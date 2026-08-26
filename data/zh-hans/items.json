@@ -47,6 +47,28 @@
         "statChanges": { "satiety": 6 }
       },
       "successMessage": "吃掉了三明治，饱腹感增加了。"
+    },
+    {
+      "id": "feast_set",
+      "name": "暴食套餐",
+      "consumable": true,
+      "usable": true,
+      "inspectText": "食堂阿姨特意多打的一整份套餐，分量大得惊人，吃完可能会撑到走不动路。",
+      "useEffect": {
+        "statChanges": { "satiety": 90 }
+      },
+      "successMessage": "你把整份套餐都吃光了，感觉肚子快要撑破了。"
+    },
+    {
+      "id": "mystery_potion",
+      "name": "不明液体",
+      "consumable": true,
+      "usable": true,
+      "inspectText": "一小瓶来源不明的液体，气味刺鼻，说明书也没有，喝下去后果难以预料。",
+      "useEffect": {
+        "ending": "poisoned_death"
+      },
+      "successMessage": "你喝下了这瓶不明液体……"
     }
   ],
   "startingInventory": [
@@ -56,3 +78,4 @@
     { "itemId": "sandwich", "count": 2 }
   ]
 }
+

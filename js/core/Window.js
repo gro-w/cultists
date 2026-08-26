@@ -169,6 +169,12 @@ export default class Win95Window {
     this.el.style.display = "flex";
   }
 
+  /** Reposition the window (used when restoring a save's window layout). */
+  moveTo(x, y) {
+    this.el.style.left = `${Math.max(0, x)}px`;
+    this.el.style.top = `${Math.max(0, y)}px`;
+  }
+
   close() {
     this.el.remove();
     if (this.onClose) this.onClose(this);

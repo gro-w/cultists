@@ -1,33 +1,20 @@
 import { windowManager } from "../core/WindowManager.js";
-import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
-
-/**
- * Pick the schedule entry that matches the current day+phase, falling back
- * to cycling through the authored entries for that phase when `day` goes
- * beyond what was authored (so the game never runs out of content).
- */
-function pickScheduleEntry(schedule, day, phase) {
-  const phaseEntries = (schedule || [])
-    .filter((e) => e.phase === phase)
-    .sort((a, b) => a.day - b.day);
-  if (phaseEntries.length === 0) return null;
-  const exact = phaseEntries.find((e) => e.day === day);
-  if (exact) return exact;
-  const idx = (Math.max(1, day) - 1) % phaseEntries.length;
-  return phaseEntries[idx];
-}
+import { scheduleData } from "../core/ScheduleData.js";
+import { applyDialogueOnShow } from "../core/DialogueEffects.js";
+import { endingManager } from "../core/EndingManager.js";
 
 /**
  * SocialApp - Social media style chat client.
  * Always accessible, but the contact/conversation content varies by the
- * current in-game day/phase (data-driven via `data/social_schedule.json`).
+ * current in-game day/phase (data-driven via `data/dayXXa.json` /
+ * `data/dayXXb.json`, resolved through ScheduleData).
  */
 export async function launchSocialApp() {
-  const schedule = await dataLoader.loadJSON("social_schedule.json");
+  await scheduleData.init();
 
   const root = document.createElement("div");
   root.className = "app-social";
@@ -44,11 +31,8 @@ export async function launchSocialApp() {
   function registerKeywords(entry) {
     const keywordDefs = {};
     (entry.contacts || []).forEach((c) => {
-      (c.keywords || []).forEach((k) => {
-        keywordDefs[k.id] = { ...k, source: `室友-${c.name}` };
-      });
+      Object.assign(keywordDefs, keywordManager.definitionsWithSource(c.keywordIds, `室友-${c.name}`));
     });
-    keywordManager.registerDefinitions(keywordDefs);
     return keywordDefs;
   }
 
@@ -101,6 +85,9 @@ export async function launchSocialApp() {
       chatEl.scrollTop = chatEl.scrollHeight;
     }
 
+    // Only the current node's single message + its reply options are shown
+    // at a time; picking an option appends the player's reply then reveals
+    // the next node (previous messages remain above in the transcript).
     function showNode(nodeId) {
       const tree = contact.dialogueTree;
       const node = tree && tree.nodes[nodeId];
@@ -109,6 +96,8 @@ export async function launchSocialApp() {
       dialogueProgress.set("social", contact.id, nodeId);
 
       appendBubble(node.speaker === "npc" ? "npc" : "me", node.text);
+      applyDialogueOnShow(node);
+      if (endingManager.isEnded) return;
 
       if (node.options && node.options.length > 0) {
         node.options.forEach((opt) => {
@@ -135,8 +124,8 @@ export async function launchSocialApp() {
     }
   }
 
-  function renderCurrentEntry() {
-    const entry = pickScheduleEntry(schedule.schedule, gameState.day, gameState.phase);
+  async function renderCurrentEntry() {
+    const entry = await scheduleData.load(gameState.day, gameState.phase);
     if (!entry) {
       contactListEl.innerHTML = '<h4>联系人</h4><p class="his-empty">（今日暂无安排）</p>';
       chatEl.innerHTML = "";
@@ -148,7 +137,7 @@ export async function launchSocialApp() {
 
   const unsubscribe = eventBus.on("daynight:changed", renderCurrentEntry);
 
-  renderCurrentEntry();
+  await renderCurrentEntry();
 
   return windowManager.createWindow({
     appId: "social",

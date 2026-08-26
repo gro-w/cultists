@@ -1,24 +1,5 @@
 {
-  "keywords": [
-    {
-      "id": "flu_suspect",
-      "label": "流感嫌疑",
-      "category": "clue",
-      "definition": "同时出现发热与咳嗽时，ChatGTP 推测的可能诊断方向。"
-    },
-    {
-      "id": "hypertension_risk",
-      "label": "高血压风险",
-      "category": "clue",
-      "definition": "头痛伴眩晕时，ChatGTP 提示需要警惕的潜在风险。"
-    },
-    {
-      "id": "basement_secret",
-      "label": "地下室秘密",
-      "category": "clue",
-      "definition": "结合深夜怪声与旧钥匙两条线索后，ChatGTP 推测的地下室秘密。"
-    }
-  ],
+  "revealKeywordIds": ["flu_suspect", "hypertension_risk", "basement_secret"],
   "entries": [
     { "keywords": ["发热"], "answer": "发热通常是身体对感染或炎症的免疫反应，建议监测体温并配合解热药物。" },
     { "keywords": ["咳嗽"], "answer": "咳嗽可能由上呼吸道感染引起，如伴随其他症状建议进一步检查。" },

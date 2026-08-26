@@ -1,5 +1,6 @@
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
+import { dataLoader } from "./DataLoader.js";
 
 /**
  * KeywordManager - global keyword bus (singleton) implementing a
@@ -29,6 +30,21 @@ class KeywordManager {
      * @type {Map<string, object>}
      */
     this.definitions = new Map();
+    this._loaded = false;
+  }
+
+  /**
+   * Load the central `data/keywords.json` registry (idempotent). This is
+   * the single source of truth for every keyword's label/category/
+   * definition; dialogue and item data files only reference keyword ids,
+   * looking their static fields up here and attaching a contextual
+   * `source` (e.g. "病人-王芳") at the point of use.
+   */
+  async load() {
+    if (this._loaded) return;
+    const data = await dataLoader.loadJSON("keywords.json");
+    this.registerDefinitions(data.keywords || []);
+    this._loaded = true;
   }
 
   /**
@@ -46,6 +62,31 @@ class KeywordManager {
   /** Look up a definition, preferring a text-local map, then the registry. */
   _resolveDefinition(id, localDefs) {
     return (localDefs && localDefs[id]) || this.definitions.get(id);
+  }
+
+  /** Look up a globally-registered keyword definition (no local override). */
+  getDefinition(id) {
+    return this.definitions.get(id);
+  }
+
+  /**
+   * Build a `{id: {...def, source}}` map for a list of keyword ids, all
+   * sharing the same contextual source (e.g. "病人-王芳"). Ids missing a
+   * registered definition are skipped with a console warning.
+   * @param {string[]} ids
+   * @param {string} source
+   */
+  definitionsWithSource(ids, source) {
+    const out = {};
+    (ids || []).forEach((id) => {
+      const def = this.definitions.get(id);
+      if (!def) {
+        console.warn(`[KeywordManager] Unknown keyword id "${id}" (source: ${source}).`);
+        return;
+      }
+      out[id] = { ...def, source };
+    });
+    return out;
   }
 
   /**

@@ -2,6 +2,7 @@ import { windowManager } from "../core/WindowManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js";
 import { getPinyinInitial } from "../core/Pinyin.js";
+import { i18n } from "../core/I18n.js";
 import { launchChatGTPApp } from "./ChatGTPApp.js";
 
 const CATEGORY_LABELS = {
@@ -61,7 +62,7 @@ export async function launchNotebookApp() {
   function render() {
     const keywords = keywordManager.all();
     if (keywords.length === 0) {
-      root.innerHTML = `<p class="notebook-empty">尚未收集任何关键词。在对话中点击高亮词汇即可收集。</p>`;
+      root.innerHTML = `<p class="notebook-empty">${i18n.t("notebook.empty", "尚未收集任何关键词。在对话中点击高亮词汇即可收集。")}</p>`;
       return;
     }
 
@@ -76,18 +77,18 @@ export async function launchNotebookApp() {
       list.forEach((kw) => {
         const li = document.createElement("li");
         li.className = "notebook-item";
-        li.title = `双击在 ChatGTP 中查询「${kw.label}」`;
+        li.title = `${i18n.t("notebook.dblClickHint", "双击在 ChatGTP 中查询")}「${kw.label}」`;
         li.addEventListener("dblclick", () => launchChatGTPApp({ presetKeywordId: kw.id }));
 
         const text = document.createElement("span");
         text.className = "notebook-item-text";
-        text.innerHTML = `<strong>${kw.label}</strong> <em>(${kw.source || "未知来源"})</em>`;
+        text.innerHTML = `<strong>${kw.label}</strong> <em>(${kw.source || i18n.t("notebook.unknownSource", "未知来源")})</em>`;
 
         const deleteBtn = document.createElement("button");
         deleteBtn.type = "button";
         deleteBtn.className = "win95-btn bevel-out notebook-delete-btn";
-        deleteBtn.textContent = "删除";
-        deleteBtn.title = `从笔记本中删除「${kw.label}」`;
+        deleteBtn.textContent = i18n.t("notebook.deleteBtn", "删除");
+        deleteBtn.title = `${i18n.t("notebook.deleteHint", "从笔记本中删除")}「${kw.label}」`;
         deleteBtn.addEventListener("click", () => keywordManager.remove(kw.id));
 
         li.appendChild(text);
@@ -105,7 +106,7 @@ export async function launchNotebookApp() {
 
   return windowManager.createWindow({
     appId: "notebook",
-    title: "关键词笔记本",
+    title: i18n.t("apps.notebook", "关键词笔记本"),
     icon: "📓",
     width: 420,
     height: 480,

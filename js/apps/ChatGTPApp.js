@@ -95,6 +95,12 @@ export async function launchChatGTPApp() {
   }
 
   function renderKeywordChips() {
+    // Selected keywords may have been removed from the notebook; drop them
+    // before rendering so the MAX_SELECTED_KEYWORDS check below stays accurate.
+    [...selectedIds].forEach((id) => {
+      if (!keywordManager.has(id)) selectedIds.delete(id);
+    });
+
     chipsEl.innerHTML = "";
     const collected = keywordManager.all();
     if (collected.length === 0) {
@@ -116,10 +122,6 @@ export async function launchChatGTPApp() {
         renderKeywordChips();
       });
       chipsEl.appendChild(chip);
-    });
-    // Selected keywords may have been removed from the notebook; drop them.
-    [...selectedIds].forEach((id) => {
-      if (!keywordManager.has(id)) selectedIds.delete(id);
     });
   }
 

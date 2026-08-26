@@ -11,8 +11,10 @@ const CATEGORY_LABELS = {
 
 /**
  * NotebookApp - real-time view of every keyword collected so far, grouped
- * by category, with definition and source. Subscribes to KeywordManager so
- * it always reflects the latest global state.
+ * by category. Only shows the keyword label and its source (no detailed
+ * definition) and lets the player delete a keyword from the notebook.
+ * Subscribes to KeywordManager so it always reflects the latest global
+ * state.
  */
 export async function launchNotebookApp() {
   const root = document.createElement("div");
@@ -40,9 +42,21 @@ export async function launchNotebookApp() {
       const ul = document.createElement("ul");
       list.forEach((kw) => {
         const li = document.createElement("li");
-        li.innerHTML = `<strong>${kw.label}</strong> — ${kw.definition || "暂无释义"} <em>(${
-          kw.source || "未知来源"
-        })</em>`;
+        li.className = "notebook-item";
+
+        const text = document.createElement("span");
+        text.className = "notebook-item-text";
+        text.innerHTML = `<strong>${kw.label}</strong> <em>(${kw.source || "未知来源"})</em>`;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "win95-btn bevel-out notebook-delete-btn";
+        deleteBtn.textContent = "删除";
+        deleteBtn.title = `从笔记本中删除「${kw.label}」`;
+        deleteBtn.addEventListener("click", () => keywordManager.remove(kw.id));
+
+        li.appendChild(text);
+        li.appendChild(deleteBtn);
         ul.appendChild(li);
       });
       section.appendChild(ul);

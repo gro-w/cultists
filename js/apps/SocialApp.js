@@ -28,6 +28,7 @@ export async function launchSocialApp() {
       keywordDefs[k.id] = { ...k, source: `室友-${c.name}` };
     });
   });
+  keywordManager.registerDefinitions(keywordDefs);
 
   function renderContacts() {
     contactListEl.innerHTML = "<h4>联系人</h4>";
@@ -42,16 +43,49 @@ export async function launchSocialApp() {
 
   function renderChat(contact) {
     chatEl.innerHTML = `<h4>与 ${contact.name} 的聊天</h4>`;
-    const list = document.createElement("div");
-    list.className = "chat-bubbles";
-    (contact.messages || []).forEach((msg) => {
+    const bubblesEl = document.createElement("div");
+    bubblesEl.className = "chat-bubbles";
+    const optionsEl = document.createElement("div");
+    optionsEl.className = "dialogue-options";
+    chatEl.appendChild(bubblesEl);
+    chatEl.appendChild(optionsEl);
+
+    function appendBubble(from, text) {
       const bubble = document.createElement("div");
-      bubble.className = `chat-bubble bubble-${msg.from}`;
-      bubble.innerHTML = keywordManager.renderHighlightedText(msg.text, keywordDefs);
-      list.appendChild(bubble);
-    });
-    chatEl.appendChild(list);
-    keywordManager.bindHighlights(chatEl, keywordDefs);
+      bubble.className = `chat-bubble bubble-${from}`;
+      bubble.innerHTML = keywordManager.renderHighlightedText(text, keywordDefs);
+      bubblesEl.appendChild(bubble);
+      keywordManager.bindHighlights(bubble, keywordDefs);
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+
+    function showNode(nodeId) {
+      const tree = contact.dialogueTree;
+      const node = tree && tree.nodes[nodeId];
+      optionsEl.innerHTML = "";
+      if (!node) return;
+
+      appendBubble(node.speaker === "npc" ? "npc" : "me", node.text);
+
+      if (node.options && node.options.length > 0) {
+        node.options.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.className = "win95-btn bevel-out dialogue-option-btn";
+          btn.textContent = opt.label;
+          btn.addEventListener("click", () => {
+            appendBubble("me", opt.label);
+            showNode(opt.next);
+          });
+          optionsEl.appendChild(btn);
+        });
+      } else {
+        optionsEl.innerHTML = '<p class="dialogue-end">（对话已结束）</p>';
+      }
+    }
+
+    if (contact.dialogueTree) {
+      showNode(contact.dialogueTree.start);
+    }
   }
 
   renderContacts();

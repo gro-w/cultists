@@ -18,11 +18,38 @@
           "definition": "一把生锈的旧钥匙，据说能打开宿舍地下室的门。"
         }
       ],
-      "messages": [
-        { "from": "npc", "text": "你昨晚有没有听到[[night_noise]]？我吓死了。" },
-        { "from": "me", "text": "没有诶，你确定不是做梦？" },
-        { "from": "npc", "text": "真的！而且我还在楼梯间捡到一把[[old_key]]，好诡异。" }
-      ]
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "你昨晚有没有听到[[night_noise]]？我吓死了。",
+            "options": [
+              { "label": "没有诶，说来听听？", "next": "ask_detail" },
+              { "label": "会不会是你做梦了？", "next": "ask_dream" }
+            ]
+          },
+          "ask_detail": {
+            "speaker": "npc",
+            "text": "真的！而且我还在楼梯间捡到一把[[old_key]]，好诡异。",
+            "options": [
+              { "label": "那把钥匙给我看看？", "next": "end" }
+            ]
+          },
+          "ask_dream": {
+            "speaker": "npc",
+            "text": "才不是呢！而且我还在楼梯间捡到一把[[old_key]]，绝对不是幻觉。",
+            "options": [
+              { "label": "好吧，先保管好那把钥匙。", "next": "end" }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "嗯，我先收好，改天再一起研究。",
+            "options": []
+          }
+        }
+      }
     },
     {
       "id": "roommate_ajun",
@@ -42,11 +69,38 @@
           "definition": "熬夜提神用的功能性饮料，阿俊常备的必需品。"
         }
       ],
-      "messages": [
-        { "from": "npc", "text": "听说过[[night_shift_rumor]]吗？我室友说的，毛骨悚然。" },
-        { "from": "me", "text": "认真的？说来听听。" },
-        { "from": "npc", "text": "改天吧，我先喝瓶[[energy_drink]]续命，明天还要早起。" }
-      ]
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "听说过[[night_shift_rumor]]吗？我室友说的，毛骨悚然。",
+            "options": [
+              { "label": "认真的？说来听听。", "next": "ask_more" },
+              { "label": "别吓我，我还要值夜班呢。", "next": "reassure" }
+            ]
+          },
+          "ask_more": {
+            "speaker": "npc",
+            "text": "改天吧，我先喝瓶[[energy_drink]]续命，明天还要早起。",
+            "options": [
+              { "label": "行吧，早点休息。", "next": "end" }
+            ]
+          },
+          "reassure": {
+            "speaker": "npc",
+            "text": "放心，都是传闻而已。我先喝瓶[[energy_drink]]提提神。",
+            "options": [
+              { "label": "好，你也早点睡。", "next": "end" }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "晚安，做个好梦。",
+            "options": []
+          }
+        }
+      }
     }
   ]
 }

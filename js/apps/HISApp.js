@@ -39,6 +39,7 @@ export async function launchHISApp() {
       keywordDefs[k.id] = { ...k, source: `病人-${p.name}` };
     });
   });
+  keywordManager.registerDefinitions(keywordDefs);
 
   let currentRecord = null;
 
@@ -55,20 +56,52 @@ export async function launchHISApp() {
 
   function renderDialogue(patient) {
     dialogueEl.innerHTML = `<h4>与 ${patient.name} 的对话</h4>`;
-    const list = document.createElement("div");
-    list.className = "dialogue-lines";
-    (patient.dialogue || []).forEach((line) => {
+    const linesEl = document.createElement("div");
+    linesEl.className = "dialogue-lines";
+    const optionsEl = document.createElement("div");
+    optionsEl.className = "dialogue-options";
+    dialogueEl.appendChild(linesEl);
+    dialogueEl.appendChild(optionsEl);
+
+    function appendLine(speaker, speakerLabel, text) {
       const p = document.createElement("p");
-      p.className = `dialogue-line speaker-${line.speaker}`;
-      const speakerLabel = line.speaker === "npc" ? patient.name : "我";
+      p.className = `dialogue-line speaker-${speaker}`;
       p.innerHTML = `<strong>${speakerLabel}:</strong> ${keywordManager.renderHighlightedText(
-        line.text,
+        text,
         keywordDefs
       )}`;
-      list.appendChild(p);
-    });
-    dialogueEl.appendChild(list);
-    keywordManager.bindHighlights(dialogueEl, keywordDefs);
+      linesEl.appendChild(p);
+      keywordManager.bindHighlights(p, keywordDefs);
+      dialogueEl.scrollTop = dialogueEl.scrollHeight;
+    }
+
+    function showNode(nodeId) {
+      const tree = patient.dialogueTree;
+      const node = tree && tree.nodes[nodeId];
+      optionsEl.innerHTML = "";
+      if (!node) return;
+
+      appendLine(node.speaker, node.speaker === "npc" ? patient.name : "我", node.text);
+
+      if (node.options && node.options.length > 0) {
+        node.options.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.className = "win95-btn bevel-out dialogue-option-btn";
+          btn.textContent = opt.label;
+          btn.addEventListener("click", () => {
+            appendLine("player", "我", opt.label);
+            showNode(opt.next);
+          });
+          optionsEl.appendChild(btn);
+        });
+      } else {
+        optionsEl.innerHTML = '<p class="dialogue-end">（对话已结束）</p>';
+      }
+    }
+
+    if (patient.dialogueTree) {
+      showNode(patient.dialogueTree.start);
+    }
 
     const recordTemplate = records.templates.find(
       (t) => t.id === patient.recordTemplateId

@@ -2,6 +2,7 @@ import { windowManager } from "../core/WindowManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js";
 import { getPinyinInitial } from "../core/Pinyin.js";
+import { launchChatGTPApp } from "./ChatGTPApp.js";
 
 const CATEGORY_LABELS = {
   symptom: "症状",
@@ -75,6 +76,8 @@ export async function launchNotebookApp() {
       list.forEach((kw) => {
         const li = document.createElement("li");
         li.className = "notebook-item";
+        li.title = `双击在 ChatGTP 中查询「${kw.label}」`;
+        li.addEventListener("dblclick", () => launchChatGTPApp({ presetKeywordId: kw.id }));
 
         const text = document.createElement("span");
         text.className = "notebook-item-text";

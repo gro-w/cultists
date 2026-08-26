@@ -269,3 +269,33 @@
   width: 30px;
   text-align: right;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Settings App                                                            */
+/* ---------------------------------------------------------------------- */
+.settings-section {
+  margin-bottom: 14px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-volume-slider {
+  flex: 1;
+}
+
+.settings-volume-value {
+  width: 42px;
+  text-align: right;
+}
+
+.settings-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+

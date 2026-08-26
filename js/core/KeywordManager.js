@@ -1,4 +1,5 @@
 import { eventBus } from "./EventBus.js";
+import { gameState } from "./GameState.js";
 
 /**
  * KeywordManager - global keyword bus (singleton) implementing a
@@ -89,12 +90,17 @@ class KeywordManager {
 
   /**
    * Add a keyword to the global notebook (idempotent) and broadcast it.
+   * Records the in-game day it was (re-)collected on, used by the
+   * Notebook app's "按收集时间第 x 天" grouping mode.
    * @param {object} keyword
    */
   collect(keyword) {
     if (!keyword || !keyword.id) return;
     this.registerDefinitions([keyword]);
     const isNew = !this.collected.has(keyword.id);
+    if (isNew) {
+      keyword.collectedDay = gameState.day;
+    }
     this.collected.set(keyword.id, keyword);
     eventBus.emit("keyword:collected", { keyword, isNew });
     if (isNew) {

@@ -1,3 +1,4 @@
+import { i18n } from "../core/I18n.js";
 import { windowManager } from "../core/WindowManager.js";
 import { gameState } from "../core/GameState.js";
 import { itemManager } from "../core/ItemManager.js";
@@ -179,7 +180,7 @@ export async function launchStatusApp() {
 
   return windowManager.createWindow({
     appId: "status",
-    title: "状态与属性",
+    title: i18n.t("apps.status", "状态与属性"),
     icon: "📊",
     width: 380,
     height: 380,

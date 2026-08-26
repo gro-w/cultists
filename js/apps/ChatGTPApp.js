@@ -1,3 +1,4 @@
+import { i18n } from "../core/I18n.js";
 import { windowManager } from "../core/WindowManager.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
@@ -189,7 +190,7 @@ export async function launchChatGTPApp(options = {}) {
 
   return windowManager.createWindow({
     appId: "chatgtp",
-    title: "ChatGTP",
+    title: i18n.t("apps.chatgtp", "ChatGTP"),
     icon: "🤖",
     width: 480,
     height: 480,

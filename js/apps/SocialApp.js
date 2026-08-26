@@ -1,3 +1,4 @@
+import { i18n } from "../core/I18n.js";
 import { windowManager } from "../core/WindowManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
@@ -141,7 +142,7 @@ export async function launchSocialApp() {
 
   return windowManager.createWindow({
     appId: "social",
-    title: "夜聊 Messenger",
+    title: i18n.t("apps.social", "夜聊 Messenger"),
     icon: "💬",
     width: 560,
     height: 420,

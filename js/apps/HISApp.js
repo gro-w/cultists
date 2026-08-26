@@ -1,3 +1,4 @@
+import { i18n } from "../core/I18n.js";
 import { windowManager } from "../core/WindowManager.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
@@ -238,7 +239,7 @@ export async function launchHISApp() {
 
   return windowManager.createWindow({
     appId: "his",
-    title: "HIS 医疗系统",
+    title: i18n.t("apps.his", "HIS 医疗系统"),
     icon: "🏥",
     width: 640,
     height: 460,

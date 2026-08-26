@@ -118,6 +118,23 @@ class KeywordManager {
     eventBus.emit("keyword:removed", { id, keyword });
   }
 
+  /**
+   * Replace the entire collected notebook (used by SaveManager when
+   * restoring a save). Requires the referenced ids to already have a
+   * definition registered (SaveManager preloads/registers every known
+   * keyword definition at boot for this purpose).
+   * @param {{id:string, collectedDay:number}[]} entries
+   */
+  restoreCollected(entries) {
+    this.collected = new Map();
+    (entries || []).forEach(({ id, collectedDay }) => {
+      const def = this.definitions.get(id);
+      if (!def) return;
+      this.collected.set(id, { ...def, collectedDay });
+    });
+    eventBus.emit("keyword:collected", { keyword: null, isNew: false, bulk: true });
+  }
+
   has(id) {
     return this.collected.has(id);
   }

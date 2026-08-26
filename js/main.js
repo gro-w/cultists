@@ -3,6 +3,8 @@ import { dayNightSystem } from "./core/DayNightSystem.js";
 import { settingsManager } from "./core/SettingsManager.js";
 import { audioManager } from "./core/AudioManager.js";
 import { confirmDialog } from "./core/ConfirmDialog.js";
+import { itemManager } from "./core/ItemManager.js";
+import { saveManager } from "./core/SaveManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -76,9 +78,24 @@ function boot() {
     e.stopPropagation();
   });
 
+  // Register launchers so SaveManager can reopen windows that were open at
+  // save time, then restore from `location.search` if a save is present.
+  const launcherMap = {};
+  APP_REGISTRY.forEach((app) => {
+    if (app.id !== "phase-toggle") launcherMap[app.id] = () => app.launch();
+  });
+  saveManager.registerLaunchers(launcherMap);
+  saveManager.loadFromLocation();
+
   console.info(
     `[Cultists OS] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
   );
 }
 
-document.addEventListener("DOMContentLoaded", boot);
+document.addEventListener("DOMContentLoaded", () => {
+  // Preload item defs + the canonical index tables SaveManager needs before
+  // any UI is shown, so a save-string restore (if present) is deterministic.
+  Promise.all([itemManager.load(), saveManager.init()])
+    .catch((err) => console.error("[Cultists OS] Failed to preload data:", err))
+    .finally(boot);
+});

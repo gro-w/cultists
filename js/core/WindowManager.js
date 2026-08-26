@@ -81,6 +81,12 @@ class WindowManager {
     if (id) this.close(id);
   }
 
+  /** Return the open Win95Window instance for a single-instance appId, if any. */
+  getByAppId(appId) {
+    const id = this._singleInstanceKeys.get(appId);
+    return id ? this.windows.get(id) : undefined;
+  }
+
   /** Close every window whose appId is not in the allowed list (used by DayNightSystem). */
   closeAllExcept(allowedAppIds = []) {
     for (const [appId, winId] of [...this._singleInstanceKeys.entries()]) {

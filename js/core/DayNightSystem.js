@@ -1,21 +1,17 @@
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
-import { windowManager } from "./WindowManager.js";
 
 /**
  * DayNightSystem - manages the day/night game-loop phase.
- * - Day phase: HIS (medical system) app is available.
- * - Night phase: Social app is available.
- * ChatGTP / Notebook / StatusViewer remain available in both phases.
+ * Every app (HIS, Social, ChatGTP, Notebook, Status, Settings) is always
+ * available in both phases; HIS and Social instead vary their *content*
+ * (patient/contact lists, dialogue) based on the current day + phase via
+ * their own data-driven schedules (see their `data/*.json` files).
  *
  * Emits `daynight:changed` whenever the phase toggles so the Desktop /
- * Taskbar / apps can react (e.g. hide/show icons, close phase-locked apps).
+ * Taskbar / open app windows can react (e.g. re-render their content).
  */
 class DayNightSystem {
-  constructor() {
-    this.alwaysAvailableAppIds = ["chatgtp", "notebook", "status", "settings"];
-  }
-
   get phase() {
     return gameState.phase;
   }
@@ -24,25 +20,16 @@ class DayNightSystem {
     return gameState.day;
   }
 
-  isAppAvailable(appId) {
-    if (this.alwaysAvailableAppIds.includes(appId)) return true;
-    if (appId === "his") return this.phase === "day";
-    if (appId === "social") return this.phase === "night";
+  /** All apps are always available; kept for backwards-compatible callers. */
+  isAppAvailable() {
     return true;
   }
 
   /** Toggle the phase (day -> night -> day, incrementing day count). */
   toggle() {
     const phase = gameState.advancePhase();
-    this._closeUnavailableApps();
     eventBus.emit("daynight:changed", { phase, day: gameState.day });
     return phase;
-  }
-
-  _closeUnavailableApps() {
-    const lockedOut =
-      this.phase === "day" ? ["social"] : ["his"];
-    lockedOut.forEach((appId) => windowManager.closeByAppId(appId));
   }
 }
 

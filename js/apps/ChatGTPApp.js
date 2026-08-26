@@ -1,6 +1,7 @@
 import { windowManager } from "../core/WindowManager.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
+import { eventBus } from "../core/EventBus.js";
 
 const FALLBACK_ANSWER = "对不起，我无法回答这个问题。";
 const MAX_SELECTED_KEYWORDS = 2;
@@ -14,8 +15,27 @@ const MAX_SELECTED_KEYWORDS = 2;
  * exact (order-independent) set of keyword labels used in the query.
  * Answers may themselves contain `[[keywordId]]` markers, revealing new
  * keywords the player can click to collect.
+ *
+ * Since the window is single-instance (`appId: "chatgtp"`), other apps
+ * (e.g. NotebookApp's double-click-to-query shortcut) preselect a keyword
+ * in an already-open instance via the `chatgtp:select-keyword` eventBus
+ * event rather than calling this function's options directly.
+ * @param {object} [options]
+ * @param {string} [options.presetKeywordId] - keyword id to preselect on open
  */
-export async function launchChatGTPApp() {
+export async function launchChatGTPApp(options = {}) {
+  // If already open, just focus it and forward any preselected keyword via
+  // the eventBus instead of rebuilding the whole app (avoids leaking a
+  // second set of subscriptions onto a window instance we'd discard).
+  const existing = windowManager.getByAppId("chatgtp");
+  if (existing) {
+    windowManager.focus(existing.id);
+    if (options.presetKeywordId) {
+      eventBus.emit("chatgtp:select-keyword", { id: options.presetKeywordId });
+    }
+    return existing;
+  }
+
   const qa = await dataLoader.loadJSON("chatgtp_qa.json");
 
   // Keywords that ChatGTP's answers can introduce/reveal, registered
@@ -143,9 +163,29 @@ export async function launchChatGTPApp() {
     if (e.key === "Enter") sendBtn.click();
   });
 
+  /**
+   * Select a keyword (by id) for combo query, if it's currently collected
+   * and the selection isn't already full. Used both by preset options and
+   * by the `chatgtp:select-keyword` event (e.g. Notebook double-click).
+   */
+  function selectKeyword(id) {
+    if (!id || !keywordManager.has(id)) return;
+    if (!selectedIds.has(id) && selectedIds.size >= MAX_SELECTED_KEYWORDS) {
+      // Make room by dropping the oldest selection so the newly requested
+      // keyword can still be added.
+      const [oldest] = selectedIds;
+      selectedIds.delete(oldest);
+    }
+    selectedIds.add(id);
+    renderKeywordChips();
+  }
+
+  const offSelectKeyword = eventBus.on("chatgtp:select-keyword", ({ id }) => selectKeyword(id));
+
   const offKeywordChange = keywordManager.onChange(() => renderKeywordChips());
   renderKeywordChips();
   appendMessage("npc", "你好，我是 ChatGTP，你可以输入问题，或从笔记本中选择 1-2 个关键词进行组合查询～");
+  if (options.presetKeywordId) selectKeyword(options.presetKeywordId);
 
   return windowManager.createWindow({
     appId: "chatgtp",
@@ -154,6 +194,9 @@ export async function launchChatGTPApp() {
     width: 480,
     height: 480,
     content: root,
-    onClose: () => offKeywordChange(),
+    onClose: () => {
+      offKeywordChange();
+      offSelectKeyword();
+    },
   });
 }

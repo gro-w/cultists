@@ -2,6 +2,7 @@ import { windowManager } from "./core/WindowManager.js";
 import { dayNightSystem } from "./core/DayNightSystem.js";
 import { settingsManager } from "./core/SettingsManager.js";
 import { audioManager } from "./core/AudioManager.js";
+import { confirmDialog } from "./core/ConfirmDialog.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -17,59 +18,31 @@ import { launchSettingsApp } from "./apps/SettingsApp.js";
  * descriptor (id/label/icon/launch) consumed by both the Desktop icon grid
  * and the Start menu, then wires up the WindowManager + Taskbar + Desktop.
  *
- * All apps are always visible on the desktop and in the Start menu,
- * regardless of the current day/night phase (per design). Apps that are
- * only meaningful in one phase (HIS during the day, Social at night) still
- * enforce that at launch time via `withPhaseGate`, showing a short message
- * instead of opening if used at the wrong time.
+ * All apps are always visible on the desktop and in the Start menu, and are
+ * always launchable regardless of the current day/night phase. HIS and the
+ * Social app instead vary *what content* they show based on the current
+ * day + phase (see their own data-driven schedules).
  */
-
-/**
- * Wrap a launcher so it only actually opens the app when
- * `dayNightSystem.isAppAvailable(appId)` is true; otherwise it alerts the
- * player with a friendly reason instead of opening the window.
- * @param {string} appId
- * @param {() => void} launch
- * @param {string} unavailableMessage
- */
-function withPhaseGate(appId, launch, unavailableMessage) {
-  return () => {
-    if (!dayNightSystem.isAppAvailable(appId)) {
-      window.alert(unavailableMessage);
-      return;
-    }
-    return launch();
-  };
-}
 
 /** Perform the 下班/睡觉 phase-change action, with optional confirmation. */
-function handlePhaseToggle() {
+async function handlePhaseToggle() {
   const isDay = dayNightSystem.phase === "day";
   const message = isDay
     ? "确定要下班，结束白天进入夜晚吗？"
     : "确定要睡觉，结束今天进入下一天吗？";
-  if (settingsManager.confirmPhaseChange && !window.confirm(message)) {
-    return;
+  if (settingsManager.confirmPhaseChange) {
+    const ok = await confirmDialog(message, { title: isDay ? "下班确认" : "睡觉确认", icon: isDay ? "🚪" : "🛏️" });
+    if (!ok) return;
   }
   dayNightSystem.toggle();
 }
 
 const APP_REGISTRY = [
-  {
-    id: "his",
-    label: "HIS 医疗系统",
-    icon: "🏥",
-    launch: withPhaseGate("his", () => launchHISApp(), "现在是夜晚，HIS 医疗系统仅在白天开放。"),
-  },
-  {
-    id: "social",
-    label: "夜聊 Messenger",
-    icon: "💬",
-    launch: withPhaseGate("social", () => launchSocialApp(), "现在是白天，夜聊 Messenger 仅在夜晚开放。"),
-  },
+  { id: "his", label: "HIS 医疗系统", icon: "🏥", launch: () => launchHISApp() },
+  { id: "social", label: "夜聊 Messenger", icon: "💬", launch: () => launchSocialApp() },
   { id: "chatgtp", label: "ChatGTP", icon: "🤖", launch: () => launchChatGTPApp() },
   { id: "notebook", label: "关键词笔记本", icon: "📓", launch: () => launchNotebookApp() },
-  { id: "status", label: "状态显示器", icon: "📊", launch: () => launchStatusApp() },
+  { id: "status", label: "状态与属性", icon: "📊", launch: () => launchStatusApp() },
   { id: "settings", label: "设置", icon: "⚙️", launch: () => launchSettingsApp() },
   {
     id: "phase-toggle",

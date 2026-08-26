@@ -299,3 +299,104 @@
   cursor: pointer;
 }
 
+/* Win95-style range slider (BGM volume) */
+.settings-volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: var(--w95-white);
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+  outline: none;
+}
+
+.settings-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 18px;
+  background: var(--w95-gray);
+  border-top: 1px solid var(--w95-white);
+  border-left: 1px solid var(--w95-white);
+  border-right: 1px solid var(--w95-gray-darker);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  box-shadow: inset 1px 1px 0 var(--w95-gray-light),
+              inset -1px -1px 0 var(--w95-gray-dark);
+  cursor: pointer;
+}
+
+.settings-volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 18px;
+  background: var(--w95-gray);
+  border-top: 1px solid var(--w95-white);
+  border-left: 1px solid var(--w95-white);
+  border-right: 1px solid var(--w95-gray-darker);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  box-shadow: inset 1px 1px 0 var(--w95-gray-light),
+              inset -1px -1px 0 var(--w95-gray-dark);
+  cursor: pointer;
+  border-radius: 0;
+}
+
+/* Win95-style checkbox (square, inset box, drawn tick) */
+.settings-checkbox-row input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  background: var(--w95-white);
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.settings-checkbox-row input[type="checkbox"]:checked::after {
+  content: "✔";
+  position: absolute;
+  top: -3px;
+  left: 0;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--w95-black);
+}
+
+.settings-section h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Confirm Dialog (Win95 modal, replaces window.confirm)                  */
+/* ---------------------------------------------------------------------- */
+.app-confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.confirm-dialog-message {
+  margin: 8px 0;
+  white-space: pre-line;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.confirm-dialog-actions .win95-btn {
+  min-width: 72px;
+}
+

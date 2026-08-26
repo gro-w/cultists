@@ -87,6 +87,11 @@ class WindowManager {
     return id ? this.windows.get(id) : undefined;
   }
 
+  /** appIds of every currently-open single-instance window (used by SaveManager). */
+  openAppIds() {
+    return [...this._singleInstanceKeys.keys()];
+  }
+
   /** Close every window whose appId is not in the allowed list (used by DayNightSystem). */
   closeAllExcept(allowedAppIds = []) {
     for (const [appId, winId] of [...this._singleInstanceKeys.entries()]) {

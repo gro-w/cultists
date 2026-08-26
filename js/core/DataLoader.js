@@ -11,7 +11,7 @@ class DataLoader {
 
   /**
    * Fetch a JSON file from the data directory (cached after first load).
-   * @param {string} filename e.g. "dialogues_day.json"
+   * @param {string} filename e.g. "his_schedule.json"
    * @returns {Promise<any>}
    */
   async loadJSON(filename) {

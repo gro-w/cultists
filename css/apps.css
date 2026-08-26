@@ -69,6 +69,17 @@
   text-align: left;
 }
 
+.his-schedule-note {
+  font-size: 11px;
+  color: var(--w95-gray-dark);
+  margin: 0 0 6px;
+}
+
+.his-empty {
+  color: var(--w95-gray-dark);
+  font-style: italic;
+}
+
 .dialogue-line {
   margin: 4px 0;
 }
@@ -268,6 +279,87 @@
 .status-value {
   width: 30px;
   text-align: right;
+}
+
+.app-status {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.status-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.status-tab-btn.active {
+  font-weight: bold;
+  background: var(--w95-white);
+}
+
+.status-tab-panel {
+  flex: 1;
+  overflow: auto;
+}
+
+.item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item-row {
+  border-bottom: 1px solid #eee;
+  padding: 6px 0;
+}
+
+.item-row-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.item-row-name {
+  font-weight: bold;
+}
+
+.item-row-count {
+  color: var(--w95-gray-dark);
+}
+
+.item-row-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.item-row-feedback {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--w95-gray-dark);
+}
+
+.save-url-row,
+.save-load-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.save-url-row label {
+  flex-shrink: 0;
+}
+
+.save-url-input,
+.save-load-input {
+  flex: 1;
+}
+
+.save-feedback {
+  font-size: 12px;
+  color: var(--w95-gray-dark);
 }
 
 /* ---------------------------------------------------------------------- */

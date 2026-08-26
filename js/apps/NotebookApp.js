@@ -50,7 +50,7 @@ export async function launchNotebookApp() {
     });
   }
 
-  keywordManager.onChange(render);
+  const offKeywordChange = keywordManager.onChange(render);
   render();
 
   return windowManager.createWindow({
@@ -60,5 +60,6 @@ export async function launchNotebookApp() {
     width: 420,
     height: 480,
     content: root,
+    onClose: () => offKeywordChange(),
   });
 }

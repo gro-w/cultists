@@ -34,8 +34,8 @@ export async function launchStatusApp() {
     `;
   }
 
-  eventBus.on("gamestate:changed", render);
-  eventBus.on("daynight:changed", render);
+  const offGameState = eventBus.on("gamestate:changed", render);
+  const offDayNight = eventBus.on("daynight:changed", render);
   render();
 
   return windowManager.createWindow({
@@ -46,5 +46,9 @@ export async function launchStatusApp() {
     height: 260,
     resizable: false,
     content: root,
+    onClose: () => {
+      offGameState();
+      offDayNight();
+    },
   });
 }

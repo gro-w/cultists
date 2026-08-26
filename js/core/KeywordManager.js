@@ -98,13 +98,11 @@ class KeywordManager {
     if (!keyword || !keyword.id) return;
     this.registerDefinitions([keyword]);
     const isNew = !this.collected.has(keyword.id);
+    const stored = isNew ? { ...keyword, collectedDay: gameState.day } : this.collected.get(keyword.id);
+    this.collected.set(keyword.id, stored);
+    eventBus.emit("keyword:collected", { keyword: stored, isNew });
     if (isNew) {
-      keyword.collectedDay = gameState.day;
-    }
-    this.collected.set(keyword.id, keyword);
-    eventBus.emit("keyword:collected", { keyword, isNew });
-    if (isNew) {
-      eventBus.emit("keyword:new", { keyword });
+      eventBus.emit("keyword:new", { keyword: stored });
     }
   }
 

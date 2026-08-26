@@ -21,6 +21,30 @@ class KeywordManager {
   constructor() {
     /** @type {Map<string, object>} collected keywords keyed by id */
     this.collected = new Map();
+    /**
+     * Global registry of every keyword definition seen so far, keyed by id.
+     * Lets any app (e.g. ChatGTP answers) highlight/collect a keyword even
+     * if it wasn't part of the text's local `keywordDefs` map.
+     * @type {Map<string, object>}
+     */
+    this.definitions = new Map();
+  }
+
+  /**
+   * Register one or more keyword definitions into the global registry.
+   * @param {object|object[]|Record<string, object>} defs
+   */
+  registerDefinitions(defs) {
+    if (!defs) return;
+    const list = Array.isArray(defs) ? defs : Object.values(defs);
+    list.forEach((def) => {
+      if (def && def.id) this.definitions.set(def.id, def);
+    });
+  }
+
+  /** Look up a definition, preferring a text-local map, then the registry. */
+  _resolveDefinition(id, localDefs) {
+    return (localDefs && localDefs[id]) || this.definitions.get(id);
   }
 
   /**
@@ -33,7 +57,7 @@ class KeywordManager {
   renderHighlightedText(text, keywordDefs = {}) {
     if (!text) return "";
     return text.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (match, id, display) => {
-      const def = keywordDefs[id];
+      const def = this._resolveDefinition(id, keywordDefs);
       const label = display || (def ? def.label : id);
       if (!def) {
         console.warn(`[KeywordManager] Unknown keyword id "${id}" referenced in text.`);
@@ -54,7 +78,7 @@ class KeywordManager {
     container.querySelectorAll(".keyword-highlight").forEach((span) => {
       span.addEventListener("click", () => {
         const id = span.dataset.keywordId;
-        const def = keywordDefs[id];
+        const def = this._resolveDefinition(id, keywordDefs);
         if (def) {
           this.collect(def);
           span.classList.add("keyword-collected");
@@ -69,12 +93,25 @@ class KeywordManager {
    */
   collect(keyword) {
     if (!keyword || !keyword.id) return;
+    this.registerDefinitions([keyword]);
     const isNew = !this.collected.has(keyword.id);
     this.collected.set(keyword.id, keyword);
     eventBus.emit("keyword:collected", { keyword, isNew });
     if (isNew) {
       eventBus.emit("keyword:new", { keyword });
     }
+  }
+
+  /**
+   * Remove a keyword from the collected notebook (does not forget its
+   * definition, so it can still be highlighted/re-collected later).
+   * @param {string} id
+   */
+  remove(id) {
+    if (!this.collected.has(id)) return;
+    const keyword = this.collected.get(id);
+    this.collected.delete(id);
+    eventBus.emit("keyword:removed", { id, keyword });
   }
 
   has(id) {
@@ -93,10 +130,14 @@ class KeywordManager {
     return this.all().filter((k) => k.category === category);
   }
 
-  /** Subscribe to any change in the keyword notebook. */
+  /** Subscribe to any change (collect or remove) in the keyword notebook. */
   onChange(handler) {
-    const off1 = eventBus.on("keyword:collected", handler);
-    return off1;
+    const offCollected = eventBus.on("keyword:collected", handler);
+    const offRemoved = eventBus.on("keyword:removed", handler);
+    return () => {
+      offCollected();
+      offRemoved();
+    };
   }
 }
 

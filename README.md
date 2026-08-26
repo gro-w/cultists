@@ -58,10 +58,15 @@ data/
 
 ### 3. 关键词机制（发布/订阅）
 - 对话文本使用 `[[keywordId|显示文本]]` 语法标记特殊词汇；`KeywordManager.renderHighlightedText()` 将其转换为可点击的高亮 `<span>`。
-- 点击高亮词汇会调用 `KeywordManager.collect()`，将关键词写入全局 Map 并通过 `eventBus.emit('keyword:collected', ...)` 广播。
-- `NotebookApp`、`HISApp`（病历下拉选项）、`ChatGTPApp`（关键词快捷提问）均订阅该事件，实现"提取 -> 笔记本查看 -> 填空/查询"的完整闭环，无需相互耦合。
+- 点击高亮词汇会调用 `KeywordManager.collect()`，将关键词写入全局 Map 并通过 `eventBus.emit('keyword:collected', ...)` 广播；`KeywordManager.remove()` 则从笔记本中移除并广播 `keyword:removed`。
+- `KeywordManager` 同时维护一个全局关键词定义注册表（`registerDefinitions()`），任意应用（如 ChatGTP 的回答）都可以引用并高亮此前未在当前上下文中定义过的关键词。
+- `NotebookApp`（笔记本，支持删除）、`HISApp`（病历下拉选项）、`ChatGTPApp`（关键词组合查询）均订阅该事件，实现"提取 -> 笔记本查看 -> 填空/查询"的完整闭环，无需相互耦合。
 
-### 4. 昼夜循环
+### 4. 对话树（分支对话）
+- HIS 病人对话与社交软件联系人对话均采用 `dialogueTree`（`{ start, nodes: { [nodeId]: { speaker, text, options } } }`）的树形结构，而非线性文本数组。
+- 每次只展示当前节点的一句话；若该节点带有 `options`，则渲染为可点击的选项按钮，点击后显示玩家选择的台词并跳转到 `next` 指向的节点；`options` 为空数组表示对话分支结束。
+
+### 5. 昼夜循环
 - `GameState`（单例）保存天数、昼夜阶段与身心状态数值。
 - `DayNightSystem` 负责阶段切换（`toggle()`）、判断某个应用在当前阶段是否可用（`isAppAvailable()`），并在切换时自动关闭不可用阶段的窗口。
 - `Desktop` 与 `Taskbar` 订阅 `daynight:changed` 事件，实时更新图标可见性与状态指示。
@@ -70,4 +75,6 @@ data/
 ## 扩展指南
 - **新增应用**：在 `js/apps/` 下新建模块，暴露一个 `launchXApp()` 函数，内部调用 `windowManager.createWindow({ appId, title, icon, content })`，再于 `js/main.js` 的 `APP_REGISTRY` 中注册即可自动出现在桌面图标与开始菜单中。
 - **新增关键词/对话/药品/QA**：直接编辑 `data/` 下对应 JSON 文件，无需修改任何 JS 代码。
+- **新增对话分支**：在对应病人/联系人的 `dialogueTree.nodes` 中新增节点，并通过 `options[].next` 连接即可，无需修改应用代码。
+- **新增 ChatGTP 组合问答**：在 `chatgtp_qa.json` 的 `entries` 中添加 `{ "keywords": ["关键词A","关键词B"], "answer": "..." }`（1 或 2 个关键词均可），回答文本中可用 `[[keywordId]]` 引入 `keywords` 数组里定义的新关键词。
 - **新增昼夜阶段限定应用**：在 `DayNightSystem.isAppAvailable()` 中补充判断分支。

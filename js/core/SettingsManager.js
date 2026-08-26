@@ -31,7 +31,11 @@ class SettingsManager {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
       const saved = JSON.parse(raw);
-      Object.assign(this, saved);
+      if (!saved || typeof saved !== "object") return;
+      const { bgmVolume, notebookSortMode, confirmPhaseChange } = saved;
+      if (typeof bgmVolume === "number") this.bgmVolume = bgmVolume;
+      if (typeof notebookSortMode === "string") this.notebookSortMode = notebookSortMode;
+      if (typeof confirmPhaseChange === "boolean") this.confirmPhaseChange = confirmPhaseChange;
     } catch (err) {
       console.warn("[SettingsManager] Failed to load saved settings:", err);
     }
@@ -46,11 +50,16 @@ class SettingsManager {
   }
 
   /**
-   * Update one or more settings and broadcast the change.
+   * Update one or more settings and broadcast the change. Only known,
+   * type-checked keys are applied, to avoid accidentally clobbering
+   * internal methods/properties with unexpected input.
    * @param {Partial<{bgmVolume:number, notebookSortMode:string, confirmPhaseChange:boolean}>} partial
    */
   set(partial = {}) {
-    Object.assign(this, partial);
+    const { bgmVolume, notebookSortMode, confirmPhaseChange } = partial;
+    if (typeof bgmVolume === "number") this.bgmVolume = bgmVolume;
+    if (typeof notebookSortMode === "string") this.notebookSortMode = notebookSortMode;
+    if (typeof confirmPhaseChange === "boolean") this.confirmPhaseChange = confirmPhaseChange;
     this._save();
     eventBus.emit("settings:changed", this.snapshot());
   }

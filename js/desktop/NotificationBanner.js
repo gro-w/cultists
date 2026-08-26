@@ -14,18 +14,31 @@ export default class NotificationBanner {
   constructor(containerEl) {
     this.containerEl = containerEl;
     this._timer = null;
+    this._onTransitionEnd = null;
     eventBus.on("daynight:changed", ({ phase }) => this.show(PHASE_MESSAGES[phase] || ""));
   }
 
   show(message) {
     if (!message) return;
+    clearTimeout(this._timer);
+    if (this._onTransitionEnd) {
+      this.containerEl.removeEventListener("transitionend", this._onTransitionEnd);
+      this._onTransitionEnd = null;
+    }
     this.containerEl.textContent = message;
     this.containerEl.classList.remove("hidden");
+    // Force reflow so the opacity transition re-triggers even if a previous
+    // banner was still fading in/out.
+    void this.containerEl.offsetWidth;
     this.containerEl.classList.add("visible");
-    clearTimeout(this._timer);
     this._timer = setTimeout(() => {
       this.containerEl.classList.remove("visible");
-      this.containerEl.classList.add("hidden");
+      this._onTransitionEnd = () => {
+        this.containerEl.classList.add("hidden");
+        this.containerEl.removeEventListener("transitionend", this._onTransitionEnd);
+        this._onTransitionEnd = null;
+      };
+      this.containerEl.addEventListener("transitionend", this._onTransitionEnd);
     }, 4000);
   }
 }

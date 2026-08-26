@@ -1,0 +1,229 @@
+{
+  "schedule": [
+    {
+      "day": 1,
+      "phase": "day",
+      "note": "第一天白天：室友们都在忙，消息不多。",
+      "contacts": [
+        {
+          "id": "roommate_xiaomei_d1day",
+          "name": "小美",
+          "avatar": "🐱",
+          "keywords": [],
+          "dialogueTree": {
+            "start": "greet",
+            "nodes": {
+              "greet": {
+                "speaker": "npc",
+                "text": "白天要上班啦，晚点聊～",
+                "options": [{ "label": "好，晚上聊。", "next": "end" }]
+              },
+              "end": { "speaker": "npc", "text": "👌", "options": [] }
+            }
+          }
+        },
+        {
+          "id": "roommate_ajun_d1day",
+          "name": "阿俊",
+          "avatar": "🐶",
+          "keywords": [],
+          "dialogueTree": {
+            "start": "greet",
+            "nodes": {
+              "greet": {
+                "speaker": "npc",
+                "text": "在医院呢，白天太忙了，回头联系。",
+                "options": [{ "label": "行，注意休息。", "next": "end" }]
+              },
+              "end": { "speaker": "npc", "text": "嗯嗯～", "options": [] }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "day": 1,
+      "phase": "night",
+      "note": "第一天晚上：宿舍夜聊，室友们分享了各自的见闻。",
+      "contacts": [
+        {
+          "id": "roommate_xiaomei_d1night",
+          "name": "小美",
+          "avatar": "🐱",
+          "keywords": [
+            {
+              "id": "night_noise",
+              "label": "深夜怪声",
+              "category": "clue",
+              "definition": "小美提到凌晨走廊里传来的奇怪声响，来源不明。"
+            }
+          ],
+          "dialogueTree": {
+            "start": "greet",
+            "nodes": {
+              "greet": {
+                "speaker": "npc",
+                "text": "你昨晚有没有听到[[night_noise]]？我吓死了。",
+                "options": [
+                  { "label": "没有诶，说来听听？", "next": "ask_detail" },
+                  { "label": "会不会是你做梦了？", "next": "ask_dream" }
+                ]
+              },
+              "ask_detail": {
+                "speaker": "npc",
+                "text": "真的很奇怪，像是有人在楼梯间搬东西。",
+                "options": [{ "label": "会不会是值班的人？", "next": "end" }]
+              },
+              "ask_dream": {
+                "speaker": "npc",
+                "text": "才不是呢！我清清楚楚听到了，绝对不是幻觉。",
+                "options": [{ "label": "好吧，那你早点休息。", "next": "end" }]
+              },
+              "end": {
+                "speaker": "npc",
+                "text": "嗯，我先睡了，改天再聊。",
+                "options": []
+              }
+            }
+          }
+        },
+        {
+          "id": "roommate_ajun_d1night",
+          "name": "阿俊",
+          "avatar": "🐶",
+          "keywords": [
+            {
+              "id": "night_shift_rumor",
+              "label": "夜班传闻",
+              "category": "clue",
+              "definition": "关于医院夜班时段流传的诡异传闻，阿俊语焉不详。"
+            },
+            {
+              "id": "energy_drink",
+              "label": "功能饮料",
+              "category": "item",
+              "definition": "熬夜提神用的功能性饮料，阿俊常备的必需品。"
+            }
+          ],
+          "dialogueTree": {
+            "start": "greet",
+            "nodes": {
+              "greet": {
+                "speaker": "npc",
+                "text": "听说过[[night_shift_rumor]]吗？我室友说的，毛骨悚然。",
+                "options": [
+                  { "label": "认真的？说来听听。", "next": "ask_more" },
+                  { "label": "别吓我，我还要值夜班呢。", "next": "reassure" }
+                ]
+              },
+              "ask_more": {
+                "speaker": "npc",
+                "text": "改天吧，我先喝瓶[[energy_drink]]续命，明天还要早起。",
+                "options": [{ "label": "行吧，早点休息。", "next": "end" }]
+              },
+              "reassure": {
+                "speaker": "npc",
+                "text": "放心，都是传闻而已。我先喝瓶[[energy_drink]]提提神。",
+                "options": [{ "label": "好，你也早点睡。", "next": "end" }]
+              },
+              "end": {
+                "speaker": "npc",
+                "text": "晚安，做个好梦。",
+                "options": []
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "phase": "day",
+      "note": "第二天白天：小美传来一条关于旧钥匙的消息。",
+      "contacts": [
+        {
+          "id": "roommate_xiaomei_d2day",
+          "name": "小美",
+          "avatar": "🐱",
+          "keywords": [
+            {
+              "id": "old_key",
+              "label": "旧钥匙",
+              "category": "item",
+              "definition": "一把生锈的旧钥匙，据说能打开宿舍地下室的一个盒子。"
+            }
+          ],
+          "dialogueTree": {
+            "start": "greet",
+            "nodes": {
+              "greet": {
+                "speaker": "npc",
+                "text": "对了，昨晚捡到的那把[[old_key]]，我放你桌上了，你看看能打开什么。",
+                "options": [{ "label": "好，我找找看。", "next": "end" }]
+              },
+              "end": {
+                "speaker": "npc",
+                "text": "嗯，有发现记得告诉我！",
+                "options": []
+              }
+            }
+          }
+        },
+        {
+          "id": "roommate_ajun_d2day",
+          "name": "阿俊",
+          "avatar": "🐶",
+          "keywords": [],
+          "dialogueTree": {
+            "start": "greet",
+            "nodes": {
+              "greet": {
+                "speaker": "npc",
+                "text": "今天你值夜班对吧？路上小心点。",
+                "options": [{ "label": "嗯，我会注意的。", "next": "end" }]
+              },
+              "end": { "speaker": "npc", "text": "加油！", "options": [] }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "phase": "night",
+      "note": "第二天晚上：值夜班期间，室友仍在线上关心情况。",
+      "contacts": [
+        {
+          "id": "roommate_ajun_d2night",
+          "name": "阿俊",
+          "avatar": "🐶",
+          "keywords": [
+            {
+              "id": "night_shift_rumor_detail",
+              "label": "夜班传闻细节",
+              "category": "clue",
+              "definition": "阿俊终于说出了夜班传闻的细节：据说走廊尽头的杂物间总在深夜传出声响。"
+            }
+          ],
+          "dialogueTree": {
+            "start": "greet",
+            "nodes": {
+              "greet": {
+                "speaker": "npc",
+                "text": "既然你今晚值班，我就告诉你吧——[[night_shift_rumor_detail]]。",
+                "options": [
+                  { "label": "……谢谢你告诉我，我会小心的。", "next": "end" }
+                ]
+              },
+              "end": {
+                "speaker": "npc",
+                "text": "别太紧张，有事随时找我。",
+                "options": []
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

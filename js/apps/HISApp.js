@@ -1,16 +1,40 @@
 import { windowManager } from "../core/WindowManager.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
+import { gameState } from "../core/GameState.js";
+import { eventBus } from "../core/EventBus.js";
+import { dialogueProgress } from "../core/DialogueProgress.js";
 
 /**
- * HISApp - Hospital Information System (day-phase only).
+ * Pick the schedule entry that matches the current day+phase, falling back
+ * to cycling through the authored entries for that phase when `day` goes
+ * beyond what was authored (so the game never runs out of content).
+ * @param {Array} schedule
+ * @param {number} day
+ * @param {string} phase
+ */
+function pickScheduleEntry(schedule, day, phase) {
+  const phaseEntries = (schedule || [])
+    .filter((e) => e.phase === phase)
+    .sort((a, b) => a.day - b.day);
+  if (phaseEntries.length === 0) return null;
+  const exact = phaseEntries.find((e) => e.day === day);
+  if (exact) return exact;
+  const idx = (Math.max(1, day) - 1) % phaseEntries.length;
+  return phaseEntries[idx];
+}
+
+/**
+ * HISApp - Hospital Information System.
+ * Always accessible, but the patient list & dialogue content varies by the
+ * current in-game day/phase (data-driven via `data/his_schedule.json`).
  * Flow: pick a patient -> read dialogue (click highlighted keywords to
  * collect them) -> fill the medical record template using collected
  * keywords -> prescribe a medicine from the configured list.
  */
 export async function launchHISApp() {
-  const [dialogues, records, medicines] = await Promise.all([
-    dataLoader.loadJSON("dialogues_day.json"),
+  const [schedule, records, medicines] = await Promise.all([
+    dataLoader.loadJSON("his_schedule.json"),
     dataLoader.loadJSON("medical_records.json"),
     dataLoader.loadJSON("medicines.json"),
   ]);
@@ -33,28 +57,55 @@ export async function launchHISApp() {
   const recordEl = root.querySelector(".his-record");
   const prescriptionEl = root.querySelector(".his-prescription");
 
-  const keywordDefs = {};
-  (dialogues.patients || []).forEach((p) => {
-    (p.keywords || []).forEach((k) => {
-      keywordDefs[k.id] = { ...k, source: `病人-${p.name}` };
-    });
-  });
-  keywordManager.registerDefinitions(keywordDefs);
-
+  let currentEntry = null;
   let currentRecord = null;
 
-  function renderPatients() {
-    patientListEl.innerHTML = "<h4>候诊病人</h4>";
-    (dialogues.patients || []).forEach((patient) => {
+  function registerKeywords(entry) {
+    const keywordDefs = {};
+    (entry.patients || []).forEach((p) => {
+      (p.keywords || []).forEach((k) => {
+        keywordDefs[k.id] = { ...k, source: `病人-${p.name}` };
+      });
+    });
+    keywordManager.registerDefinitions(keywordDefs);
+    return keywordDefs;
+  }
+
+  function renderPatients(entry, keywordDefs) {
+    patientListEl.innerHTML = `<h4>候诊病人（第${gameState.day}天 · ${
+      gameState.phase === "day" ? "白天" : "夜晚"
+    }）</h4>`;
+    if (entry.note) {
+      const note = document.createElement("p");
+      note.className = "his-schedule-note";
+      note.textContent = entry.note;
+      patientListEl.appendChild(note);
+    }
+    if (!entry.patients || entry.patients.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "his-empty";
+      empty.textContent = "暂无候诊病人。";
+      patientListEl.appendChild(empty);
+      dialogueEl.innerHTML = "<h4>与病人的对话</h4><p class=\"dialogue-end\">（无病人）</p>";
+      recordEl.innerHTML = "<h4>病历</h4>";
+      prescriptionEl.innerHTML = "<h4>处方</h4>";
+      return;
+    }
+    entry.patients.forEach((patient) => {
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out his-patient-btn";
       btn.textContent = `${patient.name}（${patient.age}岁）`;
-      btn.addEventListener("click", () => renderDialogue(patient));
+      btn.addEventListener("click", () => renderDialogue(patient, keywordDefs));
       patientListEl.appendChild(btn);
     });
+
+    // Resume the previously-selected patient in this entry, if any.
+    const resumeId = dialogueProgress.get("his").actorId;
+    const resumePatient = entry.patients.find((p) => p.id === resumeId);
+    renderDialogue(resumePatient || entry.patients[0], keywordDefs);
   }
 
-  function renderDialogue(patient) {
+  function renderDialogue(patient, keywordDefs) {
     dialogueEl.innerHTML = `<h4>与 ${patient.name} 的对话</h4>`;
     const linesEl = document.createElement("div");
     linesEl.className = "dialogue-lines";
@@ -80,6 +131,7 @@ export async function launchHISApp() {
       const node = tree && tree.nodes[nodeId];
       optionsEl.innerHTML = "";
       if (!node) return;
+      dialogueProgress.set("his", patient.id, nodeId);
 
       appendLine(node.speaker, node.speaker === "npc" ? patient.name : "我", node.text);
 
@@ -100,7 +152,11 @@ export async function launchHISApp() {
     }
 
     if (patient.dialogueTree) {
-      showNode(patient.dialogueTree.start);
+      const resumeNodeId =
+        dialogueProgress.get("his").actorId === patient.id
+          ? dialogueProgress.get("his").nodeId
+          : null;
+      showNode(resumeNodeId || patient.dialogueTree.start);
     }
 
     const recordTemplate = records.templates.find(
@@ -179,7 +235,20 @@ export async function launchHISApp() {
     prescriptionEl.appendChild(submitBtn);
   }
 
-  renderPatients();
+  function renderCurrentEntry() {
+    const entry = pickScheduleEntry(schedule.schedule, gameState.day, gameState.phase);
+    currentEntry = entry;
+    if (!entry) {
+      patientListEl.innerHTML = "<h4>候诊病人</h4><p class=\"his-empty\">（今日暂无安排）</p>";
+      return;
+    }
+    const keywordDefs = registerKeywords(entry);
+    renderPatients(entry, keywordDefs);
+  }
+
+  const unsubscribe = eventBus.on("daynight:changed", renderCurrentEntry);
+
+  renderCurrentEntry();
 
   return windowManager.createWindow({
     appId: "his",
@@ -188,5 +257,6 @@ export async function launchHISApp() {
     width: 640,
     height: 460,
     content: root,
+    onClose: unsubscribe,
   });
 }

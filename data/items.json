@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "id": "physician_cert",
+      "name": "医师证书",
+      "consumable": false,
+      "usable": false,
+      "inspectText": "你的医师执业资格证书，证明你有资格在医院独立接诊。看起来必须妥善保管。"
+    },
+    {
+      "id": "old_key",
+      "name": "一把旧钥匙",
+      "consumable": false,
+      "usable": true,
+      "inspectText": "一把生了锈的旧钥匙，边缘还留着划痕，不知道能打开什么。",
+      "useCondition": {
+        "requires": [{ "itemId": "locked_box", "count": 1 }]
+      },
+      "useEffect": {
+        "remove": [{ "itemId": "locked_box", "count": 1 }],
+        "add": [{ "itemId": "opened_box", "count": 1 }]
+      },
+      "failMessage": "身上没有需要用这把钥匙打开的盒子，这把钥匙暂时用不上。",
+      "successMessage": "你用旧钥匙打开了锁住的盒子。"
+    },
+    {
+      "id": "locked_box",
+      "name": "一个锁住的盒子",
+      "consumable": false,
+      "usable": false,
+      "inspectText": "一个上了锁的木盒，摇一摇里面似乎有东西碰撞的声响。也许有钥匙能打开它。"
+    },
+    {
+      "id": "opened_box",
+      "name": "一个打开的盒子",
+      "consumable": false,
+      "usable": false,
+      "inspectText": "盒子已经打开了，里面只剩下一些灰尘和一张看不清字迹的纸片。"
+    },
+    {
+      "id": "sandwich",
+      "name": "三明治",
+      "consumable": true,
+      "usable": true,
+      "inspectText": "便利店买的三明治，看起来还算新鲜，可以填填肚子。",
+      "useEffect": {
+        "statChanges": { "satiety": 6 }
+      },
+      "successMessage": "吃掉了三明治，饱腹感增加了。"
+    }
+  ],
+  "startingInventory": [
+    { "itemId": "physician_cert", "count": 1 },
+    { "itemId": "old_key", "count": 1 },
+    { "itemId": "locked_box", "count": 1 },
+    { "itemId": "sandwich", "count": 2 }
+  ]
+}

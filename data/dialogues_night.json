@@ -1,0 +1,52 @@
+{
+  "contacts": [
+    {
+      "id": "roommate_xiaomei",
+      "name": "小美",
+      "avatar": "🐱",
+      "keywords": [
+        {
+          "id": "night_noise",
+          "label": "深夜怪声",
+          "category": "clue",
+          "definition": "小美提到凌晨走廊里传来的奇怪声响，来源不明。"
+        },
+        {
+          "id": "old_key",
+          "label": "旧钥匙",
+          "category": "item",
+          "definition": "一把生锈的旧钥匙，据说能打开宿舍地下室的门。"
+        }
+      ],
+      "messages": [
+        { "from": "npc", "text": "你昨晚有没有听到[[night_noise]]？我吓死了。" },
+        { "from": "me", "text": "没有诶，你确定不是做梦？" },
+        { "from": "npc", "text": "真的！而且我还在楼梯间捡到一把[[old_key]]，好诡异。" }
+      ]
+    },
+    {
+      "id": "roommate_ajun",
+      "name": "阿俊",
+      "avatar": "🐶",
+      "keywords": [
+        {
+          "id": "night_shift_rumor",
+          "label": "夜班传闻",
+          "category": "clue",
+          "definition": "关于医院夜班时段流传的诡异传闻，阿俊语焉不详。"
+        },
+        {
+          "id": "energy_drink",
+          "label": "功能饮料",
+          "category": "item",
+          "definition": "熬夜提神用的功能性饮料，阿俊常备的必需品。"
+        }
+      ],
+      "messages": [
+        { "from": "npc", "text": "听说过[[night_shift_rumor]]吗？我室友说的，毛骨悚然。" },
+        { "from": "me", "text": "认真的？说来听听。" },
+        { "from": "npc", "text": "改天吧，我先喝瓶[[energy_drink]]续命，明天还要早起。" }
+      ]
+    }
+  ]
+}

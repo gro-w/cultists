@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Application-specific styling (HIS, Social, ChatGTP, Notebook, Status)
+   ========================================================================== */
+
+.panel-inset {
+  background: var(--w95-white);
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+  padding: 6px;
+  overflow: auto;
+}
+
+h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+/* Keyword highlight (shared by HIS / Social dialogue rendering) */
+.keyword-highlight {
+  background: #ffe680;
+  border-bottom: 1px dashed #a86b00;
+  cursor: pointer;
+  padding: 0 2px;
+  font-weight: bold;
+  color: #7a4b00;
+}
+
+.keyword-highlight.keyword-collected {
+  background: #c8f7c5;
+  color: #1a6b1a;
+  border-bottom-color: #1a6b1a;
+}
+
+/* ---------------------------------------------------------------------- */
+/* HIS App                                                                 */
+/* ---------------------------------------------------------------------- */
+.his-layout {
+  display: flex;
+  gap: 6px;
+  height: 100%;
+}
+
+.his-patient-list {
+  width: 140px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.his-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.his-dialogue,
+.his-record,
+.his-prescription {
+  flex: 1;
+  min-height: 60px;
+}
+
+.his-patient-btn {
+  text-align: left;
+}
+
+.dialogue-line {
+  margin: 4px 0;
+}
+
+.record-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.record-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Social App                                                              */
+/* ---------------------------------------------------------------------- */
+.social-layout {
+  display: flex;
+  gap: 6px;
+  height: 100%;
+}
+
+.social-contact-list {
+  width: 140px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.social-chat {
+  flex: 1;
+  min-width: 0;
+}
+
+.social-contact-btn {
+  text-align: left;
+}
+
+.chat-bubbles,
+.chatgtp-history {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: #e8e8e8;
+}
+
+.chat-bubble.bubble-npc {
+  align-self: flex-start;
+  background: #dfefff;
+}
+
+.chat-bubble.bubble-me {
+  align-self: flex-end;
+  background: #d7ffd7;
+}
+
+/* ---------------------------------------------------------------------- */
+/* ChatGTP App                                                             */
+/* ---------------------------------------------------------------------- */
+.chatgtp-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 6px;
+}
+
+.chatgtp-history {
+  flex: 1;
+}
+
+.chatgtp-keywords {
+  max-height: 90px;
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 4px;
+}
+
+.keyword-chip {
+  font-size: 11px;
+}
+
+.chatgtp-input-row {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.chatgtp-input {
+  flex: 1;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Notebook App                                                            */
+/* ---------------------------------------------------------------------- */
+.notebook-section ul {
+  margin: 0 0 8px;
+  padding-left: 18px;
+}
+
+.notebook-empty {
+  color: var(--w95-gray-dark);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Status App                                                              */
+/* ---------------------------------------------------------------------- */
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.status-label {
+  width: 40px;
+}
+
+.status-bar {
+  flex: 1;
+  height: 14px;
+  background: var(--w95-white);
+}
+
+.status-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1084d0, #4bc0f0);
+}
+
+.status-value {
+  width: 30px;
+  text-align: right;
+}

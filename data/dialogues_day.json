@@ -1,0 +1,67 @@
+{
+  "patients": [
+    {
+      "id": "patient_wangfang",
+      "name": "王芳",
+      "age": 34,
+      "recordTemplateId": "record_fever",
+      "keywords": [
+        {
+          "id": "fever",
+          "label": "发热",
+          "category": "symptom",
+          "definition": "体温超过37.3摄氏度的状态，是感染或炎症的常见信号。"
+        },
+        {
+          "id": "cough",
+          "label": "咳嗽",
+          "category": "symptom",
+          "definition": "呼吸道受到刺激时产生的反射性动作，可提示上呼吸道感染。"
+        },
+        {
+          "id": "insomnia",
+          "label": "失眠",
+          "category": "symptom",
+          "definition": "难以入睡或睡眠质量差的状态，可能与压力或病痛有关。"
+        }
+      ],
+      "dialogue": [
+        { "speaker": "npc", "text": "医生，我这两天一直[[fever]]，量了体温有38.5度。" },
+        { "speaker": "player", "text": "除了发热，还有其他不舒服的地方吗？" },
+        { "speaker": "npc", "text": "嗯，还伴有[[cough]]，晚上也因为难受[[insomnia]]。" },
+        { "speaker": "player", "text": "好的，我先给你做个记录。" }
+      ]
+    },
+    {
+      "id": "patient_lidong",
+      "name": "李东",
+      "age": 52,
+      "recordTemplateId": "record_headache",
+      "keywords": [
+        {
+          "id": "headache",
+          "label": "头痛",
+          "category": "symptom",
+          "definition": "头部区域的疼痛感，可由多种原因引起，包括疲劳、压力或疾病。"
+        },
+        {
+          "id": "dizziness",
+          "label": "眩晕",
+          "category": "symptom",
+          "definition": "感觉自身或周围环境在旋转、摇晃的症状。"
+        },
+        {
+          "id": "mystery_note",
+          "label": "神秘纸条",
+          "category": "clue",
+          "definition": "李东随口提到的一张纸条，内容不明，似乎与医院的传闻有关。"
+        }
+      ],
+      "dialogue": [
+        { "speaker": "npc", "text": "大夫，我最近老是[[headache]]，站起来的时候还[[dizziness]]。" },
+        { "speaker": "player", "text": "有没有摔倒或者受过伤？" },
+        { "speaker": "npc", "text": "没有，倒是捡到一张[[mystery_note]]，你要看看吗？" }
+      ]
+    }
+  ]
+}

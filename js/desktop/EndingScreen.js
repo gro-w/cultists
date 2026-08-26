@@ -17,13 +17,15 @@ export default class EndingScreen {
 
   show(def) {
     this.rootEl.innerHTML = `
-      <div class="ending-screen-panel">
-        <div class="ending-screen-icon">${def.icon || "🌑"}</div>
-        <h2 class="ending-screen-title">${def.title || ""}</h2>
-        <p class="ending-screen-text">${def.text || ""}</p>
-        <button type="button" class="win95-btn bevel-out ending-screen-btn">
-          ${i18n.t("ending.backToMenu", "返回主菜单")}
-        </button>
+      <div class="crt-screen">
+        <div class="ending-screen-panel">
+          <div class="ending-screen-icon">${def.icon || "🌑"}</div>
+          <h2 class="ending-screen-title">${def.title || ""}</h2>
+          <p class="ending-screen-text">${def.text || ""}</p>
+          <button type="button" class="crt-btn ending-screen-btn">
+            ${i18n.t("ending.backToMenu", "返回主菜单")}
+          </button>
+        </div>
       </div>
     `;
     this.rootEl.classList.remove("hidden");

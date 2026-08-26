@@ -1,8 +1,10 @@
 /* ============================================================
-   Main Menu (Windows XP login-style) + Ending Screen overlays.
-   Both are full-screen overlays layered above the Win95 desktop,
-   deliberately styled differently (XP blue gradient) to signal
-   "you are outside the simulated OS" rather than inside an app.
+   Main Menu + Ending Screen: retro CRT-terminal overlays.
+   Both are full-screen overlays layered above the Win95 desktop.
+   Deliberately styled as an old-school phosphor terminal (green-on-
+   black, scanlines, glow, blinking cursor) to signal "you are
+   outside the simulated OS" - booting/shutting down the machine -
+   rather than inside a Win95 app window.
    ============================================================ */
 
 .main-menu-overlay,
@@ -13,6 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #000;
 }
 
 .main-menu-overlay.hidden,
@@ -20,162 +23,241 @@
   display: none;
 }
 
-/* ---- Main Menu (XP login) ---- */
+/* ---- shared CRT terminal chrome ---- */
 
-.xp-login-backdrop {
+.crt-screen {
+  position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  background: linear-gradient(180deg, #2a6fd6 0%, #1a4fb0 45%, #123a86 100%);
-  color: #fff;
-  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-  text-align: center;
-  padding: 24px;
+  gap: 22px;
   box-sizing: border-box;
+  padding: 24px;
+  background: radial-gradient(ellipse at center, #04180a 0%, #000 78%);
+  color: #4dff88;
+  font-family: "Courier New", "Consolas", "Microsoft YaHei", monospace;
+  text-shadow: 0 0 4px rgba(77, 255, 136, 0.85), 0 0 10px rgba(77, 255, 136, 0.4);
+  text-align: center;
 }
 
-.xp-login-header {
-  font-size: 28px;
-  font-weight: 600;
+/* Scanline + vignette overlay, purely decorative, sits above the content. */
+.crt-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 1px,
+    rgba(0, 0, 0, 0.25) 2px,
+    rgba(0, 0, 0, 0.25) 3px
+  );
+  mix-blend-mode: multiply;
+  z-index: 2;
+}
+
+.crt-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.85);
+  z-index: 3;
+  animation: crt-flicker 6s infinite;
+}
+
+@keyframes crt-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.88; }
+  98% { opacity: 1; }
+}
+
+.crt-cursor {
+  display: inline-block;
+  width: 0.6em;
+  background: #4dff88;
+  margin-left: 2px;
+  animation: crt-blink 1s steps(1) infinite;
+}
+
+@keyframes crt-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ---- Main Menu (retro boot/login terminal) ---- */
+
+.crt-title {
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  z-index: 1;
+}
+
+.crt-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
   letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  z-index: 1;
 }
 
-.xp-login-body {
-  display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.xp-user-tile {
-  width: 180px;
-  padding: 20px 16px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  transition: background 0.15s ease;
-  font-family: inherit;
-}
-
-.xp-user-tile:hover,
-.xp-user-tile:focus {
-  background: rgba(255, 255, 255, 0.28);
-  outline: none;
-}
-
-.xp-user-icon {
-  font-size: 36px;
-}
-
-.xp-user-name {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.xp-user-hint {
-  font-size: 11px;
-  opacity: 0.85;
-}
-
-.xp-login-load-panel {
-  width: 320px;
+.crt-menu-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  padding: 16px;
+  z-index: 1;
+  width: 340px;
 }
 
-.xp-login-load-panel.hidden {
-  display: none;
-}
-
-.xp-login-load-label {
-  font-size: 12px;
+.crt-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid #2d7a4c;
+  color: #4dff88;
+  font-family: inherit;
+  font-size: 14px;
+  text-shadow: inherit;
+  cursor: pointer;
   text-align: left;
 }
 
-.xp-login-load-input {
-  font-size: 12px;
-  padding: 6px 8px;
-  border: 1px solid #888;
-  border-radius: 3px;
+.crt-menu-item:hover,
+.crt-menu-item:focus {
+  background: rgba(77, 255, 136, 0.12);
+  border-color: #4dff88;
+  outline: none;
 }
 
-.xp-login-load-actions {
+.crt-menu-item .crt-menu-marker {
+  opacity: 0;
+}
+
+.crt-menu-item:hover .crt-menu-marker,
+.crt-menu-item:focus .crt-menu-marker {
+  opacity: 1;
+}
+
+.crt-menu-item-text {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.crt-menu-item-hint {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.crt-login-load-panel {
+  z-index: 1;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #2d7a4c;
+  padding: 16px;
+  text-align: left;
+}
+
+.crt-login-load-panel.hidden {
+  display: none;
+}
+
+.crt-login-load-label {
+  font-size: 11px;
+}
+
+.crt-login-load-input {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 8px;
+  background: #000;
+  border: 1px solid #2d7a4c;
+  color: #4dff88;
+  caret-color: #4dff88;
+}
+
+.crt-login-load-input:focus {
+  outline: none;
+  border-color: #4dff88;
+}
+
+.crt-login-load-actions {
+  display: flex;
+  gap: 10px;
   justify-content: flex-end;
 }
 
-.xp-login-btn {
+.crt-btn {
+  font-family: inherit;
+  background: transparent;
+  border: 1px solid #4dff88;
+  color: #4dff88;
   padding: 4px 14px;
-  border: none;
-  border-radius: 3px;
-  background: #f0f0f0;
-  color: #123a86;
-  font-weight: 600;
   cursor: pointer;
+  text-shadow: inherit;
 }
 
-.xp-login-btn:hover {
-  background: #fff;
+.crt-btn:hover {
+  background: rgba(77, 255, 136, 0.15);
 }
 
-.xp-login-feedback {
+.crt-login-feedback {
   font-size: 11px;
-  color: #ffd7d7;
+  color: #ff5c5c;
+  text-shadow: 0 0 4px rgba(255, 92, 92, 0.8);
   margin: 0;
-  text-align: left;
 }
 
-.xp-login-feedback.hidden {
+.crt-login-feedback.hidden {
   display: none;
 }
 
-.xp-login-footer {
-  font-size: 11px;
-  opacity: 0.75;
+.crt-login-footer {
+  font-size: 10px;
+  opacity: 0.6;
+  z-index: 1;
 }
 
 /* ---- Ending Screen ---- */
 
 .ending-screen-panel {
-  max-width: 480px;
-  background: #1c1c1c;
-  color: #f2f2f2;
-  border: 2px solid #444;
-  border-radius: 8px;
-  padding: 32px 28px;
-  text-align: center;
-  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  z-index: 1;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
 .ending-screen-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
+  font-size: 40px;
+  filter: grayscale(1) brightness(1.4) drop-shadow(0 0 6px rgba(77, 255, 136, 0.7));
 }
 
 .ending-screen-title {
-  margin: 0 0 12px;
+  margin: 0;
   font-size: 22px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .ending-screen-text {
   font-size: 13px;
-  line-height: 1.7;
-  color: #d8d8d8;
-  margin: 0 0 20px;
+  line-height: 1.8;
+  margin: 0;
+  color: #4dff88;
+  opacity: 0.92;
+}
+
+.ending-screen-btn {
+  margin-top: 8px;
 }

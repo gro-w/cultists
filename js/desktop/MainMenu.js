@@ -1,13 +1,14 @@
 /**
- * MainMenu - a full-screen, Windows-XP-styled login/welcome screen shown at
- * boot when there is no save string in the URL. Lets the player either
- * start a brand new game or load an existing save by pasting its save
- * string (the `?...` part of a previously-saved URL) as a "password".
+ * MainMenu - a full-screen, retro-CRT-terminal-styled boot/login screen
+ * shown at boot when there is no save string in the URL. Lets the player
+ * either start a brand new game or load an existing save by pasting its
+ * save string (the `?...` part of a previously-saved URL) as a "password".
  *
  * Deliberately styled differently from the rest of the (Win95) UI - this
- * screen represents the "OS login" moment before entering the simulated
- * Win95 desktop, so it borrows the classic blue-gradient XP login look
- * instead of the grey Win95 chrome (see css/mainmenu.css).
+ * screen represents the moment before/after the simulated Win95 desktop
+ * boots, so it borrows an old-school phosphor-green terminal look (scan
+ * lines, glow, blinking cursor) instead of the grey Win95 chrome
+ * (see css/mainmenu.css).
  */
 export default class MainMenu {
   /**
@@ -33,39 +34,42 @@ export default class MainMenu {
 
   _render() {
     this.rootEl.innerHTML = `
-      <div class="xp-login-backdrop">
-        <div class="xp-login-header">
-          <span class="xp-login-title">Cultists OS</span>
-        </div>
-        <div class="xp-login-body">
-          <button type="button" class="xp-user-tile" data-action="new-game">
-            <span class="xp-user-icon">🧑‍⚕️</span>
-            <span class="xp-user-name">新游戏</span>
-            <span class="xp-user-hint">开始一段全新的实习故事</span>
+      <div class="crt-screen">
+        <div class="crt-title">CULTISTS OS 95<span class="crt-cursor">&nbsp;</span></div>
+        <div class="crt-subtitle">SYSTEM READY - SELECT AN OPTION BELOW</div>
+        <div class="crt-menu-list">
+          <button type="button" class="crt-menu-item" data-action="new-game">
+            <span class="crt-menu-marker">&gt;</span>
+            <span class="crt-menu-item-text">
+              <span>[1] 新游戏</span>
+              <span class="crt-menu-item-hint">开始一段全新的实习故事</span>
+            </span>
           </button>
-          <button type="button" class="xp-user-tile" data-action="load-save">
-            <span class="xp-user-icon">🔑</span>
-            <span class="xp-user-name">载入存档</span>
-            <span class="xp-user-hint">输入存档密码继续游戏</span>
+          <button type="button" class="crt-menu-item" data-action="load-save">
+            <span class="crt-menu-marker">&gt;</span>
+            <span class="crt-menu-item-text">
+              <span>[2] 载入存档</span>
+              <span class="crt-menu-item-hint">输入存档密码继续游戏</span>
+            </span>
           </button>
         </div>
-        <div class="xp-login-load-panel hidden">
-          <label class="xp-login-load-label">请输入存档密码（即存档链接 ? 后面的部分）：</label>
-          <input type="text" class="xp-login-load-input" placeholder="粘贴存档字符串..." />
-          <div class="xp-login-load-actions">
-            <button type="button" class="xp-login-btn" data-action="confirm-load">确定</button>
-            <button type="button" class="xp-login-btn" data-action="cancel-load">取消</button>
+        <div class="crt-login-load-panel hidden">
+          <label class="crt-login-load-label">C:\\&gt; 请输入存档密码（即存档链接 ? 后面的部分）：</label>
+          <input type="text" class="crt-login-load-input" placeholder="粘贴存档字符串..." autocomplete="off" spellcheck="false" />
+          <div class="crt-login-load-actions">
+            <button type="button" class="crt-btn" data-action="confirm-load">确定</button>
+            <button type="button" class="crt-btn" data-action="cancel-load">取消</button>
           </div>
-          <p class="xp-login-feedback hidden"></p>
+          <p class="crt-login-feedback hidden"></p>
         </div>
-        <div class="xp-login-footer">在你继续之前，选择一个选项以进入 Cultists OS。</div>
+        <div class="crt-login-footer">在你继续之前，选择一个选项以进入 Cultists OS。</div>
       </div>
     `;
 
-    const loadPanel = this.rootEl.querySelector(".xp-login-load-panel");
-    const loadInput = this.rootEl.querySelector(".xp-login-load-input");
-    const feedback = this.rootEl.querySelector(".xp-login-feedback");
-    const tiles = this.rootEl.querySelector(".xp-login-body");
+    const loadPanel = this.rootEl.querySelector(".crt-login-load-panel");
+    const loadInput = this.rootEl.querySelector(".crt-login-load-input");
+    const feedback = this.rootEl.querySelector(".crt-login-feedback");
+    const tiles = this.rootEl.querySelector(".crt-menu-list");
 
     this.rootEl.querySelector('[data-action="new-game"]').addEventListener("click", () => {
       this.hide();

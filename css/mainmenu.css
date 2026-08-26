@@ -1,0 +1,181 @@
+/* ============================================================
+   Main Menu (Windows XP login-style) + Ending Screen overlays.
+   Both are full-screen overlays layered above the Win95 desktop,
+   deliberately styled differently (XP blue gradient) to signal
+   "you are outside the simulated OS" rather than inside an app.
+   ============================================================ */
+
+.main-menu-overlay,
+.ending-screen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-menu-overlay.hidden,
+.ending-screen-overlay.hidden {
+  display: none;
+}
+
+/* ---- Main Menu (XP login) ---- */
+
+.xp-login-backdrop {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: linear-gradient(180deg, #2a6fd6 0%, #1a4fb0 45%, #123a86 100%);
+  color: #fff;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  text-align: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.xp-login-header {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.xp-login-body {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.xp-user-tile {
+  width: 180px;
+  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s ease;
+  font-family: inherit;
+}
+
+.xp-user-tile:hover,
+.xp-user-tile:focus {
+  background: rgba(255, 255, 255, 0.28);
+  outline: none;
+}
+
+.xp-user-icon {
+  font-size: 36px;
+}
+
+.xp-user-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.xp-user-hint {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.xp-login-load-panel {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.xp-login-load-panel.hidden {
+  display: none;
+}
+
+.xp-login-load-label {
+  font-size: 12px;
+  text-align: left;
+}
+
+.xp-login-load-input {
+  font-size: 12px;
+  padding: 6px 8px;
+  border: 1px solid #888;
+  border-radius: 3px;
+}
+
+.xp-login-load-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.xp-login-btn {
+  padding: 4px 14px;
+  border: none;
+  border-radius: 3px;
+  background: #f0f0f0;
+  color: #123a86;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.xp-login-btn:hover {
+  background: #fff;
+}
+
+.xp-login-feedback {
+  font-size: 11px;
+  color: #ffd7d7;
+  margin: 0;
+  text-align: left;
+}
+
+.xp-login-feedback.hidden {
+  display: none;
+}
+
+.xp-login-footer {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+/* ---- Ending Screen ---- */
+
+.ending-screen-panel {
+  max-width: 480px;
+  background: #1c1c1c;
+  color: #f2f2f2;
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 32px 28px;
+  text-align: center;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.ending-screen-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.ending-screen-title {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.ending-screen-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #d8d8d8;
+  margin: 0 0 20px;
+}

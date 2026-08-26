@@ -38,13 +38,13 @@ export async function launchChatGTPApp(options = {}) {
 
   const qa = await dataLoader.loadJSON("chatgtp_qa.json");
 
-  // Keywords that ChatGTP's answers can introduce/reveal, registered
-  // globally so `renderHighlightedText`/`bindHighlights` can resolve them.
-  const ownKeywordDefs = {};
-  (qa.keywords || []).forEach((k) => {
-    ownKeywordDefs[k.id] = { ...k, source: "ChatGTP 问答" };
-  });
-  keywordManager.registerDefinitions(ownKeywordDefs);
+  // Keywords that ChatGTP's answers can introduce/reveal, resolved from the
+  // central `data/keywords.json` registry (already loaded at boot) and
+  // tagged with a "ChatGTP 问答" source for the Notebook.
+  const ownKeywordDefs = keywordManager.definitionsWithSource(
+    qa.revealKeywordIds || [],
+    "ChatGTP 问答"
+  );
 
   // Index entries by their sorted, normalized keyword-label set for
   // order-independent single/combo lookups.

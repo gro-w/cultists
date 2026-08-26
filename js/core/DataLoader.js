@@ -6,12 +6,26 @@
 class DataLoader {
   constructor() {
     this._cache = new Map();
-    this._basePath = "data/";
+    this._language = "zh-hans";
+    this._basePath = `data/${this._language}/`;
+  }
+
+  /** Switch the language-scoped content folder (e.g. "zh-hans" -> `data/zh-hans/`). */
+  setLanguage(lang) {
+    if (!lang || lang === this._language) return;
+    this._language = lang;
+    this._basePath = `data/${lang}/`;
+    this.clearCache();
+  }
+
+  get language() {
+    return this._language;
   }
 
   /**
-   * Fetch a JSON file from the data directory (cached after first load).
-   * @param {string} filename e.g. "his_schedule.json"
+   * Fetch a JSON file from the language-scoped data directory (cached after
+   * first load).
+   * @param {string} filename e.g. "day01a.json"
    * @returns {Promise<any>}
    */
   async loadJSON(filename) {

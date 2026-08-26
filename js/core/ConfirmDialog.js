@@ -1,4 +1,5 @@
 import { windowManager } from "./WindowManager.js";
+import { i18n } from "./I18n.js";
 
 /**
  * ConfirmDialog - a small Win95-styled modal window offering 确认/取消
@@ -8,7 +9,7 @@ import { windowManager } from "./WindowManager.js";
  * Usage:
  *   const ok = await confirmDialog(message, { title: "提示" });
  */
-export function confirmDialog(message, { title = "确认", icon = "❓" } = {}) {
+export function confirmDialog(message, { title = i18n.t("confirm.defaultTitle", "确认"), icon = "❓" } = {}) {
   return new Promise((resolve) => {
     const root = document.createElement("div");
     root.className = "app-confirm-dialog";
@@ -23,12 +24,12 @@ export function confirmDialog(message, { title = "确认", icon = "❓" } = {}) 
     const okBtn = document.createElement("button");
     okBtn.type = "button";
     okBtn.className = "win95-btn bevel-out confirm-dialog-ok";
-    okBtn.textContent = "确认";
+    okBtn.textContent = i18n.t("confirm.ok", "确认");
 
     const cancelBtn = document.createElement("button");
     cancelBtn.type = "button";
     cancelBtn.className = "win95-btn bevel-out confirm-dialog-cancel";
-    cancelBtn.textContent = "取消";
+    cancelBtn.textContent = i18n.t("confirm.cancel", "取消");
 
     actions.appendChild(okBtn);
     actions.appendChild(cancelBtn);

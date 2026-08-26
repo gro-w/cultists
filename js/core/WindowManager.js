@@ -92,6 +92,34 @@ class WindowManager {
     return [...this._singleInstanceKeys.keys()];
   }
 
+  /**
+   * Snapshot every open single-instance window's appId + position, ordered
+   * from bottom to top of the z-stack (used by SaveManager so re-opening
+   * them in this same order on load recreates the original stacking).
+   * @returns {{appId:string, x:number, y:number}[]}
+   */
+  windowSnapshot() {
+    const entries = [];
+    for (const [appId, winId] of this._singleInstanceKeys.entries()) {
+      const win = this.windows.get(winId);
+      if (!win) continue;
+      entries.push({
+        appId,
+        x: win.el.offsetLeft,
+        y: win.el.offsetTop,
+        z: parseInt(win.el.style.zIndex, 10) || 0,
+      });
+    }
+    entries.sort((a, b) => a.z - b.z);
+    return entries.map(({ appId, x, y }) => ({ appId, x, y }));
+  }
+
+  /** Move an already-open single-instance window's appId to a given position. */
+  moveWindow(appId, x, y) {
+    const win = this.getByAppId(appId);
+    if (win) win.moveTo(x, y);
+  }
+
   /** Close every window whose appId is not in the allowed list (used by DayNightSystem). */
   closeAllExcept(allowedAppIds = []) {
     for (const [appId, winId] of [...this._singleInstanceKeys.entries()]) {

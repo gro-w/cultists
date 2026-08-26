@@ -13,12 +13,13 @@ import { keywordManager } from "./KeywordManager.js";
  *     consumable: boolean,   // removed from inventory after a successful use
  *     usable: boolean,       // whether "使用" is available at all
  *     inspectText: string,   // shown when the player "调查"s the item
- *     revealKeywords: [{...keyword def}],  // optional keywords unlocked on inspect
+ *     revealKeywordIds: string[],  // optional keyword ids (from data/keywords.json) unlocked on inspect
  *     useCondition: { requires: [{ itemId, count }] },  // optional
  *     useEffect: {
  *       remove: [{ itemId, count }],
  *       add: [{ itemId, count }],
- *       statChanges: { energy, mental, physical, satiety }
+ *       statChanges: { energy, mental, physical, satiety },
+ *       ending: string  // optional ending id (data/endings.json) triggered on success
  *     },
  *     failMessage, successMessage
  *   }
@@ -100,7 +101,8 @@ class ItemManager {
   inspect(id) {
     const def = this.defs.get(id);
     if (!def) return null;
-    (def.revealKeywords || []).forEach((k) => keywordManager.collect(k));
+    const keywordDefs = keywordManager.definitionsWithSource(def.revealKeywordIds || [], `物品-${def.name}`);
+    Object.values(keywordDefs).forEach((k) => keywordManager.collect(k));
     return def.inspectText || "（没有更多可以查看的信息。）";
   }
 
@@ -126,7 +128,11 @@ class ItemManager {
     if (effect.statChanges) gameState.modify(effect.statChanges);
     if (def.consumable) this.remove(id, 1);
 
-    return { ok: true, message: def.successMessage || `使用了${def.name}。` };
+    const result = { ok: true, message: def.successMessage || `使用了${def.name}。` };
+    // Let EndingManager (and anything else) react to a successful item use
+    // without ItemManager needing to import it directly.
+    eventBus.emit("item:used", { id, result });
+    return result;
   }
 
   snapshot() {

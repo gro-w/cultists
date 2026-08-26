@@ -1,13 +1,13 @@
-import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
 import { itemManager } from "./ItemManager.js";
 import { dialogueProgress } from "./DialogueProgress.js";
 import { windowManager } from "./WindowManager.js";
+import { scheduleData } from "./ScheduleData.js";
 
-const SAVE_FORMAT_VERSION = 1;
+const SAVE_FORMAT_VERSION = 2;
 
-/** Fixed order used for the open-windows bitmask byte. */
+/** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings"];
 
 function clampByte(value, max = 255) {
@@ -44,9 +44,10 @@ function base64UrlDecode(str) {
 
 /**
  * SaveManager - packs the entire game state (stats, day/phase, collected
- * keywords, inventory, dialogue progress, open windows) into a short binary
- * blob, base64url-encodes it, and writes it to `location.search` so a save
- * is just "the current URL". Loading reverses the process.
+ * keywords, inventory, dialogue progress, open windows + their position and
+ * stacking order) into a short binary blob, base64url-encodes it, and writes
+ * it to `location.search` so a save is just "the current URL". Loading
+ * reverses the process.
  *
  * To keep the encoding compact and free of plaintext variable names/values,
  * every reference (keyword, item, HIS/Social actor + dialogue node) is
@@ -58,13 +59,16 @@ function base64UrlDecode(str) {
  *   [1]      day (0-255)
  *   [2]      phase (0 = day, 1 = night)
  *   [3-6]    energy, mental, physical, satiety (0-255 each)
- *   [7]      open-windows bitmask (bit per WINDOW_APP_IDS entry)
- *   [8]      HIS actor index + 1 (0 = none)
- *   [9]      HIS dialogue node index + 1 (0 = none / not started)
- *   [10]     Social actor index + 1 (0 = none)
- *   [11]     Social dialogue node index + 1 (0 = none / not started)
- *   [12]     collected-keyword count (0-255)
- *   [13..]   per keyword: 2-byte keyword index + 1-byte collectedDay
+ *   [7]      open-window count N (0-len(WINDOW_APP_IDS)), ordered bottom-to-top
+ *   [8..]    per window (5 bytes): 1-byte appId index into WINDOW_APP_IDS,
+ *            2-byte x, 2-byte y - re-opening/positioning them in this same
+ *            (ascending z) order on load restores the original stacking.
+ *   [next]   HIS actor index + 1 (0 = none)
+ *   [next]   HIS dialogue node index + 1 (0 = none / not started)
+ *   [next]   Social actor index + 1 (0 = none)
+ *   [next]   Social dialogue node index + 1 (0 = none / not started)
+ *   [next]   collected-keyword count (0-255)
+ *   [...]    per keyword: 2-byte keyword index + 1-byte collectedDay
  *   [next]   inventory-entry count (0-255)
  *   [...]    per item: 2-byte item index + 1-byte held count
  */
@@ -81,50 +85,22 @@ class SaveManager {
   /** Preload every data file needed to build the canonical index tables. */
   async init() {
     if (this._initialized) return;
-    const [hisData, socialData, itemsData] = await Promise.all([
-      dataLoader.loadJSON("his_schedule.json"),
-      dataLoader.loadJSON("social_schedule.json"),
-      dataLoader.loadJSON("items.json"),
-    ]);
+    await Promise.all([scheduleData.init(), keywordManager.load(), itemManager.load()]);
 
-    this.hisActors = this._buildActorIndex(hisData.schedule, "patients");
-    this.socialActors = this._buildActorIndex(socialData.schedule, "contacts");
-    this.itemIds = (itemsData.items || []).map((it) => it.id);
-
-    const keywordDefs = [];
-    const seen = new Set();
-    const collectFrom = (list, prefix) => {
-      (list || []).forEach((actor) => {
-        (actor.keywords || []).forEach((k) => {
-          if (seen.has(k.id)) return;
-          seen.add(k.id);
-          keywordDefs.push({ ...k, source: `${prefix}${actor.name}` });
-        });
-      });
-    };
-    (hisData.schedule || []).forEach((entry) => collectFrom(entry.patients, "病人-"));
-    (socialData.schedule || []).forEach((entry) => collectFrom(entry.contacts, "室友-"));
-    (itemsData.items || []).forEach((item) => {
-      (item.revealKeywords || []).forEach((k) => {
-        if (seen.has(k.id)) return;
-        seen.add(k.id);
-        keywordDefs.push({ ...k, source: `物品-${item.name}` });
-      });
-    });
-    // Register every known keyword definition up-front so a restored save
-    // can resolve any previously-collected keyword id, even if the HIS/Social
-    // schedule entry it originally came from isn't the currently active one.
-    keywordManager.registerDefinitions(keywordDefs);
-    this.keywordIds = keywordDefs.map((k) => k.id);
+    const entries = await scheduleData.loadAllEntries();
+    this.hisActors = this._buildActorIndex(entries, "patients");
+    this.socialActors = this._buildActorIndex(entries, "contacts");
+    this.itemIds = itemManager.allDefIds();
+    this.keywordIds = [...keywordManager.definitions.keys()];
 
     this._initialized = true;
   }
 
-  _buildActorIndex(schedule, listKey) {
+  _buildActorIndex(entries, listKey) {
     const actors = [];
     const seen = new Set();
-    (schedule || []).forEach((entry) => {
-      (entry[listKey] || []).forEach((actor) => {
+    entries.forEach(({ data }) => {
+      (data[listKey] || []).forEach((actor) => {
         if (seen.has(actor.id)) return;
         seen.add(actor.id);
         const nodeKeys = actor.dialogueTree ? Object.keys(actor.dialogueTree.nodes || {}) : [];
@@ -178,12 +154,14 @@ class SaveManager {
     bytes.push(clampByte(gameState.physical));
     bytes.push(clampByte(gameState.satiety));
 
-    const openIds = new Set(windowManager.openAppIds());
-    let windowMask = 0;
-    WINDOW_APP_IDS.forEach((id, idx) => {
-      if (openIds.has(id)) windowMask |= 1 << idx;
+    const windows = windowManager.windowSnapshot().slice(0, WINDOW_APP_IDS.length);
+    bytes.push(windows.length);
+    windows.forEach(({ appId, x, y }) => {
+      const idx = WINDOW_APP_IDS.indexOf(appId);
+      bytes.push(clampByte(idx));
+      push16(bytes, x);
+      push16(bytes, y);
     });
-    bytes.push(windowMask);
 
     const hisProgress = dialogueProgress.get("his");
     const hisActorIdx = this.hisActors.findIndex((a) => a.id === hisProgress.actorId);
@@ -229,7 +207,19 @@ class SaveManager {
     const mental = bytes[i++];
     const physical = bytes[i++];
     const satiety = bytes[i++];
-    const windowMask = bytes[i++];
+
+    const windowCount = bytes[i++] || 0;
+    const windowEntries = [];
+    for (let w = 0; w < windowCount; w += 1) {
+      const appIdIdx = bytes[i++];
+      const x = read16(bytes, i);
+      i += 2;
+      const y = read16(bytes, i);
+      i += 2;
+      const appId = WINDOW_APP_IDS[appIdIdx];
+      if (appId) windowEntries.push({ appId, x, y });
+    }
+
     const hisActorIdx = bytes[i++] - 1;
     const hisNodeIdx = bytes[i++] - 1;
     const socialActorIdx = bytes[i++] - 1;
@@ -274,14 +264,20 @@ class SaveManager {
       dialogueProgress.reset("social");
     }
 
-    WINDOW_APP_IDS.forEach((id, idx) => {
-      const shouldOpen = (windowMask & (1 << idx)) !== 0;
-      const isOpen = !!windowManager.getByAppId(id);
-      if (shouldOpen && !isOpen && this._launchers[id]) {
-        this._launchers[id]();
-      } else if (!shouldOpen && isOpen) {
-        windowManager.closeByAppId(id);
+    // Close anything open that isn't part of the saved layout, then
+    // (re)open + reposition the saved windows in ascending-z order so
+    // their relative stacking is restored.
+    const savedAppIds = new Set(windowEntries.map((w) => w.appId));
+    WINDOW_APP_IDS.forEach((appId) => {
+      if (!savedAppIds.has(appId) && windowManager.getByAppId(appId)) {
+        windowManager.closeByAppId(appId);
       }
+    });
+    windowEntries.forEach(({ appId, x, y }) => {
+      if (!windowManager.getByAppId(appId) && this._launchers[appId]) {
+        this._launchers[appId]();
+      }
+      windowManager.moveWindow(appId, x, y);
     });
   }
 }

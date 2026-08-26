@@ -4,37 +4,23 @@ import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
-
-/**
- * Pick the schedule entry that matches the current day+phase, falling back
- * to cycling through the authored entries for that phase when `day` goes
- * beyond what was authored (so the game never runs out of content).
- * @param {Array} schedule
- * @param {number} day
- * @param {string} phase
- */
-function pickScheduleEntry(schedule, day, phase) {
-  const phaseEntries = (schedule || [])
-    .filter((e) => e.phase === phase)
-    .sort((a, b) => a.day - b.day);
-  if (phaseEntries.length === 0) return null;
-  const exact = phaseEntries.find((e) => e.day === day);
-  if (exact) return exact;
-  const idx = (Math.max(1, day) - 1) % phaseEntries.length;
-  return phaseEntries[idx];
-}
+import { scheduleData } from "../core/ScheduleData.js";
+import { applyDialogueOnShow } from "../core/DialogueEffects.js";
+import { endingManager } from "../core/EndingManager.js";
 
 /**
  * HISApp - Hospital Information System.
  * Always accessible, but the patient list & dialogue content varies by the
- * current in-game day/phase (data-driven via `data/his_schedule.json`).
- * Flow: pick a patient -> read dialogue (click highlighted keywords to
- * collect them) -> fill the medical record template using collected
- * keywords -> prescribe a medicine from the configured list.
+ * current in-game day/phase (data-driven via `data/dayXXa.json` /
+ * `data/dayXXb.json`, resolved through ScheduleData). Flow: pick a patient
+ * -> read dialogue one line at a time, choosing options that branch the
+ * conversation (click highlighted keywords to collect them) -> fill the
+ * medical record template using collected keywords -> prescribe a medicine
+ * from the configured list.
  */
 export async function launchHISApp() {
-  const [schedule, records, medicines] = await Promise.all([
-    dataLoader.loadJSON("his_schedule.json"),
+  await scheduleData.init();
+  const [records, medicines] = await Promise.all([
     dataLoader.loadJSON("medical_records.json"),
     dataLoader.loadJSON("medicines.json"),
   ]);
@@ -57,17 +43,13 @@ export async function launchHISApp() {
   const recordEl = root.querySelector(".his-record");
   const prescriptionEl = root.querySelector(".his-prescription");
 
-  let currentEntry = null;
   let currentRecord = null;
 
   function registerKeywords(entry) {
     const keywordDefs = {};
     (entry.patients || []).forEach((p) => {
-      (p.keywords || []).forEach((k) => {
-        keywordDefs[k.id] = { ...k, source: `病人-${p.name}` };
-      });
+      Object.assign(keywordDefs, keywordManager.definitionsWithSource(p.keywordIds, `病人-${p.name}`));
     });
-    keywordManager.registerDefinitions(keywordDefs);
     return keywordDefs;
   }
 
@@ -126,6 +108,9 @@ export async function launchHISApp() {
       dialogueEl.scrollTop = dialogueEl.scrollHeight;
     }
 
+    // Only the current node's single line + its options are shown at a
+    // time (previously-shown lines stay in the transcript above); picking
+    // an option appends the player's choice then reveals the next node.
     function showNode(nodeId) {
       const tree = patient.dialogueTree;
       const node = tree && tree.nodes[nodeId];
@@ -134,6 +119,8 @@ export async function launchHISApp() {
       dialogueProgress.set("his", patient.id, nodeId);
 
       appendLine(node.speaker, node.speaker === "npc" ? patient.name : "我", node.text);
+      applyDialogueOnShow(node);
+      if (endingManager.isEnded) return;
 
       if (node.options && node.options.length > 0) {
         node.options.forEach((opt) => {
@@ -235,9 +222,8 @@ export async function launchHISApp() {
     prescriptionEl.appendChild(submitBtn);
   }
 
-  function renderCurrentEntry() {
-    const entry = pickScheduleEntry(schedule.schedule, gameState.day, gameState.phase);
-    currentEntry = entry;
+  async function renderCurrentEntry() {
+    const entry = await scheduleData.load(gameState.day, gameState.phase);
     if (!entry) {
       patientListEl.innerHTML = "<h4>候诊病人</h4><p class=\"his-empty\">（今日暂无安排）</p>";
       return;
@@ -248,7 +234,7 @@ export async function launchHISApp() {
 
   const unsubscribe = eventBus.on("daynight:changed", renderCurrentEntry);
 
-  renderCurrentEntry();
+  await renderCurrentEntry();
 
   return windowManager.createWindow({
     appId: "his",

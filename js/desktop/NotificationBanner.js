@@ -1,9 +1,5 @@
 import { eventBus } from "../core/EventBus.js";
-
-const PHASE_MESSAGES = {
-  day: "☀ 新的一天开始了，HIS 医疗系统已开启。",
-  night: "🌙 夜晚降临，社交软件已开启。",
-};
+import { i18n } from "../core/I18n.js";
 
 /**
  * NotificationBanner - a small auto-dismissing toast shown whenever the
@@ -15,7 +11,14 @@ export default class NotificationBanner {
     this.containerEl = containerEl;
     this._timer = null;
     this._onTransitionEnd = null;
-    eventBus.on("daynight:changed", ({ phase }) => this.show(PHASE_MESSAGES[phase] || ""));
+    eventBus.on("daynight:changed", ({ phase }) =>
+      this.show(i18n.t(`notification.${phase}`, ""))
+    );
+  }
+
+  /** Show the "welcome back" toast used when resuming from a save string. */
+  showWelcomeBack() {
+    this.show(i18n.t("notification.welcomeBack", ""));
   }
 
   show(message) {

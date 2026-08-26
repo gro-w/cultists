@@ -23,6 +23,7 @@ class SettingsManager {
     this.bgmVolume = 50;
     this.notebookSortMode = NOTEBOOK_SORT_MODES.CATEGORY;
     this.confirmPhaseChange = true;
+    this.language = "zh-hans";
     this._load();
   }
 
@@ -32,10 +33,11 @@ class SettingsManager {
       if (!raw) return;
       const saved = JSON.parse(raw);
       if (!saved || typeof saved !== "object") return;
-      const { bgmVolume, notebookSortMode, confirmPhaseChange } = saved;
+      const { bgmVolume, notebookSortMode, confirmPhaseChange, language } = saved;
       if (typeof bgmVolume === "number") this.bgmVolume = bgmVolume;
       if (typeof notebookSortMode === "string") this.notebookSortMode = notebookSortMode;
       if (typeof confirmPhaseChange === "boolean") this.confirmPhaseChange = confirmPhaseChange;
+      if (typeof language === "string") this.language = language;
     } catch (err) {
       console.warn("[SettingsManager] Failed to load saved settings:", err);
     }
@@ -53,13 +55,14 @@ class SettingsManager {
    * Update one or more settings and broadcast the change. Only known,
    * type-checked keys are applied, to avoid accidentally clobbering
    * internal methods/properties with unexpected input.
-   * @param {Partial<{bgmVolume:number, notebookSortMode:string, confirmPhaseChange:boolean}>} partial
+   * @param {Partial<{bgmVolume:number, notebookSortMode:string, confirmPhaseChange:boolean, language:string}>} partial
    */
   set(partial = {}) {
-    const { bgmVolume, notebookSortMode, confirmPhaseChange } = partial;
+    const { bgmVolume, notebookSortMode, confirmPhaseChange, language } = partial;
     if (typeof bgmVolume === "number") this.bgmVolume = bgmVolume;
     if (typeof notebookSortMode === "string") this.notebookSortMode = notebookSortMode;
     if (typeof confirmPhaseChange === "boolean") this.confirmPhaseChange = confirmPhaseChange;
+    if (typeof language === "string") this.language = language;
     this._save();
     eventBus.emit("settings:changed", this.snapshot());
   }
@@ -69,6 +72,7 @@ class SettingsManager {
       bgmVolume: this.bgmVolume,
       notebookSortMode: this.notebookSortMode,
       confirmPhaseChange: this.confirmPhaseChange,
+      language: this.language,
     };
   }
 

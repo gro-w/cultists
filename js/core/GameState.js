@@ -1,5 +1,10 @@
 import { eventBus } from "./EventBus.js";
 
+// Satiety is allowed to climb well past the "healthy" 0-100 range so that
+// stat-threshold endings (e.g. "satiety > 150" gluttony ending) are
+// reachable. It still fits in a single save-string byte (0-255).
+const SATIETY_MAX = 255;
+
 /**
  * GameState - singleton holding the protagonist's runtime status:
  * energy, mental/physical condition, satiety, current in-game day and phase.
@@ -32,7 +37,7 @@ class GameState {
     this.energy = clamp(this.energy + energy);
     this.mental = clamp(this.mental + mental);
     this.physical = clamp(this.physical + physical);
-    this.satiety = clamp(this.satiety + satiety);
+    this.satiety = clamp(this.satiety + satiety, 0, SATIETY_MAX);
     eventBus.emit("gamestate:changed", this.snapshot());
   }
 
@@ -43,7 +48,7 @@ class GameState {
     if (typeof energy === "number") this.energy = clamp(energy);
     if (typeof mental === "number") this.mental = clamp(mental);
     if (typeof physical === "number") this.physical = clamp(physical);
-    if (typeof satiety === "number") this.satiety = clamp(satiety);
+    if (typeof satiety === "number") this.satiety = clamp(satiety, 0, SATIETY_MAX);
     eventBus.emit("gamestate:changed", this.snapshot());
     eventBus.emit("daynight:changed", { phase: this.phase, day: this.day });
   }

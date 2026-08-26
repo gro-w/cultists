@@ -1,6 +1,7 @@
 import { windowManager } from "../core/WindowManager.js";
 import { eventBus } from "../core/EventBus.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
+import { i18n } from "../core/I18n.js";
 import { gameState } from "../core/GameState.js";
 
 /**
@@ -73,8 +74,8 @@ export default class Taskbar {
     const update = () => {
       const isDay = dayNightSystem.phase === "day";
       this.indicatorEl.textContent = isDay
-        ? `☀ 白天 (Day ${gameState.day})`
-        : `🌙 夜晚 (Day ${gameState.day})`;
+        ? `${i18n.t("daynight.day", "☀ 白天")} (Day ${gameState.day})`
+        : `${i18n.t("daynight.night", "🌙 夜晚")} (Day ${gameState.day})`;
     };
     eventBus.on("daynight:changed", update);
     update();

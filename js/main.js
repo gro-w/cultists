@@ -5,9 +5,15 @@ import { audioManager } from "./core/AudioManager.js";
 import { confirmDialog } from "./core/ConfirmDialog.js";
 import { itemManager } from "./core/ItemManager.js";
 import { saveManager } from "./core/SaveManager.js";
+import { scheduleData } from "./core/ScheduleData.js";
+import { endingManager } from "./core/EndingManager.js";
+import { i18n } from "./core/I18n.js";
+import { dataLoader } from "./core/DataLoader.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
+import MainMenu from "./desktop/MainMenu.js";
+import EndingScreen from "./desktop/EndingScreen.js";
 import { launchHISApp } from "./apps/HISApp.js";
 import { launchSocialApp } from "./apps/SocialApp.js";
 import { launchChatGTPApp } from "./apps/ChatGTPApp.js";
@@ -24,37 +30,48 @@ import { launchSettingsApp } from "./apps/SettingsApp.js";
  * always launchable regardless of the current day/night phase. HIS and the
  * Social app instead vary *what content* they show based on the current
  * day + phase (see their own data-driven schedules).
+ *
+ * Boot flow: if `location.search` is empty, an XP-style Main Menu overlay
+ * is shown first (new game / load save-string). If a search string is
+ * already present, the game boots straight in and shows a "welcome back"
+ * toast instead of the old per-phase "XX 已开启" wording.
  */
 
 /** Perform the 下班/睡觉 phase-change action, with optional confirmation. */
 async function handlePhaseToggle() {
   const isDay = dayNightSystem.phase === "day";
   const message = isDay
-    ? "确定要下班，结束白天进入夜晚吗？"
-    : "确定要睡觉，结束今天进入下一天吗？";
+    ? i18n.t("phase.workEndMessage", "确定要下班，结束白天进入夜晚吗？")
+    : i18n.t("phase.sleepMessage", "确定要睡觉，结束今天进入下一天吗？");
   if (settingsManager.confirmPhaseChange) {
-    const ok = await confirmDialog(message, { title: isDay ? "下班确认" : "睡觉确认", icon: isDay ? "🚪" : "🛏️" });
+    const title = isDay
+      ? i18n.t("phase.workEndTitle", "下班确认")
+      : i18n.t("phase.sleepTitle", "睡觉确认");
+    const ok = await confirmDialog(message, { title, icon: isDay ? "🚪" : "🛏️" });
     if (!ok) return;
   }
   dayNightSystem.toggle();
 }
 
 const APP_REGISTRY = [
-  { id: "his", label: "HIS 医疗系统", icon: "🏥", launch: () => launchHISApp() },
-  { id: "social", label: "夜聊 Messenger", icon: "💬", launch: () => launchSocialApp() },
-  { id: "chatgtp", label: "ChatGTP", icon: "🤖", launch: () => launchChatGTPApp() },
-  { id: "notebook", label: "关键词笔记本", icon: "📓", launch: () => launchNotebookApp() },
-  { id: "status", label: "状态与属性", icon: "📊", launch: () => launchStatusApp() },
-  { id: "settings", label: "设置", icon: "⚙️", launch: () => launchSettingsApp() },
+  { id: "his", label: () => i18n.t("apps.his", "HIS 医疗系统"), icon: "🏥", launch: () => launchHISApp() },
+  { id: "social", label: () => i18n.t("apps.social", "夜聊 Messenger"), icon: "💬", launch: () => launchSocialApp() },
+  { id: "chatgtp", label: () => i18n.t("apps.chatgtp", "ChatGTP"), icon: "🤖", launch: () => launchChatGTPApp() },
+  { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },
+  { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },
+  { id: "settings", label: () => i18n.t("apps.settings", "设置"), icon: "⚙️", launch: () => launchSettingsApp() },
   {
     id: "phase-toggle",
-    label: () => (dayNightSystem.phase === "day" ? "下班" : "睡觉"),
+    label: () =>
+      dayNightSystem.phase === "day"
+        ? i18n.t("apps.phaseToggleWork", "下班")
+        : i18n.t("apps.phaseToggleSleep", "睡觉"),
     icon: () => (dayNightSystem.phase === "day" ? "🚪" : "🛏️"),
     launch: () => handlePhaseToggle(),
   },
 ];
 
-function boot() {
+function boot({ welcomeBack }) {
   const windowLayer = document.getElementById("window-layer");
   windowManager.mount(windowLayer);
   audioManager.mount();
@@ -70,7 +87,8 @@ function boot() {
     apps: APP_REGISTRY,
   });
 
-  new NotificationBanner(document.getElementById("notification-banner"));
+  const notificationBanner = new NotificationBanner(document.getElementById("notification-banner"));
+  new EndingScreen(document.getElementById("ending-screen"));
 
   // Prevent the start menu button click from immediately closing itself
   // via the document-level "click to close" handler.
@@ -85,7 +103,11 @@ function boot() {
     if (app.id !== "phase-toggle") launcherMap[app.id] = () => app.launch();
   });
   saveManager.registerLaunchers(launcherMap);
-  saveManager.loadFromLocation();
+
+  if (welcomeBack) {
+    saveManager.loadFromLocation();
+    notificationBanner.showWelcomeBack();
+  }
 
   console.info(
     `[Cultists OS] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
@@ -93,9 +115,35 @@ function boot() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Preload item defs + the canonical index tables SaveManager needs before
-  // any UI is shown, so a save-string restore (if present) is deterministic.
-  Promise.all([itemManager.load(), saveManager.init()])
+  // Preload item/schedule/ending defs + the canonical index tables
+  // SaveManager needs before any UI is shown, so a save-string restore (if
+  // present) is deterministic. UI strings load first since several of the
+  // preloaded modules (Settings, Notebook...) read i18n.t() during render.
+  const language = settingsManager.language;
+  dataLoader.setLanguage(language);
+
+  Promise.all([
+    i18n.setLanguage(language),
+    i18n.loadLanguages(),
+    itemManager.load(),
+    scheduleData.init(),
+    endingManager.load(),
+    saveManager.init(),
+  ])
     .catch((err) => console.error("[Cultists OS] Failed to preload data:", err))
-    .finally(boot);
+    .finally(() => {
+      const hasSave = !!window.location.search.replace(/^\?/, "");
+      if (!hasSave) {
+        boot({ welcomeBack: false });
+        const mainMenu = new MainMenu(document.getElementById("main-menu"), {
+          onNewGame: () => {
+            /* fresh game: nothing to restore, boot() already ran with defaults */
+          },
+          onLoadSave: (saveString) => saveManager.loadFromString(saveString),
+        });
+        mainMenu.show();
+      } else {
+        boot({ welcomeBack: true });
+      }
+    });
 });

@@ -29,15 +29,20 @@ js/
     KeywordManager.js        # 关键词全局总线单例：高亮渲染、点击收集、笔记本同步
     GameState.js             # 主角状态单例：精力/精神/体力/天数/昼夜阶段
     DayNightSystem.js        # 昼夜循环管理：阶段切换、应用可用性判断
+    SettingsManager.js       # 设置单例：BGM 音量、笔记本排序方式、下班/睡觉确认开关（localStorage 持久化）
+    AudioManager.js          # BGM 播放单例：音量实时跟随 SettingsManager
+    Pinyin.js                # 关键词首字拼音首字母查表工具（供笔记本"按拼音"分组使用）
   desktop/
-    Desktop.js               # 桌面图标渲染与启动
+    Desktop.js               # 桌面图标渲染与启动（所有应用常驻桌面）
     Taskbar.js                # 任务栏（窗口标签、时钟、开始菜单、昼夜指示）
+    NotificationBanner.js    # 阶段切换提示条：昼夜切换后弹出并自动消失
   apps/
     HISApp.js                # 白天：HIS 医疗系统（问诊 -> 填写病历 -> 开处方）
     SocialApp.js              # 夜晚：社交软件（室友聊天 -> 收集线索关键词）
     ChatGTPApp.js             # 全天：仿 ChatGPT 问答助手（关键词命中配置库作答）
-    NotebookApp.js            # 全天：关键词笔记本（实时展示已收集关键词）
+    NotebookApp.js            # 全天：关键词笔记本（关键词+来源+删除按钮，支持按类别/天数/拼音分组）
     StatusApp.js              # 全天：主角状态显示器
+    SettingsApp.js            # 全天：设置（BGM 音量、笔记本排序方式、下班/睡觉确认开关）
   main.js                    # 应用注册表 + 引导启动
 data/
   dialogues_day.json         # 白天病人对话树 + 高亮关键词配置
@@ -69,8 +74,14 @@ data/
 ### 5. 昼夜循环
 - `GameState`（单例）保存天数、昼夜阶段与身心状态数值。
 - `DayNightSystem` 负责阶段切换（`toggle()`）、判断某个应用在当前阶段是否可用（`isAppAvailable()`），并在切换时自动关闭不可用阶段的窗口。
-- `Desktop` 与 `Taskbar` 订阅 `daynight:changed` 事件，实时更新图标可见性与状态指示。
-- 目前通过任务栏"开始菜单 -> 切换昼夜（测试用）"手动触发，方便验证白天/夜晚应用切换与全流程贯通；后续可替换为基于剧情进度或时间的自动切换逻辑。
+- `Desktop` 与 `Taskbar` 中所有应用（含阶段限定的 HIS / 社交软件）**始终显示**在桌面图标与开始菜单中；若在错误阶段双击启动，会弹出提示而不打开窗口（见 `main.js` 的 `withPhaseGate`）。
+- 桌面新增一个动态"下班/睡觉"快捷方式：白天显示"下班"，双击后（可选二次确认，见设置）调用 `dayNightSystem.toggle()` 进入夜晚；夜晚显示"睡觉"，确认后进入下一天。图标/文案会随昼夜实时切换。
+- `NotificationBanner` 订阅 `daynight:changed`，在阶段切换后弹出顶部提示条（几秒后自动消失），告知下一阶段已开启。
+
+### 6. 设置系统
+- `SettingsManager`（单例）持久化保存：`bgmVolume`（BGM 音量）、`notebookSortMode`（笔记本分组方式：按类别 / 按收集天数 / 按拼音首字母）、`confirmPhaseChange`（下班/睡觉前是否需要二次确认）。修改后通过 `eventBus.emit('settings:changed', ...)` 广播，任意订阅方（`AudioManager`、`NotebookApp`）会立即生效。
+- `SettingsApp` 提供音量滑块、排序方式下拉框与确认开关，均直接调用 `settingsManager.set(...)`。
+- `AudioManager` 维护单个隐藏的 `<audio>` 元素，音量始终跟随设置；`setTrack()` 可在后续接入真实 BGM 资源。
 
 ## 扩展指南
 - **新增应用**：在 `js/apps/` 下新建模块，暴露一个 `launchXApp()` 函数，内部调用 `windowManager.createWindow({ appId, title, icon, content })`，再于 `js/main.js` 的 `APP_REGISTRY` 中注册即可自动出现在桌面图标与开始菜单中。

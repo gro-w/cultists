@@ -1,5 +1,7 @@
 import { windowManager } from "../core/WindowManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
+import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js";
+import { getPinyinInitial } from "../core/Pinyin.js";
 
 const CATEGORY_LABELS = {
   symptom: "症状",
@@ -10,11 +12,46 @@ const CATEGORY_LABELS = {
 };
 
 /**
+ * Group keywords according to the given sort mode, returning an array of
+ * `{ title, list }` entries already sorted into a sensible order.
+ * @param {object[]} keywords
+ * @param {string} mode one of NOTEBOOK_SORT_MODES
+ */
+function groupKeywords(keywords, mode) {
+  const groups = new Map();
+
+  function pushTo(key, title, kw) {
+    if (!groups.has(key)) groups.set(key, { title, list: [] });
+    groups.get(key).list.push(kw);
+  }
+
+  keywords.forEach((kw) => {
+    if (mode === NOTEBOOK_SORT_MODES.DAY) {
+      const day = kw.collectedDay;
+      const key = day == null ? "unknown" : `day_${String(day).padStart(6, "0")}`;
+      const title = day == null ? "未知天数" : `第 ${day} 天`;
+      pushTo(key, title, kw);
+    } else if (mode === NOTEBOOK_SORT_MODES.PINYIN) {
+      const initial = getPinyinInitial(kw.label);
+      pushTo(initial, initial, kw);
+    } else {
+      const cat = kw.category || "misc";
+      pushTo(cat, CATEGORY_LABELS[cat] || cat, kw);
+    }
+  });
+
+  const entries = [...groups.values()];
+  entries.sort((a, b) => a.title.localeCompare(b.title, "zh-Hans-CN", { numeric: true }));
+  return entries;
+}
+
+/**
  * NotebookApp - real-time view of every keyword collected so far, grouped
- * by category. Only shows the keyword label and its source (no detailed
+ * by category / collection day / pinyin initial (configurable via the
+ * Settings app). Only shows the keyword label and its source (no detailed
  * definition) and lets the player delete a keyword from the notebook.
- * Subscribes to KeywordManager so it always reflects the latest global
- * state.
+ * Subscribes to KeywordManager + SettingsManager so it always reflects the
+ * latest global state.
  */
 export async function launchNotebookApp() {
   const root = document.createElement("div");
@@ -27,18 +64,13 @@ export async function launchNotebookApp() {
       return;
     }
 
-    const groups = {};
-    keywords.forEach((kw) => {
-      const cat = kw.category || "misc";
-      groups[cat] = groups[cat] || [];
-      groups[cat].push(kw);
-    });
+    const groups = groupKeywords(keywords, settingsManager.notebookSortMode);
 
     root.innerHTML = "";
-    Object.entries(groups).forEach(([cat, list]) => {
+    groups.forEach(({ title, list }) => {
       const section = document.createElement("div");
       section.className = "notebook-section";
-      section.innerHTML = `<h4>${CATEGORY_LABELS[cat] || cat}</h4>`;
+      section.innerHTML = `<h4>${title}</h4>`;
       const ul = document.createElement("ul");
       list.forEach((kw) => {
         const li = document.createElement("li");
@@ -65,6 +97,7 @@ export async function launchNotebookApp() {
   }
 
   const offKeywordChange = keywordManager.onChange(render);
+  const offSettingsChange = settingsManager.onChange(render);
   render();
 
   return windowManager.createWindow({
@@ -74,6 +107,9 @@ export async function launchNotebookApp() {
     width: 420,
     height: 480,
     content: root,
-    onClose: () => offKeywordChange(),
+    onClose: () => {
+      offKeywordChange();
+      offSettingsChange();
+    },
   });
 }

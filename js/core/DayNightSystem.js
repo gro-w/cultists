@@ -13,7 +13,7 @@ import { windowManager } from "./WindowManager.js";
  */
 class DayNightSystem {
   constructor() {
-    this.alwaysAvailableAppIds = ["chatgtp", "notebook", "status"];
+    this.alwaysAvailableAppIds = ["chatgtp", "notebook", "status", "settings"];
   }
 
   get phase() {

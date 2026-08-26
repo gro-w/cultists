@@ -5,8 +5,7 @@ import { gameState } from "../core/GameState.js";
 
 /**
  * Taskbar - shows open window tabs, a live clock, current day/night
- * indicator and the Start menu (with a manual day/night toggle for testing
- * and an app launcher list).
+ * indicator and the Start menu (listing every registered app).
  */
 export default class Taskbar {
   constructor({ tasksEl, clockEl, indicatorEl, startButtonEl, startMenuEl, apps }) {
@@ -21,6 +20,7 @@ export default class Taskbar {
     this._bindStartButton();
     this._bindWindowEvents();
     this._bindDayNight();
+    eventBus.on("daynight:changed", () => this._renderStartMenu());
     this._tickClock();
     setInterval(() => this._tickClock(), 1000 * 30);
   }
@@ -38,24 +38,17 @@ export default class Taskbar {
   _renderStartMenu() {
     this.startMenuEl.innerHTML = "";
     this.apps.forEach((app) => {
+      const label = typeof app.label === "function" ? app.label() : app.label;
+      const icon = typeof app.icon === "function" ? app.icon() : app.icon;
       const item = document.createElement("div");
       item.className = "start-menu-item";
-      item.innerHTML = `<span>${app.icon}</span><span>${app.label}</span>`;
+      item.innerHTML = `<span>${icon}</span><span>${label}</span>`;
       item.addEventListener("click", () => {
         app.launch();
         this.startMenuEl.classList.add("hidden");
       });
       this.startMenuEl.appendChild(item);
     });
-
-    const toggleItem = document.createElement("div");
-    toggleItem.className = "start-menu-item";
-    toggleItem.innerHTML = `<span>🌓</span><span>切换昼夜（测试用）</span>`;
-    toggleItem.addEventListener("click", () => {
-      dayNightSystem.toggle();
-      this.startMenuEl.classList.add("hidden");
-    });
-    this.startMenuEl.appendChild(toggleItem);
   }
 
   _bindWindowEvents() {

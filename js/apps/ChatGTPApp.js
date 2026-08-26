@@ -70,7 +70,7 @@ export async function launchChatGTPApp() {
     if (e.key === "Enter") sendBtn.click();
   });
 
-  keywordManager.onChange(() => renderKeywordShortcuts());
+  const offKeywordChange = keywordManager.onChange(() => renderKeywordShortcuts());
   renderKeywordShortcuts();
   appendMessage("npc", "你好，我是 ChatGTP，你可以问我任何已知的关键词～");
 
@@ -81,5 +81,6 @@ export async function launchChatGTPApp() {
     width: 480,
     height: 440,
     content: root,
+    onClose: () => offKeywordChange(),
   });
 }

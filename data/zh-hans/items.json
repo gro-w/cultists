@@ -12,7 +12,8 @@
       "name": "一把旧钥匙",
       "consumable": false,
       "usable": true,
-      "inspectText": "一把生了锈的旧钥匙，边缘还留着划痕，不知道能打开什么。",
+      "revealKeywordIds": ["old_key_clue"],
+      "inspectText": "一把生了锈的[[old_key_clue|旧钥匙]]，边缘还留着划痕，不知道能打开什么。",
       "useCondition": {
         "requires": [{ "itemId": "locked_box", "count": 1 }]
       },
@@ -32,7 +33,7 @@
       "inspectCheck": { "skillId": "observation" },
       "inspectOutcomes": {
         "criticalSuccess": {
-          "text": "你借着窗外的光仔细端详木盒的缝隙，隐约看清了里面除了硬物之外，还压着一张折起的纸片——不用打开锁也能猜到些什么了。",
+          "text": "你借着窗外的光仔细端详木盒的缝隙，隐约看清了里面除了硬物之外，还压着一张折起的[[mystery_note|纸片]]——不用打开锁也能猜到些什么了。",
           "revealKeywordIds": ["mystery_note"]
         },
         "success": {
@@ -52,7 +53,8 @@
       "name": "一个打开的盒子",
       "consumable": false,
       "usable": false,
-      "inspectText": "盒子已经打开了，里面只剩下一些灰尘和一张看不清字迹的纸片。"
+      "revealKeywordIds": ["mystery_note"],
+      "inspectText": "盒子已经打开了，里面只剩下一些灰尘和一张[[mystery_note|看不清字迹的纸片]]。"
     },
     {
       "id": "sandwich",
@@ -81,11 +83,11 @@
       "name": "不明液体",
       "consumable": true,
       "usable": true,
-      "inspectText": "一小瓶来源不明的液体，气味刺鼻，说明书也没有，喝下去后果难以预料。",
+      "inspectText": "一小瓶来源不明的[[strange_liquid|液体]]，气味刺鼻，说明书也没有，喝下去后果难以预料。",
       "inspectCheck": { "skillId": "medicine" },
       "inspectOutcomes": {
         "criticalSuccess": {
-          "text": "凑近对光看了看沉淀物和颜色，你几乎可以断定这不是能喝的东西——绝对不能尝试。",
+          "text": "凑近对光看了看沉淀物和颜色，你几乎可以断定这不是能喝的东西——是[[strange_liquid|不明液体]]，绝对不能尝试。",
           "revealKeywordIds": ["strange_liquid"]
         },
         "success": {
@@ -109,7 +111,7 @@
       "name": "额外工作量",
       "consumable": false,
       "usable": false,
-      "inspectText": "同事情绪崩溃请假后留下的一堆未处理事务，全都压在了你一个人身上。"
+      "inspectText": "同事情绪崩溃请假后留下的一堆未处理事务，全都压在了你一个人身上。走廊里有人低声提起[[night_shift_rumor|夜班传闻]]，你没心思去听。"
     }
   ],
   "startingInventory": [
@@ -119,4 +121,3 @@
     { "itemId": "sandwich", "count": 2 }
   ]
 }
-

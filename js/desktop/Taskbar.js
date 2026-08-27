@@ -46,6 +46,7 @@ export default class Taskbar {
       const icon = typeof app.icon === "function" ? app.icon() : app.icon;
       const item = document.createElement("div");
       item.className = "start-menu-item";
+      item.dataset.appId = app.id;
       item.innerHTML = `<span>${icon}</span><span>${label}</span>`;
       item.addEventListener("click", () => {
         app.launch();

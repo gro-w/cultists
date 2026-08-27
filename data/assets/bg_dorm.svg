@@ -44,14 +44,12 @@
     <rect x="172" y="205" width="10" height="30" fill="#6c4f38" />
   </g>
 
-  <!-- desk with laptop -->
+  <!-- desk -->
   <g>
     <rect x="210" y="170" width="100" height="8" fill="#7a5a3f" />
     <rect x="216" y="178" width="6" height="40" fill="#5c4128" />
     <rect x="298" y="178" width="6" height="40" fill="#5c4128" />
-    <rect x="228" y="150" width="46" height="26" rx="2" fill="#3a3a48" stroke="#22222c" stroke-width="2" />
-    <rect x="228" y="176" width="46" height="4" fill="#22222c" />
-    <circle cx="251" cy="160" r="2" fill="#7fd0ff" opacity="0.8" />
+
   </g>
   <!-- desk chair -->
   <rect x="285" y="190" width="20" height="6" rx="2" fill="#463a5a" />

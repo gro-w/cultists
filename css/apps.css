@@ -220,6 +220,73 @@
   flex: 1;
 }
 
+.chatgtp-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.chatgtp-tab-btn.active {
+  font-weight: bold;
+  background: var(--w95-white);
+}
+
+.chatgtp-san-indicator {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--w95-gray-dark);
+  white-space: nowrap;
+}
+
+.chatgtp-san-indicator.distressed {
+  color: #a86b00;
+  font-weight: bold;
+}
+
+.chatgtp-san-indicator.offline {
+  color: #b00020;
+  font-weight: bold;
+}
+
+.chatgtp-tab-panel {
+  height: calc(100% - 26px);
+}
+
+.chatgtp-dialogue-layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatgtp-dialogue-lines {
+  flex: 1;
+  overflow: auto;
+}
+
+/* ---------------------------------------------------------------------- */
+/* NPC state (own SAN, distress/offline) - shared across HIS/Social/     */
+/* Monitor/ChatGTP + StatusApp's NPC tab                                  */
+/* ---------------------------------------------------------------------- */
+.npc-distress-warning {
+  color: #a86b00;
+}
+
+.monitor-npc-marker.distressed {
+  color: #a86b00;
+}
+
+.monitor-npc-marker.offline {
+  color: #b00020;
+  text-decoration: line-through;
+}
+
+.action-budget-hint {
+  font-size: 11px;
+  color: var(--w95-gray-dark);
+}
+
 /* ---------------------------------------------------------------------- */
 /* Monitor App (surveillance-camera view: walk / talk / inspect)          */
 /* ---------------------------------------------------------------------- */
@@ -453,6 +520,33 @@
 .save-feedback {
   font-size: 12px;
   color: var(--w95-gray-dark);
+}
+
+.action-budget-row {
+  font-size: 12px;
+  margin: 2px 0;
+}
+
+.action-budget-row.over-budget {
+  color: #b00020;
+  font-weight: bold;
+}
+
+.skill-row {
+  font-size: 12px;
+  margin: 2px 0;
+}
+
+.npc-san-bar .status-bar-fill {
+  background: linear-gradient(90deg, #6bbf6b, #a8e0a8);
+}
+
+.npc-san-bar .status-bar-fill.distressed {
+  background: linear-gradient(90deg, #d9a13d, #f0cf8a);
+}
+
+.npc-san-bar .status-bar-fill.offline {
+  background: linear-gradient(90deg, #b00020, #e06a80);
 }
 
 /* ---------------------------------------------------------------------- */

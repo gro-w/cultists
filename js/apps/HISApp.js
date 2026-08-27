@@ -6,8 +6,9 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
 import { scheduleData } from "../core/ScheduleData.js";
-import { applyDialogueOnShow } from "../core/DialogueEffects.js";
-import { endingManager } from "../core/EndingManager.js";
+import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { npcStateManager } from "../core/NpcStateManager.js";
+import { actionBudget } from "../core/ActionBudget.js";
 
 /**
  * HISApp - Hospital Information System.
@@ -18,6 +19,11 @@ import { endingManager } from "../core/EndingManager.js";
  * conversation (click highlighted keywords to collect them) -> fill the
  * medical record template using collected keywords -> prescribe a medicine
  * from the configured list.
+ *
+ * Dialogue tree walking (dice-check options, npcSanChange, dialogue:turn
+ * budget accounting) is shared with SocialApp/MonitorApp via
+ * `createDialogueRunner` (see DialogueRunner.js). A patient whose own SAN
+ * (NpcStateManager) has dropped to "offline" can no longer be talked to.
  */
 export async function launchHISApp() {
   await scheduleData.init();
@@ -54,6 +60,14 @@ export async function launchHISApp() {
     return keywordDefs;
   }
 
+  function budgetNote() {
+    const remaining = actionBudget.remaining("dialogue");
+    if (!Number.isFinite(remaining)) return "";
+    return remaining > 0
+      ? `本阶段剩余问诊次数：${remaining}`
+      : `本阶段问诊次数已用尽（继续问诊将记为加班/熬夜）`;
+  }
+
   function renderPatients(entry, keywordDefs) {
     patientListEl.innerHTML = `<h4>候诊病人（第${gameState.day}天 · ${
       gameState.phase === "day" ? "白天" : "夜晚"
@@ -64,6 +78,11 @@ export async function launchHISApp() {
       note.textContent = entry.note;
       patientListEl.appendChild(note);
     }
+    const budgetHint = document.createElement("p");
+    budgetHint.className = "his-schedule-note action-budget-hint";
+    budgetHint.textContent = budgetNote();
+    patientListEl.appendChild(budgetHint);
+
     if (!entry.patients || entry.patients.length === 0) {
       const empty = document.createElement("p");
       empty.className = "his-empty";
@@ -77,7 +96,9 @@ export async function launchHISApp() {
     entry.patients.forEach((patient) => {
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out his-patient-btn";
-      btn.textContent = `${patient.name}（${patient.age}岁）`;
+      const offline = npcStateManager.isOffline(patient.id);
+      const distressed = !offline && npcStateManager.isDistressed(patient.id);
+      btn.textContent = `${patient.name}（${patient.age}岁）${offline ? " 🚫" : distressed ? " ⚠️" : ""}`;
       btn.addEventListener("click", () => renderDialogue(patient, keywordDefs));
       patientListEl.appendChild(btn);
     });
@@ -90,6 +111,20 @@ export async function launchHISApp() {
 
   function renderDialogue(patient, keywordDefs) {
     dialogueEl.innerHTML = `<h4>与 ${patient.name} 的对话</h4>`;
+
+    if (npcStateManager.isOffline(patient.id)) {
+      dialogueEl.innerHTML +=
+        '<p class="dialogue-end">（该患者情绪崩溃，已请假离开，暂时无法继续问诊。）</p>';
+      renderRecord(patient, records.templates.find((t) => t.id === patient.recordTemplateId));
+      return;
+    }
+    if (npcStateManager.isDistressed(patient.id)) {
+      const warn = document.createElement("p");
+      warn.className = "his-schedule-note npc-distress-warning";
+      warn.textContent = "⚠️ 该患者情绪明显不稳定，言语间透着焦躲和不耐烦。";
+      dialogueEl.appendChild(warn);
+    }
+
     const linesEl = document.createElement("div");
     linesEl.className = "dialogue-lines";
     const optionsEl = document.createElement("div");
@@ -109,47 +144,20 @@ export async function launchHISApp() {
       dialogueEl.scrollTop = dialogueEl.scrollHeight;
     }
 
-    // Only the current node's single line + its options are shown at a
-    // time (previously-shown lines stay in the transcript above); picking
-    // an option appends the player's choice then reveals the next node.
-    function showNode(nodeId) {
-      const tree = patient.dialogueTree;
-      const node = tree && tree.nodes[nodeId];
-      optionsEl.innerHTML = "";
-      if (!node) return;
-      dialogueProgress.set("his", patient.id, nodeId);
+    const runner = createDialogueRunner({
+      actor: patient,
+      appendLine,
+      optionsEl,
+      optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
+      appId: "his",
+      onNodeShown: (nodeId) => dialogueProgress.set("his", patient.id, nodeId),
+    });
 
-      appendLine(node.speaker, node.speaker === "npc" ? patient.name : "我", node.text);
-      applyDialogueOnShow(node);
-      if (endingManager.isEnded) return;
+    const resumeNodeId =
+      dialogueProgress.get("his").actorId === patient.id ? dialogueProgress.get("his").nodeId : null;
+    runner.showNode(resumeNodeId || (patient.dialogueTree && patient.dialogueTree.start));
 
-      if (node.options && node.options.length > 0) {
-        node.options.forEach((opt) => {
-          const btn = document.createElement("button");
-          btn.className = "win95-btn bevel-out dialogue-option-btn";
-          btn.textContent = opt.label;
-          btn.addEventListener("click", () => {
-            appendLine("player", "我", opt.label);
-            showNode(opt.next);
-          });
-          optionsEl.appendChild(btn);
-        });
-      } else {
-        optionsEl.innerHTML = '<p class="dialogue-end">（对话已结束）</p>';
-      }
-    }
-
-    if (patient.dialogueTree) {
-      const resumeNodeId =
-        dialogueProgress.get("his").actorId === patient.id
-          ? dialogueProgress.get("his").nodeId
-          : null;
-      showNode(resumeNodeId || patient.dialogueTree.start);
-    }
-
-    const recordTemplate = records.templates.find(
-      (t) => t.id === patient.recordTemplateId
-    );
+    const recordTemplate = records.templates.find((t) => t.id === patient.recordTemplateId);
     renderRecord(patient, recordTemplate);
   }
 
@@ -233,7 +241,9 @@ export async function launchHISApp() {
     renderPatients(entry, keywordDefs);
   }
 
-  const unsubscribe = eventBus.on("daynight:changed", renderCurrentEntry);
+  const offDayNight = eventBus.on("daynight:changed", renderCurrentEntry);
+  const offBudget = eventBus.on("actionBudget:changed", renderCurrentEntry);
+  const offNpcState = eventBus.on("npc:offline", renderCurrentEntry);
 
   await renderCurrentEntry();
 
@@ -244,6 +254,10 @@ export async function launchHISApp() {
     width: 640,
     height: 460,
     content: root,
-    onClose: unsubscribe,
+    onClose: () => {
+      offDayNight();
+      offBudget();
+      offNpcState();
+    },
   });
 }

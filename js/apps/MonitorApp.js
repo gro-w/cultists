@@ -6,8 +6,10 @@ import { itemManager } from "../core/ItemManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { scheduleData } from "../core/ScheduleData.js";
-import { applyDialogueOnShow } from "../core/DialogueEffects.js";
-import { endingManager } from "../core/EndingManager.js";
+import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { npcStateManager } from "../core/NpcStateManager.js";
+import { actionBudget } from "../core/ActionBudget.js";
+import { formatInspectResult } from "../core/InspectFormat.js";
 
 const MOVE_STEP = 18; // px per arrow-key press
 const CHARACTER_SPRITE = "data/assets/char01_01_stage.png";
@@ -16,9 +18,11 @@ const CHARACTER_SPRITE = "data/assets/char01_01_stage.png";
  * MonitorApp - a top-down "surveillance camera" view of the protagonist.
  * The player token can be walked around a scene (click to move, or arrow
  * keys), talk to whichever NPCs the current day/phase schedule places in
- * the room (same `dialogueTree` data HISApp/SocialApp use), and inspect/use
- * items that are visible in the room (same ItemManager definitions the
- * Status app's inventory tab uses).
+ * the room (same `dialogueTree` data HISApp/SocialApp use, walked via the
+ * shared `createDialogueRunner`), and inspect/use items that are visible
+ * in the room (same ItemManager definitions the Status app's inventory
+ * tab uses - including repeatable dice-check inspections, see
+ * `formatInspectResult`/ItemManager.inspect()).
  *
  * The scene background + NPC/item marker layout is entirely data-driven via
  * `data/monitor_scenes.json` ({ day: {...}, night: {...} }), so new rooms or
@@ -35,6 +39,7 @@ export async function launchMonitorApp() {
   root.className = "app-monitor";
   root.innerHTML = `
     <h4 class="monitor-title"></h4>
+    <p class="monitor-budget-hint"></p>
     <div class="monitor-viewport-wrap panel-inset">
       <div class="monitor-viewport" tabindex="0">
         <img class="monitor-scene-bg" alt="" />
@@ -46,6 +51,7 @@ export async function launchMonitorApp() {
   `;
 
   const titleEl = root.querySelector(".monitor-title");
+  const budgetHintEl = root.querySelector(".monitor-budget-hint");
   const viewportEl = root.querySelector(".monitor-viewport");
   const bgEl = root.querySelector(".monitor-scene-bg");
   const markerLayerEl = root.querySelector(".monitor-marker-layer");
@@ -94,9 +100,30 @@ export async function launchMonitorApp() {
     interactionEl.innerHTML = `<p class="monitor-hint">${message}</p>`;
   }
 
+  function updateBudgetHint() {
+    const dialogueRemaining = actionBudget.remaining("dialogue");
+    const inspectRemaining = actionBudget.remaining("inspect");
+    const parts = [];
+    if (Number.isFinite(dialogueRemaining)) parts.push(`对话剩余 ${dialogueRemaining}`);
+    if (Number.isFinite(inspectRemaining)) parts.push(`调查剩余 ${inspectRemaining}`);
+    budgetHintEl.textContent = parts.length > 0 ? `本阶段：${parts.join(" · ")}` : "";
+  }
+
   /** Render the shared dialogueTree conversation UI for one actor (patient/contact). */
   function renderActorInteraction(actor, keywordDefs) {
     interactionEl.innerHTML = `<h4>与 ${actor.name} 对话</h4>`;
+
+    if (npcStateManager.isOffline(actor.id)) {
+      interactionEl.innerHTML += '<p class="dialogue-end">（对方情绪崩溃后已经离开，暂时无法互动。）</p>';
+      return;
+    }
+    if (npcStateManager.isDistressed(actor.id)) {
+      const warn = document.createElement("p");
+      warn.className = "his-schedule-note npc-distress-warning";
+      warn.textContent = "⚠️ 对方情绪明显不稳定。";
+      interactionEl.appendChild(warn);
+    }
+
     const linesEl = document.createElement("div");
     linesEl.className = "dialogue-lines monitor-dialogue-lines";
     const optionsEl = document.createElement("div");
@@ -113,38 +140,17 @@ export async function launchMonitorApp() {
       interactionEl.scrollTop = interactionEl.scrollHeight;
     }
 
-    function showNode(nodeId) {
-      const tree = actor.dialogueTree;
-      const node = tree && tree.nodes[nodeId];
-      optionsEl.innerHTML = "";
-      if (!node) return;
-      dialogueNodeByActor.set(actor.id, nodeId);
+    const runner = createDialogueRunner({
+      actor,
+      appendLine,
+      optionsEl,
+      optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
+      appId: "monitor",
+      onNodeShown: (nodeId) => dialogueNodeByActor.set(actor.id, nodeId),
+      emptyMessage: "（暂无对话内容）",
+    });
 
-      appendLine(node.speaker, node.speaker === "npc" ? actor.name : "我", node.text);
-      applyDialogueOnShow(node);
-      if (endingManager.isEnded) return;
-
-      if (node.options && node.options.length > 0) {
-        node.options.forEach((opt) => {
-          const btn = document.createElement("button");
-          btn.className = "win95-btn bevel-out dialogue-option-btn";
-          btn.textContent = opt.label;
-          btn.addEventListener("click", () => {
-            appendLine("player", "我", opt.label);
-            showNode(opt.next);
-          });
-          optionsEl.appendChild(btn);
-        });
-      } else {
-        optionsEl.innerHTML = '<p class="dialogue-end">（对话已结束）</p>';
-      }
-    }
-
-    if (actor.dialogueTree) {
-      showNode(dialogueNodeByActor.get(actor.id) || actor.dialogueTree.start);
-    } else {
-      interactionEl.innerHTML += '<p class="dialogue-end">（暂无对话内容）</p>';
-    }
+    runner.showNode(dialogueNodeByActor.get(actor.id) || (actor.dialogueTree && actor.dialogueTree.start));
   }
 
   /** Render the inspect/use UI for an item hotspot, mirroring StatusApp's inventory actions. */
@@ -155,7 +161,18 @@ export async function launchMonitorApp() {
     const text = document.createElement("p");
     text.className = "monitor-item-text";
     interactionEl.appendChild(text);
-    text.textContent = itemManager.inspect(itemId);
+
+    function doInspect() {
+      const result = itemManager.inspect(itemId);
+      text.textContent = formatInspectResult(result);
+    }
+    doInspect();
+
+    const inspectAgainBtn = document.createElement("button");
+    inspectAgainBtn.className = "win95-btn bevel-out";
+    inspectAgainBtn.textContent = "再次调查";
+    inspectAgainBtn.addEventListener("click", doInspect);
+    interactionEl.appendChild(inspectAgainBtn);
 
     if (def.usable) {
       const useBtn = document.createElement("button");
@@ -175,12 +192,18 @@ export async function launchMonitorApp() {
     const slots = currentScene.actorSlots || [];
     actors.slice(0, slots.length).forEach((actor, idx) => {
       const slot = slots[idx];
+      const offline = npcStateManager.isOffline(actor.id);
+      const distressed = !offline && npcStateManager.isDistressed(actor.id);
       const marker = document.createElement("button");
       marker.type = "button";
-      marker.className = "win95-btn bevel-out monitor-npc-marker";
+      marker.className = `win95-btn bevel-out monitor-npc-marker${offline ? " offline" : ""}${
+        distressed ? " distressed" : ""
+      }`;
       marker.style.left = `${slot.x}px`;
       marker.style.top = `${slot.y}px`;
-      marker.textContent = `${actor.avatar || "🧑‍⚕️"} ${actor.name}`;
+      marker.textContent = `${actor.avatar || "🧑‍⚕️"} ${actor.name}${
+        offline ? " 🚫" : distressed ? " ⚠️" : ""
+      }`;
       marker.addEventListener("click", (e) => {
         e.stopPropagation();
         renderActorInteraction(actor, keywordDefs);
@@ -223,6 +246,7 @@ export async function launchMonitorApp() {
     titleEl.textContent = `${currentScene.backgroundLabel || "监控画面"}（第${gameState.day}天 · ${
       phase === "day" ? "白天" : "夜晚"
     }）`;
+    updateBudgetHint();
 
     playerPos = clampToBounds(currentScene.playerStart || playerPos, currentScene.bounds);
     placePlayer(false);
@@ -271,6 +295,8 @@ export async function launchMonitorApp() {
 
   const offDayNight = eventBus.on("daynight:changed", renderScene);
   const offItems = eventBus.on("items:changed", () => renderItemHotspots());
+  const offBudget = eventBus.on("actionBudget:changed", updateBudgetHint);
+  const offNpcState = eventBus.on("npc:offline", renderScene);
 
   await renderScene();
 
@@ -279,11 +305,13 @@ export async function launchMonitorApp() {
     title: i18n.t("apps.monitor", "监控画面"),
     icon: "🖥️",
     width: 520,
-    height: 560,
+    height: 580,
     content: root,
     onClose: () => {
       offDayNight();
       offItems();
+      offBudget();
+      offNpcState();
     },
   });
 }

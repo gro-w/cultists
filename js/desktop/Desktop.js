@@ -28,6 +28,7 @@ export default class Desktop {
       const icon = typeof app.icon === "function" ? app.icon() : app.icon;
       const iconEl = document.createElement("div");
       iconEl.className = "desktop-icon";
+      iconEl.dataset.appId = app.id;
       iconEl.tabIndex = 0;
       iconEl.innerHTML = `
         <span class="icon-glyph">${icon}</span>

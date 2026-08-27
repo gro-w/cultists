@@ -380,6 +380,18 @@
   margin: 6px 0;
 }
 
+.monitor-item-text .inspect-text {
+  margin: 0 0 3px;
+  line-height: 1.5;
+}
+
+.monitor-item-text .inspect-check-meta {
+  margin: 0;
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+}
+
 /* ---------------------------------------------------------------------- */
 /* Notebook App                                                            */
 /* ---------------------------------------------------------------------- */
@@ -498,6 +510,18 @@
   margin: 4px 0 0;
   font-size: 12px;
   color: var(--w95-gray-dark);
+}
+
+.item-row-feedback .inspect-text {
+  margin: 0 0 3px;
+  line-height: 1.5;
+}
+
+.item-row-feedback .inspect-check-meta {
+  margin: 0;
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
 }
 
 .save-url-row,

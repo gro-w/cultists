@@ -1,0 +1,25 @@
+{
+  "day": 5,
+  "phase": "night",
+  "note": "第五天晚上：最后一个夜班，一切即将迎来结局。",
+  "patients": [],
+  "contacts": [
+    {
+      "id": "roommate_xiaomei_d5night",
+      "name": "小美",
+      "avatar": "🐱",
+      "keywordIds": [],
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "这周终于要结束了，你还好吗？",
+            "options": [{ "label": "还好，只是经历了很多事。", "next": "end" }]
+          },
+          "end": { "speaker": "npc", "text": "无论如何，早点休息吧。", "options": [] }
+        }
+      }
+    }
+  ]
+}

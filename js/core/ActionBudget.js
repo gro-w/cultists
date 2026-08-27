@@ -207,7 +207,10 @@ class ActionBudget {
     const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
     const previousMinutes = this.phaseMinutes;
     this.phaseMinutes += minutesPerAction;
-    if (gameState.phase === "night" && previousMinutes < 8 * 60 && this.phaseMinutes >= 8 * 60) {
+    const phaseStart = gameState.phase === "night" ? 16 * 60 : 8 * 60;
+    const previousClock = phaseStart + previousMinutes;
+    const nextClock = phaseStart + this.phaseMinutes;
+    if (Math.floor(nextClock / (24 * 60)) > Math.floor(previousClock / (24 * 60))) {
       gameState.advanceDayAtMidnight();
     }
   }

@@ -101,7 +101,7 @@ export async function launchStatusApp() {
     const clock = `${String(Math.floor((clockMinutes % 1440) / 60)).padStart(2, "0")}:${String(clockMinutes % 60).padStart(2, "0")}`;
     panels.stats.innerHTML = `
       <h4>主角状态</h4>
-      <p>第 ${s.day} 天 · ${s.phase === "day" ? "☀ 白天" : "🌙 夜晚"} · ${clock}</p>
+      <p>第 ${s.day} 天 · ${s.phase === "day" ? "☀ 白天" : "🌙 夜晚"} · ${s.location === "dorm" ? "宿舍" : "工作中"} · ${clock}</p>
       ${bar("精力", s.energy)}
       ${bar("精神", s.mental)}
       ${bar("体力", s.physical)}

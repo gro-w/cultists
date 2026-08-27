@@ -6,7 +6,7 @@ discovered across prior sessions that are easy to miss from the code alone.
 
 ## What this project is
 
-- **English name**: Cultists
+- **English name**: surrendered by cultists
 - **Chinese name**: 完蛋，我被邪教徒包围了！
 - A **Windows-95-styled, data-driven web game engine** implemented in plain
   ES6 modules (no build step, no bundler, no framework, no `package.json`).

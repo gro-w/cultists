@@ -1,113 +1,172 @@
-# Cultists（完蛋，我被邪教徒包围了！）
+# surrendered by cultists（完蛋，我被邪教徒包围了！）
 
-一个仿 Windows 95 风格的可拓展 Web 游戏引擎，服务于以“关键词收集与解谜/交互”为核心机制的桌面模拟器游戏。
+**surrendered by cultists** 是一款采用 Windows 95 视觉风格的、纯 ES6 模块实现的网页互动游戏。玩家扮演医院实习生，在白天使用医院信息系统处理工作，在下班后回到宿舍与 NPC 交流、整理线索，并逐步揭开被邪教徒包围的真相。
 
-- 英文名：**Cultists**
+- 英文名：**surrendered by cultists**
 - 中文名：**完蛋，我被邪教徒包围了！**
+- 技术栈：原生 HTML / CSS / JavaScript ES6 modules
+- 构建方式：无构建步骤、无打包器、无第三方框架、无 `package.json`
+- 内容方式：JSON 数据驱动
 
-## 运行方式
+## 当前开发进展
 
-由于引擎通过 `fetch` 异步加载 `data/` 目录下的 JSON 配置，浏览器的同源策略要求项目必须通过 HTTP(S) 服务器访问（不能直接双击打开 `index.html`）。
+当前版本已经完成工作模式与下班模式的拆分，并形成完整的基础游戏循环：
+
+- **工作模式**：以 Win95 桌面为核心，提供 HIS、夜聊、监控、ChatGTP、关键词笔记本、状态、成就和设置等应用。
+- **下班模式**：以宿舍场景为核心，直接操控主角移动，与 NPC 交互，查看墙上游戏时钟，并使用床、手机、电脑和线索墙等场景热点。
+- **电脑交互**：宿舍电脑只打开工作桌面，不改变地点、上下班状态或游戏时间；电脑桌面提供“关闭电脑”按钮，关闭后返回宿舍。
+- **床交互**：床是宿舍中切换状态的主要入口。工作时间直接去上班；非工作时间确认睡觉，睡眠后进入次日 `08:00` 的工作模式。
+- **转场动画**：工作模式与下班模式之间使用关闭/打开笔记本电脑的转场效果。
+- **时间系统**：每次有效行动推进 `20` 分钟，行动次数不限；时间本身是行动限制，并支持跨 `16:00`、午夜和睡眠结算。
+- **线索墙**：已发现的线索以节点和红线关系图显示，与工作模式中的关键词笔记本区分开。
+- **存档与结局**：存档字符串写入 URL，保存状态包括游戏时间、地点、属性、物品、关键词、对话进度、窗口状态等；支持事件、对话、物品、属性和最终阶段等结局触发方式。
+- **启动流程**：无存档参数时先显示主菜单，支持新游戏和载入存档；带存档 URL 时自动恢复游戏。
+
+## 本地运行
+
+游戏运行时会通过 `fetch()` 加载 `data/` 下的 JSON 文件，因此必须通过 HTTP(S) 服务器访问，不能直接双击 `index.html`。
 
 ```bash
-# 在项目根目录下启动一个静态服务器，例如：
+# 在项目根目录执行
 python3 -m http.server 8000
-# 然后在浏览器中访问
-http://localhost:8000/
 ```
 
-## 目录结构
+然后打开：
 
+```text
+http://localhost:8000/index.html
 ```
-index.html                  # 入口页面：桌面 / 任务栏 / 开始菜单骨架
+
+## 游戏时间规则
+
+- 初始状态：第 1 天、`08:00`、工作模式。
+- 工作时间窗口：`08:00 <= time < 16:00`。
+- 每次成功对话、调查、ChatGTP 查询或其他计时行动消耗 `20` 分钟。
+- 行动数量没有上限；行动是否继续由游戏时间、NPC 状态和结局条件决定。
+- 工作时间点击下班：进入下班模式；在工作窗口内会将时间推进到 `16:00`。
+- 下班模式在 `08:00–16:00` 点击床：确认后直接进入工作模式，不推进时间、不执行睡眠。
+- 下班模式在 `16:00–次日 08:00` 点击床：确认后睡眠，结算恢复效果并进入次日 `08:00` 工作模式。
+- 跨过 `00:00` 时立即增加游戏日期。
+- `00:00–07:40` 的游戏时钟以红色粗体显示。
+- 游戏时间完全由游戏状态驱动，不使用操作系统真实时间。
+
+## 主要操作
+
+### 工作模式
+
+工作模式是带笔记本电脑边框的 Win95 桌面。桌面图标和开始菜单可以打开：
+
+- **HIS 医疗系统**：与患者问诊、填写病历和开具药物。
+- **夜聊 Messenger**：与联系人对话并收集关键词。
+- **监控画面**：查看监控场景、调查异常和使用物品。
+- **ChatGTP**：通过一个或两个关键词查询线索，并消耗精神值。
+- **关键词笔记本**：查看已收集关键词、来源和定义。
+- **状态与属性**：查看属性、物品、时间和存档。
+- **成就**：查看已解锁成就。
+- **设置**：调整 BGM 音量、笔记本排序和阶段切换确认选项。
+
+所有应用都可以打开；HIS、夜聊和监控中的内容根据天数与昼夜阶段读取对应数据。
+
+### 下班模式
+
+下班模式显示宿舍场景，不复用工作模式的应用桌面作为主界面：
+
+- 点击场景移动主角。
+- 点击主角查看属性、物品和保存游戏。
+- 点击 NPC 进行对话；离线 NPC 无法交互。
+- 点击床确认去上班或睡觉。
+- 点击手机打开 ChatGTP。
+- 点击线索墙查看已发现线索的红线关系图。
+- 点击电脑打开工作桌面；点击电脑桌面的“关闭电脑”返回宿舍。
+
+## 项目结构
+
+```text
+index.html                    # 入口页面、工作桌面、宿舍模式、主菜单与结局界面
 css/
-  win95.css                 # Win95 基础样式库（窗口、按钮、任务栏、图标、立体边框）
-  apps.css                  # 各应用内部界面样式
+  win95.css                   # Win95 基础控件与桌面样式
+  apps.css                   # 工作模式应用窗口样式
+  modes.css                  # 笔记本边框、宿舍场景与模式转场样式
+  mainmenu.css               # 主菜单与结局界面的 CRT 样式
 js/
-  core/
-    EventBus.js             # 全局发布/订阅事件总线（单例）
-    Window.js                # 单个窗口的 DOM/拖拽/缩放/最小化/关闭逻辑
-    WindowManager.js         # 窗口系统单例：创建、聚焦、层叠、单实例管理
-    DataLoader.js            # 数据加载器单例：异步读取并缓存 data/ 下的 JSON
-    KeywordManager.js        # 关键词全局总线单例：高亮渲染、点击收集、笔记本同步
-    GameState.js             # 主角状态单例：精力/精神/体力/饱腹/天数/昼夜阶段
-    DayNightSystem.js        # 昼夜循环管理：阶段切换（应用始终可用，内容随阶段变化）
-    DialogueProgress.js      # 记录 HIS/社交软件当前对话到了哪个 NPC/哪个节点（供恢复与存档使用）
-    ItemManager.js           # 物品/背包单例：物品定义加载、持有数量、调查、使用效果结算
-    SaveManager.js           # 存档单例：构建规范索引表、状态压缩编码/解码、读写 URL search
-    SettingsManager.js       # 设置单例：BGM 音量、笔记本排序方式、下班/睡觉确认开关（localStorage 持久化）
-    AudioManager.js          # BGM 播放单例：音量实时跟随 SettingsManager
-    ConfirmDialog.js         # Win95 风格确认/取消模态框（替代 window.confirm）
-    Pinyin.js                # 关键词首字拼音首字母查表工具（供笔记本"按拼音"分组使用）
-  desktop/
-    Desktop.js               # 桌面图标渲染与启动（所有应用常驻桌面）
-    Taskbar.js                # 任务栏（窗口标签、时钟、开始菜单、昼夜指示）
-    NotificationBanner.js    # 阶段切换提示条：昼夜切换后弹出并自动消失
-  apps/
-    HISApp.js                # HIS 医疗系统（问诊 -> 填写病历 -> 开处方），患者列表随天数/昼夜变化
-    SocialApp.js              # 社交软件（室友聊天 -> 收集线索关键词），联系人/对话随天数/昼夜变化
-    ChatGTPApp.js             # 仿 ChatGPT 问答助手：可选 1-2 个关键词组合查询，回答中可再引入新关键词
-    NotebookApp.js            # 关键词笔记本（关键词+来源+删除按钮，双击可直接在 ChatGTP 中查询该词）
-    StatusApp.js              # 状态与属性：状态 / 物品 / 保存 三个标签页
-    SettingsApp.js            # 设置（BGM 音量、笔记本排序方式、下班/睡觉确认开关，Win95 风格控件）
-  main.js                    # 应用注册表 + 引导启动（含存档预加载与恢复）
-data/
-  his_schedule.json          # HIS 病人排期：按 { day, phase, patients } 分组的对话树 + 高亮关键词配置
-  social_schedule.json       # 社交软件联系人排期：按 { day, phase, contacts } 分组的对话树 + 高亮关键词配置
-  medical_records.json       # 病历模板与待填槽位配置
-  medicines.json             # 可开具药物列表
-  chatgtp_qa.json            # ChatGTP 关键词-回复映射库
-  items.json                 # 物品定义（是否消耗/可用、调查文本、使用条件与效果）与初始背包
+  main.js                    # 应用注册、核心系统预加载与启动流程
+  core/                      # 游戏状态、时间、事件、数据、存档和结局等核心系统
+  desktop/                   # Win95 桌面、任务栏、主菜单、宿舍模式和提示界面
+  apps/                      # HIS、夜聊、监控、ChatGTP、笔记本等应用
+ data/
+  languages.json             # 可用语言列表
+  strings.<lang>.json        # UI 外壳文本
+  <lang>/                    # 语言相关的全部游戏内容
+    days.json                # 游戏总天数
+    day01a.json ... day05b.json # 每天白天/夜晚的排期内容
+    keywords.json            # 关键词定义与分类
+    items.json               # 物品与初始背包
+    action_budget.json       # 行动时间和睡眠配置
+    monitor_scenes.json      # 工作/宿舍场景配置
+    chatgtp_qa.json          # ChatGTP 关键词问答
+    endings.json             # 结局、属性触发和最终条件
+    medical_records.json     # 病历模板
+    medicines.json           # 药品列表
+    achievements.json        # 成就定义
+    npc_state.json           # NPC 状态配置
+    skills.json              # 技能配置
+  assets/                    # 场景 SVG 与角色图片
 ```
 
-## 核心架构说明
+## 核心架构
 
-### 1. 窗口系统
-- `WindowManager`（单例）统一管理所有 `Win95Window` 实例：创建、置顶聚焦（z-index 递增）、单实例应用（`appId`）。
-- `Win95Window` 封装了标题栏拖拽、右下角缩放、最小化/关闭按钮的原生事件绑定，不依赖任何第三方库。
+### 单例与事件总线
 
-### 2. 数据驱动
-- 所有文本、对话分支、病历模板、药品库、AI 问答库、物品定义均以 JSON 存放在 `data/` 目录，通过 `DataLoader.loadJSON()` 异步加载并缓存，新增/修改内容无需改动引擎代码。
+`js/core/` 中的核心系统采用“类 + 单例”导出方式。系统之间优先通过 `EventBus` 发布和订阅事件，减少应用之间的直接依赖。主要模块包括：
 
-### 3. 关键词机制（发布/订阅）
-- 对话文本使用 `[[keywordId|显示文本]]` 语法标记特殊词汇；`KeywordManager.renderHighlightedText()` 将其转换为可点击的高亮 `<span>`。
-- 点击高亮词汇会调用 `KeywordManager.collect()`，将关键词写入全局 Map 并通过 `eventBus.emit('keyword:collected', ...)` 广播；`KeywordManager.remove()` 则从笔记本中移除并广播 `keyword:removed`。
-- `KeywordManager` 同时维护一个全局关键词定义注册表（`registerDefinitions()`），任意应用（如 ChatGTP 的回答、物品调查揭示的线索）都可以引用并高亮此前未在当前上下文中定义过的关键词。
-- `NotebookApp`（笔记本：只显示关键词+来源，支持删除，双击可直接跳转 ChatGTP 查询）、`HISApp`（病历下拉选项）、`ChatGTPApp`（选 1-2 个关键词组合查询）均订阅该事件，实现"提取 -> 笔记本查看 -> 填空/查询"的完整闭环，无需相互耦合。
+- `GameState`：维护天数、昼夜、地点、精力、精神、体力和饱腹等状态。
+- `DayNightSystem`：处理工作/下班/睡眠切换、工作时间边界和最终阶段。
+- `ActionBudget`：记录阶段时间，每次有效行动推进 20 分钟，并处理加班、熬夜和睡眠结算。
+- `ScheduleData` / `DataLoader`：按语言、天数和昼夜阶段加载 JSON 内容。
+- `KeywordManager`：注册、收集和渲染关键词，并维护笔记本数据。
+- `ItemManager`：管理物品、调查、使用条件和使用效果。
+- `DialogueRunner` / `DialogueProgress`：执行并保存分支对话。
+- `NpcStateManager` / `FavorabilityManager`：管理 NPC 在线状态和好感度。
+- `EndingManager`：监听事件并解析属性、物品、对话和最终阶段结局。
+- `SaveManager`：将完整游戏状态编码为 URL 存档字符串并负责恢复。
+- `SettingsManager` / `AudioManager`：管理设置持久化和 BGM。
+- `AchievementManager`：根据游戏事件解锁成就。
 
-### 4. 对话树（分支对话）
-- HIS 病人对话与社交软件联系人对话均采用 `dialogueTree`（`{ start, nodes: { [nodeId]: { speaker, text, options } } }`）的树形结构，而非线性文本数组。
-- 每次只展示当前节点的一句话；若该节点带有 `options`，则渲染为可点击的选项按钮，点击后显示玩家选择的台词并跳转到 `next` 指向的节点；`options` 为空数组表示对话分支结束。
-- `DialogueProgress`（单例）记录 HIS/社交软件当前选中的 NPC 与对话节点，用于重新打开窗口时恢复到原来的对话位置，也供 `SaveManager` 编码进存档。
+### 数据驱动内容
 
-### 5. 昼夜循环与内容排期
-- `GameState`（单例）保存天数、昼夜阶段与身心状态数值（精力/精神/体力/饱腹）。
-- `DayNightSystem` 负责阶段切换（`toggle()`），并广播 `daynight:changed`；HIS / 社交软件等应用**始终可以打开**，不再有阶段限制。
-- HIS / 社交软件改为读取 `data/his_schedule.json` / `data/social_schedule.json` 中按 `{ day, phase }` 分组的排期数据，随着天数与昼夜推进展示不同的病人列表/联系人与对话内容；窗口保持打开状态下，切换阶段会实时重新渲染。超出已配置天数时，会在同一阶段的已配置条目间循环，保证游戏不会"没有内容"。
-- `Desktop` 与 `Taskbar` 中所有应用**始终显示**在桌面图标与开始菜单中。
-- 桌面新增一个动态"下班/睡觉"快捷方式：白天显示"下班"，双击后（可选二次确认，见设置，使用 Win95 风格的 `ConfirmDialog` 而非浏览器原生 `confirm`）调用 `dayNightSystem.toggle()` 进入夜晚；夜晚显示"睡觉"，确认后进入下一天。图标/文案会随昼夜实时切换。
-- `NotificationBanner` 订阅 `daynight:changed`，在阶段切换后弹出顶部提示条（几秒后自动消失），告知下一阶段已开启。
+游戏内容不写死在应用逻辑中。对话树、排期、关键词、物品、药品、病历、问答、技能、成就和结局均来自 `data/<lang>/`。新增内容通常只需要修改对应 JSON，并保持既有 schema 和 ID 的唯一性。
 
-### 6. 设置系统
-- `SettingsManager`（单例）持久化保存：`bgmVolume`（BGM 音量）、`notebookSortMode`（笔记本分组方式：按类别 / 按收集天数 / 按拼音首字母）、`confirmPhaseChange`（下班/睡觉前是否需要二次确认）。修改后通过 `eventBus.emit('settings:changed', ...)` 广播，任意订阅方（`AudioManager`、`NotebookApp`）会立即生效。
-- `SettingsApp` 提供 Win95 风格的音量滑块、排序方式下拉框与确认开关（自绘 3D 边框/勾选样式），均直接调用 `settingsManager.set(...)`。
-- `AudioManager` 维护单个隐藏的 `<audio>` 元素，音量始终跟随设置；`setTrack()` 可在后续接入真实 BGM 资源。
+### 存档格式
 
-### 7. 物品系统
-- `ItemManager`（单例）从 `data/items.json` 加载物品定义与初始背包。每个物品定义包含：`consumable`（使用后是否消耗）、`usable`（能否使用）、`inspectText`（调查文本）、`revealKeywords`（调查时揭示的关键词，可选）、`useCondition.requires`（使用所需持有的其他物品，可选）、`useEffect`（使用效果：增删物品 `remove`/`add`，或改变状态数值 `statChanges`）、`failMessage`/`successMessage`。
-- `inspect(id)` 显示调查文本并收集 `revealKeywords`；`use(id)` 校验可用性/持有量/使用条件后结算效果，`consumable` 物品会在使用成功后自动移除一个。
-- `StatusApp` 的"物品"标签页列出持有物品及数量，并提供"调查"/"使用"按钮（仅 `usable` 的物品显示"使用"）。
+`SaveManager` 使用版本化的紧凑编码格式，将数值和索引编码为 base64url 字符串并写入 URL 查询参数。存档包含：
 
-### 8. 存档系统
-- `SaveManager`（单例）在启动时预加载 `his_schedule.json`/`social_schedule.json`/`items.json`，构建关键词、物品、HIS/社交 NPC+对话节点的规范索引表（决定性顺序，不依赖当前打开了哪个应用）。
-- 存档时（`StatusApp` 的"保存"标签页），把天数/昼夜阶段/四项状态数值/已打开窗口/HIS 与社交对话进度/已收集关键词列表/持有物品列表全部按固定顺序打包为字节数组，转换为 base64url 字符串写入 `location.search`（通过 `history.replaceState`，不刷新页面），并展示当前完整网址供玩家复制保存。
-- 读档时解析该字符串，还原 `GameState`/`KeywordManager`/`ItemManager`/`DialogueProgress` 并按位掩码重新打开/关闭对应窗口。整个编码只包含索引/数值字节，不包含明文的物品名、关键词 id 等字符串。
-- 打开游戏时若网址没有 `?` 后的存档字符串，则从头开始新游戏；否则自动解析并恢复。
+- 天数、昼夜阶段、地点与阶段内时间
+- 精神、体力、精力、饱腹和可恢复精神损失
+- 物品数量与已收集关键词
+- 对话进度、NPC 状态、好感度、技能和成就
+- 已打开窗口及其位置和层叠顺序
 
-## 扩展指南
-- **新增应用**：在 `js/apps/` 下新建模块，暴露一个 `launchXApp()` 函数，内部调用 `windowManager.createWindow({ appId, title, icon, content })`，再于 `js/main.js` 的 `APP_REGISTRY` 中注册即可自动出现在桌面图标与开始菜单中（如需存档时能重新打开，也会自动纳入 `SaveManager` 的窗口位掩码，只要 appId 加入 `SaveManager.js` 的 `WINDOW_APP_IDS` 列表）。
-- **新增关键词/对话/药品/QA/物品**：直接编辑 `data/` 下对应 JSON 文件，无需修改任何 JS 代码。
-- **新增对话分支**：在对应病人/联系人的 `dialogueTree.nodes` 中新增节点，并通过 `options[].next` 连接即可，无需修改应用代码。
-- **新增一天的 HIS/社交内容**：在 `his_schedule.json` / `social_schedule.json` 的 `schedule` 数组中追加 `{ day, phase, patients/contacts }` 条目；患者/联系人 `id` 需在整个文件内全局唯一。
-- **新增 ChatGTP 组合问答**：在 `chatgtp_qa.json` 的 `entries` 中添加 `{ "keywords": ["关键词A","关键词B"], "answer": "..." }`（1 或 2 个关键词均可），回答文本中可用 `[[keywordId]]` 引入 `keywords` 数组里定义的新关键词。
-- **新增物品**：在 `items.json` 的 `items` 中添加定义，并按需加入 `startingInventory` 或某个 `useEffect.add` 中。
+修改存档字节布局时必须同步提升 `SaveManager.js` 中的存档格式版本；窗口 `appId` 列表也必须保持追加而不重排。
+
+## 扩展方式
+
+- **新增应用**：在 `js/apps/` 创建模块，导出启动函数，在 `js/main.js` 的 `APP_REGISTRY` 中注册。
+- **新增工作或宿舍内容**：编辑 `data/<lang>/dayNNa.json` 或 `dayNNb.json`。
+- **新增关键词**：在 `keywords.json` 中添加定义，应用只引用关键词 ID。
+- **新增对话分支**：在对应 `dialogueTree.nodes` 中添加节点，并通过 `options[].next` 连接。
+- **新增 ChatGTP 问答**：在 `chatgtp_qa.json` 的问答条目中添加关键词组合和回答。
+- **新增物品、药品、结局或成就**：分别编辑对应 JSON 文件，并按现有 schema 配置效果或触发条件。
+- **新增语言**：添加语言列表、UI 字符串文件以及完整的 `data/<lang>/` 内容目录。
+
+## 验证
+
+项目目前没有测试框架、代码格式化工具或构建流程。提交修改前执行与改动范围对应的静态检查：
+
+```bash
+node --check js/main.js
+node --check js/desktop/DormMode.js
+python3 -m json.tool data/zh-hans/action_budget.json > /dev/null
+git diff --check
+```
+
+对新增或修改的每个 JavaScript 文件执行 `node --check`，对每个修改的 JSON 文件执行 JSON 校验。浏览器端流程由项目开发者在本地服务器中进行验证。

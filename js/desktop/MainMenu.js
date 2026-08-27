@@ -10,6 +10,8 @@
  * lines, glow, blinking cursor) instead of the grey Win95 chrome
  * (see css/mainmenu.css).
  */
+import { i18n } from "../core/I18n.js";
+
 export default class MainMenu {
   /**
    * @param {HTMLElement} rootEl - container element (e.g. #main-menu)
@@ -35,8 +37,8 @@ export default class MainMenu {
   _render() {
     this.rootEl.innerHTML = `
       <div class="crt-screen">
-        <div class="crt-title">CULTISTS OS 95<span class="crt-cursor">&nbsp;</span></div>
-        <div class="crt-subtitle">SYSTEM READY - SELECT AN OPTION BELOW</div>
+        <div class="crt-title">${i18n.t("mainmenu.title", "完蛋，我被邪教徒包围了！")}<span class="crt-cursor">&nbsp;</span></div>
+        <div class="crt-subtitle">${i18n.t("mainmenu.subtitle", "CULTISTS")}</div>
         <div class="crt-menu-list">
           <button type="button" class="crt-menu-item" data-action="new-game">
             <span class="crt-menu-marker">&gt;</span>
@@ -62,7 +64,7 @@ export default class MainMenu {
           </div>
           <p class="crt-login-feedback hidden"></p>
         </div>
-        <div class="crt-login-footer">在你继续之前，选择一个选项以进入 Cultists OS。</div>
+        <div class="crt-login-footer">${i18n.t("mainmenu.footer", "在你继续之前，选择一个选项以进入游戏。")}</div>
       </div>
     `;
 

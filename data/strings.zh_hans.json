@@ -5,7 +5,7 @@
   "notification.day": "☀ 新的一天开始了。",
   "notification.night": "🌙 夜晚降临了。",
   "notification.welcomeBack": "欢迎回来，继续你的故事吧。",
-  "mainmenu.title": "Cultists OS",
+  "mainmenu.title": "完蛋，我被邪教徒包围了！",
   "mainmenu.newGame": "新游戏",
   "mainmenu.newGameHint": "开始一段全新的实习故事",
   "mainmenu.loadSave": "载入存档",
@@ -15,7 +15,7 @@
   "mainmenu.confirm": "确定",
   "mainmenu.cancel": "取消",
   "mainmenu.invalid": "存档字符串无效，请检查后重试。",
-  "mainmenu.footer": "在你继续之前，选择一个选项以进入 Cultists OS。",
+  "mainmenu.footer": "在你继续之前，选择一个选项以进入游戏。",
   "confirm.defaultTitle": "确认",
   "confirm.ok": "确认",
   "confirm.cancel": "取消",
@@ -43,5 +43,6 @@
   "notebook.deleteBtn": "删除",
   "notebook.deleteHint": "从笔记本中删除",
   "notebook.dblClickHint": "双击在 ChatGTP 中查询",
-  "notebook.unknownSource": "未知来源"
+  "notebook.unknownSource": "未知来源",
+  "mainmenu.subtitle": "CULTISTS"
 }

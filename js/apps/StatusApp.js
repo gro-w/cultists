@@ -76,24 +76,11 @@ export async function launchStatusApp() {
     `;
   }
 
-  function actionBudgetRow(kind, label) {
-    const { used } = actionBudget.snapshot();
-    const limit = actionBudget.currentLimits[kind === "inspect" ? "inspectLimit" : "dialogueLimit"];
-    const usedCount = used[kind];
-    const remaining = actionBudget.remaining(kind);
-    const overBudget = remaining < 0;
-    const limitText = Number.isFinite(limit) ? limit : "∞";
-    return `
-      <p class="action-budget-row${overBudget ? " over-budget" : ""}">
-        ${label}：已用 ${usedCount} / ${limitText}${overBudget ? `（超出 ${-remaining}，将记为加班/熬夜）` : ""}
-      </p>
-    `;
-  }
 
   function renderStats() {
     const s = gameState.snapshot();
     const budgetSnapshot = actionBudget.snapshot();
-    const { pendingNightDebt, phaseMinutes } = budgetSnapshot;
+    const { phaseMinutes } = budgetSnapshot;
     const phaseLimit = s.phase === "day"
       ? actionBudget.config?.day?.workMinutes || 480
       : actionBudget.config?.night?.nightMinutes || 960;
@@ -108,10 +95,7 @@ export async function launchStatusApp() {
       ${bar("饱腹", s.satiety)}
       <p class="action-budget-row">时间：${Math.floor(phaseMinutes / 60)} 小时 ${phaseMinutes % 60} 分 / ${phaseLimit / 60} 小时${phaseMinutes > phaseLimit ? "（已进入加班/熬夜）" : ""}</p>
       <p class="action-budget-hint">可恢复精神损失：${s.recoverableMentalLoss}</p>
-      <h4>本阶段行动次数</h4>
-      ${actionBudgetRow("dialogue", "对话/问诊")}
-      ${actionBudgetRow("inspect", "调查")}
-      ${pendingNightDebt > 0 ? `<p class="action-budget-row over-budget">今晚将因白天加班减少 ${pendingNightDebt} 次可用行动。</p>` : ""}
+
       <h4>技能</h4>
       ${skillManager
         .all()

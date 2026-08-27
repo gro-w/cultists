@@ -7,7 +7,7 @@ import { dialogueProgress } from "../core/DialogueProgress.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
-import { actionBudget } from "../core/ActionBudget.js";
+
 
 /**
  * SocialApp - Social media style chat client.
@@ -44,13 +44,6 @@ export async function launchSocialApp() {
     return keywordDefs;
   }
 
-  function budgetNote() {
-    const remaining = actionBudget.remaining("dialogue");
-    if (!Number.isFinite(remaining)) return "";
-    return remaining > 0
-      ? `本阶段剩余聊天次数：${remaining}`
-      : `本阶段聊天次数已用尽（继续聊天将记为加班/熬夜）`;
-  }
 
   function renderContacts(entry, keywordDefs) {
     contactListEl.innerHTML = `<h4>联系人（第${gameState.day}天 · ${
@@ -62,10 +55,6 @@ export async function launchSocialApp() {
       note.textContent = entry.note;
       contactListEl.appendChild(note);
     }
-    const budgetHint = document.createElement("p");
-    budgetHint.className = "his-schedule-note action-budget-hint";
-    budgetHint.textContent = budgetNote();
-    contactListEl.appendChild(budgetHint);
 
     if (!entry.contacts || entry.contacts.length === 0) {
       const empty = document.createElement("p");
@@ -150,7 +139,7 @@ export async function launchSocialApp() {
   }
 
   const offDayNight = eventBus.on("daynight:changed", renderCurrentEntry);
-  const offBudget = eventBus.on("actionBudget:changed", renderCurrentEntry);
+
   const offNpcState = eventBus.on("npc:offline", renderCurrentEntry);
 
   await renderCurrentEntry();
@@ -164,7 +153,7 @@ export async function launchSocialApp() {
     content: root,
     onClose: () => {
       offDayNight();
-      offBudget();
+
       offNpcState();
     },
   });

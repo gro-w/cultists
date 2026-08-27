@@ -56,7 +56,7 @@ class DayNightSystem {
     if (gameState.location === "dorm" && inWorkWindow) {
       gameState.location = "work";
       eventBus.emit("gamestate:changed", gameState.snapshot());
-      eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location });
+      eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location, phaseChanged: false });
       return gameState.phase;
     }
 
@@ -66,19 +66,28 @@ class DayNightSystem {
       if (!inWorkWindow && gameState.phase === "night") {
         gameState.location = "dorm";
         eventBus.emit("gamestate:changed", gameState.snapshot());
-        eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location });
+        eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location, phaseChanged: false });
         return gameState.phase;
       }
-      if (!inWorkWindow && clockMinutes >= 16 * 60 && gameState.phase === "day") {
+      if (!inWorkWindow && gameState.phase === "day") {
         const settlement = actionBudget.settlePhase(gameState.phase);
-        const phase = gameState.advancePhase({ incrementDay: true, location: "dorm" });
-        eventBus.emit("daynight:changed", { phase, day: gameState.day, location: gameState.location, settlement });
+        const elapsed = actionBudget.phaseMinutes;
+        const phase = gameState.advancePhase({ incrementDay: false, location: "dorm" });
+        const preservedMinutes = Math.max(0, 8 * 60 + elapsed - 16 * 60);
+        eventBus.emit("daynight:changed", {
+          phase,
+          day: gameState.day,
+          location: gameState.location,
+          settlement,
+          phaseChanged: true,
+          phaseMinutes: preservedMinutes,
+        });
         return phase;
       }
       if (!inWorkWindow) {
         gameState.location = "dorm";
         eventBus.emit("gamestate:changed", gameState.snapshot());
-        eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location });
+        eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location, phaseChanged: false });
         return gameState.phase;
       }
 
@@ -97,7 +106,10 @@ class DayNightSystem {
       return gameState.phase;
     }
     const settlement = actionBudget.settlePhase(gameState.phase);
-    const phase = gameState.advancePhase({ incrementDay: true, location: "work" });
+    // Midnight already increments the date while actions advance the clock;
+    // only sleep before midnight needs the night-to-day increment here.
+    const incrementDay = clockMinutes >= 16 * 60;
+    const phase = gameState.advancePhase({ incrementDay, location: "work" });
     eventBus.emit("daynight:changed", { phase, day: gameState.day, location: gameState.location, settlement });
     return phase;
   }

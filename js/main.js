@@ -44,8 +44,10 @@ import { launchMonitorApp } from "./apps/MonitorApp.js";
 
 /** Perform the 下班/睡觉 phase-change action, with optional confirmation. */
 async function handlePhaseToggle() {
-  const goingToWork = gameState.phase === "day" && gameState.location === "dorm";
-  const isWorkEnd = gameState.phase === "day" && !goingToWork;
+  const clockMinutes = dayNightSystem.currentClockMinutes();
+  const inWorkWindow = clockMinutes >= 8 * 60 && clockMinutes < 16 * 60;
+  const goingToWork = gameState.location === "dorm" && inWorkWindow;
+  const isWorkEnd = gameState.location === "work";
   const message = goingToWork
     ? "确定要去上班吗？时间不会推进。"
     : isWorkEnd
@@ -74,12 +76,12 @@ const APP_REGISTRY = [
   {
     id: "phase-toggle",
     label: () =>
-      gameState.phase === "day" && gameState.location === "dorm"
-        ? "去上班"
-        : gameState.phase === "day"
-          ? i18n.t("apps.phaseToggleWork", "下班")
-          : i18n.t("apps.phaseToggleSleep", "睡觉"),
-    icon: () => gameState.phase === "day" && gameState.location === "dorm" ? "🚶" : gameState.phase === "day" ? "🚪" : "🛏️",
+      gameState.location === "work"
+        ? i18n.t("apps.phaseToggleWork", "下班")
+        : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
+          ? "去上班"
+          : "去睡觉",
+    icon: () => gameState.location === "work" ? "🚪" : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60 ? "🚶" : "🛏️",
     launch: () => handlePhaseToggle(),
   },
 ];

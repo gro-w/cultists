@@ -25,6 +25,11 @@ class DayNightSystem {
     return gameState.day;
   }
 
+  currentClockMinutes() {
+    const phaseStart = gameState.phase === "day" ? 8 * 60 : 16 * 60;
+    return (phaseStart + actionBudget.phaseMinutes) % (24 * 60);
+  }
+
   /** All apps are always available; kept for backwards-compatible callers. */
   isAppAvailable() {
     return true;
@@ -44,36 +49,56 @@ class DayNightSystem {
    * tell the player what just happened.
    */
   toggle() {
-    // Waking up leaves the protagonist in the dorm. Going to work is a
-    // location change only and must not advance the clock or settle a phase.
-    if (gameState.phase === "day" && gameState.location === "dorm") {
+    const clockMinutes = this.currentClockMinutes();
+    const inWorkWindow = clockMinutes >= 8 * 60 && clockMinutes < 16 * 60;
+
+    // Off duty during working hours: go to work without spending time.
+    if (gameState.location === "dorm" && inWorkWindow) {
       gameState.location = "work";
       eventBus.emit("gamestate:changed", gameState.snapshot());
-      eventBus.emit("daynight:changed", {
-        phase: gameState.phase,
-        day: gameState.day,
-        location: gameState.location,
-      });
+      eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location });
       return gameState.phase;
     }
+
+    if (gameState.location === "work") {
+      // Outside working hours, going off duty does not spend time. At or
+      // after 16:00, enter the night schedule so the next click sleeps.
+      if (!inWorkWindow && gameState.phase === "night") {
+        gameState.location = "dorm";
+        eventBus.emit("gamestate:changed", gameState.snapshot());
+        eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location });
+        return gameState.phase;
+      }
+      if (!inWorkWindow && clockMinutes >= 16 * 60 && gameState.phase === "day") {
+        const settlement = actionBudget.settlePhase(gameState.phase);
+        const phase = gameState.advancePhase({ incrementDay: true, location: "dorm" });
+        eventBus.emit("daynight:changed", { phase, day: gameState.day, location: gameState.location, settlement });
+        return phase;
+      }
+      if (!inWorkWindow) {
+        gameState.location = "dorm";
+        eventBus.emit("gamestate:changed", gameState.snapshot());
+        eventBus.emit("daynight:changed", { phase: gameState.phase, day: gameState.day, location: gameState.location });
+        return gameState.phase;
+      }
+
+      // On duty in 08:00-16:00: end work and snap to exactly 16:00.
+      actionBudget.phaseMinutes = 8 * 60;
+      const settlement = actionBudget.settlePhase(gameState.phase);
+      const phase = gameState.advancePhase({ incrementDay: true, location: "dorm" });
+      eventBus.emit("daynight:changed", { phase, day: gameState.day, location: gameState.location, settlement });
+      return phase;
+    }
+
+    // In the dorm outside working hours, sleep until next 08:00 and wake on duty.
     if (scheduleData.isFinalPhase(gameState.day, gameState.phase)) {
       actionBudget.settlePhase(gameState.phase);
       endingManager.resolveFinalEnding();
       return gameState.phase;
     }
     const settlement = actionBudget.settlePhase(gameState.phase);
-    // Leaving work before 16:00 advances the clock to the fixed work end.
-    // Leaving after 16:00 keeps the already-overdue time unchanged.
-    if (gameState.phase === "day" && actionBudget.phaseMinutes < 8 * 60) {
-      actionBudget.phaseMinutes = 8 * 60;
-    }
-    const phase = gameState.advancePhase({ incrementDay: true, location: "dorm" });
-    eventBus.emit("daynight:changed", {
-      phase,
-      day: gameState.day,
-      location: gameState.location,
-      settlement,
-    });
+    const phase = gameState.advancePhase({ incrementDay: true, location: "work" });
+    eventBus.emit("daynight:changed", { phase, day: gameState.day, location: gameState.location, settlement });
     return phase;
   }
 }

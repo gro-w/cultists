@@ -167,6 +167,9 @@ export async function launchChatGTPApp(options = {}) {
 
   function ask(queryText, labels) {
     if (!queryText) return;
+    // A keyword query is still an active conversation with ChatGTP, so it
+    // advances the shared phase clock just like an NPC dialogue turn.
+    eventBus.emit("dialogue:turn", { appId: "chatgtp", actorId: CHATGTP_ACTOR_ID });
     appendMessage("me", escapeHtml(queryText));
 
     if (npcStateManager.isOffline(CHATGTP_ACTOR_ID)) {

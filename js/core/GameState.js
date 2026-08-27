@@ -20,6 +20,7 @@ class GameState {
     this.mental = 100;
     this.physical = 100;
     this.satiety = 70;
+    this.recoverableMentalLoss = 0;
   }
 
   advancePhase() {
@@ -41,14 +42,34 @@ class GameState {
     eventBus.emit("gamestate:changed", this.snapshot());
   }
 
+  applyMentalLoss(amount, { recoverable = false } = {}) {
+    const loss = Math.max(0, Number(amount) || 0);
+    if (!loss) return;
+    this.mental = clamp(this.mental - loss);
+    if (recoverable) this.recoverableMentalLoss += loss;
+    eventBus.emit("gamestate:changed", this.snapshot());
+  }
+
+  recoverMental(amount) {
+    const recovery = Math.min(this.recoverableMentalLoss, Math.max(0, Number(amount) || 0));
+    if (!recovery) return 0;
+    this.recoverableMentalLoss -= recovery;
+    this.mental = clamp(this.mental + recovery);
+    eventBus.emit("gamestate:changed", this.snapshot());
+    return recovery;
+  }
+
   /** Overwrite every stat at once (used by SaveManager when restoring a save). */
-  restore({ day, phase, energy, mental, physical, satiety } = {}) {
+  restore({ day, phase, energy, mental, physical, satiety, recoverableMentalLoss } = {}) {
     if (typeof day === "number") this.day = day;
     if (phase === "day" || phase === "night") this.phase = phase;
     if (typeof energy === "number") this.energy = clamp(energy);
     if (typeof mental === "number") this.mental = clamp(mental);
     if (typeof physical === "number") this.physical = clamp(physical);
     if (typeof satiety === "number") this.satiety = clamp(satiety, 0, SATIETY_MAX);
+    if (typeof recoverableMentalLoss === "number") {
+      this.recoverableMentalLoss = Math.max(0, recoverableMentalLoss);
+    }
     eventBus.emit("gamestate:changed", this.snapshot());
     eventBus.emit("daynight:changed", { phase: this.phase, day: this.day });
   }
@@ -61,6 +82,7 @@ class GameState {
       mental: this.mental,
       physical: this.physical,
       satiety: this.satiety,
+      recoverableMentalLoss: this.recoverableMentalLoss,
     };
   }
 }

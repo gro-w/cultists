@@ -4,8 +4,9 @@ import { itemManager } from "./ItemManager.js";
 import { dialogueProgress } from "./DialogueProgress.js";
 import { windowManager } from "./WindowManager.js";
 import { scheduleData } from "./ScheduleData.js";
+import { actionBudget } from "./ActionBudget.js";
 
-const SAVE_FORMAT_VERSION = 2;
+const SAVE_FORMAT_VERSION = 3;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor"];
@@ -163,6 +164,18 @@ class SaveManager {
     bytes.push(clampByte(gameState.mental));
     bytes.push(clampByte(gameState.physical));
     bytes.push(clampByte(gameState.satiety));
+    const budget = actionBudget.snapshot();
+    bytes.push(clampByte(gameState.recoverableMentalLoss));
+    bytes.push(clampByte(budget.used.dialogue));
+    bytes.push(clampByte(budget.used.inspect));
+    bytes.push(clampByte(budget.limits.dialogueLimit));
+    bytes.push(clampByte(budget.limits.inspectLimit));
+    bytes.push(clampByte(budget.phaseMinutes));
+    bytes.push(clampByte(budget.pendingNightDebt));
+    bytes.push(clampByte(budget.insufficientSleepStreak));
+    bytes.push(clampByte(budget.sleepHistory[0] || 0));
+    bytes.push(clampByte(budget.sleepHistory[1] || 0));
+    bytes.push(clampByte(budget.sleepHistory[2] || 0));
 
     const windows = windowManager.windowSnapshot().slice(0, WINDOW_APP_IDS.length);
     bytes.push(windows.length);
@@ -210,13 +223,24 @@ class SaveManager {
 
   _decode(bytes) {
     let i = 0;
-    i += 1; // format version - reserved for future migrations
+    const version = bytes[i++];
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
     const energy = bytes[i++];
     const mental = bytes[i++];
     const physical = bytes[i++];
     const satiety = bytes[i++];
+    const recoverableMentalLoss = version >= 3 ? bytes[i++] : 0;
+    const budgetSnapshot = version >= 3
+      ? {
+          used: { dialogue: bytes[i++], inspect: bytes[i++] },
+          limits: { dialogueLimit: bytes[i++], inspectLimit: bytes[i++] },
+          phaseMinutes: bytes[i++],
+          pendingNightDebt: bytes[i++],
+          insufficientSleepStreak: bytes[i++],
+          sleepHistory: [bytes[i++], bytes[i++], bytes[i++]].filter((n) => n > 0),
+        }
+      : null;
 
     const windowCount = bytes[i++] || 0;
     const windowEntries = [];
@@ -255,7 +279,8 @@ class SaveManager {
       if (id) itemEntries.push({ id, count });
     }
 
-    gameState.restore({ day, phase, energy, mental, physical, satiety });
+    gameState.restore({ day, phase, energy, mental, physical, satiety, recoverableMentalLoss });
+    if (budgetSnapshot) actionBudget.restore(budgetSnapshot);
     keywordManager.restoreCollected(keywordEntries);
     itemManager.restoreInventory(itemEntries);
 

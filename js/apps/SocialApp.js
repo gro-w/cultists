@@ -9,6 +9,13 @@ import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 
+const dialogueKeywordIds = (tree) => {
+  if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
+  const ids = [];
+  Object.values(tree?.nodes || {}).forEach((node) => String(node?.text || "").replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, (_, id) => { if (!ids.includes(id)) ids.push(id); return _; }));
+  return ids;
+};
+
 
 /**
  * SocialApp - Social media style chat client.
@@ -40,7 +47,7 @@ export async function launchSocialApp() {
   function registerKeywords(entry) {
     const keywordDefs = {};
     (entry.contacts || []).forEach((c) => {
-      Object.assign(keywordDefs, keywordManager.definitionsWithSource(c.keywordIds, `室友-${c.name}`));
+      Object.assign(keywordDefs, keywordManager.definitionsWithSource(dialogueKeywordIds(c.dialogueTree), `室友-${c.name}`));
     });
     return keywordDefs;
   }
@@ -66,11 +73,12 @@ export async function launchSocialApp() {
       return;
     }
     entry.contacts.forEach((contact) => {
+      const npcId = contact.npcId || contact.id;
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out social-contact-btn";
-      const offline = npcStateManager.isOffline(contact.id);
+      const offline = npcStateManager.isOffline(npcId);
       const unavailable = !dayNightSystem.areRoommatesAvailable();
-      const distressed = !offline && npcStateManager.isDistressed(contact.id);
+      const distressed = !offline && npcStateManager.isDistressed(npcId);
       btn.textContent = `${contact.avatar || "🙂"} ${contact.name}${
         offline ? " 🚫" : unavailable ? " 💤" : distressed ? " ⚠️" : ""
       }`;
@@ -85,9 +93,10 @@ export async function launchSocialApp() {
   }
 
   function renderChat(contact, keywordDefs) {
+    const npcId = contact.npcId || contact.id;
     chatEl.innerHTML = `<h4>与 ${contact.name} 的聊天</h4>`;
 
-    if (npcStateManager.isOffline(contact.id)) {
+    if (npcStateManager.isOffline(npcId)) {
       chatEl.innerHTML += '<p class="dialogue-end">（对方已经很久没有上线了，消息始终没有回音。）</p>';
       return;
     }
@@ -95,7 +104,7 @@ export async function launchSocialApp() {
       chatEl.innerHTML += `<p class="dialogue-end">（${dayNightSystem.areRoommatesSleeping() ? "对方正在睡觉" : "对方正在上班"}，暂时无法聊天。）</p>`;
       return;
     }
-    if (npcStateManager.isDistressed(contact.id)) {
+    if (npcStateManager.isDistressed(npcId)) {
       const warn = document.createElement("p");
       warn.className = "his-schedule-note npc-distress-warning";
       warn.textContent = "⚠️ 对方的语气最近变得异常低落，回复也断断续续。";

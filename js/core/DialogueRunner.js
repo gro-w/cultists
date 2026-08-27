@@ -41,6 +41,7 @@ export function createDialogueRunner({
   onNodeShown,
   emptyMessage = "（暂无对话内容）",
 }) {
+  const stateActorId = actor.npcId || actor.id;
   function showNode(nodeId) {
     const tree = actor.dialogueTree;
     const node = nodeId ? tree && tree.nodes[nodeId] : null;
@@ -56,7 +57,7 @@ export function createDialogueRunner({
     eventBus.emit("game:text_read", { nodeId: `${actor.id}/${nodeId}` });
 
     appendLine(node.speaker, node.speaker === "npc" ? actor.name : "我", node.text);
-    applyDialogueOnShow(node, actor.id);
+    applyDialogueOnShow(node, stateActorId);
     if (endingManager.isEnded) return;
 
     if (node.options && node.options.length > 0) {

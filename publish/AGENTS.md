@@ -66,16 +66,18 @@ avoidable. Follow this pattern for any new global/cross-cutting state.
 | `KeywordManager.js` | Central keyword registry (loads `keywords.json`), highlight rendering/click-to-collect, and the Notebook's backing store. `definitionsWithSource(ids, source)` is the standard way apps register keywords they reveal. |
 | `ItemManager.js` | Inventory singleton (loads `items.json`). `use()` applies `useEffect` and emits `item:used`; `inspect()` reveals `revealKeywordIds` via KeywordManager. |
 | `ScheduleData.js` | Resolves per-day-phase content files (`data/zh-hans/dayNNa.json` / `dayNNb.json`) via `data/zh-hans/days.json`'s `totalDays`. `isFinalPhase(day, phase)` flags the last authored night. |
+| `SpecialEventManager.js` | Loads `special_events.json` and replaces matching schedule NPCs when day/phase, favorability, and SAN conditions match. |
 | `DialogueEffects.js` | Shared `applyDialogueOnShow(node)` helper — applies a dialogue node's optional `onShow: { grantItems, removeItems, ending }` side effects. Used by both HISApp and SocialApp so dialogue-driven item grants/endings aren't duplicated. |
 | `EndingManager.js` | Loads `endings.json`. Resolves all 4 ending trigger types (event/dialogue via `trigger(id)`, item-use via `item:used` + `useEffect.ending`, stat-threshold via `gamestate:changed` + `statTriggers`, time/final-day via `resolveFinalEnding()` + `finalConditions`/`defaultEndingId`). First ending wins (`isEnded` latches true). Emits `ending:triggered`. |
 | `GameState.js` | Player stats (energy/mental/physical/satiety/day/phase). Satiety is clamped to **0–255** (not 100) so gluttony-threshold endings are reachable. |
+| `npcs.json` / `FavorabilityManager.js` / `NpcStateManager.js` | Maintain stable NPC IDs, names, initial favorability, and initial SAN; dialogue `onShow.favorabilityChange` changes favorability. |
 | `DayNightSystem.js` | `toggle()` advances day/night; checks `scheduleData.isFinalPhase()` first and calls `endingManager.resolveFinalEnding()` instead of advancing once the last phase is reached. |
 | `DialogueProgress.js` | Tracks which dialogue nodes/options have been seen, for branching dialogue persistence. |
 | `SettingsManager.js` | Player-configurable prefs (BGM volume, notebook sort mode, phase-change confirmation, language), persisted to `localStorage`, broadcast via `settings:changed`. |
 | `AudioManager.js` | BGM playback, volume driven by `SettingsManager`. |
 | `ConfirmDialog.js` | `confirmDialog(message, opts)` — a Win95-window-styled replacement for `window.confirm()`; returns a Promise\<boolean\>. |
 | `Window.js` / `WindowManager.js` | Window chrome (drag/resize/minimize/close/`moveTo`) and the window system (create/focus/z-order/`windowSnapshot()`/`moveWindow()`). `windowSnapshot()` is what SaveManager persists. |
-| `SaveManager.js` | Encodes/decodes the entire game state (stats, items, keywords, dialogue progress, **open windows + their position/z-order**) into a short opaque string written to `location.search`. Format is versioned (`SAVE_FORMAT_VERSION`); bumping the format is a breaking change for existing save links. |
+| `SaveManager.js` | Encodes/decodes the entire game state (stats, items, keywords, dialogue progress, NPC favorability/SAN, **open windows + their position/z-order**) into a short opaque string written to `location.search`. Format is versioned (`SAVE_FORMAT_VERSION`); bumping the format is a breaking change for existing save links. |
 
 ### Apps (`js/apps/*.js`) + Desktop chrome (`js/desktop/*.js`)
 
@@ -120,10 +122,11 @@ Key files inside `data/zh-hans/`:
 | File | Purpose |
 |---|---|
 | `days.json` | `{ "totalDays": N }` — drives `ScheduleData`'s day-phase cycling. |
-| `day01a.json` … `dayNNb.json` | Per-day-phase content (`a` = day, `b` = night): `patients`/`contacts` arrays, each with a `dialogueTree` (nodes with `text`, `[[keywordId]]` inline highlight markers, `options[]`, optional `onShow: {grantItems, removeItems, ending}`), plus optional `recordTemplateId` for HIS patients. |
-| `keywords.json` | Central keyword registry: `{ id, label, category, definition, ... }`. All apps reference keywords by id via `keywordIds`/`keywordId` fields; never inline-define a keyword elsewhere. |
+| `day01a.json` … `dayNNb.json` | Per-day-phase content (`a` = day, `b` = night): `patients` remain in the existing patient schema; NPC dialogue entries in `contacts` use `{ type: "npc", npcId, dialogueTree }` to reference `npcs.json`, while custom entries use `{ type: "other", name, avatar, dialogueTree }`. Each dialogue tree has nodes with `text`, `[[keywordId]]` inline highlight markers, `options[]`, and optional `onShow` effects. The markers are the sole dialogue-keyword references; actors do not need a `keywordIds` field. |
+| `keywords.json` | Central keyword registry: `{ id, content }` only. Dialogue text references keywords with `[[keywordId]]` markers; never inline-define a keyword elsewhere. Item data may still use keyword IDs for reveal effects. ChatGTP normal/corrupted answers live in `chatgtp_qa.json`. |
 | `items.json` | Inventory item defs: `consumable`, `usable`, `inspectText`, `revealKeywordIds`, `useCondition.requires`, `useEffect.{grant,remove,ending,stat deltas}`. |
 | `endings.json` | `endings[]` (id/title/icon/text), `statTriggers[]` (stat/op/value/endingId), `finalConditions[]` (condition/endingId, checked in order on the final night), `defaultEndingId` (fallback). |
+| `special_events.json` | Conditional NPC replacements: `npcId`, `phase`, inclusive `startDay`/`endDay`, optional `favorability`/`san` min/max, and a replacement `dialogueTree`. |
 | `medical_records.json`, `medicines.json` | HIS record templates (fill-in-the-blank slots) and prescribable medicine list. |
 | `chatgtp_qa.json` | Keyword-combination → answer map for the ChatGTP app; each entry has `revealKeywordIds` for keywords the answer teaches. |
 
@@ -133,7 +136,7 @@ Key files inside `data/zh-hans/`:
   "speaker": "npc" | "player",
   "text": "...[[keywordId]] inline highlight marker...",
   "options": [{ "label": "...", "next": "nodeId" }],
-  "onShow": { "grantItems": [{"itemId":"x","count":1}], "removeItems": [...], "ending": "endingId" }
+  "onShow": { "grantItems": [...], "removeItems": [...], "ending": "endingId", "favorabilityChange": {"npcId": "npc_id", "delta": 5} }
 }
 ```
 `onShow` effects are applied via `DialogueEffects.applyDialogueOnShow(node)`
@@ -177,8 +180,7 @@ string; there is no server-side or file-based save.
   `ItemManager` does **not** import `EndingManager` directly — it emits
   `item:used` and `EndingManager` subscribes, to keep the dependency
   direction one-way).
-- Never hardcode a keyword's label/definition/category outside
-  `keywords.json` — always reference by id and resolve through
+- Never hardcode a keyword's content outside `keywords.json` — always reference by id and resolve through
   `keywordManager`.
 - Never hardcode a `data/<lang>/...` path — go through `dataLoader` (it is
   already language-aware).

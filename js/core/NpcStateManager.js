@@ -28,14 +28,25 @@ class NpcStateManager {
     this.san = new Map();
     /** @type {Set<string>} actorIds that have gone offline */
     this.offlineActors = new Set();
+    this.npcs = [];
     this._loadPromise = null;
   }
 
   /** Load `data/npc_state.json` (idempotent, safe to call concurrently). */
   async load() {
     if (!this._loadPromise) {
-      this._loadPromise = dataLoader.loadJSON("npc_state.json").then((data) => {
+      this._loadPromise = Promise.all([
+        dataLoader.loadJSON("npc_state.json"),
+        dataLoader.loadJSON("npcs.json"),
+      ]).then(([data, npcDoc]) => {
         this.config = data;
+        this.npcs = npcDoc.npcs || [];
+        this.npcs.forEach((npc) => {
+          if (!this.san.has(npc.id)) {
+            const initialSan = Number(npc.initialSan);
+            this.san.set(npc.id, Math.max(0, Math.min(100, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
+          }
+        });
       });
     }
     return this._loadPromise;
@@ -55,7 +66,11 @@ class NpcStateManager {
 
   /** Current SAN (0-100) for an actor id; unseen actors start at the configured default. */
   get(actorId) {
-    if (!this.san.has(actorId)) this.san.set(actorId, this._defaultSan());
+    if (!this.san.has(actorId)) {
+      const npc = this.npcs.find((entry) => entry.id === actorId);
+      const initialSan = Number(npc?.initialSan);
+      this.san.set(actorId, Math.max(0, Math.min(100, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
+    }
     return this.san.get(actorId);
   }
 
@@ -93,6 +108,14 @@ class NpcStateManager {
 
   snapshot() {
     return { san: Object.fromEntries(this.san), offline: [...this.offlineActors] };
+  }
+
+  restore({ san = {}, offline = [] } = {}) {
+    Object.entries(san).forEach(([id, value]) => {
+      if (this.san.has(id) || this.npcs.some((npc) => npc.id === id)) this.san.set(id, Math.max(0, Math.min(100, Number(value) || 0)));
+    });
+    this.offlineActors = new Set(offline.filter((id) => this.san.has(id)));
+    eventBus.emit("npcState:restored", this.snapshot());
   }
 
   /** Subscribe to any SAN change or offline transition. Returns an unsubscribe function. */

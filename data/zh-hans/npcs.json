@@ -1,0 +1,46 @@
+{
+  "npcs": [
+    {
+      "id": "ajie",
+      "name": "阿杰",
+      "avatar": "🐶",
+      "initialFavorability": 60,
+      "initialSan": 80
+    },
+    {
+      "id": "awei",
+      "name": "阿伟",
+      "avatar": "🐱",
+      "initialFavorability": 50,
+      "initialSan": 80
+    },
+    {
+      "id": "binbin",
+      "name": "彬彬",
+      "avatar": "🐼",
+      "initialFavorability": 40,
+      "initialSan": 80
+    },
+    {
+      "id": "xiaomei",
+      "name": "小美",
+      "avatar": "🐱",
+      "initialFavorability": 50,
+      "initialSan": 80
+    },
+    {
+      "id": "ajun",
+      "name": "阿俊",
+      "avatar": "🐶",
+      "initialFavorability": 50,
+      "initialSan": 80
+    },
+    {
+      "id": "linan",
+      "name": "李楠",
+      "avatar": "🐰",
+      "initialFavorability": 50,
+      "initialSan": 80
+    }
+  ]
+}

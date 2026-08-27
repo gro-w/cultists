@@ -22,9 +22,8 @@ const CHATGTP_ACTOR_ID = "chatgtp";
  * "chatgtp", same mechanism as any patient/contact): every keyword-QA
  * query costs `sanCostPerQuery` SAN, and dialogue-mode nodes can carry
  * `onShow.npcSanChange` same as any other dialogueTree. Once its SAN drops
- * below the "distressed" threshold, keyword-QA answers have a chance to be
- * replaced by a `corruptedAnswers` entry instead of the real lookup
- * (ChatGTP "hallucinating" from strain); once it goes fully offline,
+ * below the "distressed" threshold, each matched entry chooses its own
+ * corrupted answer (or reuses the normal answer); once it goes fully offline,
  * queries get `offlineAnswer` instead of any real answer.
  *
  * Since the window is single-instance (`appId: "chatgtp"`), other apps
@@ -48,8 +47,8 @@ export async function launchChatGTPApp(options = {}) {
   }
 
   const qa = await dataLoader.loadJSON("chatgtp_qa.json");
+  await keywordManager.load();
   const sanCostPerQuery = Number(qa.sanCostPerQuery) || 0;
-  const corruptedAnswers = qa.corruptedAnswers || [];
   const offlineAnswer = qa.offlineAnswer || FALLBACK_ANSWER;
 
   // Keywords that ChatGTP's answers can introduce/reveal, resolved from the
@@ -60,12 +59,12 @@ export async function launchChatGTPApp(options = {}) {
     "ChatGTP 问答"
   );
 
-  // Index entries by their sorted, normalized keyword-label set for
+  // Index entries by their sorted, normalized keyword-id set for
   // order-independent single/combo lookups.
   const entryIndex = new Map();
   (qa.entries || []).forEach((entry) => {
     const key = normalizeSet(entry.keywords || []);
-    entryIndex.set(key, entry.answer);
+    entryIndex.set(key, entry);
   });
 
   const root = document.createElement("div");
@@ -148,8 +147,16 @@ export async function launchChatGTPApp(options = {}) {
     return (s || "").trim().toLowerCase();
   }
 
+  function normalizeKeywordValue(value) {
+    const normalized = normalizeLabel(value);
+    const definition = keywordManager.getDefinition(value)
+      || keywordManager.all().find((entry) => normalizeLabel(entry.content || entry.label) === normalized)
+      || [...keywordManager.definitions.values()].find((entry) => normalizeLabel(entry.content || entry.label) === normalized);
+    return definition ? definition.id : normalized;
+  }
+
   function normalizeSet(labels) {
-    return labels.map(normalizeLabel).sort().join("+");
+    return labels.map(normalizeKeywordValue).sort().join("+");
   }
 
   function appendMessage(role, html) {
@@ -162,7 +169,7 @@ export async function launchChatGTPApp(options = {}) {
   }
 
   function answerFor(labels) {
-    return entryIndex.get(normalizeSet(labels)) || FALLBACK_ANSWER;
+    return entryIndex.get(normalizeSet(labels)) || null;
   }
 
   function ask(queryText, labels) {
@@ -177,12 +184,10 @@ export async function launchChatGTPApp(options = {}) {
       return;
     }
 
-    let answer = answerFor(labels);
-    // Once distressed, strain has a chance to corrupt the response into a
-    // fabricated/garbled one instead of the real lookup - a visible sign
-    // ChatGTP's own SAN loss is affecting the reliability of its answers.
-    if (npcStateManager.isDistressed(CHATGTP_ACTOR_ID) && corruptedAnswers.length > 0 && Math.random() < 0.6) {
-      answer = corruptedAnswers[Math.floor(Math.random() * corruptedAnswers.length)];
+    const entry = answerFor(labels);
+    let answer = entry?.answer || FALLBACK_ANSWER;
+    if (npcStateManager.isDistressed(CHATGTP_ACTOR_ID) && entry && !entry.corruptedSameAsNormal) {
+      answer = entry.corruptedAnswer || entry.answer || FALLBACK_ANSWER;
     }
     appendMessage("npc", keywordManager.renderHighlightedText(answer, ownKeywordDefs));
 
@@ -212,7 +217,7 @@ export async function launchChatGTPApp(options = {}) {
       chip.type = "button";
       const isSelected = selectedIds.has(kw.id);
       chip.className = `win95-btn bevel-out keyword-chip${isSelected ? " selected" : ""}`;
-      chip.textContent = kw.label;
+      chip.textContent = kw.content || kw.label || kw.id;
       chip.disabled = !isSelected && selectedIds.size >= MAX_SELECTED_KEYWORDS;
       chip.addEventListener("click", () => {
         if (isSelected) {
@@ -229,8 +234,8 @@ export async function launchChatGTPApp(options = {}) {
   queryBtn.addEventListener("click", () => {
     if (selectedIds.size === 0) return;
     const selectedKeywords = [...selectedIds].map((id) => keywordManager.get(id)).filter(Boolean);
-    const labels = selectedKeywords.map((k) => k.label);
-    ask(labels.join(" + "), labels);
+    const ids = selectedKeywords.map((k) => k.id);
+    ask(selectedKeywords.map((k) => k.content || k.label || k.id).join(" + "), ids);
     selectedIds.clear();
     renderKeywordChips();
   });

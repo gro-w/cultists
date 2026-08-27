@@ -13,9 +13,7 @@ import { dataLoader } from "./DataLoader.js";
  * Keyword definition shape (as authored in dialogue JSON / keyword configs):
  *   {
  *     id: "fever",            // unique id
- *     label: "发热",           // displayed text
- *     category: "symptom",    // symptom | item | clue | drug | misc
- *     definition: "体温超过37.3摄氏度的状态。",
+ *     content: "发热",         // displayed text
  *     source: "病人-王芳"       // where it was collected from
  *   }
  */
@@ -38,8 +36,8 @@ class KeywordManager {
    * to call concurrently from multiple callers - the in-flight promise is
    * cached so overlapping callers all await the same load instead of
    * racing past a boolean guard set only after the `await` resolves).
-   * This is the single source of truth for every keyword's label/category/
-   * definition; dialogue and item data files only reference keyword ids,
+   * This is the single source of truth for every keyword's content; dialogue
+   * and item data files only reference keyword ids,
    * looking their static fields up here and attaching a contextual
    * `source` (e.g. "病人-王芳") at the point of use.
    */
@@ -74,6 +72,24 @@ class KeywordManager {
     return this.definitions.get(id);
   }
 
+  /** Extract every canonical keyword id referenced by [[...]] markers. */
+  idsFromText(text) {
+    const ids = [];
+    String(text || "").replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, (_, id) => {
+      if (!ids.includes(id)) ids.push(id);
+      return _;
+    });
+    return ids;
+  }
+
+  /** Extract keyword ids from all dialogue node text in an actor. */
+  idsFromDialogueTree(tree) {
+    return Object.values(tree?.nodes || {}).reduce((ids, node) => {
+      this.idsFromText(node?.text).forEach((id) => { if (!ids.includes(id)) ids.push(id); });
+      return ids;
+    }, []);
+  }
+
   /**
    * Build a `{id: {...def, source}}` map for a list of keyword ids, all
    * sharing the same contextual source (e.g. "病人-王芳"). Ids missing a
@@ -105,7 +121,7 @@ class KeywordManager {
     if (!text) return "";
     return text.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (match, id, display) => {
       const def = this._resolveDefinition(id, keywordDefs);
-      const label = display || (def ? def.label : id);
+      const label = display || (def ? (def.content || def.label || id) : id);
       if (!def) {
         console.warn(`[KeywordManager] Unknown keyword id "${id}" referenced in text.`);
         return label;

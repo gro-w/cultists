@@ -11,6 +11,13 @@ import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 
+const dialogueKeywordIds = (tree) => {
+  if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
+  const ids = [];
+  Object.values(tree?.nodes || {}).forEach((node) => String(node?.text || "").replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, (_, id) => { if (!ids.includes(id)) ids.push(id); return _; }));
+  return ids;
+};
+
 const MOVE_STEP = 18;
 const ROOM = { minX: 20, maxX: 460, minY: 195, maxY: 285 };
 
@@ -119,12 +126,13 @@ export default class DormMode {
     const actors = this.entry?.[listKey] || [];
     const slots = scene.actorSlots || [];
     const keywordDefs = {};
-    actors.forEach((actor) => Object.assign(keywordDefs, keywordManager.definitionsWithSource(actor.keywordIds, `宿舍-${actor.name}`)));
+    actors.forEach((actor) => Object.assign(keywordDefs, keywordManager.definitionsWithSource(dialogueKeywordIds(actor.dialogueTree), `宿舍-${actor.name}`)));
     actors.slice(0, slots.length).forEach((actor, index) => {
+      const npcId = actor.npcId || actor.id;
       const slot = slots[index];
       const marker = document.createElement("button");
       marker.type = "button";
-      marker.className = `win95-btn bevel-out dorm-npc-marker${npcStateManager.isOffline(actor.id) ? " offline" : ""}`;
+      marker.className = `win95-btn bevel-out dorm-npc-marker${npcStateManager.isOffline(npcId) ? " offline" : ""}`;
       marker.style.left = `${slot.x}px`;
       marker.style.top = `${slot.y}px`;
       marker.textContent = `${actor.avatar || "🙂"} ${actor.name}`;
@@ -214,8 +222,8 @@ export default class DormMode {
       node.className = "dorm-clue-node";
       node.style.left = `${positions[index].x}px`;
       node.style.top = `${positions[index].y}px`;
-      node.title = clue.definition || clue.label;
-      node.textContent = clue.label;
+      node.title = clue.content || clue.label || clue.id;
+      node.textContent = clue.content || clue.label || clue.id;
       board.appendChild(node);
     });
     this.interaction.appendChild(board);

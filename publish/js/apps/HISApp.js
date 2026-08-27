@@ -10,6 +10,13 @@ import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 
+const dialogueKeywordIds = (tree) => {
+  if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
+  const ids = [];
+  Object.values(tree?.nodes || {}).forEach((node) => String(node?.text || "").replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, (_, id) => { if (!ids.includes(id)) ids.push(id); return _; }));
+  return ids;
+};
+
 
 /**
  * HISApp - Hospital Information System.
@@ -56,7 +63,7 @@ export async function launchHISApp() {
   function registerKeywords(entry) {
     const keywordDefs = {};
     (entry.patients || []).forEach((p) => {
-      Object.assign(keywordDefs, keywordManager.definitionsWithSource(p.keywordIds, `病人-${p.name}`));
+      Object.assign(keywordDefs, keywordManager.definitionsWithSource(dialogueKeywordIds(p.dialogueTree), `病人-${p.name}`));
     });
     return keywordDefs;
   }
@@ -171,7 +178,7 @@ export async function launchHISApp() {
         .forEach((kw) => {
           const opt = document.createElement("option");
           opt.value = kw.id;
-          opt.textContent = kw.label;
+          opt.textContent = kw.content || kw.label || kw.id;
           select.appendChild(opt);
         });
       select.addEventListener("change", () => {

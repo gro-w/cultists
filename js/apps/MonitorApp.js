@@ -11,6 +11,13 @@ import { npcStateManager } from "../core/NpcStateManager.js";
 
 import { formatInspectResult } from "../core/InspectFormat.js";
 
+const dialogueKeywordIds = (tree) => {
+  if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
+  const ids = [];
+  Object.values(tree?.nodes || {}).forEach((node) => String(node?.text || "").replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, (_, id) => { if (!ids.includes(id)) ids.push(id); return _; }));
+  return ids;
+};
+
 const MOVE_STEP = 18; // px per arrow-key press
 const CHARACTER_SPRITE = "data/assets/char01_01_stage.png";
 
@@ -103,13 +110,14 @@ export async function launchMonitorApp() {
 
   /** Render the shared dialogueTree conversation UI for one actor (patient/contact). */
   function renderActorInteraction(actor, keywordDefs) {
+    const npcId = actor.npcId || actor.id;
     interactionEl.innerHTML = `<h4>与 ${actor.name} 对话</h4>`;
 
-    if (npcStateManager.isOffline(actor.id)) {
+    if (npcStateManager.isOffline(npcId)) {
       interactionEl.innerHTML += '<p class="dialogue-end">（对方情绪崩溃后已经离开，暂时无法互动。）</p>';
       return;
     }
-    if (npcStateManager.isDistressed(actor.id)) {
+    if (npcStateManager.isDistressed(npcId)) {
       const warn = document.createElement("p");
       warn.className = "his-schedule-note npc-distress-warning";
       warn.textContent = "⚠️ 对方情绪明显不稳定。";
@@ -184,8 +192,9 @@ export async function launchMonitorApp() {
     const slots = currentScene.actorSlots || [];
     actors.slice(0, slots.length).forEach((actor, idx) => {
       const slot = slots[idx];
-      const offline = npcStateManager.isOffline(actor.id);
-      const distressed = !offline && npcStateManager.isDistressed(actor.id);
+      const npcId = actor.npcId || actor.id;
+      const offline = npcStateManager.isOffline(npcId);
+      const distressed = !offline && npcStateManager.isDistressed(npcId);
       const marker = document.createElement("button");
       marker.type = "button";
       marker.className = `win95-btn bevel-out monitor-npc-marker${offline ? " offline" : ""}${
@@ -251,7 +260,7 @@ export async function launchMonitorApp() {
     } else {
       const keywordDefs = {};
       (entry[listKey] || []).forEach((actor) => {
-        Object.assign(keywordDefs, keywordManager.definitionsWithSource(actor.keywordIds, `监控-${actor.name}`));
+        Object.assign(keywordDefs, keywordManager.definitionsWithSource(dialogueKeywordIds(actor.dialogueTree), `监控-${actor.name}`));
       });
       renderActorMarkers(entry, keywordDefs, listKey);
       showHint("点击场景移动主角，点击 NPC 或物品图标进行互动。");

@@ -34,7 +34,7 @@ function groupKeywords(keywords, mode) {
       const title = day == null ? "未知天数" : `第 ${day} 天`;
       pushTo(key, title, kw);
     } else if (mode === NOTEBOOK_SORT_MODES.PINYIN) {
-      const initial = getPinyinInitial(kw.label);
+      const initial = getPinyinInitial(kw.content || kw.label || kw.id);
       pushTo(initial, initial, kw);
     } else {
       const cat = kw.category || "misc";
@@ -75,20 +75,21 @@ export async function launchNotebookApp() {
       section.innerHTML = `<h4>${title}</h4>`;
       const ul = document.createElement("ul");
       list.forEach((kw) => {
+        const content = kw.content || kw.label || kw.id;
         const li = document.createElement("li");
         li.className = "notebook-item";
-        li.title = `${i18n.t("notebook.dblClickHint", "双击在 ChatGTP 中查询")}「${kw.label}」`;
+        li.title = `${i18n.t("notebook.dblClickHint", "双击在 ChatGTP 中查询")}「${content}」`;
         li.addEventListener("dblclick", () => launchChatGTPApp({ presetKeywordId: kw.id }));
 
         const text = document.createElement("span");
         text.className = "notebook-item-text";
-        text.innerHTML = `<strong>${kw.label}</strong> <em>(${kw.source || i18n.t("notebook.unknownSource", "未知来源")})</em>`;
+        text.innerHTML = `<strong>${content}</strong> <em>(${kw.source || i18n.t("notebook.unknownSource", "未知来源")})</em>`;
 
         const deleteBtn = document.createElement("button");
         deleteBtn.type = "button";
         deleteBtn.className = "win95-btn bevel-out notebook-delete-btn";
         deleteBtn.textContent = i18n.t("notebook.deleteBtn", "删除");
-        deleteBtn.title = `${i18n.t("notebook.deleteHint", "从笔记本中删除")}「${kw.label}」`;
+        deleteBtn.title = `${i18n.t("notebook.deleteHint", "从笔记本中删除")}「${content}」`;
         deleteBtn.addEventListener("click", () => keywordManager.remove(kw.id));
 
         li.appendChild(text);

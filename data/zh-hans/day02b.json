@@ -8,21 +8,34 @@
       "name": "无名氏（急诊）",
       "age": 40,
       "recordTemplateId": "record_headache",
-      "keywordIds": ["emergency_bruise", "night_shift_rumor_echo"],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "（患者情绪激动）我不知道发生了什么，身上突然多了[[emergency_bruise]]……",
-            "options": [{ "label": "别紧张，慢慢说，你还记得什么？", "next": "ask_detail" }]
+            "options": [
+              {
+                "label": "别紧张，慢慢说，你还记得什么？",
+                "next": "ask_detail"
+              }
+            ]
           },
           "ask_detail": {
             "speaker": "npc",
             "text": "我隐约记得走廊很暗，像是撞到了什么……这和[[night_shift_rumor_echo]]是不是有关系？",
-            "options": [{ "label": "先别多想，我们尽快处理伤口。", "next": "end" }]
+            "options": [
+              {
+                "label": "先别多想，我们尽快处理伤口。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "谢谢医生……希望只是我多想了。", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "谢谢医生……希望只是我多想了。",
+            "options": []
+          }
         }
       }
     }
@@ -30,20 +43,28 @@
   "contacts": [
     {
       "id": "roommate_ajun_d2night",
-      "name": "阿俊",
-      "avatar": "🐶",
-      "keywordIds": ["night_shift_rumor_detail"],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "既然你今晚值班，我就告诉你吧——[[night_shift_rumor_detail]]。",
-            "options": [{ "label": "……谢谢你告诉我，我会小心的。", "next": "end" }]
+            "options": [
+              {
+                "label": "……谢谢你告诉我，我会小心的。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "别太紧张，有事随时找我。", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "别太紧张，有事随时找我。",
+            "options": []
+          }
         }
-      }
+      },
+      "npcId": "ajun",
+      "type": "npc"
     }
   ]
 }

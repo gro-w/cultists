@@ -1,4 +1,7 @@
 import { dataLoader } from "./DataLoader.js";
+import { specialEventManager } from "./SpecialEventManager.js";
+import { favorabilityManager } from "./FavorabilityManager.js";
+import { npcStateManager } from "./NpcStateManager.js";
 
 /**
  * ScheduleData - resolves the per-day-phase content file for HIS/Social.
@@ -46,7 +49,13 @@ class ScheduleData {
 
   /** Load (and cache, via DataLoader) the day-phase file for day/phase. */
   async load(day, phase) {
-    return dataLoader.loadJSON(this.fileNameFor(day, phase));
+    const [schedule] = await Promise.all([
+      dataLoader.loadJSON(this.fileNameFor(day, phase)),
+      specialEventManager.load(),
+      favorabilityManager.load(),
+      npcStateManager.load(),
+    ]);
+    return specialEventManager.apply(schedule, day, phase);
   }
 
   /** Load every authored day-phase file (used by SaveManager to build canonical index tables). */
@@ -55,7 +64,7 @@ class ScheduleData {
     for (let day = 1; day <= this.totalDays; day += 1) {
       for (const phase of ["day", "night"]) {
         // eslint-disable-next-line no-await-in-loop
-        const data = await dataLoader.loadJSON(this.fileNameFor(day, phase));
+        const data = await this.load(day, phase);
         entries.push({ day, phase, data });
       }
     }

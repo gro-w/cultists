@@ -12,6 +12,7 @@ import { dataLoader } from "./core/DataLoader.js";
 import { skillManager } from "./core/SkillManager.js";
 import { actionBudget } from "./core/ActionBudget.js";
 import { npcStateManager } from "./core/NpcStateManager.js";
+import { favorabilityManager } from "./core/FavorabilityManager.js";
 import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
 import Desktop from "./desktop/Desktop.js";
@@ -29,6 +30,14 @@ import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchMonitorApp } from "./apps/MonitorApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
+// DEV-TOOLS:START
+import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
+import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
+// DEV-TOOLS:END
+
+// DEV-TOOLS:START
+const developerModeEnabled = isDeveloperModeSearch();
+// DEV-TOOLS:END
 
 /**
  * main.js - application bootstrap. Registers every app with a shared
@@ -78,6 +87,9 @@ const APP_REGISTRY = [
   { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },
   { id: "achievements", label: () => i18n.t("apps.achievements", "成就"), icon: "🏆", launch: () => launchAchievementsApp() },
   { id: "settings", label: () => i18n.t("apps.settings", "设置"), icon: "⚙️", launch: () => launchSettingsApp() },
+  // DEV-TOOLS:START
+  ...(developerModeEnabled ? [{ id: "developer-mode", label: "开发人员模式", icon: "🛠️", launch: () => launchDeveloperMode() }] : []),
+  // DEV-TOOLS:END
   {
     id: "phase-toggle",
     label: () =>
@@ -103,6 +115,9 @@ function boot({ welcomeBack }) {
     tasksEl: document.getElementById("taskbar-tasks"),
     clockEl: document.getElementById("taskbar-clock"),
     indicatorEl: document.getElementById("daynight-indicator"),
+    // DEV-TOOLS:START
+    dataFileEl: document.getElementById("taskbar-data-file"),
+    // DEV-TOOLS:END
     startButtonEl: document.getElementById("start-button"),
     startMenuEl: document.getElementById("start-menu"),
     apps: APP_REGISTRY,
@@ -164,6 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     skillManager.load(),
     actionBudget.init(),
     npcStateManager.load(),
+    favorabilityManager.load(),
     achievementManager.init(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
@@ -171,7 +187,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // The menu is the first visible surface. Boot the desktop underneath it
       // so selecting an entry only changes visibility and cannot race the
       // fairly large app/event-bus initialization step.
-      const welcomeBack = Boolean(window.location.search);
+      // DEV-TOOLS:START
+      const developerMode = developerModeEnabled;
+      // DEV-TOOLS:END
+      const welcomeBack = Boolean(window.location.search)
+        // DEV-TOOLS:START
+        && !developerMode
+        // DEV-TOOLS:END
+        ;
       boot({ welcomeBack });
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
         onNewGame: () => {
@@ -183,6 +206,14 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
       if (welcomeBack) mainMenu.hide();
-      else mainMenu.show();
+      else {
+        // DEV-TOOLS:START
+        if (developerMode) {
+          mainMenu.hide();
+          launchDeveloperMode();
+        } else
+        // DEV-TOOLS:END
+        mainMenu.show();
+      }
     });
 });

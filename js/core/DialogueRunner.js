@@ -2,6 +2,7 @@ import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { endingManager } from "./EndingManager.js";
 import { eventBus } from "./EventBus.js";
 import { resolveOptionNext, OUTCOME_LABELS } from "./DiceCheck.js";
+import { gameState } from "./GameState.js";
 
 /**
  * createDialogueRunner - shared driver for walking a single actor's
@@ -50,6 +51,10 @@ export function createDialogueRunner({
     }
     if (onNodeShown) onNodeShown(nodeId);
 
+    // Emit game:text_read so AchievementManager can track "read all texts".
+    // Uses a stable composite key: actorId + "/" + nodeId.
+    eventBus.emit("game:text_read", { nodeId: `${actor.id}/${nodeId}` });
+
     appendLine(node.speaker, node.speaker === "npc" ? actor.name : "我", node.text);
     applyDialogueOnShow(node, actor.id);
     if (endingManager.isEnded) return;
@@ -70,6 +75,28 @@ export function createDialogueRunner({
               "（判定）",
               `${outcomeLabel}（掷出 ${check.roll} / 技能 ${check.skillValue}）`
             );
+            // Emit game:skill_check so AchievementManager can react.
+            eventBus.emit("game:skill_check", {
+              skillId: opt.check && opt.check.skillId,
+              roll: check.roll,
+              skillValue: check.skillValue,
+              outcome: check.outcome,
+              actorId: actor.id,
+              appId,
+            });
+            // Also forward SAN-change info if the game state just changed
+            // (outcome-based statChanges are handled via onShow, not here,
+            //  but we still want the pre/post SAN delta for "精神内耗").
+            const snap = gameState.snapshot();
+            if (typeof snap.mental === "number") {
+              // The delta will have been applied already by applyDialogueOnShow
+              // if the node had statChanges; we emit with current mental so
+              // the achievement manager has an up-to-date value.
+              eventBus.emit("game:sanity_changed", {
+                value: snap.mental,
+                delta: 0, // delta unknown here; stat-change nodes emit their own
+              });
+            }
           }
           showNode(next);
         });

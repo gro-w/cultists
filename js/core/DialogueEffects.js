@@ -1,6 +1,8 @@
 import { itemManager } from "./ItemManager.js";
 import { endingManager } from "./EndingManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
+import { favorabilityManager } from "./FavorabilityManager.js";
+import { eventBus } from "./EventBus.js";
 
 /**
  * applyDialogueOnShow - applies a dialogue node's optional `onShow` effects
@@ -21,6 +23,15 @@ import { npcStateManager } from "./NpcStateManager.js";
  * @param {string} [actorId] - the patient/contact/NPC id this node belongs
  *   to (its own SAN, distinct from the protagonist's `gameState.mental`).
  */
+/**
+ * Extended onShow fields supported by this function:
+ *   favorabilityChange: { npcId: "ajie"|"awei"|"binbin", delta: number }
+ *     Mutates the named NPC's favourability via FavorabilityManager and
+ *     emits `favorability:changed` so AchievementManager can react.
+ *
+ * All other fields (grantItems, removeItems, ending, npcSanChange) are
+ * unchanged from the original implementation.
+ */
 export function applyDialogueOnShow(node, actorId) {
   const onShow = node && node.onShow;
   if (!onShow) return;
@@ -30,4 +41,15 @@ export function applyDialogueOnShow(node, actorId) {
     npcStateManager.modify(actorId, onShow.npcSanChange);
   }
   if (onShow.ending) endingManager.trigger(onShow.ending);
+
+  // Favourability change (new field)
+  const fc = onShow.favorabilityChange;
+  if (fc && fc.npcId && typeof fc.delta === "number") {
+    favorabilityManager.modify(fc.npcId, fc.delta);
+  }
+
+  // Game-semantic events for the achievement system
+  if (onShow.gameEvent) {
+    eventBus.emit(onShow.gameEvent, onShow.gameEventPayload || {});
+  }
 }

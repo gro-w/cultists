@@ -46,7 +46,7 @@
   "notebook.dblClickHint": "双击在 ChatGTP 中查询",
   "notebook.unknownSource": "未知来源",
   "mainmenu.subtitle": "CULTISTS",
-  "notification.overtime": "🚪 今天加班超时了，侵占了今晚的可用时间。",
-  "notification.allnighter": "🌙 昨晚熬得太狠了，精神状态受到了冲击。",
+  "notification.overtime": "🚪 今天加班超时了 {n} 次，侵占了今晚的可用时间。",
+  "notification.allnighter": "🌙 昨晚睡眠 {minutes} 分钟，损失 {loss} 点精神，恢复 {recovered} 点。",
   "notification.npcOffline": "⚠️ 有人情绪崩溃下线了，额外工作压到了你身上。"
 }

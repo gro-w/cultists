@@ -21,18 +21,24 @@ const DEFAULT_LIMITS = { dialogueLimit: Infinity, inspectLimit: Infinity };
  * generate those actions - same one-way event-bus pattern EndingManager
  * uses for `item:used`.
  *
- * Not yet persisted by SaveManager (phase 1 of this feature) - a loaded
- * save starts the current phase with a fresh budget and no carried debt.
+ * Time is measured in 20-minute units: every dialogue turn or inspection advances
+ * the shared phase clock. Crossing the configured work/night duration creates
+ * overtime or all-nighter consequences; ending a night models sleep and
+ * recovery before the next day begins. Runtime state is included in save v3.
  */
 class ActionBudget {
   constructor() {
     this.config = null;
     this.used = { dialogue: 0, inspect: 0 };
+    this.phaseMinutes = 0;
+    this.sleepHistory = [];
+    this.insufficientSleepStreak = 0;
     this.currentLimits = { ...DEFAULT_LIMITS };
     this._pendingNightDebt = 0;
     this._initPromise = null;
 
     eventBus.on("item:inspected", () => this.recordInspection());
+    eventBus.on("item:used", () => this.recordTimedAction());
     eventBus.on("dialogue:turn", () => this.recordDialogueTurn());
     // DayNightSystem.toggle() settles the ending phase's overage and then
     // emits this same event with the new phase - listening here (rather
@@ -40,7 +46,9 @@ class ActionBudget {
     // own daynight:changed emission (e.g. from SaveManager restoring a
     // save) also correctly resets the budget for whatever phase was
     // loaded, with a single code path.
-    eventBus.on("daynight:changed", ({ phase }) => this.startPhase(phase));
+    eventBus.on("daynight:changed", ({ phase, phaseChanged = true, phaseMinutes }) => {
+      if (phaseChanged) this.startPhase(phase, phaseMinutes);
+    });
   }
 
   /**
@@ -65,23 +73,14 @@ class ActionBudget {
    * over from the day that just ended (only relevant when phase="night")
    * and resetting the used-action counters for the new phase.
    */
-  startPhase(phase) {
-    const base = (this.config && this.config[phase]) || DEFAULT_LIMITS;
-    let dialogueLimit = base.dialogueLimit ?? Infinity;
-    let inspectLimit = base.inspectLimit ?? Infinity;
-
-    if (phase === "night" && this._pendingNightDebt > 0) {
-      let debt = this._pendingNightDebt;
-      const dialogueCut = Math.min(dialogueLimit, debt);
-      dialogueLimit -= dialogueCut;
-      debt -= dialogueCut;
-      const inspectCut = Math.min(inspectLimit, debt);
-      inspectLimit -= inspectCut;
-      this._pendingNightDebt = 0;
-    }
-
-    this.currentLimits = { dialogueLimit, inspectLimit };
+  startPhase(phase, preservedMinutes = 0) {
+    // Action count is intentionally unlimited. Time consumed by each action
+    // is the only action constraint; phase limits remain for overtime/sleep
+    // consequences, not for blocking or rationing actions.
+    this.currentLimits = { ...DEFAULT_LIMITS };
+    this._pendingNightDebt = 0;
     this.used = { dialogue: 0, inspect: 0 };
+    this.phaseMinutes = Math.max(0, Number(preservedMinutes) || 0);
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
@@ -91,10 +90,13 @@ class ActionBudget {
    * @returns {{ totalOverage: number, kind: "overtime"|"allnighter"|null, debt?: number, sanLoss?: number }}
    */
   settlePhase(phase) {
-    const overageDialogue = Math.max(0, this.used.dialogue - this.currentLimits.dialogueLimit);
-    const overageInspect = Math.max(0, this.used.inspect - this.currentLimits.inspectLimit);
-    const totalOverage = overageDialogue + overageInspect;
-    if (totalOverage <= 0) return { totalOverage: 0, kind: null };
+    const phaseLimit = phase === "day"
+      ? (this.config && this.config.day.workMinutes) || 480
+      : (this.config && this.config.night.nightMinutes) || 960;
+    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
+    const timeOverage = Math.max(0, Math.ceil((this.phaseMinutes - phaseLimit) / minutesPerAction));
+    const totalOverage = timeOverage;
+    if (phase === "day" && totalOverage <= 0) return { totalOverage: 0, kind: null };
 
     const perAction = (this.config && this.config.overtimePenaltyPerAction) || 1;
     if (phase === "day") {
@@ -104,17 +106,46 @@ class ActionBudget {
 
     const sanLossPerAction = (this.config && this.config.sanLossPerLateNightAction) || 0;
     const sanLoss = totalOverage * sanLossPerAction;
-    if (sanLoss > 0) gameState.modify({ mental: -sanLoss });
-    return { totalOverage, kind: "allnighter", sanLoss };
+    if (sanLoss > 0) gameState.applyMentalLoss(sanLoss, { recoverable: true });
+    const nightMinutes = (this.config && this.config.night.nightMinutes) || 960;
+    const sleepMinutes = Math.max(0, nightMinutes - this.phaseMinutes);
+    const recoveryPerHour = (this.config && this.config.sanRecoveryPerSleepHour) || 0;
+    const recoveredSan = gameState.recoverMental((sleepMinutes / 60) * recoveryPerHour);
+    const insufficientThreshold = (this.config && this.config.insufficientSleepMinutes) || nightMinutes;
+    const insufficient = sleepMinutes < insufficientThreshold;
+    this.sleepHistory.push(sleepMinutes);
+    this.sleepHistory = this.sleepHistory.slice(-3);
+    this.insufficientSleepStreak = insufficient ? this.insufficientSleepStreak + 1 : 0;
+    let sleepDebtSanLoss = 0;
+    if (this.insufficientSleepStreak >= 3) {
+      sleepDebtSanLoss = (this.config && this.config.threeDaySleepDebtSanLoss) || 0;
+      if (sleepDebtSanLoss > 0) gameState.modify({ mental: -sleepDebtSanLoss });
+      this.insufficientSleepStreak = 0;
+    }
+    return {
+      totalOverage,
+      kind: totalOverage > 0 ? "allnighter" : null,
+      sanLoss,
+      sleepMinutes,
+      recoveredSan,
+      sleepDebtSanLoss,
+    };
   }
 
   recordDialogueTurn() {
     this.used.dialogue += 1;
+    this._consumeTime();
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
   recordInspection() {
     this.used.inspect += 1;
+    this._consumeTime();
+    eventBus.emit("actionBudget:changed", this.snapshot());
+  }
+
+  recordTimedAction() {
+    this._consumeTime();
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
@@ -128,26 +159,14 @@ class ActionBudget {
    * @param {{dialogueLimit?: number, inspectLimit?: number}} penalty
    */
   applyPenalty(penalty = {}) {
-    if (typeof penalty.dialogueLimit === "number" && Number.isFinite(this.currentLimits.dialogueLimit)) {
-      this.currentLimits.dialogueLimit = Math.max(
-        this.used.dialogue,
-        this.currentLimits.dialogueLimit - penalty.dialogueLimit
-      );
-    }
-    if (typeof penalty.inspectLimit === "number" && Number.isFinite(this.currentLimits.inspectLimit)) {
-      this.currentLimits.inspectLimit = Math.max(
-        this.used.inspect,
-        this.currentLimits.inspectLimit - penalty.inspectLimit
-      );
-    }
+    // Kept as a compatibility no-op for old NPC data. There are no action
+    // count limits to reduce anymore.
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
-  /** Actions still available this phase for `kind` ("dialogue"|"inspect"); may be negative once over budget. */
+  /** Compatibility API: action counts are unlimited. */
   remaining(kind) {
-    const limitKey = kind === "inspect" ? "inspectLimit" : "dialogueLimit";
-    const usedKey = kind === "inspect" ? "inspect" : "dialogue";
-    return this.currentLimits[limitKey] - this.used[usedKey];
+    return Infinity;
   }
 
   snapshot() {
@@ -155,7 +174,35 @@ class ActionBudget {
       used: { ...this.used },
       limits: { ...this.currentLimits },
       pendingNightDebt: this._pendingNightDebt,
+      phaseMinutes: this.phaseMinutes,
+      sleepHistory: [...this.sleepHistory],
+      insufficientSleepStreak: this.insufficientSleepStreak,
     };
+  }
+
+  _consumeTime() {
+    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
+    const previousMinutes = this.phaseMinutes;
+    this.phaseMinutes += minutesPerAction;
+    const phaseStart = gameState.phase === "night" ? 16 * 60 : 8 * 60;
+    const previousClock = phaseStart + previousMinutes;
+    const nextClock = phaseStart + this.phaseMinutes;
+    if (Math.floor(nextClock / (24 * 60)) > Math.floor(previousClock / (24 * 60))) {
+      gameState.advanceDayAtMidnight();
+    }
+  }
+
+  restore(snapshot = {}) {
+    this.used = {
+      dialogue: Math.max(0, Number(snapshot.used?.dialogue) || 0),
+      inspect: Math.max(0, Number(snapshot.used?.inspect) || 0),
+    };
+    this.currentLimits = { ...DEFAULT_LIMITS };
+    this._pendingNightDebt = 0;
+    this.phaseMinutes = Math.max(0, Number(snapshot.phaseMinutes) || 0);
+    this.sleepHistory = Array.isArray(snapshot.sleepHistory) ? snapshot.sleepHistory.slice(-3) : [];
+    this.insufficientSleepStreak = Math.max(0, Number(snapshot.insufficientSleepStreak) || 0);
+    eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
   /** Subscribe to any change in used actions / limits. Returns an unsubscribe function. */

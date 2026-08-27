@@ -76,34 +76,26 @@ export async function launchStatusApp() {
     `;
   }
 
-  function actionBudgetRow(kind, label) {
-    const { used } = actionBudget.snapshot();
-    const limit = actionBudget.currentLimits[kind === "inspect" ? "inspectLimit" : "dialogueLimit"];
-    const usedCount = used[kind];
-    const remaining = actionBudget.remaining(kind);
-    const overBudget = remaining < 0;
-    const limitText = Number.isFinite(limit) ? limit : "∞";
-    return `
-      <p class="action-budget-row${overBudget ? " over-budget" : ""}">
-        ${label}：已用 ${usedCount} / ${limitText}${overBudget ? `（超出 ${-remaining}，将记为加班/熬夜）` : ""}
-      </p>
-    `;
-  }
 
   function renderStats() {
     const s = gameState.snapshot();
-    const { pendingNightDebt } = actionBudget.snapshot();
+    const budgetSnapshot = actionBudget.snapshot();
+    const { phaseMinutes } = budgetSnapshot;
+    const phaseLimit = s.phase === "day"
+      ? actionBudget.config?.day?.workMinutes || 480
+      : actionBudget.config?.night?.nightMinutes || 960;
+    const clockMinutes = (s.phase === "day" ? 8 * 60 : 16 * 60) + phaseMinutes;
+    const clock = `${String(Math.floor((clockMinutes % 1440) / 60)).padStart(2, "0")}:${String(clockMinutes % 60).padStart(2, "0")}`;
     panels.stats.innerHTML = `
       <h4>主角状态</h4>
-      <p>第 ${s.day} 天 · ${s.phase === "day" ? "☀ 白天" : "🌙 夜晚"}</p>
+      <p>第 ${s.day} 天 · ${s.phase === "day" ? "☀ 白天" : "🌙 夜晚"} · ${s.location === "dorm" ? "宿舍" : "工作中"} · ${clock}</p>
       ${bar("精力", s.energy)}
       ${bar("精神", s.mental)}
       ${bar("体力", s.physical)}
       ${bar("饱腹", s.satiety)}
-      <h4>本阶段行动次数</h4>
-      ${actionBudgetRow("dialogue", "对话/问诊")}
-      ${actionBudgetRow("inspect", "调查")}
-      ${pendingNightDebt > 0 ? `<p class="action-budget-row over-budget">今晚将因白天加班减少 ${pendingNightDebt} 次可用行动。</p>` : ""}
+      <p class="action-budget-row">时间：${Math.floor(phaseMinutes / 60)} 小时 ${phaseMinutes % 60} 分 / ${phaseLimit / 60} 小时${phaseMinutes > phaseLimit ? "（已进入加班/熬夜）" : ""}</p>
+      <p class="action-budget-hint">可恢复精神损失：${s.recoverableMentalLoss}</p>
+
       <h4>技能</h4>
       ${skillManager
         .all()

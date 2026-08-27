@@ -93,8 +93,9 @@ export async function launchHISApp() {
     entry.patients.forEach((patient) => {
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out his-patient-btn";
-      const offline = npcStateManager.isOffline(patient.id);
-      const distressed = !offline && npcStateManager.isDistressed(patient.id);
+      const npcId = patient.npcId || patient.id;
+      const offline = npcStateManager.isOffline(npcId);
+      const distressed = !offline && npcStateManager.isDistressed(npcId);
       btn.textContent = `${patient.name}（${patient.age}岁）${offline ? " 🚫" : distressed ? " ⚠️" : ""}`;
       btn.addEventListener("click", () => renderDialogue(patient, keywordDefs));
       patientListEl.appendChild(btn);
@@ -108,14 +109,15 @@ export async function launchHISApp() {
 
   function renderDialogue(patient, keywordDefs) {
     dialogueEl.innerHTML = `<h4>与 ${patient.name} 的对话</h4>`;
+    const npcId = patient.npcId || patient.id;
 
-    if (npcStateManager.isOffline(patient.id)) {
+    if (npcStateManager.isOffline(npcId)) {
       dialogueEl.innerHTML +=
         '<p class="dialogue-end">（该患者情绪崩溃，已请假离开，暂时无法继续问诊。）</p>';
       renderRecord(patient, records.templates.find((t) => t.id === patient.recordTemplateId));
       return;
     }
-    if (npcStateManager.isDistressed(patient.id)) {
+    if (npcStateManager.isDistressed(npcId)) {
       const warn = document.createElement("p");
       warn.className = "his-schedule-note npc-distress-warning";
       warn.textContent = "⚠️ 该患者情绪明显不稳定，言语间透着焦躲和不耐烦。";

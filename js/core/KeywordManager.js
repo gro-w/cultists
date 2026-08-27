@@ -210,7 +210,11 @@ class KeywordManager {
   }
 
   allByCategory(category) {
-    return this.all().filter((k) => k.category === category);
+    const definitions = this.all();
+    const categorized = definitions.filter((k) => k.category === category);
+    // New keyword definitions intentionally have only id/content. When no
+    // legacy category metadata exists, keep record selectors usable.
+    return categorized.length > 0 ? categorized : definitions;
   }
 
   /** Subscribe to any change (collect or remove) in the keyword notebook. */

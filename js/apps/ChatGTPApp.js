@@ -38,7 +38,7 @@ export async function launchChatGTPApp(options = {}) {
   // If already open, just focus it and forward any preselected keyword via
   // the eventBus instead of rebuilding the whole app (avoids leaking a
   // second set of subscriptions onto a window instance we'd discard).
-  const existing = windowManager.getByAppId("chatgtp");
+  const existing = options.container ? null : windowManager.getByAppId("chatgtp");
   if (existing) {
     windowManager.focus(existing.id);
     if (options.presetKeywordId) {
@@ -309,6 +309,11 @@ export async function launchChatGTPApp(options = {}) {
   appendMessage("npc", "你好，我是 ChatGTP，你可以输入问题，或从笔记本中选择 1-2 个关键词进行组合查询～");
   if (options.presetKeywordId) selectKeyword(options.presetKeywordId);
   selectTab("qa");
+
+  if (options.container) {
+    options.container.replaceChildren(root);
+    return root;
+  }
 
   return windowManager.createWindow({
     appId: "chatgtp",

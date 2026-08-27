@@ -59,7 +59,8 @@
           "decline": {
             "speaker": "npc",
             "text": "……好吧，我明白了，谢谢你的坦诚。",
-            "options": [{ "label": "抱歉，希望我们还是好朋友。", "next": "end" }]
+            "options": [{ "label": "抱歉，希望我们还是好朋友。", "next": "end" }],
+            "onShow": { "npcSanChange": -30 }
           },
           "end": { "speaker": "npc", "text": "嗯，会的。", "options": [] }
         }

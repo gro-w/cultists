@@ -17,13 +17,20 @@
             "text": "你们医院是干什么吃的！我父亲都[[headache]]这么久了还没人管！",
             "options": [
               { "label": "我们这就为您安排检查，请稍等。", "next": "calm" },
-              { "label": "请您先冷静一下，情绪激动对病情没有帮助。", "next": "push_back" }
+              { "label": "请您先冷静一下，情绪激动对病情没有帮助。", "next": "push_back" },
+              {
+                "label": "（沟通应对判定）试着用专业而温和的话语先安抚他的情绪。",
+                "next": "calm",
+                "check": { "skillId": "communication" },
+                "outcomes": { "criticalFailure": "push_back" }
+              }
             ]
           },
           "calm": {
             "speaker": "npc",
             "text": "……好吧，那就麻烦你们了，动作快一点。",
-            "options": [{ "label": "好的，我们尽快安排。", "next": "end_calm" }]
+            "options": [{ "label": "好的，我们尽快安排。", "next": "end_calm" }],
+            "onShow": { "npcSanChange": 6 }
           },
           "end_calm": { "speaker": "npc", "text": "谢谢，希望别让我们等太久。", "options": [] },
           "push_back": {
@@ -32,12 +39,14 @@
             "options": [
               { "label": "不是这个意思，我们会尽快处理。", "next": "deescalate" },
               { "label": "您这样大喊大叫，我没法跟您沟通。", "next": "escalate" }
-            ]
+            ],
+            "onShow": { "npcSanChange": -10 }
           },
           "deescalate": {
             "speaker": "npc",
             "text": "……算了，你们快点。",
-            "options": [{ "label": "好的，马上安排。", "next": "end_calm" }]
+            "options": [{ "label": "好的，马上安排。", "next": "end_calm" }],
+            "onShow": { "npcSanChange": 5 }
           },
           "escalate": {
             "speaker": "npc",
@@ -45,7 +54,8 @@
             "options": [
               { "label": "（试图缓和气氛）我们都是为了病人好，别激动。", "next": "final_calm" },
               { "label": "（毫不退让）您这样无理取闹，我无法为您提供帮助。", "next": "final_conflict" }
-            ]
+            ],
+            "onShow": { "npcSanChange": -20 }
           },
           "final_calm": {
             "speaker": "npc",

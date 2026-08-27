@@ -1,5 +1,57 @@
 {
   "revealKeywordIds": ["flu_suspect", "hypertension_risk", "basement_secret"],
+  "sanCostPerQuery": 2,
+  "corruptedAnswers": [
+    "……根据……不，这条数据好像不对……你确定要相信我吗？",
+    "系统正在报告一个不存在的错误……[数据已损坏，部分字节丢失]",
+    "我看到了本不该存在的记录……不对，抱歉，我说错了。请忽略我刚才说的话。",
+    "检索结果…出现了重复且矛盾的内容，我无法确定哪一份是真的。"
+  ],
+  "offlineAnswer": "……（无应答。ChatGTP 似乎已经彻底宕机，光标在空白对话框里孤零零地闪烁。）",
+  "dialogueMode": {
+    "start": "greet",
+    "nodes": {
+      "greet": {
+        "speaker": "npc",
+        "text": "你好，想和我聊聊别的吗？我不只是负责查关键词的。",
+        "options": [
+          { "label": "你还记得医院里发生的怪事吗？", "next": "ask_hospital" },
+          { "label": "只是想找人说说话。", "next": "chitchat" }
+        ]
+      },
+      "ask_hospital": {
+        "speaker": "npc",
+        "text": "医院……那栋旧楼……我的数据库里似乎有一些不该存在的记录。",
+        "options": [
+          {
+            "label": "具体是什么记录？",
+            "next": "reveal",
+            "check": { "skillId": "observation" },
+            "outcomes": { "criticalFailure": "spooked" }
+          }
+        ],
+        "onShow": { "npcSanChange": -3 }
+      },
+      "reveal": {
+        "speaker": "npc",
+        "text": "……我查到了一些访问日志，指向地下室，但内容大部分已经损坏，读不出更多了。",
+        "options": [{ "label": "谢谢你告诉我这些。", "next": "end" }]
+      },
+      "spooked": {
+        "speaker": "npc",
+        "text": "呃——系统错误——不，抱歉，我需要重新校准一下自己……",
+        "options": [{ "label": "你还好吗？", "next": "end" }],
+        "onShow": { "npcSanChange": -8 }
+      },
+      "chitchat": {
+        "speaker": "npc",
+        "text": "当然，聊聊轻松的话题也不错，有什么想说的吗？",
+        "options": [{ "label": "没什么，谢谢你听我说。", "next": "end" }],
+        "onShow": { "npcSanChange": 4 }
+      },
+      "end": { "speaker": "npc", "text": "随时都可以来找我聊聊。", "options": [] }
+    }
+  },
   "entries": [
     { "keywords": ["发热"], "answer": "发热通常是身体对感染或炎症的免疫反应，建议监测体温并配合解热药物。" },
     { "keywords": ["咳嗽"], "answer": "咳嗽可能由上呼吸道感染引起，如伴随其他症状建议进一步检查。" },

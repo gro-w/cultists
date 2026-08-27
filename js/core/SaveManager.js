@@ -8,7 +8,7 @@ import { scheduleData } from "./ScheduleData.js";
 const SAVE_FORMAT_VERSION = 2;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
-const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings"];
+const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor"];
 
 function clampByte(value, max = 255) {
   const n = Math.round(Number(value) || 0);
@@ -79,12 +79,24 @@ class SaveManager {
     this.itemIds = [];
     this.keywordIds = [];
     this._launchers = {};
-    this._initialized = false;
+    this._initPromise = null;
   }
 
-  /** Preload every data file needed to build the canonical index tables. */
+  /**
+   * Preload every data file needed to build the canonical index tables
+   * (idempotent, and safe to call concurrently from multiple callers - the
+   * in-flight promise is cached so overlapping callers all await the same
+   * init instead of racing past a boolean guard set only after the
+   * `await` resolves).
+   */
   async init() {
-    if (this._initialized) return;
+    if (!this._initPromise) {
+      this._initPromise = this._doInit();
+    }
+    return this._initPromise;
+  }
+
+  async _doInit() {
     await Promise.all([scheduleData.init(), keywordManager.load(), itemManager.load()]);
 
     const entries = await scheduleData.loadAllEntries();
@@ -92,8 +104,6 @@ class SaveManager {
     this.socialActors = this._buildActorIndex(entries, "contacts");
     this.itemIds = itemManager.allDefIds();
     this.keywordIds = [...keywordManager.definitions.keys()];
-
-    this._initialized = true;
   }
 
   _buildActorIndex(entries, listKey) {

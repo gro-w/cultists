@@ -221,6 +221,99 @@
 }
 
 /* ---------------------------------------------------------------------- */
+/* Monitor App (surveillance-camera view: walk / talk / inspect)          */
+/* ---------------------------------------------------------------------- */
+.app-monitor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 6px;
+}
+
+.monitor-title {
+  flex-shrink: 0;
+}
+
+.monitor-viewport-wrap {
+  flex: 2;
+  min-height: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+
+.monitor-viewport {
+  position: relative;
+  width: 480px;
+  height: 300px;
+  max-width: 100%;
+  outline: none;
+  cursor: crosshair;
+  flex-shrink: 0;
+}
+
+.monitor-scene-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.monitor-marker-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.monitor-npc-marker,
+.monitor-item-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.monitor-item-marker {
+  font-size: 16px;
+  padding: 1px 4px;
+}
+
+.monitor-player {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  z-index: 3;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.monitor-interaction {
+  flex: 1;
+  min-height: 90px;
+  overflow: auto;
+}
+
+.monitor-hint {
+  color: var(--w95-gray-dark);
+  font-style: italic;
+  margin: 0;
+}
+
+.monitor-dialogue-lines {
+  margin-bottom: 6px;
+}
+
+.monitor-item-text {
+  margin: 6px 0;
+}
+
+/* ---------------------------------------------------------------------- */
 /* Notebook App                                                            */
 /* ---------------------------------------------------------------------- */
 .notebook-section ul {

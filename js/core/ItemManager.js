@@ -30,18 +30,31 @@ class ItemManager {
     this.defs = new Map();
     /** @type {Map<string, number>} item id -> held count */
     this.inventory = new Map();
-    this._loaded = false;
+    this._loadPromise = null;
   }
 
-  /** Load item definitions + starting inventory (idempotent). */
+  /**
+   * Load item definitions + starting inventory (idempotent, and safe to
+   * call concurrently from multiple callers - e.g. main.js's boot
+   * Promise.all and SaveManager.init() both call this). The in-flight
+   * promise itself is cached (not just a boolean flag set after the
+   * `await` resolves), so overlapping callers all await the same load
+   * instead of racing past the guard and double-applying the starting
+   * inventory.
+   */
   async load() {
-    if (this._loaded) return;
+    if (!this._loadPromise) {
+      this._loadPromise = this._doLoad();
+    }
+    return this._loadPromise;
+  }
+
+  async _doLoad() {
     const data = await dataLoader.loadJSON("items.json");
     (data.items || []).forEach((def) => this.defs.set(def.id, def));
     (data.startingInventory || []).forEach(({ itemId, count }) => {
       this._addRaw(itemId, count || 1);
     });
-    this._loaded = true;
     eventBus.emit("items:changed", this.snapshot());
   }
 

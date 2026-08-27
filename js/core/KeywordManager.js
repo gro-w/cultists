@@ -30,21 +30,26 @@ class KeywordManager {
      * @type {Map<string, object>}
      */
     this.definitions = new Map();
-    this._loaded = false;
+    this._loadPromise = null;
   }
 
   /**
-   * Load the central `data/keywords.json` registry (idempotent). This is
-   * the single source of truth for every keyword's label/category/
+   * Load the central `data/keywords.json` registry (idempotent, and safe
+   * to call concurrently from multiple callers - the in-flight promise is
+   * cached so overlapping callers all await the same load instead of
+   * racing past a boolean guard set only after the `await` resolves).
+   * This is the single source of truth for every keyword's label/category/
    * definition; dialogue and item data files only reference keyword ids,
    * looking their static fields up here and attaching a contextual
    * `source` (e.g. "病人-王芳") at the point of use.
    */
   async load() {
-    if (this._loaded) return;
-    const data = await dataLoader.loadJSON("keywords.json");
-    this.registerDefinitions(data.keywords || []);
-    this._loaded = true;
+    if (!this._loadPromise) {
+      this._loadPromise = dataLoader
+        .loadJSON("keywords.json")
+        .then((data) => this.registerDefinitions(data.keywords || []));
+    }
+    return this._loadPromise;
   }
 
   /**

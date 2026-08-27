@@ -78,7 +78,9 @@ export async function launchMonitorApp() {
   const dialogueNodeByActor = new Map();
 
   function sceneFor(phase) {
-    return phase === "night" ? scenes.night : scenes.day;
+    // The monitor always watches the hospital ward. The off-duty dorm is
+    // rendered by DormMode, not by this standalone monitor window.
+    return scenes.day;
   }
 
   function clampToBounds(pos, bounds) {
@@ -247,8 +249,6 @@ export async function launchMonitorApp() {
     titleEl.textContent = `${currentScene.backgroundLabel || "监控画面"}（第${gameState.day}天 · ${
       phase === "day" ? "白天" : "夜晚"
     }）`;
-    updateBudgetHint();
-
     playerPos = clampToBounds(currentScene.playerStart || playerPos, currentScene.bounds);
     placePlayer(false);
 

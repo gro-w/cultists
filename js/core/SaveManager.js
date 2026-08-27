@@ -6,7 +6,7 @@ import { windowManager } from "./WindowManager.js";
 import { scheduleData } from "./ScheduleData.js";
 import { actionBudget } from "./ActionBudget.js";
 
-const SAVE_FORMAT_VERSION = 3;
+const SAVE_FORMAT_VERSION = 4;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor"];
@@ -17,7 +17,7 @@ function clampByte(value, max = 255) {
 }
 
 function push16(bytes, value) {
-  const v = Math.max(0, Math.min(0xffff, value));
+  const v = Math.round(Math.max(0, Math.min(0xffff, Number(value) || 0)));
   bytes.push((v >> 8) & 0xff);
   bytes.push(v & 0xff);
 }
@@ -165,17 +165,17 @@ class SaveManager {
     bytes.push(clampByte(gameState.physical));
     bytes.push(clampByte(gameState.satiety));
     const budget = actionBudget.snapshot();
-    bytes.push(clampByte(gameState.recoverableMentalLoss));
+    push16(bytes, gameState.recoverableMentalLoss);
     bytes.push(clampByte(budget.used.dialogue));
     bytes.push(clampByte(budget.used.inspect));
     bytes.push(clampByte(budget.limits.dialogueLimit));
     bytes.push(clampByte(budget.limits.inspectLimit));
-    bytes.push(clampByte(budget.phaseMinutes));
-    bytes.push(clampByte(budget.pendingNightDebt));
+    push16(bytes, budget.phaseMinutes);
+    push16(bytes, budget.pendingNightDebt);
     bytes.push(clampByte(budget.insufficientSleepStreak));
-    bytes.push(clampByte(budget.sleepHistory[0] || 0));
-    bytes.push(clampByte(budget.sleepHistory[1] || 0));
-    bytes.push(clampByte(budget.sleepHistory[2] || 0));
+    push16(bytes, budget.sleepHistory[0] || 0);
+    push16(bytes, budget.sleepHistory[1] || 0);
+    push16(bytes, budget.sleepHistory[2] || 0);
 
     const windows = windowManager.windowSnapshot().slice(0, WINDOW_APP_IDS.length);
     bytes.push(windows.length);
@@ -222,17 +222,30 @@ class SaveManager {
   }
 
   _decode(bytes) {
+    if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
     const version = bytes[i++];
+    if (version !== 2 && version !== 3 && version !== 4) throw new Error("Unsupported save version");
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
     const energy = bytes[i++];
     const mental = bytes[i++];
     const physical = bytes[i++];
     const satiety = bytes[i++];
-    const recoverableMentalLoss = version >= 3 ? bytes[i++] : 0;
+    const recoverableMentalLoss = version >= 4 ? read16(bytes, i) : version === 3 ? bytes[i] : 0;
+    if (version >= 4) i += 2;
+    else if (version === 3) i += 1;
     const budgetSnapshot = version >= 3
-      ? {
+      ? version >= 4
+        ? {
+            used: { dialogue: bytes[i++], inspect: bytes[i++] },
+            limits: { dialogueLimit: bytes[i++], inspectLimit: bytes[i++] },
+            phaseMinutes: read16(bytes, (i += 0)),
+            pendingNightDebt: read16(bytes, (i += 2)),
+            insufficientSleepStreak: bytes[i++],
+            sleepHistory: [read16(bytes, i), read16(bytes, i + 2), read16(bytes, i + 4)].filter((n) => n > 0),
+          }
+        : {
           used: { dialogue: bytes[i++], inspect: bytes[i++] },
           limits: { dialogueLimit: bytes[i++], inspectLimit: bytes[i++] },
           phaseMinutes: bytes[i++],
@@ -241,6 +254,7 @@ class SaveManager {
           sleepHistory: [bytes[i++], bytes[i++], bytes[i++]].filter((n) => n > 0),
         }
       : null;
+    if (version >= 4) i += 6;
 
     const windowCount = bytes[i++] || 0;
     const windowEntries = [];

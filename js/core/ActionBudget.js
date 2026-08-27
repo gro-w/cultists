@@ -21,7 +21,7 @@ const DEFAULT_LIMITS = { dialogueLimit: Infinity, inspectLimit: Infinity };
  * generate those actions - same one-way event-bus pattern EndingManager
  * uses for `item:used`.
  *
- * Time is measured in minutes: every dialogue turn or inspection advances
+ * Time is measured in 20-minute units: every dialogue turn or inspection advances
  * the shared phase clock. Crossing the configured work/night duration creates
  * overtime or all-nighter consequences; ending a night models sleep and
  * recovery before the next day begins. Runtime state is included in save v3.
@@ -38,6 +38,7 @@ class ActionBudget {
     this._initPromise = null;
 
     eventBus.on("item:inspected", () => this.recordInspection());
+    eventBus.on("item:used", () => this.recordTimedAction());
     eventBus.on("dialogue:turn", () => this.recordDialogueTurn());
     // DayNightSystem.toggle() settles the ending phase's overage and then
     // emits this same event with the new phase - listening here (rather
@@ -103,7 +104,7 @@ class ActionBudget {
     const phaseLimit = phase === "day"
       ? (this.config && this.config.day.workMinutes) || 480
       : (this.config && this.config.night.nightMinutes) || 960;
-    const minutesPerAction = (this.config && this.config.minutesPerAction) || 60;
+    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
     const timeOverage = Math.max(0, Math.ceil((this.phaseMinutes - phaseLimit) / minutesPerAction));
     const totalOverage = Math.max(countOverage, timeOverage);
     if (phase === "day" && totalOverage <= 0) return { totalOverage: 0, kind: null };
@@ -132,7 +133,14 @@ class ActionBudget {
       if (sleepDebtSanLoss > 0) gameState.modify({ mental: -sleepDebtSanLoss });
       this.insufficientSleepStreak = 0;
     }
-    return { totalOverage, kind: "allnighter", sanLoss, sleepMinutes, recoveredSan, sleepDebtSanLoss };
+    return {
+      totalOverage,
+      kind: totalOverage > 0 ? "allnighter" : null,
+      sanLoss,
+      sleepMinutes,
+      recoveredSan,
+      sleepDebtSanLoss,
+    };
   }
 
   recordDialogueTurn() {
@@ -143,6 +151,11 @@ class ActionBudget {
 
   recordInspection() {
     this.used.inspect += 1;
+    this._consumeTime();
+    eventBus.emit("actionBudget:changed", this.snapshot());
+  }
+
+  recordTimedAction() {
     this._consumeTime();
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
@@ -191,7 +204,12 @@ class ActionBudget {
   }
 
   _consumeTime() {
-    this.phaseMinutes += (this.config && this.config.minutesPerAction) || 20;
+    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
+    const previousMinutes = this.phaseMinutes;
+    this.phaseMinutes += minutesPerAction;
+    if (gameState.phase === "night" && previousMinutes < 8 * 60 && this.phaseMinutes >= 8 * 60) {
+      gameState.advanceDayAtMidnight();
+    }
   }
 
   restore(snapshot = {}) {

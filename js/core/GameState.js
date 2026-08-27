@@ -23,15 +23,20 @@ class GameState {
     this.recoverableMentalLoss = 0;
   }
 
-  advancePhase() {
+  advancePhase({ incrementDay = true } = {}) {
     if (this.phase === "day") {
       this.phase = "night";
     } else {
       this.phase = "day";
-      this.day += 1;
+      if (incrementDay) this.day += 1;
     }
     eventBus.emit("gamestate:changed", this.snapshot());
     return this.phase;
+  }
+
+  advanceDayAtMidnight() {
+    this.day += 1;
+    eventBus.emit("gamestate:changed", this.snapshot());
   }
 
   modify({ energy = 0, mental = 0, physical = 0, satiety = 0 } = {}) {

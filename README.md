@@ -1,8 +1,8 @@
-# surrendered by cultists（完蛋，我被邪教徒包围了！）
+# surrounded by cultists（完蛋，我被邪教徒包围了！）
 
-**surrendered by cultists** 是一款采用 Windows 95 视觉风格的、纯 ES6 模块实现的网页互动游戏。玩家扮演医院实习生，在白天使用医院信息系统处理工作，在下班后回到宿舍与 NPC 交流、整理线索，并逐步揭开被邪教徒包围的真相。
+**surrounded by cultists** 是一款采用 Windows 95 视觉风格的、纯 ES6 模块实现的网页互动游戏。玩家扮演医院实习生，在白天使用医院信息系统处理工作，在下班后回到宿舍与 NPC 交流、整理线索，并逐步揭开被邪教徒包围的真相。
 
-- 英文名：**surrendered by cultists**
+- 英文名：**surrounded by cultists**
 - 中文名：**完蛋，我被邪教徒包围了！**
 - 技术栈：原生 HTML / CSS / JavaScript ES6 modules
 - 构建方式：无构建步骤、无打包器、无第三方框架、无 `package.json`

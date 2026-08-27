@@ -45,11 +45,14 @@ class DayNightSystem {
    */
   toggle() {
     if (scheduleData.isFinalPhase(gameState.day, gameState.phase)) {
+      actionBudget.settlePhase(gameState.phase);
       endingManager.resolveFinalEnding();
       return gameState.phase;
     }
     const settlement = actionBudget.settlePhase(gameState.phase);
-    const phase = gameState.advancePhase();
+    const phase = gameState.advancePhase({
+      incrementDay: !(gameState.phase === "night" && actionBudget.phaseMinutes >= 8 * 60),
+    });
     eventBus.emit("daynight:changed", { phase, day: gameState.day, settlement });
     return phase;
   }

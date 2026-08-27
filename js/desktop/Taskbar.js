@@ -87,6 +87,8 @@ export default class Taskbar {
     const phaseDuration = gameState.phase === "day" ? 8 * 60 : 16 * 60;
     const phaseMinutes = Math.min(actionBudget.snapshot().phaseMinutes || 0, phaseDuration);
     const totalMinutes = (phaseStart + phaseMinutes) % (24 * 60);
+    const isEarlyMorning = gameState.phase === "night" && totalMinutes < 8 * 60;
+    this.clockEl.classList.toggle("early-morning-warning", isEarlyMorning);
     const hh = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
     const mm = String(totalMinutes % 60).padStart(2, "0");
     this.clockEl.textContent = `${hh}:${mm}`;

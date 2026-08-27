@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" width="480" height="300">
+  <!-- Hospital ward background - hand-authored flat illustration (self-made, no external asset). -->
+  <defs>
+    <linearGradient id="wardWallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf6f6" />
+      <stop offset="1" stop-color="#d7ecec" />
+    </linearGradient>
+    <linearGradient id="wardFloorGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfe0e2" />
+      <stop offset="1" stop-color="#b9d1d4" />
+    </linearGradient>
+  </defs>
+
+  <!-- wall -->
+  <rect x="0" y="0" width="480" height="190" fill="url(#wardWallGrad)" />
+  <!-- wainscot stripe -->
+  <rect x="0" y="150" width="480" height="10" fill="#bfe0df" />
+  <!-- floor -->
+  <rect x="0" y="190" width="480" height="110" fill="url(#wardFloorGrad)" />
+  <!-- floor tile lines -->
+  <g stroke="#a9c6c8" stroke-width="1" opacity="0.6">
+    <line x1="0" y1="215" x2="480" y2="215" />
+    <line x1="0" y1="245" x2="480" y2="245" />
+    <line x1="0" y1="275" x2="480" y2="275" />
+    <line x1="60" y1="190" x2="30" y2="300" />
+    <line x1="160" y1="190" x2="140" y2="300" />
+    <line x1="260" y1="190" x2="250" y2="300" />
+    <line x1="360" y1="190" x2="360" y2="300" />
+    <line x1="440" y1="190" x2="460" y2="300" />
+  </g>
+
+  <!-- window -->
+  <rect x="24" y="26" width="120" height="86" rx="4" fill="#bfe6f2" stroke="#8fb9c4" stroke-width="4" />
+  <line x1="84" y1="26" x2="84" y2="112" stroke="#8fb9c4" stroke-width="4" />
+  <line x1="24" y1="69" x2="144" y2="69" stroke="#8fb9c4" stroke-width="4" />
+  <rect x="16" y="18" width="136" height="102" fill="none" stroke="#7ba4af" stroke-width="6" rx="6" />
+  <!-- curtain -->
+  <path d="M16 18 q10 30 0 60 q10 20 0 42" fill="none" stroke="#f6c9c9" stroke-width="10" stroke-linecap="round" opacity="0.85" />
+
+  <!-- wall clock -->
+  <circle cx="230" cy="46" r="16" fill="#ffffff" stroke="#7a8a8a" stroke-width="3" />
+  <line x1="230" y1="46" x2="230" y2="35" stroke="#4a4a4a" stroke-width="2" stroke-linecap="round" />
+  <line x1="230" y1="46" x2="239" y2="49" stroke="#4a4a4a" stroke-width="2" stroke-linecap="round" />
+
+  <!-- medicine cabinet -->
+  <rect x="376" y="40" width="76" height="96" rx="3" fill="#ffffff" stroke="#9fb6b8" stroke-width="3" />
+  <line x1="414" y1="40" x2="414" y2="136" stroke="#9fb6b8" stroke-width="2" />
+  <rect x="392" y="56" width="8" height="8" fill="#e2554f" rx="1" />
+  <rect x="392" y="80" width="8" height="8" fill="#4fa8e2" rx="1" />
+  <rect x="428" y="56" width="8" height="8" fill="#7cc36b" rx="1" />
+  <rect x="428" y="80" width="8" height="8" fill="#e2b34f" rx="1" />
+
+  <!-- hospital bed -->
+  <g>
+    <rect x="150" y="150" width="180" height="16" rx="3" fill="#d9d9d9" />
+    <rect x="150" y="164" width="180" height="46" rx="4" fill="#ffffff" stroke="#cfd7d7" stroke-width="2" />
+    <rect x="150" y="164" width="36" height="46" rx="4" fill="#eef3f3" stroke="#cfd7d7" stroke-width="2" />
+    <rect x="160" y="150" width="24" height="20" rx="4" fill="#eef6fb" stroke="#cfd7d7" stroke-width="2" />
+    <rect x="150" y="205" width="8" height="26" fill="#b7c2c2" />
+    <rect x="322" y="205" width="8" height="26" fill="#b7c2c2" />
+    <rect x="150" y="205" width="180" height="4" fill="#b7c2c2" />
+  </g>
+
+  <!-- IV stand -->
+  <g stroke="#9aa6a6" stroke-width="3" fill="none">
+    <line x1="70" y1="220" x2="70" y2="120" />
+    <line x1="55" y1="120" x2="85" y2="120" />
+    <line x1="55" y1="220" x2="85" y2="220" />
+  </g>
+  <path d="M70 120 q0 -10 10 -10" stroke="#9aa6a6" stroke-width="3" fill="none" />
+  <rect x="76" y="96" width="16" height="24" rx="3" fill="#dff1ee" stroke="#9aa6a6" stroke-width="2" />
+
+  <!-- side table -->
+  <rect x="336" y="196" width="34" height="34" rx="2" fill="#f1e3c7" stroke="#cdb98e" stroke-width="2" />
+  <circle cx="353" cy="188" r="6" fill="#e58fa0" />
+
+  <!-- privacy curtain divider -->
+  <g opacity="0.55">
+    <line x1="410" y1="150" x2="410" y2="300" stroke="#9fb6b8" stroke-width="4" />
+    <path d="M410 150 q20 40 0 75 q20 40 0 75" fill="none" stroke="#a9d3d0" stroke-width="14" stroke-linecap="round" />
+  </g>
+</svg>

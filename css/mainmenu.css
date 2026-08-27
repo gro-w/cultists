@@ -1,0 +1,263 @@
+/* ============================================================
+   Main Menu + Ending Screen: retro CRT-terminal overlays.
+   Both are full-screen overlays layered above the Win95 desktop.
+   Deliberately styled as an old-school phosphor terminal (green-on-
+   black, scanlines, glow, blinking cursor) to signal "you are
+   outside the simulated OS" - booting/shutting down the machine -
+   rather than inside a Win95 app window.
+   ============================================================ */
+
+.main-menu-overlay,
+.ending-screen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.main-menu-overlay.hidden,
+.ending-screen-overlay.hidden {
+  display: none;
+}
+
+/* ---- shared CRT terminal chrome ---- */
+
+.crt-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  box-sizing: border-box;
+  padding: 24px;
+  background: radial-gradient(ellipse at center, #04180a 0%, #000 78%);
+  color: #4dff88;
+  font-family: "Courier New", "Consolas", "Microsoft YaHei", monospace;
+  text-shadow: 0 0 4px rgba(77, 255, 136, 0.85), 0 0 10px rgba(77, 255, 136, 0.4);
+  text-align: center;
+}
+
+/* Scanline + vignette overlay, purely decorative, sits above the content. */
+.crt-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 1px,
+    rgba(0, 0, 0, 0.25) 2px,
+    rgba(0, 0, 0, 0.25) 3px
+  );
+  mix-blend-mode: multiply;
+  z-index: 2;
+}
+
+.crt-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.85);
+  z-index: 3;
+  animation: crt-flicker 6s infinite;
+}
+
+@keyframes crt-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.88; }
+  98% { opacity: 1; }
+}
+
+.crt-cursor {
+  display: inline-block;
+  width: 0.6em;
+  background: #4dff88;
+  margin-left: 2px;
+  animation: crt-blink 1s steps(1) infinite;
+}
+
+@keyframes crt-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ---- Main Menu (retro boot/login terminal) ---- */
+
+.crt-title {
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  z-index: 1;
+}
+
+.crt-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  letter-spacing: 1px;
+  z-index: 1;
+}
+
+.crt-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1;
+  width: 340px;
+}
+
+.crt-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid #2d7a4c;
+  color: #4dff88;
+  font-family: inherit;
+  font-size: 14px;
+  text-shadow: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.crt-menu-item:hover,
+.crt-menu-item:focus {
+  background: rgba(77, 255, 136, 0.12);
+  border-color: #4dff88;
+  outline: none;
+}
+
+.crt-menu-item .crt-menu-marker {
+  opacity: 0;
+}
+
+.crt-menu-item:hover .crt-menu-marker,
+.crt-menu-item:focus .crt-menu-marker {
+  opacity: 1;
+}
+
+.crt-menu-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.crt-menu-item-hint {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.crt-login-load-panel {
+  z-index: 1;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #2d7a4c;
+  padding: 16px;
+  text-align: left;
+}
+
+.crt-login-load-panel.hidden {
+  display: none;
+}
+
+.crt-login-load-label {
+  font-size: 11px;
+}
+
+.crt-login-load-input {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 8px;
+  background: #000;
+  border: 1px solid #2d7a4c;
+  color: #4dff88;
+  caret-color: #4dff88;
+}
+
+.crt-login-load-input:focus {
+  outline: none;
+  border-color: #4dff88;
+}
+
+.crt-login-load-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.crt-btn {
+  font-family: inherit;
+  background: transparent;
+  border: 1px solid #4dff88;
+  color: #4dff88;
+  padding: 4px 14px;
+  cursor: pointer;
+  text-shadow: inherit;
+}
+
+.crt-btn:hover {
+  background: rgba(77, 255, 136, 0.15);
+}
+
+.crt-login-feedback {
+  font-size: 11px;
+  color: #ff5c5c;
+  text-shadow: 0 0 4px rgba(255, 92, 92, 0.8);
+  margin: 0;
+}
+
+.crt-login-feedback.hidden {
+  display: none;
+}
+
+.crt-login-footer {
+  font-size: 10px;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+/* ---- Ending Screen ---- */
+
+.ending-screen-panel {
+  z-index: 1;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.ending-screen-icon {
+  font-size: 40px;
+  filter: grayscale(1) brightness(1.4) drop-shadow(0 0 6px rgba(77, 255, 136, 0.7));
+}
+
+.ending-screen-title {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.ending-screen-text {
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 0;
+  color: #4dff88;
+  opacity: 0.92;
+}
+
+.ending-screen-btn {
+  margin-top: 8px;
+}

@@ -26,26 +26,35 @@ class EndingManager {
     this.statTriggers = [];
     this.finalConditions = [];
     this.defaultEndingId = null;
-    this._loaded = false;
+    this._loadPromise = null;
     this._ended = false;
   }
 
+  /**
+   * Load `data/endings.json` (idempotent, and safe to call concurrently
+   * from multiple callers - the in-flight promise is cached so overlapping
+   * callers all await the same load instead of racing past a boolean
+   * guard set only after the `await` resolves, which would otherwise
+   * double-register the gamestate:changed/item:used listeners below).
+   */
   async load() {
-    if (this._loaded) return;
-    const data = await dataLoader.loadJSON("endings.json");
-    (data.endings || []).forEach((e) => this.defs.set(e.id, e));
-    this.statTriggers = data.statTriggers || [];
-    this.finalConditions = data.finalConditions || [];
-    this.defaultEndingId = data.defaultEndingId || null;
-    this._loaded = true;
+    if (!this._loadPromise) {
+      this._loadPromise = dataLoader.loadJSON("endings.json").then((data) => {
+        (data.endings || []).forEach((e) => this.defs.set(e.id, e));
+        this.statTriggers = data.statTriggers || [];
+        this.finalConditions = data.finalConditions || [];
+        this.defaultEndingId = data.defaultEndingId || null;
 
-    eventBus.on("gamestate:changed", (snapshot) => this._checkStatTriggers(snapshot));
-    eventBus.on("item:used", ({ id, result }) => {
-      if (!result || !result.ok) return;
-      const def = itemManager.getDef(id);
-      const endingId = def && def.useEffect && def.useEffect.ending;
-      if (endingId) this.trigger(endingId);
-    });
+        eventBus.on("gamestate:changed", (snapshot) => this._checkStatTriggers(snapshot));
+        eventBus.on("item:used", ({ id, result }) => {
+          if (!result || !result.ok) return;
+          const def = itemManager.getDef(id);
+          const endingId = def && def.useEffect && def.useEffect.ending;
+          if (endingId) this.trigger(endingId);
+        });
+      });
+    }
+    return this._loadPromise;
   }
 
   _checkStatTriggers(snapshot) {

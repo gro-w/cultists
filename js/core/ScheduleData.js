@@ -14,15 +14,22 @@ import { dataLoader } from "./DataLoader.js";
 class ScheduleData {
   constructor() {
     this.totalDays = 1;
-    this._loaded = false;
+    this._initPromise = null;
   }
 
-  /** Load `data/days.json` (idempotent). */
+  /**
+   * Load `data/days.json` (idempotent, and safe to call concurrently from
+   * multiple callers - the in-flight promise is cached so overlapping
+   * callers all await the same load instead of racing past a boolean
+   * guard set only after the `await` resolves).
+   */
   async init() {
-    if (this._loaded) return;
-    const data = await dataLoader.loadJSON("days.json");
-    this.totalDays = Math.max(1, Number(data.totalDays) || 1);
-    this._loaded = true;
+    if (!this._initPromise) {
+      this._initPromise = dataLoader.loadJSON("days.json").then((data) => {
+        this.totalDays = Math.max(1, Number(data.totalDays) || 1);
+      });
+    }
+    return this._initPromise;
   }
 
   /** Whether `day`/`phase` is (or is past) the final authored slot. */

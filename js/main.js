@@ -20,6 +20,7 @@ import { launchChatGTPApp } from "./apps/ChatGTPApp.js";
 import { launchNotebookApp } from "./apps/NotebookApp.js";
 import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
+import { launchMonitorApp } from "./apps/MonitorApp.js";
 
 /**
  * main.js - application bootstrap. Registers every app with a shared
@@ -56,6 +57,7 @@ async function handlePhaseToggle() {
 const APP_REGISTRY = [
   { id: "his", label: () => i18n.t("apps.his", "HIS 医疗系统"), icon: "🏥", launch: () => launchHISApp() },
   { id: "social", label: () => i18n.t("apps.social", "夜聊 Messenger"), icon: "💬", launch: () => launchSocialApp() },
+  { id: "monitor", label: () => i18n.t("apps.monitor", "监控画面"), icon: "🖥️", launch: () => launchMonitorApp() },
   { id: "chatgtp", label: () => i18n.t("apps.chatgtp", "ChatGTP"), icon: "🤖", launch: () => launchChatGTPApp() },
   { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },
   { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },

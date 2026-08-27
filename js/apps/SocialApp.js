@@ -5,14 +5,21 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
 import { scheduleData } from "../core/ScheduleData.js";
-import { applyDialogueOnShow } from "../core/DialogueEffects.js";
-import { endingManager } from "../core/EndingManager.js";
+import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { npcStateManager } from "../core/NpcStateManager.js";
+import { actionBudget } from "../core/ActionBudget.js";
 
 /**
  * SocialApp - Social media style chat client.
  * Always accessible, but the contact/conversation content varies by the
  * current in-game day/phase (data-driven via `data/dayXXa.json` /
  * `data/dayXXb.json`, resolved through ScheduleData).
+ *
+ * Dialogue tree walking (dice-check options, npcSanChange, dialogue:turn
+ * budget accounting) is shared with HISApp/MonitorApp via
+ * `createDialogueRunner` (see DialogueRunner.js). A contact whose own SAN
+ * (NpcStateManager) has dropped to "offline" goes silent for the rest of
+ * the game.
  */
 export async function launchSocialApp() {
   await scheduleData.init();
@@ -37,6 +44,14 @@ export async function launchSocialApp() {
     return keywordDefs;
   }
 
+  function budgetNote() {
+    const remaining = actionBudget.remaining("dialogue");
+    if (!Number.isFinite(remaining)) return "";
+    return remaining > 0
+      ? `本阶段剩余聊天次数：${remaining}`
+      : `本阶段聊天次数已用尽（继续聊天将记为加班/熬夜）`;
+  }
+
   function renderContacts(entry, keywordDefs) {
     contactListEl.innerHTML = `<h4>联系人（第${gameState.day}天 · ${
       gameState.phase === "day" ? "白天" : "夜晚"
@@ -47,6 +62,11 @@ export async function launchSocialApp() {
       note.textContent = entry.note;
       contactListEl.appendChild(note);
     }
+    const budgetHint = document.createElement("p");
+    budgetHint.className = "his-schedule-note action-budget-hint";
+    budgetHint.textContent = budgetNote();
+    contactListEl.appendChild(budgetHint);
+
     if (!entry.contacts || entry.contacts.length === 0) {
       const empty = document.createElement("p");
       empty.className = "his-empty";
@@ -58,7 +78,11 @@ export async function launchSocialApp() {
     entry.contacts.forEach((contact) => {
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out social-contact-btn";
-      btn.textContent = `${contact.avatar || "🙂"} ${contact.name}`;
+      const offline = npcStateManager.isOffline(contact.id);
+      const distressed = !offline && npcStateManager.isDistressed(contact.id);
+      btn.textContent = `${contact.avatar || "🙂"} ${contact.name}${
+        offline ? " 🚫" : distressed ? " ⚠️" : ""
+      }`;
       btn.addEventListener("click", () => renderChat(contact, keywordDefs));
       contactListEl.appendChild(btn);
     });
@@ -70,6 +94,18 @@ export async function launchSocialApp() {
 
   function renderChat(contact, keywordDefs) {
     chatEl.innerHTML = `<h4>与 ${contact.name} 的聊天</h4>`;
+
+    if (npcStateManager.isOffline(contact.id)) {
+      chatEl.innerHTML += '<p class="dialogue-end">（对方已经很久没有上线了，消息始终没有回音。）</p>';
+      return;
+    }
+    if (npcStateManager.isDistressed(contact.id)) {
+      const warn = document.createElement("p");
+      warn.className = "his-schedule-note npc-distress-warning";
+      warn.textContent = "⚠️ 对方的语气最近变得异常低落，回复也断断续续。";
+      chatEl.appendChild(warn);
+    }
+
     const bubblesEl = document.createElement("div");
     bubblesEl.className = "chat-bubbles";
     const optionsEl = document.createElement("div");
@@ -86,43 +122,20 @@ export async function launchSocialApp() {
       chatEl.scrollTop = chatEl.scrollHeight;
     }
 
-    // Only the current node's single message + its reply options are shown
-    // at a time; picking an option appends the player's reply then reveals
-    // the next node (previous messages remain above in the transcript).
-    function showNode(nodeId) {
-      const tree = contact.dialogueTree;
-      const node = tree && tree.nodes[nodeId];
-      optionsEl.innerHTML = "";
-      if (!node) return;
-      dialogueProgress.set("social", contact.id, nodeId);
+    const runner = createDialogueRunner({
+      actor: contact,
+      appendLine: (speaker, label, text) => appendBubble(speaker === "npc" ? "npc" : "me", text),
+      optionsEl,
+      optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
+      appId: "social",
+      onNodeShown: (nodeId) => dialogueProgress.set("social", contact.id, nodeId),
+    });
 
-      appendBubble(node.speaker === "npc" ? "npc" : "me", node.text);
-      applyDialogueOnShow(node);
-      if (endingManager.isEnded) return;
-
-      if (node.options && node.options.length > 0) {
-        node.options.forEach((opt) => {
-          const btn = document.createElement("button");
-          btn.className = "win95-btn bevel-out dialogue-option-btn";
-          btn.textContent = opt.label;
-          btn.addEventListener("click", () => {
-            appendBubble("me", opt.label);
-            showNode(opt.next);
-          });
-          optionsEl.appendChild(btn);
-        });
-      } else {
-        optionsEl.innerHTML = '<p class="dialogue-end">（对话已结束）</p>';
-      }
-    }
-
-    if (contact.dialogueTree) {
-      const resumeNodeId =
-        dialogueProgress.get("social").actorId === contact.id
-          ? dialogueProgress.get("social").nodeId
-          : null;
-      showNode(resumeNodeId || contact.dialogueTree.start);
-    }
+    const resumeNodeId =
+      dialogueProgress.get("social").actorId === contact.id
+        ? dialogueProgress.get("social").nodeId
+        : null;
+    runner.showNode(resumeNodeId || (contact.dialogueTree && contact.dialogueTree.start));
   }
 
   async function renderCurrentEntry() {
@@ -136,7 +149,9 @@ export async function launchSocialApp() {
     renderContacts(entry, keywordDefs);
   }
 
-  const unsubscribe = eventBus.on("daynight:changed", renderCurrentEntry);
+  const offDayNight = eventBus.on("daynight:changed", renderCurrentEntry);
+  const offBudget = eventBus.on("actionBudget:changed", renderCurrentEntry);
+  const offNpcState = eventBus.on("npc:offline", renderCurrentEntry);
 
   await renderCurrentEntry();
 
@@ -147,6 +162,10 @@ export async function launchSocialApp() {
     width: 560,
     height: 420,
     content: root,
-    onClose: unsubscribe,
+    onClose: () => {
+      offDayNight();
+      offBudget();
+      offNpcState();
+    },
   });
 }

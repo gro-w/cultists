@@ -9,6 +9,9 @@ import { scheduleData } from "./core/ScheduleData.js";
 import { endingManager } from "./core/EndingManager.js";
 import { i18n } from "./core/I18n.js";
 import { dataLoader } from "./core/DataLoader.js";
+import { skillManager } from "./core/SkillManager.js";
+import { actionBudget } from "./core/ActionBudget.js";
+import { npcStateManager } from "./core/NpcStateManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -131,6 +134,9 @@ document.addEventListener("DOMContentLoaded", () => {
     scheduleData.init(),
     endingManager.load(),
     saveManager.init(),
+    skillManager.load(),
+    actionBudget.init(),
+    npcStateManager.load(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

@@ -2,6 +2,7 @@ import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
+import { checkSkill } from "./DiceCheck.js";
 
 /**
  * ItemManager - singleton owning the player's inventory and the data-driven
@@ -12,8 +13,25 @@ import { keywordManager } from "./KeywordManager.js";
  *     id, name,
  *     consumable: boolean,   // removed from inventory after a successful use
  *     usable: boolean,       // whether "使用" is available at all
- *     inspectText: string,   // shown when the player "调查"s the item
+ *     inspectText: string,   // shown when the player "调查"s the item (used
+ *                            // when `inspectCheck` is absent - a plain,
+ *                            // always-the-same-result inspection)
  *     revealKeywordIds: string[],  // optional keyword ids (from data/keywords.json) unlocked on inspect
+ *     inspectCheck: { skillId: string },  // optional - if set, every 调查
+ *                            // re-rolls a CoC-style percentile check against
+ *                            // that skill (see DiceCheck.js) instead of
+ *                            // always returning `inspectText`, so repeated
+ *                            // inspections of the same item can yield
+ *                            // different results.
+ *     inspectOutcomes: {     // required when inspectCheck is set; one entry
+ *                            // per DiceCheck outcome name (criticalSuccess/
+ *                            // success/failure/criticalFailure), each:
+ *       [outcome]: {
+ *         text: string,                    // shown instead of inspectText
+ *         revealKeywordIds: string[],      // overrides the top-level list for this outcome
+ *         statChanges: { energy, mental, physical, satiety }  // e.g. a criticalFailure spooking the player
+ *       }
+ *     },
  *     useCondition: { requires: [{ itemId, count }] },  // optional
  *     useEffect: {
  *       remove: [{ itemId, count }],
@@ -110,13 +128,43 @@ class ItemManager {
       .filter((entry) => entry.def);
   }
 
-  /** Inspect an item: reveals any associated keywords and returns its blurb. */
+  /**
+   * Inspect an item: reveals any associated keywords and returns a result
+   * describing what the player saw. Every call counts as one "调查"
+   * action (broadcast via `item:inspected` so ActionBudget can enforce the
+   * per-phase inspection limit).
+   *
+   * If the item has no `inspectCheck`, this always returns the same
+   * `inspectText` (legacy behaviour). If it does, a fresh CoC-style
+   * percentile check is rolled against the named skill *every time* -
+   * so re-inspecting the same item can surface a different outcome
+   * (different text, different revealed keywords, even a stat penalty on
+   * a criticalFailure) instead of a static, one-note description.
+   * @returns {{ text: string, check: {roll:number, skillValue:number, outcome:string}|null }}
+   */
   inspect(id) {
     const def = this.defs.get(id);
     if (!def) return null;
+    eventBus.emit("item:inspected", { id });
+
+    if (def.inspectCheck && def.inspectCheck.skillId) {
+      const check = checkSkill(def.inspectCheck.skillId);
+      const outcomes = def.inspectOutcomes || {};
+      const outcome =
+        outcomes[check.outcome] || outcomes.success || outcomes.failure || {};
+      const revealIds = outcome.revealKeywordIds || def.revealKeywordIds || [];
+      const keywordDefs = keywordManager.definitionsWithSource(revealIds, `物品-${def.name}`);
+      Object.values(keywordDefs).forEach((k) => keywordManager.collect(k));
+      if (outcome.statChanges) gameState.modify(outcome.statChanges);
+      return {
+        text: outcome.text || def.inspectText || "（没有更多可以查看的信息。）",
+        check,
+      };
+    }
+
     const keywordDefs = keywordManager.definitionsWithSource(def.revealKeywordIds || [], `物品-${def.name}`);
     Object.values(keywordDefs).forEach((k) => keywordManager.collect(k));
-    return def.inspectText || "（没有更多可以查看的信息。）";
+    return { text: def.inspectText || "（没有更多可以查看的信息。）", check: null };
   }
 
   /**

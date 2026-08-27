@@ -1,0 +1,6 @@
+{
+  "day": { "dialogueLimit": 6, "inspectLimit": 4 },
+  "night": { "dialogueLimit": 6, "inspectLimit": 4 },
+  "overtimePenaltyPerAction": 1,
+  "sanLossPerLateNightAction": 5
+}

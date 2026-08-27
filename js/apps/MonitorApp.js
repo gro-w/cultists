@@ -8,7 +8,7 @@ import { eventBus } from "../core/EventBus.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
-import { actionBudget } from "../core/ActionBudget.js";
+
 import { formatInspectResult } from "../core/InspectFormat.js";
 
 const MOVE_STEP = 18; // px per arrow-key press
@@ -39,7 +39,7 @@ export async function launchMonitorApp() {
   root.className = "app-monitor";
   root.innerHTML = `
     <h4 class="monitor-title"></h4>
-    <p class="monitor-budget-hint"></p>
+
     <div class="monitor-viewport-wrap panel-inset">
       <div class="monitor-viewport" tabindex="0">
         <img class="monitor-scene-bg" alt="" />
@@ -51,7 +51,7 @@ export async function launchMonitorApp() {
   `;
 
   const titleEl = root.querySelector(".monitor-title");
-  const budgetHintEl = root.querySelector(".monitor-budget-hint");
+
   const viewportEl = root.querySelector(".monitor-viewport");
   const bgEl = root.querySelector(".monitor-scene-bg");
   const markerLayerEl = root.querySelector(".monitor-marker-layer");
@@ -100,14 +100,6 @@ export async function launchMonitorApp() {
     interactionEl.innerHTML = `<p class="monitor-hint">${message}</p>`;
   }
 
-  function updateBudgetHint() {
-    const dialogueRemaining = actionBudget.remaining("dialogue");
-    const inspectRemaining = actionBudget.remaining("inspect");
-    const parts = [];
-    if (Number.isFinite(dialogueRemaining)) parts.push(`对话剩余 ${dialogueRemaining}`);
-    if (Number.isFinite(inspectRemaining)) parts.push(`调查剩余 ${inspectRemaining}`);
-    budgetHintEl.textContent = parts.length > 0 ? `本阶段：${parts.join(" · ")}` : "";
-  }
 
   /** Render the shared dialogueTree conversation UI for one actor (patient/contact). */
   function renderActorInteraction(actor, keywordDefs) {
@@ -295,7 +287,7 @@ export async function launchMonitorApp() {
 
   const offDayNight = eventBus.on("daynight:changed", renderScene);
   const offItems = eventBus.on("items:changed", () => renderItemHotspots());
-  const offBudget = eventBus.on("actionBudget:changed", updateBudgetHint);
+
   const offNpcState = eventBus.on("npc:offline", renderScene);
 
   await renderScene();
@@ -310,7 +302,7 @@ export async function launchMonitorApp() {
     onClose: () => {
       offDayNight();
       offItems();
-      offBudget();
+
       offNpcState();
     },
   });

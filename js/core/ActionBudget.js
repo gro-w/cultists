@@ -46,7 +46,9 @@ class ActionBudget {
     // own daynight:changed emission (e.g. from SaveManager restoring a
     // save) also correctly resets the budget for whatever phase was
     // loaded, with a single code path.
-    eventBus.on("daynight:changed", ({ phase }) => this.startPhase(phase));
+    eventBus.on("daynight:changed", ({ phase, phaseChanged = true, phaseMinutes }) => {
+      if (phaseChanged) this.startPhase(phase, phaseMinutes);
+    });
   }
 
   /**
@@ -71,24 +73,14 @@ class ActionBudget {
    * over from the day that just ended (only relevant when phase="night")
    * and resetting the used-action counters for the new phase.
    */
-  startPhase(phase) {
-    const base = (this.config && this.config[phase]) || DEFAULT_LIMITS;
-    let dialogueLimit = base.dialogueLimit ?? Infinity;
-    let inspectLimit = base.inspectLimit ?? Infinity;
-
-    if (phase === "night" && this._pendingNightDebt > 0) {
-      let debt = this._pendingNightDebt;
-      const dialogueCut = Math.min(dialogueLimit, debt);
-      dialogueLimit -= dialogueCut;
-      debt -= dialogueCut;
-      const inspectCut = Math.min(inspectLimit, debt);
-      inspectLimit -= inspectCut;
-      this._pendingNightDebt = 0;
-    }
-
-    this.currentLimits = { dialogueLimit, inspectLimit };
+  startPhase(phase, preservedMinutes = 0) {
+    // Action count is intentionally unlimited. Time consumed by each action
+    // is the only action constraint; phase limits remain for overtime/sleep
+    // consequences, not for blocking or rationing actions.
+    this.currentLimits = { ...DEFAULT_LIMITS };
+    this._pendingNightDebt = 0;
     this.used = { dialogue: 0, inspect: 0 };
-    this.phaseMinutes = 0;
+    this.phaseMinutes = Math.max(0, Number(preservedMinutes) || 0);
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
@@ -98,15 +90,12 @@ class ActionBudget {
    * @returns {{ totalOverage: number, kind: "overtime"|"allnighter"|null, debt?: number, sanLoss?: number }}
    */
   settlePhase(phase) {
-    const overageDialogue = Math.max(0, this.used.dialogue - this.currentLimits.dialogueLimit);
-    const overageInspect = Math.max(0, this.used.inspect - this.currentLimits.inspectLimit);
-    const countOverage = overageDialogue + overageInspect;
     const phaseLimit = phase === "day"
       ? (this.config && this.config.day.workMinutes) || 480
       : (this.config && this.config.night.nightMinutes) || 960;
     const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
     const timeOverage = Math.max(0, Math.ceil((this.phaseMinutes - phaseLimit) / minutesPerAction));
-    const totalOverage = Math.max(countOverage, timeOverage);
+    const totalOverage = timeOverage;
     if (phase === "day" && totalOverage <= 0) return { totalOverage: 0, kind: null };
 
     const perAction = (this.config && this.config.overtimePenaltyPerAction) || 1;
@@ -170,26 +159,14 @@ class ActionBudget {
    * @param {{dialogueLimit?: number, inspectLimit?: number}} penalty
    */
   applyPenalty(penalty = {}) {
-    if (typeof penalty.dialogueLimit === "number" && Number.isFinite(this.currentLimits.dialogueLimit)) {
-      this.currentLimits.dialogueLimit = Math.max(
-        this.used.dialogue,
-        this.currentLimits.dialogueLimit - penalty.dialogueLimit
-      );
-    }
-    if (typeof penalty.inspectLimit === "number" && Number.isFinite(this.currentLimits.inspectLimit)) {
-      this.currentLimits.inspectLimit = Math.max(
-        this.used.inspect,
-        this.currentLimits.inspectLimit - penalty.inspectLimit
-      );
-    }
+    // Kept as a compatibility no-op for old NPC data. There are no action
+    // count limits to reduce anymore.
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
-  /** Actions still available this phase for `kind` ("dialogue"|"inspect"); may be negative once over budget. */
+  /** Compatibility API: action counts are unlimited. */
   remaining(kind) {
-    const limitKey = kind === "inspect" ? "inspectLimit" : "dialogueLimit";
-    const usedKey = kind === "inspect" ? "inspect" : "dialogue";
-    return this.currentLimits[limitKey] - this.used[usedKey];
+    return Infinity;
   }
 
   snapshot() {
@@ -220,8 +197,8 @@ class ActionBudget {
       dialogue: Math.max(0, Number(snapshot.used?.dialogue) || 0),
       inspect: Math.max(0, Number(snapshot.used?.inspect) || 0),
     };
-    this.currentLimits = { ...DEFAULT_LIMITS, ...(snapshot.limits || {}) };
-    this._pendingNightDebt = Math.max(0, Number(snapshot.pendingNightDebt) || 0);
+    this.currentLimits = { ...DEFAULT_LIMITS };
+    this._pendingNightDebt = 0;
     this.phaseMinutes = Math.max(0, Number(snapshot.phaseMinutes) || 0);
     this.sleepHistory = Array.isArray(snapshot.sleepHistory) ? snapshot.sleepHistory.slice(-3) : [];
     this.insufficientSleepStreak = Math.max(0, Number(snapshot.insufficientSleepStreak) || 0);

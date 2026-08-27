@@ -32,10 +32,15 @@ export default class NotificationBanner {
       ).replace("{n}", settlement.totalOverage);
     }
     if (settlement.kind === "allnighter") {
-      return i18n.t(
+      const message = i18n.t(
         "notification.allnighter",
-        `🌙 昨晚熬得太狠了（超出 ${settlement.totalOverage} 次），精神状态受到了 ${settlement.sanLoss} 点的冲击。`
+        `🌙 昨晚睡眠 ${settlement.sleepMinutes} 分钟，熬夜损失 ${settlement.sanLoss} 点精神，恢复 ${settlement.recoveredSan} 点。`
       );
+      return message
+        .replace("{minutes}", settlement.sleepMinutes)
+        .replace("{loss}", settlement.sanLoss)
+        .replace("{recovered}", settlement.recoveredSan)
+        .concat(settlement.sleepDebtSanLoss ? ` 连续三天睡眠不足，额外损失 ${settlement.sleepDebtSanLoss} 点精神。` : "");
     }
     return null;
   }

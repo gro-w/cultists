@@ -8,7 +8,7 @@ import { dialogueProgress } from "../core/DialogueProgress.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
-import { actionBudget } from "../core/ActionBudget.js";
+
 
 /**
  * HISApp - Hospital Information System.
@@ -60,13 +60,6 @@ export async function launchHISApp() {
     return keywordDefs;
   }
 
-  function budgetNote() {
-    const remaining = actionBudget.remaining("dialogue");
-    if (!Number.isFinite(remaining)) return "";
-    return remaining > 0
-      ? `本阶段剩余问诊次数：${remaining}`
-      : `本阶段问诊次数已用尽（继续问诊将记为加班/熬夜）`;
-  }
 
   function renderPatients(entry, keywordDefs) {
     patientListEl.innerHTML = `<h4>候诊病人（第${gameState.day}天 · ${
@@ -78,10 +71,6 @@ export async function launchHISApp() {
       note.textContent = entry.note;
       patientListEl.appendChild(note);
     }
-    const budgetHint = document.createElement("p");
-    budgetHint.className = "his-schedule-note action-budget-hint";
-    budgetHint.textContent = budgetNote();
-    patientListEl.appendChild(budgetHint);
 
     if (!entry.patients || entry.patients.length === 0) {
       const empty = document.createElement("p");
@@ -242,7 +231,7 @@ export async function launchHISApp() {
   }
 
   const offDayNight = eventBus.on("daynight:changed", renderCurrentEntry);
-  const offBudget = eventBus.on("actionBudget:changed", renderCurrentEntry);
+
   const offNpcState = eventBus.on("npc:offline", renderCurrentEntry);
 
   await renderCurrentEntry();
@@ -256,7 +245,7 @@ export async function launchHISApp() {
     content: root,
     onClose: () => {
       offDayNight();
-      offBudget();
+
       offNpcState();
     },
   });

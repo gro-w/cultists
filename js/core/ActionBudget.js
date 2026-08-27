@@ -191,7 +191,7 @@ class ActionBudget {
   }
 
   _consumeTime() {
-    this.phaseMinutes += (this.config && this.config.minutesPerAction) || 60;
+    this.phaseMinutes += (this.config && this.config.minutesPerAction) || 20;
   }
 
   restore(snapshot = {}) {

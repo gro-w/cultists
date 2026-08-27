@@ -1,0 +1,34 @@
+{
+  "day": {
+    "backgroundAsset": "data/assets/bg_ward.svg",
+    "backgroundLabel": "病房监控画面",
+    "bounds": { "minX": 20, "maxX": 460, "minY": 195, "maxY": 285 },
+    "playerStart": { "x": 240, "y": 260 },
+    "actorSlots": [
+      { "x": 195, "y": 230 },
+      { "x": 300, "y": 230 },
+      { "x": 245, "y": 270 }
+    ],
+    "itemHotspots": [
+      { "itemId": "locked_box", "x": 353, "y": 205, "icon": "📦" },
+      { "itemId": "opened_box", "x": 353, "y": 205, "icon": "📭" },
+      { "itemId": "old_key", "x": 70, "y": 235, "icon": "🔑" },
+      { "itemId": "sandwich", "x": 250, "y": 272, "icon": "🥪" }
+    ]
+  },
+  "night": {
+    "backgroundAsset": "data/assets/bg_dorm.svg",
+    "backgroundLabel": "宿舍监控画面",
+    "bounds": { "minX": 20, "maxX": 460, "minY": 195, "maxY": 285 },
+    "playerStart": { "x": 240, "y": 260 },
+    "actorSlots": [
+      { "x": 130, "y": 230 },
+      { "x": 250, "y": 230 },
+      { "x": 370, "y": 230 }
+    ],
+    "itemHotspots": [
+      { "itemId": "old_key", "x": 260, "y": 200, "icon": "🔑" },
+      { "itemId": "sandwich", "x": 150, "y": 262, "icon": "🥪" }
+    ]
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "items": [
+    {
+      "id": "physician_cert",
+      "name": "医师证书",
+      "consumable": false,
+      "usable": false,
+      "inspectText": "你的医师执业资格证书，证明你有资格在医院独立接诊。看起来必须妥善保管。"
+    },
+    {
+      "id": "old_key",
+      "name": "一把旧钥匙",
+      "consumable": false,
+      "usable": true,
+      "inspectText": "一把生了锈的旧钥匙，边缘还留着划痕，不知道能打开什么。",
+      "useCondition": {
+        "requires": [{ "itemId": "locked_box", "count": 1 }]
+      },
+      "useEffect": {
+        "remove": [{ "itemId": "locked_box", "count": 1 }],
+        "add": [{ "itemId": "opened_box", "count": 1 }]
+      },
+      "failMessage": "身上没有需要用这把钥匙打开的盒子，这把钥匙暂时用不上。",
+      "successMessage": "你用旧钥匙打开了锁住的盒子。"
+    },
+    {
+      "id": "locked_box",
+      "name": "一个锁住的盒子",
+      "consumable": false,
+      "usable": false,
+      "inspectText": "一个上了锁的木盒，摇一摇里面似乎有东西碰撞的声响。也许有钥匙能打开它。",
+      "inspectCheck": { "skillId": "observation" },
+      "inspectOutcomes": {
+        "criticalSuccess": {
+          "text": "你借着窗外的光仔细端详木盒的缝隙，隐约看清了里面除了硬物之外，还压着一张折起的纸片——不用打开锁也能猜到些什么了。",
+          "revealKeywordIds": ["mystery_note"]
+        },
+        "success": {
+          "text": "一个上了锁的木盒，摇一摇里面似乎有东西碰撞的声响。也许有钥匙能打开它。"
+        },
+        "failure": {
+          "text": "你翻来覆去看了半天，除了锁孔上的划痕，看不出更多东西。"
+        },
+        "criticalFailure": {
+          "text": "你凑得太近，木盒边缘一根倒刺扎进了指腹，吓得手一抖差点没摔了它。",
+          "statChanges": { "mental": -3 }
+        }
+      }
+    },
+    {
+      "id": "opened_box",
+      "name": "一个打开的盒子",
+      "consumable": false,
+      "usable": false,
+      "inspectText": "盒子已经打开了，里面只剩下一些灰尘和一张看不清字迹的纸片。"
+    },
+    {
+      "id": "sandwich",
+      "name": "三明治",
+      "consumable": true,
+      "usable": true,
+      "inspectText": "便利店买的三明治，看起来还算新鲜，可以填填肚子。",
+      "useEffect": {
+        "statChanges": { "satiety": 6 }
+      },
+      "successMessage": "吃掉了三明治，饱腹感增加了。"
+    },
+    {
+      "id": "feast_set",
+      "name": "暴食套餐",
+      "consumable": true,
+      "usable": true,
+      "inspectText": "食堂阿姨特意多打的一整份套餐，分量大得惊人，吃完可能会撑到走不动路。",
+      "useEffect": {
+        "statChanges": { "satiety": 90 }
+      },
+      "successMessage": "你把整份套餐都吃光了，感觉肚子快要撑破了。"
+    },
+    {
+      "id": "mystery_potion",
+      "name": "不明液体",
+      "consumable": true,
+      "usable": true,
+      "inspectText": "一小瓶来源不明的液体，气味刺鼻，说明书也没有，喝下去后果难以预料。",
+      "inspectCheck": { "skillId": "medicine" },
+      "inspectOutcomes": {
+        "criticalSuccess": {
+          "text": "凑近对光看了看沉淀物和颜色，你几乎可以断定这不是能喝的东西——绝对不能尝试。",
+          "revealKeywordIds": ["strange_liquid"]
+        },
+        "success": {
+          "text": "一小瓶来源不明的液体，气味刺鼻，说明书也没有，喝下去后果难以预料。"
+        },
+        "failure": {
+          "text": "你对着瓶口闻了闻，只觉得一股说不清的怪味，看不出更多线索。"
+        },
+        "criticalFailure": {
+          "text": "凑得太近，刺鼻的气味直冲鼻腔，你被熏得眼泪直流，一阵反胃。",
+          "statChanges": { "physical": -3 }
+        }
+      },
+      "useEffect": {
+        "ending": "poisoned_death"
+      },
+      "successMessage": "你喝下了这瓶不明液体……"
+    },
+    {
+      "id": "extra_workload",
+      "name": "额外工作量",
+      "consumable": false,
+      "usable": false,
+      "inspectText": "同事情绪崩溃请假后留下的一堆未处理事务，全都压在了你一个人身上。"
+    }
+  ],
+  "startingInventory": [
+    { "itemId": "physician_cert", "count": 1 },
+    { "itemId": "old_key", "count": 1 },
+    { "itemId": "locked_box", "count": 1 },
+    { "itemId": "sandwich", "count": 2 }
+  ]
+}
+

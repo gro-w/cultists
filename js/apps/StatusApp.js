@@ -4,15 +4,28 @@ import { gameState } from "../core/GameState.js";
 import { itemManager } from "../core/ItemManager.js";
 import { eventBus } from "../core/EventBus.js";
 import { saveManager } from "../core/SaveManager.js";
+import { skillManager } from "../core/SkillManager.js";
+import { actionBudget } from "../core/ActionBudget.js";
+import { npcStateManager } from "../core/NpcStateManager.js";
+import { formatInspectResult } from "../core/InspectFormat.js";
 
 /**
  * StatusApp - "状态与属性": the protagonist's stats, inventory, and save/load
- * UI, organized into three tabs:
- *   - 状态: energy/mental/physical/satiety bars + current day/phase.
+ * UI, organized into four tabs:
+ *   - 状态: energy/mental/physical/satiety bars + current day/phase, plus
+ *     this phase's remaining 对话/调查 action budget (ActionBudget) and the
+ *     protagonist's skill values (SkillManager, used by dice checks).
  *   - 物品: inventory list backed by ItemManager, with 调查/使用 actions.
+ *     Inspecting an item with a configured `inspectCheck` re-rolls a dice
+ *     check every time (see ItemManager.inspect()/InspectFormat.js), so
+ *     repeated inspections can surface different results.
+ *   - NPC: every patient/contact/ChatGTP the player has interacted with,
+ *     and their own SAN (NpcStateManager) - distressed/offline status is
+ *     shown here at a glance instead of only inside each app.
  *   - 保存: builds/display the save-string URL (SaveManager) and lets the
  *     player load a save string back in.
- * Always available; live-updates via GameState/ItemManager events.
+ * Always available; live-updates via GameState/ItemManager/ActionBudget/
+ * NpcStateManager events.
  */
 export async function launchStatusApp() {
   await itemManager.load();
@@ -23,10 +36,12 @@ export async function launchStatusApp() {
     <div class="status-tabs">
       <button class="win95-btn bevel-out status-tab-btn" data-tab="stats">状态</button>
       <button class="win95-btn bevel-out status-tab-btn" data-tab="items">物品</button>
+      <button class="win95-btn bevel-out status-tab-btn" data-tab="npc">NPC</button>
       <button class="win95-btn bevel-out status-tab-btn" data-tab="save">保存</button>
     </div>
     <div class="status-tab-panel panel-inset" data-panel="stats"></div>
     <div class="status-tab-panel panel-inset" data-panel="items" hidden></div>
+    <div class="status-tab-panel panel-inset" data-panel="npc" hidden></div>
     <div class="status-tab-panel panel-inset" data-panel="save" hidden></div>
   `;
 
@@ -34,6 +49,7 @@ export async function launchStatusApp() {
   const panels = {
     stats: root.querySelector('[data-panel="stats"]'),
     items: root.querySelector('[data-panel="items"]'),
+    npc: root.querySelector('[data-panel="npc"]'),
     save: root.querySelector('[data-panel="save"]'),
   };
 
@@ -60,8 +76,23 @@ export async function launchStatusApp() {
     `;
   }
 
+  function actionBudgetRow(kind, label) {
+    const { used } = actionBudget.snapshot();
+    const limit = actionBudget.currentLimits[kind === "inspect" ? "inspectLimit" : "dialogueLimit"];
+    const usedCount = used[kind];
+    const remaining = actionBudget.remaining(kind);
+    const overBudget = remaining < 0;
+    const limitText = Number.isFinite(limit) ? limit : "∞";
+    return `
+      <p class="action-budget-row${overBudget ? " over-budget" : ""}">
+        ${label}：已用 ${usedCount} / ${limitText}${overBudget ? `（超出 ${-remaining}，将记为加班/熬夜）` : ""}
+      </p>
+    `;
+  }
+
   function renderStats() {
     const s = gameState.snapshot();
+    const { pendingNightDebt } = actionBudget.snapshot();
     panels.stats.innerHTML = `
       <h4>主角状态</h4>
       <p>第 ${s.day} 天 · ${s.phase === "day" ? "☀ 白天" : "🌙 夜晚"}</p>
@@ -69,6 +100,15 @@ export async function launchStatusApp() {
       ${bar("精神", s.mental)}
       ${bar("体力", s.physical)}
       ${bar("饱腹", s.satiety)}
+      <h4>本阶段行动次数</h4>
+      ${actionBudgetRow("dialogue", "对话/问诊")}
+      ${actionBudgetRow("inspect", "调查")}
+      ${pendingNightDebt > 0 ? `<p class="action-budget-row over-budget">今晚将因白天加班减少 ${pendingNightDebt} 次可用行动。</p>` : ""}
+      <h4>技能</h4>
+      ${skillManager
+        .all()
+        .map((sk) => `<p class="skill-row">${sk.label}：${sk.value}</p>`)
+        .join("")}
     `;
   }
 
@@ -99,10 +139,14 @@ export async function launchStatusApp() {
 
       const inspectBtn = document.createElement("button");
       inspectBtn.className = "win95-btn bevel-out";
-      inspectBtn.textContent = "调查";
+      // Items with a dice-check inspection are explicitly re-inspectable
+      // (see ItemManager.inspect()); plain items just show the same text
+      // every time, so the label stays "调查" for those.
+      inspectBtn.textContent = def.inspectCheck ? "调查（可重复）" : "调查";
       inspectBtn.addEventListener("click", () => {
+        const result = itemManager.inspect(id);
         feedback.hidden = false;
-        feedback.textContent = itemManager.inspect(id) || "";
+        feedback.textContent = formatInspectResult(result);
       });
       actions.appendChild(inspectBtn);
 
@@ -123,6 +167,35 @@ export async function launchStatusApp() {
       list.appendChild(li);
     });
     panels.items.appendChild(list);
+  }
+
+  function renderNpcStates() {
+    const entries = [...npcStateManager.san.keys()];
+    panels.npc.innerHTML = "<h4>已接触的 NPC 状态</h4>";
+    if (entries.length === 0) {
+      panels.npc.innerHTML += '<p class="his-empty">（尚未与任何人产生足够互动）</p>';
+      return;
+    }
+    const list = document.createElement("ul");
+    list.className = "item-list";
+    entries.forEach((actorId) => {
+      const san = npcStateManager.get(actorId);
+      const offline = npcStateManager.isOffline(actorId);
+      const distressed = !offline && npcStateManager.isDistressed(actorId);
+      const li = document.createElement("li");
+      li.className = "item-row";
+      li.innerHTML = `
+        <div class="item-row-info">
+          <span class="item-row-name">${actorId}${offline ? " 🚫" : distressed ? " ⚠️" : ""}</span>
+          <span class="item-row-count">SAN ${san}</span>
+        </div>
+        <div class="status-bar bevel-in npc-san-bar">
+          <div class="status-bar-fill${offline ? " offline" : distressed ? " distressed" : ""}" style="width:${san}%"></div>
+        </div>
+      `;
+      list.appendChild(li);
+    });
+    panels.npc.appendChild(list);
   }
 
   function renderSave() {
@@ -168,12 +241,15 @@ export async function launchStatusApp() {
   function renderAll() {
     renderStats();
     renderItems();
+    renderNpcStates();
     renderSave();
   }
 
   const offGameState = eventBus.on("gamestate:changed", renderStats);
   const offDayNight = eventBus.on("daynight:changed", renderStats);
   const offItems = eventBus.on("items:changed", renderItems);
+  const offBudget = eventBus.on("actionBudget:changed", renderStats);
+  const offNpcState = npcStateManager.onChange(renderNpcStates);
 
   renderAll();
   selectTab("stats");
@@ -182,13 +258,15 @@ export async function launchStatusApp() {
     appId: "status",
     title: i18n.t("apps.status", "状态与属性"),
     icon: "📊",
-    width: 380,
-    height: 380,
+    width: 400,
+    height: 440,
     content: root,
     onClose: () => {
       offGameState();
       offDayNight();
       offItems();
+      offBudget();
+      offNpcState();
     },
   });
 }

@@ -110,7 +110,7 @@ function boot({ welcomeBack }) {
   }
 
   console.info(
-    `[Cultists OS] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
+    `[Cultists] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
   );
 }
 
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     endingManager.load(),
     saveManager.init(),
   ])
-    .catch((err) => console.error("[Cultists OS] Failed to preload data:", err))
+    .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {
       const hasSave = !!window.location.search.replace(/^\?/, "");
       if (!hasSave) {

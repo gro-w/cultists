@@ -1,0 +1,216 @@
+/* Workstation shell and direct off-duty room presentation. */
+.laptop-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px 0;
+  background: #242424;
+  border: 8px solid #4b4b4b;
+  box-shadow: inset 0 0 0 3px #111, 0 0 0 3px #111;
+  transition: filter 0.35s ease, transform 0.35s ease;
+}
+
+.laptop-frame:not(.work-mode-active) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.laptop-frame.computer-screen-active {
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  visibility: visible;
+  pointer-events: auto;
+}
+.computer-screen-active .desktop-icon[data-app-id="phase-toggle"],
+.computer-screen-active .start-menu-item[data-app-id="phase-toggle"] {
+  display: none;
+}
+
+.laptop-frame.work-mode-active::before {
+  content: "";
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: -8px;
+  height: 5px;
+  background: #777;
+  box-shadow: 0 2px 0 #111;
+}
+
+.dorm-mode-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #171335;
+  color: #fff;
+  opacity: 1;
+}
+
+.dorm-mode-overlay.hidden { display: none; }
+.dorm-mode-overlay.computer-open {
+  z-index: 2200;
+  background: transparent;
+  pointer-events: none;
+}
+.dorm-mode-overlay.computer-open .dorm-room-frame { visibility: hidden; }
+
+.dorm-room-frame {
+  width: min(760px, 96vw);
+  max-height: 96vh;
+  padding: 10px;
+  background: #302b48;
+  border: 8px solid #51486d;
+  box-shadow: inset 0 0 0 3px #171335, 0 0 0 3px #0b0918;
+}
+
+.dorm-room-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px 8px;
+  color: #f4ecc9;
+}
+
+.dorm-mode-tip { font-size: 12px; opacity: 0.8; }
+
+.dorm-viewport {
+  position: relative;
+  width: min(480px, 96vw);
+  aspect-ratio: 480 / 300;
+  padding: 0;
+  overflow: hidden;
+  background: #2c2842;
+}
+
+.dorm-scene-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dorm-marker-layer { position: absolute; inset: 0; }
+.dorm-player {
+  position: absolute;
+  z-index: 4;
+  cursor: pointer;
+  transform-origin: bottom center;
+  transition: left 0.25s linear, top 0.25s linear, transform 0.15s ease;
+}
+
+.dorm-wall-clock {
+  position: absolute;
+  z-index: 3;
+  top: 30px;
+  left: 210px;
+  width: 92px;
+  padding: 5px 4px;
+  text-align: center;
+  color: #261f42;
+  background: #f4ecc9;
+  border: 3px solid #8a6a4c;
+  box-shadow: 2px 2px 0 #171335;
+  transform: rotate(-2deg);
+}
+.dorm-wall-clock-label { display: block; font-size: 8px; letter-spacing: 1px; }
+.dorm-wall-clock strong { display: block; font: bold 20px monospace; }
+
+.dorm-npc-marker,
+.dorm-bed-marker {
+  position: absolute;
+  z-index: 5;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dorm-npc-marker { transform: translate(-50%, -100%); }
+.dorm-bed-marker { left: 82px; top: 220px; }
+.dorm-phone-marker { left: 330px; top: 178px; }
+.dorm-clue-wall-marker { left: 26px; top: 168px; }
+.dorm-npc-marker.offline { opacity: 0.55; }
+
+.dorm-interaction {
+  min-height: 86px;
+  max-height: 190px;
+  margin-top: 8px;
+  color: #222;
+}
+.dorm-interaction h3,
+.dorm-interaction h4 { margin: 0 0 6px; }
+.dorm-interaction button { margin: 3px; }
+
+.dorm-bed-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 12, 35, 0.62);
+}
+.dorm-bed-confirm.hidden { display: none; }
+.dorm-bed-confirm-box {
+  width: min(320px, 90%);
+  padding: 14px;
+  color: #222;
+  background: #c0c0c0;
+  border: 3px solid #51486d;
+  box-shadow: 4px 4px 0 #171335;
+}
+.dorm-bed-confirm-title { display: block; margin-bottom: 8px; }
+.dorm-bed-confirm-message { margin: 0 0 12px; }
+.dorm-bed-confirm-actions { text-align: right; }
+
+.computer-close-button {
+  position: fixed;
+  z-index: 2300;
+  top: 18px;
+  right: 24px;
+  padding: 6px 12px;
+  color: #fff;
+  background: #7d2635;
+  border-color: #f5d8d8;
+  pointer-events: auto;
+}
+.computer-close-button.hidden { display: none; }
+
+.dorm-clue-wall-note { margin: 0 0 4px; font-size: 11px; }
+.dorm-clue-wall {
+  position: relative;
+  width: 100%;
+  height: var(--clue-wall-height);
+  overflow: auto;
+  background: #c99666;
+  border: 5px solid #70482f;
+  box-shadow: inset 0 0 0 2px #e2bd8d;
+}
+.dorm-clue-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.dorm-clue-lines line { stroke: #b21f2d; stroke-width: 3; stroke-linecap: round; opacity: 0.88; }
+.dorm-clue-node {
+  position: absolute;
+  width: 130px;
+  min-height: 28px;
+  padding: 5px 7px;
+  transform: translate(-50%, -50%) rotate(-1deg);
+  color: #241b1b;
+  background: #fff3c9;
+  border: 1px solid #9e8156;
+  box-shadow: 2px 2px 0 rgba(49, 25, 15, 0.45);
+  text-align: center;
+  font-size: 11px;
+  z-index: 1;
+}
+
+.dorm-mode-overlay.mode-transition { animation: room-fade 0.62s ease both; }
+.dorm-mode-overlay.closing-laptop { animation-name: laptop-close; }
+.dorm-mode-overlay.opening-laptop { animation-name: laptop-open; }
+
+@keyframes laptop-close {
+  0% { opacity: 0; transform: perspective(900px) rotateX(-78deg) scale(0.7); transform-origin: 50% 100%; }
+  55% { opacity: 1; transform: perspective(900px) rotateX(12deg) scale(1.02); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes laptop-open {
+  0% { opacity: 0; transform: scale(1.08); filter: brightness(1.8); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+@keyframes room-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -20,6 +20,7 @@ import NotificationBanner from "./desktop/NotificationBanner.js";
 import AchievementToast from "./desktop/AchievementToast.js";
 import MainMenu from "./desktop/MainMenu.js";
 import EndingScreen from "./desktop/EndingScreen.js";
+import DormMode from "./desktop/DormMode.js";
 import { launchHISApp } from "./apps/HISApp.js";
 import { launchSocialApp } from "./apps/SocialApp.js";
 import { launchChatGTPApp } from "./apps/ChatGTPApp.js";
@@ -92,6 +93,7 @@ const APP_REGISTRY = [
 
 function boot({ welcomeBack }) {
   const windowLayer = document.getElementById("window-layer");
+  const workShell = document.getElementById("work-shell");
   windowManager.mount(windowLayer);
   audioManager.mount();
 
@@ -108,6 +110,13 @@ function boot({ welcomeBack }) {
 
   const notificationBanner = new NotificationBanner(document.getElementById("notification-banner"));
   new EndingScreen(document.getElementById("ending-screen"));
+  const dormMode = new DormMode(document.getElementById("dorm-mode"), {
+    workShell,
+    launchWorkApp: () => {
+      if (gameState.location === "dorm") dayNightSystem.toggle();
+    },
+  });
+  dormMode.init().catch((err) => console.error("[Cultists] Failed to initialize dorm mode:", err));
 
   // Achievement toast – separate element so it doesn't clobber day/night banners.
   const achievementToast = new AchievementToast(document.getElementById("achievement-toast"));
@@ -162,7 +171,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // The menu is the first visible surface. Boot the desktop underneath it
       // so selecting an entry only changes visibility and cannot race the
       // fairly large app/event-bus initialization step.
-      boot({ welcomeBack: false });
+      const welcomeBack = Boolean(window.location.search);
+      boot({ welcomeBack });
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
         onNewGame: () => {
           window.history.replaceState(null, "", window.location.pathname);
@@ -172,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return ok;
         },
       });
-      mainMenu.show();
+      if (welcomeBack) mainMenu.hide();
+      else mainMenu.show();
     });
 });

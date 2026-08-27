@@ -6,7 +6,7 @@ import { windowManager } from "./WindowManager.js";
 import { scheduleData } from "./ScheduleData.js";
 import { actionBudget } from "./ActionBudget.js";
 
-const SAVE_FORMAT_VERSION = 4;
+const SAVE_FORMAT_VERSION = 5;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor"];
@@ -44,7 +44,7 @@ function base64UrlDecode(str) {
 }
 
 /**
- * SaveManager - packs the entire game state (stats, day/phase, collected
+ * SaveManager - packs the entire game state (stats, day/phase/location, collected
  * keywords, inventory, dialogue progress, open windows + their position and
  * stacking order) into a short binary blob, base64url-encodes it, and writes
  * it to `location.search` so a save is just "the current URL". Loading
@@ -59,9 +59,10 @@ function base64UrlDecode(str) {
  *   [0]      format version
  *   [1]      day (0-255)
  *   [2]      phase (0 = day, 1 = night)
- *   [3-6]    energy, mental, physical, satiety (0-255 each)
- *   [7]      open-window count N (0-len(WINDOW_APP_IDS)), ordered bottom-to-top
- *   [8..]    per window (5 bytes): 1-byte appId index into WINDOW_APP_IDS,
+ *   [3]      location (0 = work, 1 = dorm)
+ *   [4-7]    energy, mental, physical, satiety (0-255 each)
+ *   [8]      open-window count N (0-len(WINDOW_APP_IDS)), ordered bottom-to-top
+ *   [9..]    per window (5 bytes): 1-byte appId index into WINDOW_APP_IDS,
  *            2-byte x, 2-byte y - re-opening/positioning them in this same
  *            (ascending z) order on load restores the original stacking.
  *   [next]   HIS actor index + 1 (0 = none)
@@ -160,6 +161,7 @@ class SaveManager {
     bytes.push(SAVE_FORMAT_VERSION);
     bytes.push(clampByte(gameState.day));
     bytes.push(gameState.phase === "night" ? 1 : 0);
+    bytes.push(gameState.location === "dorm" ? 1 : 0);
     bytes.push(clampByte(gameState.energy));
     bytes.push(clampByte(gameState.mental));
     bytes.push(clampByte(gameState.physical));
@@ -225,9 +227,10 @@ class SaveManager {
     if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
     const version = bytes[i++];
-    if (version !== 2 && version !== 3 && version !== 4) throw new Error("Unsupported save version");
+    if (version !== 2 && version !== 3 && version !== 4 && version !== 5) throw new Error("Unsupported save version");
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
+    const location = version >= 5 && bytes[i++] === 1 ? "dorm" : "work";
     const energy = bytes[i++];
     const mental = bytes[i++];
     const physical = bytes[i++];
@@ -293,7 +296,7 @@ class SaveManager {
       if (id) itemEntries.push({ id, count });
     }
 
-    gameState.restore({ day, phase, energy, mental, physical, satiety, recoverableMentalLoss });
+    gameState.restore({ day, phase, location, energy, mental, physical, satiety, recoverableMentalLoss });
     if (budgetSnapshot) actionBudget.restore(budgetSnapshot);
     keywordManager.restoreCollected(keywordEntries);
     itemManager.restoreInventory(itemEntries);

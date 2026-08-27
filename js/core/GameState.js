@@ -16,6 +16,7 @@ class GameState {
   constructor() {
     this.day = 1;
     this.phase = "day"; // "day" | "night"
+    this.location = "work"; // "work" | "dorm"
     this.energy = 100;
     this.mental = 100;
     this.physical = 100;
@@ -23,13 +24,14 @@ class GameState {
     this.recoverableMentalLoss = 0;
   }
 
-  advancePhase({ incrementDay = true } = {}) {
+  advancePhase({ incrementDay = true, location } = {}) {
     if (this.phase === "day") {
       this.phase = "night";
     } else {
       this.phase = "day";
       if (incrementDay) this.day += 1;
     }
+    if (location === "work" || location === "dorm") this.location = location;
     eventBus.emit("gamestate:changed", this.snapshot());
     return this.phase;
   }
@@ -65,9 +67,10 @@ class GameState {
   }
 
   /** Overwrite every stat at once (used by SaveManager when restoring a save). */
-  restore({ day, phase, energy, mental, physical, satiety, recoverableMentalLoss } = {}) {
+  restore({ day, phase, location, energy, mental, physical, satiety, recoverableMentalLoss } = {}) {
     if (typeof day === "number") this.day = day;
     if (phase === "day" || phase === "night") this.phase = phase;
+    if (location === "work" || location === "dorm") this.location = location;
     if (typeof energy === "number") this.energy = clamp(energy);
     if (typeof mental === "number") this.mental = clamp(mental);
     if (typeof physical === "number") this.physical = clamp(physical);
@@ -83,6 +86,7 @@ class GameState {
     return {
       day: this.day,
       phase: this.phase,
+      location: this.location,
       energy: this.energy,
       mental: this.mental,
       physical: this.physical,

@@ -3,6 +3,7 @@ import { eventBus } from "../core/EventBus.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { i18n } from "../core/I18n.js";
 import { gameState } from "../core/GameState.js";
+import { actionBudget } from "../core/ActionBudget.js";
 
 /**
  * Taskbar - shows open window tabs, a live clock, current day/night
@@ -24,6 +25,7 @@ export default class Taskbar {
     eventBus.on("daynight:changed", () => this._renderStartMenu());
     eventBus.on("daynight:changed", () => this._tickClock());
     eventBus.on("actionBudget:changed", () => this._tickClock());
+    eventBus.on("gamestate:changed", () => this._bindDayNightUpdate());
     this._tickClock();
   }
 
@@ -72,20 +74,19 @@ export default class Taskbar {
   }
 
   _bindDayNight() {
-    const update = () => {
-      const isDay = dayNightSystem.phase === "day";
-      this.indicatorEl.textContent = isDay
-        ? `${i18n.t("daynight.day", "☀ 白天")} (Day ${gameState.day})`
-        : `${i18n.t("daynight.night", "🌙 夜晚")} (Day ${gameState.day})`;
-    };
-    eventBus.on("daynight:changed", update);
-    update();
+    this._bindDayNightUpdate();
+  }
+
+  _bindDayNightUpdate() {
+    const isDay = dayNightSystem.phase === "day";
+    this.indicatorEl.textContent = isDay
+      ? `${i18n.t("daynight.day", "☀ 白天")} (Day ${gameState.day})`
+      : `${i18n.t("daynight.night", "🌙 夜晚")} (Day ${gameState.day})`;
   }
 
   _tickClock() {
     const phaseStart = gameState.phase === "day" ? 8 * 60 : 16 * 60;
-    const phaseDuration = gameState.phase === "day" ? 8 * 60 : 16 * 60;
-    const phaseMinutes = Math.min(actionBudget.snapshot().phaseMinutes || 0, phaseDuration);
+    const phaseMinutes = actionBudget.snapshot().phaseMinutes || 0;
     const totalMinutes = (phaseStart + phaseMinutes) % (24 * 60);
     const isEarlyMorning = gameState.phase === "night" && totalMinutes < 8 * 60;
     this.clockEl.classList.toggle("early-morning-warning", isEarlyMorning);

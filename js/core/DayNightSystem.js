@@ -44,16 +44,36 @@ class DayNightSystem {
    * tell the player what just happened.
    */
   toggle() {
+    // Waking up leaves the protagonist in the dorm. Going to work is a
+    // location change only and must not advance the clock or settle a phase.
+    if (gameState.phase === "day" && gameState.location === "dorm") {
+      gameState.location = "work";
+      eventBus.emit("gamestate:changed", gameState.snapshot());
+      eventBus.emit("daynight:changed", {
+        phase: gameState.phase,
+        day: gameState.day,
+        location: gameState.location,
+      });
+      return gameState.phase;
+    }
     if (scheduleData.isFinalPhase(gameState.day, gameState.phase)) {
       actionBudget.settlePhase(gameState.phase);
       endingManager.resolveFinalEnding();
       return gameState.phase;
     }
     const settlement = actionBudget.settlePhase(gameState.phase);
-    const phase = gameState.advancePhase({
-      incrementDay: !(gameState.phase === "night" && actionBudget.phaseMinutes >= 8 * 60),
+    // Leaving work before 16:00 advances the clock to the fixed work end.
+    // Leaving after 16:00 keeps the already-overdue time unchanged.
+    if (gameState.phase === "day" && actionBudget.phaseMinutes < 8 * 60) {
+      actionBudget.phaseMinutes = 8 * 60;
+    }
+    const phase = gameState.advancePhase({ incrementDay: true, location: "dorm" });
+    eventBus.emit("daynight:changed", {
+      phase,
+      day: gameState.day,
+      location: gameState.location,
+      settlement,
     });
-    eventBus.emit("daynight:changed", { phase, day: gameState.day, settlement });
     return phase;
   }
 }

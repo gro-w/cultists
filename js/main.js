@@ -12,6 +12,7 @@ import { dataLoader } from "./core/DataLoader.js";
 import { skillManager } from "./core/SkillManager.js";
 import { actionBudget } from "./core/ActionBudget.js";
 import { npcStateManager } from "./core/NpcStateManager.js";
+import { gameState } from "./core/GameState.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -43,15 +44,20 @@ import { launchMonitorApp } from "./apps/MonitorApp.js";
 
 /** Perform the 下班/睡觉 phase-change action, with optional confirmation. */
 async function handlePhaseToggle() {
-  const isDay = dayNightSystem.phase === "day";
-  const message = isDay
-    ? i18n.t("phase.workEndMessage", "确定要下班，结束白天进入夜晚吗？")
-    : i18n.t("phase.sleepMessage", "确定要睡觉，结束今天进入下一天吗？");
+  const goingToWork = gameState.phase === "day" && gameState.location === "dorm";
+  const isWorkEnd = gameState.phase === "day" && !goingToWork;
+  const message = goingToWork
+    ? "确定要去上班吗？时间不会推进。"
+    : isWorkEnd
+      ? i18n.t("phase.workEndMessage", "确定要下班，结束白天进入夜晚吗？")
+      : i18n.t("phase.sleepMessage", "确定要睡觉，结束今天进入下一天吗？");
   if (settingsManager.confirmPhaseChange) {
-    const title = isDay
-      ? i18n.t("phase.workEndTitle", "下班确认")
-      : i18n.t("phase.sleepTitle", "睡觉确认");
-    const ok = await confirmDialog(message, { title, icon: isDay ? "🚪" : "🛏️" });
+    const title = goingToWork
+      ? "去上班确认"
+      : isWorkEnd
+        ? i18n.t("phase.workEndTitle", "下班确认")
+        : i18n.t("phase.sleepTitle", "睡觉确认");
+    const ok = await confirmDialog(message, { title, icon: goingToWork || isWorkEnd ? "🚪" : "🛏️" });
     if (!ok) return;
   }
   dayNightSystem.toggle();
@@ -68,10 +74,12 @@ const APP_REGISTRY = [
   {
     id: "phase-toggle",
     label: () =>
-      dayNightSystem.phase === "day"
-        ? i18n.t("apps.phaseToggleWork", "下班")
-        : i18n.t("apps.phaseToggleSleep", "睡觉"),
-    icon: () => (dayNightSystem.phase === "day" ? "🚪" : "🛏️"),
+      gameState.phase === "day" && gameState.location === "dorm"
+        ? "去上班"
+        : gameState.phase === "day"
+          ? i18n.t("apps.phaseToggleWork", "下班")
+          : i18n.t("apps.phaseToggleSleep", "睡觉"),
+    icon: () => gameState.phase === "day" && gameState.location === "dorm" ? "🚶" : gameState.phase === "day" ? "🚪" : "🛏️",
     launch: () => handlePhaseToggle(),
   },
 ];
@@ -140,18 +148,19 @@ document.addEventListener("DOMContentLoaded", () => {
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {
-      const hasSave = !!window.location.search.replace(/^\?/, "");
-      if (!hasSave) {
-        boot({ welcomeBack: false });
-        const mainMenu = new MainMenu(document.getElementById("main-menu"), {
-          onNewGame: () => {
-            /* fresh game: nothing to restore, boot() already ran with defaults */
-          },
-          onLoadSave: (saveString) => saveManager.loadFromString(saveString),
-        });
-        mainMenu.show();
-      } else {
-        boot({ welcomeBack: true });
-      }
+      // The menu is the first visible surface. Boot the desktop underneath it
+      // so selecting an entry only changes visibility and cannot race the
+      // fairly large app/event-bus initialization step.
+      boot({ welcomeBack: false });
+      const mainMenu = new MainMenu(document.getElementById("main-menu"), {
+        onNewGame: () => {
+          window.history.replaceState(null, "", window.location.pathname);
+        },
+        onLoadSave: (saveString) => {
+          const ok = saveManager.loadFromString(saveString);
+          return ok;
+        },
+      });
+      mainMenu.show();
     });
 });

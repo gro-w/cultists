@@ -1,0 +1,51 @@
+/* DEV-TOOLS:START */
+.developer-mode-root { height: 100%; overflow: auto; padding: 8px; background: #c0c0c0; color: #111; font: 13px Arial, sans-serif; box-sizing: border-box; }
+.dev-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 8px; border-bottom: 1px solid #808080; }
+.dev-btn { margin: 2px 0; padding: 3px 8px; min-height: 24px; }
+.dev-status { margin: 8px 0; padding: 5px; background: #ffffe1; border: 1px solid #808080; }
+.dev-status.dev-error { color: #900; background: #ffe0e0; }
+.dev-panel { display: grid; gap: 8px; }
+.dev-section { padding: 8px; background: #d4d0c8; border: 1px solid #808080; box-shadow: inset 1px 1px #fff; }
+.dev-section h3 { margin: 0 0 8px; font-size: 14px; }
+.dev-section label { display: inline-flex; align-items: center; gap: 4px; margin: 3px 8px 3px 0; }
+.dev-section input, .dev-section select { box-sizing: border-box; min-height: 23px; }
+.dev-section input[type="number"] { width: 74px; }
+.dev-textarea { display: block; width: 100%; box-sizing: border-box; resize: vertical; font: 12px Consolas, monospace; padding: 6px; border: 2px inset #eee; background: #fff; }
+.dev-save-input { min-height: 58px; }
+.dev-json-editor { min-height: 390px; margin: 8px 0; }
+.dev-actor-editor { min-height: 390px; margin: 8px 0; }
+.dev-editor-selects { display: flex; flex-wrap: wrap; gap: 8px; }
+.dev-keyword-palette { margin: 6px 0; padding: 5px; background: #eee; border: 1px solid #999; }
+.dev-keyword-chip { margin: 2px; text-align: left; }
+.dev-keyword-chip code { color: #003399; }
+.dev-tree { display: grid; gap: 8px; }
+.dev-tree-map { padding: 6px; background: #eee; border: 1px solid #999; }
+.dev-tree-node { margin: 8px 0; padding: 7px; background: #fff; border: 2px outset #ddd; }
+.dev-tree-node header { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; color: #003399; }
+.dev-tree-node header .dev-btn { margin-left: auto; }
+.dev-tree-node label { display: flex; align-items: flex-start; gap: 6px; margin: 4px 0; }
+.dev-tree-node textarea { flex: 1; min-height: 44px; resize: vertical; font: 12px Arial, sans-serif; }
+.dev-tree-options { margin: 6px 0 0 18px; padding-left: 8px; border-left: 3px solid #808080; }
+.dev-tree-option { display: flex; align-items: center; gap: 4px; margin: 4px 0; }
+.dev-tree-option input { flex: 1; min-width: 120px; }
+.dev-tree-option select { width: 125px; }
+.dev-actor-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.dev-actor-meta input { min-width: 220px; }
+.dev-actor-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0; padding: 6px; background: #eee; border: 1px solid #999; }
+.dev-actor-actions input { min-width: 150px; }
+.dev-keyword-table input, .dev-keyword-table textarea { width: 100%; box-sizing: border-box; }
+.dev-keyword-table th:nth-child(1) { width: 150px; }
+.dev-keyword-table th:nth-child(3) { width: 90px; }
+.dev-current-file { font: bold 16px Consolas, monospace; color: #003399; }
+.dev-table { width: 100%; border-collapse: collapse; background: #fff; }
+.dev-table th, .dev-table td { border: 1px solid #808080; padding: 4px; text-align: left; }
+.dev-inventory-add { margin-bottom: 8px; }
+.dev-qa-list { display: grid; gap: 8px; margin: 8px 0; }
+.dev-qa-entry { padding: 7px; background: #fff; border: 2px outset #ddd; }
+.dev-qa-entry header { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; color: #003399; }
+.dev-qa-entry header .dev-btn { margin-left: auto; }
+.dev-qa-entry select { max-width: 190px; }
+.dev-qa-entry label { display: flex; align-items: flex-start; width: 100%; margin: 5px 0; }
+.dev-qa-entry textarea { flex: 1; min-height: 52px; resize: vertical; font: 12px Arial, sans-serif; }
+.dev-qa-entry .dev-checkbox-label { align-items: center; }
+/* DEV-TOOLS:END */

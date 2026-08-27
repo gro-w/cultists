@@ -4,16 +4,22 @@ import { dayNightSystem } from "../core/DayNightSystem.js";
 import { i18n } from "../core/I18n.js";
 import { gameState } from "../core/GameState.js";
 import { actionBudget } from "../core/ActionBudget.js";
+// DEV-TOOLS:START
+import { scheduleData } from "../core/ScheduleData.js";
+// DEV-TOOLS:END
 
 /**
  * Taskbar - shows open window tabs, a live clock, current day/night
  * indicator and the Start menu (listing every registered app).
  */
 export default class Taskbar {
-  constructor({ tasksEl, clockEl, indicatorEl, startButtonEl, startMenuEl, apps }) {
+  constructor({ tasksEl, clockEl, indicatorEl, dataFileEl, startButtonEl, startMenuEl, apps }) {
     this.tasksEl = tasksEl;
     this.clockEl = clockEl;
     this.indicatorEl = indicatorEl;
+    // DEV-TOOLS:START
+    this.dataFileEl = dataFileEl;
+    // DEV-TOOLS:END
     this.startButtonEl = startButtonEl;
     this.startMenuEl = startMenuEl;
     this.apps = apps;
@@ -79,17 +85,20 @@ export default class Taskbar {
   }
 
   _bindDayNightUpdate() {
-    const isDay = dayNightSystem.phase === "day";
+    const isDay = dayNightSystem.isDaylight();
     this.indicatorEl.textContent = isDay
       ? `${i18n.t("daynight.day", "☀ 白天")} (Day ${gameState.day})`
       : `${i18n.t("daynight.night", "🌙 夜晚")} (Day ${gameState.day})`;
+    // DEV-TOOLS:START
+    if (this.dataFileEl) this.dataFileEl.textContent = scheduleData.fileNameFor(gameState.day, gameState.phase);
+    // DEV-TOOLS:END
   }
 
   _tickClock() {
     const phaseStart = gameState.phase === "day" ? 8 * 60 : 16 * 60;
     const phaseMinutes = actionBudget.snapshot().phaseMinutes || 0;
     const totalMinutes = (phaseStart + phaseMinutes) % (24 * 60);
-    const isEarlyMorning = gameState.phase === "night" && totalMinutes < 8 * 60;
+    const isEarlyMorning = totalMinutes < 7 * 60 + 40;
     this.clockEl.classList.toggle("early-morning-warning", isEarlyMorning);
     const hh = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
     const mm = String(totalMinutes % 60).padStart(2, "0");

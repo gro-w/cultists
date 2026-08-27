@@ -1,0 +1,23 @@
+/* DEV-TOOLS:START */
+.developer-mode-root { height: 100%; overflow: auto; padding: 8px; background: #c0c0c0; color: #111; font: 13px Arial, sans-serif; box-sizing: border-box; }
+.dev-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 8px; border-bottom: 1px solid #808080; }
+.dev-btn { margin: 2px 0; padding: 3px 8px; min-height: 24px; }
+.dev-status { margin: 8px 0; padding: 5px; background: #ffffe1; border: 1px solid #808080; }
+.dev-status.dev-error { color: #900; background: #ffe0e0; }
+.dev-panel { display: grid; gap: 8px; }
+.dev-section { padding: 8px; background: #d4d0c8; border: 1px solid #808080; box-shadow: inset 1px 1px #fff; }
+.dev-section h3 { margin: 0 0 8px; font-size: 14px; }
+.dev-section label { display: inline-flex; align-items: center; gap: 4px; margin: 3px 8px 3px 0; }
+.dev-section input, .dev-section select { box-sizing: border-box; min-height: 23px; }
+.dev-section input[type="number"] { width: 74px; }
+.dev-textarea { display: block; width: 100%; box-sizing: border-box; resize: vertical; font: 12px Consolas, monospace; padding: 6px; border: 2px inset #eee; background: #fff; }
+.dev-save-input { min-height: 58px; }
+.dev-json-editor { min-height: 390px; margin: 8px 0; }
+.dev-actor-editor { min-height: 390px; margin: 8px 0; }
+.dev-editor-selects { display: flex; flex-wrap: wrap; gap: 8px; }
+.dev-keyword-palette { margin: 6px 0; padding: 5px; background: #eee; border: 1px solid #999; }
+.dev-current-file { font: bold 16px Consolas, monospace; color: #003399; }
+.dev-table { width: 100%; border-collapse: collapse; background: #fff; }
+.dev-table th, .dev-table td { border: 1px solid #808080; padding: 4px; text-align: left; }
+.dev-inventory-add { margin-bottom: 8px; }
+/* DEV-TOOLS:END */

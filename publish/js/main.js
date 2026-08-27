@@ -29,10 +29,6 @@ import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchMonitorApp } from "./apps/MonitorApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
-// DEV-TOOLS:START
-import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
-import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
-// DEV-TOOLS:END
 
 /**
  * main.js - application bootstrap. Registers every app with a shared
@@ -107,9 +103,6 @@ function boot({ welcomeBack }) {
     tasksEl: document.getElementById("taskbar-tasks"),
     clockEl: document.getElementById("taskbar-clock"),
     indicatorEl: document.getElementById("daynight-indicator"),
-    // DEV-TOOLS:START
-    dataFileEl: document.getElementById("taskbar-data-file"),
-    // DEV-TOOLS:END
     startButtonEl: document.getElementById("start-button"),
     startMenuEl: document.getElementById("start-menu"),
     apps: APP_REGISTRY,
@@ -178,13 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // The menu is the first visible surface. Boot the desktop underneath it
       // so selecting an entry only changes visibility and cannot race the
       // fairly large app/event-bus initialization step.
-      // DEV-TOOLS:START
-      const developerMode = isDeveloperModeSearch();
-      // DEV-TOOLS:END
       const welcomeBack = Boolean(window.location.search)
-        // DEV-TOOLS:START
-        && !developerMode
-        // DEV-TOOLS:END
         ;
       boot({ welcomeBack });
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
@@ -198,12 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       if (welcomeBack) mainMenu.hide();
       else {
-        // DEV-TOOLS:START
-        if (developerMode) {
-          mainMenu.hide();
-          launchDeveloperMode();
-        } else
-        // DEV-TOOLS:END
         mainMenu.show();
       }
     });

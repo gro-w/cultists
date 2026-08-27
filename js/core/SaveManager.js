@@ -5,11 +5,13 @@ import { dialogueProgress } from "./DialogueProgress.js";
 import { windowManager } from "./WindowManager.js";
 import { scheduleData } from "./ScheduleData.js";
 import { actionBudget } from "./ActionBudget.js";
+import { favorabilityManager, NPC_IDS } from "./FavorabilityManager.js";
 
-const SAVE_FORMAT_VERSION = 5;
+// v6 = v5 (location byte + ActionBudget snapshot) + favourability bytes (3 NPC values + 1 hadPositive bitmask)
+const SAVE_FORMAT_VERSION = 6;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
-const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor"];
+const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements"];
 
 function clampByte(value, max = 255) {
   const n = Math.round(Number(value) || 0);
@@ -220,6 +222,14 @@ class SaveManager {
       bytes.push(clampByte(count));
     });
 
+    // v3: favourability – 1 byte per NPC (ajie, awei, binbin) + 1 byte hadPositive bitmask
+    NPC_IDS.forEach((id) => bytes.push(clampByte(favorabilityManager.get(id))));
+    let favFlags = 0;
+    NPC_IDS.forEach((id, idx) => {
+      if (favorabilityManager.hadPositive.has(id)) favFlags |= (1 << idx);
+    });
+    bytes.push(favFlags);
+
     return Uint8Array.from(bytes);
   }
 
@@ -227,10 +237,11 @@ class SaveManager {
     if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
     const version = bytes[i++];
-    if (version !== 2 && version !== 3 && version !== 4 && version !== 5) throw new Error("Unsupported save version");
+    if (version < 2 || version > 6) throw new Error("Unsupported save version");
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
-    const location = version >= 5 && bytes[i++] === 1 ? "dorm" : "work";
+    // location byte present from v5 onward; advance i unconditionally when present
+    const location = version >= 5 ? (bytes[i++] === 1 ? "dorm" : "work") : "work";
     const energy = bytes[i++];
     const mental = bytes[i++];
     const physical = bytes[i++];
@@ -300,6 +311,16 @@ class SaveManager {
     if (budgetSnapshot) actionBudget.restore(budgetSnapshot);
     keywordManager.restoreCollected(keywordEntries);
     itemManager.restoreInventory(itemEntries);
+
+    // v3: favourability – only present in save strings written by v3+
+    // Guard with remaining byte count so v2 saves load cleanly (no crash).
+    if (i + NPC_IDS.length < bytes.length) {
+      const favValues = {};
+      NPC_IDS.forEach((id) => { favValues[id] = bytes[i++]; });
+      const favFlags = bytes[i++] || 0;
+      const hadPositive = NPC_IDS.filter((_, idx) => favFlags & (1 << idx));
+      favorabilityManager.restore({ values: favValues, hadPositive });
+    }
 
     if (hisActorIdx >= 0 && this.hisActors[hisActorIdx]) {
       const actor = this.hisActors[hisActorIdx];

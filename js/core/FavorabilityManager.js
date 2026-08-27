@@ -1,4 +1,5 @@
 import { eventBus } from "./EventBus.js";
+import { dataLoader } from "./DataLoader.js";
 
 /**
  * The three core NPCs whose favourability is tracked throughout the game.
@@ -40,6 +41,19 @@ class FavorabilityManager {
      * Used by the "雨露均沾" achievement (allHadPositive check).
      */
     this.hadPositive = new Set();
+    this.npcs = [];
+    this._loadPromise = null;
+  }
+
+  async load() {
+    if (!this._loadPromise) this._loadPromise = dataLoader.loadJSON("npcs.json").then((data) => {
+      this.npcs = data.npcs || [];
+      this.npcs.forEach((npc) => {
+        const initialFavorability = Number(npc.initialFavorability);
+        if (Number.isFinite(initialFavorability)) this.values.set(npc.id, Math.max(FAV_MIN, Math.min(FAV_MAX, initialFavorability)));
+      });
+    });
+    return this._loadPromise;
   }
 
   /** Current favourability (0–100) for `npcId`. Unknown ids return 0. */
@@ -60,7 +74,7 @@ class FavorabilityManager {
    *   { npcId, value, previousValue, delta, allValues, allHadPositive }
    */
   modify(npcId, delta) {
-    if (!NPC_IDS.includes(npcId) || !delta) return;
+    if (!this.values.has(npcId) || !delta) return;
     const prev = this.get(npcId);
     const next = Math.max(FAV_MIN, Math.min(FAV_MAX, prev + delta));
     const actualDelta = next - prev;
@@ -89,12 +103,12 @@ class FavorabilityManager {
   }
 
   restore({ values = {}, hadPositive = [] } = {}) {
-    NPC_IDS.forEach((id) => {
+    [...this.values.keys()].forEach((id) => {
       if (typeof values[id] === "number") {
         this.values.set(id, Math.max(FAV_MIN, Math.min(FAV_MAX, values[id])));
       }
     });
-    this.hadPositive = new Set(hadPositive.filter((id) => NPC_IDS.includes(id)));
+    this.hadPositive = new Set(hadPositive.filter((id) => this.values.has(id)));
     // Notify listeners that state was restored (e.g. UI re-render).
     eventBus.emit("favorability:restored", { allValues: this.getAll() });
   }

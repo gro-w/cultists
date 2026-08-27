@@ -6,37 +6,53 @@
   "contacts": [
     {
       "id": "roommate_xiaomei_d3night",
-      "name": "小美",
-      "avatar": "🐱",
-      "keywordIds": [],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "今天顺利吗？我听说门诊有点乱。",
-            "options": [{ "label": "还好，处理过去了，有点累。", "next": "end" }]
+            "options": [
+              {
+                "label": "还好，处理过去了，有点累。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "早点休息吧。", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "早点休息吧。",
+            "options": []
+          }
         }
-      }
+      },
+      "npcId": "xiaomei",
+      "type": "npc"
     },
     {
       "id": "roommate_linan_d3night",
-      "name": "林安",
-      "avatar": "🦊",
-      "keywordIds": [],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "新来的同事，请多关照，我是林安，值夜班的时候多亏你帮忙。",
-            "options": [{ "label": "别客气，以后互相照应。", "next": "end" }]
+            "options": [
+              {
+                "label": "别客气，以后互相照应。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "谢谢，晚安。", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "谢谢，晚安。",
+            "options": []
+          }
         }
-      }
+      },
+      "npcId": "linan",
+      "type": "npc"
     }
   ]
 }

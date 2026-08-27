@@ -99,11 +99,13 @@ js/
   <lang>/                    # 语言相关的全部游戏内容
     days.json                # 游戏总天数
     day01a.json ... day05b.json # 每天白天/夜晚的排期内容
-    keywords.json            # 关键词定义与分类
+    keywords.json            # 关键词 ID 与显示内容
     items.json               # 物品与初始背包
     action_budget.json       # 行动时间和睡眠配置
     monitor_scenes.json      # 工作/宿舍场景配置
-    chatgtp_qa.json          # ChatGTP 关键词问答
+    npcs.json                # NPC ID、名字、初始好感度与 SAN
+    special_events.json      # 按天数/阶段/好感度/SAN 覆盖 NPC 的特殊事件
+    chatgtp_qa.json          # ChatGTP 关键词/组合的正常与损坏回答
     endings.json             # 结局、属性触发和最终条件
     medical_records.json     # 病历模板
     medicines.json           # 药品列表
@@ -152,9 +154,12 @@ js/
 
 - **新增应用**：在 `js/apps/` 创建模块，导出启动函数，在 `js/main.js` 的 `APP_REGISTRY` 中注册。
 - **新增工作或宿舍内容**：编辑 `data/<lang>/dayNNa.json` 或 `dayNNb.json`。
-- **新增关键词**：在 `keywords.json` 中添加定义，应用只引用关键词 ID。
+- **新增特殊 NPC 事件**：在 `special_events.json` 添加 `npcId`、`phase`、`startDay`/`endDay`、可选的好感度/SAN 范围和 `dialogueTree`；条件满足时会替换当天对应 NPC 的原事件。
+- **维护 NPC**：在 `npcs.json` 编辑稳定 `id`、名字、`initialFavorability` 和 `initialSan`。对话节点可以用 `onShow.favorabilityChange` 改变 NPC 好感度。
+- **日程角色结构**：`patients` 保持原有结构；`contacts` 中的列表 NPC 使用 `{ "type": "npc", "npcId": "...", "dialogueTree": { ... } }`，名称和头像从 `npcs.json` 读取。非列表角色使用 `{ "type": "other", "name": "...", "avatar": "...", "dialogueTree": { ... } }`。
+- **新增关键词**：在 `keywords.json` 中添加 `{ "id": "...", "content": "..." }`，应用只引用关键词 ID。
 - **新增对话分支**：在对应 `dialogueTree.nodes` 中添加节点，并通过 `options[].next` 连接。
-- **新增 ChatGTP 问答**：在 `chatgtp_qa.json` 的问答条目中添加关键词组合和回答。
+- **新增 ChatGTP 问答**：在 `chatgtp_qa.json` 的 `entries` 中添加 1～2 个关键词 ID、`answer`、`corruptedAnswer` 和 `corruptedSameAsNormal`。
 - **新增物品、药品、结局或成就**：分别编辑对应 JSON 文件，并按现有 schema 配置效果或触发条件。
 - **新增语言**：添加语言列表、UI 字符串文件以及完整的 `data/<lang>/` 内容目录。
 
@@ -166,6 +171,7 @@ js/
 - 游戏日期、时间、地点和玩家数值调节；
 - 物品任意增加、减少和清空；
 - 对话/患者角色 JSON 编辑，以及关键词标记插入；
+- 日程角色和患者的新增、删除及分支树编辑；
 - ChatGTP、关键词、物品和其他数据 JSON 编辑；
 - 将编辑后的日程、问答或数据文件下载为 JSON。
 

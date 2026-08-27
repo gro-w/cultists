@@ -8,7 +8,6 @@
       "name": "赵强",
       "age": 27,
       "recordTemplateId": "record_fever",
-      "keywordIds": ["sore_throat", "night_shift_injury"],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
@@ -16,21 +15,41 @@
             "speaker": "npc",
             "text": "医生，我嗓子疼得厉害，[[sore_throat]]已经两天了。",
             "options": [
-              { "label": "是怎么引起的？", "next": "ask_cause" },
-              { "label": "先给你检查一下嗓子。", "next": "check_direct" }
+              {
+                "label": "是怎么引起的？",
+                "next": "ask_cause"
+              },
+              {
+                "label": "先给你检查一下嗓子。",
+                "next": "check_direct"
+              }
             ]
           },
           "ask_cause": {
             "speaker": "npc",
             "text": "唉，说来话长，前几天[[night_shift_injury]]，之后就一直没恢复好。",
-            "options": [{ "label": "好的，我先给你做个记录。", "next": "end" }]
+            "options": [
+              {
+                "label": "好的，我先给你做个记录。",
+                "next": "end"
+              }
+            ]
           },
           "check_direct": {
             "speaker": "npc",
             "text": "好的，麻烦您了。",
-            "options": [{ "label": "好的，我先给你做个记录。", "next": "end" }]
+            "options": [
+              {
+                "label": "好的，我先给你做个记录。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "谢谢医生。", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "谢谢医生。",
+            "options": []
+          }
         }
       }
     }
@@ -38,37 +57,53 @@
   "contacts": [
     {
       "id": "roommate_xiaomei_d2day",
-      "name": "小美",
-      "avatar": "🐱",
-      "keywordIds": ["old_key_clue"],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "对了，昨晚捡到的那把[[old_key_clue]]，我放你桌上了，你看看能打开什么。",
-            "options": [{ "label": "好，我找找看。", "next": "end" }]
+            "options": [
+              {
+                "label": "好，我找找看。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "嗯，有发现记得告诉我！", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "嗯，有发现记得告诉我！",
+            "options": []
+          }
         }
-      }
+      },
+      "npcId": "xiaomei",
+      "type": "npc"
     },
     {
       "id": "roommate_ajun_d2day",
-      "name": "阿俊",
-      "avatar": "🐶",
-      "keywordIds": [],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "今天你值夜班对吧？路上小心点。",
-            "options": [{ "label": "嗯，我会注意的。", "next": "end" }]
+            "options": [
+              {
+                "label": "嗯，我会注意的。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "加油！", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "加油！",
+            "options": []
+          }
         }
-      }
+      },
+      "npcId": "ajun",
+      "type": "npc"
     }
   ]
 }

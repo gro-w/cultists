@@ -1,26 +1,92 @@
 {
   "keywords": [
-    { "id": "fever", "label": "发热", "category": "symptom", "definition": "体温超过37.3摄氏度的状态，是感染或炎症的常见信号。" },
-    { "id": "cough", "label": "咳嗽", "category": "symptom", "definition": "呼吸道受到刺激时产生的反射性动作，可提示上呼吸道感染。" },
-    { "id": "insomnia", "label": "失眠", "category": "symptom", "definition": "难以入睡或睡眠质量差的状态，可能与压力或病痛有关。" },
-    { "id": "headache", "label": "头痛", "category": "symptom", "definition": "头部区域的疼痛感，可由多种原因引起，包括疲劳、压力或疾病。" },
-    { "id": "dizziness", "label": "眩晕", "category": "symptom", "definition": "感觉自身或周围环境在旋转、摇晃的症状。" },
-    { "id": "mystery_note", "label": "神秘纸条", "category": "clue", "definition": "李东随口提到的一张纸条，内容不明，似乎与医院的传闻有关。" },
-    { "id": "sore_throat", "label": "咽痛", "category": "symptom", "definition": "咽喉部位的疼痛，常与上呼吸道感染或用嗓过度有关。" },
-    { "id": "night_shift_injury", "label": "夜班受伤", "category": "clue", "definition": "赵强提到自己在医院值夜班时不慎受伤，具体经过语焉不详。" },
-    { "id": "emergency_bruise", "label": "多处淤青", "category": "symptom", "definition": "身上多处淤青，可能来自摔倒、冲突或其他意外。" },
-    { "id": "night_shift_rumor_echo", "label": "夜班传闻的呼应", "category": "clue", "definition": "这位患者的伤情似乎和阿俊提到的夜班传闻有些吻合，令人不安。" },
-    { "id": "night_noise", "label": "深夜怪声", "category": "clue", "definition": "凌晨走廊里传来的奇怪声响，来源不明。" },
-    { "id": "night_shift_rumor", "label": "夜班传闻", "category": "clue", "definition": "关于医院夜班时段流传的诡异传闻，语焉不详。" },
-    { "id": "energy_drink", "label": "功能饮料", "category": "item", "definition": "熬夜提神用的功能性饮料，阿俊常备的必需品。" },
-    { "id": "old_key_clue", "label": "旧钥匙", "category": "item", "definition": "一把生锈的旧钥匙，据说能打开宿舍地下室的一个盒子。" },
-    { "id": "night_shift_rumor_detail", "label": "夜班传闻细节", "category": "clue", "definition": "夜班传闻的细节：据说走廊尽头的杂物间总在深夜传出声响。" },
-    { "id": "angry_family", "label": "医闹情绪", "category": "clue", "definition": "患者家属情绪激动，言语间充满敌意，场面一触即发。" },
-    { "id": "colleague_confession", "label": "同事的告白", "category": "clue", "definition": "值夜班的同事鼓起勇气说出了藏在心里很久的话。" },
-    { "id": "duty_room_secret", "label": "值班室的秘密", "category": "clue", "definition": "值班室深处似乎藏着某种不愿被提起的秘密。" },
-    { "id": "strange_liquid", "label": "不明液体", "category": "clue", "definition": "一位病人递来的小瓶不明液体，气味刺鼻，来源可疑。" },
-    { "id": "flu_suspect", "label": "流感嫌疑", "category": "clue", "definition": "同时出现发热与咳嗽时，ChatGTP 推测的可能诊断方向。" },
-    { "id": "hypertension_risk", "label": "高血压风险", "category": "clue", "definition": "头痛伴眩晕时，ChatGTP 提示需要警惕的潜在风险。" },
-    { "id": "basement_secret", "label": "地下室秘密", "category": "clue", "definition": "结合深夜怪声与旧钥匙两条线索后，ChatGTP 推测的地下室秘密。" }
+    {
+      "id": "fever",
+      "content": "发热"
+    },
+    {
+      "id": "cough",
+      "content": "咳嗽"
+    },
+    {
+      "id": "insomnia",
+      "content": "失眠"
+    },
+    {
+      "id": "headache",
+      "content": "头痛"
+    },
+    {
+      "id": "dizziness",
+      "content": "眩晕"
+    },
+    {
+      "id": "mystery_note",
+      "content": "神秘纸条"
+    },
+    {
+      "id": "sore_throat",
+      "content": "咽痛"
+    },
+    {
+      "id": "night_shift_injury",
+      "content": "夜班受伤"
+    },
+    {
+      "id": "emergency_bruise",
+      "content": "多处淤青"
+    },
+    {
+      "id": "night_shift_rumor_echo",
+      "content": "夜班传闻的呼应"
+    },
+    {
+      "id": "night_noise",
+      "content": "深夜怪声"
+    },
+    {
+      "id": "night_shift_rumor",
+      "content": "夜班传闻"
+    },
+    {
+      "id": "energy_drink",
+      "content": "功能饮料"
+    },
+    {
+      "id": "old_key_clue",
+      "content": "旧钥匙"
+    },
+    {
+      "id": "night_shift_rumor_detail",
+      "content": "夜班传闻细节"
+    },
+    {
+      "id": "angry_family",
+      "content": "医闹情绪"
+    },
+    {
+      "id": "colleague_confession",
+      "content": "同事的告白"
+    },
+    {
+      "id": "duty_room_secret",
+      "content": "值班室的秘密"
+    },
+    {
+      "id": "strange_liquid",
+      "content": "不明液体"
+    },
+    {
+      "id": "flu_suspect",
+      "content": "流感嫌疑"
+    },
+    {
+      "id": "hypertension_risk",
+      "content": "高血压风险"
+    },
+    {
+      "id": "basement_secret",
+      "content": "地下室秘密"
+    }
   ]
 }

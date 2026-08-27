@@ -12,6 +12,7 @@ import { dataLoader } from "./core/DataLoader.js";
 import { skillManager } from "./core/SkillManager.js";
 import { actionBudget } from "./core/ActionBudget.js";
 import { npcStateManager } from "./core/NpcStateManager.js";
+import { favorabilityManager } from "./core/FavorabilityManager.js";
 import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
 import Desktop from "./desktop/Desktop.js";
@@ -29,6 +30,7 @@ import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchMonitorApp } from "./apps/MonitorApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
+
 
 /**
  * main.js - application bootstrap. Registers every app with a shared
@@ -164,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     skillManager.load(),
     actionBudget.init(),
     npcStateManager.load(),
+    favorabilityManager.load(),
     achievementManager.init(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))

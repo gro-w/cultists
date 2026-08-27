@@ -8,16 +8,24 @@
       "name": "王芳（复查）",
       "age": 34,
       "recordTemplateId": "record_fever",
-      "keywordIds": ["fever"],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "医生，我这几天感觉好多了，[[fever]]也退了，特地来道个谢。",
-            "options": [{ "label": "恢复得不错，继续注意休息。", "next": "end" }]
+            "options": [
+              {
+                "label": "恢复得不错，继续注意休息。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "谢谢医生这几天的照顾！", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "谢谢医生这几天的照顾！",
+            "options": []
+          }
         }
       }
     }
@@ -25,20 +33,28 @@
   "contacts": [
     {
       "id": "roommate_ajun_d5day",
-      "name": "阿俊",
-      "avatar": "🐶",
-      "keywordIds": [],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
           "greet": {
             "speaker": "npc",
             "text": "这周实习感觉怎么样？马上就要告一段落了。",
-            "options": [{ "label": "经历了不少事，但也算收获满满。", "next": "end" }]
+            "options": [
+              {
+                "label": "经历了不少事，但也算收获满满。",
+                "next": "end"
+              }
+            ]
           },
-          "end": { "speaker": "npc", "text": "辛苦啦，好好休息一下吧。", "options": [] }
+          "end": {
+            "speaker": "npc",
+            "text": "辛苦啦，好好休息一下吧。",
+            "options": []
+          }
         }
-      }
+      },
+      "npcId": "ajun",
+      "type": "npc"
     }
   ]
 }

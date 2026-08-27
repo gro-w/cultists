@@ -130,41 +130,91 @@ class ItemManager {
 
   /**
    * Inspect an item: reveals any associated keywords and returns a result
-   * describing what the player saw. Every call counts as one "调查"
+   * describing what the player saw. Every call counts as one「调查」
    * action (broadcast via `item:inspected` so ActionBudget can enforce the
    * per-phase inspection limit).
    *
-   * If the item has no `inspectCheck`, this always returns the same
-   * `inspectText` (legacy behaviour). If it does, a fresh CoC-style
-   * percentile check is rolled against the named skill *every time* -
-   * so re-inspecting the same item can surface a different outcome
-   * (different text, different revealed keywords, even a stat penalty on
-   * a criticalFailure) instead of a static, one-note description.
-   * @returns {{ text: string, check: {roll:number, skillValue:number, outcome:string}|null }}
+   * SAN-band variants: if `def.sanVariants` contains an entry matching the
+   * player's current SAN level, its `description` overrides `inspectText`
+   * and its `revealKeywordIds` are merged with the top-level list.
+   *
+   * Both `inspectText` / band `description` and `inspectOutcomes[].text`
+   * may contain `[[keywordId]]` inline markers. Those are NOT auto-collected
+   * on inspect — the player clicks the highlighted span to collect them.
+   * Keywords listed in `revealKeywordIds` (top-level or band) ARE
+   * auto-collected on every inspect.
+   *
+   * @returns {{ text: string, check: {roll:number, skillValue:number, outcome:string}|null, keywordDefs: object }}
    */
   inspect(id) {
     const def = this.defs.get(id);
     if (!def) return null;
     eventBus.emit("item:inspected", { id });
 
+    // Pick the SAN-band variant for the player's current mental value.
+    const bandKey = this._getSanBandKey(gameState.mental);
+    const band = def.sanVariants && def.sanVariants[bandKey];
+
     if (def.inspectCheck && def.inspectCheck.skillId) {
       const check = checkSkill(def.inspectCheck.skillId);
       const outcomes = def.inspectOutcomes || {};
       const outcome =
         outcomes[check.outcome] || outcomes.success || outcomes.failure || {};
-      const revealIds = outcome.revealKeywordIds || def.revealKeywordIds || [];
-      const keywordDefs = keywordManager.definitionsWithSource(revealIds, `物品-${def.name}`);
-      Object.values(keywordDefs).forEach((k) => keywordManager.collect(k));
+      // Merge: outcome-specific > top-level > band
+      const revealIds = [
+        ...(outcome.revealKeywordIds || def.revealKeywordIds || []),
+        ...((band && band.revealKeywordIds) || []),
+      ];
+      const baseText = outcome.text || def.inspectText || "（没有更多可以查看的信息。）";
+      const text = (band && band.description) || baseText;
       if (outcome.statChanges) gameState.modify(outcome.statChanges);
-      return {
-        text: outcome.text || def.inspectText || "（没有更多可以查看的信息。）",
-        check,
-      };
+      const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
+      revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
+      return { text, check, keywordDefs };
     }
 
-    const keywordDefs = keywordManager.definitionsWithSource(def.revealKeywordIds || [], `物品-${def.name}`);
-    Object.values(keywordDefs).forEach((k) => keywordManager.collect(k));
-    return { text: def.inspectText || "（没有更多可以查看的信息。）", check: null };
+    const revealIds = [
+      ...(def.revealKeywordIds || []),
+      ...((band && band.revealKeywordIds) || []),
+    ];
+    const text = (band && band.description) || def.inspectText || "（没有更多可以查看的信息。）";
+    const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
+    revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
+    return { text, check: null, keywordDefs };
+  }
+
+  /**
+   * Map a mental value to the matching SAN-band key used in `sanVariants`.
+   * @param {number} mental
+   * @returns {string}
+   */
+  _getSanBandKey(mental) {
+    if (mental > 90) return ">90";
+    if (mental > 70) return "70-90";
+    if (mental > 50) return "50-70";
+    if (mental > 30) return "30-50";
+    if (mental > 15) return "15-30";
+    return "0-15";
+  }
+
+  /**
+   * Build a `keywordDefs` map covering:
+   *   - explicitly listed `revealIds` (with source attribution), and
+   *   - any `[[kwId]]` inline markers found inside `text`.
+   * The map is what callers pass to `renderHighlightedText` / `bindHighlights`.
+   * @param {string} text
+   * @param {string[]} revealIds
+   * @param {string} itemName
+   * @returns {Record<string, object>}
+   */
+  _buildKeywordDefs(text, revealIds, itemName) {
+    const source = `物品-${itemName}`;
+    const inlineIds = [];
+    const re = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
+    let m;
+    while ((m = re.exec(text)) !== null) inlineIds.push(m[1]);
+    const allIds = [...new Set([...revealIds, ...inlineIds])];
+    return keywordManager.definitionsWithSource(allIds, source);
   }
 
   /**

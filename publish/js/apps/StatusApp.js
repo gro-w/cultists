@@ -7,7 +7,7 @@ import { saveManager } from "../core/SaveManager.js";
 import { skillManager } from "../core/SkillManager.js";
 import { actionBudget } from "../core/ActionBudget.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
-import { formatInspectResult } from "../core/InspectFormat.js";
+import { formatInspectResult, renderInspectResult } from "../core/InspectFormat.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 
 /**
@@ -123,7 +123,7 @@ export async function launchStatusApp() {
       info.innerHTML = `<span class="item-row-name">${def.name}</span><span class="item-row-count">x${count}</span>`;
       li.appendChild(info);
 
-      const feedback = document.createElement("p");
+      const feedback = document.createElement("div");
       feedback.className = "item-row-feedback";
       feedback.hidden = true;
 
@@ -139,7 +139,7 @@ export async function launchStatusApp() {
       inspectBtn.addEventListener("click", () => {
         const result = itemManager.inspect(id);
         feedback.hidden = false;
-        feedback.textContent = formatInspectResult(result);
+        renderInspectResult(result, feedback);
       });
       actions.appendChild(inspectBtn);
 

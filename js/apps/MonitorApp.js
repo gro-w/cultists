@@ -9,7 +9,7 @@ import { scheduleData } from "../core/ScheduleData.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 
-import { formatInspectResult } from "../core/InspectFormat.js";
+import { formatInspectResult, renderInspectResult } from "../core/InspectFormat.js";
 
 const dialogueKeywordIds = (tree) => {
   if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
@@ -158,13 +158,13 @@ export async function launchMonitorApp() {
     const def = itemManager.getDef(itemId);
     if (!def) return;
     interactionEl.innerHTML = `<h4>调查: ${def.name}</h4>`;
-    const text = document.createElement("p");
+    const text = document.createElement("div");
     text.className = "monitor-item-text";
     interactionEl.appendChild(text);
 
     function doInspect() {
       const result = itemManager.inspect(itemId);
-      text.textContent = formatInspectResult(result);
+      renderInspectResult(result, text);
     }
     doInspect();
 

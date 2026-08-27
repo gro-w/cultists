@@ -13,9 +13,11 @@ import { skillManager } from "./core/SkillManager.js";
 import { actionBudget } from "./core/ActionBudget.js";
 import { npcStateManager } from "./core/NpcStateManager.js";
 import { gameState } from "./core/GameState.js";
+import { achievementManager } from "./core/AchievementManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
+import AchievementToast from "./desktop/AchievementToast.js";
 import MainMenu from "./desktop/MainMenu.js";
 import EndingScreen from "./desktop/EndingScreen.js";
 import { launchHISApp } from "./apps/HISApp.js";
@@ -25,6 +27,7 @@ import { launchNotebookApp } from "./apps/NotebookApp.js";
 import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchMonitorApp } from "./apps/MonitorApp.js";
+import { launchAchievementsApp } from "./apps/AchievementsApp.js";
 
 /**
  * main.js - application bootstrap. Registers every app with a shared
@@ -72,6 +75,7 @@ const APP_REGISTRY = [
   { id: "chatgtp", label: () => i18n.t("apps.chatgtp", "ChatGTP"), icon: "🤖", launch: () => launchChatGTPApp() },
   { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },
   { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },
+  { id: "achievements", label: () => i18n.t("apps.achievements", "成就"), icon: "🏆", launch: () => launchAchievementsApp() },
   { id: "settings", label: () => i18n.t("apps.settings", "设置"), icon: "⚙️", launch: () => launchSettingsApp() },
   {
     id: "phase-toggle",
@@ -104,6 +108,10 @@ function boot({ welcomeBack }) {
 
   const notificationBanner = new NotificationBanner(document.getElementById("notification-banner"));
   new EndingScreen(document.getElementById("ending-screen"));
+
+  // Achievement toast – separate element so it doesn't clobber day/night banners.
+  const achievementToast = new AchievementToast(document.getElementById("achievement-toast"));
+  achievementToast.setLauncher(() => launchAchievementsApp());
 
   // Prevent the start menu button click from immediately closing itself
   // via the document-level "click to close" handler.
@@ -147,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     skillManager.load(),
     actionBudget.init(),
     npcStateManager.load(),
+    achievementManager.init(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

@@ -42,10 +42,18 @@ class GameState {
   }
 
   modify({ energy = 0, mental = 0, physical = 0, satiety = 0 } = {}) {
+    const prevMental = this.mental;
     this.energy = clamp(this.energy + energy);
     this.mental = clamp(this.mental + mental);
     this.physical = clamp(this.physical + physical);
     this.satiety = clamp(this.satiety + satiety, 0, SATIETY_MAX);
+    // Emit a semantic sanity-change event for the achievement system whenever
+    // mental (= SAN / 理智值) actually moves.  This keeps AchievementManager
+    // decoupled from GameState internals.
+    if (mental !== 0) {
+      const actualDelta = this.mental - prevMental;
+      eventBus.emit("game:sanity_changed", { value: this.mental, delta: actualDelta });
+    }
     eventBus.emit("gamestate:changed", this.snapshot());
   }
 

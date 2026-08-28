@@ -4,6 +4,7 @@ import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js
 import { getPinyinInitial } from "../core/Pinyin.js";
 import { i18n } from "../core/I18n.js";
 import { launchChatGTPApp } from "./ChatGTPApp.js";
+import { spellManager } from "../core/SpellManager.js";
 
 const CATEGORY_LABELS = {
   symptom: "症状",
@@ -59,16 +60,42 @@ export async function launchNotebookApp() {
   const root = document.createElement("div");
   root.className = "app-notebook";
 
-  function render() {
+  // ── Tab state ─────────────────────────────────────────────────────────────
+  let activeTab = "keywords"; // "keywords" | "spells"
+
+  // ── Tab bar ───────────────────────────────────────────────────────────────
+  const tabBar = document.createElement("div");
+  tabBar.style.cssText = "display:flex;gap:0;border-bottom:1px solid #bbb;flex-shrink:0;margin-bottom:8px;";
+
+  function makeTabBtn(id, label) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "win95-btn";
+    btn.style.cssText = "border-radius:3px 3px 0 0;border-bottom:none;margin-bottom:-1px;padding:4px 14px;";
+    btn.textContent = label;
+    btn.addEventListener("click", () => { activeTab = id; render(); });
+    return btn;
+  }
+
+  const kwTabBtn    = makeTabBtn("keywords", "🔑 关键词");
+  const spellTabBtn = makeTabBtn("spells",   "✨ 法术");
+  tabBar.appendChild(kwTabBtn);
+  tabBar.appendChild(spellTabBtn);
+  root.appendChild(tabBar);
+
+  const contentEl = document.createElement("div");
+  contentEl.style.cssText = "flex:1;overflow-y:auto;";
+  root.appendChild(contentEl);
+
+  // ── Keyword panel ─────────────────────────────────────────────────────────
+  function renderKeywords() {
     const keywords = keywordManager.all();
     if (keywords.length === 0) {
-      root.innerHTML = `<p class="notebook-empty">${i18n.t("notebook.empty", "尚未收集任何关键词。在对话中点击高亮词汇即可收集。")}</p>`;
+      contentEl.innerHTML = `<p class="notebook-empty">${i18n.t("notebook.empty", "尚未收集任何关键词。在对话中点击高亮词汇即可收集。")}</p>`;
       return;
     }
-
     const groups = groupKeywords(keywords, settingsManager.notebookSortMode);
-
-    root.innerHTML = "";
+    contentEl.innerHTML = "";
     groups.forEach(({ title, list }) => {
       const section = document.createElement("div");
       section.className = "notebook-section";
@@ -97,12 +124,81 @@ export async function launchNotebookApp() {
         ul.appendChild(li);
       });
       section.appendChild(ul);
-      root.appendChild(section);
+      contentEl.appendChild(section);
     });
+  }
+
+  // ── Spell panel ───────────────────────────────────────────────────────────
+  function renderSpells() {
+    const spells = spellManager.all();
+    if (spells.length === 0) {
+      contentEl.innerHTML = `<p class="notebook-empty" style="padding:24px 16px">` +
+        `尚未学习任何法术。<br><small style="color:#aaa">在 0&lt;SAN≤50 时使用可学习的书籍即可开始学习。</small></p>`;
+      return;
+    }
+    contentEl.innerHTML = "";
+    const note = document.createElement("p");
+    note.style.cssText = "font-size:11px;color:#888;margin:0 0 10px;";
+    note.textContent = "施放消耗 5 SAN。施放不受 ActionBudget 时间限制影响（瞬时效果）。";
+    contentEl.appendChild(note);
+
+    spells.forEach((spell) => {
+      const card = document.createElement("div");
+      card.style.cssText = "border:1px solid #b0bec5;border-radius:4px;padding:10px 12px;margin-bottom:10px;" +
+        "background:#e8f5e9;display:flex;flex-direction:column;gap:6px;";
+
+      const header = document.createElement("div");
+      header.style.cssText = "display:flex;align-items:center;gap:8px;";
+      const title = document.createElement("strong");
+      title.style.cssText = "font-size:13px;color:#2e7d32;flex:1;";
+      title.textContent = spell.name;
+      const src = document.createElement("span");
+      src.style.cssText = "font-size:11px;color:#999;";
+      src.textContent = `来自《${spell.sourceBookName || spell.sourceBookId}》`;
+      header.appendChild(title);
+      header.appendChild(src);
+
+      const desc = document.createElement("p");
+      desc.style.cssText = "margin:0;font-size:12px;color:#444;line-height:1.5;";
+      desc.textContent = spell.description || "（无效果描述）";
+
+      const footer = document.createElement("div");
+      footer.style.cssText = "display:flex;align-items:center;gap:8px;";
+      const meta = document.createElement("span");
+      meta.style.cssText = "font-size:11px;color:#888;flex:1;";
+      meta.textContent = `⏱ 学习 4h · 💀 施放 5 SAN`;
+      const castBtn = document.createElement("button");
+      castBtn.type = "button";
+      castBtn.className = "win95-btn bevel-out";
+      castBtn.textContent = "施放";
+      castBtn.addEventListener("click", () => {
+        const res = spellManager.cast(spell.id);
+        meta.textContent = res.message;
+        setTimeout(() => { meta.textContent = "⏱ 学习 4h · 💀 施放 5 SAN"; }, 2500);
+      });
+
+      footer.appendChild(meta);
+      footer.appendChild(castBtn);
+      card.appendChild(header);
+      card.appendChild(desc);
+      card.appendChild(footer);
+      contentEl.appendChild(card);
+    });
+  }
+
+  // ── Unified render ────────────────────────────────────────────────────────
+  function render() {
+    kwTabBtn.style.background    = activeTab === "keywords" ? "#fff" : "";
+    kwTabBtn.style.fontWeight    = activeTab === "keywords" ? "700"  : "";
+    spellTabBtn.style.background = activeTab === "spells"   ? "#fff" : "";
+    spellTabBtn.style.fontWeight = activeTab === "spells"   ? "700"  : "";
+    if (activeTab === "spells") renderSpells();
+    else renderKeywords();
   }
 
   const offKeywordChange = keywordManager.onChange(render);
   const offSettingsChange = settingsManager.onChange(render);
+  const offSpellChange = spellManager.onChange(render);
   render();
 
   return windowManager.createWindow({
@@ -110,11 +206,12 @@ export async function launchNotebookApp() {
     title: i18n.t("apps.notebook", "关键词笔记本"),
     icon: "📓",
     width: 420,
-    height: 480,
+    height: 500,
     content: root,
     onClose: () => {
       offKeywordChange();
       offSettingsChange();
+      offSpellChange();
     },
   });
 }

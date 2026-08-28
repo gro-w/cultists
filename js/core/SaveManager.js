@@ -7,15 +7,17 @@ import { scheduleData } from "./ScheduleData.js";
 import { actionBudget } from "./ActionBudget.js";
 import { favorabilityManager, NPC_IDS } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
+import { spellManager } from "./SpellManager.js";
 import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
 import { workQueue, socialQueue } from "./ScheduleQueue.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
-// v10 is the schedule-system rewrite. Older binary formats are intentionally unsupported.
-const SAVE_FORMAT_VERSION = 10;
+// v11 = v10 plus spell list in JSON payload.
+const SAVE_FORMAT_VERSION = 11;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
-const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements"];
+const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];
 
 function clampByte(value, max = 255) {
   const n = Math.round(Number(value) || 0);
@@ -108,7 +110,7 @@ class SaveManager {
   }
 
   async _doInit() {
-    await Promise.all([scheduleData.init(), keywordManager.load(), itemManager.load(), favorabilityManager.load(), npcStateManager.load(), itemPlacementManager.load(), medicalCaseManager.load()]);
+    await Promise.all([scheduleData.init(), globalVariableManager.init(), keywordManager.load(), itemManager.load(), favorabilityManager.load(), npcStateManager.load(), itemPlacementManager.load(), medicalCaseManager.load()]);
 
     const entries = await scheduleData.loadAllEntries();
     this.hisActors = this._buildActorIndex(entries, "patients");
@@ -179,7 +181,9 @@ class SaveManager {
       keywords: keywordManager.all().map((kw) => ({ id: kw.id, collectedDay: kw.collectedDay })),
       inventory: itemManager.all(),
       medical: medicalCaseManager.snapshot(),
+      globalVariables: globalVariableManager.snapshot(),
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
+      spells: spellManager.all(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
 
@@ -288,12 +292,14 @@ class SaveManager {
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)) {
       throw new Error("Invalid save data");
     }
+    globalVariableManager.restore(payload.globalVariables || []);
     gameState.restore(payload.gameState);
     actionBudget.restore(payload.actionBudget || {});
     workQueue.restore(payload.workQueue);
     socialQueue.restore(payload.socialQueue);
     keywordManager.restoreCollected(payload.keywords || []);
     itemManager.restoreInventory(payload.inventory || []);
+    spellManager.restore(payload.spells || []);
     medicalCaseManager.restore(payload.medical || {});
     scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
     this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);

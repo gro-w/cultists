@@ -258,6 +258,38 @@ class DeveloperMode {
     });
   }
 
+  showGlobalVariables() {
+    const valueText = (variable, value) => variable.type === "string" ? value : String(value);
+    const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")}</div></section>`);
+  }
+
+  _readGlobalVariableRows() {
+    const parse = (raw, type, id, field) => {
+      if (type === "bool") {
+        if (raw !== "true" && raw !== "false") throw new Error(`变量 ${id} 的${field}必须是 true 或 false`);
+        return raw === "true";
+      }
+      if (type === "number") {
+        const value = Number(raw);
+        if (!Number.isFinite(value) || value < 0 || value > 256) throw new Error(`变量 ${id} 的${field}必须是 0-256 的数字`);
+        return value;
+      }
+      return raw;
+    };
+    return Array.from(this.root.querySelectorAll("[data-global-variable-row]"), (row) => {
+      const id = Number(row.querySelector("[data-gv-id]").value);
+      const type = row.querySelector("[data-gv-type]").value;
+      return {
+        id,
+        name: row.querySelector("[data-gv-name]").value.trim(),
+        type,
+        default: parse(row.querySelector("[data-gv-default]").value, type, id, "默认值"),
+        value: parse(row.querySelector("[data-gv-value]").value, type, id, "当前值"),
+      };
+    });
+  }
+
   collectTree() {
     const nodes = {};
     this.root.querySelectorAll("[data-node-id]").forEach((card) => {

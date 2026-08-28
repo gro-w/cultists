@@ -3,6 +3,7 @@ import { endingManager } from "./EndingManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { eventBus } from "./EventBus.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 /**
  * applyDialogueOnShow - applies a dialogue node's optional `onShow` effects
@@ -52,4 +53,5 @@ export function applyDialogueOnShow(node, actorId) {
   if (onShow.gameEvent) {
     eventBus.emit(onShow.gameEvent, onShow.gameEventPayload || {});
   }
+  globalVariableManager.applyEffects(onShow.globalVariables || onShow.globalVariableChanges);
 }

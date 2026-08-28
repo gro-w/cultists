@@ -112,6 +112,14 @@
       "consumable": false,
       "usable": false,
       "inspectText": "同事情绪崩溃请假后留下的一堆未处理事务，全都压在了你一个人身上。走廊里有人低声提起[[night_shift_rumor|夜班传闻]]，你没心思去听。"
+    },
+    {
+      "id": "roommate_necklace",
+      "name": "室友的项链",
+      "consumable": false,
+      "usable": false,
+      "revealKeywordIds": ["roommate_necklace_clue"],
+      "inspectText": "书桌上放着一条室友平时从不离身的项链。链坠背面刻着一个陌生的[[roommate_necklace_clue|奇怪符号]]。"
     }
   ],
   "startingInventory": [

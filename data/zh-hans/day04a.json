@@ -7,7 +7,18 @@
       "id": "patient_stranger_d4",
       "name": "神秘病人",
       "age": 38,
-      "recordTemplateId": "record_headache",
+      "correctDiagnosisId": "migraine_unspecified",
+      "diagnosisOptionIds": [
+        "migraine_unspecified",
+        "benign_positional_vertigo",
+        "acute_upper_respiratory_infection"
+      ],
+      "applicableMedicineIds": [
+        "med_paracetamol"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
       "dialogueTree": {
         "start": "greet",
         "nodes": {

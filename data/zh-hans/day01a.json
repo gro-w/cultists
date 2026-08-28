@@ -7,7 +7,19 @@
       "id": "patient_wangfang_d1",
       "name": "王芳",
       "age": 34,
-      "recordTemplateId": "record_fever",
+      "correctDiagnosisId": "acute_upper_respiratory_infection",
+      "diagnosisOptionIds": [
+        "acute_upper_respiratory_infection",
+        "insomnia_disorder",
+        "vertigo"
+      ],
+      "applicableMedicineIds": [
+        "med_paracetamol",
+        "med_cough_syrup"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
       "dialogueTree": {
         "start": "greet",
         "nodes": {
@@ -57,7 +69,18 @@
       "id": "patient_lidong_d1",
       "name": "李东",
       "age": 52,
-      "recordTemplateId": "record_headache",
+      "correctDiagnosisId": "benign_positional_vertigo",
+      "diagnosisOptionIds": [
+        "benign_positional_vertigo",
+        "acute_upper_respiratory_infection",
+        "insomnia_disorder"
+      ],
+      "applicableMedicineIds": [
+        "med_vertigo_pill"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
       "dialogueTree": {
         "start": "greet",
         "nodes": {

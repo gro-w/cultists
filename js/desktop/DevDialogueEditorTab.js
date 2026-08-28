@@ -1,6 +1,7 @@
 // DEV-TOOLS:START
 import { dataLoader } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
+import { MAX_GAME_DAYS } from "../core/GameRules.js";
 
 /**
  * DevDialogueEditorTab — dialogue-editor.html/js ported into DeveloperMode.
@@ -22,7 +23,7 @@ const _DE_PHASES = [
   { id:'b', label:'傍晚/夜晚' },
 ];
 const _DE_BUILTIN_VARS = [
-  { id:'day',          label:'天数',              type:'number', min:0, max:30 },
+  { id:'day',          label:'天数',              type:'number', min:1, max:MAX_GAME_DAYS },
   { id:'phase',        label:'时段',              type:'select', opts:['a','b'] },
   { id:'sanity',       label:'理智值 (sanity)',   type:'number', min:0, max:100 },
   { id:'clarity',      label:'清晰值 (clarity)',  type:'number', min:0, max:100, note:'理智值降至 0 时自动解锁，初始值 10' },
@@ -51,7 +52,7 @@ export class DevDialogueEditorTab {
     this._dragState = null;
     this._connectMode = false;
     this._connectFrom = null;     // { nodeId, optIdx }
-    this.totalDays = 5;
+    this.totalDays = MAX_GAME_DAYS;
     this.gameItems = [];
     this.gameSpells = [];
     this._abort = null;           // AbortController for document listeners
@@ -81,7 +82,8 @@ export class DevDialogueEditorTab {
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
   _emptyCtx() { return {nodes:{},startNodeId:null}; }
-  _emptyProject(totalDays = 5) {
+  _emptyProject(totalDays = MAX_GAME_DAYS) {
+    totalDays = Math.min(MAX_GAME_DAYS, Math.max(1, Number(totalDays) || MAX_GAME_DAYS));
     const schedules={};
     for (let d=1;d<=totalDays;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={entries:[]};
     return {version:2,totalDays,customVars:[],schedules,events:{},endings:{},eventFileDoc:{events:[]},endingFileDoc:{endings:[]}};
@@ -839,6 +841,7 @@ export class DevDialogueEditorTab {
   // ── day / event / ending ──────────────────────────────────────────────────
   addDay() {
     if (!this.project) return;
+    if (this.totalDays >= MAX_GAME_DAYS) { this._st(`游戏最多支持 ${MAX_GAME_DAYS} 天`); return; }
     this.totalDays += 1;
     this.project.totalDays = this.totalDays;
     const pad = String(this.totalDays).padStart(2,'0');
@@ -886,7 +889,7 @@ export class DevDialogueEditorTab {
     this.project = this._emptyProject();
     this.loadedScheduleFiles = new Set();
     this.loadedMetaFiles = new Set();
-    this.totalDays = 5; this.currentCtx = null; this.selectedNodeId = null;
+    this.totalDays = MAX_GAME_DAYS; this.currentCtx = null; this.selectedNodeId = null;
     this._saveLS(); this._renderSidebar(); this._renderCanvas();
     const ef=this._el('de-editor-empty'),ff=this._el('de-editor-form');
     if(ef) ef.style.display=''; if(ff) ff.style.display='none';
@@ -906,7 +909,10 @@ export class DevDialogueEditorTab {
       try {
         const d = JSON.parse(e.target.result);
         if (!d.version) { alert('无法识别的项目格式'); return; }
-        this.project = this._migrateProject(d); this.loadedScheduleFiles = new Set(Object.keys(this.project.schedules || {})); this.loadedMetaFiles = new Set(['special_events.json', 'endings.json']); this.totalDays = d.totalDays || 5;
+        this.project = this._migrateProject(d);
+        this.project.schedules = Object.fromEntries(Object.entries(this.project.schedules || {}).filter(([id]) => !/^(?:work|social)\d{2}[ab]$/.test(id) || Number(id.slice(5, 7)) <= MAX_GAME_DAYS));
+        this.project.totalDays = MAX_GAME_DAYS;
+        this.loadedScheduleFiles = new Set(Object.keys(this.project.schedules || {})); this.loadedMetaFiles = new Set(['special_events.json', 'endings.json']); this.totalDays = MAX_GAME_DAYS;
         this.currentCtx = null; this.selectedNodeId = null;
         this._saveLS(); this._renderSidebar(); this._renderCanvas();
         this._st('项目已载入：' + f.name);

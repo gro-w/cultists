@@ -1,4 +1,5 @@
 import { eventBus } from "./EventBus.js";
+import { MAX_GAME_DAYS } from "./GameRules.js";
 
 function phaseForClock(clockMinutes) {
   return clockMinutes >= 8 * 60 && clockMinutes < 16 * 60 ? "day" : "night";
@@ -31,7 +32,7 @@ class GameState {
   }
 
   setClock(day, clockMinutes) {
-    this.day = Math.max(1, Math.floor(Number(day) || 1));
+    this.day = Math.min(MAX_GAME_DAYS, Math.max(1, Math.floor(Number(day) || 1)));
     this.clockMinutes = ((Math.floor(Number(clockMinutes) || 0) % 1440) + 1440) % 1440;
     this.phase = phaseForClock(this.clockMinutes);
     eventBus.emit("gamestate:changed", this.snapshot());
@@ -45,10 +46,11 @@ class GameState {
 
   advanceClock(minutes) {
     let total = this.clockMinutes + Math.max(0, Number(minutes) || 0);
-    while (total >= 1440) {
+    while (total >= 1440 && this.day < MAX_GAME_DAYS) {
       total -= 1440;
       this.day += 1;
     }
+    if (this.day >= MAX_GAME_DAYS && total >= 1440) total = 1439;
     this.clockMinutes = total;
     this.phase = phaseForClock(this.clockMinutes);
     eventBus.emit("gamestate:changed", this.snapshot());
@@ -59,7 +61,7 @@ class GameState {
       this.phase = "night";
     } else {
       this.phase = "day";
-      if (incrementDay) this.day += 1;
+      if (incrementDay) this.day = Math.min(MAX_GAME_DAYS, this.day + 1);
     }
     if (location === "work" || location === "dorm") this.location = location;
     eventBus.emit("gamestate:changed", this.snapshot());
@@ -67,7 +69,7 @@ class GameState {
   }
 
   advanceDayAtMidnight() {
-    this.day += 1;
+    this.day = Math.min(MAX_GAME_DAYS, this.day + 1);
     eventBus.emit("gamestate:changed", this.snapshot());
   }
 
@@ -106,7 +108,7 @@ class GameState {
 
   /** Overwrite every stat at once (used by SaveManager when restoring a save). */
   restore({ day, clockMinutes, phase, duty, location, energy, mental, physical, satiety, recoverableMentalLoss } = {}) {
-    if (day !== undefined && (!Number.isInteger(day) || day < 1)) throw new Error("Invalid save day");
+    if (day !== undefined && (!Number.isInteger(day) || day < 1 || day > MAX_GAME_DAYS)) throw new Error("Invalid save day");
     if (clockMinutes !== undefined && (!Number.isInteger(clockMinutes) || clockMinutes < 0 || clockMinutes >= 1440)) {
       throw new Error("Invalid save clock");
     }

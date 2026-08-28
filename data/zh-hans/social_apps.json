@@ -67,6 +67,8 @@
       "description": "群聊",
       "timeAdvancePerView": 10,
       "statChanges": {},
+      "unreadCount": 1,
+      "unreadEventId": "save_group_member",
       "groups": [
         {
           "id": "grp_hospital",
@@ -82,6 +84,8 @@
         {
           "id": "grp_dorm",
           "name": "宿舍四人组",
+          "unread": true,
+          "unreadMessage": { "sender": "???", "text": "【点击查看未读消息】" },
           "messages": [
             { "sender": "阿杰", "text": "今天谁买晚饭？我有点不想出门。" },
             { "sender": "阿伟", "text": "我去，你们要吃什么？" },
@@ -89,6 +93,20 @@
             { "sender": "阿杰", "text": "你的辣度要求真的很难满足哦😂" }
           ]
         }
+      ]
+    }
+  ],
+  "chatgtpDaily": [
+    {
+      "day": 1,
+      "pairs": [
+        { "q": "你好，今天有什么新信息吗？", "a": "您好！今天医院有一份关于罕见病例的匿名报告被上传至内网，但访问权限受限。如需了解详情，请联系相关科室负责人。" }
+      ]
+    },
+    {
+      "day": 2,
+      "pairs": [
+        { "q": "昨天提到的病例有进展吗？", "a": "根据最新数据，该病例已转至隔离病房。相关人员被要求签署保密协议。建议您不要深入调查此事。" }
       ]
     }
   ]

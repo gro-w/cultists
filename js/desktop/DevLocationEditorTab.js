@@ -93,14 +93,31 @@ export class DevLocationEditorTab {
         <button type="button" class="win95-btn dev-btn" style="margin-top:6px" onclick="_le._addSub()">＋ 添加子位置</button>
       </div>
 
-      <div class="dev-section dev-ie-sec" id="le-zone-section" style="display:none"><h3>🖼 区域编辑器</h3>
-        <p style="font-size:11px;color:#888;margin:0 0 6px">在背景图上拖动鼠标，为选中的子位置绘制/调整区域矩形。</p>
+      <div class="dev-section dev-ie-sec" id="le-zone-section"><h3>🖼 画布编辑器</h3>
         <div style="display:flex;gap:8px;margin-bottom:6px;align-items:center;flex-wrap:wrap">
-          <label style="font-size:12px">编辑子位置：</label>
-          <select id="le-zone-sub-select" onchange="_le._onZoneSubChange()" style="min-height:22px;border:2px inset #eee;padding:1px 4px;font-size:12px"></select>
+          <label style="font-size:12px">模式：</label>
+          <select id="le-canvas-mode" onchange="_le._onCanvasModeChange()" style="min-height:22px;border:2px inset #eee;padding:1px 4px;font-size:12px">
+            <option value="zone">子位置区域（拖拽绘制）</option>
+            <option value="hotspot">物品/立绘位置（点击定位）</option>
+          </select>
+          <span id="le-zone-sub-wrap" style="display:flex;gap:4px;align-items:center">
+            <label style="font-size:12px">编辑子位置：</label>
+            <select id="le-zone-sub-select" onchange="_le._onZoneSubChange()" style="min-height:22px;border:2px inset #eee;padding:1px 4px;font-size:12px"></select>
+          </span>
         </div>
         <canvas id="le-zone-canvas" style="border:2px inset #ccc;cursor:crosshair;max-width:100%;background:#111"></canvas>
         <p id="le-zone-hint" style="font-size:11px;color:#888;margin-top:4px"></p>
+        <div id="le-hotspot-section" style="display:none;margin-top:8px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <strong style="font-size:12px">Hotspot 列表</strong>
+            <span style="font-size:11px;color:#888">点击画布添加；拖动已有标记调整位置</span>
+            <button type="button" class="win95-btn dev-btn" onclick="_le._addHotspot()">＋ 手动添加</button>
+          </div>
+          <table class="dev-table" style="font-size:11px;width:100%">
+            <thead><tr><th>物品 / 角色 ID</th><th>标签</th><th>图标</th><th>X</th><th>Y</th><th>删除</th></tr></thead>
+            <tbody id="le-hotspot-tbody"></tbody>
+          </table>
+        </div>
       </div>
 
       <div style="display:flex;gap:8px;padding:8px 0 4px">
@@ -179,6 +196,72 @@ export class DevLocationEditorTab {
   }
 
   _setDirty() { this._dirty = true; }
+
+  // ── canvas mode switch ───────────────────────────────────────────────────────
+  _onCanvasModeChange() {
+    const mode = this._el("le-canvas-mode")?.value ?? "zone";
+    const zoneWrap    = this._el("le-zone-sub-wrap");
+    const hotspotSec  = this._el("le-hotspot-section");
+    if (zoneWrap)   zoneWrap.style.display   = mode === "zone"    ? "" : "none";
+    if (hotspotSec) hotspotSec.style.display = mode === "hotspot" ? "" : "none";
+    this._redrawZoneCanvas();
+    if (mode === "hotspot") this._renderHotspotTable();
+  }
+
+  // ── hotspot editing ──────────────────────────────────────────────────────────
+  _renderHotspotTable() {
+    const tbody = this._el("le-hotspot-tbody");
+    if (!tbody) return;
+    const loc = this._locations.find((l) => l.id === this._currentId);
+    if (!loc) return;
+    if (!loc.hotspots) loc.hotspots = [];
+    tbody.innerHTML = loc.hotspots.map((h, i) => `
+      <tr>
+        <td><input type="text" value="${this._e(h.targetId || "")}"
+          style="width:120px;min-height:18px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+          onchange="_le._setHotspotField(${i},'targetId',this.value)"></td>
+        <td><input type="text" value="${this._e(h.label || "")}"
+          style="width:100px;min-height:18px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+          onchange="_le._setHotspotField(${i},'label',this.value)"></td>
+        <td><input type="text" value="${this._e(h.icon || "")}"
+          style="width:40px;min-height:18px;border:2px inset #eee;padding:1px 3px;font-size:11px;text-align:center"
+          onchange="_le._setHotspotField(${i},'icon',this.value)"></td>
+        <td><input type="number" value="${h.x ?? 0}"
+          style="width:52px;min-height:18px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+          onchange="_le._setHotspotField(${i},'x',Number(this.value))"></td>
+        <td><input type="number" value="${h.y ?? 0}"
+          style="width:52px;min-height:18px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+          onchange="_le._setHotspotField(${i},'y',Number(this.value))"></td>
+        <td><button type="button" class="win95-btn dev-btn"
+          onclick="_le._removeHotspot(${i})">✕</button></td>
+      </tr>`).join("") || `<tr><td colspan="6" style="color:#aaa;font-size:11px;padding:4px">暂无 hotspot</td></tr>`;
+    this._redrawZoneCanvas();
+  }
+
+  _addHotspot() {
+    const loc = this._locations.find((l) => l.id === this._currentId);
+    if (!loc) return;
+    if (!loc.hotspots) loc.hotspots = [];
+    loc.hotspots.push({ targetId: "", label: "", icon: "❔", x: 100, y: 100 });
+    this._dirty = true;
+    this._renderHotspotTable();
+  }
+
+  _removeHotspot(i) {
+    const loc = this._locations.find((l) => l.id === this._currentId);
+    if (!loc?.hotspots) return;
+    loc.hotspots.splice(i, 1);
+    this._dirty = true;
+    this._renderHotspotTable();
+  }
+
+  _setHotspotField(i, field, val) {
+    const loc = this._locations.find((l) => l.id === this._currentId);
+    if (!loc?.hotspots?.[i]) return;
+    loc.hotspots[i][field] = val;
+    this._dirty = true;
+    this._redrawZoneCanvas();
+  }
 
   // ── background image band list ───────────────────────────────────────────────
   _renderBgList() {
@@ -352,7 +435,9 @@ export class DevLocationEditorTab {
     // Draw background
     const draw = () => {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
-      // Draw all sub-location zones
+      const mode = this._el("le-canvas-mode")?.value ?? "zone";
+
+      // Draw sub-location zones (zone mode)
       const sel = this._el("le-zone-sub-select");
       const selectedSubId = sel?.value;
       (loc.subLocations || []).forEach((sub) => {
@@ -367,6 +452,30 @@ export class DevLocationEditorTab {
         ctx.font = "11px sans-serif";
         ctx.fillText(sub.name || sub.id, zone.x + 3, zone.y + 13);
       });
+
+      // Draw hotspots (hotspot mode)
+      if (mode === "hotspot") {
+        (loc.hotspots || []).forEach((h) => {
+          const x = h.x ?? 0, y = h.y ?? 0;
+          ctx.beginPath();
+          ctx.arc(x, y, 10, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,200,0,0.7)";
+          ctx.fill();
+          ctx.strokeStyle = "#cc6600";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.fillStyle = "#333";
+          ctx.font = "12px sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(h.icon || "❔", x, y);
+          ctx.textAlign = "left";
+          ctx.textBaseline = "alphabetic";
+          ctx.fillStyle = "#fff";
+          ctx.font = "10px sans-serif";
+          ctx.fillText(h.label || h.targetId || "", x + 13, y + 4);
+        });
+      }
     };
 
     if (loc.backgroundImages?.length > 0 && loc.backgroundImages[0].imageData) {
@@ -406,6 +515,26 @@ export class DevLocationEditorTab {
     };
 
     canvas.addEventListener("mousedown", (ev) => {
+      const mode = this._el("le-canvas-mode")?.value ?? "zone";
+      if (mode === "hotspot") {
+        // Click to place hotspot at cursor
+        const pt = toCanvas(ev);
+        const loc = this._locations.find((l) => l.id === this._currentId);
+        if (!loc) return;
+        if (!loc.hotspots) loc.hotspots = [];
+        // Check if near existing hotspot (move it)
+        const existing = loc.hotspots.find((h) => Math.hypot((h.x ?? 0) - pt.x, (h.y ?? 0) - pt.y) < 14);
+        if (existing) {
+          this._dragHotspot = existing;
+          this._dragging = true;
+        } else {
+          loc.hotspots.push({ targetId: "", label: "", icon: "❔", x: Math.round(pt.x), y: Math.round(pt.y) });
+          this._dirty = true;
+          this._renderHotspotTable();
+        }
+        ev.preventDefault();
+        return;
+      }
       const sel = this._el("le-zone-sub-select");
       if (!sel?.value) return;
       this._dragSubId = sel.value;
@@ -415,7 +544,17 @@ export class DevLocationEditorTab {
     });
 
     canvas.addEventListener("mousemove", (ev) => {
+      if (this._dragHotspot && this._dragging) {
+        const cur = toCanvas(ev);
+        this._dragHotspot.x = Math.round(cur.x);
+        this._dragHotspot.y = Math.round(cur.y);
+        this._dirty = true;
+        this._redrawZoneCanvas();
+        return;
+      }
       if (!this._dragging || !this._dragStart) return;
+      const mode = this._el("le-canvas-mode")?.value ?? "zone";
+      if (mode === "hotspot") return;
       const cur = toCanvas(ev);
       const loc = this._locations.find((l) => l.id === this._currentId);
       const sub = (loc?.subLocations || []).find((s) => s.id === this._dragSubId);
@@ -432,7 +571,13 @@ export class DevLocationEditorTab {
     const stopDrag = () => {
       if (this._dragging) {
         this._dragging = false;
-        this._renderSubTable(); // refresh coordinate inputs
+        if (this._dragHotspot) {
+          this._dragHotspot = null;
+          this._renderHotspotTable();
+        } else {
+          this._renderSubTable(); // refresh coordinate inputs
+        }
+        this._dragStart = null;
       }
     };
     canvas.addEventListener("mouseup", stopDrag);

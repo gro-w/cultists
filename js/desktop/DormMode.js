@@ -40,6 +40,9 @@ export default class DormMode {
     this._computerOpen = false;
     this._compTabInit = {};
     this._transitionTimer = null;
+    this._dormSanOff = null;
+    /** Map<appId, gameDay> — which day the player already browsed each app */
+    this._viewedApps = new Map();
     this._build();
     eventBus.on("daynight:changed", (detail) => this._onStateChanged(detail));
     eventBus.on("time:changed", () => this._renderClock());
@@ -48,6 +51,10 @@ export default class DormMode {
 
   async init() {
     this.scenes = await dataLoader.loadJSON("monitor_scenes.json");
+    await locationSystem.load();
+    this._updateDormBg();
+    if (this._dormSanOff) this._dormSanOff();
+    this._dormSanOff = eventBus.on("game:sanity_changed", () => this._updateDormBg());
     await this._renderScene();
     this._syncVisibility(false);
   }
@@ -162,6 +169,14 @@ export default class DormMode {
 
     this.root.querySelector('[data-npc="player"] .dorm-bunk-top')
       .addEventListener("click", () => this._showPlayerMenu());
+  }
+
+  // ── Background (sanity-aware) ────────────────────────────────────────────
+  _updateDormBg() {
+    const img = locationSystem.resolveBackground("dorm", gameState.mental ?? 100);
+    this.root.style.backgroundImage = img ? `url(${img})` : "";
+    this.root.style.backgroundSize  = img ? "cover" : "";
+    this.root.style.backgroundPosition = img ? "center" : "";
   }
 
   // ── Clock ───────────────────────────────────────────────────────────────────
@@ -428,25 +443,71 @@ export default class DormMode {
   }
 
   _switchCompTab(tabId) {
-    // Update tab button states
     this.root.querySelectorAll(".dorm-comp-tab-btn[data-comptab]").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.comptab === tabId);
     });
-    // Show / hide panels
     this.root.querySelectorAll(".dorm-computer-panel[data-comppanel]").forEach((panel) => {
       panel.classList.toggle("hidden", panel.dataset.comppanel !== tabId);
     });
-    // Lazy-init panel content
     if (!this._compTabInit[tabId]) {
       this._compTabInit[tabId] = true;
       const panel = this.root.querySelector(`[data-comppanel="${tabId}"]`);
       if (tabId === "chatgtp") {
-        launchChatGTPApp({ container: panel })
-          .catch((err) => { panel.textContent = `ChatGTP 无法打开：${err.message}`; });
+        this._renderChatGTPWithDaily(panel);
       } else if (tabId === "social") {
         this._renderSocialMedia(panel);
       }
     }
+  }
+
+  async _renderChatGTPWithDaily(panel) {
+    // Daily preset Q&A banner — one per day, sequential by chatgtpDaily index
+    try {
+      const data = await dataLoader.loadJSON("social_apps.json");
+      const daily = data.chatgtpDaily || [];
+      const day   = gameState.day;
+      // Find the entry for today (matched by day field, fall back to sequential index day-1)
+      const entry = daily.find((e) => e.day === day)
+        ?? (day <= daily.length ? daily[day - 1] : null);
+      const pairs = entry?.pairs || [];
+
+      if (pairs.length > 0) {
+        const viewKey = `chatgtp_daily_${day}`;
+        const pairIdx = this._viewedApps.get(viewKey) ?? 0;
+        const banner = document.createElement("div");
+        banner.className = "chatgtp-daily-banner";
+        if (pairIdx >= pairs.length) {
+          banner.textContent = "📬 今日预设对话：已全部查看。";
+        } else {
+          const pair = pairs[pairIdx];
+          banner.innerHTML = `<span class="chatgtp-daily-label">📬 今日消息 (${pairIdx + 1}/${pairs.length})</span>
+            <button type="button" class="win95-btn bevel-out chatgtp-daily-btn">查看</button>`;
+          banner.querySelector(".chatgtp-daily-btn").addEventListener("click", async () => {
+            // Append into the ChatGTP history after it initialises
+            const histEl = panel.querySelector(".chatgtp-history");
+            if (histEl) {
+              const q = document.createElement("div");
+              q.className = "chat-bubble bubble-me";
+              q.textContent = pair.q;
+              const a = document.createElement("div");
+              a.className = "chat-bubble bubble-npc";
+              a.textContent = pair.a;
+              histEl.appendChild(q);
+              histEl.appendChild(a);
+              histEl.scrollTop = histEl.scrollHeight;
+            }
+            this._viewedApps.set(viewKey, pairIdx + 1);
+            banner.textContent = pairIdx + 1 >= pairs.length
+              ? "📬 今日预设对话：已全部查看。"
+              : `📬 今日消息已查看（剩余 ${pairs.length - pairIdx - 1} 条）`;
+          });
+        }
+        panel.appendChild(banner);
+      }
+    } catch (_) { /* daily section optional */ }
+
+    launchChatGTPApp({ container: { replaceChildren: (el) => panel.appendChild(el) } })
+      .catch((err) => { panel.insertAdjacentHTML("beforeend", `<p>ChatGTP 无法打开：${err.message}</p>`); });
   }
 
   async _renderSocialMedia(panel) {
@@ -455,114 +516,189 @@ export default class DormMode {
       const data = await dataLoader.loadJSON("social_apps.json");
       panel.innerHTML = "";
       const apps = data.apps || [];
+      const day  = gameState.day;
+
       const tabsBar = document.createElement("div");
       tabsBar.className = "sm-tabs";
       const panels = new Map();
+
       apps.forEach((app, idx) => {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "win95-btn bevel-out sm-tab-btn";
         btn.dataset.appId = app.id;
-        btn.textContent = `${app.icon} ${app.name}`;
+
+        // Unread badge
+        const unread = app.unreadCount && !this._viewedApps.has("unread_" + app.id);
+        btn.innerHTML = `${app.icon} ${app.name}${unread ? `<span class="sm-unread-badge">${app.unreadCount}</span>` : ""}`;
+
         const appPanel = document.createElement("div");
-        appPanel.className = "sm-panel";
-        appPanel.hidden = idx !== 0;
+        appPanel.className = "sm-panel" + (idx !== 0 ? " hidden" : "");
         panels.set(app.id, appPanel);
+
         btn.addEventListener("click", () => {
-          tabsBar.querySelectorAll(".sm-tab-btn").forEach((b) => b.classList.toggle("active", b.dataset.appId === app.id));
-          panels.forEach((p, id) => { p.hidden = id !== app.id; });
+          tabsBar.querySelectorAll(".sm-tab-btn").forEach((b) =>
+            b.classList.toggle("active", b.dataset.appId === app.id));
+          panels.forEach((p, id) => p.classList.toggle("hidden", id !== app.id));
           if (!appPanel.dataset.rendered) {
             appPanel.dataset.rendered = "1";
-            this._renderSocialAppContent(app, appPanel);
+            this._renderSocialAppContent(app, appPanel, data, day);
           }
         });
         tabsBar.appendChild(btn);
       });
+
       panel.appendChild(tabsBar);
       apps.forEach((app) => panel.appendChild(panels.get(app.id)));
+
+      // Render first app immediately
       if (apps.length > 0) {
         tabsBar.querySelector(".sm-tab-btn")?.classList.add("active");
         const firstPanel = panels.get(apps[0].id);
         firstPanel.dataset.rendered = "1";
-        this._renderSocialAppContent(apps[0], firstPanel);
+        this._renderSocialAppContent(apps[0], firstPanel, data, day);
       }
     } catch (err) {
       panel.textContent = `社交媒体加载失败：${err.message}`;
     }
   }
 
-  _renderSocialAppContent(app, panel) {
+  _renderSocialAppContent(app, panel, data, day) {
     const header = document.createElement("div");
     header.className = "sm-app-header";
-    header.innerHTML = `<span class="sm-app-icon">${app.icon}</span> <strong>${app.name}</strong>`;
+    header.innerHTML = `<span class="sm-app-icon">${app.icon}</span> <strong>${app.name}</strong><span class="sm-app-desc" style="margin-left:8px">${app.description || ""}</span>`;
     panel.appendChild(header);
 
+    // Daily browse button (once per day per app)
+    const viewKey = `browse_${app.id}`;
+    const alreadyBrowsed = this._viewedApps.get(viewKey) === day;
     if (app.timeAdvancePerView > 0) {
       const browseBtn = document.createElement("button");
       browseBtn.type = "button";
       browseBtn.className = "win95-btn bevel-out sm-browse-btn";
-      browseBtn.textContent = `📱 浏览（消耗 ${app.timeAdvancePerView} 分钟）`;
-      browseBtn.addEventListener("click", () => {
-        eventBus.emit("item:inspected", { id: `social_${app.id}`, effect: null, inspectTimeAdvance: app.timeAdvancePerView });
+      if (alreadyBrowsed) {
+        browseBtn.textContent = "（今日已浏览）";
         browseBtn.disabled = true;
-        browseBtn.textContent = "（已浏览）";
-      });
+      } else {
+        browseBtn.textContent = `📱 浏览（消耗 ${app.timeAdvancePerView} 分钟）`;
+        browseBtn.addEventListener("click", () => {
+          this._viewedApps.set(viewKey, day);
+          eventBus.emit("item:inspected", { id: `social_${app.id}`, effect: null, inspectTimeAdvance: app.timeAdvancePerView });
+          browseBtn.disabled = true;
+          browseBtn.textContent = "（今日已浏览）";
+        });
+      }
       panel.appendChild(browseBtn);
     }
 
     const feed = document.createElement("div");
     feed.className = "sm-feed";
+
     if (app.id === "qqgroup") {
-      (app.groups || []).forEach((group) => {
-        const card = document.createElement("div");
-        card.className = "sm-group-card panel-inset";
-        card.innerHTML = `<div class="sm-group-name">🐧 ${group.name}</div>`;
-        const msgList = document.createElement("div");
-        msgList.className = "sm-msg-list";
-        (group.messages || []).forEach((msg) => {
-          const row = document.createElement("div");
-          row.className = "sm-msg-row";
-          row.innerHTML = `<span class="sm-msg-sender">${msg.sender}：</span><span class="sm-msg-text">${msg.text}</span>`;
-          msgList.appendChild(row);
-        });
-        card.appendChild(msgList);
-        feed.appendChild(card);
-      });
+      this._renderQQGroups(app, feed, day);
     } else {
-      (app.posts || []).forEach((post) => {
-        const card = document.createElement("div");
-        card.className = "sm-post-card panel-inset";
-        card.innerHTML = `<div class="sm-post-title">${post.title}</div><div class="sm-post-meta">@${post.author}${post.likes != null ? ` · 👍 ${post.likes}` : ""}</div>`;
-        if (post.content) {
-          const body = document.createElement("p");
-          body.className = "sm-post-body";
-          body.textContent = post.content;
-          card.appendChild(body);
-        }
-        if (post.answers?.length) {
-          const toggle = document.createElement("button");
-          toggle.type = "button";
-          toggle.className = "win95-btn bevel-out sm-answers-toggle";
-          toggle.textContent = `查看 ${post.answers.length} 条回答`;
-          const answersEl = document.createElement("div");
-          answersEl.className = "sm-answers hidden";
-          post.answers.forEach((a, i) => {
-            const p = document.createElement("p");
-            p.className = "sm-answer";
-            p.textContent = `${i + 1}. ${a}`;
-            answersEl.appendChild(p);
-          });
-          toggle.addEventListener("click", () => {
-            answersEl.classList.toggle("hidden");
-            toggle.textContent = answersEl.classList.contains("hidden") ? `查看 ${post.answers.length} 条回答` : "收起";
-          });
-          card.appendChild(toggle);
-          card.appendChild(answersEl);
-        }
-        feed.appendChild(card);
-      });
+      // Pick today's post: seeded-random by day so same day always shows same post
+      const posts = app.posts || [];
+      if (posts.length > 0) {
+        // LCG seed from day + appId hash for per-app variation
+        const seed = day * 2654435761 + (app.id || "").split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+        const todayPost = posts[Math.abs(seed >> 8) % posts.length];
+        const dayLabel = document.createElement("p");
+        dayLabel.style.cssText = "font-size:11px;color:#888;margin:0 0 4px";
+        dayLabel.textContent = `第 ${day} 天推荐`;
+        feed.appendChild(dayLabel);
+        feed.appendChild(this._makePostCard(todayPost, app));
+      } else {
+        feed.innerHTML = `<p style="color:#aaa;font-size:12px">暂无内容。</p>`;
+      }
     }
     panel.appendChild(feed);
+  }
+
+  _makePostCard(post, app) {
+    const card = document.createElement("div");
+    card.className = "sm-post-card panel-inset";
+    card.innerHTML = `<div class="sm-post-title">${post.title}</div><div class="sm-post-meta">@${post.author || "匿名"}${post.likes != null ? ` · 👍 ${post.likes}` : ""}</div>`;
+    if (post.content) {
+      const body = document.createElement("p");
+      body.className = "sm-post-body";
+      body.textContent = post.content;
+      card.appendChild(body);
+    }
+    if (post.tags?.length) {
+      const tags = document.createElement("div");
+      tags.className = "sm-post-tags";
+      post.tags.forEach((t) => {
+        const span = document.createElement("span");
+        span.className = "sm-tag";
+        span.textContent = `# ${t}`;
+        tags.appendChild(span);
+      });
+      card.appendChild(tags);
+    }
+    if (post.answers?.length) {
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "win95-btn bevel-out sm-answers-toggle";
+      toggle.textContent = `查看 ${post.answers.length} 条回答`;
+      const answersEl = document.createElement("div");
+      answersEl.className = "sm-answers hidden";
+      post.answers.forEach((a, i) => {
+        const p = document.createElement("p");
+        p.className = "sm-answer";
+        p.textContent = `${i + 1}. ${a}`;
+        answersEl.appendChild(p);
+      });
+      toggle.addEventListener("click", () => {
+        answersEl.classList.toggle("hidden");
+        toggle.textContent = answersEl.classList.contains("hidden")
+          ? `查看 ${post.answers.length} 条回答` : "收起";
+      });
+      card.appendChild(toggle);
+      card.appendChild(answersEl);
+    }
+    return card;
+  }
+
+  _renderQQGroups(app, feed, day) {
+    // Unread group message (only first time today)
+    const unreadKey = "unread_" + app.id;
+    const hasUnread = !this._viewedApps.has(unreadKey);
+    const unreadGroup = (app.groups || []).find((g) => g.unread);
+
+    if (hasUnread && unreadGroup?.unreadMessage) {
+      const notice = document.createElement("div");
+      notice.className = "sm-post-card panel-inset";
+      notice.style.cssText = "border-color:#e53935;cursor:pointer";
+      notice.innerHTML = `<div class="sm-post-title" style="color:#e53935">🔔 有未读消息</div>
+        <div class="sm-msg-row" style="margin-top:4px">
+          <span class="sm-msg-sender">${unreadGroup.unreadMessage.sender}：</span>
+          <span class="sm-msg-text">${unreadGroup.unreadMessage.text}</span>
+        </div>`;
+      notice.addEventListener("click", () => {
+        this._viewedApps.set(unreadKey, day);
+        notice.remove();
+        // TODO: trigger "save group member" event when implemented
+        this._message("（「拯救群友」事件功能尚未实现。）");
+      });
+      feed.appendChild(notice);
+    }
+
+    (app.groups || []).forEach((group) => {
+      const card = document.createElement("div");
+      card.className = "sm-group-card panel-inset";
+      card.innerHTML = `<div class="sm-group-name">🐧 ${group.name}</div>`;
+      const msgList = document.createElement("div");
+      msgList.className = "sm-msg-list";
+      (group.messages || []).forEach((msg) => {
+        const row = document.createElement("div");
+        row.className = "sm-msg-row";
+        row.innerHTML = `<span class="sm-msg-sender">${msg.sender}：</span><span class="sm-msg-text">${msg.text}</span>`;
+        msgList.appendChild(row);
+      });
+      card.appendChild(msgList);
+      feed.appendChild(card);
+    });
   }
 
   // ── Clue wall ───────────────────────────────────────────────────────────────

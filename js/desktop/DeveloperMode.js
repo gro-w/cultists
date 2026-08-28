@@ -17,6 +17,7 @@ import { DevItemEditorTab } from "./DevItemEditorTab.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
 import { DevLocationEditorTab } from "./DevLocationEditorTab.js";
+import { DevDormComputerTab } from "./DevDormComputerTab.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
@@ -60,9 +61,9 @@ export function launchDeveloperMode() {
 }
 
 class DeveloperMode {
-  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this.queueId = "work"; this.queueFile = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this.render(); }
+  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this.queueId = "work"; this.queueFile = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("Work 事件队列", "tab-queue-work")}${button("Social 事件队列", "tab-queue-social")}${button("JSON 文件", "tab-json")}${button("物品编辑器", "tab-item-editor", "dev-btn-tool")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-tool")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-tool")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-tool")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("Work 事件队列", "tab-queue-work")}${button("Social 事件队列", "tab-queue-social")}${button("JSON 文件", "tab-json")}${button("物品编辑器", "tab-item-editor", "dev-btn-tool")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-tool")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-tool")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-tool")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-tool")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
 
@@ -121,11 +122,12 @@ class DeveloperMode {
     this.root.querySelectorAll("[data-tree-text]").forEach((el) => el.addEventListener("focus", () => { this.activeText = el; }));
   }
 
-  /** Unmount any active editor tab (item / dialogue / bgm / location) before switching panels. */
+  /** Unmount any active editor tab (item / dialogue / bgm / location / dormComputer) before switching panels. */
   _unmountEditorTabs() {
     if (this._dialogueEditorTab) { this._dialogueEditorTab.unmount(); this._dialogueEditorTab = null; }
     if (this._bgmEditorTab) { this._bgmEditorTab.unmount(); this._bgmEditorTab = null; }
     if (this._locationEditorTab) { this._locationEditorTab.unmount(); this._locationEditorTab = null; }
+    if (this._dormComputerTab) { this._dormComputerTab.unmount(); this._dormComputerTab = null; }
     // item editor has no document-level listeners, no explicit unmount needed
     this._itemEditorTab = null;
   }
@@ -160,6 +162,14 @@ class DeveloperMode {
     this.root.querySelector("[data-dev-panel]").innerHTML = this._locationEditorTab.html();
     this.bindPanel();
     this._locationEditorTab.mount();
+  }
+
+  showDormComputerEditor() {
+    this._unmountEditorTabs();
+    this._dormComputerTab = new DevDormComputerTab(this);
+    this.root.querySelector("[data-dev-panel]").innerHTML = this._dormComputerTab.html();
+    this.bindPanel();
+    this._dormComputerTab.mount();
   }
 
   showState() {
@@ -419,6 +429,7 @@ class DeveloperMode {
     if (action === "tab-dialogue-editor") return this.showDialogueEditor();
     if (action === "tab-bgm-editor") return this.showBgmEditor();
     if (action === "tab-location-editor") return this.showLocationEditor();
+    if (action === "tab-dorm-computer") return this.showDormComputerEditor();
     if (action === "tab-state") { this._unmountEditorTabs(); return this.showState(); }
     if (action === "tab-inventory") { this._unmountEditorTabs(); return this.showInventory(); }
     if (action === "tab-npc-state") { this._unmountEditorTabs(); return this.showNpcState(); }

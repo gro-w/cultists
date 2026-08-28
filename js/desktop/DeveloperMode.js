@@ -17,6 +17,24 @@ const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
 const DAY_FILES = () => Array.from({ length: scheduleData.totalDays }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
 const JSON_FILES = () => [...DAY_FILES(), "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json", "global_variables.json"];
+const QA_PAGE_SIZE = 50;
+const KEYWORD_CATEGORY_LABELS = {
+  disease: "疾病",
+  "disease-category": "疾病类别",
+  symptom: "症状",
+  medicine: "药品",
+  "medicine-category": "药品类别",
+  misc: "其他",
+};
+function keywordCategory(keyword) {
+  const id = String(keyword?.id || "");
+  if (id.startsWith("disease-category:")) return "disease-category";
+  if (id.startsWith("disease:")) return "disease";
+  if (id.startsWith("medicine-category:")) return "medicine-category";
+  if (id.startsWith("symptom_")) return "symptom";
+  if (id.startsWith("med_") || id === "med_paracetamol" || id === "med_cough_syrup") return "medicine";
+  return "misc";
+}
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
@@ -36,9 +54,9 @@ export function launchDeveloperMode() {
 }
 
 class DeveloperMode {
-  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this._devServerActive = false; this._sse = null; this.render(); }
+  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this.queueId = "work"; this.queueFile = ""; this._devServerActive = false; this._sse = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("JSON 文件", "tab-json")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("Work 事件队列", "tab-queue-work")}${button("Social 事件队列", "tab-queue-social")}${button("JSON 文件", "tab-json")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
 
@@ -83,6 +101,8 @@ class DeveloperMode {
     if (actorFile) actorFile.addEventListener("change", () => { this.actorFile = actorFile.value; this.actorId = ""; this.actorTreeDraft = null; this.showActorEditor(); });
     const actorId = this.root.querySelector("[data-actor-id]");
     if (actorId) actorId.addEventListener("change", () => { this.actorId = actorId.value; this.actorTreeDraft = null; this.showActorEditor(); });
+    const queueFile = this.root.querySelector("[data-queue-file]");
+    if (queueFile) queueFile.addEventListener("change", () => { this.queueFile = queueFile.value; this.showQueueEditor(this.queueId); });
     this.root.querySelectorAll("[data-keyword-insert]").forEach((el) => el.addEventListener("click", () => {
       const editor = this.activeText || this.root.querySelector("[data-actor-editor]");
       if (!editor) return;
@@ -201,23 +221,74 @@ class DeveloperMode {
     this.panel(`<section class="dev-section"><h3>关键词编辑器</h3><p>关键词只保存稳定 ID 和显示内容。疾病关键词的介绍、药物和秘药资料请在 ChatGTP 编辑器中修改。</p><table class="dev-table dev-keyword-table"><thead><tr><th>ID</th><th>内容</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div></section>`);
   }
 
+  _syncQaPage() {
+    if (!this.qaDraft) return;
+    this.root.querySelectorAll("[data-qa-entry]").forEach((row) => {
+      const index = Number(row.dataset.qaEntry);
+      const selected = Array.from(row.querySelectorAll("[data-qa-keyword]"), (select) => select.value).filter(Boolean);
+      const entry = this.qaDraft[index];
+      if (!entry) return;
+      entry.keywords = [...new Set(selected)];
+      entry.answer = row.querySelector("[data-qa-answer]")?.value || "";
+      entry.corruptedSameAsNormal = row.querySelector("[data-qa-same]")?.checked || false;
+      if (entry.corruptedSameAsNormal) delete entry.corruptedAnswer;
+      else entry.corruptedAnswer = row.querySelector("[data-qa-corrupted]")?.value || "";
+    });
+  }
+
   async showChatgtp() {
     const qa = await this.loadDoc("chatgtp_qa.json");
-    const keywords = await this.loadDoc("keywords.json");
-
-    const rows = (qa.entries || []).map((entry, index) => {
-      const selected = (entry.keywords || []).map((value) => {
-        const keyword = (keywords.keywords || []).find((item) => item.id === value || item.content === value || item.label === value);
-        return keyword?.id || value;
-      });
-      const option = (slot) => `<select data-qa-keyword="${index}" data-qa-slot="${slot}"><option value="">（不选择）</option>${(keywords.keywords || []).map((keyword) => `<option value="${esc(keyword.id)}" ${selected[slot] === keyword.id ? "selected" : ""}>${esc(keyword.content || keyword.label || keyword.id)} (${esc(keyword.id)})</option>`).join("")}</select>`;
+    const keywordDoc = await this.loadDoc("keywords.json");
+    if (!this.qaDraft) this.qaDraft = qa.entries || [];
+    const keywords = keywordDoc.keywords || [];
+    const byId = new Map(keywords.map((keyword) => [keyword.id, keyword]));
+    const categories = [...new Set(keywords.map(keywordCategory))];
+    const filtered = this.qaDraft.map((entry, index) => ({ entry, index })).filter(({ entry }) => {
+      if (!this.qaCategory) return true;
+      return (entry.keywords || []).some((id) => keywordCategory(byId.get(id)) === this.qaCategory);
+    });
+    const totalPages = Math.max(1, Math.ceil(filtered.length / QA_PAGE_SIZE));
+    this.qaPage = Math.min(Math.max(1, this.qaPage), totalPages);
+    const page = filtered.slice((this.qaPage - 1) * QA_PAGE_SIZE, this.qaPage * QA_PAGE_SIZE);
+    const categoryOptions = [`<option value="">全部关键词类别</option>`, ...categories.map((category) => `<option value="${category}" ${category === this.qaCategory ? "selected" : ""}>${KEYWORD_CATEGORY_LABELS[category] || category}</option>`)].join("");
+    const rows = page.map(({ entry, index }) => {
+      const selected = (entry.keywords || []).map((value) => byId.has(value) ? value : value);
+      const option = (slot) => {
+        const visibleKeywords = keywords.filter((keyword) => keywordCategory(keyword) === this.qaCategory || selected.includes(keyword.id));
+        return `<select data-qa-keyword data-qa-slot="${slot}"><option value="">（不选择）</option>${visibleKeywords.map((keyword) => `<option value="${esc(keyword.id)}" ${selected[slot] === keyword.id ? "selected" : ""}>${esc(keyword.content || keyword.label || keyword.id)} (${esc(keyword.id)})</option>`).join("")}</select>`;
+      };
       const same = Boolean(entry.corruptedSameAsNormal);
       return `<article class="dev-qa-entry" data-qa-entry="${index}"><header><strong>${index + 1}. 关键词组合</strong>${option(0)} + ${option(1)}${button("删除", `remove-qa-entry-${index}`)}</header><label>正常回答<textarea data-qa-answer rows="3">${esc(entry.answer)}</textarea></label><label class="dev-checkbox-label"><input type="checkbox" data-qa-same ${same ? "checked" : ""}> SAN 较低时使用正常回答</label><label>损坏时回答<textarea data-qa-corrupted rows="3" ${same ? "disabled" : ""}>${esc(entry.corruptedAnswer || "")}</textarea></label></article>`;
     }).join("");
-    this.panel(`<section class="dev-section"><h3>ChatGTP 问答编辑器</h3><p>所有关键词（包括疾病和疾病类别关键词）都使用同一套 1～2 个关键词问答字段。正常回答对应高 SAN，损坏回答对应低 SAN；疾病关键词的内容按既定规则预先写入这里。</p><div class="dev-qa-list">${rows || "暂无问答条目"}</div><div>${button("新增问答", "add-qa-entry")} ${button("保存问答到内存", "save-qa")} ${button("下载 chatgtp_qa.json", "download-qa")} ${button("写入磁盘", "write-qa")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>ChatGTP 问答编辑器</h3><p>先按关键词类别筛选，再为每条问答选择两个关键词。列表每页最多显示 ${QA_PAGE_SIZE} 条，避免一次创建数万条编辑 DOM。</p><label>关键词类别 <select data-qa-category>${categoryOptions}</select></label><span>当前显示 ${page.length} / ${filtered.length} 条（总计 ${this.qaDraft.length} 条）</span><div class="dev-qa-list">${rows || "暂无符合条件的问答条目"}</div><div>${button("上一页", "qa-page-prev")} <span>第 ${this.qaPage} / ${totalPages} 页</span> ${button("下一页", "qa-page-next")} ${button("新增问答", "add-qa-entry")} ${button("保存问答到内存", "save-qa")} ${button("下载 chatgtp_qa.json", "download-qa")} ${button("写入磁盘", "write-qa")}</div></section>`);
+    this.root.querySelector("[data-qa-category]")?.addEventListener("change", (event) => { this._syncQaPage(); this.qaCategory = event.target.value; this.qaPage = 1; this.showChatgtp(); });
     this.root.querySelectorAll("[data-qa-same]").forEach((checkbox) => checkbox.addEventListener("change", () => {
       checkbox.closest("[data-qa-entry]").querySelector("[data-qa-corrupted]").disabled = checkbox.checked;
     }));
+  }
+
+  async showQueueEditor(queueId = this.queueId) {
+    this.queueId = queueId;
+    const prefix = `${queueId}`;
+    const files = DAY_FILES().filter((file) => file.startsWith(prefix));
+    if (!files.length) return;
+    if (!this.queueFile || !files.includes(this.queueFile)) {
+      const suffix = gameState.phase === "night" ? "b" : "a";
+      this.queueFile = `${prefix}${String(gameState.day).padStart(2, "0")}${suffix}.json`;
+      if (!files.includes(this.queueFile)) this.queueFile = files[0];
+    }
+    const doc = await this.loadDoc(this.queueFile);
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const rows = entries.map((entry, index) => `<article class="dev-queue-entry" data-queue-entry="${index}"><header><strong>事件 ${index + 1}</strong>${button("删除", `remove-queue-entry-${index}`)}</header><textarea data-queue-entry-json class="dev-textarea" rows="8">${esc(JSON.stringify(entry, null, 2))}</textarea></article>`).join("");
+    this.panel(`<section class="dev-section"><h3>${queueId === "work" ? "Work" : "Social"} 事件队列编辑器</h3><p>选择一个日程文件编辑该时间点追加的事件。每条事件保留原始 JSON 结构；保存前会校验每条事件必须是 JSON 对象。</p><label>日程文件 <select data-queue-file>${files.map((file) => `<option ${file === this.queueFile ? "selected" : ""}>${file}</option>`).join("")}</select></label><span>共 ${entries.length} 条事件</span><div class="dev-queue-list">${rows || "暂无事件"}</div><div>${button("新增事件", "add-queue-entry")} ${button("保存队列到内存", "save-queue")} ${button("下载队列 JSON", "download-queue")} ${button("写入磁盘", "write-queue")}</div></section>`);
+  }
+
+  _readQueueEntries() {
+    return Array.from(this.root.querySelectorAll("[data-queue-entry-json]"), (textarea) => {
+      const value = JSON.parse(textarea.value);
+      if (!value || Array.isArray(value) || typeof value !== "object") throw new Error("每条事件必须是 JSON 对象");
+      return value;
+    });
   }
 
   async showNpcs() {
@@ -338,7 +409,14 @@ class DeveloperMode {
     if (action === "tab-chatgtp") return this.showChatgtp();
     if (action === "tab-npcs") return this.showNpcs();
     if (action === "tab-global-variables") return this.showGlobalVariables();
+    if (action === "tab-queue-work") return this.showQueueEditor("work");
+    if (action === "tab-queue-social") return this.showQueueEditor("social");
     if (action === "tab-json") return this.showJson();
+    if (action === "qa-page-prev" || action === "qa-page-next") {
+      this._syncQaPage();
+      this.qaPage += action === "qa-page-prev" ? -1 : 1;
+      return this.showChatgtp();
+    }
     if (action === "add-global-variable") {
       const nextId = globalVariableManager.all().reduce((max, variable) => Math.max(max, variable.id), -1) + 1;
       const doc = await this.loadDoc("global_variables.json");
@@ -493,7 +571,7 @@ class DeveloperMode {
     const removeOption = action.match(/^remove-option-(\d+)-(\d+)$/);
     if (removeOption) { const tree = this.collectTree(); const id = Object.keys(tree.nodes)[Number(removeOption[1])]; if (id) tree.nodes[id].options.splice(Number(removeOption[2]), 1); this.replaceActorTree(tree); return; }
     const removeQa = action.match(/^remove-qa-entry-(\d+)$/);
-    if (removeQa) { const qa = await this.loadDoc("chatgtp_qa.json"); qa.entries.splice(Number(removeQa[1]), 1); this.docs.set("chatgtp_qa.json", qa); return this.showChatgtp(); }
+    if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
     if (removeNpc) { const doc = await this.loadDoc("npcs.json"); doc.npcs.splice(Number(removeNpc[1]), 1); this.docs.set("npcs.json", doc); return this.showNpcs(); }
     if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂", initialFavorability: 50, initialSan: 80 }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
@@ -506,23 +584,51 @@ class DeveloperMode {
       if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }
       this.setStatus("npcs.json 已保存到内存。"); return;
     }
-    if (action === "add-qa-entry") { const qa = await this.loadDoc("chatgtp_qa.json"); const keywords = await this.loadDoc("keywords.json"); const firstId = keywords.keywords?.[0]?.id || ""; qa.entries = qa.entries || []; qa.entries.push({ keywords: firstId ? [firstId] : [], answer: "", corruptedAnswer: "", corruptedSameAsNormal: true }); this.docs.set("chatgtp_qa.json", qa); return this.showChatgtp(); }
+    if (action === "add-qa-entry") { this._syncQaPage(); if (!this.qaDraft) this.qaDraft = []; this.qaDraft.push({ keywords: [], answer: "", corruptedAnswer: "", corruptedSameAsNormal: true }); this.qaPage = Math.ceil(this.qaDraft.length / QA_PAGE_SIZE); return this.showChatgtp(); }
     if (action === "save-qa" || action === "download-qa" || action === "write-qa") {
       const qa = await this.loadDoc("chatgtp_qa.json");
-      const rows = Array.from(this.root.querySelectorAll("[data-qa-entry]"));
-      const entries = rows.map((row) => {
-        const keywords = Array.from(row.querySelectorAll("[data-qa-keyword]"), (select) => select.value).filter(Boolean);
-        const corruptedSameAsNormal = row.querySelector("[data-qa-same]").checked;
-        const entry = { keywords: [...new Set(keywords)], answer: row.querySelector("[data-qa-answer]").value, corruptedSameAsNormal };
-        if (!corruptedSameAsNormal) entry.corruptedAnswer = row.querySelector("[data-qa-corrupted]").value;
-        return entry;
-      });
+      this._syncQaPage();
+      const entries = this.qaDraft || [];
       const keys = entries.map((entry) => [...entry.keywords].sort().join("+"));
       if (entries.some((entry) => entry.keywords.length === 0 || entry.keywords.length > 2 || !entry.answer.trim()) || new Set(keys).size !== keys.length) { this.setStatus("ChatGTP 保存失败：每条问答需要 1～2 个关键词、正常回答，且关键词组合不能重复。", true); return; }
       qa.entries = entries; this.docs.set("chatgtp_qa.json", qa);
       if (action === "download-qa") { downloadJson("chatgtp_qa.json", qa); this.setStatus("chatgtp_qa.json 已下载。"); return; }
       if (action === "write-qa") { await this.writeToDisk("chatgtp_qa.json", qa); return; }
       this.setStatus("chatgtp_qa.json 已保存到内存。"); return;
+    }
+
+    const removeQueueEntry = action.match(/^remove-queue-entry-(\d+)$/);
+    if (removeQueueEntry) {
+      const doc = await this.loadDoc(this.queueFile);
+      const entries = this._readQueueEntries();
+      entries.splice(Number(removeQueueEntry[1]), 1);
+      doc.entries = entries;
+      this.docs.set(this.queueFile, doc);
+      return this.showQueueEditor(this.queueId);
+    }
+    if (action === "add-queue-entry") {
+      const doc = await this.loadDoc(this.queueFile);
+      const entries = this._readQueueEntries();
+      const id = `new_${this.queueId}_${entries.length + 1}`;
+      entries.push(this.queueId === "work"
+        ? { id, name: "新患者", age: 0, dialogueTree: { start: "start", nodes: { start: { speaker: "npc", text: "", options: [] } } } }
+        : { id, type: "other", name: "新角色", avatar: "🙂", dialogueTree: { start: "start", nodes: { start: { speaker: "npc", text: "", options: [] } } } });
+      doc.entries = entries;
+      this.docs.set(this.queueFile, doc);
+      return this.showQueueEditor(this.queueId);
+    }
+    if (action === "save-queue" || action === "download-queue" || action === "write-queue") {
+      try {
+        const doc = await this.loadDoc(this.queueFile);
+        doc.entries = this._readQueueEntries();
+        this.docs.set(this.queueFile, doc);
+        if (action === "download-queue") { downloadJson(this.queueFile, doc); this.setStatus(`${this.queueFile} 已下载。`); return; }
+        if (action === "write-queue") { await this.writeToDisk(this.queueFile, doc); return; }
+        this.setStatus(`${this.queueFile} 已保存到内存。`);
+      } catch (err) {
+        this.setStatus(`事件队列保存失败：${err.message}`, true);
+      }
+      return;
     }
     if (action === "add-keyword") { const doc = await this.loadDoc("keywords.json"); doc.keywords.push({ id: `new_keyword_${doc.keywords.length + 1}`, content: "新关键词" }); this.docs.set("keywords.json", doc); return this.showKeywords(); }
     if (action === "remove-keyword" || action.startsWith("remove-keyword-")) { const index = Number(action.split("-").pop()); const doc = await this.loadDoc("keywords.json"); doc.keywords.splice(index, 1); this.docs.set("keywords.json", doc); return this.showKeywords(); }

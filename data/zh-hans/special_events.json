@@ -1,128 +1,95 @@
 {
   "events": [
     {
-      "id": "evt_mtcrd081",
-      "name": "悔恨之泪",
-      "dialogueTree": {
-        "start": "n_mtcrd087",
+      "id": "悔恨之泪",
+      "blueprint": {
         "nodes": {
-          "n_mtcrd087": {
-            "speaker": "player",
-            "text": "又把耳机买回来了？听着怎么样？",
+          "n_26.6nj": {
+            "id": "n_26.6nj",
+            "type": "flowStart",
+            "next": "n_5l.pvt",
+            "options": [],
+            "onShow": {},
+            "inputs": {},
+            "outputs": {},
             "x": 40,
-            "y": 40,
-            "next": "n_mtcrd088"
+            "y": 40
           },
-          "n_mtcrd088": {
-            "speaker": "npc",
-            "text": "其实没我想象的那么惊艳。",
-            "x": 278.79998779296875,
-            "y": 39.20001220703125,
-            "next": "n_mtcrd089"
-          },
-          "n_mtcrd089": {
-            "speaker": "player",
-            "text": "笑死，得不到的永远在骚动，得到了白月光就变成白米饭。",
-            "x": 548.4000244140625,
-            "y": 8.4000244140625,
-            "next": "n_rk.u8r"
-          },
-          "n_rk.u8r": {
-            "speaker": "player",
-            "text": "ok",
-            "x": 760,
-            "y": 40,
-            "next": "n_z5.h69"
-          },
-          "n_z5.h69": {
-            "speaker": "player",
-            "text": "",
-            "x": 22,
-            "y": 211.20001220703125,
-            "next": "n_an.8j8"
-          },
-          "n_an.8j8": {
-            "speaker": "player",
-            "text": "",
+          "n_5l.pvt": {
+            "id": "n_5l.pvt",
+            "type": "text",
+            "next": "n_fn7.wa",
+            "options": [],
+            "onShow": {},
+            "inputs": {
+              "speaker": "npc",
+              "text": "对，一攒够钱我就买了——终于能给挚爱的Pink Floyd一个“容器”，还挺高兴的。"
+            },
+            "outputs": {},
             "x": 280,
-            "y": 210,
-            "next": "n_g1.t6h"
+            "y": 40
           },
-          "n_g1.t6h": {
-            "speaker": "player",
-            "text": "",
-            "x": 544,
-            "y": 206.39999389648438,
-            "next": "n_6l1.is"
-          },
-          "n_6l1.is": {
-            "speaker": "player",
-            "text": "",
-            "x": 760,
-            "y": 210,
-            "next": "n_pt.swo"
-          },
-          "n_pt.swo": {
-            "speaker": "player",
-            "text": "",
+          "n_4ym.ay": {
+            "id": "n_4ym.ay",
+            "type": "text",
+            "next": null,
+            "options": [],
+            "onShow": {},
+            "inputs": {
+              "speaker": "player",
+              "text": "你别又说什么高音甜中音稳那一套。"
+            },
+            "outputs": {},
             "x": 40,
-            "y": 380,
-            "next": "n_um.nbr"
+            "y": 210
           },
-          "n_um.nbr": {
-            "speaker": "player",
-            "text": "",
-            "x": 280,
-            "y": 380
+          "n_fn7.wa": {
+            "id": "n_fn7.wa",
+            "type": "text",
+            "next": "n_la.3dt",
+            "options": [],
+            "onShow": {},
+            "inputs": {
+              "speaker": "player",
+              "text": "来让我康康，啊不，听听。"
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 40
           },
-          "n_74w.9a": {
-            "speaker": "player",
-            "text": "",
+          "n_la.3dt": {
+            "id": "n_la.3dt",
+            "type": "text",
+            "next": null,
+            "options": [],
+            "onShow": {},
+            "inputs": {
+              "speaker": "player",
+              "text": ""
+            },
+            "outputs": {},
             "x": 760,
-            "y": 380
+            "y": 40
           }
-        }
+        },
+        "connections": [],
+        "startNodeId": "n_26.6nj"
       }
     },
     {
-      "id": "evt_mtcrd082",
-      "name": "七夕节别和自己玩游戏",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
+      "id": "游戏王の荣耀"
     },
     {
-      "id": "evt_mtcrd083",
-      "name": "一切谜锁都解开了",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
+      "id": "一切谜锁都解开了"
     },
     {
-      "id": "evt_mtcrd084",
-      "name": "失踪者",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
+      "id": "长眠的克苏鲁候汝入梦"
     },
     {
-      "id": "evt_mtcrd085",
-      "name": "有人回信",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
+      "id": "与海之子对话"
     },
     {
-      "id": "evt_mtcrd086",
-      "name": "无人回信",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
+      "id": "追逐"
     }
   ]
 }

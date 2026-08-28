@@ -18,7 +18,7 @@ import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
 import { DevLocationEditorTab } from "./DevLocationEditorTab.js";
 import { DevDormComputerTab } from "./DevDormComputerTab.js";
-import { DevStructuredEditorTab } from "./DevStructuredEditorTab.js";
+import { DEDICATED_EDITOR_CLASSES } from "./DevDedicatedDataEditors.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
@@ -43,6 +43,12 @@ function keywordCategory(keyword) {
   return "misc";
 }
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
+const DEDICATED_EDITOR_TITLES = {
+  "chatgtp-dialog": "ChatGTP 对话编辑器", "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
+  medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器", "npc-state": "NPC 状态规则编辑器",
+  "time-rules": "时间规则编辑器", calendar: "日历规则编辑器", achievements: "成就定义编辑器",
+  skills: "技能定义编辑器", "monitor-scenes": "监控场景编辑器",
+};
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
 function phaseForClock(total) { const normalized = ((total % 1440) + 1440) % 1440; return normalized >= 480 && normalized < 960 ? { phase: "day", phaseMinutes: normalized - 480 } : { phase: "night", phaseMinutes: normalized >= 960 ? normalized - 960 : normalized + 480 }; }
@@ -64,7 +70,7 @@ export function launchDeveloperMode() {
 class DeveloperMode {
   constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this.render(); }
   render() {
-    const structuredButtons = DevStructuredEditorTab.keys().map((key) => button(DevStructuredEditorTab.config(key).title, `tab-structured-${key}`, "dev-btn-data")).join("");
+    const structuredButtons = Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => button(DEDICATED_EDITOR_TITLES[key], `tab-structured-${key}`, "dev-btn-data")).join("");
     this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("关键词编辑器", "tab-keywords", "dev-btn-data")}${button("ChatGTP 编辑器", "tab-chatgtp", "dev-btn-data")}${button("NPC 列表", "tab-npcs", "dev-btn-data")}${button("全局变量", "tab-global-variables", "dev-btn-data")}${button("物品编辑器", "tab-item-editor", "dev-btn-data")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-data")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-data")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-data")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-data")}${structuredButtons}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
@@ -102,7 +108,7 @@ class DeveloperMode {
 
   downloadFile(fileName, value) { downloadJson(fileName, value); }
 
-  bindPanel() { this.root.querySelectorAll("[data-dev-action]").forEach((el) => el.addEventListener("click", () => this.handle(el.dataset.devAction))); }
+  bindPanel() { this.root.querySelectorAll("[data-dev-action]").forEach((el) => el.addEventListener("click", () => this.handle(el.dataset.devAction, el))); }
   _setPanelKind(kind) {
     const panel = this.root.querySelector("[data-dev-panel]");
     if (!panel) return;
@@ -176,7 +182,9 @@ class DeveloperMode {
   showStructuredEditor(key) {
     this._unmountEditorTabs();
     this._setPanelKind("data");
-    this._structuredEditorTab = new DevStructuredEditorTab(this, key);
+    const EditorClass = DEDICATED_EDITOR_CLASSES[key];
+    if (!EditorClass) { this.setStatus(`未知专用编辑器：${key}`, true); return; }
+    this._structuredEditorTab = new EditorClass(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._structuredEditorTab.html();
     this.bindPanel();
     this._structuredEditorTab.mount();
@@ -330,7 +338,7 @@ class DeveloperMode {
   }
 
 
-  async handle(action) {
+  async handle(action, source = null) {
     if (action === "tab-item-editor") return this.showItemEditor();
     if (action === "tab-dialogue-editor") return this.showDialogueEditor();
     if (action === "tab-bgm-editor") return this.showBgmEditor();
@@ -347,6 +355,18 @@ class DeveloperMode {
 
     const structuredTab = action.match(/^tab-structured-(.+)$/);
     if (structuredTab) return this.showStructuredEditor(structuredTab[1]);
+    const dedicatedAction = {
+      "add-node": "addNode", "remove-node": "removeNode", "add-option": "addOption", "remove-option": "removeOption",
+      "add-placement": "addPlacement", "remove-placement": "removePlacement", "add-category": "addCategory", "remove-category": "removeCategory",
+      "add-diagnosis": "addDiagnosis", "remove-diagnosis": "removeDiagnosis", "add-tag": "addTag", "remove-tag": "removeTag",
+      "add-medicine": "addMedicine", "remove-medicine": "removeMedicine", "add-dialogue": "addDialogue", "remove-dialogue": "removeDialogue",
+      "add-day": "addDay", "remove-day": "removeDay", "add-achievement": "addAchievement", "remove-achievement": "removeAchievement",
+      "add-skill": "addSkill", "remove-skill": "removeSkill", "add-scene": "addScene", "remove-scene": "removeScene",
+    }[action];
+    if (dedicatedAction && this._structuredEditorTab?.[dedicatedAction]) {
+      const value = source?.dataset.ddValue || "";
+      return this._structuredEditorTab[dedicatedAction](value);
+    }
     if (action === "structured-reload") return this._structuredEditorTab?.reload();
     if (action === "structured-save") {
       try { return this._structuredEditorTab?.save(); }

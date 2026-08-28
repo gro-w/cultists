@@ -2,6 +2,7 @@ import { windowManager } from "./core/WindowManager.js";
 import { dayNightSystem } from "./core/DayNightSystem.js";
 import { settingsManager } from "./core/SettingsManager.js";
 import { audioManager } from "./core/AudioManager.js";
+import { bgmManager } from "./core/BgmManager.js";
 import { confirmDialog } from "./core/ConfirmDialog.js";
 import { itemManager } from "./core/ItemManager.js";
 import { saveManager } from "./core/SaveManager.js";
@@ -20,6 +21,7 @@ import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handl
 import "./core/ItemScheduleRuntime.js"; // side-effect: executes item-owned schedules
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
+import { locationSystem } from "./core/LocationSystem.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -27,6 +29,7 @@ import AchievementToast from "./desktop/AchievementToast.js";
 import MainMenu from "./desktop/MainMenu.js";
 import EndingScreen from "./desktop/EndingScreen.js";
 import DormMode from "./desktop/DormMode.js";
+import LocationScene from "./desktop/LocationScene.js";
 import { launchHISApp } from "./apps/HISApp.js";
 import { launchSocialApp } from "./apps/SocialApp.js";
 import { launchChatGTPApp } from "./apps/ChatGTPApp.js";
@@ -92,6 +95,10 @@ async function handlePhaseToggle() {
   }
 }
 
+// locationScene is initialised in boot() after DOM is ready, then captured
+// here for APP_REGISTRY closures to close over.
+let locationScene = null;
+
 const APP_REGISTRY = [
   { id: "his", label: () => i18n.t("apps.his", "HIS 医疗系统"), icon: "🏥", launch: () => launchHISApp() },
   { id: "social", label: () => i18n.t("apps.social", "夜聊 Messenger"), icon: "💬", launch: () => launchSocialApp() },
@@ -105,6 +112,9 @@ const APP_REGISTRY = [
   // DEV-TOOLS:START
   ...(developerModeEnabled ? [{ id: "developer-mode", label: "开发人员模式", icon: "🛠️", launch: () => launchDeveloperMode() }] : []),
   // DEV-TOOLS:END
+  { id: "hospital",   label: "医院",   icon: "🏥", launch: () => locationScene?.show("hospital") },
+  { id: "restaurant", label: "火锅店", icon: "🍲", launch: () => locationScene?.show("restaurant") },
+  { id: "seaside",    label: "海边",   icon: "🌊", launch: () => locationScene?.show("seaside") },
   {
     id: "phase-toggle",
     label: () =>
@@ -123,6 +133,7 @@ function boot({ welcomeBack }) {
   const workShell = document.getElementById("work-shell");
   windowManager.mount(windowLayer);
   audioManager.mount();
+  bgmManager.mount();
 
   new Desktop(document.getElementById("desktop-icons"), APP_REGISTRY);
 
@@ -140,6 +151,7 @@ function boot({ welcomeBack }) {
 
   const notificationBanner = new NotificationBanner(document.getElementById("notification-banner"));
   new EndingScreen(document.getElementById("ending-screen"));
+
   const dormMode = new DormMode(document.getElementById("dorm-mode"), {
     workShell,
     launchWorkApp: () => {
@@ -147,6 +159,9 @@ function boot({ welcomeBack }) {
     },
   });
   dormMode.init().catch((err) => console.error("[Cultists] Failed to initialize dorm mode:", err));
+
+  // Location scene for hospital / restaurant / seaside
+  locationScene = new LocationScene(document.getElementById("location-scene"));
 
   // Achievement toast – separate element so it doesn't clobber day/night banners.
   const achievementToast = new AchievementToast(document.getElementById("achievement-toast"));
@@ -200,6 +215,8 @@ document.addEventListener("DOMContentLoaded", () => {
     achievementManager.init(),
     medicalCaseManager.load(),
     globalVariableManager.init(),
+    bgmManager.load(),
+    locationSystem.load(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

@@ -2,6 +2,7 @@ import { windowManager } from "./core/WindowManager.js";
 import { dayNightSystem } from "./core/DayNightSystem.js";
 import { settingsManager } from "./core/SettingsManager.js";
 import { audioManager } from "./core/AudioManager.js";
+import { bgmManager } from "./core/BgmManager.js";
 import { confirmDialog } from "./core/ConfirmDialog.js";
 import { itemManager } from "./core/ItemManager.js";
 import { saveManager } from "./core/SaveManager.js";
@@ -123,6 +124,7 @@ function boot({ welcomeBack }) {
   const workShell = document.getElementById("work-shell");
   windowManager.mount(windowLayer);
   audioManager.mount();
+  bgmManager.mount();
 
   new Desktop(document.getElementById("desktop-icons"), APP_REGISTRY);
 
@@ -200,6 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
     achievementManager.init(),
     medicalCaseManager.load(),
     globalVariableManager.init(),
+    bgmManager.load(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

@@ -165,5 +165,41 @@
 .dev-de-opt-row { margin-bottom:6px; padding:4px 6px; background:#e8e8e8; border:1px solid #ccc; }
 .dev-de-opt-label { flex:1; min-height:23px; border:2px inset #eee; padding:2px 4px; font-size:12px; min-width:0; }
 .dev-de-opt-next { min-height:23px; border:2px inset #eee; padding:2px; font-size:11px; min-width:80px; }
+
+/* ── BGM editor (DevBgmEditorTab) ── */
+.dev-bgm-root { height:100%; overflow:auto; padding:0; }
+.dev-bgm-root-inner { display:flex; flex-direction:column; gap:0; }
+.dev-bgm-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:6px 8px; border-bottom:1px solid #808080; background:#c8c8c8; }
+.dev-bgm-section { padding:8px; border-bottom:1px solid #b0b0b0; }
+.dev-bgm-sec-hd { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-weight:700; font-size:13px; }
+.dev-bgm-sec-hd .win95-btn { margin-left:auto; }
+.dev-bgm-hint { margin:0 0 6px; font-size:11px; color:#555; }
+.dev-bgm-table-wrap { overflow-x:auto; }
+.dev-bgm-table { width:100%; border-collapse:collapse; font-size:12px; }
+.dev-bgm-table th { background:#d0d0d0; border:1px solid #999; padding:3px 6px; text-align:left; font-size:11px; white-space:nowrap; }
+.dev-bgm-table td { border:1px solid #ccc; padding:2px 4px; vertical-align:middle; }
+.dev-bgm-table tr:nth-child(even) td { background:#f0f0f0; }
+.dev-bgm-id { font-size:10px; color:#003399; user-select:all; }
+.dev-bgm-name-input, .dev-bgm-note-input { width:100%; min-height:21px; border:1px inset #eee; padding:1px 4px; font-size:12px; box-sizing:border-box; }
+.dev-bgm-src-input { width:100%; min-height:21px; border:1px inset #eee; padding:1px 4px; font:11px Consolas,monospace; box-sizing:border-box; }
+.dev-bgm-ref-cell { text-align:center; white-space:nowrap; }
+.dev-bgm-ref-badge { display:inline-block; background:#000080; color:#fff; border-radius:3px; padding:1px 5px; font-size:10px; cursor:default; }
+.dev-bgm-ref-none { color:#aaa; font-size:11px; }
+.dev-bgm-warn { margin-left:3px; cursor:help; }
+.dev-bgm-prev-btn { min-width:26px; padding:1px 4px; }
+.dev-bgm-prev-btn.active { background:#000080; color:#fff; }
+.dev-bgm-refs-btn, .dev-bgm-del-btn { min-width:26px; padding:1px 4px; }
+.dev-bgm-del-btn { color:#900; }
+.dev-bgm-search { margin-left:auto; min-height:23px; border:2px inset #eee; padding:2px 6px; font-size:12px; width:160px; }
+.dev-bgm-empty { color:#888; font-size:12px; padding:8px; text-align:center; }
+.dev-bgm-sel { min-height:23px; border:2px inset #eee; padding:2px; font-size:12px; }
+.dev-bgm-bgmid-sel { min-width:120px; }
+.dev-bgm-wnum { width:52px; min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; text-align:center; }
+.dev-bgm-fb-row { margin-top:6px; font-size:12px; }
+
+/* onShow BGM row inside dialogue node editor */
+.dev-de-onshow-bgm { display:flex; align-items:center; gap:4px; margin-top:3px; font-size:11px; }
+.dev-de-onshow-bgm select { min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; }
+.dev-de-onshow-bgm-indicator { font-size:10px; color:#006600; margin-left:2px; }
 /* DEV-TOOLS:END */
 

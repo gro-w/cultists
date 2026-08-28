@@ -973,25 +973,25 @@ export class DevDialogueEditorTab {
     const data = this._ctxData(); if (!data) return;
     const nodes = data.nodes; const ids = Object.keys(nodes);
     if (!ids.length) return;
-    const W = 200, H = 120, GAPX = 60, GAPY = 40;
-    // BFS from startNode
+    const W = 200, H = 120, GAPX = 40, GAPY = 50, PAD = 40, COLS = 4;
+    // BFS from startNode to get traversal order, then append orphans
     const start = data.startNodeId || ids[0];
-    const visited = new Set(), queue = [[start, 0, 0]], cols = {};
+    const visited = new Set(), order = [];
+    const queue = [start]; visited.add(start);
     while (queue.length) {
-      const [id, col, row] = queue.shift();
-      if (visited.has(id)) continue;
-      visited.add(id);
-      if (!cols[col]) cols[col] = 0;
-      nodes[id].x = col * (W + GAPX) + 40;
-      nodes[id].y = cols[col] * (H + GAPY) + 40;
-      cols[col]++;
-      const n = nodes[id]; const nextCol = col + 1;
-      if (n.next && nodes[n.next] && !visited.has(n.next)) queue.push([n.next, nextCol, 0]);
-      (n.options||[]).forEach(o => { if (o.next && nodes[o.next] && !visited.has(o.next)) queue.push([o.next, nextCol, 0]); });
+      const id = queue.shift(); order.push(id);
+      const n = nodes[id];
+      const nexts = [];
+      if (n.next && nodes[n.next]) nexts.push(n.next);
+      (n.options||[]).forEach(o => { if (o.next && nodes[o.next]) nexts.push(o.next); });
+      nexts.forEach(nid => { if (!visited.has(nid)) { visited.add(nid); queue.push(nid); } });
     }
-    // place any unreachable nodes
-    let orphanRow = Object.values(cols).reduce((a,b)=>Math.max(a,b),0);
-    ids.filter(id => !visited.has(id)).forEach(id => { nodes[id].x = 40; nodes[id].y = orphanRow * (H + GAPY) + 40; orphanRow++; });
+    ids.filter(id => !visited.has(id)).forEach(id => order.push(id));
+    // Place in a grid: COLS columns, rows grow downward — all nodes stay in visible area
+    order.forEach((id, i) => {
+      nodes[id].x = PAD + (i % COLS) * (W + GAPX);
+      nodes[id].y = PAD + Math.floor(i / COLS) * (H + GAPY);
+    });
     this._saveLS(); this._renderCanvas();
   }
 

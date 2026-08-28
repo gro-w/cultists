@@ -1,52 +1,127 @@
 {
   "events": [
     {
-      "id": "test1",
+      "id": "evt_mtcrd081",
+      "name": "悔恨之泪",
       "dialogueTree": {
-        "start": "n_mc.o56",
+        "start": "n_mtcrd087",
         "nodes": {
-          "n_mc.o56": {
+          "n_mtcrd087": {
             "speaker": "player",
-            "text": "test1",
-            "x": 153,
-            "y": 165,
-            "options": [
-              {
-                "label": "test1",
-                "next": "n_fe.4xu"
-              },
-              {
-                "label": "test2",
-                "next": "n_uh.lw6"
-              }
-            ]
+            "text": "又把耳机买回来了？听着怎么样？",
+            "x": 40,
+            "y": 40,
+            "next": "n_mtcrd088"
           },
-          "n_fe.4xu": {
+          "n_mtcrd088": {
+            "speaker": "npc",
+            "text": "其实没我想象的那么惊艳。",
+            "x": 278.79998779296875,
+            "y": 39.20001220703125,
+            "next": "n_mtcrd089"
+          },
+          "n_mtcrd089": {
+            "speaker": "player",
+            "text": "笑死，得不到的永远在骚动，得到了白月光就变成白米饭。",
+            "x": 548.4000244140625,
+            "y": 8.4000244140625,
+            "next": "n_rk.u8r"
+          },
+          "n_rk.u8r": {
+            "speaker": "player",
+            "text": "ok",
+            "x": 760,
+            "y": 40,
+            "next": "n_z5.h69"
+          },
+          "n_z5.h69": {
             "speaker": "player",
             "text": "",
-            "x": 784,
-            "y": 386,
-            "options": [
-              {
-                "label": "",
-                "next": null
-              }
-            ]
+            "x": 22,
+            "y": 211.20001220703125,
+            "next": "n_an.8j8"
           },
-          "n_uh.lw6": {
+          "n_an.8j8": {
             "speaker": "player",
             "text": "",
-            "x": 484,
-            "y": 521,
-            "options": [
-              {
-                "label": "test3",
-                "next": "n_fe.4xu"
-              }
-            ]
+            "x": 280,
+            "y": 210,
+            "next": "n_g1.t6h"
+          },
+          "n_g1.t6h": {
+            "speaker": "player",
+            "text": "",
+            "x": 544,
+            "y": 206.39999389648438,
+            "next": "n_6l1.is"
+          },
+          "n_6l1.is": {
+            "speaker": "player",
+            "text": "",
+            "x": 760,
+            "y": 210,
+            "next": "n_pt.swo"
+          },
+          "n_pt.swo": {
+            "speaker": "player",
+            "text": "",
+            "x": 40,
+            "y": 380,
+            "next": "n_um.nbr"
+          },
+          "n_um.nbr": {
+            "speaker": "player",
+            "text": "",
+            "x": 280,
+            "y": 380
+          },
+          "n_74w.9a": {
+            "speaker": "player",
+            "text": "",
+            "x": 760,
+            "y": 380
           }
-        },
-        "startNodeId": "n_mc.o56"
+        }
+      }
+    },
+    {
+      "id": "evt_mtcrd082",
+      "name": "七夕节别和自己玩游戏",
+      "dialogueTree": {
+        "nodes": {},
+        "start": null
+      }
+    },
+    {
+      "id": "evt_mtcrd083",
+      "name": "一切谜锁都解开了",
+      "dialogueTree": {
+        "nodes": {},
+        "start": null
+      }
+    },
+    {
+      "id": "evt_mtcrd084",
+      "name": "失踪者",
+      "dialogueTree": {
+        "nodes": {},
+        "start": null
+      }
+    },
+    {
+      "id": "evt_mtcrd085",
+      "name": "有人回信",
+      "dialogueTree": {
+        "nodes": {},
+        "start": null
+      }
+    },
+    {
+      "id": "evt_mtcrd086",
+      "name": "无人回信",
+      "dialogueTree": {
+        "nodes": {},
+        "start": null
       }
     }
   ]

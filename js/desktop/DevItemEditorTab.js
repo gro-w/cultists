@@ -478,13 +478,18 @@ export class DevItemEditorTab {
 
   // ── format converters ─────────────────────────────────────────────────────
   _toGame(it) {
-    const out={id:it.id,name:it.defaultName,consumable:it.consumable,usable:it.usable,
-      pickable:it.pickable,worldCount:it.worldCount,locations:it.locations};
-    if(it.inspectText) out.inspectText=it.inspectText;
-    if(it.inspectTimeAdvance) out.inspectTimeAdvance=it.inspectTimeAdvance;
+    // Spread rawGame first so unmanaged fields (inspectCheck, inspectOutcomes,
+    // useEffect.add/remove, …) survive the round-trip unchanged.
+    const out = it._rawGame ? {...it._rawGame} : {};
+    // Overwrite every managed field unconditionally, and delete it when cleared.
+    out.id=it.id; out.name=it.defaultName; out.consumable=it.consumable;
+    out.usable=it.usable; out.pickable=it.pickable;
+    out.worldCount=it.worldCount; out.locations=it.locations;
+    if(it.inspectText) out.inspectText=it.inspectText; else delete out.inspectText;
+    if(it.inspectTimeAdvance) out.inspectTimeAdvance=it.inspectTimeAdvance; else delete out.inspectTimeAdvance;
     const uc=it.useCondition||{};
-    if(uc.sanMin||uc.sanMax){out.useCondition={};if(uc.sanMin)out.useCondition.sanMin=uc.sanMin;if(uc.sanMax)out.useCondition.sanMax=uc.sanMax;}
-    if(it.revealKeywordIds&&it.revealKeywordIds.length) out.revealKeywordIds=it.revealKeywordIds;
+    if(uc.sanMin||uc.sanMax){out.useCondition={};if(uc.sanMin)out.useCondition.sanMin=uc.sanMin;if(uc.sanMax)out.useCondition.sanMax=uc.sanMax;} else delete out.useCondition;
+    if(it.revealKeywordIds&&it.revealKeywordIds.length) out.revealKeywordIds=it.revealKeywordIds; else delete out.revealKeywordIds;
     const variants={};
     _IE_BANDS.forEach(b=>{
       const v=it.sanVariants[b.key]||{}; const entry={};
@@ -495,12 +500,22 @@ export class DevItemEditorTab {
       if(ie.gameEvent||ie.mental||ie.ending){entry.inspectEffect={};if(ie.gameEvent)entry.inspectEffect.gameEvent=ie.gameEvent;if(ie.mental)entry.inspectEffect.statChanges={mental:ie.mental};if(ie.ending)entry.inspectEffect.ending=ie.ending;}
       if(Object.keys(entry).length) variants[b.key]=entry;
     });
-    if(Object.keys(variants).length) out.sanVariants=variants;
-    if(it.isBook) out.isBook=true;
-    if(it.bookContents&&it.bookContents.length) out.bookContents=it.bookContents;
-    if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>({name:s.name,description:s.description||'',learnTimeMinutes:240,castSanCost:5}));
+    if(Object.keys(variants).length) out.sanVariants=variants; else delete out.sanVariants;
+    if(it.isBook) out.isBook=true; else delete out.isBook;
+    if(it.bookContents&&it.bookContents.length) out.bookContents=it.bookContents; else delete out.bookContents;
+    if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>({name:s.name,description:s.description||'',learnTimeMinutes:240,castSanCost:5})); else delete out.spells;
     const ue=it.useEffect;
-    if(it.usable){out.useEffect={};if(ue.ending)out.useEffect.ending=ue.ending;if(ue.gameEvent)out.useEffect.gameEvent=ue.gameEvent;if(ue.timeAdvance)out.useEffect.timeAdvance=ue.timeAdvance;const sc={};if(ue.mental)sc.mental=ue.mental;if(ue.physical)sc.physical=ue.physical;if(ue.satiety)sc.satiety=ue.satiety;if(ue.energy)sc.energy=ue.energy;if(Object.keys(sc).length)out.useEffect.statChanges=sc;if(ue.successMsg)out.successMessage=ue.successMsg;if(ue.failMsg)out.failMessage=ue.failMsg;}
+    if(it.usable){
+      // Merge into rawGame's useEffect so add/remove arrays are preserved.
+      out.useEffect={...(out.useEffect||{})};
+      if(ue.ending) out.useEffect.ending=ue.ending; else delete out.useEffect.ending;
+      if(ue.gameEvent) out.useEffect.gameEvent=ue.gameEvent; else delete out.useEffect.gameEvent;
+      if(ue.timeAdvance) out.useEffect.timeAdvance=ue.timeAdvance; else delete out.useEffect.timeAdvance;
+      const sc={};if(ue.mental)sc.mental=ue.mental;if(ue.physical)sc.physical=ue.physical;if(ue.satiety)sc.satiety=ue.satiety;if(ue.energy)sc.energy=ue.energy;
+      if(Object.keys(sc).length) out.useEffect.statChanges=sc; else delete out.useEffect.statChanges;
+      if(ue.successMsg) out.successMessage=ue.successMsg; else delete out.successMessage;
+      if(ue.failMsg) out.failMessage=ue.failMsg; else delete out.failMessage;
+    }
     return out;
   }
   _fromGame(g) {

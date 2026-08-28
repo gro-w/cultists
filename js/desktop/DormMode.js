@@ -448,10 +448,6 @@ export default class DormMode {
   }
 
   async _renderSocialMedia(panel) {
-    const { dataLoader: dl } = await import("../core/DataLoader.js");
-    // Use existing SocialMediaApp rendered inline
-    const { launchSocialMediaApp: _unused, ..._ } = {}; // suppress lint
-    // Render inline instead of opening a window
     panel.innerHTML = `<div class="sm-loading">加载中…</div>`;
     try {
       const data = await dataLoader.loadJSON("social_apps.json");

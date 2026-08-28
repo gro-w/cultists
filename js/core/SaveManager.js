@@ -9,9 +9,10 @@ import { favorabilityManager, NPC_IDS } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
+import { workQueue, socialQueue } from "./ScheduleQueue.js";
 
-// v9 = v8 plus HIS medical case, income, and delayed incident state.
-const SAVE_FORMAT_VERSION = 9;
+// v10 is the schedule-system rewrite. Older binary formats are intentionally unsupported.
+const SAVE_FORMAT_VERSION = 10;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements"];
@@ -170,6 +171,19 @@ class SaveManager {
   }
 
   _encode() {
+    const payload = {
+      gameState: gameState.snapshot(),
+      actionBudget: actionBudget.snapshot(),
+      workQueue: workQueue.snapshot(),
+      socialQueue: socialQueue.snapshot(),
+      keywords: keywordManager.all().map((kw) => ({ id: kw.id, collectedDay: kw.collectedDay })),
+      inventory: itemManager.all(),
+      medical: medicalCaseManager.snapshot(),
+      windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
+    };
+    return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
+
+    /* Legacy binary encoder retained below only as historical reference. */
     const bytes = [];
     bytes.push(SAVE_FORMAT_VERSION);
     bytes.push(clampByte(gameState.day));
@@ -257,7 +271,22 @@ class SaveManager {
     if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
     const version = bytes[i++];
-    if (version < 2 || version > 9) throw new Error("Unsupported save version");
+    if (version !== SAVE_FORMAT_VERSION) throw new Error("Unsupported save version");
+    const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
+    if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)) {
+      throw new Error("Invalid save data");
+    }
+    gameState.restore(payload.gameState);
+    actionBudget.restore(payload.actionBudget || {});
+    workQueue.restore(payload.workQueue);
+    socialQueue.restore(payload.socialQueue);
+    keywordManager.restoreCollected(payload.keywords || []);
+    itemManager.restoreInventory(payload.inventory || []);
+    medicalCaseManager.restore(payload.medical || {});
+    scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
+    return;
+
+    /* Legacy binary decoder retained below only as historical reference. */
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
     // location byte present from v5 onward; advance i unconditionally when present

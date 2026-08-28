@@ -120,6 +120,23 @@
   white-space: nowrap;
 }
 .dorm-npc-marker { transform: translate(-50%, -100%); }
+.dorm-npc-image {
+  position: absolute;
+  width: 78px;
+  height: 112px;
+  object-fit: contain;
+  object-position: bottom center;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  border: 2px solid transparent;
+  filter: drop-shadow(2px 2px 0 #171335);
+}
+.dorm-npc-image:hover,
+.dorm-npc-image:focus-visible {
+  border-color: #fff;
+  outline: 1px dotted #000;
+}
+.dorm-npc-image.offline { opacity: 0.55; }
 .dorm-item-placement-marker {
   position: absolute;
   z-index: 6;

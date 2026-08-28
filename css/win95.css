@@ -204,6 +204,10 @@ html, body {
   cursor: nwse-resize;
 }
 
+.win95-window.maximized .win95-window-resize-handle {
+  display: none;
+}
+
 /* -------------------------------------------------------------------------
    Buttons / Inputs
    ------------------------------------------------------------------------- */

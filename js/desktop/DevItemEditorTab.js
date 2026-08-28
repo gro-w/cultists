@@ -1,4 +1,6 @@
 // DEV-TOOLS:START
+import { dataLoader } from "../core/DataLoader.js";
+
 /**
  * DevItemEditorTab — item-editor.html/js ported into the DeveloperMode panel.
  * Inline onclick= handlers reference window._ie (set to `this` on mount).
@@ -53,14 +55,7 @@ export class DevItemEditorTab {
   /** Called by DeveloperMode after injecting html() into the panel. */
   mount() {
     window._ie = this;
-    if (!this._loadLS()) {
-      this._dev.loadDoc('items.json').then(doc => {
-        this.items = (doc.items||[]).map(g=>this._fromGame(g));
-        this._persist();
-        this._renderList();
-        this._st('从 items.json 加载了 '+this.items.length+' 个物品');
-      }).catch(()=>{});
-    }
+    this._loadCurrentGame();
     this._renderList();
   }
 
@@ -69,9 +64,9 @@ export class DevItemEditorTab {
     return `<div class="dev-ie-root">
 <div class="dev-ie-toolbar">
   <strong style="font-size:13px">物品编辑器</strong>
-  <button type="button" class="win95-btn dev-btn" onclick="_ie.importJSON()">📂 导入</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_ie.exportJSON()">💾 导出</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_ie.writeToGame()">🎮 写入磁盘</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie._loadCurrentGame()">⬇ 从当前游戏读取</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie.exportJSON()">📤 导出 JSON</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie.writeToGame()">💽 写入磁盘</button>
   <input type="file" id="ie-file-input" accept=".json" style="display:none" onchange="_ie._onFile(event)">
 </div>
 <div class="dev-ie-main">
@@ -440,6 +435,18 @@ export class DevItemEditorTab {
   }
 
   importJSON() { this._el('ie-file-input')?.click(); }
+  async _loadCurrentGame() {
+    try {
+      const data = await dataLoader.loadJSON('items.json');
+      if (!Array.isArray(data.items)) throw new Error('items.json 缺少 items 数组');
+      if (data.items.some((item) => !item || typeof item !== 'object' || Array.isArray(item))) {
+        throw new Error('items.json 的 items 必须全部是 JSON 对象');
+      }
+      this.items = data.items.map(g=>this._fromGame(g));
+      this.currentId=null; this.dirty=false; this._persist(); this._renderList();
+      this._st('已从当前游戏读取 items.json：'+this.items.length+' 个物品');
+    } catch (err) { this._st('读取当前游戏失败：'+err.message); }
+  }
   _onFile(ev) {
     const f=ev.target.files[0]; if(!f) return;
     const r=new FileReader();
@@ -456,9 +463,11 @@ export class DevItemEditorTab {
     r.readAsText(f,'utf-8'); ev.target.value='';
   }
   exportJSON() {
-    const blob=new Blob([JSON.stringify({_editorFormat:true,items:this.items},null,2)],{type:'application/json'});
+    if(this.currentId&&this.dirty) this.saveItem(true);
+    const blob=new Blob([JSON.stringify({items:this.items.map(it=>this._toGame(it))},null,2)+'\n'],{type:'application/json'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download='items-editor.json'; a.click(); URL.revokeObjectURL(a.href);
+    a.download='items.json'; a.click(); URL.revokeObjectURL(a.href);
+    this._st('items.json 已下载');
   }
   async writeToGame() {
     if(this.currentId&&this.dirty) this.saveItem(true);

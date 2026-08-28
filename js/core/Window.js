@@ -1,7 +1,7 @@
 /**
  * Window - represents a single Win95-style window instance.
  * Handles its own DOM creation, dragging, focus styling, resize and
- * close/minimize behaviour. Window content is provided by the app that
+ * close/minimize/maximize behaviour. Window content is provided by the app that
  * requests it (see WindowManager.createWindow).
  */
 
@@ -29,6 +29,8 @@ export default class Win95Window {
     this.onClose = options.onClose || null;
     this.onFocus = options.onFocus || null;
     this.minimized = false;
+    this.maximized = false;
+    this._normalBounds = null;
 
     this._buildDom(options);
     this._bindDrag();
@@ -51,7 +53,8 @@ export default class Win95Window {
           <span class="win95-titlebar-text"></span>
         </div>
         <div class="win95-titlebar-controls">
-          <button type="button" class="bevel-out win95-min" title="最小化">_</button>
+          <button type="button" class="bevel-out win95-min" title="最小化" aria-label="最小化">_</button>
+          <button type="button" class="bevel-out win95-max" title="最大化" aria-label="最大化">□</button>
           <button type="button" class="bevel-out win95-close" title="关闭">✕</button>
         </div>
       </div>
@@ -75,6 +78,10 @@ export default class Win95Window {
     el.querySelector(".win95-min").addEventListener("click", (e) => {
       e.stopPropagation();
       this.toggleMinimize();
+    });
+    el.querySelector(".win95-max").addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.toggleMaximize();
     });
     el.addEventListener("mousedown", () => this.focus());
 
@@ -162,6 +169,42 @@ export default class Win95Window {
   toggleMinimize() {
     this.minimized = !this.minimized;
     this.el.style.display = this.minimized ? "none" : "flex";
+  }
+
+  toggleMaximize() {
+    if (this.maximized) {
+      this._restoreNormalBounds();
+      return;
+    }
+    this._normalBounds = {
+      left: this.el.style.left,
+      top: this.el.style.top,
+      width: this.el.style.width,
+      height: this.el.style.height,
+    };
+    this.maximized = true;
+    this.el.classList.add("maximized");
+    this.el.style.left = "0px";
+    this.el.style.top = "0px";
+    this.el.style.width = "100%";
+    this.el.style.height = "100%";
+    const button = this.el.querySelector(".win95-max");
+    button.title = "还原";
+    button.setAttribute("aria-label", "还原");
+  }
+
+  _restoreNormalBounds() {
+    if (!this._normalBounds) return;
+    const { left, top, width, height } = this._normalBounds;
+    this.maximized = false;
+    this.el.classList.remove("maximized");
+    this.el.style.left = left;
+    this.el.style.top = top;
+    this.el.style.width = width;
+    this.el.style.height = height;
+    const button = this.el.querySelector(".win95-max");
+    button.title = "最大化";
+    button.setAttribute("aria-label", "最大化");
   }
 
   restore() {

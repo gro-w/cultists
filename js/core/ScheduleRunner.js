@@ -1,4 +1,4 @@
-import { normalizeBlueprint, migrateDialogueTree, validateBlueprint } from "./ScheduleBlueprint.js";
+import { normalizeBlueprint, validateBlueprint } from "./ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
 import { actionBudget } from "./ActionBudget.js";
 import { scheduleData } from "./ScheduleData.js";
@@ -24,12 +24,11 @@ function nextFlow(blueprint, node, port = "flowOut") {
 }
 
 export class ScheduleRunner {
-  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, appId = "schedule", readOnly = false } = {}) {
+  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
     this.definition = definition || {};
     this.instance = instance || { status: "pending", transcript: [] };
-    this.blueprint = this.definition.blueprint
-      ? normalizeBlueprint(this.definition.blueprint)
-      : migrateDialogueTree(this.definition.dialogueTree || this.definition);
+    this.blueprint = normalizeBlueprint(this.definition.blueprint || this.definition);
+    this.random = random;
     this.appendLine = appendLine;
     this.optionsEl = optionsEl;
     this.onComplete = onComplete;
@@ -88,6 +87,15 @@ export class ScheduleRunner {
         return {};
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
+      case "diceCheck": {
+        const n = Math.max(1, Math.min(100, Number(get("n", 0))));
+        if (!Number.isFinite(n)) throw new Error("Dice check target must be a number");
+        const roll = Math.floor(this.random() * 100) + 1;
+        const port = roll === 100 || (n < 50 && roll >= 96)
+          ? "largeFailure"
+          : roll <= n / 5 ? "largeSuccess" : roll <= n ? "success" : "failure";
+        return { next: nextFlow(this.blueprint, node, port) };
+      }
       case "consumeTime": actionBudget.consumeTime(get("minutes", 0)); return {};
       case "setGlobal": globalVariableManager.set(get("variableId"), get("value")); return {};
       case "insertSchedule": {

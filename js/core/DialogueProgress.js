@@ -42,6 +42,9 @@ class DialogueProgress {
   }
 
   restore(snapshot = {}) {
+    this.his = { actorId: null, nodeId: null };
+    this.social = { actorId: null, nodeId: null };
+    this.chatgtp = { actorId: "chatgtp", nodeId: null };
     ["his", "social", "chatgtp"].forEach((app) => {
       const value = snapshot[app];
       if (!value || typeof value !== "object") return;

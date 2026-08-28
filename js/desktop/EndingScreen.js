@@ -13,6 +13,7 @@ export default class EndingScreen {
   constructor(rootEl) {
     this.rootEl = rootEl;
     endingManager.onEnding((def) => this.show(def));
+    endingManager.onReset(() => this.hide());
   }
 
   show(def) {
@@ -32,5 +33,10 @@ export default class EndingScreen {
     this.rootEl.querySelector(".ending-screen-btn").addEventListener("click", () => {
       window.location.href = window.location.pathname;
     });
+  }
+
+  hide() {
+    this.rootEl.classList.add("hidden");
+    this.rootEl.replaceChildren();
   }
 }

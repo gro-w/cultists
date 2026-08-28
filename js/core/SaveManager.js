@@ -97,7 +97,7 @@ class SaveManager {
       }
       return true;
     } catch (err) {
-      medicalCaseManager.endRestore();
+      endingManager.endRestore();
       console.error("[SaveManager] Failed to load save string:", err);
       return false;
     }
@@ -153,7 +153,9 @@ class SaveManager {
     if (version !== SAVE_FORMAT_VERSION) throw new Error("Unsupported save version");
     const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)
-      || !Array.isArray(payload.chatgtpQueue || []) || !Array.isArray(payload.realtimeQueue || [])) {
+      || !Array.isArray(payload.chatgtpQueue || []) || !Array.isArray(payload.realtimeQueue || [])
+      || !payload.favorability || !Array.isArray(payload.itemPlacements)
+      || !payload.dialogueProgress || typeof payload.ending !== "object") {
       throw new Error("Invalid save data");
     }
     if (!Number.isInteger(payload.gameState.day) || payload.gameState.day < 1 || payload.gameState.day > MAX_GAME_DAYS) {

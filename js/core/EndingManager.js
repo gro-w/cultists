@@ -151,9 +151,14 @@ class EndingManager {
     return eventBus.on("ending:triggered", handler);
   }
 
+  onReset(handler) {
+    return eventBus.on("ending:reset", handler);
+  }
+
   /** Used by SaveManager when restoring a save from before any ending happened. */
   reset() {
     this._ended = false;
+    eventBus.emit("ending:reset", this.snapshot());
   }
 }
 

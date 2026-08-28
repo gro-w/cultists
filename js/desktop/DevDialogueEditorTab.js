@@ -46,6 +46,7 @@ export class DevDialogueEditorTab {
     this.currentCtx = null;       // { type:'schedule'|'event'|'ending', id, entryIndex }
     this.currentQueue = 'work';
     this.loadedScheduleFiles = new Set();
+    this.loadedMetaFiles = new Set();
     this.selectedNodeId = null;
     this._dragState = null;
     this._connectMode = false;
@@ -83,7 +84,7 @@ export class DevDialogueEditorTab {
   _emptyProject(totalDays = 5) {
     const schedules={};
     for (let d=1;d<=totalDays;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={entries:[]};
-    return {version:2,totalDays,customVars:[],schedules,events:{},endings:{}};
+    return {version:2,totalDays,customVars:[],schedules,events:{},endings:{},eventFileDoc:{events:[]},endingFileDoc:{endings:[]}};
   }
 
   _normalizeGameTree(tree) {
@@ -116,6 +117,8 @@ export class DevDialogueEditorTab {
   mount() {
     window._de = this;
     this.project = this._emptyProject();
+    this.loadedScheduleFiles = new Set();
+    this.loadedMetaFiles = new Set();
     this._loadCurrentGame();
     // try pick up items/spells from item editor localStorage
     try {
@@ -401,8 +404,8 @@ export class DevDialogueEditorTab {
 
   _deleteCtx(type, id) {
     if (!confirm(`确认删除 ${type} "${id}"？`)) return;
-    if (type==='event')  delete this.project.events[id];
-    if (type==='ending') delete this.project.endings[id];
+    if (type==='event')  { delete this.project.events[id]; this.loadedMetaFiles.add('special_events.json'); }
+    if (type==='ending') { delete this.project.endings[id]; this.loadedMetaFiles.add('endings.json'); }
     if (this.currentCtx?.id===id) { this.currentCtx=null; this._renderCanvas(); }
     this._renderSidebar(); this._saveLS();
   }
@@ -794,6 +797,7 @@ export class DevDialogueEditorTab {
     if (!id?.trim()) return;
     if (this.project.events[id]) { alert('ID 已存在'); return; }
     this.project.events[id] = this._emptyCtx();
+    this.loadedMetaFiles.add('special_events.json');
     this._renderSidebar(); this._saveLS(); this._selectCtx('event', id);
   }
 
@@ -802,12 +806,13 @@ export class DevDialogueEditorTab {
     if (!id?.trim()) return;
     if (this.project.endings[id]) { alert('ID 已存在'); return; }
     this.project.endings[id] = this._emptyCtx();
+    this.loadedMetaFiles.add('endings.json');
     this._renderSidebar(); this._saveLS(); this._selectCtx('ending', id);
   }
 
   // ── persistence ───────────────────────────────────────────────────────────
   _saveLS() {
-    try { localStorage.setItem(_DE_LS, JSON.stringify({ ...this.project, loadedScheduleFiles: [...this.loadedScheduleFiles] })); } catch(e) {}
+    try { localStorage.setItem(_DE_LS, JSON.stringify({ ...this.project, loadedScheduleFiles: [...this.loadedScheduleFiles], loadedMetaFiles: [...this.loadedMetaFiles] })); } catch(e) {}
   }
   _loadLS() {
     try {
@@ -822,6 +827,7 @@ export class DevDialogueEditorTab {
     if (!confirm('新建项目会清除未保存的内容，继续？')) return;
     this.project = this._emptyProject();
     this.loadedScheduleFiles = new Set();
+    this.loadedMetaFiles = new Set();
     this.totalDays = 5; this.currentCtx = null; this.selectedNodeId = null;
     this._saveLS(); this._renderSidebar(); this._renderCanvas();
     const ef=this._el('de-editor-empty'),ff=this._el('de-editor-form');
@@ -842,7 +848,7 @@ export class DevDialogueEditorTab {
       try {
         const d = JSON.parse(e.target.result);
         if (!d.version) { alert('无法识别的项目格式'); return; }
-        this.project = this._migrateProject(d); this.loadedScheduleFiles = new Set(Object.keys(this.project.schedules || {})); this.totalDays = d.totalDays || 5;
+        this.project = this._migrateProject(d); this.loadedScheduleFiles = new Set(Object.keys(this.project.schedules || {})); this.loadedMetaFiles = new Set(['special_events.json', 'endings.json']); this.totalDays = d.totalDays || 5;
         this.currentCtx = null; this.selectedNodeId = null;
         this._saveLS(); this._renderSidebar(); this._renderCanvas();
         this._st('项目已载入：' + f.name);
@@ -857,6 +863,7 @@ export class DevDialogueEditorTab {
       this.totalDays = scheduleData.totalDays;
       this.project = this._emptyProject(this.totalDays);
       this.loadedScheduleFiles = new Set();
+      this.loadedMetaFiles = new Set(['special_events.json', 'endings.json']);
       const files = Object.keys(this.project.schedules);
       await Promise.all(files.map(async (name) => {
         const data = await dataLoader.loadJSON(`${name}.json`);
@@ -869,6 +876,18 @@ export class DevDialogueEditorTab {
         })) };
         this.loadedScheduleFiles.add(name);
       }));
+      const [eventFileDoc, endingFileDoc] = await Promise.all([
+        dataLoader.loadJSON('special_events.json'),
+        dataLoader.loadJSON('endings.json'),
+      ]);
+      this.project.eventFileDoc = eventFileDoc;
+      this.project.endingFileDoc = endingFileDoc;
+      this.project.events = Object.fromEntries((eventFileDoc.events || []).map((entry) => [
+        entry.id, this._normalizeGameTree(entry.dialogueTree),
+      ]));
+      this.project.endings = Object.fromEntries((endingFileDoc.endings || []).map((entry) => [
+        entry.id, this._normalizeGameTree(entry.dialogueTree),
+      ]));
       this.currentCtx = null; this.selectedNodeId = null;
       this._saveLS(); this._renderSidebar(); this._renderCanvas();
       this._st(`已从当前游戏读取 ${files.length} 个日程文件`);
@@ -939,23 +958,41 @@ export class DevDialogueEditorTab {
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = key + '.json'; a.click(); URL.revokeObjectURL(a.href);
     });
+    if (this.loadedMetaFiles.has('special_events.json')) downloadJson('special_events.json', this._eventFileToGame());
+    if (this.loadedMetaFiles.has('endings.json')) downloadJson('endings.json', this._endingFileToGame());
     this._closeModal(); this._st('游戏格式已导出');
   }
 
   async _writeGameFiles() {
     const schedules = this.project?.schedules || {};
     const files = Object.entries(schedules).filter(([key, schedule]) => this.loadedScheduleFiles.has(key) && schedule?.entries);
-    await Promise.all(files.map(([key, schedule]) => this._dev.writeToDisk(`${key}.json`, this._scheduleToGame(schedule))));
-    this._st(`已写入 ${files.length} 个日程文件`);
+    const writes = files.map(([key, schedule]) => this._dev.writeToDisk(`${key}.json`, this._scheduleToGame(schedule)));
+    if (this.loadedMetaFiles.has('special_events.json')) writes.push(this._dev.writeToDisk('special_events.json', this._eventFileToGame()));
+    if (this.loadedMetaFiles.has('endings.json')) writes.push(this._dev.writeToDisk('endings.json', this._endingFileToGame()));
+    await Promise.all(writes);
+    this._st(`已写入 ${writes.length} 个文件`);
   }
 
   _scheduleToGame(schedule) {
     return { entries: (schedule?.entries || []).map((entry) => {
-      const out = { ...entry };
+      const { day, time, ...out } = entry;
       out.dialogueTree = this._ctxToGameTree(entry.dialogueTree);
       return out;
     }) };
   }
+
+  _metaFileToGame(fileDoc, contexts, key) {
+    const source = Array.isArray(fileDoc?.[key]) ? fileDoc[key] : [];
+    const byId = new Map(source.map((entry) => [entry.id, entry]));
+    return { ...fileDoc, [key]: Object.entries(contexts || {}).map(([id, ctx]) => {
+      const out = { ...(byId.get(id) || {}), id };
+      if (ctx?.nodes && Object.keys(ctx.nodes).length) out.dialogueTree = this._ctxToGameTree(ctx);
+      return out;
+    }) };
+  }
+
+  _eventFileToGame() { return this._metaFileToGame(this.project.eventFileDoc, this.project.events, 'events'); }
+  _endingFileToGame() { return this._metaFileToGame(this.project.endingFileDoc, this.project.endings, 'endings'); }
 
   _ctxToGameTree(ctx) {
     const nodes = ctx?.nodes; if (!nodes || !Object.keys(nodes).length) return { start: ctx?.startNodeId || null, nodes: {} };

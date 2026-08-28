@@ -61,9 +61,9 @@ export function launchDeveloperMode() {
 }
 
 class DeveloperMode {
-  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this.queueId = "work"; this.queueFile = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this.render(); }
+  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("Work 事件队列", "tab-queue-work")}${button("Social 事件队列", "tab-queue-social")}${button("JSON 文件", "tab-json")}${button("物品编辑器", "tab-item-editor", "dev-btn-tool")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-tool")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-tool")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-tool")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-tool")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("JSON 文件", "tab-json")}${button("物品编辑器", "tab-item-editor", "dev-btn-tool")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-tool")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-tool")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-tool")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-tool")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
 
@@ -104,22 +104,7 @@ class DeveloperMode {
     this.bindPanel();
     const jsonFile = this.root.querySelector("[data-json-file]");
     if (jsonFile) jsonFile.addEventListener("change", () => this.showJson(jsonFile.value));
-    const actorFile = this.root.querySelector("[data-actor-file]");
-    if (actorFile) actorFile.addEventListener("change", () => { this.actorFile = actorFile.value; this.actorId = ""; this.actorTreeDraft = null; this.showActorEditor(); });
-    const actorId = this.root.querySelector("[data-actor-id]");
-    if (actorId) actorId.addEventListener("change", () => { this.actorId = actorId.value; this.actorTreeDraft = null; this.showActorEditor(); });
-    const queueFile = this.root.querySelector("[data-queue-file]");
-    if (queueFile) queueFile.addEventListener("change", () => { this.queueFile = queueFile.value; this.showQueueEditor(this.queueId); });
-    this.root.querySelectorAll("[data-keyword-insert]").forEach((el) => el.addEventListener("click", () => {
-      const editor = this.activeText || this.root.querySelector("[data-actor-editor]");
-      if (!editor) return;
-      const marker = `[[${el.dataset.keywordInsert}]]`;
-      const start = editor.selectionStart;
-      editor.value = `${editor.value.slice(0, start)}${marker}${editor.value.slice(editor.selectionEnd)}`;
-      editor.selectionStart = editor.selectionEnd = start + marker.length;
-      editor.focus();
-    }));
-    this.root.querySelectorAll("[data-tree-text]").forEach((el) => el.addEventListener("focus", () => { this.activeText = el; }));
+
   }
 
   /** Unmount any active editor tab (item / dialogue / bgm / location / dormComputer) before switching panels. */
@@ -237,40 +222,7 @@ class DeveloperMode {
     </section>`);
   }
 
-  keywordPalette(keywordDoc) { return `<div class="dev-keyword-palette"><strong>关键词（点击插入，显示 ID / 内容）：</strong>${(keywordDoc.keywords || []).map((k) => `<button type="button" class="win95-btn dev-keyword-chip" data-keyword-insert="${esc(k.id)}">${esc(k.content || k.label || k.id)} <code>${esc(k.id)}</code></button>`).join("") || "暂无关键词"}</div>`; }
 
-  treeHtml(tree, keywordDoc) {
-    const nodes = tree?.nodes || {};
-    const nodeIds = Object.keys(nodes);
-    const cards = nodeIds.map((id, index) => {
-      const node = nodes[id] || {};
-      const options = (node.options || []).map((option, optionIndex) => `<div class="dev-tree-option"><input data-option-label="${esc(id)}" data-option-index="${optionIndex}" value="${esc(option.label)}" placeholder="选项文本"><span>→</span><select data-option-next="${esc(id)}" data-option-index="${optionIndex}">${nodeIds.map((target) => `<option value="${esc(target)}" ${target === option.next ? "selected" : ""}>${esc(target)}</option>`).join("")}</select>${button("删除", `remove-option-${index}-${optionIndex}`)}</div>`).join("");
-      return `<article class="dev-tree-node" data-node-id="${esc(id)}"><header><strong>${index + 1}. ${esc(id)}</strong>${id === tree.start ? " <em>起点</em>" : ""}${button("删除节点", `remove-node-${index}`)}</header><label>说话者 <select data-node-speaker="${esc(id)}"><option value="npc" ${node.speaker === "npc" ? "selected" : ""}>NPC</option><option value="player" ${node.speaker === "player" ? "selected" : ""}>玩家</option></select></label><label>内容<textarea data-tree-text data-node-text="${esc(id)}" rows="3">${esc(node.text)}</textarea></label><div class="dev-tree-options"><strong>分支选项</strong>${options || "<span>无分支（终点）</span>"}${button("新增选项", `add-option-${index}`)}</div></article>`;
-    }).join("");
-    const startOptions = nodeIds.map((id) => `<option value="${esc(id)}" ${id === tree.start ? "selected" : ""}>${esc(id)}</option>`).join("");
-    return `<section class="dev-tree"><div class="dev-tree-map"><strong>对话分支树</strong><p>起点：<select data-tree-start>${startOptions}</select>；每张卡片是一个节点，箭头表示选项跳转。</p>${cards || "暂无节点"}${button("新增节点", "add-node")}</div>${this.keywordPalette(keywordDoc)}</section>`;
-  }
-
-  async showActorEditor(type = this.actorType) {
-    this.actorType = type;
-    const doc = await this.loadDoc(this.actorFile);
-    const actors = doc[type] || [];
-    if (!actors.some((actor) => actor.id === this.actorId)) this.actorId = actors[0]?.id || "";
-    const actor = actors.find((entry) => entry.id === this.actorId) || {};
-    const keywordDoc = await this.loadDoc("keywords.json");
-    const npcDoc = type === "contacts" ? await this.loadDoc("npcs.json") : { npcs: [] };
-    const npcOptions = (npcDoc.npcs || []).map((npc) => `<option value="${esc(npc.id)}" ${actor.npcId === npc.id ? "selected" : ""}>${esc(npc.name)} (${esc(npc.id)})</option>`).join("");
-    const tree = this.actorTreeDraft || actor.dialogueTree || { start: "start", nodes: { start: { speaker: "npc", text: "", options: [] } } };
-    this.panel(`<section class="dev-section"><h3>${type === "patients" ? "患者编辑器" : "对话编辑器"}</h3>
-      <div class="dev-editor-selects"><label>文件 <select data-actor-file>${DAY_FILES().map((file) => `<option ${file === this.actorFile ? "selected" : ""}>${file}</option>`).join("")}</select></label>
-      <label>角色 <select data-actor-id>${actors.map((entry) => `<option value="${entry.id}" ${entry.id === this.actorId ? "selected" : ""}>${entry.name || npcDoc.npcs?.find((npc) => npc.id === entry.npcId)?.name || entry.id}</option>`).join("")}</select></label></div>
-      <div class="dev-actor-actions"><label>新${type === "patients" ? "患者" : "角色"} ID <input data-new-actor-id placeholder="例如 new_${type === "patients" ? "patient" : "contact"}"></label><label>名称 <input data-new-actor-name placeholder="显示名称"></label>${button(`新增${type === "patients" ? "患者" : "角色"}`, "add-actor")}${this.actorId ? button(`删除当前${type === "patients" ? "患者" : "角色"}`, "delete-actor") : ""}</div>
-      <p>这是可视化分支树：节点内容、说话者、选项文本和箭头目标均可直接编辑。关键词按钮会插入当前聚焦节点。</p>
-      <div class="dev-actor-meta">${type === "patients" ? `<label>角色名称 <input data-actor-name value="${esc(actor.name)}"></label>` : `<label>角色类型 <select data-actor-kind><option value="npc" ${actor.npcId ? "selected" : ""}>NPC 列表角色</option><option value="other" ${!actor.npcId ? "selected" : ""}>other（自定义角色）</option></select></label><label>NPC ID <select data-actor-npc-id><option value="">（选择 NPC）</option>${npcOptions}</select></label><label>自定义名称 <input data-actor-name value="${esc(actor.name)}" placeholder="仅 other 使用"></label><label>自定义头像 <input data-actor-avatar value="${esc(actor.avatar)}" placeholder="仅 other 使用"></label>`}</div>
-      ${this.treeHtml(tree, keywordDoc)}
-      <div>${button("保存角色到内存", "save-actor")} ${button("下载日程 JSON", "download-actor-file")} ${button("写入磁盘", "write-actor-file")}</div>
-    </section>`);
-  }
 
   async showKeywords() {
     const doc = await this.loadDoc("keywords.json");
@@ -324,29 +276,6 @@ class DeveloperMode {
     }));
   }
 
-  async showQueueEditor(queueId = this.queueId) {
-    this.queueId = queueId;
-    const prefix = `${queueId}`;
-    const files = DAY_FILES().filter((file) => file.startsWith(prefix));
-    if (!files.length) return;
-    if (!this.queueFile || !files.includes(this.queueFile)) {
-      const suffix = gameState.phase === "night" ? "b" : "a";
-      this.queueFile = `${prefix}${String(gameState.day).padStart(2, "0")}${suffix}.json`;
-      if (!files.includes(this.queueFile)) this.queueFile = files[0];
-    }
-    const doc = await this.loadDoc(this.queueFile);
-    const entries = Array.isArray(doc.entries) ? doc.entries : [];
-    const rows = entries.map((entry, index) => `<article class="dev-queue-entry" data-queue-entry="${index}"><header><strong>事件 ${index + 1}</strong>${button("删除", `remove-queue-entry-${index}`)}</header><textarea data-queue-entry-json class="dev-textarea" rows="8">${esc(JSON.stringify(entry, null, 2))}</textarea></article>`).join("");
-    this.panel(`<section class="dev-section"><h3>${queueId === "work" ? "Work" : "Social"} 事件队列编辑器</h3><p>选择一个日程文件编辑该时间点追加的事件。每条事件保留原始 JSON 结构；保存前会校验每条事件必须是 JSON 对象。</p><label>日程文件 <select data-queue-file>${files.map((file) => `<option ${file === this.queueFile ? "selected" : ""}>${file}</option>`).join("")}</select></label><span>共 ${entries.length} 条事件</span><div class="dev-queue-list">${rows || "暂无事件"}</div><div>${button("新增事件", "add-queue-entry")} ${button("保存队列到内存", "save-queue")} ${button("下载队列 JSON", "download-queue")} ${button("写入磁盘", "write-queue")}</div></section>`);
-  }
-
-  _readQueueEntries() {
-    return Array.from(this.root.querySelectorAll("[data-queue-entry-json]"), (textarea) => {
-      const value = JSON.parse(textarea.value);
-      if (!value || Array.isArray(value) || typeof value !== "object") throw new Error("每条事件必须是 JSON 对象");
-      return value;
-    });
-  }
 
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
@@ -386,43 +315,6 @@ class DeveloperMode {
     });
   }
 
-  collectTree() {
-    const nodes = {};
-    this.root.querySelectorAll("[data-node-id]").forEach((card) => {
-      const id = card.dataset.nodeId;
-      const options = Array.from(card.querySelectorAll(".dev-tree-option")).map((row) => ({
-        label: row.querySelector("[data-option-label]")?.value || "",
-        next: row.querySelector("[data-option-next]")?.value || "",
-      }));
-      nodes[id] = { speaker: card.querySelector("[data-node-speaker]")?.value || "npc", text: card.querySelector("[data-node-text]")?.value || "", options };
-    });
-    return { start: this.root.querySelector("[data-tree-start]")?.value || Object.keys(nodes)[0] || "start", nodes };
-  }
-
-  async saveActorToMemory() {
-    const doc = await this.loadDoc(this.actorFile);
-    const index = (doc[this.actorType] || []).findIndex((entry) => entry.id === this.actorId);
-    if (index < 0) throw new Error("角色不存在");
-    const value = clone(doc[this.actorType][index]);
-    if (this.actorType === "patients") {
-      value.name = this.root.querySelector("[data-actor-name]")?.value || value.name;
-    } else if (this.root.querySelector("[data-actor-kind]")?.value === "npc") {
-      value.type = "npc";
-      value.npcId = this.root.querySelector("[data-actor-npc-id]")?.value || "";
-      delete value.name;
-      delete value.avatar;
-    } else {
-      value.type = "other";
-      delete value.npcId;
-      value.name = this.root.querySelector("[data-actor-name]")?.value || "自定义角色";
-      value.avatar = this.root.querySelector("[data-actor-avatar]")?.value || "🙂";
-    }
-    delete value.keywordIds;
-    value.dialogueTree = this.collectTree();
-    doc[this.actorType][index] = value;
-    this.docs.set(this.actorFile, doc);
-    this.actorTreeDraft = value.dialogueTree;
-  }
 
   async handle(action) {
     if (action === "tab-item-editor") return this.showItemEditor();
@@ -433,14 +325,12 @@ class DeveloperMode {
     if (action === "tab-state") { this._unmountEditorTabs(); return this.showState(); }
     if (action === "tab-inventory") { this._unmountEditorTabs(); return this.showInventory(); }
     if (action === "tab-npc-state") { this._unmountEditorTabs(); return this.showNpcState(); }
-    if (action === "tab-dialogue") { this._unmountEditorTabs(); return this.showActorEditor("contacts"); }
-    if (action === "tab-patient") { this._unmountEditorTabs(); return this.showActorEditor("patients"); }
+
     if (action === "tab-keywords") { this._unmountEditorTabs(); return this.showKeywords(); }
     if (action === "tab-chatgtp") { this._unmountEditorTabs(); return this.showChatgtp(); }
     if (action === "tab-npcs") { this._unmountEditorTabs(); return this.showNpcs(); }
     if (action === "tab-global-variables") { this._unmountEditorTabs(); return this.showGlobalVariables(); }
-    if (action === "tab-queue-work") { this._unmountEditorTabs(); return this.showQueueEditor("work"); }
-    if (action === "tab-queue-social") { this._unmountEditorTabs(); return this.showQueueEditor("social"); }
+
     if (action === "tab-json") { this._unmountEditorTabs(); return this.showJson(); }
     if (action === "qa-page-prev" || action === "qa-page-next") {
       this._syncQaPage();
@@ -567,42 +457,7 @@ class DeveloperMode {
       let value; try { value = JSON.parse(raw); } catch (err) { this.setStatus(`JSON 无效，无法写入磁盘：${err.message}`, true); return; }
       this.docs.set(this.selectedFile, value); await this.writeToDisk(this.selectedFile, value); return;
     }
-    if (action === "save-actor") {
-      try { await this.saveActorToMemory(); this.setStatus(`${this.actorFile} 的 ${this.actorId} 已保存到内存。`); }
-      catch (err) { this.setStatus(`角色保存失败：${err.message}`, true); }
-      return;
-    }
-    if (action === "download-actor-file") { await this.saveActorToMemory(); const doc = await this.loadDoc(this.actorFile); downloadJson(this.actorFile, doc); this.setStatus(`${this.actorFile} 已下载。`); return; }
-    if (action === "write-actor-file") {
-      try { await this.saveActorToMemory(); } catch (err) { this.setStatus(`角色保存失败：${err.message}`, true); return; }
-      await this.writeToDisk(this.actorFile, await this.loadDoc(this.actorFile)); return;
-    }
-    if (action === "add-actor") {
-      const id = this.root.querySelector("[data-new-actor-id]")?.value.trim();
-      const name = this.root.querySelector("[data-new-actor-name]")?.value.trim() || id;
-      const doc = await this.loadDoc(this.actorFile);
-      const actors = doc[this.actorType] || (doc[this.actorType] = []);
-      if (!id) { this.setStatus("新增失败：必须填写角色 ID。", true); return; }
-      if (actors.some((actor) => actor.id === id)) { this.setStatus(`新增失败：ID ${id} 已存在。`, true); return; }
-      const actor = { id, name, dialogueTree: { start: "start", nodes: { start: { speaker: "npc", text: "", options: [] } } } };
-      if (this.actorType === "patients") Object.assign(actor, { age: 0 });
-      else Object.assign(actor, { type: "other", avatar: "🙂" });
-      actors.push(actor); this.docs.set(this.actorFile, doc); this.actorId = id; this.actorTreeDraft = null; this.setStatus(`${this.actorFile} 已新增${this.actorType === "patients" ? "患者" : "角色"} ${id}。`); return this.showActorEditor();
-    }
-    if (action === "delete-actor") {
-      const doc = await this.loadDoc(this.actorFile);
-      const actors = doc[this.actorType] || [];
-      const index = actors.findIndex((actor) => actor.id === this.actorId);
-      if (index < 0) { this.setStatus("删除失败：当前角色不存在。", true); return; }
-      actors.splice(index, 1); this.docs.set(this.actorFile, doc); this.actorId = actors[Math.max(0, index - 1)]?.id || actors[0]?.id || ""; this.actorTreeDraft = null; this.setStatus(`已删除${this.actorType === "patients" ? "患者" : "角色"}。`); return this.showActorEditor();
-    }
-    if (action === "add-node") { const tree = this.collectTree(); let n = 1; while (tree.nodes[`new_node_${n}`]) n += 1; tree.nodes[`new_node_${n}`] = { speaker: "npc", text: "", options: [] }; this.replaceActorTree(tree); return; }
-    const addOption = action.match(/^add-option-(\d+)$/);
-    if (addOption) { const tree = this.collectTree(); const id = Object.keys(tree.nodes)[Number(addOption[1])]; if (id) tree.nodes[id].options.push({ label: "", next: tree.start }); this.replaceActorTree(tree); return; }
-    const removeNode = action.match(/^remove-node-(\d+)$/);
-    if (removeNode) { const tree = this.collectTree(); const id = Object.keys(tree.nodes)[Number(removeNode[1])]; if (id && Object.keys(tree.nodes).length > 1) { delete tree.nodes[id]; Object.values(tree.nodes).forEach((node) => node.options = node.options.filter((option) => option.next !== id)); if (tree.start === id) tree.start = Object.keys(tree.nodes)[0]; this.replaceActorTree(tree); } return; }
-    const removeOption = action.match(/^remove-option-(\d+)-(\d+)$/);
-    if (removeOption) { const tree = this.collectTree(); const id = Object.keys(tree.nodes)[Number(removeOption[1])]; if (id) tree.nodes[id].options.splice(Number(removeOption[2]), 1); this.replaceActorTree(tree); return; }
+
     const removeQa = action.match(/^remove-qa-entry-(\d+)$/);
     if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
@@ -630,39 +485,7 @@ class DeveloperMode {
       this.setStatus("chatgtp_qa.json 已保存到内存。"); return;
     }
 
-    const removeQueueEntry = action.match(/^remove-queue-entry-(\d+)$/);
-    if (removeQueueEntry) {
-      const doc = await this.loadDoc(this.queueFile);
-      const entries = this._readQueueEntries();
-      entries.splice(Number(removeQueueEntry[1]), 1);
-      doc.entries = entries;
-      this.docs.set(this.queueFile, doc);
-      return this.showQueueEditor(this.queueId);
-    }
-    if (action === "add-queue-entry") {
-      const doc = await this.loadDoc(this.queueFile);
-      const entries = this._readQueueEntries();
-      const id = `new_${this.queueId}_${entries.length + 1}`;
-      entries.push(this.queueId === "work"
-        ? { id, name: "新患者", age: 0, dialogueTree: { start: "start", nodes: { start: { speaker: "npc", text: "", options: [] } } } }
-        : { id, type: "other", name: "新角色", avatar: "🙂", dialogueTree: { start: "start", nodes: { start: { speaker: "npc", text: "", options: [] } } } });
-      doc.entries = entries;
-      this.docs.set(this.queueFile, doc);
-      return this.showQueueEditor(this.queueId);
-    }
-    if (action === "save-queue" || action === "download-queue" || action === "write-queue") {
-      try {
-        const doc = await this.loadDoc(this.queueFile);
-        doc.entries = this._readQueueEntries();
-        this.docs.set(this.queueFile, doc);
-        if (action === "download-queue") { downloadJson(this.queueFile, doc); this.setStatus(`${this.queueFile} 已下载。`); return; }
-        if (action === "write-queue") { await this.writeToDisk(this.queueFile, doc); return; }
-        this.setStatus(`${this.queueFile} 已保存到内存。`);
-      } catch (err) {
-        this.setStatus(`事件队列保存失败：${err.message}`, true);
-      }
-      return;
-    }
+
     if (action === "add-keyword") { const doc = await this.loadDoc("keywords.json"); doc.keywords.push({ id: `new_keyword_${doc.keywords.length + 1}`, content: "新关键词" }); this.docs.set("keywords.json", doc); return this.showKeywords(); }
     if (action === "remove-keyword" || action.startsWith("remove-keyword-")) { const index = Number(action.split("-").pop()); const doc = await this.loadDoc("keywords.json"); doc.keywords.splice(index, 1); this.docs.set("keywords.json", doc); return this.showKeywords(); }
 
@@ -681,6 +504,5 @@ class DeveloperMode {
     }
   }
 
-  replaceActorTree(tree) { this.actorTreeDraft = tree; this.root.querySelector("[data-dev-panel]").innerHTML = ""; this.showActorEditor().catch((err) => this.setStatus(`刷新分支树失败：${err.message}`, true)); }
 }
 // DEV-TOOLS:END

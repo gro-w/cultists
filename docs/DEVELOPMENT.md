@@ -36,7 +36,7 @@ node dev-server.js --port 8001 --lang zh-hans
 
 ## 开发人员模式
 
-源码中严格的 `?dev` 查询串会启用开发人员模式。当前工具包括状态、NPC、背包、对话树、患者、关键词、ChatGTP、NPC、全局变量和 JSON 编辑器。
+源码中严格的 `?dev` 查询串会启用开发人员模式。当前工具包括状态、NPC 状态、背包、关键词、ChatGTP、NPC 列表、全局变量、JSON、物品、日程蓝图、BGM、位置和电脑内容编辑器。旧的“对话分支树”“患者分支树”“Work 事件队列”“Social 事件队列”已经删除；对话和患者内容统一由“日程蓝图编辑器”按源文件与日程条目编辑。
 
 - 「保存到内存」只改变当前页面运行时数据。
 - 「下载」导出 JSON 文件。
@@ -75,7 +75,7 @@ git diff --check
 
 ## 存档注意事项
 
-`SaveManager.js` 当前格式为 v11，payload 包括游戏状态、双队列、医疗、关键词、背包、全局变量、法术和窗口布局。任何 payload 结构或编码布局改变都要评估版本兼容性。旧版本不会自动迁移。新增可恢复窗口时，要把 `appId` 追加到 `WINDOW_APP_IDS`，并注册 launcher。
+`SaveManager.js` 当前格式为 v12，payload 包括游戏状态、TimeService、四条队列、医疗、关键词、背包、NPC 状态、全局变量、法术、动态日程和窗口布局。任何 payload 结构或编码布局改变都要评估版本兼容性。旧版本不会自动迁移。新增可恢复窗口时，要把 `appId` 追加到 `WINDOW_APP_IDS`，并注册 launcher。
 
 ## 发布玩家版本
 

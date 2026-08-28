@@ -11,7 +11,6 @@ import { saveManager } from "../core/SaveManager.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
-import { launchSocialMediaApp } from "../apps/SocialMediaApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
 import { locationSystem } from "../core/LocationSystem.js";
 

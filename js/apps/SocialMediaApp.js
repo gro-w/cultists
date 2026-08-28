@@ -188,7 +188,7 @@ export async function launchSocialMediaApp(options = {}) {
   // Show first app by default
   if (apps.length > 0) showApp(apps[0].id);
 
-  return windowManager.open({
+  return windowManager.createWindow({
     appId: "social-media",
     title: "📱 社交媒体",
     content: root,

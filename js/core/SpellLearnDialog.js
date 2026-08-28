@@ -74,8 +74,12 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             spellIndex: idx,
           });
           if (learned) {
-            // ActionBudget listens to this and charges 240 min
-            eventBus.emit("spell:learned", { spellId, bookId, bookName });
+            eventBus.emit("schedule:triggered", {
+              source: "spell",
+              action: "learn",
+              spell: learned,
+              context: { spell: learned, effect: {}, timeMinutes: learned.learnTimeMinutes || 240 },
+            });
           }
           rebuildList();
         });

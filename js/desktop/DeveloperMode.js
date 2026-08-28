@@ -5,7 +5,7 @@ import { scheduleData } from "../core/ScheduleData.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { saveManager } from "../core/SaveManager.js";
 import { gameState } from "../core/GameState.js";
-import { actionBudget } from "../core/ActionBudget.js";
+import { timeService } from "../core/TimeService.js";
 import { itemManager } from "../core/ItemManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { eventBus } from "../core/EventBus.js";
@@ -460,12 +460,8 @@ class DeveloperMode {
       const hour = Math.min(23, Math.max(0, Number(this.root.querySelector("[data-hour]").value) || 0));
       const minute = Math.min(59, Math.max(0, Number(this.root.querySelector("[data-minute]").value) || 0));
       const clock = hour * 60 + minute;
-      const derived = phaseForClock(clock);
-      gameState.restore({ day, phase: derived.phase, location: this.root.querySelector("[data-location]").value });
-      actionBudget.phaseMinutes = derived.phaseMinutes;
-      eventBus.emit("actionBudget:changed", actionBudget.snapshot());
-      eventBus.emit("daynight:changed", { phase: derived.phase, day, phaseChanged: false, developer: true });
-      this.setStatus(`时间已调整为第 ${day} 日 ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}，数据文件 ${scheduleData.fileNameFor(day, derived.phase)}。`);
+      const adjusted = timeService.debugSetTime(day, clock, this.root.querySelector("[data-location]").value);
+      this.setStatus(`时间已调整为第 ${day} 日 ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}，数据文件 ${scheduleData.fileNameFor(day, adjusted.phase)}。`);
       return this.showState();
     }
     if (action === "apply-stats") {

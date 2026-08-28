@@ -59,9 +59,13 @@ class SpellManager {
     if (gameState.mental < cost) {
       return { ok: false, message: `理智值不足（需要 ${cost} SAN），无法施放。` };
     }
-    gameState.modify({ mental: -cost });
-    eventBus.emit("spell:cast", { spell });
-    eventBus.emit("spells:changed", this.snapshot());
+    eventBus.emit("schedule:triggered", {
+      source: "spell",
+      spell,
+      action: "cast",
+      blueprint: spell.useSchedule || spell.schedules?.cast || null,
+      context: { spell, effect: { statChanges: { mental: -cost } }, timeMinutes: spell.castTimeMinutes || 0 },
+    });
     return { ok: true, message: `施放了「${spell.name}」，消耗 ${cost} SAN。` };
   }
 

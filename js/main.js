@@ -15,6 +15,8 @@ import { npcStateManager } from "./core/NpcStateManager.js";
 import { favorabilityManager } from "./core/FavorabilityManager.js";
 import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
+import { spellManager } from "./core/SpellManager.js";
+import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import Desktop from "./desktop/Desktop.js";

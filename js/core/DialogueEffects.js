@@ -4,7 +4,7 @@ import { npcStateManager } from "./NpcStateManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { eventBus } from "./EventBus.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
-import { scheduleData } from "./ScheduleData.js";
+import { applyScheduleOperations } from "./ScheduleOperations.js";
 
 /**
  * applyDialogueOnShow - applies a dialogue node's optional `onShow` effects
@@ -55,8 +55,5 @@ export function applyDialogueOnShow(node, actorId) {
     eventBus.emit(onShow.gameEvent, onShow.gameEventPayload || {});
   }
   globalVariableManager.applyEffects(onShow.globalVariables || onShow.globalVariableChanges);
-  const additions = onShow.addSchedule || onShow.addSchedules || [];
-  (Array.isArray(additions) ? additions : [additions]).forEach((request) => {
-    if (request?.scheduleId) scheduleData.addSchedule(request.scheduleId, request);
-  });
+  applyScheduleOperations(onShow);
 }

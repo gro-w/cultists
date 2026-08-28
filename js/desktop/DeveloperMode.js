@@ -2,6 +2,7 @@
 import { windowManager } from "../core/WindowManager.js";
 import { dataLoader, detectDevServer, writeJSONToDisk } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
+import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { saveManager } from "../core/SaveManager.js";
 import { gameState } from "../core/GameState.js";
 import { actionBudget } from "../core/ActionBudget.js";
@@ -17,7 +18,7 @@ import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
-const DAY_FILES = () => Array.from({ length: scheduleData.totalDays }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
+const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, scheduleData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
 const JSON_FILES = () => [...DAY_FILES(), "socialpub.json", "workpub.json", "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json", "global_variables.json"];
 const QA_PAGE_SIZE = 50;
 const KEYWORD_CATEGORY_LABELS = {
@@ -59,7 +60,7 @@ export function launchDeveloperMode() {
 class DeveloperMode {
   constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this.queueId = "work"; this.queueFile = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("Work 事件队列", "tab-queue-work")}${button("Social 事件队列", "tab-queue-social")}${button("JSON 文件", "tab-json")}${button("物品编辑器", "tab-item-editor", "dev-btn-tool")}${button("对话节点编辑器", "tab-dialogue-editor", "dev-btn-tool")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("Work 事件队列", "tab-queue-work")}${button("Social 事件队列", "tab-queue-social")}${button("JSON 文件", "tab-json")}${button("物品编辑器", "tab-item-editor", "dev-btn-tool")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-tool")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
 

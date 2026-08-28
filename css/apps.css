@@ -995,10 +995,20 @@
 .calendar-rest-swatch { background: #ffd6d6; }
 .calendar-night-swatch { background: #d9e4ff; }
 .calendar-current-swatch { outline: 2px solid #000080; }
+.calendar-locked-swatch { background: #d0d0d0; }
+
+.calendar-locked-notice {
+  padding: 4px 6px;
+  border: 1px solid #a0a0a0;
+  background: #e0e0e0;
+  color: #666;
+  font-size: 11px;
+  text-align: center;
+}
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 4px;
   flex: 1;
   min-height: 0;
@@ -1025,6 +1035,15 @@
 .calendar-rest-day { background: #fff0f0; }
 .calendar-night-duty { background: #eef3ff; }
 .calendar-rest-day.calendar-night-duty { background: #f4eaff; }
+.calendar-locked-day {
+  background: #d0d0d0;
+  border-color: #b0b0b0;
+  color: #888;
+}
+
+.calendar-locked-day .calendar-day-label {
+  color: #888;
+}
 
 .calendar-current-day {
   outline: 2px solid #000080;

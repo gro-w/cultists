@@ -1,8 +1,9 @@
 import { dataLoader } from "./DataLoader.js";
+import { MAX_GAME_DAYS } from "./GameRules.js";
 
 class CalendarData {
   constructor() {
-    this.totalDays = 30;
+    this.totalDays = MAX_GAME_DAYS;
     this.restDays = new Set();
     this.nightDutyDays = new Set();
     this._initPromise = null;
@@ -11,8 +12,8 @@ class CalendarData {
   async init() {
     if (!this._initPromise) {
       this._initPromise = dataLoader.loadJSON("calendar.json").then((data) => {
-        this.totalDays = Math.max(1, Number(data.totalDays) || 30);
-        this.restDays = new Set((data.restDays || []).map((day) => Number(day)).filter((day) => day >= 1));
+        this.totalDays = Math.min(MAX_GAME_DAYS, Math.max(1, Number(data.totalDays) || MAX_GAME_DAYS));
+        this.restDays = new Set((data.restDays || []).map((day) => Number(day)).filter((day) => day >= 1 && day <= this.totalDays));
         this.nightDutyDays = new Set((data.nightDutyDays || [])
           .map((day) => Number(day))
           .filter((day) => day >= 1 && day <= this.totalDays));

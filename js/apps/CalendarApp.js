@@ -16,7 +16,9 @@ export async function launchCalendarApp() {
       <span><i class="calendar-legend-swatch calendar-rest-swatch"></i>休息日</span>
       <span><i class="calendar-legend-swatch calendar-night-swatch"></i>夜班值班日</span>
       <span><i class="calendar-legend-swatch calendar-current-swatch"></i>今天</span>
+      <span><i class="calendar-legend-swatch calendar-locked-swatch"></i>未解锁</span>
     </div>
+    <div class="calendar-locked-notice">第 8–31 天未解锁，敬请期待完整版发布</div>
     <div class="calendar-grid" role="list" aria-label="第 1 至 ${calendarData.totalDays} 天"></div>
   `;
 
@@ -47,6 +49,17 @@ export async function launchCalendarApp() {
         <span class="calendar-day-number">${day}</span>
         <span class="calendar-day-label">${isRestDay ? "休息日" : isNightDutyDay ? "夜班值班" : "工作日"}</span>
         ${isCurrentDay ? '<span class="calendar-today-label">今天</span>' : ""}
+      `;
+      gridEl.appendChild(cell);
+    }
+    for (let day = calendarData.totalDays + 1; day <= 31; day += 1) {
+      const cell = document.createElement("div");
+      cell.className = "calendar-day calendar-locked-day";
+      cell.setAttribute("role", "listitem");
+      cell.setAttribute("aria-label", `第 ${day} 天：未解锁`);
+      cell.innerHTML = `
+        <span class="calendar-day-number">${day}</span>
+        <span class="calendar-day-label">未解锁</span>
       `;
       gridEl.appendChild(cell);
     }

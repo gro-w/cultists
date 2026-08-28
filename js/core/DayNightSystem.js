@@ -91,6 +91,10 @@ class DayNightSystem {
     if (scheduleData.hasPendingBatch("work", gameState.day, 16 * 60)) {
       return { ok: false, reason: "unfinishedWork", batch: "b" };
     }
+    if (scheduleData.isFinalPhase(gameState.day, gameState.phase) && !targetIsRest) {
+      endingManager.resolveFinalEnding();
+      return gameState.phase;
+    }
     const sleepMinutes = target.day === gameState.day
       ? target.minutes - gameState.clockMinutes
       : (1440 - gameState.clockMinutes) + target.minutes;
@@ -98,9 +102,6 @@ class DayNightSystem {
     gameState.setDuty(targetIsRest ? "off-duty" : "on-duty");
     this._emitChanged(previousPhase, true);
 
-    if (scheduleData.isFinalPhase(gameState.day, gameState.phase) && !targetIsRest) {
-      endingManager.resolveFinalEnding();
-    }
     return gameState.phase;
   }
 }

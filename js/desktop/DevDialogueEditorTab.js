@@ -96,7 +96,7 @@ export class DevDialogueEditorTab {
           id: this._uid('opt'), label: opt.label || '', next: opt.next || null,
           effects: opt.effects || {}, conditions: opt.condition ? [opt.condition] : (opt.conditions || []),
         })), onShow: node.onShow || {}, entryConds: node.condition ? [node.condition] : (node.entryConds || []),
-        x: node.x || 100, y: node.y || 100 };
+        x: node.x ?? 100, y: node.y ?? 100 };
     });
     return { nodes, startNodeId: tree.start || tree.startNodeId || Object.keys(nodes)[0] || null };
   }
@@ -442,7 +442,7 @@ export class DevDialogueEditorTab {
       const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
       const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
       const optionPins = (node.options||[]).map((opt, i) =>
-        `<div class="dev-de-node-opt"><span class="dev-de-option-pin" data-node-id="${this._e(node.id)}" data-option-index="${i}" title="拖动到目标节点连线">${i+1}</span><span>${this._e((opt.label||`选项 ${i+1}`).slice(0,24))}</span></div>`
+        `<div class="dev-de-node-opt"><span>${this._e((opt.label||`选项 ${i+1}`).slice(0,24))}</span><span class="dev-de-option-pin" data-node-id="${this._e(node.id)}" data-option-index="${i}" title="拖动到目标节点连线">${i+1}</span></div>`
       ).join('');
       div.innerHTML=`
         <div class="dev-de-node-hd" style="background:${spk.color}">
@@ -500,11 +500,13 @@ export class DevDialogueEditorTab {
     const wrap=this._el('de-canvas-container');
     const wr=wrap?wrap.getBoundingClientRect():{left:0,top:0};
     const sx=wrap?wrap.scrollLeft:0, sy=wrap?wrap.scrollTop:0;
-    const arc=(fId,tId,color,dashed)=>{
+    const arc=(fId,tId,color,dashed,sourceEl=null)=>{
       const fEl=document.getElementById(`de-node-${fId}`), tEl=document.getElementById(`de-node-${tId}`);
       if(!fEl||!tEl) return;
       const fr=fEl.getBoundingClientRect(), tr=tEl.getBoundingClientRect();
-      const x1=fr.left-wr.left+fr.width/2+sx, y1=fr.top-wr.top+fr.height+sy;
+      const sourceRect=sourceEl?.getBoundingClientRect();
+      const x1=sourceRect ? sourceRect.left-wr.left+sourceRect.width/2+sx : fr.left-wr.left+fr.width/2+sx;
+      const y1=sourceRect ? sourceRect.top-wr.top+sourceRect.height/2+sy : fr.top-wr.top+fr.height+sy;
       const x2=tr.left-wr.left+tr.width/2+sx, y2=tr.top-wr.top+sy;
       const dy=Math.max(40,Math.abs(y2-y1)/2);
       const p=document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -516,7 +518,11 @@ export class DevDialogueEditorTab {
     };
     Object.values(data.nodes||{}).forEach(node=>{
       if(node.next) arc(node.id,node.next,'#000080',false);
-      (node.options||[]).forEach((opt,i)=>{ if(opt.next) arc(node.id,opt.next,`hsl(${(i*55+200)%360},60%,40%)`,true); });
+      (node.options||[]).forEach((opt,i)=>{
+        if (!opt.next) return;
+        const pin = document.getElementById(`de-node-${node.id}`)?.querySelectorAll('.dev-de-option-pin')[i];
+        arc(node.id,opt.next,`hsl(${(i*55+200)%360},60%,40%)`,true,pin);
+      });
     });
   }
 
@@ -1045,7 +1051,7 @@ export class DevDialogueEditorTab {
     const nodes = ctx?.nodes; if (!nodes || !Object.keys(nodes).length) return { start: ctx?.startNodeId || null, nodes: {} };
     const gameNodes = {};
     Object.values(nodes).forEach(n => {
-      const gn = { speaker: n.speaker === 'player' ? 'player' : 'npc', text: n.text || '' };
+      const gn = { speaker: n.speaker === 'player' ? 'player' : 'npc', text: n.text || '', x: n.x ?? 100, y: n.y ?? 100 };
       if (n.entryConds?.length) gn.condition = n.entryConds[0];
       if (n.options?.length) gn.options = n.options.map(o => {
         const option = { label: o.label || '', next: o.next || null };

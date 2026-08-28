@@ -43,6 +43,7 @@ function clockParts() { const total = dayNightSystem.currentClockMinutes(); retu
 function phaseForClock(total) { const normalized = ((total % 1440) + 1440) % 1440; return normalized >= 480 && normalized < 960 ? { phase: "day", phaseMinutes: normalized - 480 } : { phase: "night", phaseMinutes: normalized >= 960 ? normalized - 960 : normalized + 480 }; }
 
 export function launchDeveloperMode() {
+  eventBus.emit("developer:opened", {});
   const existing = windowManager.getByAppId("developer-mode");
   if (existing) { windowManager.focus(existing.id); return; }
   const root = document.createElement("div"); root.className = "developer-mode-root";

@@ -44,17 +44,40 @@
     }
   ],
   "statTriggers": [
-    { "stat": "satiety", "op": "gt", "value": 150, "endingId": "gluttony_death" },
-    { "stat": "mental", "op": "lte", "value": 0, "endingId": "malnutrition_ending" },
-    { "stat": "physical", "op": "lte", "value": 0, "endingId": "malnutrition_ending" }
+    {
+      "stat": "satiety",
+      "op": "gt",
+      "value": 150,
+      "endingId": "gluttony_death"
+    },
+    {
+      "stat": "mental",
+      "op": "lte",
+      "value": 0,
+      "endingId": "malnutrition_ending"
+    },
+    {
+      "stat": "physical",
+      "op": "lte",
+      "value": 0,
+      "endingId": "malnutrition_ending"
+    }
   ],
   "finalConditions": [
     {
-      "requires": [{ "itemId": "opened_box", "count": 1 }],
+      "requires": [
+        {
+          "itemId": "opened_box",
+          "count": 1
+        }
+      ],
       "endingId": "mystery_solved_ending"
     },
     {
-      "statAtLeast": { "satiety": 40, "energy": 30 },
+      "statAtLeast": {
+        "satiety": 40,
+        "energy": 30
+      },
       "endingId": "normal_ending"
     }
   ],

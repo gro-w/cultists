@@ -1,3 +1,34 @@
 {
-  "events": []
+  "events": [
+    {
+      "id": "test1",
+      "dialogueTree": {
+        "start": "n_mc.o56",
+        "nodes": {
+          "n_mc.o56": {
+            "speaker": "player",
+            "text": "test1",
+            "options": [
+              {
+                "label": "test1",
+                "next": "n_fe.4xu"
+              },
+              {
+                "label": "test2",
+                "next": "n_uh.lw6"
+              }
+            ]
+          },
+          "n_fe.4xu": {
+            "speaker": "player",
+            "text": ""
+          },
+          "n_uh.lw6": {
+            "speaker": "player",
+            "text": ""
+          }
+        }
+      }
+    }
+  ]
 }

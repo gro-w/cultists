@@ -1,8 +1,10 @@
 // DEV-TOOLS:START
 import { dataLoader } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
+import { globalVariableManager } from "../core/GlobalVariableManager.js";
+import { itemManager } from "../core/ItemManager.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
-import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition } from "../core/ScheduleNodeRegistry.js";
+import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition, getScheduleNodePort } from "../core/ScheduleNodeRegistry.js";
 import { validateBlueprint } from "../core/ScheduleBlueprint.js";
 
 /**
@@ -39,8 +41,7 @@ const _DE_BUILTIN_VARS = [
   { id:'ate_potion',   label:'是否吃秘药',        type:'bool' },
   { id:'cast_spell',   label:'施放法术',          type:'bool' },
 ];
-const _DE_NUMVARS = ['sanity','clarity','aje_favor','awei_favor','binbin_favor','suspicion'];
-const _DE_COND_OPS = ['==','!=','>','>=','<','<=','has','nothas'];
+const _DE_NUMVARS = ['energy','mental','physical','satiety','recoverableMentalLoss'];
 const _DE_NODE_LABELS = Object.fromEntries(SCHEDULE_NODE_TYPES.map(type => [type, getScheduleNodeDefinition(type).label]));
 
 export class DevDialogueEditorTab {
@@ -67,7 +68,7 @@ export class DevDialogueEditorTab {
   _e(s)   { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   _uid(p) { return `${p||'id'}_${(Date.now()+Math.random()).toString(36).slice(-6)}`; }
   _st(msg) { this._dev.setStatus(msg); }
-  _spk(id) { return _DE_SPEAKERS.find(s=>s.id===id)||_DE_SPEAKERS[0]; }
+
   _allVars() { return [..._DE_BUILTIN_VARS,...(this.project?.customVars||[])]; }
   _ctxData() {
     if (!this.currentCtx||!this.project) return null;
@@ -82,7 +83,7 @@ export class DevDialogueEditorTab {
     return null;
   }
   _emptyNode(x=100,y=100) {
-    return {id:this._uid('n'),type:'text',speaker:'player',text:'',keywordIds:[],next:null,options:[],onShow:{},entryConds:[],inputs:{},outputs:{},x,y};
+    return {id:this._uid('n'),type:'text',inputs:{speaker:'player',text:''},outputs:{},x,y};
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
   _emptyCtx() { return {nodes:{},connections:[],startNodeId:null}; }
@@ -241,66 +242,10 @@ export class DevDialogueEditorTab {
           <div id="de-ed-inputs"></div>
           <div id="de-ed-outputs" class="dev-de-port-summary"></div>
         </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">发言角色</div>
-          <div style="display:flex;gap:3px;flex-wrap:wrap" id="de-spk-btns">
-            ${_DE_SPEAKERS.map(s=>`<button type="button" class="win95-btn dev-btn dev-de-spk-btn" data-spk="${s.id}" onclick="_de._setSpeaker('${s.id}')">${s.label}</button>`).join('')}
-          </div>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">对话文本</div>
-          <textarea class="dev-textarea" id="de-ed-text" style="width:100%;height:80px;resize:vertical" placeholder="输入对话内容…" oninput="_de._saveNodeText()"></textarea>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">亮起关键词 ID（逗号分隔）</div>
-          <input style="width:100%;min-height:23px;border:2px inset #eee;padding:2px 4px" id="de-ed-keywords" placeholder="keyword_id1, keyword_id2" oninput="_de._saveNodeKeywords()">
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">选项分支</div>
-          <div id="de-opt-list"></div>
-          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addOption()">＋ 添加选项</button>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">直接跳转（无选项时）</div>
-          <div style="display:flex;gap:4px">
-            <select id="de-ed-next" style="flex:1;min-height:23px;border:2px inset #eee;padding:2px" onchange="_de._saveNodeNext()">
-              <option value="">(结束)</option>
-            </select>
-            <button type="button" class="win95-btn dev-btn" onclick="_de._addNodeAndLink()">＋新节点</button>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">onShow 效果</div>
-          <div id="de-onshow-effects">
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>好感：阿杰</span><input class="dev-de-wnum" id="de-os-aje" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>阿伟</span><input class="dev-de-wnum" id="de-os-awei" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>彬彬</span><input class="dev-de-wnum" id="de-os-binbin" type="number" placeholder="0" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>理智值</span><input class="dev-de-wnum" id="de-os-sanity" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>怀疑度</span><input class="dev-de-wnum" id="de-os-suspicion" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span title="sanity=0解锁">清晰值</span><input class="dev-de-wnum" id="de-os-clarity" type="number" placeholder="0" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>给予物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-grant" placeholder="item_id" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>移除物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-remove" placeholder="item_id" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-              <span>触发结局</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-ending" placeholder="ending_id" oninput="_de._saveOnShow()">
-            </div>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">进入条件</div>
-          <div id="de-entry-conds"></div>
-          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addEntryCond()">＋ 添加条件</button>
+        <div class="dev-de-ed-sec dev-de-connection-editor">
+          <div class="dev-de-ed-label">流程输出（选择下家）</div>
+          <div id="de-flow-outputs"></div>
+          <div class="dev-de-ed-help">流程输出只能连接到流程输入；每个输出最多一个下家。</div>
         </div>
       </div>
     </div>
@@ -487,24 +432,21 @@ export class DevDialogueEditorTab {
     container.innerHTML='';
     container.style.cursor = this._connectMode ? 'crosshair' : '';
     Object.values(data.nodes||{}).forEach(node=>{
-      const spk=this._spk(node.speaker);
       const nodeLabel=_DE_NODE_LABELS[node.type||'text']||'显示文字';
       const isStart=node.id===data.startNodeId, isSel=node.id===this.selectedNodeId;
       const div=document.createElement('div');
       div.className=`dev-de-node${isSel?' selected':''}${isStart?' start':''}`;
       div.id=`de-node-${node.id}`;
       div.style.cssText=`left:${node.x||60}px;top:${node.y||60}px`;
-      const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
-      const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
       div.innerHTML=`
-        <div class="dev-de-node-hd" style="background:${spk.color}">
-          <span>${this._e(nodeLabel)} · ${this._e(spk.label)}${isStart?' 🏠':''}</span>
+        <div class="dev-de-node-hd" style="background:#000080">
+          <span>${this._e(nodeLabel)}${isStart?' 🏠':''}</span>
           <button type="button" class="dev-de-node-link" onclick="event.stopPropagation();_de._startConnect('${node.id}',null)" title="连线">🔗</button>
         </div>
-        <div class="dev-de-node-body">${this._e((node.type&&node.type!=='text') ? JSON.stringify(node.inputs||{}) : (node.text||'').slice(0,60))}</div>
+        <div class="dev-de-node-body">${this._e(JSON.stringify(node.inputs||{}))}</div>
         <div class="dev-de-port-layer inputs">${this._portMarkup(node, 'input')}</div>
         <div class="dev-de-port-layer outputs">${this._portMarkup(node, 'output')}</div>
-        <div class="dev-de-node-ft">${optBadge}${nxtBadge}</div>`;
+        <div class="dev-de-node-ft"><span class="dev-de-nbadge">${this._e(node.type || 'unknown')}</span></div>`;
       div.querySelectorAll('.dev-de-port-pin').forEach(pin => pin.addEventListener('pointerdown', e => {
         e.preventDefault();
         e.stopPropagation();
@@ -569,18 +511,11 @@ export class DevDialogueEditorTab {
       if(dashed) p.setAttribute('stroke-dasharray','5,3');
       svg.appendChild(p);
     };
-    Object.values(data.nodes||{}).forEach(node=>{
-      if(node.next) arc(node.id,node.next,'#000080',false,null,'flowIn');
-      (node.options||[]).forEach((opt,i)=>{
-        if (!opt.next) return;
-        const pin = document.getElementById(`de-node-${node.id}`)?.querySelector(`[data-port="option${i}"]`);
-        arc(node.id,opt.next,`hsl(${(i*55+200)%360},60%,40%)`,true,pin,'flowIn');
-      });
-    });
     (data.connections||[]).forEach(connection=>{
       if(connection.fromNodeId && connection.toNodeId) {
         const source = document.getElementById(`de-node-${connection.fromNodeId}`)?.querySelector(`[data-port="${CSS.escape(connection.fromPort || '')}"]`);
-        const color = connection.fromPort?.startsWith('option') ? '#804000' : connection.fromPort === 'value' ? '#008040' : '#000080';
+        const sourcePort = getScheduleNodePort(data.nodes[connection.fromNodeId]?.type, connection.fromPort, 'output');
+        const color = sourcePort?.kind === 'value' ? '#08752d' : '#b00000';
         arc(connection.fromNodeId, connection.toNodeId, color, false, source, connection.toPort);
       }
     });
@@ -626,38 +561,15 @@ export class DevDialogueEditorTab {
     if (ef) ef.style.display='none'; if (ff) ff.style.display='';
     const typeEl=this._el('de-ed-type'); if(typeEl) typeEl.value=node.type||'text';
     this._renderNodeInputs(node, data);
-    // speaker buttons
-    this._el('de-spk-btns')?.querySelectorAll('.dev-de-spk-btn').forEach(b=>{
-      b.classList.toggle('active', b.dataset.spk===node.speaker);
-      b.style.borderColor = b.dataset.spk===node.speaker ? this._spk(node.speaker).color : '';
-    });
-    const txt=this._el('de-ed-text'); if(txt) txt.value=node.text||'';
-    const kw=this._el('de-ed-keywords'); if(kw) kw.value=(node.keywordIds||[]).join(', ');
-    // next dropdown
-    this._rebuildNextDropdown('de-ed-next', node.next, data);
-    // options
-    this._renderOptList(node, data);
-    // onShow
-    const os=node.onShow||{};
-    const set=(id,v)=>{ const e=this._el(id); if(e) e.value=v||''; };
-    set('de-os-aje',     os.aje_favor);
-    set('de-os-awei',    os.awei_favor);
-    set('de-os-binbin',  os.binbin_favor);
-    set('de-os-sanity',  os.sanity);
-    set('de-os-suspicion',os.suspicion);
-    set('de-os-clarity', os.clarity);
-    set('de-os-grant',   (os.grantItems||[]).join(', '));
-    set('de-os-remove',  (os.removeItems||[]).join(', '));
-    set('de-os-ending',  os.ending);
-    // entry conditions
-    this._renderEntryConds(node);
   }
 
   _saveNodeType(type) {
     const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
     if(!node || !getScheduleNodeDefinition(type)) return;
     node.type=type;
-    if(type==='flowStart') { node.speaker=undefined; node.text=undefined; node.options=[]; }
+    ['speaker','text','keywordIds','options','branches','onShow','entryConds','condition','globalVariableCondition','next'].forEach(field => delete node[field]);
+    node.inputs={...(node.inputs||{})};
+    if(type==='flowStart') node.inputs={};
     data.connections=(data.connections||[]).filter(connection => {
       const from=getScheduleNodePort(data.nodes[connection.fromNodeId]?.type,connection.fromPort,'output');
       const to=getScheduleNodePort(data.nodes[connection.toNodeId]?.type,connection.toPort,'input');
@@ -668,6 +580,53 @@ export class DevDialogueEditorTab {
 
   _valueOutputRefs(data) {
     return Object.values(data.nodes || {}).flatMap(node => this._portsFor(node, 'output').filter(port => port.kind === 'value').map(port => ({ nodeId: node.id, port: port.name, label: `${node.id}.${port.name}` })));
+  }
+
+  _constantChoices(port) {
+    const choices = {
+      speaker: _DE_SPEAKERS.map(item => [item.id, item.label]),
+      operator: [['+','加'],['-','减'],['*','乘'],['/','除'],['%','取余']],
+      statId: _DE_NUMVARS.map(id => [id, id]),
+      queue: [['work','Work'],['social','Social']],
+      variableId: (globalVariableManager.definitions || []).map(item => [String(item.id), `${item.name} (${item.id})`]),
+      itemId: (itemManager.defs ? Array.from(itemManager.defs.values()) : this.gameItems).map(item => [item.id, item.name || item.id]),
+      scheduleId: Array.from(scheduleData.scheduleById?.keys?.() || []).map(id => [id, id]),
+      instanceId: Array.from(scheduleData.scheduleById?.keys?.() || []).map(id => [id, id]),
+    }[port.name];
+    return choices?.length ? choices : null;
+  }
+
+  _constantControl(port, value) {
+    const choices = this._constantChoices(port);
+    if (choices) return `<select class="dev-de-input-value" onchange="_de._saveInputValue('${this._e(port.name)}',this.value)"><option value="">选择常量</option>${choices.map(([id,label]) => `<option value="${this._e(id)}"${String(value)===String(id)?' selected':''}>${this._e(label)}</option>`).join('')}</select>`;
+    if (port.name === 'text' || port.name === 'condition') return `<textarea class="dev-de-input-value dev-de-input-text" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">${this._e(value ?? '')}</textarea>`;
+    return `<input class="dev-de-input-value" type="${port.type==='number'?'number':'text'}" value="${this._e(value ?? '')}" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">`;
+  }
+
+  _renderFlowOutputs(node, data) {
+    const el=this._el('de-flow-outputs'); if(!el) return;
+    const outputs=this._portsFor(node,'output').filter(port=>port.kind==='flow');
+    const targets=Object.values(data.nodes||{}).flatMap(target=>this._portsFor(target,'input').filter(port=>port.kind==='flow').map(port=>({nodeId:target.id,port:port.name,label:`${target.id}.${port.name}`})));
+    el.innerHTML=outputs.length ? outputs.map(output=>{
+      const connection=(data.connections||[]).find(item=>item.fromNodeId===node.id && item.fromPort===output.name);
+      const current=connection ? `${connection.toNodeId}::${connection.toPort}` : '';
+      return `<div class="dev-de-output-row"><label>${this._e(output.name)}</label><select onchange="_de._saveFlowTarget('${this._e(output.name)}',this.value)"><option value="">（结束）</option>${targets.filter(item=>item.nodeId!==node.id).map(item=>`<option value="${this._e(`${item.nodeId}::${item.port}`)}"${current===`${item.nodeId}::${item.port}`?' selected':''}>${this._e(item.label)}</option>`).join('')}</select></div>`;
+    }).join('') : '<div class="dev-de-no-ports">此节点没有流程输出</div>';
+  }
+
+  _saveFlowTarget(fromPort, value) {
+    const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
+    if(!data || !node) return;
+    data.connections=(data.connections||[]).filter(item=>!(item.fromNodeId===node.id && item.fromPort===fromPort));
+    if(value) {
+      const [toNodeId,toPort]=value.split('::');
+      const source=getScheduleNodePort(node.type,fromPort,'output');
+      const target=getScheduleNodePort(data.nodes[toNodeId]?.type,toPort,'input');
+      if(!source || !target || source.kind!=='flow' || target.kind!=='flow') { this._st('流程输出只能连接流程输入'); this._renderFlowOutputs(node,data); return; }
+      data.connections=data.connections.filter(item=>!(item.toNodeId===toNodeId && item.toPort===toPort));
+      data.connections.push({fromNodeId:node.id,fromPort,toNodeId,toPort});
+    }
+    this._saveLS(); this._renderCanvas(); this._renderFlowOutputs(node,data);
   }
 
   _renderNodeInputs(node, data) {
@@ -681,8 +640,11 @@ export class DevDialogueEditorTab {
       const pinMode=this._inputModes.get(modeKey) ?? Boolean(connection);
       const raw=node.inputs?.[port.name];
       const value=raw && typeof raw==='object' && raw.nodeId ? '' : (raw ?? '');
-      const refOptions=refs.filter(ref=>ref.nodeId!==node.id).map(ref=>`<option value="${this._e(`${ref.nodeId}::${ref.port}`)}" ${connection && connection.fromNodeId===ref.nodeId && connection.fromPort===ref.port ? 'selected' : ''}>${this._e(ref.label)}</option>`).join('');
-      return `<div class="dev-de-input-row"><label>${this._e(port.name)}</label><select class="dev-de-input-mode" onchange="_de._setInputMode('${this._e(port.name)}',this.value)"><option value="constant" ${pinMode?'':'selected'}>常量</option><option value="pin" ${pinMode?'selected':''}>数值引脚</option></select>${pinMode ? `<select class="dev-de-input-source" onchange="_de._setInputSource('${this._e(port.name)}',this.value)"><option value="">选择输出引脚</option>${refOptions}</select>` : `<input class="dev-de-input-value" data-input-name="${this._e(port.name)}" type="${port.type==='number'?'number':'text'}" value="${this._e(value)}" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">`}</div>`;
+      const refOptions=refs.filter(ref=>ref.nodeId!==node.id).map(ref=>{
+        const source=getScheduleNodePort(data.nodes[ref.nodeId]?.type,ref.port,'output');
+        return source && (port.type==='any' || source.type==='any' || source.type===port.type) ? `<option value="${this._e(`${ref.nodeId}::${ref.port}`)}" ${connection && connection.fromNodeId===ref.nodeId && connection.fromPort===ref.port ? 'selected' : ''}>${this._e(ref.label)}</option>` : '';
+      }).join('');
+      return `<div class="dev-de-input-row"><label>${this._e(port.name)}</label><select class="dev-de-input-mode" onchange="_de._setInputMode('${this._e(port.name)}',this.value)"><option value="constant" ${pinMode?'':'selected'}>输入常量</option><option value="pin" ${pinMode?'selected':''}>来自上游数值引脚</option></select>${pinMode ? `<select class="dev-de-input-source" onchange="_de._setInputSource('${this._e(port.name)}',this.value)"><option value="">选择上游输出</option>${refOptions}</select>` : this._constantControl(port,value)}</div>`;
     })].join('');
     el.innerHTML=html || '<div class="dev-de-no-ports">此节点没有输入</div>';
     const outputEl=this._el('de-ed-outputs');
@@ -690,6 +652,7 @@ export class DevDialogueEditorTab {
       const outputs=this._portsFor(node,'output');
       outputEl.innerHTML=outputs.length ? `输出引脚：${outputs.map(port=>`<span class="dev-de-port-chip ${port.kind}">${this._e(port.name)}</span>`).join('')}` : '无输出引脚';
     }
+    this._renderFlowOutputs(node,data);
   }
 
   _saveInputValue(name,value) {
@@ -1241,12 +1204,9 @@ export class DevDialogueEditorTab {
     const nodes = {};
     Object.values(ctx?.nodes || {}).forEach(n => {
       const node = { ...n, id: n.id, inputs: { ...(n.inputs || {}) }, outputs: { ...(n.outputs || {}) } };
-      if (node.type === 'text') {
-        node.inputs.speaker = node.speaker === 'player' ? 'player' : 'npc';
-        node.inputs.text = node.text || '';
-      }
       delete node.speaker; delete node.text; delete node.keywordIds; delete node.entryConds;
-      if (node.conditions?.length) node.condition = node.conditions[0];
+      delete node.options; delete node.branches; delete node.onShow; delete node.conditions;
+      delete node.condition; delete node.globalVariableCondition; delete node.next;
       nodes[node.id] = node;
     });
     const startNodeId = ctx?.startNodeId || Object.keys(nodes)[0] || null;

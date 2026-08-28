@@ -1,17 +1,20 @@
 import { eventBus } from "./EventBus.js";
 
 const globalSequenceBySchedule = new Map();
-const VALID_STATUSES = new Set(["pending", "completed"]);
+const VALID_STATUSES = new Set(["unresolved", "resolved"]);
 
 class ScheduleQueue {
-  constructor(queueId) {
+  constructor(queueId, options = {}) {
     this.queueId = queueId;
+    this.singleCurrent = Boolean(options.singleCurrent);
+    this.nonBlocking = Boolean(options.nonBlocking);
     this.entries = [];
     this.sequenceBySchedule = new Map();
   }
 
   append(entries = []) {
-    const added = entries.map((entry) => {
+    const batch = Array.isArray(entries) ? entries : [entries];
+    const added = batch.map((entry) => {
       const scheduleId = entry.scheduleId || entry.payload?.scheduleId || entry.id || entry.payload?.id;
       const sequence = Math.max(this.sequenceBySchedule.get(scheduleId) || 0, globalSequenceBySchedule.get(scheduleId) || 0);
       this.sequenceBySchedule.set(scheduleId, sequence + 1);
@@ -21,7 +24,7 @@ class ScheduleQueue {
         scheduleId,
         payload: entry.payload || entry,
         instanceId: entry.instanceId || `${scheduleId}:${sequence + 1}`,
-        status: entry.status === "completed" ? "completed" : "pending",
+        status: entry.status === "resolved" || entry.status === "completed" ? "resolved" : "unresolved",
         transcript: Array.isArray(entry.transcript) ? [...entry.transcript] : [],
       };
     });
@@ -33,7 +36,7 @@ class ScheduleQueue {
   complete(instanceId) {
     const entry = this.entries.find((item) => item.instanceId === instanceId);
     if (!entry) return false;
-    entry.status = "completed";
+    entry.status = "resolved";
     eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
     return true;
   }
@@ -61,7 +64,7 @@ class ScheduleQueue {
 
   hasCompletedId(scheduleId) {
     return this.entries.some((entry) =>
-      entry.status === "completed" && entry.scheduleId === scheduleId
+      entry.status === "resolved" && entry.scheduleId === scheduleId
     );
   }
 
@@ -70,12 +73,12 @@ class ScheduleQueue {
   }
 
   getPending() {
-    return this.entries.filter((entry) => entry.status === "pending");
+    return this.entries.filter((entry) => entry.status === "unresolved");
   }
 
   getPendingForBatch(day, time) {
     return this.entries.filter((entry) =>
-      entry.status === "pending" && entry.receivedDay === day && entry.receivedTime === time
+      entry.status === "unresolved" && entry.receivedDay === day && entry.receivedTime === time
     );
   }
 
@@ -112,8 +115,17 @@ class ScheduleQueue {
   snapshot() {
     return this.getAll().map((entry) => ({ ...entry, transcript: [...(entry.transcript || [])] }));
   }
+
+  /** The first unresolved item is the only active item in serialized queues. */
+  current() {
+    return this.singleCurrent
+      ? this.entries.find((entry) => entry.status === "unresolved") || null
+      : this.entries.find((entry) => entry.status === "unresolved") || null;
+  }
 }
 
 export const workQueue = new ScheduleQueue("work");
 export const socialQueue = new ScheduleQueue("social");
+export const chatgtpQueue = new ScheduleQueue("chatgtp", { singleCurrent: true });
+export const realtimeQueue = new ScheduleQueue("realtime", { nonBlocking: true });
 export default ScheduleQueue;

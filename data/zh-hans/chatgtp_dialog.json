@@ -1,0 +1,100 @@
+{
+  "id": "chatgtp_dialog",
+  "name": "ChatGTP 对话",
+  "blueprint": {
+    "startNodeId": "greet",
+    "nodes": {
+      "greet": {
+        "id": "greet",
+        "type": "text",
+        "speaker": "npc",
+        "text": "你好，想和我聊聊别的吗？我不只是负责查关键词的。",
+        "options": [
+          {
+            "label": "你还记得医院里发生的怪事吗？",
+            "next": "ask_hospital"
+          },
+          {
+            "label": "只是想找人说说话。",
+            "next": "chitchat"
+          }
+        ]
+      },
+      "ask_hospital": {
+        "id": "ask_hospital",
+        "type": "text",
+        "speaker": "npc",
+        "text": "医院……那栋旧楼……我的数据库里似乎有一些不该存在的记录。",
+        "onShow": {
+          "npcSanChange": -3
+        },
+        "options": [
+          {
+            "label": "具体是什么记录？",
+            "next": "reveal",
+            "check": {
+              "skillId": "observation"
+            },
+            "outcomes": {
+              "criticalFailure": "spooked"
+            }
+          }
+        ]
+      },
+      "reveal": {
+        "id": "reveal",
+        "type": "text",
+        "speaker": "npc",
+        "text": "……我查到了一些访问日志，指向地下室，但内容大部分已经损坏，读不出更多了。",
+        "options": [
+          {
+            "label": "谢谢你告诉我这些。",
+            "next": "end"
+          }
+        ]
+      },
+      "spooked": {
+        "id": "spooked",
+        "type": "text",
+        "speaker": "npc",
+        "text": "呃——系统错误——不，抱歉，我需要重新校准一下自己……",
+        "onShow": {
+          "npcSanChange": -8
+        },
+        "options": [
+          {
+            "label": "你还好吗？",
+            "next": "end"
+          }
+        ]
+      },
+      "chitchat": {
+        "id": "chitchat",
+        "type": "text",
+        "speaker": "npc",
+        "text": "当然，聊聊轻松的话题也不错，有什么想说的吗？",
+        "onShow": {
+          "npcSanChange": 4
+        },
+        "options": [
+          {
+            "label": "没什么，谢谢你听我说。",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "id": "end",
+        "type": "text",
+        "speaker": "npc",
+        "text": "随时都可以来找我聊聊。",
+        "next": "scheduleEnd"
+      },
+      "scheduleEnd": {
+        "id": "scheduleEnd",
+        "type": "scheduleEnd"
+      }
+    },
+    "connections": []
+  }
+}

@@ -3,7 +3,7 @@ import { gameState } from "./GameState.js";
 import { calendarData } from "./CalendarData.js";
 import { scheduleData } from "./ScheduleData.js";
 import { endingManager } from "./EndingManager.js";
-import { actionBudget } from "./ActionBudget.js";
+import { timeService } from "./TimeService.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
 
 class DayNightSystem {
@@ -36,13 +36,7 @@ class DayNightSystem {
   }
 
   _setTime(day, minutes, automatic = false, sleepMinutes = 0) {
-    if (minutes === 8 * 60 && Number(day) > gameState.day) {
-      medicalCaseManager.processDue(Number(day));
-      const phaseSettlement = actionBudget.settlePhase("night");
-      actionBudget.settleAtEight({ day: Number(day), sleepMinutes, phaseSettlement });
-    }
-    gameState.setClock(day, minutes);
-    scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
+    timeService.advanceTo(day, minutes, { automatic, sleepMinutes });
   }
 
   _setDuty(duty) {

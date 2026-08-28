@@ -1,7 +1,7 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { itemManager } from "./ItemManager.js";
-import { actionBudget } from "./ActionBudget.js";
+import { realtimeQueue } from "./ScheduleQueue.js";
 
 function clamp(value) {
   return Math.max(0, Math.min(100, Number(value) || 0));
@@ -111,9 +111,24 @@ class NpcStateManager {
   _goOffline(actorId) {
     this.offlineActors.add(actorId);
     const consequence = (this.config && this.config.offlineConsequence) || {};
-    (consequence.grantItems || []).forEach((g) => itemManager.add(g.itemId, g.count || 1));
-    if (consequence.actionBudgetPenalty) actionBudget.applyPenalty(consequence.actionBudgetPenalty);
-    eventBus.emit("npc:offline", { actorId });
+    const entry = {
+      id: `npc-offline:${actorId}`,
+      scheduleId: `npc-offline:${actorId}`,
+      blueprint: consequence.blueprint,
+      actorId,
+      action: "offline",
+      status: "unresolved",
+    };
+    eventBus.emit("schedule:triggered", {
+      source: "npc",
+      actorId,
+      action: "offline",
+      blueprint: consequence.blueprint,
+      context: {
+        effect: { add: consequence.grantItems || [] },
+      },
+      instance: entry,
+    });
   }
 
   snapshot() {

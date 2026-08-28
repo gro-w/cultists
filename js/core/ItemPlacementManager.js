@@ -94,8 +94,19 @@ class ItemPlacementManager {
   }
 
   setPlaced(id, placed) {
-    if (!this.get(id)) return false;
-    this.placed.set(id, placed === true);
+    const placement = this.get(id);
+    if (!placement) return false;
+    const nextPlaced = placed === true;
+    const currentPlaced = this.isPlaced(id);
+    if (currentPlaced === nextPlaced) return true;
+    if (nextPlaced) {
+      if (!itemManager.has(placement.itemId)) return false;
+      itemManager._addRaw(placement.itemId, -1);
+    } else {
+      itemManager._addRaw(placement.itemId, 1);
+    }
+    this.placed.set(id, nextPlaced);
+    eventBus.emit("items:changed", itemManager.snapshot());
     eventBus.emit("item-placements:changed", this.snapshot());
     return true;
   }
@@ -107,6 +118,7 @@ class ItemPlacementManager {
   restore(entries = []) {
     const values = new Map(entries.map((entry) => [entry.id, entry.placed === true]));
     this.placements.forEach((placement) => {
+      this.placed.set(placement.id, placement.initiallyPlaced !== false);
       if (values.has(placement.id)) this.placed.set(placement.id, values.get(placement.id));
     });
     eventBus.emit("item-placements:changed", this.snapshot());

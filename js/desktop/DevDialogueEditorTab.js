@@ -1,4 +1,7 @@
 // DEV-TOOLS:START
+import { dataLoader } from "../core/DataLoader.js";
+import { scheduleData } from "../core/ScheduleData.js";
+
 /**
  * DevDialogueEditorTab — dialogue-editor.html/js ported into DeveloperMode.
  * Inline onclick= handlers reference window._de (set on mount, cleared on unmount).
@@ -77,10 +80,10 @@ export class DevDialogueEditorTab {
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
   _emptyCtx() { return {nodes:{},startNodeId:null}; }
-  _emptyProject() {
+  _emptyProject(totalDays = 5) {
     const schedules={};
-    for (let d=1;d<=5;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={entries:[]};
-    return {version:2,totalDays:5,customVars:[],schedules,events:{},endings:{}};
+    for (let d=1;d<=totalDays;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={entries:[]};
+    return {version:2,totalDays,customVars:[],schedules,events:{},endings:{}};
   }
 
   _normalizeGameTree(tree) {
@@ -112,11 +115,8 @@ export class DevDialogueEditorTab {
   // ── lifecycle ─────────────────────────────────────────────────────────────
   mount() {
     window._de = this;
-    // load persisted project
-    if (!this._loadLS()) this.project = this._emptyProject();
-    this.project = this._migrateProject(this.project);
-    this.loadedScheduleFiles = new Set(this.project.loadedScheduleFiles || []);
-    this.totalDays = this.project.totalDays||5;
+    this.project = this._emptyProject();
+    this._loadCurrentGame();
     // try pick up items/spells from item editor localStorage
     try {
       const seed = localStorage.getItem('cultists_item_editor_v2');
@@ -149,8 +149,9 @@ export class DevDialogueEditorTab {
   <button type="button" class="win95-btn dev-btn" onclick="_de._newProject()">📄 新建</button>
   <button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存</button>
   <button type="button" class="win95-btn dev-btn" onclick="_de._loadProjectFile()">📂 载入</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_de._importFromGame()">⬇ 从游戏读取</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_de._showExportModal()">📤 导出</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_de._loadCurrentGame()">⬇ 从当前游戏读取</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_de._exportGameFiles()">📤 导出 JSON</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_de._writeGameFiles()">💽 写入磁盘</button>
   <button type="button" class="win95-btn dev-btn" onclick="_de._showVarsModal()">⚙ 变量</button>
   <input type="file" id="de-file-input" accept=".json" style="display:none" onchange="_de._onProjectFile(event)">
   <input type="file" id="de-game-input" accept=".json" multiple style="display:none" onchange="_de._onGameFiles(event)">
@@ -780,9 +781,9 @@ export class DevDialogueEditorTab {
     this.totalDays += 1;
     this.project.totalDays = this.totalDays;
     const pad = String(this.totalDays).padStart(2,'0');
-    for (const ph of ['a','b']) {
-      const k = `day${pad}${ph}`;
-      if (!this.project.days[k]) this.project.days[k] = this._emptyCtx();
+    for (const queue of ['work','social']) for (const ph of ['a','b']) {
+      const k = `${queue}${pad}${ph}`;
+      if (!this.project.schedules[k]) this.project.schedules[k] = {entries:[]};
     }
     this._renderSidebar(); this._saveLS();
     this._st(`已添加第 ${this.totalDays} 天`);
@@ -850,7 +851,29 @@ export class DevDialogueEditorTab {
     r.readAsText(f, 'utf-8'); ev.target.value = '';
   }
 
-  _importFromGame() { this._el('de-game-input')?.click(); }
+  async _loadCurrentGame() {
+    try {
+      await scheduleData.init();
+      this.totalDays = scheduleData.totalDays;
+      this.project = this._emptyProject(this.totalDays);
+      this.loadedScheduleFiles = new Set();
+      const files = Object.keys(this.project.schedules);
+      await Promise.all(files.map(async (name) => {
+        const data = await dataLoader.loadJSON(`${name}.json`);
+        if (!Array.isArray(data.entries)) throw new Error(`${name}.json 缺少 entries 数组`);
+        if (data.entries.some((entry) => !entry || typeof entry !== 'object' || Array.isArray(entry))) {
+          throw new Error(`${name}.json 的 entries 必须全部是 JSON 对象`);
+        }
+        this.project.schedules[name] = { ...data, entries: data.entries.map((entry) => ({
+          ...entry, dialogueTree: this._normalizeGameTree(entry.dialogueTree),
+        })) };
+        this.loadedScheduleFiles.add(name);
+      }));
+      this.currentCtx = null; this.selectedNodeId = null;
+      this._saveLS(); this._renderSidebar(); this._renderCanvas();
+      this._st(`已从当前游戏读取 ${files.length} 个日程文件`);
+    } catch (err) { this._st(`读取当前游戏失败：${err.message}`, true); }
+  }
 
   _onGameFiles(ev) {
     const files = Array.from(ev.target.files); if (!files.length) return;
@@ -909,7 +932,7 @@ export class DevDialogueEditorTab {
 
   _exportGameFiles() {
     const schedules = this.project?.schedules || {};
-    Object.entries(schedules).forEach(([key, schedule]) => {
+    Object.entries(schedules).filter(([key]) => this.loadedScheduleFiles.has(key)).forEach(([key, schedule]) => {
       const out = this._scheduleToGame(schedule);
       if (!out) return;
       const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});

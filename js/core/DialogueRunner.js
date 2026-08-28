@@ -30,6 +30,7 @@ import { gameState } from "./GameState.js";
  * @param {string} opts.optionBtnClass
  * @param {string} [opts.appId] - forwarded on the emitted `dialogue:turn` event
  * @param {(nodeId:string) => void} [opts.onNodeShown] - e.g. persist to DialogueProgress
+ * @param {() => void} [opts.onComplete] - called when the dialogue reaches a leaf node
  * @param {string} [opts.emptyMessage] - shown (as an npc line) when the actor has no dialogueTree
  */
 export function createDialogueRunner({
@@ -39,6 +40,7 @@ export function createDialogueRunner({
   optionBtnClass,
   appId,
   onNodeShown,
+  onComplete,
   emptyMessage = "（暂无对话内容）",
 }) {
   const stateActorId = actor.npcId || actor.id;
@@ -105,6 +107,7 @@ export function createDialogueRunner({
       });
     } else {
       optionsEl.innerHTML = '<p class="dialogue-end">（对话已结束）</p>';
+      if (onComplete) onComplete();
     }
   }
 

@@ -8,6 +8,7 @@ import { scheduleData } from "../core/ScheduleData.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
+import { socialQueue } from "../core/ScheduleQueue.js";
 
 const dialogueKeywordIds = (tree) => {
   if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
@@ -72,16 +73,23 @@ export async function launchSocialApp() {
       chatEl.innerHTML = '<h4>聊天</h4><p class="dialogue-end">（无联系人）</p>';
       return;
     }
+    let groupKey = "";
     entry.contacts.forEach((contact) => {
+      const nextGroupKey = `${contact.receivedDay}:${contact.receivedTime}`;
+      if (nextGroupKey !== groupKey) {
+        groupKey = nextGroupKey;
+        const group = document.createElement("h5");
+        group.className = "schedule-group-heading";
+        group.textContent = `第${contact.receivedDay}天 · ${contact.receivedTime === 480 ? "白班" : "夜班"} · ${String(Math.floor(contact.receivedTime / 60)).padStart(2, "0")}:${String(contact.receivedTime % 60).padStart(2, "0")}`;
+        contactListEl.appendChild(group);
+      }
       const npcId = contact.npcId || contact.id;
-      const btn = document.createElement("button");
-      btn.className = "win95-btn bevel-out social-contact-btn";
       const offline = npcStateManager.isOffline(npcId);
       const unavailable = !dayNightSystem.areRoommatesAvailable();
       const distressed = !offline && npcStateManager.isDistressed(npcId);
-      btn.textContent = `${contact.avatar || "🙂"} ${contact.name}${
-        offline ? " 🚫" : unavailable ? " 💤" : distressed ? " ⚠️" : ""
-      }`;
+      const btn = document.createElement("button");
+      btn.className = "win95-btn bevel-out social-contact-btn";
+      btn.textContent = `${contact.name}${contact.queueStatus === "completed" ? " ✓" : ""}${offline ? " 🚫" : unavailable ? " 💤" : distressed ? " ⚠️" : ""}`;
       btn.disabled = offline || unavailable;
       btn.addEventListener("click", () => renderChat(contact, keywordDefs));
       contactListEl.appendChild(btn);
@@ -134,6 +142,7 @@ export async function launchSocialApp() {
       optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
       appId: "social",
       onNodeShown: (nodeId) => dialogueProgress.set("social", contact.id, nodeId),
+      onComplete: () => contact.queueInstanceId && socialQueue.complete(contact.queueInstanceId),
     });
 
     const resumeNodeId =
@@ -144,12 +153,16 @@ export async function launchSocialApp() {
   }
 
   async function renderCurrentEntry() {
-    const entry = await scheduleData.load(gameState.day, gameState.phase);
-    if (!entry) {
-      contactListEl.innerHTML = '<h4>联系人</h4><p class="his-empty">（今日暂无安排）</p>';
-      chatEl.innerHTML = "";
-      return;
-    }
+    await scheduleData.init();
+    const contacts = socialQueue.getAll().map((item) => ({
+      ...item.payload,
+      id: item.instanceId,
+      queueInstanceId: item.instanceId,
+      queueStatus: item.status,
+      receivedDay: item.receivedDay,
+      receivedTime: item.receivedTime,
+    }));
+    const entry = { contacts };
     const keywordDefs = registerKeywords(entry);
     renderContacts(entry, keywordDefs);
   }

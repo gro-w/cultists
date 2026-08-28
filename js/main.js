@@ -76,7 +76,15 @@ async function handlePhaseToggle() {
     const ok = await confirmDialog(message, { title, icon: goingToWork || isWorkEnd ? "🚪" : "🛏️" });
     if (!ok) return;
   }
-  dayNightSystem.toggle();
+  const result = dayNightSystem.toggle();
+  if (result && result.ok === false && result.reason === "unfinishedWork") {
+    await confirmDialog(
+      result.batch === "a"
+        ? "您有未完成的工作，必须完成当前白班内容后才能下班。"
+        : "您有未完成的工作，必须完成当前夜班内容后才能睡觉。",
+      { title: "无法切换状态", icon: "⚠️" }
+    );
+  }
 }
 
 const APP_REGISTRY = [
@@ -152,14 +160,16 @@ function boot({ welcomeBack }) {
   });
   saveManager.registerLaunchers(launcherMap);
 
+  let saveLoaded = true;
   if (welcomeBack) {
-    saveManager.loadFromLocation();
-    notificationBanner.showWelcomeBack();
+    saveLoaded = saveManager.loadFromLocation();
+    if (saveLoaded) notificationBanner.showWelcomeBack();
   }
 
   console.info(
     `[Cultists] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
   );
+  return { saveLoaded };
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -197,17 +207,32 @@ document.addEventListener("DOMContentLoaded", () => {
         && !developerMode
         // DEV-TOOLS:END
         ;
-      boot({ welcomeBack });
+      const bootResult = boot({ welcomeBack });
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
         onNewGame: () => {
           window.history.replaceState(null, "", window.location.pathname);
         },
         onLoadSave: (saveString) => {
           const ok = saveManager.loadFromString(saveString);
+          if (!ok) {
+            confirmDialog("该存档格式已不再支持。由于日程系统已经重构，旧存档无法继续使用，请重新开始游戏。", {
+              title: "存档不受支持",
+              icon: "⚠️",
+            });
+          }
           return ok;
         },
       });
-      if (welcomeBack) mainMenu.hide();
+      if (welcomeBack && bootResult.saveLoaded) mainMenu.hide();
+      else if (welcomeBack) {
+        mainMenu.show();
+        confirmDialog("该存档格式已不再支持。由于日程系统已经重构，旧存档无法继续使用，请重新开始游戏。", {
+          title: "存档不受支持",
+          icon: "⚠️",
+        }).then(() => {
+          window.history.replaceState(null, "", window.location.pathname);
+        });
+      }
       else {
         // DEV-TOOLS:START
         if (developerMode) {

@@ -51,9 +51,10 @@
         "start": "n_mtclbgjy",
         "nodes": {
           "n_mtclbgjy": {
-            "id": "n_mtclbgjy",
             "speaker": "player",
-            "text": ""
+            "text": "",
+            "x": 100,
+            "y": 100
           }
         }
       }

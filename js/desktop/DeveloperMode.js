@@ -11,11 +11,12 @@ import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { favorabilityManager } from "../core/FavorabilityManager.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
+import { globalVariableManager } from "../core/GlobalVariableManager.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
 const DAY_FILES = () => Array.from({ length: scheduleData.totalDays }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
-const JSON_FILES = () => [...DAY_FILES(), "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json"];
+const JSON_FILES = () => [...DAY_FILES(), "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json", "global_variables.json"];
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
@@ -32,7 +33,7 @@ export function launchDeveloperMode() {
 class DeveloperMode {
   constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("JSON 文件", "tab-json")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("JSON 文件", "tab-json")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
 
@@ -195,6 +196,38 @@ class DeveloperMode {
     this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。主角对话节点可通过 <code>onShow.favorabilityChange</code> 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")}</div></section>`);
   }
 
+  showGlobalVariables() {
+    const valueText = (variable, value) => variable.type === "string" ? value : String(value);
+    const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")}</div></section>`);
+  }
+
+  _readGlobalVariableRows() {
+    const parse = (raw, type, id, field) => {
+      if (type === "bool") {
+        if (raw !== "true" && raw !== "false") throw new Error(`变量 ${id} 的${field}必须是 true 或 false`);
+        return raw === "true";
+      }
+      if (type === "number") {
+        const value = Number(raw);
+        if (!Number.isFinite(value) || value < 0 || value > 256) throw new Error(`变量 ${id} 的${field}必须是 0-256 的数字`);
+        return value;
+      }
+      return raw;
+    };
+    return Array.from(this.root.querySelectorAll("[data-global-variable-row]"), (row) => {
+      const id = Number(row.querySelector("[data-gv-id]").value);
+      const type = row.querySelector("[data-gv-type]").value;
+      return {
+        id,
+        name: row.querySelector("[data-gv-name]").value.trim(),
+        type,
+        default: parse(row.querySelector("[data-gv-default]").value, type, id, "默认值"),
+        value: parse(row.querySelector("[data-gv-value]").value, type, id, "当前值"),
+      };
+    });
+  }
+
   collectTree() {
     const nodes = {};
     this.root.querySelectorAll("[data-node-id]").forEach((card) => {
@@ -242,7 +275,41 @@ class DeveloperMode {
     if (action === "tab-keywords") return this.showKeywords();
     if (action === "tab-chatgtp") return this.showChatgtp();
     if (action === "tab-npcs") return this.showNpcs();
+    if (action === "tab-global-variables") return this.showGlobalVariables();
     if (action === "tab-json") return this.showJson();
+    if (action === "add-global-variable") {
+      const nextId = globalVariableManager.all().reduce((max, variable) => Math.max(max, variable.id), -1) + 1;
+      const doc = await this.loadDoc("global_variables.json");
+      const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
+      variables.push({ id: nextId, name: `变量${nextId}`, type: "bool", default: false });
+      this.docs.set("global_variables.json", variables);
+      globalVariableManager.replaceDefinitions(variables);
+      return this.showGlobalVariables();
+    }
+    const removeGlobalVariable = action.match(/^remove-global-variable-(\d+)$/);
+    if (removeGlobalVariable) {
+      const doc = await this.loadDoc("global_variables.json");
+      const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
+      variables.splice(Number(removeGlobalVariable[1]), 1);
+      this.docs.set("global_variables.json", variables);
+      globalVariableManager.replaceDefinitions(variables);
+      return this.showGlobalVariables();
+    }
+    if (action === "save-global-variables" || action === "download-global-variables") {
+      try {
+        const variables = this._readGlobalVariableRows();
+        globalVariableManager.replaceDefinitions(variables);
+        variables.forEach((variable) => globalVariableManager.set(variable.id, variable.value));
+        const doc = variables.map(({ id, name, type, default: defaultValue }) => ({ id, name, type, default: defaultValue }));
+        this.docs.set("global_variables.json", doc);
+        if (action === "download-global-variables") downloadJson("global_variables.json", doc);
+        this.setStatus(`global_variables.json 已${action === "download-global-variables" ? "下载" : "保存到内存"}。`);
+        return this.showGlobalVariables();
+      } catch (err) {
+        this.setStatus(`全局变量保存失败：${err.message}`, true);
+        return;
+      }
+    }
     if (action === "load-save") {
       const raw = this.root.querySelector("[data-save-input]").value.trim().replace(/^\?/, "");
       const ok = raw && saveManager.loadFromString(raw, { updateLocation: false });
@@ -301,7 +368,17 @@ class DeveloperMode {
       return this.showNpcState();
     }
     if (action === "save-json") {
-      try { this.docs.set(this.selectedFile, JSON.parse(this.root.querySelector("[data-json-editor]").value)); this.setStatus(`${this.selectedFile} 已校验并保存到内存。`); }
+      try {
+        const value = JSON.parse(this.root.querySelector("[data-json-editor]").value);
+        if (this.selectedFile === "global_variables.json") {
+          const variables = Array.isArray(value) ? value : value.variables;
+          globalVariableManager.replaceDefinitions(Array.isArray(variables) ? variables : []);
+          this.docs.set(this.selectedFile, Array.isArray(variables) ? variables : []);
+        } else {
+          this.docs.set(this.selectedFile, value);
+        }
+        this.setStatus(`${this.selectedFile} 已校验并保存到内存。`);
+      }
       catch (err) { this.setStatus(`JSON 无效：${err.message}`, true); }
       return;
     }

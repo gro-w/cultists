@@ -1,6 +1,7 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 import { actionBudget } from "./ActionBudget.js";
 import { itemManager } from "./ItemManager.js";
 
@@ -53,6 +54,7 @@ class ItemPlacementManager {
       const sleeping = minutes >= 22 * 60 + 40 || minutes < 7 * 60 + 40;
       if (condition.roommatesSleeping !== sleeping) return false;
     }
+    if (!globalVariableManager.matches(condition.globalVariables || condition.globalVariableCondition)) return false;
     return true;
   }
 

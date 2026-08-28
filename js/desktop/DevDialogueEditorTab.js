@@ -96,14 +96,22 @@ export class DevDialogueEditorTab {
     if (!tree?.nodes) return this._emptyCtx();
     const nodes = {};
     Object.entries(tree.nodes).forEach(([id, node]) => {
-      nodes[id] = { id, type: node.type || 'text', speaker: node.speaker || 'npc', text: node.text || '', inputs: node.inputs || {}, outputs: node.outputs || {},
+      nodes[id] = { id, type: node.type || 'text', speaker: node.speaker || node.inputs?.speaker || 'npc', text: node.text || node.inputs?.text || '', inputs: node.inputs || {}, outputs: node.outputs || {},
         keywordIds: [], next: node.next || null, options: (node.options || []).map(opt => ({
           id: this._uid('opt'), label: opt.label || '', next: opt.next || null,
           effects: opt.effects || {}, conditions: opt.condition ? [opt.condition] : (opt.conditions || []),
         })), onShow: node.onShow || {}, entryConds: node.condition ? [node.condition] : (node.entryConds || []),
         x: node.x ?? 100, y: node.y ?? 100 };
     });
-    return { nodes, connections: Array.isArray(tree.connections) ? tree.connections.map(connection => ({ ...connection })) : [], startNodeId: tree.start || tree.startNodeId || Object.keys(nodes)[0] || null };
+    const connections = Array.isArray(tree.connections) ? tree.connections.map(connection => ({ ...connection })) : [];
+    const startNodeId = tree.startNodeId || tree.start || Object.keys(nodes)[0] || null;
+    if (!Object.values(nodes).some(node => node.type === 'flowStart')) {
+      const flowStartId = '__start';
+      nodes[flowStartId] = { id: flowStartId, type: 'flowStart', inputs: {}, outputs: {}, x: 40, y: 40 };
+      if (startNodeId && nodes[startNodeId]) connections.unshift({ fromNodeId: flowStartId, fromPort: 'flowOut', toNodeId: startNodeId, toPort: 'flowIn' });
+      return { nodes, connections, startNodeId: flowStartId };
+    }
+    return { nodes, connections, startNodeId };
   }
 
   _migrateProject(project) {
@@ -997,7 +1005,7 @@ export class DevDialogueEditorTab {
           throw new Error(`${name}.json 的 entries 必须全部是 JSON 对象`);
         }
         this.project.schedules[name] = { ...data, entries: data.entries.map((entry) => ({
-          ...entry, dialogueTree: this._normalizeGameTree(entry.dialogueTree),
+          ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
         })) };
         this.loadedScheduleFiles.add(name);
       }));
@@ -1008,10 +1016,10 @@ export class DevDialogueEditorTab {
       this.project.eventFileDoc = eventFileDoc;
       this.project.endingFileDoc = endingFileDoc;
       this.project.events = Object.fromEntries((eventFileDoc.events || []).map((entry) => [
-        entry.id, this._normalizeGameTree(entry.dialogueTree),
+        entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
       ]));
       this.project.endings = Object.fromEntries((endingFileDoc.endings || []).map((entry) => [
-        entry.id, this._normalizeGameTree(entry.dialogueTree),
+        entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
       ]));
       this.currentCtx = null; this.selectedNodeId = null;
       this._saveLS(); this._renderSidebar(); this._renderCanvas();
@@ -1035,7 +1043,7 @@ export class DevDialogueEditorTab {
           const name = f.name.replace(/\.json$/,'');
           if (/^(work|social)\d{2}[ab]$/.test(name) && Array.isArray(d.entries)) {
             this.project.schedules[name] = { ...d, entries: d.entries.map((entry) => ({
-              ...entry, dialogueTree: this._normalizeGameTree(entry.dialogueTree),
+              ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
             })) };
             this.loadedScheduleFiles.add(name);
           } else {
@@ -1043,7 +1051,7 @@ export class DevDialogueEditorTab {
           if (/^day\d{2}[ab]$/.test(name) && (d.contacts || d.patients)) {
             const target = `social${name.slice(3)}`;
             this.project.schedules[target] = { entries: (d.contacts || d.patients || []).map((entry) => ({
-              ...entry, dialogueTree: this._normalizeGameTree(entry.dialogueTree),
+              ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
             })) };
             this.loadedScheduleFiles.add(target);
           }
@@ -1101,7 +1109,8 @@ export class DevDialogueEditorTab {
   _scheduleToGame(schedule) {
     return { entries: (schedule?.entries || []).map((entry) => {
       const { day, time, ...out } = entry;
-      out.dialogueTree = this._ctxToGameTree(entry.dialogueTree);
+      delete out.dialogueTree;
+      out.blueprint = this._ctxToBlueprint(entry.dialogueTree);
       return out;
     }) };
   }
@@ -1111,7 +1120,10 @@ export class DevDialogueEditorTab {
     const byId = new Map(source.map((entry) => [entry.id, entry]));
     return { ...fileDoc, [key]: Object.entries(contexts || {}).map(([id, ctx]) => {
       const out = { ...(byId.get(id) || {}), id };
-      if (ctx?.nodes && Object.keys(ctx.nodes).length) out.dialogueTree = this._ctxToGameTree(ctx);
+      if (ctx?.nodes && Object.keys(ctx.nodes).length) {
+        delete out.dialogueTree;
+        out.blueprint = this._ctxToBlueprint(ctx);
+      }
       return out;
     }) };
   }
@@ -1119,35 +1131,27 @@ export class DevDialogueEditorTab {
   _eventFileToGame() { return this._metaFileToGame(this.project.eventFileDoc, this.project.events, 'events'); }
   _endingFileToGame() { return this._metaFileToGame(this.project.endingFileDoc, this.project.endings, 'endings'); }
 
-  _ctxToGameTree(ctx) {
-    const nodes = ctx?.nodes; if (!nodes || !Object.keys(nodes).length) return { start: ctx?.startNodeId || null, nodes: {} };
-    const gameNodes = {};
-    Object.values(nodes).forEach(n => {
-      const gn = { speaker: n.speaker === 'player' ? 'player' : 'npc', text: n.text || '', x: n.x ?? 100, y: n.y ?? 100 };
-      if (n.type && n.type !== 'text') { gn.type = n.type; gn.inputs = { ...(n.inputs || {}) }; gn.outputs = { ...(n.outputs || {}) }; }
-      if (n.entryConds?.length) gn.condition = n.entryConds[0];
-      if (n.options?.length) gn.options = n.options.map(o => {
-        const option = { label: o.label || '', next: o.next || null };
-        if (o.conditions?.length) option.condition = o.conditions[0];
-        if (o.effects && Object.keys(o.effects).length) option.effects = o.effects;
-        return option;
-      });
-      if (n.next) gn.next = n.next;
-      if (n.onShow && Object.keys(n.onShow).length) {
-        const os = { ...n.onShow };
-        if (n.onShow.grantItems?.length) os.grantItems = n.onShow.grantItems;
-        if (n.onShow.removeItems?.length) os.removeItems = n.onShow.removeItems;
-        if (n.onShow.ending) os.ending = n.onShow.ending;
-        const favs = ['aje','awei','binbin'].filter(x => n.onShow[x+'_favor']);
-        favs.forEach(x => { os.favorabilityChange = os.favorabilityChange||{}; os.favorabilityChange[x+'_favor'] = n.onShow[x+'_favor']; });
-        if (Object.keys(os).length) gn.onShow = os;
+  _ctxToBlueprint(ctx) {
+    const nodes = {};
+    Object.values(ctx?.nodes || {}).forEach(n => {
+      const node = { ...n, id: n.id, inputs: { ...(n.inputs || {}) }, outputs: { ...(n.outputs || {}) } };
+      if (node.type === 'text') {
+        node.inputs.speaker = node.speaker === 'player' ? 'player' : 'npc';
+        node.inputs.text = node.text || '';
       }
-      gameNodes[n.id] = gn;
+      delete node.speaker; delete node.text; delete node.keywordIds; delete node.entryConds;
+      if (node.conditions?.length) node.condition = node.conditions[0];
+      nodes[node.id] = node;
     });
-    const out = { start: ctx.startNodeId || Object.keys(gameNodes)[0], nodes: gameNodes };
-    if (Array.isArray(ctx.connections) && ctx.connections.length) out.connections = ctx.connections.map(connection => ({ ...connection }));
-    if (ctx.startNodeId) out.startNodeId = ctx.startNodeId;
-    return out;
+    const startNodeId = ctx?.startNodeId || Object.keys(nodes)[0] || null;
+    const connections = Array.isArray(ctx?.connections) ? ctx.connections.map(connection => ({ ...connection })) : [];
+    if (!Object.values(nodes).some(node => node.type === 'flowStart')) {
+      const flowStartId = '__start';
+      nodes[flowStartId] = { id: flowStartId, type: 'flowStart', inputs: {}, outputs: {}, x: 40, y: 40 };
+      if (startNodeId && nodes[startNodeId]) connections.unshift({ fromNodeId: flowStartId, fromPort: 'flowOut', toNodeId: startNodeId, toPort: 'flowIn' });
+      return { nodes, connections, startNodeId: flowStartId };
+    }
+    return { nodes, connections, startNodeId };
   }
 
   // ── variables modal ───────────────────────────────────────────────────────

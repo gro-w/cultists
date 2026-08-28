@@ -218,6 +218,16 @@
   min-width: 0;
 }
 
+.chatgtp-medicine-row {
+  display: flex;
+  gap: 4px;
+}
+
+.chatgtp-medicine-row select {
+  flex: 1;
+  min-width: 0;
+}
+
 .chatgtp-notebook-row {
   display: flex;
   gap: 4px;

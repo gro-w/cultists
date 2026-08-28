@@ -57,9 +57,10 @@ export async function launchChatGTPApp(options = {}) {
     return existing;
   }
 
-  const [qa, diagnoses] = await Promise.all([
+  const [qa, diagnoses, medicines] = await Promise.all([
     dataLoader.loadJSON("chatgtp_qa.json"),
     dataLoader.loadJSON("diagnoses.json"),
+    dataLoader.loadJSON("medicines.json"),
   ]);
   await keywordManager.load();
   const sanCostPerQuery = Number(qa.sanCostPerQuery) || 0;
@@ -104,6 +105,14 @@ export async function launchChatGTPApp(options = {}) {
               <option value="">-- 选择疾病关键词（可选） --</option>
             </select>
           </div>
+          <div class="chatgtp-medicine-row">
+            <select class="win95-select chatgtp-medicine-category-select">
+              <option value="">-- 选择药物分类（可选） --</option>
+            </select>
+            <select class="win95-select chatgtp-medicine-select">
+              <option value="">-- 选择药物关键词（可选） --</option>
+            </select>
+          </div>
           <div class="chatgtp-notebook-row">
             <select class="win95-select chatgtp-notebook-category-select">
               <option value="">-- 笔记本类别（可选） --</option>
@@ -140,6 +149,8 @@ export async function launchChatGTPApp(options = {}) {
   const notebookSelect = root.querySelector(".chatgtp-notebook-select");
   const categorySelect = root.querySelector(".chatgtp-category-select");
   const diseaseSelect = root.querySelector(".chatgtp-disease-select");
+  const medicineCategorySelect = root.querySelector(".chatgtp-medicine-category-select");
+  const medicineSelect = root.querySelector(".chatgtp-medicine-select");
   const queryBtn = root.querySelector(".chatgtp-query-btn");
   const selectedKeywordEls = [...root.querySelectorAll(".chatgtp-selected-keyword")];
 
@@ -149,6 +160,7 @@ export async function launchChatGTPApp(options = {}) {
   /** @type {Set<string>} ids of keywords currently selected for combo query */
   const selectedIds = new Set();
   let selectedCategoryId = null;
+  let selectedMedicineCategoryId = null;
   let selectedNotebookCategory = "";
   let dialogueStarted = false;
   let dialogueCurrentNode = dialogueProgress.get("chatgtp").nodeId;
@@ -247,8 +259,32 @@ export async function launchChatGTPApp(options = {}) {
       diseaseSelect.appendChild(option);
     });
   }
+  function renderMedicineOptions() {
+    medicineSelect.innerHTML = '<option value="">-- 选择药物关键词（可选） --</option>';
+    const selectedCategory = (medicines.categories || []).find((category) => category.id === selectedMedicineCategoryId);
+    const allowedMedicineIds = selectedCategory ? new Set(selectedCategory.medicineIds || []) : null;
+    (medicines.medicines || []).filter((medicine) => !allowedMedicineIds || allowedMedicineIds.has(medicine.id)).forEach((medicine) => {
+      const keyword = keywordManager.getDefinition(medicine.id);
+      const option = document.createElement("option");
+      option.value = medicine.id;
+      option.textContent = keyword?.content || medicine.name || medicine.id;
+      medicineSelect.appendChild(option);
+    });
+  }
+  function renderMedicineCategoryOptions() {
+    medicineCategorySelect.innerHTML = '<option value="">-- 选择药物分类（可选） --</option>';
+    (medicines.categories || []).forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category.id;
+      option.textContent = category.name;
+      medicineCategorySelect.appendChild(option);
+    });
+    medicineCategorySelect.value = selectedMedicineCategoryId || "";
+  }
   renderCategoryOptions();
   renderDiseaseOptions();
+  renderMedicineCategoryOptions();
+  renderMedicineOptions();
 
   function addSelectedKeyword(id) {
     if (!id) return;
@@ -339,6 +375,14 @@ export async function launchChatGTPApp(options = {}) {
   diseaseSelect.addEventListener("change", () => {
     addSelectedKeyword(diseaseSelect.value);
     diseaseSelect.value = "";
+  });
+  medicineSelect.addEventListener("change", () => {
+    addSelectedKeyword(medicineSelect.value);
+    medicineSelect.value = "";
+  });
+  medicineCategorySelect.addEventListener("change", () => {
+    selectedMedicineCategoryId = medicineCategorySelect.value || null;
+    renderMedicineOptions();
   });
   notebookSelect.addEventListener("change", () => {
     addSelectedKeyword(notebookSelect.value);

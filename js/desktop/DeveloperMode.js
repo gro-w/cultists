@@ -175,7 +175,7 @@ class DeveloperMode {
         <label>时 <input data-hour type="number" min="0" max="23" value="${hour}"></label>
         <label>分 <input data-minute type="number" min="0" max="59" value="${minute}"></label>
         <label>地点 <select data-location><option value="work" ${gameState.location === "work" ? "selected" : ""}>工作</option><option value="dorm" ${gameState.location === "dorm" ? "selected" : ""}>宿舍</option></select></label>
-        <div>${button("应用时间", "apply-time")} <span>当前总分钟：${total}</span></div>
+        <div>${button("应用时间", "apply-time")} ${button("强制下班（忽略阻塞）", "force-end-work")} <span>当前总分钟：${total}</span></div>
       </section>
       <section class="dev-section"><h3>玩家数值</h3>
         ${stats.map((stat) => `<label>${stat} <input data-stat="${stat}" type="number" min="0" max="${stat === "satiety" ? 255 : 100}" value="${gameState[stat]}"> ${button("−", `stat-minus-${stat}`)} ${button("＋", `stat-plus-${stat}`)}</label>`).join("")}
@@ -484,6 +484,13 @@ class DeveloperMode {
       const clock = hour * 60 + minute;
       const adjusted = timeService.debugSetTime(day, clock, this.root.querySelector("[data-location]").value);
       this.setStatus(`时间已调整为第 ${day} 日 ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}，数据文件 ${scheduleData.fileNameFor(day, adjusted.phase)}。`);
+      return this.showState();
+    }
+    if (action === "force-end-work") {
+      const result = dayNightSystem.forceEndWork();
+      this.setStatus(result.ok
+        ? "已强制下班，忽略未完成工作阻塞。"
+        : "强制下班失败：当前不在工作值班状态。", !result.ok);
       return this.showState();
     }
     if (action === "apply-stats") {

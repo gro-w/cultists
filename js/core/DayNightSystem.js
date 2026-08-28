@@ -98,6 +98,22 @@ class DayNightSystem {
 
     return gameState.phase;
   }
+
+  // DEV-TOOLS:START
+  /** Force the current work shift to end without checking its pending batch. */
+  forceEndWork() {
+    const clock = this.currentClockMinutes();
+    const inWorkWindow = clock >= 8 * 60 && clock < 16 * 60;
+    if (gameState.duty !== "on-duty" || gameState.location !== "work") {
+      return { ok: false, reason: "notOnDuty" };
+    }
+    const previousPhase = gameState.phase;
+    if (!this.isRestDay() && inWorkWindow) this._setTime(gameState.day, 16 * 60);
+    gameState.setDuty("off-duty");
+    this._emitChanged(previousPhase);
+    return { ok: true, phase: gameState.phase };
+  }
+  // DEV-TOOLS:END
 }
 
 export const dayNightSystem = new DayNightSystem();

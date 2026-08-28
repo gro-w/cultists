@@ -65,6 +65,12 @@ export async function launchHISApp() {
 
   let currentRecord = null;
 
+  function markPatientSubmitted(patientId) {
+    patientListEl.querySelectorAll(".his-patient-btn").forEach((button) => {
+      if (button.dataset.patientId === patientId) button.classList.add("his-patient-submitted");
+    });
+  }
+
   function registerKeywords(entry) {
     const keywordDefs = {};
     (entry.patients || []).forEach((p) => {
@@ -96,7 +102,10 @@ export async function launchHISApp() {
       return;
     }
     let groupKey = "";
-    entry.patients.forEach((patient) => {
+    [...entry.patients]
+      .sort((a, b) => (Number(b.receivedDay || 0) - Number(a.receivedDay || 0))
+        || (Number(b.receivedTime || 0) - Number(a.receivedTime || 0)))
+      .forEach((patient) => {
       const nextGroupKey = `${patient.receivedDay}:${patient.receivedTime}`;
       if (nextGroupKey !== groupKey) {
         groupKey = nextGroupKey;
@@ -107,13 +116,15 @@ export async function launchHISApp() {
       }
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out his-patient-btn";
+      btn.dataset.patientId = patient.id;
       const npcId = patient.npcId || patient.id;
       const offline = npcStateManager.isOffline(npcId);
       const distressed = !offline && npcStateManager.isDistressed(npcId);
       btn.textContent = `${patient.name}（${patient.age}岁）${offline ? " 🚫" : distressed ? " ⚠️" : ""}`;
+      if (medicalCaseManager.submissions.has(patient.id)) btn.classList.add("his-patient-submitted");
       btn.addEventListener("click", () => renderDialogue(patient, keywordDefs));
       patientListEl.appendChild(btn);
-    });
+      });
 
     // Resume the previously-selected patient in this entry, if any.
     const resumeId = dialogueProgress.get("his").actorId;
@@ -244,18 +255,73 @@ export async function launchHISApp() {
       prescriptionEl.innerHTML += "<p class=\"dialogue-end\">该病人的诊断已提交。</p>";
       return;
     }
-    const select = document.createElement("select");
-    select.className = "win95-select";
-    select.multiple = true;
-    select.size = Math.min(5, Math.max(2, (medicines.medicines || []).length));
-    select.title = "按住 Ctrl 可选择多种药物，最多 5 种";
-    select.innerHTML = `<option value="">-- 选择药品 --</option>`;
-    (medicines.medicines || []).forEach((med) => {
-      const opt = document.createElement("option");
-      opt.value = med.id;
-      opt.textContent = `${med.name}（${med.effect}，价格 ${med.price || 0} 元，提成 ${med.price ? med.price * 0.1 : med.commission || 0} 元）`;
-      select.appendChild(opt);
-    });
+    const medicineById = new Map((medicines.medicines || []).map((medicine) => [medicine.id, medicine]));
+    const categoryById = new Map((medicines.categories || []).map((category) => [category.id, category]));
+    const rowsEl = document.createElement("div");
+    rowsEl.className = "his-prescription-rows";
+
+    const createMedicineRow = (categoryId = "", medicineId = "") => {
+      const row = document.createElement("div");
+      row.className = "his-prescription-row";
+      const categorySelect = document.createElement("select");
+      categorySelect.className = "win95-select his-medicine-category";
+      categorySelect.innerHTML = '<option value="">-- 选择药品类别 --</option>';
+      (medicines.categories || []).forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        option.selected = category.id === categoryId;
+        categorySelect.appendChild(option);
+      });
+      const medicineSelect = document.createElement("select");
+      medicineSelect.className = "win95-select his-medicine-select";
+      medicineSelect.innerHTML = '<option value="">-- 先选择药品类别 --</option>';
+      const populateMedicines = (selectedId = "") => {
+        const category = categoryById.get(categorySelect.value);
+        medicineSelect.innerHTML = category
+          ? '<option value="">-- 选择药品 --</option>'
+          : '<option value="">-- 先选择药品类别 --</option>';
+        (category?.medicineIds || []).forEach((id) => {
+          const medicine = medicineById.get(id);
+          if (!medicine) return;
+          const option = document.createElement("option");
+          option.value = medicine.id;
+          option.textContent = `${medicine.name}（${medicine.effect}，价格 ${medicine.price || 0} 元，提成 ${medicine.price ? medicine.price * 0.1 : medicine.commission || 0} 元）`;
+          option.selected = medicine.id === selectedId;
+          medicineSelect.appendChild(option);
+        });
+      };
+      categorySelect.addEventListener("change", () => populateMedicines());
+      populateMedicines(medicineId);
+
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.className = "win95-btn bevel-out his-prescription-copy";
+      copyButton.textContent = "+";
+      copyButton.title = "复制当前药品行";
+      copyButton.addEventListener("click", () => {
+        rowsEl.insertBefore(createMedicineRow(categorySelect.value, medicineSelect.value), row.nextSibling);
+        updateDeleteButtons();
+      });
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "win95-btn bevel-out his-prescription-delete";
+      deleteButton.textContent = "−";
+      deleteButton.title = "删除当前药品行";
+      deleteButton.addEventListener("click", () => {
+        if (rowsEl.children.length <= 1) return;
+        row.remove();
+        updateDeleteButtons();
+      });
+      row.append(categorySelect, medicineSelect, copyButton, deleteButton);
+      return row;
+    };
+    const updateDeleteButtons = () => {
+      const disabled = rowsEl.children.length <= 1;
+      rowsEl.querySelectorAll(".his-prescription-delete").forEach((button) => { button.disabled = disabled; });
+    };
+    rowsEl.appendChild(createMedicineRow());
+    updateDeleteButtons();
 
     const submitBtn = document.createElement("button");
     submitBtn.className = "win95-btn bevel-out";
@@ -265,7 +331,10 @@ export async function launchHISApp() {
         prescriptionEl.insertAdjacentHTML("beforeend", '<p class="dialogue-end">请先选择诊断。</p>');
         return;
       }
-      const medicineIds = [...select.selectedOptions].map((option) => option.value).filter(Boolean).slice(0, 5);
+      const medicineIds = [...rowsEl.querySelectorAll(".his-medicine-select")]
+        .map((select) => select.value)
+        .filter(Boolean)
+        .slice(0, 5);
       const instance = realtimeQueue.append([{
         scheduleId: "medical:submit",
         status: "unresolved",
@@ -281,6 +350,7 @@ export async function launchHISApp() {
             timeMinutes: 20,
             onComplete: (resolved) => {
               const result = resolved.result;
+              markPatientSubmitted(currentRecord.patient.id);
               prescriptionEl.innerHTML = `<h4>处方已提交</h4><p>诊断${result.correctDiagnosis ? `正确，奖金 +${result.bonus}` : "错误，无诊断奖金"}。</p><p>药品提成 +${result.commission} 元；当前收入：${result.income} 元。</p>`;
             },
           },
@@ -290,7 +360,7 @@ export async function launchHISApp() {
       }
     });
 
-    prescriptionEl.appendChild(select);
+    prescriptionEl.appendChild(rowsEl);
     prescriptionEl.appendChild(submitBtn);
   }
 

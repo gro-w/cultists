@@ -3,6 +3,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { eventBus } from "../core/EventBus.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
+import { gameState } from "../core/GameState.js";
 
 /**
  * LocationScene — full-screen location overlay for non-dorm locations:
@@ -50,6 +51,19 @@ export default class LocationScene {
       .addEventListener("click", () => this.hide());
   }
 
+  // ── helpers ───────────────────────────────────────────────────────────────────
+  _applySanityBg() {
+    if (!this._locationId) return;
+    const san = gameState.mental ?? 100;
+    const img = locationSystem.resolveBackground(this._locationId, san);
+    if (img) {
+      this._bgEl.src = img;
+      this._bgEl.hidden = false;
+    } else {
+      this._bgEl.hidden = true;
+    }
+  }
+
   // ── Public API ───────────────────────────────────────────────────────────────
   async show(locationId) {
     await locationSystem.load();
@@ -61,14 +75,7 @@ export default class LocationScene {
 
     this._locationId = locationId;
     this._titleEl.textContent = loc.name;
-
-    // Background image
-    if (loc.backgroundImage) {
-      this._bgEl.src = loc.backgroundImage;
-      this._bgEl.hidden = false;
-    } else {
-      this._bgEl.hidden = true;
-    }
+    this._applySanityBg();
 
     this._container.classList.remove("hidden");
     this._renderItems(loc);
@@ -77,12 +84,17 @@ export default class LocationScene {
     if (this._offItems) this._offItems();
     this._offItems = eventBus.on("items:changed", () => this._renderItems(loc));
     eventBus.on("item-placements:changed", () => this._renderItems(loc));
+
+    // Swap background when sanity changes while scene is open
+    if (this._offSan) this._offSan();
+    this._offSan = eventBus.on("game:sanity_changed", () => this._applySanityBg());
   }
 
   hide() {
     this._container.classList.add("hidden");
     this._locationId = null;
     if (this._offItems) { this._offItems(); this._offItems = null; }
+    if (this._offSan)   { this._offSan();   this._offSan   = null; }
   }
 
   // ── Item rendering ───────────────────────────────────────────────────────────

@@ -12,7 +12,7 @@ const STORAGE_KEY = "cultists_achievements_v1";
  * ───────────
  * All achievement *definitions* live in `data/zh-hans/achievements.json`.
  * The manager loads those defs on `init()`, then subscribes to game events on
- * the shared EventBus (same bus used by EndingManager, ActionBudget, etc.).
+ * the shared EventBus (same bus used by EndingManager and other core systems).
  *
  * When an incoming event matches an achievement's trigger spec, `unlock(id)`
  * is called.  A single `achievement:unlocked` event is emitted so any

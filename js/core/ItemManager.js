@@ -124,7 +124,7 @@ class ItemManager {
 
   _emitItemSchedule(id, action, context = {}) {
     const blueprint = this.scheduleFor(id, action);
-    eventBus.emit("schedule:triggered", { source: "item", itemId: id, action, blueprint, context });
+    eventBus.emit("schedule:triggered", { source: "item", itemId: id, action, scheduleId: `${id}:${action}`, blueprint, context });
   }
 
   /** Replace the whole inventory (used by SaveManager when restoring a save). */

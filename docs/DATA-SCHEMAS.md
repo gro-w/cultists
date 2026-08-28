@@ -19,7 +19,7 @@ work01a.json ... work07a.json   # 工作日/白班批次，08:00 追加
 work01b.json ... work07b.json   # 工作/夜班批次，16:00 追加
 social01a.json ... social07a.json
 social01b.json ... social07b.json
-workpub.json / socialpub.json     # 仅供 addSchedule 操作选择
+workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 ```
 
 游戏流程只有第 1 至第 7 天。日历配置和运行时都会将天数上限限制为 7；第 7 天最终阶段结束后进入结局，不会推进到第 8 天。包含第 8 天及以后状态的旧存档会被拒绝加载，不会静默截断玩家进度。
@@ -27,7 +27,7 @@ workpub.json / socialpub.json     # 仅供 addSchedule 操作选择
 文件最小结构：
 
 ```json
-{ "entries": [] }
+{ "displayName": "", "entries": [] }
 ```
 
 `entries` 中的每项必须有全局唯一的稳定字符串 `id`。患者放在 `patients`，社交角色放在 `contacts`。NPC 联系人使用稳定 `npcId`，自定义角色使用 `type: "other"`、`name` 和 `avatar`。
@@ -138,9 +138,11 @@ HIS、Social 和 Monitor 使用共用的 `DialogueRunner`：
 
 新日程可以使用对象式蓝图：`nodes` 是节点 ID 到节点对象的映射，`connections` 保存类型化引脚连接，`startNodeId` 指向唯一的 `flowStart` 节点。流程引脚只能连接流程引脚，数值引脚只能连接数值引脚；一个节点不能同时拥有流程输出和数值输出。旧 `dialogueTree` 会在运行时兼容迁移。
 
-当前注册的 17 种节点包括：`flowStart`、`text`、`choice`、`branch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`inventoryOperation`、`statOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前注册的 18 种节点包括：`flowStart`、`text`、`choice`、`branch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
-`consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。输入必须是非负整数且为 20 分钟的倍数；执行时通过 `ActionBudget`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点。数值输入可以连接运算或取值节点。
+`consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。输入必须是非负整数且为 20 分钟的倍数；执行时通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点。数值输入可以连接运算或取值节点。
+
+`spellOperation` 是一个流程节点，使用节点上的 `spell` 对象调用 `SpellManager.learn()`。法术学习蓝图必须把 `consumeTime(240)` 放在 `spellOperation` 之前；创建蓝图前不得调用 `spellManager.learn()`。
 
 日程队列中的实例使用 `${scheduleId}:${sequence}` 作为稳定实例 ID，并保存 `status`、`currentNodeId` 和 `transcript`。已完成实例可以重复打开并只读查看历史文本，但不会再次执行节点或重新选择。
 
@@ -155,7 +157,8 @@ HIS、Social 和 Monitor 使用共用的 `DialogueRunner`：
 - `useCondition.requires`：物品数量条件
 - `useCondition.sanMin` / `sanMax`：SAN 条件
 - `useCondition.globalVariables`：全局变量条件
-- `useEffect.remove` / `add` / `statChanges` / `timeAdvance` / `ending`
+- `useEffect.remove` / `add` / `statChanges` / `npcSanChanges` / `npcOffline` / `timeAdvance` / `ending`
+- realtime 操作使用运行时 effect：ChatGTP 可使用 `npcSanChanges`，HIS 使用 `medicalSubmission`，NPC 离线使用 `npcOffline`；这些 effect 与同一实例的时间推进一起执行。
 - `useEffect.globalVariables`：使用成功后的变量效果
 - `schedules.inspect` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图
 - `isBook`、`spells`：可学习法术的书籍
@@ -181,6 +184,8 @@ HIS、Social 和 Monitor 使用共用的 `DialogueRunner`：
 ```
 
 当前实现约定：学习每个法术 240 分钟，施放消耗 5 SAN，法术 ID 由书籍 ID 和数组索引组成。当前仓库的书籍可能仍是空 `spells` 数组；代码存在不等于已有可学习内容。
+
+ChatGTP 查询、HIS 诊断提交和 NPC 离线均使用带 `instanceId` 的 realtime/专用队列实例；它们的时间消耗与状态副作用必须由同一实例完成。睡眠、醒来和日结是 `TimeService` 的系统边界，不使用普通日程节点代替。
 
 ## 结局、特殊事件和成就
 

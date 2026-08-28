@@ -7,6 +7,7 @@ import { globalVariableManager } from "./GlobalVariableManager.js";
 import { modifyStatValue } from "./ScheduleValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
+import { spellManager } from "./SpellManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -125,6 +126,11 @@ export class ScheduleRunner {
         return {};
       }
       case "statOperation": modifyStatValue(get("statId", ""), get("delta", 0)); return {};
+      case "spellOperation": {
+        const learned = spellManager.learn(node.spell || node.inputs?.spell);
+        if (!learned && node.requireNew !== false) throw new Error("Spell is already known or invalid");
+        return {};
+      }
       default: throw new Error(`Unsupported flow node: ${node.type}`);
     }
   }
@@ -132,10 +138,18 @@ export class ScheduleRunner {
   _showChoice(node) {
     if (!this.optionsEl) throw new Error("Choice node requires an options container");
     this.optionsEl.innerHTML = "";
-    const options = (node.options || node.branches || [])
+    const storedOptions = node.options || node.branches || [];
+    const branchCount = Number.isInteger(Number(node.inputs?.branchCount))
+      ? Math.max(0, Math.min(32, Number(node.inputs.branchCount)))
+      : storedOptions.length;
+    const options = Array.from({ length: Math.max(branchCount, storedOptions.length) }, (_, index) => ({
+      ...(storedOptions[index] || {}),
+      _branchIndex: index,
+      label: storedOptions[index]?.label || storedOptions[index]?.text || node.inputs?.[`label${index}`] || `选项${index + 1}`,
+    }))
       .filter((option) => globalVariableManager.matches(option.condition || option.globalVariableCondition));
     options.forEach((option) => {
-      const index = (node.options || node.branches || []).indexOf(option);
+      const index = option._branchIndex;
       const button = document.createElement("button");
       button.type = "button";
       const labelConnection = (this.blueprint.connections || []).find((item) => item.toNodeId === node.id && item.toPort === `label${index}`);

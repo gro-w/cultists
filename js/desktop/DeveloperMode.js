@@ -139,7 +139,7 @@ class DeveloperMode {
     this._dialogueEditorTab = new DevDialogueEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dialogueEditorTab.html();
     this.bindPanel();
-    this._dialogueEditorTab.mount();
+    this._dialogueEditorTab.mount(this.root.querySelector(".dev-de-root"));
   }
 
   showState() {

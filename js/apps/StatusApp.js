@@ -15,7 +15,7 @@ import { medicalCaseManager } from "../core/MedicalCaseManager.js";
  * StatusApp - "状态与属性": the protagonist's stats, inventory, and save/load
  * UI, organized into four tabs:
  *   - 状态: energy/mental/physical/satiety bars + current day/phase, plus
- *     this phase's remaining 对话/调查 action budget (ActionBudget) and the
+ *     this phase's elapsed time (TimeService) and the
  *     protagonist's skill values (SkillManager, used by dice checks).
  *   - 物品: inventory list backed by ItemManager, with 调查/使用 actions.
  *     Inspecting an item with a configured `inspectCheck` re-rolls a dice
@@ -26,7 +26,7 @@ import { medicalCaseManager } from "../core/MedicalCaseManager.js";
  *     shown here at a glance instead of only inside each app.
  *   - 保存: builds/display the save-string URL (SaveManager) and lets the
  *     player load a save string back in.
- * Always available; live-updates via GameState/ItemManager/ActionBudget/
+ * Always available; live-updates via GameState/ItemManager/TimeService/
  * NpcStateManager events.
  */
 export async function launchStatusApp() {

@@ -12,9 +12,7 @@ export function getStatValue(statId) {
   if (GAME_STATS.has(id)) return gameState[id];
   if (id.startsWith("npcSan:")) return npcStateManager.get(id.slice(7));
   if (id.startsWith("favorability:")) return favorabilityManager.get(id.slice(14));
-  if (id === "actionBudget:phaseMinutes") return timeService.phaseMinutes;
-  if (id === "actionBudget:dialogue") return timeService.snapshot().used.dialogue;
-  if (id === "actionBudget:inspect") return timeService.snapshot().used.inspect;
+  if (id === "timeService:phaseMinutes") return timeService.phaseMinutes;
   if (id === "gameTime") return gameState.getGameTime();
   return undefined;
 }
@@ -37,7 +35,7 @@ export function modifyStatValue(statId, delta) {
     favorabilityManager.modify(npcId, change);
     return favorabilityManager.get(npcId);
   }
-  if (id === "actionBudget:phaseMinutes") throw new Error("Action budget elapsed time is read-only");
+  if (id === "timeService:phaseMinutes") throw new Error("Elapsed game time is read-only");
   throw new Error(`Unknown stat: ${statId}`);
 }
 

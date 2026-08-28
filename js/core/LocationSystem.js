@@ -71,6 +71,28 @@ class LocationSystem {
     return keys;
   }
 
+  /**
+   * Resolve the background image for a location given the current sanity value.
+   * backgroundImages: [{ sanMin: number|null, sanMax: number|null, imageData: string }]
+   * Returns the imageData of the first matching band, or "" if none match.
+   * Falls back to the legacy `backgroundImage` field for old data.
+   */
+  resolveBackground(locationId, sanity = 100) {
+    const loc = this.get(locationId);
+    if (!loc) return "";
+    // legacy single-image
+    if (!loc.backgroundImages || loc.backgroundImages.length === 0) {
+      return loc.backgroundImage || "";
+    }
+    for (const band of loc.backgroundImages) {
+      const lo = band.sanMin ?? -Infinity;
+      const hi = band.sanMax ?? Infinity;
+      if (sanity >= lo && sanity <= hi) return band.imageData || "";
+    }
+    // no band matched — return the last entry as default
+    return loc.backgroundImages[loc.backgroundImages.length - 1]?.imageData || "";
+  }
+
   /** Update a location definition in memory (dev editor). */
   update(locationDef) {
     const idx = this.locations.findIndex((l) => l.id === locationDef.id);

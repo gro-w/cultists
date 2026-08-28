@@ -72,18 +72,15 @@ export class DevLocationEditorTab {
             </select>
           </div>
         </div>
-        <div class="dev-ie-field">
-          <label>背景图片（Base64 data URL 或空）</label>
-          <div style="display:flex;gap:8px;align-items:flex-start">
-            <div id="le-bg-preview" style="width:120px;height:68px;border:2px inset #eee;background:#222;flex:0 0 auto;overflow:hidden">
-              <img id="le-bg-img" style="width:100%;height:100%;object-fit:cover;display:none" alt="">
-            </div>
-            <div style="display:flex;flex-direction:column;gap:4px">
-              <button type="button" class="win95-btn dev-btn" onclick="_le._el('le-bg-file').click()">上传背景图</button>
-              <button type="button" class="win95-btn dev-btn" onclick="_le._clearBg()">清除背景</button>
-              <input type="file" id="le-bg-file" accept="image/*" style="display:none" onchange="_le._onBgFile(event)">
-            </div>
-          </div>
+        <div class="dev-ie-field" style="flex-direction:column">
+          <label>背景图片（按理智值区间）</label>
+          <p style="font-size:11px;color:#888;margin:0 0 4px">每行对应一个理智值区间，进入场景时自动显示匹配的背景图。留空则任意理智值匹配。</p>
+          <table class="dev-table" style="font-size:11px;width:100%">
+            <thead><tr><th>理智 ≥</th><th>理智 ≤</th><th>预览</th><th>操作</th></tr></thead>
+            <tbody id="le-bg-list"></tbody>
+          </table>
+          <button type="button" class="win95-btn dev-btn" style="margin-top:6px" onclick="_le._addBgBand()">＋ 添加背景图</button>
+          <input type="file" id="le-bg-band-file" accept="image/*" style="display:none" onchange="_le._onBgBandFile(event)">
         </div>
       </div>
 
@@ -155,7 +152,7 @@ export class DevLocationEditorTab {
 
   _addLocation() {
     if (this._currentId && this._dirty) this._saveLocation(true);
-    const newLoc = { id: "loc_" + Math.random().toString(36).slice(2, 7), name: "新位置", backgroundImage: "", layer: "above", subLocations: [] };
+    const newLoc = { id: "loc_" + Math.random().toString(36).slice(2, 7), name: "新位置", backgroundImages: [], layer: "above", subLocations: [] };
     this._locations.push(newLoc);
     this._currentId = newLoc.id;
     this._dirty = false;
@@ -176,41 +173,83 @@ export class DevLocationEditorTab {
     const fName = this._el("le-f-name"); if (fName) fName.value = loc.name;
     const fLayer = this._el("le-f-layer"); if (fLayer) fLayer.value = loc.layer || "above";
 
-    const bgImg = this._el("le-bg-img");
-    if (bgImg) {
-      bgImg.src = loc.backgroundImage || "";
-      bgImg.style.display = loc.backgroundImage ? "" : "none";
-    }
-
+    this._renderBgList();
     this._renderSubTable();
     this._updateZoneSection();
   }
 
   _setDirty() { this._dirty = true; }
 
-  _onBgFile(ev) {
+  // ── background image band list ───────────────────────────────────────────────
+  _renderBgList() {
+    const tbody = this._el("le-bg-list");
+    if (!tbody) return;
+    const loc = this._locations.find((l) => l.id === this._currentId);
+    if (!loc) return;
+    if (!loc.backgroundImages) loc.backgroundImages = [];
+    tbody.innerHTML = loc.backgroundImages.map((band, i) => `
+      <tr>
+        <td><input type="number" min="0" max="100" placeholder="—" value="${band.sanMin ?? ""}"
+          style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+          onchange="_le._setBgBandField(${i},'sanMin',this.value)"></td>
+        <td><input type="number" min="0" max="100" placeholder="—" value="${band.sanMax ?? ""}"
+          style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+          onchange="_le._setBgBandField(${i},'sanMax',this.value)"></td>
+        <td>
+          ${band.imageData
+            ? `<img src="${band.imageData}" style="width:80px;height:45px;object-fit:cover;border:1px solid #555;vertical-align:middle" alt="">`
+            : `<span style="color:#aaa;font-size:11px">（空）</span>`}
+          <button type="button" class="win95-btn dev-btn" style="margin-left:4px"
+            onclick="_le._pickBgBand(${i})">上传</button>
+        </td>
+        <td><button type="button" class="win95-btn dev-btn" onclick="_le._removeBgBand(${i})">✕</button></td>
+      </tr>`).join("") || '<tr><td colspan="4" style="color:#aaa;font-size:11px;padding:6px">暂无背景图</td></tr>';
+  }
+
+  _addBgBand() {
+    const loc = this._locations.find((l) => l.id === this._currentId);
+    if (!loc) return;
+    if (!loc.backgroundImages) loc.backgroundImages = [];
+    loc.backgroundImages.push({ sanMin: null, sanMax: null, imageData: "" });
+    this._dirty = true;
+    this._renderBgList();
+  }
+
+  _pickBgBand(index) {
+    this._bgBandIndex = index;
+    this._el("le-bg-band-file").click();
+  }
+
+  _onBgBandFile(ev) {
     const f = ev.target.files[0];
     if (!f) return;
+    const i = this._bgBandIndex ?? 0;
     const r = new FileReader();
     r.onload = (e) => {
       const loc = this._locations.find((l) => l.id === this._currentId);
-      if (!loc) return;
-      loc.backgroundImage = e.target.result;
-      const bgImg = this._el("le-bg-img");
-      if (bgImg) { bgImg.src = e.target.result; bgImg.style.display = ""; }
+      if (!loc?.backgroundImages?.[i]) return;
+      loc.backgroundImages[i].imageData = e.target.result;
       this._dirty = true;
+      this._renderBgList();
       this._redrawZoneCanvas();
     };
     r.readAsDataURL(f);
+    ev.target.value = "";
   }
 
-  _clearBg() {
+  _setBgBandField(i, field, val) {
     const loc = this._locations.find((l) => l.id === this._currentId);
-    if (!loc) return;
-    loc.backgroundImage = "";
-    const bgImg = this._el("le-bg-img");
-    if (bgImg) { bgImg.src = ""; bgImg.style.display = "none"; }
+    if (!loc?.backgroundImages?.[i]) return;
+    loc.backgroundImages[i][field] = val === "" ? null : Number(val);
     this._dirty = true;
+  }
+
+  _removeBgBand(i) {
+    const loc = this._locations.find((l) => l.id === this._currentId);
+    if (!loc?.backgroundImages) return;
+    loc.backgroundImages.splice(i, 1);
+    this._dirty = true;
+    this._renderBgList();
     this._redrawZoneCanvas();
   }
 
@@ -330,7 +369,13 @@ export class DevLocationEditorTab {
       });
     };
 
-    if (loc.backgroundImage) {
+    if (loc.backgroundImages?.length > 0 && loc.backgroundImages[0].imageData) {
+      const img = new Image();
+      img.onload = () => { ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H); draw(); };
+      img.onerror = () => draw();
+      img.src = loc.backgroundImages[0].imageData;
+    } else if (loc.backgroundImage) {
+      // legacy fallback
       const img = new Image();
       img.onload = () => { ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H); draw(); };
       img.onerror = () => draw();

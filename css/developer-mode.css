@@ -51,6 +51,24 @@
 .dev-btn-tool:hover { background: #2828a0; }
 .dev-btn-data { background: #1a1a6e; color: #fff; border-color: #4040b0; }
 .dev-btn-data:hover { background: #2828a0; }
+.dev-ded-root { padding: 8px; background: #c7d9f7; border: 1px solid #6f86ad; }
+.dev-ded-header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.dev-ded-header strong { font-size: 14px; }
+.dev-ded-header span { color: #34445e; font-size: 11px; flex: 1 1 240px; }
+.dev-ded-header > div { flex-basis: 100%; }
+.dev-ded-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 6px; margin-bottom: 8px; }
+.dev-ded-list { display: grid; gap: 8px; }
+.dev-ded-card { background: #e7efff; border: 1px solid #8da4c8; padding: 8px; }
+.dev-ded-card.nested { margin-top: 6px; background: #f2f6ff; }
+.dev-ded-card-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.dev-ded-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px 10px; }
+.dev-ded-field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dev-ded-field > span, .dev-ded-subtitle, .dev-ded-tags > label { font-size: 11px; color: #28384f; }
+.dev-ded-field input, .dev-ded-field select { box-sizing: border-box; min-height: 23px; width: 100%; border: 2px inset #eee; padding: 2px 4px; font-size: 12px; background: #fff; }
+.dev-ded-check { display: flex; align-items: center; gap: 4px; min-height: 23px; font-size: 12px; }
+.dev-ded-inline { display: flex; align-items: end; gap: 5px; margin: 4px 0; }
+.dev-ded-inline .dev-ded-field { flex: 1; }
+.dev-ded-tags { margin-top: 6px; }
 
 /* ══════════════════════════════════════════════════════════════════════════
    ITEM EDITOR TAB

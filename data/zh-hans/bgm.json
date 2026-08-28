@@ -1,5 +1,30 @@
 {
-  "tracks": [],
+  "tracks": [
+    {
+      "id": "bgm_d5zygl",
+      "name": "紧张悬疑",
+      "src": "audio/kill and life.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_d60do6",
+      "name": "潜行调查",
+      "src": "audio/诡影回廊.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_d60ohc",
+      "name": "场景探索",
+      "src": "audio/熵增禁域（场景探索）.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_d60vn0",
+      "name": "邪教阴谋",
+      "src": "audio/昼光.wav",
+      "note": ""
+    }
+  ],
   "defaultRules": [],
   "fallback": "stop"
 }

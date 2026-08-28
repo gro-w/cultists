@@ -2,13 +2,13 @@ import { dataLoader } from "./DataLoader.js";
 import { eventBus } from "./EventBus.js";
 
 /**
- * LocationSystem — owns location definitions loaded from `data/locations.json`.
+ * LocationSystem — owns location definitions loaded from `data/<lang>/locations.json`.
  *
  * Location shape:
  *   {
  *     id: string,
  *     name: string,
- *     backgroundImage: string,   // data URL or relative path
+ *     backgroundImage: string,   // relative asset path
  *     layer: "above" | "below",  // item layer default
  *     subLocations: [{ id, name, zone: { x, y, width, height } }]
  *   }
@@ -73,8 +73,8 @@ class LocationSystem {
 
   /**
    * Resolve the background image for a location given the current sanity value.
-   * backgroundImages: [{ sanMin: number|null, sanMax: number|null, imageData: string }]
-   * Returns the imageData of the first matching band, or "" if none match.
+   * backgroundImages: [{ sanMin: number|null, sanMax: number|null, image: string }]
+   * Returns the image path of the first matching band, or "" if none match.
    * Falls back to the legacy `backgroundImage` field for old data.
    */
   resolveBackground(locationId, sanity = 100) {
@@ -87,10 +87,10 @@ class LocationSystem {
     for (const band of loc.backgroundImages) {
       const lo = band.sanMin ?? -Infinity;
       const hi = band.sanMax ?? Infinity;
-      if (sanity >= lo && sanity <= hi) return band.imageData || "";
+      if (sanity >= lo && sanity <= hi) return band.image || "";
     }
     // no band matched — return the last entry as default
-    return loc.backgroundImages[loc.backgroundImages.length - 1]?.imageData || "";
+    return loc.backgroundImages[loc.backgroundImages.length - 1]?.image || "";
   }
 
   /** Update a location definition in memory (dev editor). */

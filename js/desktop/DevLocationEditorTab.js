@@ -28,6 +28,11 @@ export class DevLocationEditorTab {
   // ── helpers ────────────────────────────────────────────────────────────────
   _el(id) { return document.getElementById(id); }
   _e(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  _imageSrc(value) {
+    const path = typeof value === "string" ? value.trim() : "";
+    if (!path) return "";
+    try { return new URL(path, document.baseURI).href; } catch (_) { return path; }
+  }
   _st(s) { this._dev.setStatus(s); }
 
   // ── lifecycle ──────────────────────────────────────────────────────────────
@@ -80,7 +85,7 @@ export class DevLocationEditorTab {
             <tbody id="le-bg-list"></tbody>
           </table>
           <button type="button" class="win95-btn dev-btn" style="margin-top:6px" onclick="_le._addBgBand()">＋ 添加背景图</button>
-          <input type="file" id="le-bg-band-file" accept="image/*" style="display:none" onchange="_le._onBgBandFile(event)">
+
         </div>
       </div>
 
@@ -279,11 +284,12 @@ export class DevLocationEditorTab {
           style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
           onchange="_le._setBgBandField(${i},'sanMax',this.value)"></td>
         <td>
-          ${band.imageData
-            ? `<img src="${band.imageData}" style="width:80px;height:45px;object-fit:cover;border:1px solid #555;vertical-align:middle" alt="">`
+          ${this._imageSrc(band.image)
+            ? `<img id="le-bg-img-${i}" src="${this._e(this._imageSrc(band.image))}" style="width:80px;height:45px;object-fit:cover;border:1px solid #555;vertical-align:middle" alt="图片预览" onerror="this.alt='图片加载失败'">`
             : `<span style="color:#aaa;font-size:11px">（空）</span>`}
-          <button type="button" class="win95-btn dev-btn" style="margin-left:4px"
-            onclick="_le._pickBgBand(${i})">上传</button>
+          <input type="text" value="${this._e(band.image || "")}" placeholder="data/assets/location_dorm_xxx.jpg"
+            style="width:220px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+            oninput="_le._setBgBandField(${i},'image',this.value)">
         </td>
         <td><button type="button" class="win95-btn dev-btn" onclick="_le._removeBgBand(${i})">✕</button></td>
       </tr>`).join("") || '<tr><td colspan="4" style="color:#aaa;font-size:11px;padding:6px">暂无背景图</td></tr>';
@@ -293,38 +299,24 @@ export class DevLocationEditorTab {
     const loc = this._locations.find((l) => l.id === this._currentId);
     if (!loc) return;
     if (!loc.backgroundImages) loc.backgroundImages = [];
-    loc.backgroundImages.push({ sanMin: null, sanMax: null, imageData: "" });
+    loc.backgroundImages.push({ sanMin: null, sanMax: null, image: "" });
     this._dirty = true;
     this._renderBgList();
   }
 
-  _pickBgBand(index) {
-    this._bgBandIndex = index;
-    this._el("le-bg-band-file").click();
-  }
-
-  _onBgBandFile(ev) {
-    const f = ev.target.files[0];
-    if (!f) return;
-    const i = this._bgBandIndex ?? 0;
-    const r = new FileReader();
-    r.onload = (e) => {
-      const loc = this._locations.find((l) => l.id === this._currentId);
-      if (!loc?.backgroundImages?.[i]) return;
-      loc.backgroundImages[i].imageData = e.target.result;
-      this._dirty = true;
-      this._renderBgList();
-      this._redrawZoneCanvas();
-    };
-    r.readAsDataURL(f);
-    ev.target.value = "";
-  }
 
   _setBgBandField(i, field, val) {
     const loc = this._locations.find((l) => l.id === this._currentId);
     if (!loc?.backgroundImages?.[i]) return;
-    loc.backgroundImages[i][field] = val === "" ? null : Number(val);
+    loc.backgroundImages[i][field] = field === "image" ? val.trim() : (val === "" ? null : Number(val));
     this._dirty = true;
+    if (field === "image") {
+      const preview = this._el(`le-bg-img-${i}`);
+      if (preview) {
+        preview.src = this._imageSrc(loc.backgroundImages[i].image);
+        preview.alt = loc.backgroundImages[i].image ? "图片预览" : "";
+      }
+    }
   }
 
   _removeBgBand(i) {
@@ -478,17 +470,17 @@ export class DevLocationEditorTab {
       }
     };
 
-    if (loc.backgroundImages?.length > 0 && loc.backgroundImages[0].imageData) {
+    if (loc.backgroundImages?.length > 0 && loc.backgroundImages[0].image) {
       const img = new Image();
       img.onload = () => { ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H); draw(); };
       img.onerror = () => draw();
-      img.src = loc.backgroundImages[0].imageData;
+      img.src = this._imageSrc(loc.backgroundImages[0].image);
     } else if (loc.backgroundImage) {
       // legacy fallback
       const img = new Image();
       img.onload = () => { ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H); draw(); };
       img.onerror = () => draw();
-      img.src = loc.backgroundImage;
+      img.src = this._imageSrc(loc.backgroundImage);
     } else {
       ctx.fillStyle = "#1a1a2e";
       ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);

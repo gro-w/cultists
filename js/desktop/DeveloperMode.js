@@ -53,8 +53,8 @@ function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringif
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
 function phaseForClock(total) { const normalized = ((total % 1440) + 1440) % 1440; return normalized >= 480 && normalized < 960 ? { phase: "day", phaseMinutes: normalized - 480 } : { phase: "night", phaseMinutes: normalized >= 960 ? normalized - 960 : normalized + 480 }; }
 
-export function launchDeveloperMode() {
-  eventBus.emit("developer:opened", {});
+export function launchDatabaseApp() {
+  eventBus.emit("developer:opened", { appId: "developer-mode" });
   const existing = windowManager.getByAppId("developer-mode");
   if (existing) { windowManager.focus(existing.id); return; }
   const root = document.createElement("div"); root.className = "developer-mode-root";
@@ -67,12 +67,21 @@ export function launchDeveloperMode() {
   });
 }
 
-class DeveloperMode {
-  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this.render(); }
+// Backwards-compatible source entry for external developer tooling.
+export const launchDeveloperMode = launchDatabaseApp;
+
+export class DeveloperMode {
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; if (renderShell) this.render(); }
   render() {
-    const structuredButtons = Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => button(DEDICATED_EDITOR_TITLES[key], `tab-structured-${key}`, "dev-btn-data")).join("");
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("关键词编辑器", "tab-keywords", "dev-btn-data")}${button("ChatGTP 编辑器", "tab-chatgtp", "dev-btn-data")}${button("NPC 列表", "tab-npcs", "dev-btn-data")}${button("全局变量", "tab-global-variables", "dev-btn-data")}${button("物品编辑器", "tab-item-editor", "dev-btn-data")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-data")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-data")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-data")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-data")}${structuredButtons}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
-    this.bindPanel(); this.showState();
+    const icon = (label, iconText, action, kind) => `<div class="dev-app-icon ${kind === "data" ? "dev-app-icon-data" : "dev-app-icon-runtime"}" data-dev-dblclick="open-editor" data-editor-action="${action}" data-editor-title="${label}" data-editor-kind="${kind}" tabindex="0"><span class="dev-app-icon-glyph">${iconText}</span><span>${label}</span></div>`;
+    const dataIcons = [
+      ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["全局变量定义", "🔢", "tab-global-variables"],
+      ["物品编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
+      ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
+    ];
+    const runtimeIcons = [["状态调节", "📊", "tab-state"], ["NPC 状态调节", "👤", "tab-npc-state"], ["背包控制器", "🎒", "tab-inventory"]];
+    this.root.innerHTML = `<section class="dev-app-section dev-database-section"><div class="dev-app-heading"><strong>数据库 App</strong><span>静态数据编辑器。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${dataIcons.map(([label, glyph, action]) => icon(label, glyph, action, "data")).join("")}</div></section><section class="dev-app-section dev-debugger-section"><div class="dev-app-heading dev-runtime-heading"><strong>调试器</strong><span>观察或修改当前游戏运行时变量。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${runtimeIcons.map(([label, glyph, action]) => icon(label, glyph, action, "runtime")).join("")}</div></section><div class="dev-status" data-dev-status>开发人员模式就绪。</div>`;
+    this.bindPanel();
   }
 
   /** Called once detectDevServer() resolves. Updates status bar. */
@@ -108,7 +117,24 @@ class DeveloperMode {
 
   downloadFile(fileName, value) { downloadJson(fileName, value); }
 
-  bindPanel() { this.root.querySelectorAll("[data-dev-action]").forEach((el) => el.addEventListener("click", () => this.handle(el.dataset.devAction, el))); }
+  bindPanel() {
+    this.root.querySelectorAll("[data-dev-action]").forEach((el) => el.addEventListener("click", () => this.handle(el.dataset.devAction, el)));
+    this.root.querySelectorAll("[data-dev-dblclick]").forEach((el) => el.addEventListener("dblclick", () => this.handle(el.dataset.devDblclick, el)));
+  }
+  async openEditorWindow(action, title, kind) {
+    const appId = `developer-editor-${action}`;
+    const existing = windowManager.getByAppId(appId);
+    if (existing) { windowManager.focus(existing.id); return; }
+    const root = document.createElement("div"); root.className = "developer-mode-root";
+    const win = windowManager.createWindow({ appId, title, icon: kind === "data" ? "🗄️" : "🐞", width: kind === "data" ? 900 : 820, height: kind === "data" ? 680 : 620, content: root });
+    const editor = new DeveloperMode(root, win, false);
+    root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
+    win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
+    const methods = { "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory" };
+    if (methods[action]) { editor._unmountEditorTabs(); editor[methods[action]](); return; }
+    const structured = action.match(/^tab-structured-(.+)$/);
+    if (structured) return editor.showStructuredEditor(structured[1]);
+  }
   _setPanelKind(kind) {
     const panel = this.root.querySelector("[data-dev-panel]");
     if (!panel) return;
@@ -339,6 +365,7 @@ class DeveloperMode {
 
 
   async handle(action, source = null) {
+    if (action === "open-editor") return this.openEditorWindow(source?.dataset.editorAction, source?.dataset.editorTitle, source?.dataset.editorKind);
     if (action === "tab-item-editor") return this.showItemEditor();
     if (action === "tab-dialogue-editor") return this.showDialogueEditor();
     if (action === "tab-bgm-editor") return this.showBgmEditor();

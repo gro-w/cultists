@@ -160,8 +160,9 @@ class ItemManager {
       if (resolvedEffect.statChanges) gameState.modify(resolvedEffect.statChanges);
     }
 
-    // Broadcast: include effect so ActionBudget/callers can handle timeAdvance/gameEvent.
-    eventBus.emit("item:inspected", { id, effect: resolvedEffect });
+    // Broadcast: include effect and inspectTimeAdvance so callers (ActionBudget etc.) can handle them.
+    eventBus.emit("item:inspected", { id, effect: resolvedEffect,
+      inspectTimeAdvance: def.inspectTimeAdvance || 0 });
 
     if (def.inspectCheck && def.inspectCheck.skillId) {
       const check = checkSkill(def.inspectCheck.skillId);

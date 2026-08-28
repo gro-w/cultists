@@ -1,69 +1,52 @@
 {
   "events": [
     {
-      "id": "evt_mtcrd081",
-      "name": "悔恨之泪",
+      "id": "test1",
       "dialogueTree": {
+        "start": "n_mc.o56",
         "nodes": {
-          "n_mtcrd087": {
-            "id": "n_mtcrd087",
+          "n_mc.o56": {
             "speaker": "player",
-            "text": "又把耳机买回来了？听着怎么样？",
-            "next": "n_mtcrd088"
+            "text": "test1",
+            "x": 153,
+            "y": 165,
+            "options": [
+              {
+                "label": "test1",
+                "next": "n_fe.4xu"
+              },
+              {
+                "label": "test2",
+                "next": "n_uh.lw6"
+              }
+            ]
           },
-          "n_mtcrd088": {
-            "id": "n_mtcrd088",
-            "speaker": "npc",
-            "text": "其实没我想象的那么惊艳。",
-            "next": "n_mtcrd089"
-          },
-          "n_mtcrd089": {
-            "id": "n_mtcrd089",
+          "n_fe.4xu": {
             "speaker": "player",
-            "text": "笑死，得不到的永远在骚动，得到了白月光就变成白米饭。"
+            "text": "",
+            "x": 784,
+            "y": 386,
+            "options": [
+              {
+                "label": "",
+                "next": null
+              }
+            ]
+          },
+          "n_uh.lw6": {
+            "speaker": "player",
+            "text": "",
+            "x": 484,
+            "y": 521,
+            "options": [
+              {
+                "label": "test3",
+                "next": "n_fe.4xu"
+              }
+            ]
           }
         },
-        "start": "n_mtcrd087"
-      }
-    },
-    {
-      "id": "evt_mtcrd082",
-      "name": "七夕节别和自己玩游戏",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
-    },
-    {
-      "id": "evt_mtcrd083",
-      "name": "一切谜锁都解开了",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
-    },
-    {
-      "id": "evt_mtcrd084",
-      "name": "失踪者",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
-    },
-    {
-      "id": "evt_mtcrd085",
-      "name": "有人回信",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
-      }
-    },
-    {
-      "id": "evt_mtcrd086",
-      "name": "无人回信",
-      "dialogueTree": {
-        "nodes": {},
-        "start": null
+        "startNodeId": "n_mc.o56"
       }
     }
   ]

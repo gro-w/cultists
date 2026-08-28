@@ -187,7 +187,7 @@ export async function launchHISApp() {
 
     const resumeNodeId =
       dialogueProgress.get("his").actorId === patient.id ? dialogueProgress.get("his").nodeId : null;
-    runner.start(resumeNodeId);
+    runner.start(resumeNodeId || undefined);
 
   }
 

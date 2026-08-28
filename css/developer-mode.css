@@ -1,6 +1,24 @@
 /* DEV-TOOLS:START */
 .developer-mode-root { height: 100%; overflow: auto; padding: 8px; background: #c0c0c0; color: #111; font: 13px Arial, sans-serif; box-sizing: border-box; }
 .dev-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 8px; border-bottom: 1px solid #808080; }
+.dev-app-heading { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; padding: 4px 6px; color: #000080; background: #c7d9f7; border: 1px solid #6f86ad; }
+.dev-app-heading strong { font-size: 16px; }
+.dev-app-heading span { font-size: 12px; color: #34445e; }
+.dev-runtime-heading { color: #222; background: #d4d0c8; border-color: #808080; }
+.dev-runtime-heading span { color: #444; }
+.dev-app-section { padding: 6px; border: 1px solid #808080; background: #d4d0c8; }
+.dev-app-section + .dev-app-section { margin-top: 8px; }
+.dev-editor-window-heading { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; padding: 4px 6px; border-bottom: 1px solid #808080; }
+.dev-editor-window-heading strong { color: #000080; font-size: 15px; }
+.dev-editor-window-heading span { color: #555; font-size: 11px; }
+.dev-database-section { background: #c7d9f7; border-color: #6f86ad; }
+.dev-debugger-section { background: #d4d0c8; }
+.dev-app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 8px; }
+.dev-app-icon { display: flex; min-height: 76px; align-items: center; justify-content: center; flex-direction: column; gap: 4px; padding: 5px; text-align: center; cursor: default; user-select: none; border: 1px solid transparent; }
+.dev-app-icon:hover, .dev-app-icon:focus { outline: 1px dotted #111; background: rgba(255, 255, 255, .35); }
+.dev-app-icon-data { color: #000080; }
+.dev-app-icon-runtime { color: #222; }
+.dev-app-icon-glyph { font-size: 28px; line-height: 30px; }
 .dev-btn { margin: 2px 0; padding: 3px 8px; min-height: 24px; }
 .dev-status { margin: 8px 0; padding: 5px; background: #ffffe1; border: 1px solid #808080; }
 .dev-status.dev-error { color: #900; background: #ffe0e0; }
@@ -51,6 +69,8 @@
 .dev-btn-tool:hover { background: #2828a0; }
 .dev-btn-data { background: #1a1a6e; color: #fff; border-color: #4040b0; }
 .dev-btn-data:hover { background: #2828a0; }
+.dev-btn-runtime { background: #d4d0c8; color: #111; border-color: #808080; }
+.dev-btn-runtime:hover { background: #e4e0d8; }
 .dev-ded-root { padding: 8px; background: #c7d9f7; border: 1px solid #6f86ad; }
 .dev-ded-header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
 .dev-ded-header strong { font-size: 14px; }

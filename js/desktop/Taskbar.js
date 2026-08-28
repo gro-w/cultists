@@ -47,19 +47,43 @@ export default class Taskbar {
 
   _renderStartMenu() {
     this.startMenuEl.innerHTML = "";
-    this.apps.forEach((app) => {
-      const label = typeof app.label === "function" ? app.label() : app.label;
-      const icon = typeof app.icon === "function" ? app.icon() : app.icon;
-      const item = document.createElement("div");
-      item.className = "start-menu-item";
-      item.dataset.appId = app.id;
-      item.innerHTML = `<span>${icon}</span><span>${label}</span>`;
-      item.addEventListener("click", () => {
-        app.launch();
-        this.startMenuEl.classList.add("hidden");
-      });
-      this.startMenuEl.appendChild(item);
+    const locations = new Set(["hospital", "restaurant", "seaside"]);
+    const phaseToggle = this.apps.find((app) => app.id === "phase-toggle");
+    const groups = [
+      ["应用", this.apps.filter((app) => app.id !== "phase-toggle" && !locations.has(app.id))],
+      ["地点", this.apps.filter((app) => locations.has(app.id))],
+    ];
+    const addGroup = (title, apps) => {
+      if (!apps.length) return;
+      const heading = document.createElement("div");
+      heading.className = "start-menu-group-title";
+      heading.textContent = title;
+      this.startMenuEl.appendChild(heading);
+      apps.forEach((app) => this._appendStartMenuItem(app));
+    };
+    groups.forEach(([title, apps]) => addGroup(title, apps));
+    if (phaseToggle) {
+      const separator = document.createElement("div");
+      separator.className = "start-menu-separator";
+      this.startMenuEl.appendChild(separator);
+      const item = this._appendStartMenuItem(phaseToggle);
+      item.classList.add("start-menu-phase-item");
+    }
+  }
+
+  _appendStartMenuItem(app) {
+    const label = typeof app.label === "function" ? app.label() : app.label;
+    const icon = typeof app.icon === "function" ? app.icon() : app.icon;
+    const item = document.createElement("div");
+    item.className = "start-menu-item";
+    item.dataset.appId = app.id;
+    item.innerHTML = `<span class="start-menu-item-icon">${icon}</span><span>${label}</span>`;
+    item.addEventListener("click", () => {
+      app.launch();
+      this.startMenuEl.classList.add("hidden");
     });
+    this.startMenuEl.appendChild(item);
+    return item;
   }
 
   _bindWindowEvents() {

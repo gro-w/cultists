@@ -59,10 +59,30 @@
 }
 
 .his-dialogue,
-.his-record,
 .his-prescription {
   flex: 1;
   min-height: 60px;
+}
+
+.diagnosis-form {
+  flex-shrink: 0;
+}
+
+.diagnosis-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0;
+}
+
+.diagnosis-row label {
+  width: 42px;
+  flex-shrink: 0;
+}
+
+.diagnosis-row select {
+  flex: 1;
+  min-width: 0;
 }
 
 .his-patient-btn {
@@ -100,18 +120,6 @@
   color: var(--w95-gray-dark);
   font-style: italic;
   margin: 6px 0 0;
-}
-
-.record-form {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.record-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -167,58 +175,100 @@
 /* ---------------------------------------------------------------------- */
 /* ChatGTP App                                                             */
 /* ---------------------------------------------------------------------- */
+.app-chatgtp {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
 .chatgtp-layout {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   gap: 6px;
 }
 
 .chatgtp-history {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .chatgtp-keywords {
-  max-height: 130px;
-  flex-shrink: 0;
+  flex: 0 0 150px;
+  height: 150px;
+  min-height: 150px;
+  max-height: 150px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  overflow: hidden;
 }
 
-.chatgtp-keyword-chips {
+.chatgtp-disease-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 4px;
 }
 
-.keyword-chip {
-  font-size: 11px;
+.chatgtp-disease-row select {
+  flex: 1;
+  min-width: 0;
 }
 
-.keyword-chip.selected {
+.chatgtp-medicine-row {
+  display: flex;
+  gap: 4px;
+}
+
+.chatgtp-medicine-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+.chatgtp-notebook-row {
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+}
+
+.chatgtp-notebook-category-select {
+  flex: 0.7;
+  min-width: 0;
+}
+
+.chatgtp-notebook-select {
+  flex: 1.6;
+  min-width: 0;
+}
+
+.chatgtp-selected-keywords {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.chatgtp-selected-keyword {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chatgtp-selected-keyword.selected {
   background: var(--w95-blue);
   color: var(--w95-white);
 }
 
-.keyword-chip:disabled {
-  color: var(--w95-gray-dark);
-  cursor: not-allowed;
-}
-
 .chatgtp-query-btn {
   align-self: flex-start;
+  flex: 0 0 auto;
 }
 
-.chatgtp-input-row {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.chatgtp-input {
-  flex: 1;
-}
 
 .chatgtp-tabs {
   display: flex;
@@ -251,7 +301,9 @@
 }
 
 .chatgtp-tab-panel {
-  height: calc(100% - 26px);
+  flex: 1;
+  min-height: 0;
+  height: auto;
 }
 
 .chatgtp-dialogue-layout {
@@ -897,4 +949,92 @@
   font-size: 11px;
   color: var(--w95-gray-darker);
   flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Calendar App                                                            */
+/* ---------------------------------------------------------------------- */
+.app-calendar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: 6px;
+}
+
+.calendar-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.calendar-summary span,
+.calendar-day-label,
+.calendar-today-label {
+  color: var(--w95-gray-dark);
+  font-size: 11px;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11px;
+}
+
+.calendar-legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 3px;
+  vertical-align: -1px;
+  border: 1px solid var(--w95-gray-dark);
+}
+
+.calendar-rest-swatch { background: #ffd6d6; }
+.calendar-night-swatch { background: #d9e4ff; }
+.calendar-current-swatch { outline: 2px solid #000080; }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.calendar-day {
+  position: relative;
+  min-height: 58px;
+  padding: 5px;
+  border: 1px solid var(--w95-gray-dark);
+  background: var(--w95-white);
+  box-sizing: border-box;
+}
+
+.calendar-day-number {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.calendar-day-label { display: block; margin-top: 3px; }
+.calendar-rest-day { background: #fff0f0; }
+.calendar-night-duty { background: #eef3ff; }
+.calendar-rest-day.calendar-night-duty { background: #f4eaff; }
+
+.calendar-current-day {
+  outline: 2px solid #000080;
+  outline-offset: -2px;
+}
+
+.calendar-today-label {
+  position: absolute;
+  right: 4px;
+  top: 5px;
+  color: #000080;
+  font-weight: bold;
 }

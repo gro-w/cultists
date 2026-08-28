@@ -16,10 +16,11 @@ class DialogueProgress {
   constructor() {
     this.his = { actorId: null, nodeId: null };
     this.social = { actorId: null, nodeId: null };
+    this.chatgtp = { actorId: "chatgtp", nodeId: null };
   }
 
   set(app, actorId, nodeId) {
-    if (app !== "his" && app !== "social") return;
+    if (app !== "his" && app !== "social" && app !== "chatgtp") return;
     this[app] = { actorId, nodeId };
     eventBus.emit("dialogueProgress:changed", { app, actorId, nodeId });
   }

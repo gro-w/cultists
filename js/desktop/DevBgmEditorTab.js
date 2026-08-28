@@ -132,6 +132,17 @@ export class DevBgmEditorTab {
         </select>
       </td>
       <td>
+        <input class="dev-bgm-wnum" type="number" min="0" max="100"
+          value="${r.sanMin ?? ""}" placeholder="0"
+          title="理智值下限（含）；留空=不限"
+          oninput="_bgm._onRuleChange(${i},'sanMin',this.value)">
+        –
+        <input class="dev-bgm-wnum" type="number" min="0" max="100"
+          value="${r.sanMax ?? ""}" placeholder="100"
+          title="理智值上限（含）；留空=不限"
+          oninput="_bgm._onRuleChange(${i},'sanMax',this.value)">
+      </td>
+      <td>
         <select class="dev-bgm-sel dev-bgm-bgmid-sel" onchange="_bgm._onRuleChange(${i},'bgmId',this.value)">
           <option value="">（无 BGM）</option>
           ${tracks.map((t) => `<option value="${_esc(t.id)}"${r.bgmId === t.id ? " selected" : ""}>${_esc(t.name || t.id)}</option>`).join("")}
@@ -193,9 +204,9 @@ export class DevBgmEditorTab {
     <div class="dev-bgm-table-wrap">
       <table class="dev-table dev-bgm-table">
         <thead><tr>
-          <th>天数范围（dayMin–dayMax）</th><th>时段</th><th>BGM</th><th>优先级</th><th>删除</th>
+          <th>天数范围（dayMin–dayMax）</th><th>时段</th><th>理智值范围（sanMin–sanMax）</th><th>BGM</th><th>优先级</th><th>删除</th>
         </tr></thead>
-        <tbody>${ruleRows || "<tr><td colspan='5' class='dev-bgm-empty'>暂无规则。</td></tr>"}</tbody>
+        <tbody>${ruleRows || "<tr><td colspan='6' class='dev-bgm-empty'>暂无规则。</td></tr>"}</tbody>
       </table>
     </div>
     <div class="dev-bgm-fb-row">
@@ -288,7 +299,7 @@ export class DevBgmEditorTab {
   _onRuleChange(idx, field, val) {
     const r = this._doc.defaultRules[idx];
     if (!r) return;
-    if (field === "dayMin" || field === "dayMax" || field === "priority") {
+    if (["dayMin", "dayMax", "sanMin", "sanMax", "priority"].includes(field)) {
       const n = parseInt(val, 10);
       r[field] = isNaN(n) ? null : n;
     } else if (field === "phase") {
@@ -305,7 +316,7 @@ export class DevBgmEditorTab {
   }
 
   _addRule() {
-    this._doc.defaultRules.push({ id: _uid(), dayMin: null, dayMax: null, phase: null, bgmId: null, priority: 0 });
+    this._doc.defaultRules.push({ id: _uid(), dayMin: null, dayMax: null, phase: null, sanMin: null, sanMax: null, bgmId: null, priority: 0 });
     this._save();
     this._render();
   }

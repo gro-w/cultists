@@ -48,4 +48,8 @@
 .dev-qa-entry label { display: flex; align-items: flex-start; width: 100%; margin: 5px 0; }
 .dev-qa-entry textarea { flex: 1; min-height: 52px; resize: vertical; font: 12px Arial, sans-serif; }
 .dev-qa-entry .dev-checkbox-label { align-items: center; }
+.dev-queue-list { display: grid; gap: 8px; margin: 8px 0; }
+.dev-queue-entry { padding: 7px; background: #fff; border: 2px outset #ddd; }
+.dev-queue-entry header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #003399; }
+.dev-queue-entry header .dev-btn { margin-left: auto; }
 /* DEV-TOOLS:END */

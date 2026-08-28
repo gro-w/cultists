@@ -178,13 +178,16 @@ export async function launchHISApp() {
       appendLine,
       optionsEl,
       appId: "his",
-      onCheckpoint: (instance) => workQueue.updateInstance(instance.instanceId, instance),
+      onCheckpoint: (instance) => {
+        dialogueProgress.set("his", patient.id, instance.currentNodeId || null);
+        return workQueue.updateInstance(instance.instanceId, instance);
+      },
       onComplete: (instance) => workQueue.complete(instance.instanceId),
     });
 
     const resumeNodeId =
       dialogueProgress.get("his").actorId === patient.id ? dialogueProgress.get("his").nodeId : null;
-    runner.start();
+    runner.start(resumeNodeId);
 
   }
 

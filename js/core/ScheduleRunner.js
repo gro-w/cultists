@@ -151,13 +151,14 @@ export class ScheduleRunner {
   }
 
   _scheduleStatus(instanceId) {
-    const entry = [...scheduleData.queue("work").getAll(), ...scheduleData.queue("social").getAll()].find((item) => item.instanceId === instanceId);
-    return !entry ? STATUS.nonexistent : entry.status === "completed" ? STATUS.completed : STATUS.pending;
+    const workStatus = scheduleData.queue("work").statusOf(instanceId);
+    const socialStatus = scheduleData.queue("social").statusOf(instanceId);
+    const status = workStatus !== "nonexistent" ? workStatus : socialStatus;
+    return status === "nonexistent" ? STATUS.nonexistent : status === "completed" ? STATUS.completed : STATUS.pending;
   }
 
   _scheduleInstanceCount(scheduleId) {
-    return [...scheduleData.queue("work").getAll(), ...scheduleData.queue("social").getAll()]
-      .filter((item) => item.scheduleId === scheduleId || item.payload?.id === scheduleId).length;
+    return scheduleData.queue("work").countBySchedule(scheduleId) + scheduleData.queue("social").countBySchedule(scheduleId);
   }
 }
 

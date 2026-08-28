@@ -31,6 +31,10 @@ class GameState {
     this.recoverableMentalLoss = 0;
   }
 
+  getGameTime() {
+    return this.day * 1440 + this.clockMinutes;
+  }
+
   setClock(day, clockMinutes) {
     this.day = Math.min(MAX_GAME_DAYS, Math.max(1, Math.floor(Number(day) || 1)));
     this.clockMinutes = ((Math.floor(Number(clockMinutes) || 0) % 1440) + 1440) % 1440;

@@ -53,3 +53,92 @@
 .dev-queue-entry header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #003399; }
 .dev-queue-entry header .dev-btn { margin-left: auto; }
 /* DEV-TOOLS:END */
+
+/* DEV-TOOLS:START */
+/* ── shared tool button style ─────────────────────────────────────────── */
+.dev-btn-tool { background: #1a1a6e; color: #fff; border-color: #4040b0; }
+.dev-btn-tool:hover { background: #2828a0; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ITEM EDITOR TAB
+══════════════════════════════════════════════════════════════════════════ */
+.dev-ie-root { display:flex; flex-direction:column; height:100%; min-height:0; }
+.dev-ie-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:4px 0 6px; border-bottom:1px solid #808080; }
+.dev-ie-main { display:flex; flex:1; min-height:0; gap:0; overflow:hidden; }
+.dev-ie-sidebar { width:200px; min-width:160px; flex-shrink:0; border-right:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; }
+.dev-ie-sidebar-hd { display:flex; gap:4px; padding:4px; border-bottom:1px solid #aaa; }
+.dev-ie-sidebar-hd input { flex:1; min-height:23px; border:2px inset #eee; padding:2px 4px; font-size:12px; }
+.dev-ie-item-list { flex:1; overflow-y:auto; }
+.dev-ie-item-row { display:flex; align-items:center; padding:5px 7px; cursor:pointer; border-bottom:1px solid #e0e0e0; font-size:12px; }
+.dev-ie-item-row:hover { background:#d8e8ff; }
+.dev-ie-item-row.active { background:#000080; color:#fff; }
+.dev-ie-item-row.active div { color:#fff !important; }
+.dev-ie-editor { flex:1; overflow-y:auto; min-width:0; }
+.dev-ie-sec { margin:6px 8px; padding:8px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
+.dev-ie-sec h3 { margin:0 0 8px; font-size:13px; }
+.dev-ie-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:4px; }
+.dev-ie-field { display:flex; flex-direction:column; gap:3px; flex:1; min-width:120px; font-size:12px; }
+.dev-ie-field label { font-size:11px; color:#444; font-weight:600; }
+.dev-ie-field input, .dev-ie-field select, .dev-ie-field textarea { min-height:23px; border:2px inset #eee; padding:2px 4px; font-size:12px; box-sizing:border-box; width:100%; }
+.dev-ie-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:4px; }
+.dev-ie-tag { display:inline-flex; align-items:center; gap:3px; padding:2px 6px; background:#e8e8ff; border:1px solid #9999cc; border-radius:3px; font-size:11px; }
+.dev-ie-tag.kw { background:#e8ffe8; border-color:#66aa66; }
+.dev-ie-tag button { border:none; background:none; cursor:pointer; padding:0 2px; color:#666; line-height:1; font-size:10px; }
+.dev-ie-tag button:hover { color:#c00; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DIALOGUE NODE EDITOR TAB
+══════════════════════════════════════════════════════════════════════════ */
+.dev-de-root { display:flex; flex-direction:column; height:100%; min-height:0; }
+.dev-de-header { display:flex; flex-wrap:wrap; gap:4px; padding:4px 0 6px; border-bottom:1px solid #808080; }
+.dev-de-main { display:flex; flex:1; min-height:0; overflow:hidden; }
+
+/* sidebar */
+.dev-de-sidebar { width:160px; min-width:140px; flex-shrink:0; border-right:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; }
+.dev-de-phase-tabs { display:flex; border-bottom:1px solid #808080; }
+.dev-de-ptab { flex:1; padding:4px; text-align:center; cursor:pointer; font-size:12px; font-weight:600; background:#c0c0c0; border-bottom:2px solid transparent; }
+.dev-de-ptab.active { background:#fff; border-bottom-color:#000080; color:#000080; }
+.dev-de-ptab:hover { background:#d8e8ff; }
+.dev-de-sb-sec { padding:4px; }
+.dev-de-sb-title { font-size:11px; font-weight:700; color:#000080; padding:4px 2px 2px; display:flex; align-items:center; justify-content:space-between; }
+.dev-de-sb-add { border:1px outset #ccc; background:#c0c0c0; cursor:pointer; padding:0 6px; font-size:13px; line-height:18px; }
+.dev-de-sb-add:hover { background:#a0c0ff; }
+.dev-de-sb-day { padding:4px 8px; font-size:12px; cursor:pointer; border-bottom:1px solid #e0e0e0; }
+.dev-de-sb-day:hover { background:#d8e8ff; }
+.dev-de-sb-day.active { background:#000080; color:#fff; }
+.dev-de-sb-item { padding:4px 8px; font-size:12px; cursor:pointer; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:space-between; }
+.dev-de-sb-item:hover { background:#d8e8ff; }
+.dev-de-sb-item.active { background:#000080; color:#fff; }
+.dev-de-sb-del { border:none; background:none; cursor:pointer; color:#888; font-size:11px; padding:0 2px; }
+.dev-de-sb-del:hover { color:#c00; }
+.dev-de-sb-empty { font-size:11px; color:#aaa; padding:4px 8px; }
+
+/* canvas */
+.dev-de-canvas-wrap { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+.dev-de-canvas-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:4px 6px; background:#d0d0d0; border-bottom:1px solid #808080; }
+.dev-de-canvas-container { flex:1; position:relative; overflow:auto; background:#f0f0f8; cursor:default; }
+
+/* nodes */
+.dev-de-node { position:absolute; width:185px; background:#fff; border:2px outset #ccc; box-shadow:2px 2px 4px rgba(0,0,0,.15); cursor:pointer; user-select:none; font-size:12px; }
+.dev-de-node.selected { border-color:#000080; box-shadow:0 0 0 2px #000080; }
+.dev-de-node.start { border-color:#cc6600; }
+.dev-de-node-hd { padding:3px 6px; color:#fff; font-size:11px; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+.dev-de-node-link { border:none; background:rgba(255,255,255,.25); cursor:pointer; color:#fff; padding:0 4px; font-size:11px; border-radius:2px; }
+.dev-de-node-link:hover { background:rgba(255,255,255,.5); }
+.dev-de-node-body { padding:4px 6px; color:#333; line-height:1.4; min-height:20px; word-break:break-all; }
+.dev-de-node-ft { padding:2px 6px 4px; display:flex; gap:4px; flex-wrap:wrap; }
+.dev-de-nbadge { background:#e8e8ff; border:1px solid #9999cc; border-radius:3px; font-size:10px; padding:1px 4px; color:#333; }
+
+/* right-side node editor panel */
+.dev-de-editor { width:260px; min-width:220px; flex-shrink:0; border-left:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; background:#d4d0c8; }
+.dev-de-editor-title { padding:5px 8px; font-weight:700; font-size:12px; background:#000080; color:#fff; }
+.dev-de-ed-sec { padding:4px 6px; }
+.dev-de-ed-label { font-size:11px; font-weight:700; color:#333; margin-bottom:3px; }
+.dev-de-spk-btn { margin:1px; padding:2px 7px; font-size:11px; min-height:22px; }
+.dev-de-spk-btn.active { outline:2px solid currentColor; }
+.dev-de-wnum { width:52px; min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; text-align:center; }
+.dev-de-opt-row { margin-bottom:6px; padding:4px 6px; background:#e8e8e8; border:1px solid #ccc; }
+.dev-de-opt-label { flex:1; min-height:23px; border:2px inset #eee; padding:2px 4px; font-size:12px; min-width:0; }
+.dev-de-opt-next { min-height:23px; border:2px inset #eee; padding:2px; font-size:11px; min-width:80px; }
+/* DEV-TOOLS:END */
+

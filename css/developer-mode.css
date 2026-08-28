@@ -19,7 +19,14 @@
 .dev-section input[type="number"] { width: 74px; }
 .dev-textarea { display: block; width: 100%; box-sizing: border-box; resize: vertical; font: 12px Consolas, monospace; padding: 6px; border: 2px inset #eee; background: #fff; }
 .dev-save-input { min-height: 58px; }
-.dev-json-editor { min-height: 390px; margin: 8px 0; }
+.dev-structured-root { display: flex; flex-direction: column; gap: 6px; min-height: 100%; }
+.dev-structured-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; padding-bottom: 6px; border-bottom: 1px solid #8da4c8; }
+.dev-structured-toolbar strong { margin-right: auto; color: #000080; }
+.dev-structured-description { margin: 0; font-size: 12px; }
+.dev-structured-fields { display: grid; gap: 8px; }
+.dev-structured-field { display: grid; gap: 4px; }
+.dev-structured-field > span { font-weight: 600; font-size: 12px; }
+.dev-structured-field input { min-height: 23px; border: 2px inset #eee; padding: 2px 4px; box-sizing: border-box; }
 .dev-keyword-table input, .dev-keyword-table textarea { width: 100%; box-sizing: border-box; }
 .dev-keyword-table th:nth-child(1) { width: 150px; }
 .dev-keyword-table th:nth-child(3) { width: 90px; }

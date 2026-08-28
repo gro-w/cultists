@@ -286,8 +286,76 @@ class ItemManager {
     return result;
   }
 
+  /**
+   * Return the appearance image (base64 data URL) for the given item at the
+   * player's current SAN band, or null when no image has been uploaded for
+   * that band (or the item has no sanVariants at all).
+   * @param {string} id
+   * @returns {string|null}
+   */
+  getImage(id) {
+    const def = this.defs.get(id);
+    if (!def?.sanVariants) return null;
+    const bandKey = this._getSanBandKey(gameState.mental);
+    return def.sanVariants[bandKey]?.imageData || null;
+  }
+
+  /**
+   * Return true when the item has at least one uploaded image across any
+   * SAN band (used by the UI to decide whether to show the "外观" button).
+   * @param {string} id
+   * @returns {boolean}
+   */
+  hasAnyImage(id) {
+    const def = this.defs.get(id);
+    if (!def?.sanVariants) return false;
+    return Object.values(def.sanVariants).some((v) => v?.imageData);
+  }
+
   snapshot() {
     return this.all();
+  }
+
+  /**
+   * Return all item definitions whose `locations` array contains the given key.
+   * Key may be a top-level id ("hospital") or a sub-location path ("dorm/ajie_desk").
+   * @param {string} locationKey
+   * @returns {object[]}
+   */
+  worldItemsAt(locationKey) {
+    const results = [];
+    this.defs.forEach((def) => {
+      if ((def.locations || []).includes(locationKey)) results.push(def);
+    });
+    return results;
+  }
+
+  /**
+   * Return every item definition that belongs to any sub-location of a parent
+   * location, keyed by sub-location id. E.g. worldItemsForDorm("dorm") returns
+   * { "ajie_desk": [def, …], "fridge": [def, …], … } using keys "dorm/<subId>".
+   * Also includes items with just the parent key in the special "." bucket.
+   * @param {string} parentLocationId
+   * @returns {Map<string, object[]>}
+   */
+  worldItemsBySubLocation(parentLocationId) {
+    const map = new Map();
+    const prefix = parentLocationId + "/";
+    this.defs.forEach((def) => {
+      (def.locations || []).forEach((loc) => {
+        if (loc === parentLocationId) {
+          const list = map.get(".") || [];
+          list.push(def);
+          map.set(".", list);
+        } else if (loc.startsWith(prefix)) {
+          const subId = loc.slice(prefix.length);
+          const list = map.get(subId) || [];
+          list.push(def);
+          map.set(subId, list);
+        }
+      });
+    });
+    return map;
   }
 
   /** Subscribe to any inventory change. Returns an unsubscribe function. */

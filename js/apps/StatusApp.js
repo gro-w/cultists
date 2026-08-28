@@ -145,6 +145,30 @@ export async function launchStatusApp() {
       });
       actions.appendChild(inspectBtn);
 
+      if (itemManager.hasAnyImage(id)) {
+        const imgBtn = document.createElement("button");
+        imgBtn.className = "win95-btn bevel-out";
+        imgBtn.textContent = "外观";
+        imgBtn.addEventListener("click", () => {
+          const src = itemManager.getImage(id);
+          if (!src) {
+            feedback.hidden = false;
+            feedback.innerHTML = `<span style="color:#888;font-size:12px">（当前 SAN 段没有外观图片）</span>`;
+            return;
+          }
+          // Toggle: if already showing this image, close it
+          const existing = feedback.querySelector(".item-image-preview");
+          if (!feedback.hidden && existing) {
+            feedback.hidden = true;
+            feedback.innerHTML = "";
+            return;
+          }
+          feedback.hidden = false;
+          feedback.innerHTML = `<img class="item-image-preview" src="${src}" alt="${def.name}" title="${def.name}">`;
+        });
+        actions.appendChild(imgBtn);
+      }
+
       if (def.usable) {
         const useBtn = document.createElement("button");
         useBtn.className = "win95-btn bevel-out";

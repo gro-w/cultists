@@ -6,6 +6,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition, getScheduleNodePort } from "../core/ScheduleNodeRegistry.js";
 import { validateBlueprint } from "../core/ScheduleBlueprint.js";
+import { bgmManager } from "../core/BgmManager.js";
 import { windowManager } from "../core/WindowManager.js";
 
 /**
@@ -277,6 +278,79 @@ export class DevDialogueEditorTab {
           <div id="de-ed-inputs"></div>
           <div id="de-ed-outputs" class="dev-de-port-summary"></div>
         </div>
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">发言角色</div>
+          <div style="display:flex;gap:3px;flex-wrap:wrap" id="de-spk-btns">
+            ${_DE_SPEAKERS.map(s=>`<button type="button" class="win95-btn dev-btn dev-de-spk-btn" data-spk="${s.id}" onclick="_de._setSpeaker('${s.id}')">${s.label}</button>`).join('')}
+          </div>
+        </div>
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">对话文本</div>
+          <textarea class="dev-textarea" id="de-ed-text" style="width:100%;height:80px;resize:vertical" placeholder="输入对话内容…" oninput="_de._saveNodeText()"></textarea>
+        </div>
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">亮起关键词 ID（逗号分隔）</div>
+          <input style="width:100%;min-height:23px;border:2px inset #eee;padding:2px 4px" id="de-ed-keywords" placeholder="keyword_id1, keyword_id2" oninput="_de._saveNodeKeywords()">
+        </div>
+        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">选项分支</div>
+          <div id="de-opt-list"></div>
+          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addOption()">＋ 添加选项</button>
+        </div>
+        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">直接跳转（无选项时）</div>
+          <div style="display:flex;gap:4px">
+            <select id="de-ed-next" style="flex:1;min-height:23px;border:2px inset #eee;padding:2px" onchange="_de._saveNodeNext()">
+              <option value="">(结束)</option>
+            </select>
+            <button type="button" class="win95-btn dev-btn" onclick="_de._addNodeAndLink()">＋新节点</button>
+          </div>
+        </div>
+        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">onShow 效果</div>
+          <div id="de-onshow-effects">
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
+              <span>好感：阿杰</span><input class="dev-de-wnum" id="de-os-aje" type="number" placeholder="0" oninput="_de._saveOnShow()">
+              <span>阿伟</span><input class="dev-de-wnum" id="de-os-awei" type="number" placeholder="0" oninput="_de._saveOnShow()">
+              <span>彬彬</span><input class="dev-de-wnum" id="de-os-binbin" type="number" placeholder="0" oninput="_de._saveOnShow()">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
+              <span>理智值</span><input class="dev-de-wnum" id="de-os-sanity" type="number" placeholder="0" oninput="_de._saveOnShow()">
+              <span>怀疑度</span><input class="dev-de-wnum" id="de-os-suspicion" type="number" placeholder="0" oninput="_de._saveOnShow()">
+              <span title="sanity=0解锁">清晰值</span><input class="dev-de-wnum" id="de-os-clarity" type="number" placeholder="0" oninput="_de._saveOnShow()">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
+              <span>给予物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-grant" placeholder="item_id" oninput="_de._saveOnShow()">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
+              <span>移除物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-remove" placeholder="item_id" oninput="_de._saveOnShow()">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <span>触发结局</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-ending" placeholder="ending_id" oninput="_de._saveOnShow()">
+            </div>
+            <div class="dev-de-onshow-bgm">
+              <span>🎵 BGM 动作</span>
+              <select id="de-os-bgm-action" onchange="_de._saveOnShow()">
+                <option value="">(不改变)</option>
+                <option value="play">play — 播放指定 BGM</option>
+                <option value="stop">stop — 停止（静音）</option>
+                <option value="restore">restore — 恢复上层 BGM</option>
+              </select>
+              <select id="de-os-bgm-id" onchange="_de._saveOnShow()">
+                <option value="">(选择曲目)</option>
+              </select>
+              <span class="dev-de-onshow-bgm-indicator" id="de-os-bgm-warn" style="display:none">⚠️ BGM ID 无效</span>
+            </div>
+          </div>
+        </div>
+        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">进入条件</div>
+          <div id="de-entry-conds"></div>
+          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addEntryCond()">＋ 添加条件</button>
         <div class="dev-de-ed-sec dev-de-connection-editor">
           <div class="dev-de-ed-label">流程输出（选择下家）</div>
           <div id="de-flow-outputs"></div>
@@ -706,6 +780,15 @@ export class DevDialogueEditorTab {
       div.className=`dev-de-node${isSel?' selected':''}${isStart?' start':''}`;
       div.id=`de-node-${node.id}`;
       div.style.cssText=`left:${node.x||60}px;top:${node.y||60}px`;
+      const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
+      const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
+      const bgmBadge=node.onShow?.bgm?.action==='play'&&node.onShow.bgm.bgmId
+        ? `<span class="dev-de-nbadge" title="BGM: ${this._e(node.onShow.bgm.bgmId)}" style="background:#006600;color:#fff">🎵</span>`
+        : node.onShow?.bgm?.action==='stop'
+        ? `<span class="dev-de-nbadge" title="BGM: stop" style="background:#660000;color:#fff">🎵✕</span>`
+        : node.onShow?.bgm?.action==='restore'
+        ? `<span class="dev-de-nbadge" title="BGM: restore" style="background:#004080;color:#fff">🎵↩</span>`
+        : '';
       div.innerHTML=`
         <div class="dev-de-node-hd" style="background:#000080">
           <span>${this._e(nodeLabel)}${isStart?' 🏠':''}</span>
@@ -714,7 +797,7 @@ export class DevDialogueEditorTab {
         <div class="dev-de-node-body">${this._e(JSON.stringify(node.inputs||{}))}</div>
         <div class="dev-de-port-layer inputs">${this._portMarkup(node, 'input')}</div>
         <div class="dev-de-port-layer outputs">${this._portMarkup(node, 'output')}</div>
-        <div class="dev-de-node-ft"><span class="dev-de-nbadge">${this._e(node.type || 'unknown')}</span></div>`;
+        <div class="dev-de-node-ft"><span class="dev-de-nbadge">${this._e(node.type || 'unknown')}</span>${optBadge}${nxtBadge}${bgmBadge}</div>`;
       div.querySelectorAll('.dev-de-port-pin').forEach(pin => pin.addEventListener('pointerdown', e => {
         e.preventDefault();
         e.stopPropagation();
@@ -920,6 +1003,56 @@ export class DevDialogueEditorTab {
     if (ef) ef.style.display='none'; if (ff) ff.style.display='';
     const typeEl=this._el('de-ed-type'); if(typeEl) typeEl.value=node.type||'text';
     this._renderNodeInputs(node, data);
+    // speaker buttons
+    this._el('de-spk-btns')?.querySelectorAll('.dev-de-spk-btn').forEach(b=>{
+      b.classList.toggle('active', b.dataset.spk===node.speaker);
+      b.style.borderColor = b.dataset.spk===node.speaker ? this._spk(node.speaker).color : '';
+    });
+    const txt=this._el('de-ed-text'); if(txt) txt.value=node.text||'';
+    const kw=this._el('de-ed-keywords'); if(kw) kw.value=(node.keywordIds||[]).join(', ');
+    // next dropdown
+    this._rebuildNextDropdown('de-ed-next', node.next, data);
+    // options
+    this._renderOptList(node, data);
+    // onShow
+    const os=node.onShow||{};
+    const set=(id,v)=>{ const e=this._el(id); if(e) e.value=v||''; };
+    set('de-os-aje',     os.aje_favor);
+    set('de-os-awei',    os.awei_favor);
+    set('de-os-binbin',  os.binbin_favor);
+    set('de-os-sanity',  os.sanity);
+    set('de-os-suspicion',os.suspicion);
+    set('de-os-clarity', os.clarity);
+    set('de-os-grant',   (os.grantItems||[]).join(', '));
+    set('de-os-remove',  (os.removeItems||[]).join(', '));
+    set('de-os-ending',  os.ending);
+    // BGM selects: populate track options, then restore saved values
+    const bgmActionSel = this._el('de-os-bgm-action');
+    const bgmIdSel     = this._el('de-os-bgm-id');
+    const bgmWarn      = this._el('de-os-bgm-warn');
+    if (bgmIdSel) {
+      bgmIdSel.innerHTML = '<option value="">(选择曲目)</option>' +
+        bgmManager.allTracks().map(t =>
+          `<option value="${this._e(t.id)}">${this._e(t.name || t.id)}</option>`
+        ).join('');
+    }
+    const bgm = os.bgm || {};
+    if (bgmActionSel) bgmActionSel.value = bgm.action || '';
+    if (bgmIdSel)     bgmIdSel.value     = bgm.bgmId  || '';
+    // show id selector only when action === 'play'
+    if (bgmIdSel)  bgmIdSel.style.display  = (bgm.action === 'play') ? '' : 'none';
+    // warn when bgmId is set but the track no longer exists
+    const idInvalid = bgm.action === 'play' && bgm.bgmId && !bgmManager.tracks.has(bgm.bgmId);
+    if (bgmWarn) bgmWarn.style.display = idInvalid ? '' : 'none';
+    // Show/hide bgmId select live when action changes
+    if (bgmActionSel) bgmActionSel.onchange = () => {
+      if (bgmIdSel) bgmIdSel.style.display = (bgmActionSel.value === 'play') ? '' : 'none';
+      _de._saveOnShow();
+    };
+    // entry conditions
+    this._renderEntryConds(node);
+    const flowOutputs = this._el('de-flow-outputs');
+    if (flowOutputs) this._renderFlowOutputs(node, data);
   }
 
   _saveNodeType(type) {
@@ -1126,6 +1259,10 @@ export class DevDialogueEditorTab {
     const grant=str('de-os-grant'); if(grant) os.grantItems=grant.split(',').map(s=>s.trim()).filter(Boolean);
     const rem=str('de-os-remove');  if(rem)   os.removeItems=rem.split(',').map(s=>s.trim()).filter(Boolean);
     const end=str('de-os-ending');  if(end)   os.ending=end;
+    // BGM
+    const bgmAction=str('de-os-bgm-action');
+    const bgmId=str('de-os-bgm-id');
+    if(bgmAction) { os.bgm={ action:bgmAction }; if(bgmAction==='play' && bgmId) os.bgm.bgmId=bgmId; }
     node.onShow=os; this._saveLS();
   }
 
@@ -1339,12 +1476,25 @@ export class DevDialogueEditorTab {
       nexts.forEach(nid => { if (!visited.has(nid)) { visited.add(nid); queue.push(nid); } });
     }
     ids.filter(id => !visited.has(id)).forEach(id => order.push(id));
-    // Place in a grid: COLS columns, rows grow downward — all nodes stay in visible area
+    // Place in a grid: COLS columns, rows grow downward
     order.forEach((id, i) => {
       nodes[id].x = PAD + (i % COLS) * (W + GAPX);
       nodes[id].y = PAD + Math.floor(i / COLS) * (H + GAPY);
     });
+    // Expand canvas to fit all placed nodes so nothing is clipped
+    const rows = Math.ceil(order.length / COLS);
+    const needW = PAD + COLS * (W + GAPX) + PAD;
+    const needH = PAD + rows * (H + GAPY) + PAD;
+    const nodesDiv = this._el('de-canvas-nodes');
+    const svgEl    = this._el('de-canvas-svg');
+    if (nodesDiv) { nodesDiv.style.minWidth  = Math.max(2000, needW) + 'px';
+                    nodesDiv.style.minHeight = Math.max(1200, needH) + 'px'; }
+    if (svgEl)    { svgEl.setAttribute('width',  Math.max(2000, needW));
+                    svgEl.setAttribute('height', Math.max(1200, needH)); }
     this._saveLS(); this._renderCanvas();
+    // Scroll back to origin so newly placed nodes are immediately visible
+    const wrap = this._el('de-canvas-container');
+    if (wrap) { wrap.scrollLeft = 0; wrap.scrollTop = 0; }
   }
 
   // ── day / event / ending ──────────────────────────────────────────────────
@@ -1670,5 +1820,4 @@ export class DevDialogueEditorTab {
   _closeModalIfBg(e) { if (e.target === this._el('de-modal-overlay')) this._closeModal(); }
 }
 // DEV-TOOLS:END
-
 

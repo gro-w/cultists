@@ -59,6 +59,11 @@ export class ScheduleRunner {
     while (current && guard++ < 1000) {
       const node = this.blueprint.nodes?.[current];
       if (!node) throw new Error(`Unknown flow node: ${current}`);
+      if (!globalVariableManager.matches(node.condition || node.globalVariableCondition)) {
+        this.appendLine("npc", String(this.definition.name || this.definition.id || "日程"), "（当前条件不满足，无法继续。）");
+        this._complete();
+        return;
+      }
       this.instance.currentNodeId = current;
       this.onCheckpoint(this.instance);
       if (node.type === "choice") { this._showChoice(node); return; }
@@ -108,8 +113,10 @@ export class ScheduleRunner {
   _showChoice(node) {
     if (!this.optionsEl) throw new Error("Choice node requires an options container");
     this.optionsEl.innerHTML = "";
-    const options = node.options || node.branches || [];
-    options.forEach((option, index) => {
+    const options = (node.options || node.branches || [])
+      .filter((option) => globalVariableManager.matches(option.condition || option.globalVariableCondition));
+    options.forEach((option) => {
+      const index = (node.options || node.branches || []).indexOf(option);
       const button = document.createElement("button");
       button.type = "button";
       const labelConnection = (this.blueprint.connections || []).find((item) => item.toNodeId === node.id && item.toPort === `label${index}`);

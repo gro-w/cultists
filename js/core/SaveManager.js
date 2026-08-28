@@ -14,8 +14,8 @@ import { workQueue, socialQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v11 = v10 plus spell list in JSON payload.
-const SAVE_FORMAT_VERSION = 11;
+// v12 = v11 plus unified schedule instance payloads and checkpoints.
+const SAVE_FORMAT_VERSION = 12;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];

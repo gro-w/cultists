@@ -20,6 +20,7 @@ import { spellManager } from "../core/SpellManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { achievementManager } from "../core/AchievementManager.js";
 import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "../core/ScheduleQueue.js";
+import { normalizeBlueprint } from "../core/ScheduleBlueprint.js";
 import { DevItemEditorTab } from "./DevItemEditorTab.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
@@ -65,6 +66,18 @@ const DEV_EDITOR_ICONS = {
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
 function phaseForClock(total) { const normalized = ((total % 1440) + 1440) % 1440; return normalized >= 480 && normalized < 960 ? { phase: "day", phaseMinutes: normalized - 480 } : { phase: "night", phaseMinutes: normalized >= 960 ? normalized - 960 : normalized + 480 }; }
+function scheduleNodeContent(node) {
+  if (!node) return "";
+  if (node.type === "text") return node.inputs?.text ?? node.text ?? "";
+  if (node.type === "choice") return "选项节点";
+  if (node.type === "scheduleEnd") return "日程结束";
+  if (node.type === "flowStart") return "流程开始";
+  return node.label || node.type || "流程节点";
+}
+function scheduleNodeOptions(entry) {
+  const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry);
+  return Object.values(blueprint.nodes || {}).map((node) => `<option value="${esc(node.id)}" ${node.id === (entry.currentNodeId || blueprint.startNodeId) ? "selected" : ""}>${esc(node.id)}：${esc(scheduleNodeContent(node))}</option>`).join("");
+}
 
 export function launchDatabaseApp() {
   eventBus.emit("developer:opened", { appId: "developer-mode" });
@@ -289,9 +302,9 @@ export class DeveloperMode {
 
   showSchedules() {
     const queues = [["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue], ["realtime", realtimeQueue]];
-    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => `<tr><td><code>${esc(entry.instanceId)}</code></td><td>${esc(entry.scheduleId)}</td><td>${esc(entry.status)}</td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("重开", `reopen-queue-${id}-${entry.instanceId}`) : button("标记完成", `resolve-queue-${id}-${entry.instanceId}`)}</td></tr>`).join("") || "<tr><td colspan=5>空</td></tr>"}</tbody></table></section>`).join("");
+    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td>${esc(entry.scheduleId)}</td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
     const scheduled = scheduleData.snapshotScheduled();
-    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示四个独立队列及动态日程实例；完成/重开操作写回对应队列并触发 <code>schedule:changed</code>。</p><p>ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
+    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><p>ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>`}</ul></section>${sections}`);
   }
 
   showWorld() {
@@ -553,6 +566,24 @@ export class DeveloperMode {
       const queue = queues[queueAction[2]];
       const ok = queue.updateInstance(queueAction[3], { status: queueAction[1] === "resolve" ? "resolved" : "unresolved" });
       this.setStatus(ok ? "日程实例状态已更新。" : "未找到日程实例。", !ok);
+      return this.showSchedules();
+    }
+    const jumpAction = action.match(/^jump-queue-(work|social|chatgtp|realtime)-(.+)$/);
+    if (jumpAction) {
+      const queueId = jumpAction[1];
+      const instanceId = jumpAction[2];
+      const queue = { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue }[queueId];
+      const select = Array.from(this.root.querySelectorAll("[data-schedule-jump]"))
+        .find((element) => element.dataset.scheduleJump === instanceId);
+      const entry = queue.getInstance(instanceId);
+      const nodeId = select?.value;
+      const blueprint = entry ? normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry) : null;
+      const ok = Boolean(entry && entry.status === "unresolved" && nodeId && blueprint?.nodes?.[nodeId]
+        && queue.updateInstance(instanceId, {
+          currentNodeId: nodeId,
+          executedNodeIds: (entry.executedNodeIds || []).filter((id) => id !== nodeId),
+        }));
+      this.setStatus(ok ? `日程实例已强制跳转到节点 ${nodeId}。` : "强制跳转失败：实例或流程节点无效。", !ok);
       return this.showSchedules();
     }
     const placementAction = action.match(/^toggle-placement-(.+)$/);

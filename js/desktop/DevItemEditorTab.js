@@ -1,5 +1,6 @@
 // DEV-TOOLS:START
 import { dataLoader } from "../core/DataLoader.js";
+import { locationSystem } from "../core/LocationSystem.js";
 
 /**
  * DevItemEditorTab — item-editor.html/js ported into the DeveloperMode panel.
@@ -57,6 +58,7 @@ export class DevItemEditorTab {
     window._ie = this;
     this._loadCurrentGame();
     this._renderList();
+    this._loadLocationPicker();
   }
 
   // ── HTML skeleton (returned to DeveloperMode.showItemEditor) ─────────────
@@ -92,6 +94,12 @@ export class DevItemEditorTab {
       </div>
       <div class="dev-section dev-ie-sec"><h3>📍 位置</h3>
         <div id="ie-loc-tags" class="dev-ie-tags"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+          <select id="ie-loc-picker" style="flex:1;min-width:160px;min-height:23px;border:2px inset #eee;padding:1px 3px;font-size:12px"
+            onchange="_ie._onLocPick()">
+            <option value="">── 从位置列表选择 ──</option>
+          </select>
+        </div>
         <div style="display:flex;gap:6px">
           <input type="text" id="ie-loc-input" placeholder="dorm / ajie_desk …" style="flex:1;min-height:23px;border:2px inset #eee;padding:2px 4px"
             onkeydown="if(event.key==='Enter')_ie._addLocTag()">
@@ -217,6 +225,26 @@ export class DevItemEditorTab {
 
   _setDirty() { this.dirty=true; }
   _onNameInput() { this.dirty=true; this._renderList(); }
+
+  // ── location picker (populated from LocationSystem) ──────────────────────
+  async _loadLocationPicker() {
+    try {
+      await locationSystem.load();
+      const sel = this._el('ie-loc-picker');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">── 从位置列表选择 ──</option>' +
+        locationSystem.allKeys().map(({ key, label }) =>
+          `<option value="${this._e(key)}">${this._e(label)}</option>`
+        ).join('');
+    } catch (_) { /* locationSystem not loaded yet, manual input still works */ }
+  }
+  _onLocPick() {
+    const sel = this._el('ie-loc-picker');
+    const v = sel?.value; if (!v) return;
+    const inp = this._el('ie-loc-input'); if (inp) inp.value = v;
+    this._addLocTag();
+    if (sel) sel.value = '';
+  }
 
   // ── location tags ─────────────────────────────────────────────────────────
   _renderLocTags() {

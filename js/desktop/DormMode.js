@@ -11,7 +11,9 @@ import { saveManager } from "../core/SaveManager.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
+import { launchSocialMediaApp } from "../apps/SocialMediaApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
+import { locationSystem } from "../core/LocationSystem.js";
 
 const roommateImage = (npcId) => ({
   ajie: "data/assets/char_ajie_01.png",
@@ -26,8 +28,7 @@ const dialogueKeywordIds = (tree) => {
   return ids;
 };
 
-
-/** Full-screen off-duty room: movement, NPC interaction, bed, and player menu. */
+/** Full-screen off-duty dorm: NPC interaction, desk/fridge items, bed, computer. */
 export default class DormMode {
   constructor(root, { workShell, launchWorkApp }) {
     this.root = root;
@@ -36,6 +37,8 @@ export default class DormMode {
     this.scenes = null;
     this.entry = null;
     this._transitioning = false;
+    this._computerOpen = false;
+    this._compTabInit = {};
     this._build();
     eventBus.on("daynight:changed", (detail) => this._onStateChanged(detail));
     eventBus.on("actionBudget:changed", () => this._renderClock());
@@ -48,6 +51,7 @@ export default class DormMode {
     this._syncVisibility(false);
   }
 
+  // ── DOM construction ────────────────────────────────────────────────────────
   _build() {
     this.root.className = "dorm-mode-overlay hidden";
     this.root.innerHTML = `
@@ -59,11 +63,11 @@ export default class DormMode {
           </div>
           <div class="dorm-fs-actions">
             <button type="button" class="win95-btn bevel-out" data-action="bed">🛏️ 睡觉</button>
-            <button type="button" class="win95-btn bevel-out" data-action="phone">📱 手机</button>
             <button type="button" class="win95-btn bevel-out" data-action="clue">🧵 线索墙</button>
             <button type="button" class="win95-btn bevel-out" data-action="computer">🖥️ 电脑</button>
           </div>
         </div>
+
         <div class="dorm-fs-scene">
           <div class="dorm-bunk-unit" data-npc="player">
             <div class="dorm-bunk-top" title="主角（点击查看状态）">
@@ -108,9 +112,11 @@ export default class DormMode {
             </div>
           </div>
         </div>
+
         <div class="dorm-interaction panel-inset">
           <p class="dorm-interaction-hint">点击铺位上的人物交互 · 点击主角查看状态与物品</p>
         </div>
+
         <div class="dorm-bed-confirm hidden" role="dialog" aria-modal="true">
           <div class="dorm-bed-confirm-box panel-inset">
             <strong class="dorm-bed-confirm-title"></strong>
@@ -121,33 +127,43 @@ export default class DormMode {
             </div>
           </div>
         </div>
+
+        <div class="dorm-computer-overlay hidden">
+          <div class="dorm-computer-inner">
+            <div class="dorm-computer-tabs">
+              <button type="button" class="win95-btn bevel-out dorm-comp-tab-btn active" data-comptab="chatgtp">🤖 ChatGTP</button>
+              <button type="button" class="win95-btn bevel-out dorm-comp-tab-btn" data-comptab="social">📱 社交媒体</button>
+              <button type="button" class="win95-btn bevel-out dorm-comp-close">✖ 关闭电脑</button>
+            </div>
+            <div class="dorm-computer-panel" data-comppanel="chatgtp"></div>
+            <div class="dorm-computer-panel hidden" data-comppanel="social"></div>
+          </div>
+        </div>
       </div>`;
 
-    this.clock       = this.root.querySelector(".dorm-wall-clock strong");
-    this.interaction = this.root.querySelector(".dorm-interaction");
+    this.clock          = this.root.querySelector(".dorm-wall-clock strong");
+    this.interaction    = this.root.querySelector(".dorm-interaction");
     this.confirmPanel   = this.root.querySelector(".dorm-bed-confirm");
     this.confirmTitle   = this.root.querySelector(".dorm-bed-confirm-title");
     this.confirmMessage = this.root.querySelector(".dorm-bed-confirm-message");
-    this.computerClose  = document.getElementById("computer-close-button");
-
-    this.computerClose.addEventListener("click", () => this._closeComputer());
     this.confirmPanel.querySelector(".dorm-bed-confirm-cancel").addEventListener("click", () => {
       this.confirmPanel.classList.add("hidden");
     });
 
     this.root.querySelector('[data-action="bed"]').addEventListener("click", () => this._bedAction());
-    this.root.querySelector('[data-action="phone"]').addEventListener("click", () => {
-      launchChatGTPApp({ container: this.interaction })
-        .catch((err) => this._message(`ChatGTP 无法打开：${err.message}`));
-    });
     this.root.querySelector('[data-action="clue"]').addEventListener("click", () => this._showClueWall());
     this.root.querySelector('[data-action="computer"]').addEventListener("click", () => this._openComputer());
 
-    // Player bunk top click → show player menu
+    this.root.querySelectorAll(".dorm-comp-tab-btn[data-comptab]").forEach((btn) => {
+      btn.addEventListener("click", () => this._switchCompTab(btn.dataset.comptab));
+    });
+    this.root.querySelector(".dorm-comp-close").addEventListener("click", () => this._closeComputer());
+
     this.root.querySelector('[data-npc="player"] .dorm-bunk-top')
       .addEventListener("click", () => this._showPlayerMenu());
   }
 
+  // ── Clock ───────────────────────────────────────────────────────────────────
   _clockMinutes() {
     const start = gameState.phase === "day" ? 8 * 60 : 16 * 60;
     return (start + actionBudget.phaseMinutes) % 1440;
@@ -158,6 +174,7 @@ export default class DormMode {
     this.clock.textContent = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
   }
 
+  // ── Scene render ────────────────────────────────────────────────────────────
   async _renderScene() {
     if (!this.scenes) return;
     this._renderClock();
@@ -167,16 +184,14 @@ export default class DormMode {
     this.entry = await scheduleData.load(gameState.day, gameState.phase);
     const actors = this.entry?.[listKey] || [];
 
-    // Map npcId → actor for the three roommates
     const npcMap = new Map();
     actors.forEach((actor) => {
       const npcId = actor.npcId || actor.id;
       if (["ajie", "awei", "binbin"].includes(npcId)) npcMap.set(npcId, actor);
     });
 
-    // Pre-build keyword defs for all visible actors
     const keywordDefs = {};
-    npcMap.forEach((actor, npcId) =>
+    npcMap.forEach((actor) =>
       Object.assign(keywordDefs, keywordManager.definitionsWithSource(
         dialogueKeywordIds(actor.dialogueTree), `宿舍-${actor.name}`))
     );
@@ -184,7 +199,6 @@ export default class DormMode {
     ["ajie", "awei", "binbin"].forEach((npcId) => {
       const bedEl = this.root.querySelector(`#bed-${npcId}`);
       if (!bedEl) return;
-      // Clear previous render (keep bed-rail)
       [...bedEl.querySelectorAll(".dorm-bunk-char, .dorm-npc-btn")].forEach((el) => el.remove());
 
       const actor = npcMap.get(npcId);
@@ -217,59 +231,169 @@ export default class DormMode {
       }
     });
 
-    // ── Item placements on desks / fridge ──────────────────────────────────
+    // ── Items on desks / fridge ─────────────────────────────────────────────
     this._renderItemPlacements();
   }
 
+  /**
+   * Render items in each desk/fridge slot.
+   * Sources (merged, deduplicated by itemId):
+   *   1. ItemPlacementManager – condition-gated world placements (item_placements.json)
+   *   2. ItemManager.worldItemsBySubLocation – items whose `locations` field
+   *      contains "dorm/<subId>" (set via Item Editor)
+   *
+   * Sub-location id → DOM container mapping:
+   *   player_desk  → #desk-player_desk
+   *   ajie_desk    → #desk-ajie_desk
+   *   awei_desk    → #desk-awei_desk
+   *   binbin_desk  → #desk-binbin_desk
+   *   fridge       → #desk-fridge
+   */
   _renderItemPlacements() {
-    // Clear all desk/fridge slots first
+    // Clear previous item buttons (keep .dorm-fridge-label)
     this.root.querySelectorAll(".dorm-bunk-desk, .dorm-fridge").forEach((el) => {
-      // Remove only item buttons, keep .dorm-fridge-label
       [...el.querySelectorAll(".dorm-item-slot-btn")].forEach((b) => b.remove());
     });
 
+    const rendered = new Set(); // track itemId per sub-slot to avoid dupes
+
+    // ── Source 1: ItemPlacementManager (condition-gated) ────────────────────
     itemPlacementManager.visibleFor("dorm").forEach((placement) => {
       const zone = placement.zone || "player_desk";
       const container = this.root.querySelector(`#desk-${zone}`);
       if (!container) return;
 
+      const slotKey = `${zone}:${placement.itemId}`;
+      rendered.add(slotKey);
+
       const hotspot = placement.hotspot || {};
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "win95-btn bevel-out dorm-item-slot-btn";
-      btn.textContent = hotspot.icon || "❔";
-      btn.title = hotspot.label || itemManager.getDef(placement.itemId)?.name || placement.itemId;
-      btn.setAttribute("aria-label", btn.title);
-      btn.addEventListener("click", () => this._inspectPlacedItem(placement.id));
+      const btn = this._makeItemBtn(
+        hotspot.icon || "❔",
+        hotspot.label || itemManager.getDef(placement.itemId)?.name || placement.itemId,
+        () => this._inspectPlacedItem(placement.id)
+      );
       container.appendChild(btn);
+    });
+
+    // ── Source 2: items.json locations field ────────────────────────────────
+    const bySubLoc = itemManager.worldItemsBySubLocation("dorm");
+    bySubLoc.forEach((defs, subId) => {
+      // subId "." means top-level "dorm" — show in interaction panel hint only
+      if (subId === ".") return;
+
+      const container = this.root.querySelector(`#desk-${subId}`);
+      if (!container) return;
+
+      defs.forEach((def) => {
+        const slotKey = `${subId}:${def.id}`;
+        if (rendered.has(slotKey)) return; // already shown via placement
+        rendered.add(slotKey);
+
+        // Determine layer: skip non-interactive (below) items
+        if (def.layer === "below") return;
+
+        const btn = this._makeItemBtn(
+          def.icon || "📦",
+          def.name || def.id,
+          () => this._inspectWorldItem(def.id)
+        );
+        container.appendChild(btn);
+      });
     });
   }
 
+  _makeItemBtn(icon, label, onClick) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "win95-btn bevel-out dorm-item-slot-btn";
+    btn.textContent = icon;
+    btn.title = label;
+    btn.setAttribute("aria-label", label);
+    btn.addEventListener("click", onClick);
+    return btn;
+  }
+
+  // ── Item interaction ────────────────────────────────────────────────────────
+
+  /** Inspect a world-placed item (item_placements.json, has take/put-back). */
   _inspectPlacedItem(placementId) {
     const inspected = itemPlacementManager.inspect(placementId);
     if (!inspected.ok) {
       this._message(inspected.message);
       return;
     }
+    const def = itemManager.getDef(inspected.placement.itemId);
+    this._showItemInteraction(def, inspected.result, {
+      canTake: def?.pickable !== false,
+      onTake: () => {
+        const result = itemPlacementManager.take(placementId);
+        this._message(result.message, result.ok ? "success" : "");
+        if (result.ok) {
+          this._renderScene();
+          this._showHeldPlacement(placementId);
+        }
+      },
+    });
+  }
+
+  /** Inspect a world item from items.json locations field (no placement record). */
+  _inspectWorldItem(itemId) {
+    const def = itemManager.getDef(itemId);
+    if (!def) return;
+    const result = itemManager.inspect(itemId);
+    this._showItemInteraction(def, result, {
+      canTake: def.pickable === true,
+      onTake: def.pickable
+        ? () => {
+            itemManager.add(itemId, 1);
+            this._message(`你拿起了${def.name}。`, "success");
+            this._renderItemPlacements();
+          }
+        : null,
+    });
+  }
+
+  /** Shared item interaction panel builder. */
+  _showItemInteraction(def, result, { canTake, onTake } = {}) {
     this.interaction.innerHTML = "";
     const heading = document.createElement("h3");
-    heading.textContent = itemManager.getDef(inspected.placement.itemId)?.name || "物品";
+    heading.textContent = def?.name || "物品";
     this.interaction.appendChild(heading);
+
     const resultEl = document.createElement("div");
     this.interaction.appendChild(resultEl);
-    renderInspectResult(inspected.result, resultEl);
-    const takeButton = document.createElement("button");
-    takeButton.className = "win95-btn bevel-out";
-    takeButton.textContent = "拿起并放入物品栏";
-    takeButton.addEventListener("click", () => {
-      const result = itemPlacementManager.take(placementId);
-      this._message(result.message, result.ok ? "success" : "");
-      if (result.ok) {
-        this._renderScene();
-        this._showHeldPlacement(placementId);
-      }
-    });
-    this.interaction.appendChild(takeButton);
+    renderInspectResult(result, resultEl);
+
+    // Appearance image (if any)
+    const img = itemManager.getImage(def?.id);
+    if (img) {
+      const imgEl = document.createElement("img");
+      imgEl.className = "item-image-preview";
+      imgEl.src = img;
+      imgEl.alt = def.name;
+      this.interaction.appendChild(imgEl);
+    }
+
+    // Use button
+    if (def?.usable) {
+      const useBtn = document.createElement("button");
+      useBtn.className = "win95-btn bevel-out";
+      useBtn.textContent = "使用";
+      useBtn.addEventListener("click", () => {
+        const r = itemManager.use(def.id);
+        this._message(r.message, r.ok ? "success" : "");
+      });
+      this.interaction.appendChild(useBtn);
+    }
+
+    // Take button
+    if (canTake && onTake) {
+      const takeBtn = document.createElement("button");
+      takeBtn.className = "win95-btn bevel-out";
+      takeBtn.textContent = "拿起并放入物品栏";
+      takeBtn.addEventListener("click", onTake);
+      this.interaction.appendChild(takeBtn);
+    }
   }
 
   _showHeldPlacement(placementId) {
@@ -277,7 +401,7 @@ export default class DormMode {
     if (!placement) return;
     const putBackButton = document.createElement("button");
     putBackButton.className = "win95-btn bevel-out";
-    putBackButton.textContent = "放回书桌";
+    putBackButton.textContent = "放回原处";
     putBackButton.addEventListener("click", () => {
       const result = itemPlacementManager.putBack(placementId);
       this._message(result.message, result.ok ? "success" : "");
@@ -286,20 +410,167 @@ export default class DormMode {
     this.interaction.appendChild(putBackButton);
   }
 
+  // ── Computer overlay (ChatGTP + social media, inline) ───────────────────────
   _openComputer() {
-    this.workShell.classList.add("computer-screen-active");
-    this.root.classList.add("computer-open");
-    this.computerClose.classList.remove("hidden");
+    this._computerOpen = true;
+    this.root.querySelector(".dorm-computer-overlay").classList.remove("hidden");
+    // Load default tab content on first open
+    this._switchCompTab("chatgtp");
   }
 
   _closeComputer() {
+    this._computerOpen = false;
+    this.root.querySelector(".dorm-computer-overlay").classList.add("hidden");
+    // Also hide the legacy work-shell computer-screen (if ever activated)
     this.workShell.classList.remove("computer-screen-active");
     this.root.classList.remove("computer-open");
-    this.computerClose.classList.add("hidden");
   }
 
+  _switchCompTab(tabId) {
+    // Update tab button states
+    this.root.querySelectorAll(".dorm-comp-tab-btn[data-comptab]").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.comptab === tabId);
+    });
+    // Show / hide panels
+    this.root.querySelectorAll(".dorm-computer-panel[data-comppanel]").forEach((panel) => {
+      panel.classList.toggle("hidden", panel.dataset.comppanel !== tabId);
+    });
+    // Lazy-init panel content
+    if (!this._compTabInit[tabId]) {
+      this._compTabInit[tabId] = true;
+      const panel = this.root.querySelector(`[data-comppanel="${tabId}"]`);
+      if (tabId === "chatgtp") {
+        launchChatGTPApp({ container: panel })
+          .catch((err) => { panel.textContent = `ChatGTP 无法打开：${err.message}`; });
+      } else if (tabId === "social") {
+        this._renderSocialMedia(panel);
+      }
+    }
+  }
+
+  async _renderSocialMedia(panel) {
+    const { dataLoader: dl } = await import("../core/DataLoader.js");
+    // Use existing SocialMediaApp rendered inline
+    const { launchSocialMediaApp: _unused, ..._ } = {}; // suppress lint
+    // Render inline instead of opening a window
+    panel.innerHTML = `<div class="sm-loading">加载中…</div>`;
+    try {
+      const data = await dataLoader.loadJSON("social_apps.json");
+      panel.innerHTML = "";
+      const apps = data.apps || [];
+      const tabsBar = document.createElement("div");
+      tabsBar.className = "sm-tabs";
+      const panels = new Map();
+      apps.forEach((app, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "win95-btn bevel-out sm-tab-btn";
+        btn.dataset.appId = app.id;
+        btn.textContent = `${app.icon} ${app.name}`;
+        const appPanel = document.createElement("div");
+        appPanel.className = "sm-panel";
+        appPanel.hidden = idx !== 0;
+        panels.set(app.id, appPanel);
+        btn.addEventListener("click", () => {
+          tabsBar.querySelectorAll(".sm-tab-btn").forEach((b) => b.classList.toggle("active", b.dataset.appId === app.id));
+          panels.forEach((p, id) => { p.hidden = id !== app.id; });
+          if (!appPanel.dataset.rendered) {
+            appPanel.dataset.rendered = "1";
+            this._renderSocialAppContent(app, appPanel);
+          }
+        });
+        tabsBar.appendChild(btn);
+      });
+      panel.appendChild(tabsBar);
+      apps.forEach((app) => panel.appendChild(panels.get(app.id)));
+      if (apps.length > 0) {
+        tabsBar.querySelector(".sm-tab-btn")?.classList.add("active");
+        const firstPanel = panels.get(apps[0].id);
+        firstPanel.dataset.rendered = "1";
+        this._renderSocialAppContent(apps[0], firstPanel);
+      }
+    } catch (err) {
+      panel.textContent = `社交媒体加载失败：${err.message}`;
+    }
+  }
+
+  _renderSocialAppContent(app, panel) {
+    const header = document.createElement("div");
+    header.className = "sm-app-header";
+    header.innerHTML = `<span class="sm-app-icon">${app.icon}</span> <strong>${app.name}</strong>`;
+    panel.appendChild(header);
+
+    if (app.timeAdvancePerView > 0) {
+      const browseBtn = document.createElement("button");
+      browseBtn.type = "button";
+      browseBtn.className = "win95-btn bevel-out sm-browse-btn";
+      browseBtn.textContent = `📱 浏览（消耗 ${app.timeAdvancePerView} 分钟）`;
+      browseBtn.addEventListener("click", () => {
+        eventBus.emit("item:inspected", { id: `social_${app.id}`, effect: null, inspectTimeAdvance: app.timeAdvancePerView });
+        browseBtn.disabled = true;
+        browseBtn.textContent = "（已浏览）";
+      });
+      panel.appendChild(browseBtn);
+    }
+
+    const feed = document.createElement("div");
+    feed.className = "sm-feed";
+    if (app.id === "qqgroup") {
+      (app.groups || []).forEach((group) => {
+        const card = document.createElement("div");
+        card.className = "sm-group-card panel-inset";
+        card.innerHTML = `<div class="sm-group-name">🐧 ${group.name}</div>`;
+        const msgList = document.createElement("div");
+        msgList.className = "sm-msg-list";
+        (group.messages || []).forEach((msg) => {
+          const row = document.createElement("div");
+          row.className = "sm-msg-row";
+          row.innerHTML = `<span class="sm-msg-sender">${msg.sender}：</span><span class="sm-msg-text">${msg.text}</span>`;
+          msgList.appendChild(row);
+        });
+        card.appendChild(msgList);
+        feed.appendChild(card);
+      });
+    } else {
+      (app.posts || []).forEach((post) => {
+        const card = document.createElement("div");
+        card.className = "sm-post-card panel-inset";
+        card.innerHTML = `<div class="sm-post-title">${post.title}</div><div class="sm-post-meta">@${post.author}${post.likes != null ? ` · 👍 ${post.likes}` : ""}</div>`;
+        if (post.content) {
+          const body = document.createElement("p");
+          body.className = "sm-post-body";
+          body.textContent = post.content;
+          card.appendChild(body);
+        }
+        if (post.answers?.length) {
+          const toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "win95-btn bevel-out sm-answers-toggle";
+          toggle.textContent = `查看 ${post.answers.length} 条回答`;
+          const answersEl = document.createElement("div");
+          answersEl.className = "sm-answers hidden";
+          post.answers.forEach((a, i) => {
+            const p = document.createElement("p");
+            p.className = "sm-answer";
+            p.textContent = `${i + 1}. ${a}`;
+            answersEl.appendChild(p);
+          });
+          toggle.addEventListener("click", () => {
+            answersEl.classList.toggle("hidden");
+            toggle.textContent = answersEl.classList.contains("hidden") ? `查看 ${post.answers.length} 条回答` : "收起";
+          });
+          card.appendChild(toggle);
+          card.appendChild(answersEl);
+        }
+        feed.appendChild(card);
+      });
+    }
+    panel.appendChild(feed);
+  }
+
+  // ── Clue wall ───────────────────────────────────────────────────────────────
   _showClueWall() {
-    const clues = keywordManager.all().filter((keyword) => keyword.category === "clue" || keyword.id === "old_key_clue");
+    const clues = keywordManager.all().filter((kw) => kw.category === "clue" || kw.id === "old_key_clue");
     this.interaction.innerHTML = "<h3>线索墙</h3><p class=\"dorm-clue-wall-note\">红线表示目前已发现线索之间的关联。</p>";
     if (!clues.length) {
       this.interaction.insertAdjacentHTML("beforeend", "<p>还没有足够的线索。与 NPC 交互或调查物品来收集线索。</p>");
@@ -310,17 +581,13 @@ export default class DormMode {
     const board = document.createElement("div");
     board.className = "dorm-clue-wall";
     board.style.setProperty("--clue-wall-height", `${height}px`);
-    const positions = clues.map((_, index) => ({
-      x: 55 + (index % 3) * 250,
-      y: 35 + Math.floor(index / 3) * 82,
-    }));
-    const svg = `<svg class="dorm-clue-lines" viewBox="0 0 ${width} ${height}" aria-hidden="true">${this._clueConnections(clues, positions)}</svg>`;
-    board.insertAdjacentHTML("beforeend", svg);
-    clues.forEach((clue, index) => {
+    const positions = clues.map((_, i) => ({ x: 55 + (i % 3) * 250, y: 35 + Math.floor(i / 3) * 82 }));
+    board.insertAdjacentHTML("beforeend", `<svg class="dorm-clue-lines" viewBox="0 0 ${width} ${height}" aria-hidden="true">${this._clueConnections(clues, positions)}</svg>`);
+    clues.forEach((clue, i) => {
       const node = document.createElement("div");
       node.className = "dorm-clue-node";
-      node.style.left = `${positions[index].x}px`;
-      node.style.top = `${positions[index].y}px`;
+      node.style.left = `${positions[i].x}px`;
+      node.style.top = `${positions[i].y}px`;
       node.title = clue.content || clue.label || clue.id;
       node.textContent = clue.content || clue.label || clue.id;
       board.appendChild(node);
@@ -331,9 +598,7 @@ export default class DormMode {
   _clueConnections(clues, positions) {
     const index = new Map(clues.map((clue, i) => [clue.id, i]));
     const pairs = [];
-    const add = (a, b) => {
-      if (index.has(a) && index.has(b)) pairs.push([index.get(a), index.get(b)]);
-    };
+    const add = (a, b) => { if (index.has(a) && index.has(b)) pairs.push([index.get(a), index.get(b)]); };
     add("old_key_clue", "basement_secret");
     add("night_shift_rumor", "night_shift_rumor_detail");
     add("night_shift_rumor", "night_shift_rumor_echo");
@@ -344,6 +609,7 @@ export default class DormMode {
     return pairs.map(([a, b]) => `<line x1="${positions[a].x}" y1="${positions[a].y}" x2="${positions[b].x}" y2="${positions[b].y}" />`).join("");
   }
 
+  // ── Player menu ─────────────────────────────────────────────────────────────
   _showPlayerMenu() {
     const state = gameState.snapshot();
     const items = itemManager.all();
@@ -369,6 +635,7 @@ export default class DormMode {
     this.interaction.append(save);
   }
 
+  // ── NPC dialogue ────────────────────────────────────────────────────────────
   _showDialogue(actor, keywordDefs) {
     this.interaction.innerHTML = `<h3>与 ${actor.name} 交互</h3>`;
     if (npcStateManager.isOffline(actor.id)) {
@@ -399,6 +666,7 @@ export default class DormMode {
     runner.showNode(actor.dialogueTree?.start);
   }
 
+  // ── Bed / sleep ─────────────────────────────────────────────────────────────
   _bedAction() {
     const minutes = this._clockMinutes();
     const inWork = minutes >= 8 * 60 && minutes < 16 * 60;
@@ -408,16 +676,17 @@ export default class DormMode {
       : "确定睡觉直到次日 08:00 吗？";
     this.confirmPanel.classList.remove("hidden");
     const okButton = this.confirmPanel.querySelector(".dorm-bed-confirm-ok");
-    const confirm = () => {
+    okButton.onclick = () => {
       this.confirmPanel.classList.add("hidden");
       if (inWork) this.launchWorkApp();
       else dayNightSystem.toggle();
     };
-    okButton.onclick = confirm;
     okButton.focus();
   }
 
+  // ── Helpers ─────────────────────────────────────────────────────────────────
   _message(text, className = "") {
+    this.interaction.className = "dorm-interaction panel-inset";
     this.interaction.textContent = text;
     if (className) this.interaction.classList.add(className);
   }

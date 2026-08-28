@@ -597,10 +597,12 @@ export default class DormMode {
     if (app.id === "qqgroup") {
       this._renderQQGroups(app, feed, day);
     } else {
-      // Pick today's post: deterministic rotation by day, or first if only one
+      // Pick today's post: seeded-random by day so same day always shows same post
       const posts = app.posts || [];
-      const todayPost = posts.length > 0 ? posts[(day - 1) % posts.length] : null;
-      if (todayPost) {
+      if (posts.length > 0) {
+        // LCG seed from day + appId hash for per-app variation
+        const seed = day * 2654435761 + (app.id || "").split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+        const todayPost = posts[Math.abs(seed >> 8) % posts.length];
         const dayLabel = document.createElement("p");
         dayLabel.style.cssText = "font-size:11px;color:#888;margin:0 0 4px";
         dayLabel.textContent = `第 ${day} 天推荐`;

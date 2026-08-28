@@ -25,6 +25,8 @@ class ScheduleQueue {
         payload: entry.payload || entry,
         instanceId: entry.instanceId || `${scheduleId}:${sequence + 1}`,
         status: entry.status === "resolved" || entry.status === "completed" ? "resolved" : "unresolved",
+        currentNodeId: entry.currentNodeId || entry.payload?.currentNodeId || entry.payload?.blueprint?.startNodeId || entry.payload?.startNodeId || null,
+        executedNodeIds: Array.isArray(entry.executedNodeIds) ? [...entry.executedNodeIds] : [],
         transcript: Array.isArray(entry.transcript) ? [...entry.transcript] : [],
       };
     });
@@ -99,7 +101,7 @@ class ScheduleQueue {
       if (!VALID_STATUSES.has(entry.status)) throw new Error("Invalid schedule instance status");
       if (!Array.isArray(entry.transcript)) throw new Error("Invalid schedule transcript");
       seen.add(entry.instanceId);
-      return { ...entry, queueId: this.queueId, transcript: [...entry.transcript] };
+      return { ...entry, queueId: this.queueId, executedNodeIds: Array.isArray(entry.executedNodeIds) ? [...entry.executedNodeIds] : [], transcript: [...entry.transcript] };
     });
     this.sequenceBySchedule = new Map();
     this.entries.forEach((entry) => {

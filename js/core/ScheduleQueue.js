@@ -26,6 +26,12 @@ class ScheduleQueue {
     return true;
   }
 
+  hasCompletedId(scheduleId) {
+    return this.entries.some((entry) =>
+      entry.status === "completed" && (entry.payload?.id === scheduleId || entry.id === scheduleId)
+    );
+  }
+
   getAll() {
     return this.entries.map((entry) => ({ ...entry }));
   }

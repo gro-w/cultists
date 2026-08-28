@@ -1,4 +1,7 @@
 // DEV-TOOLS:START
+import { dataLoader } from "../core/DataLoader.js";
+import { scheduleData } from "../core/ScheduleData.js";
+
 /**
  * DevDialogueEditorTab — dialogue-editor.html/js ported into DeveloperMode.
  * Inline onclick= handlers reference window._de (set on mount, cleared on unmount).
@@ -40,7 +43,10 @@ export class DevDialogueEditorTab {
   constructor(devMode) {
     this._dev = devMode;
     this.project = null;
-    this.currentCtx = null;       // { type:'day'|'event'|'ending', id }
+    this.currentCtx = null;       // { type:'schedule'|'event'|'ending', id, entryIndex }
+    this.currentQueue = 'work';
+    this.loadedScheduleFiles = new Set();
+    this.loadedMetaFiles = new Set();
     this.selectedNodeId = null;
     this._dragState = null;
     this._connectMode = false;
@@ -61,7 +67,11 @@ export class DevDialogueEditorTab {
   _ctxData() {
     if (!this.currentCtx||!this.project) return null;
     const {type,id}=this.currentCtx;
-    if (type==='day')    return this.project.days[id];
+    if (type==='schedule') {
+      const schedule = this.project.schedules?.[id];
+      const entry = schedule?.entries?.[this.currentCtx.entryIndex];
+      return entry?.dialogueTree || null;
+    }
     if (type==='event')  return this.project.events[id];
     if (type==='ending') return this.project.endings[id];
     return null;
@@ -71,18 +81,45 @@ export class DevDialogueEditorTab {
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
   _emptyCtx() { return {nodes:{},startNodeId:null}; }
-  _emptyProject() {
-    const days={};
-    for (let d=1;d<=5;d++) for (const ph of ['a','b']) days[`day${String(d).padStart(2,'0')}${ph}`]=this._emptyCtx();
-    return {version:1,totalDays:5,customVars:[],days,events:{},endings:{}};
+  _emptyProject(totalDays = 5) {
+    const schedules={};
+    for (let d=1;d<=totalDays;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={entries:[]};
+    return {version:2,totalDays,customVars:[],schedules,events:{},endings:{},eventFileDoc:{events:[]},endingFileDoc:{endings:[]}};
+  }
+
+  _normalizeGameTree(tree) {
+    if (!tree?.nodes) return this._emptyCtx();
+    const nodes = {};
+    Object.entries(tree.nodes).forEach(([id, node]) => {
+      nodes[id] = { id, speaker: node.speaker || 'npc', text: node.text || '',
+        keywordIds: [], next: node.next || null, options: (node.options || []).map(opt => ({
+          id: this._uid('opt'), label: opt.label || '', next: opt.next || null,
+          effects: opt.effects || {}, conditions: opt.condition ? [opt.condition] : (opt.conditions || []),
+        })), onShow: node.onShow || {}, entryConds: node.condition ? [node.condition] : (node.entryConds || []),
+        x: node.x ?? 100, y: node.y ?? 100 };
+    });
+    return { nodes, startNodeId: tree.start || tree.startNodeId || Object.keys(nodes)[0] || null };
+  }
+
+  _migrateProject(project) {
+    if (!project || typeof project !== 'object') return this._emptyProject();
+    if (project.schedules) return project;
+    const schedules = {};
+    Object.entries(project.days || {}).forEach(([oldId, ctx]) => {
+      const match = /^day(\d\d)([ab])$/.exec(oldId);
+      if (!match) return;
+      schedules[`social${match[1]}${match[2]}`] = { entries: [{ id: `${oldId}_entry`, type: 'other', name: oldId, avatar: '🙂', dialogueTree: ctx }] };
+    });
+    return { ...project, version: 2, schedules, days: undefined };
   }
 
   // ── lifecycle ─────────────────────────────────────────────────────────────
   mount() {
     window._de = this;
-    // load persisted project
-    if (!this._loadLS()) this.project = this._emptyProject();
-    this.totalDays = this.project.totalDays||5;
+    this.project = this._emptyProject();
+    this.loadedScheduleFiles = new Set();
+    this.loadedMetaFiles = new Set();
+    this._loadCurrentGame();
     // try pick up items/spells from item editor localStorage
     try {
       const seed = localStorage.getItem('cultists_item_editor_v2');
@@ -115,8 +152,9 @@ export class DevDialogueEditorTab {
   <button type="button" class="win95-btn dev-btn" onclick="_de._newProject()">📄 新建</button>
   <button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存</button>
   <button type="button" class="win95-btn dev-btn" onclick="_de._loadProjectFile()">📂 载入</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_de._importFromGame()">⬇ 从游戏读取</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_de._showExportModal()">📤 导出</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_de._loadCurrentGame()">⬇ 从当前游戏读取</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_de._exportGameFiles()">📤 导出 JSON</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_de._writeGameFiles()">💽 写入磁盘</button>
   <button type="button" class="win95-btn dev-btn" onclick="_de._showVarsModal()">⚙ 变量</button>
   <input type="file" id="de-file-input" accept=".json" style="display:none" onchange="_de._onProjectFile(event)">
   <input type="file" id="de-game-input" accept=".json" multiple style="display:none" onchange="_de._onGameFiles(event)">
@@ -124,9 +162,13 @@ export class DevDialogueEditorTab {
 <div class="dev-de-main">
   <!-- Sidebar -->
   <div class="dev-de-sidebar">
-    <div id="de-phase-tabs" class="dev-de-phase-tabs" style="display:none">
-      <div class="dev-de-ptab" data-phase="a" onclick="_de._selectPhase('a')">白天</div>
-      <div class="dev-de-ptab" data-phase="b" onclick="_de._selectPhase('b')">傍晚</div>
+    <div id="de-queue-tabs" class="dev-de-phase-tabs">
+      <div class="dev-de-ptab" data-queue="work" onclick="_de._selectQueue('work')">Work 患者</div>
+      <div class="dev-de-ptab" data-queue="social" onclick="_de._selectQueue('social')">Social 联系人</div>
+    </div>
+    <div id="de-phase-tabs" class="dev-de-phase-tabs">
+      <div class="dev-de-ptab" data-phase="a" onclick="_de._selectPhase('a')">08:00 白班</div>
+      <div class="dev-de-ptab" data-phase="b" onclick="_de._selectPhase('b')">16:00 夜班</div>
     </div>
     <div id="de-sidebar-inner" style="flex:1;overflow-y:auto;padding:4px">
       <div class="dev-de-sb-sec">
@@ -157,6 +199,8 @@ export class DevDialogueEditorTab {
       <button type="button" class="win95-btn dev-btn" onclick="_de._autoLayout()">🔧 自动排布</button>
       <button type="button" class="win95-btn dev-btn" onclick="_de._setStartNode()">🏠 设为起点</button>
       <button type="button" class="win95-btn dev-btn" onclick="_de._deleteSelectedNode()">🗑 删节点</button>
+      <button type="button" class="win95-btn dev-btn" onclick="_de._addScheduleEntry()">＋ 日程条目</button>
+      <button type="button" class="win95-btn dev-btn" onclick="_de._deleteScheduleEntry()">🗑 删日程条目</button>
     </div>
     <div id="de-canvas-container" class="dev-de-canvas-container" onclick="_de._onCanvasClick(event)">
       <svg id="de-canvas-svg" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible" width="2000" height="1200"></svg>
@@ -254,12 +298,22 @@ export class DevDialogueEditorTab {
     const evEl  = this._el('de-sb-events');
     const endEl = this._el('de-sb-endings');
     if (!dayEl) return;
+    this._el('de-queue-tabs')?.querySelectorAll('[data-queue]').forEach((tab) => tab.classList.toggle('active', tab.dataset.queue === this.currentQueue));
     let dayHtml = '';
     for (let d = 1; d <= this.totalDays; d++) {
       const pad = String(d).padStart(2,'0');
-      const isActive = this.currentCtx?.type==='day' && this.currentCtx.id.startsWith(`day${pad}`);
-      dayHtml += `<div class="dev-de-sb-day${isActive?' active':''}" onclick="_de._selectDayGroup(${d})">第 ${d} 天</div>`;
+      const phase = this.currentCtx?.type === 'schedule' && this.currentCtx.id.endsWith('b') ? 'b' : 'a';
+      const file = `${this.currentQueue}${pad}${phase}`;
+      const schedule = this.project.schedules?.[file] || { entries: [] };
+      const isActive = this.currentCtx?.type === 'schedule' && this.currentCtx.id === file;
+      const entries = schedule.entries.map((entry, index) => `<div class="dev-de-sb-item${isActive && this.currentCtx.entryIndex === index ? ' active' : ''}" onclick="_de._selectSchedule('${file}',${index})">${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</div>`).join('');
+      dayHtml += `<div class="dev-de-sb-day${isActive?' active':''}" onclick="_de._selectSchedule('${file}',0)">第 ${d} 天 · ${phase === 'a' ? '08:00' : '16:00'}${schedule.entries.length ? `（${schedule.entries.length} 条）` : ''}</div>${entries}`;
     }
+    const publicFile = `${this.currentQueue}pub`;
+    const publicSchedule = this.project.schedules?.[publicFile] || { entries: [] };
+    const publicActive = this.currentCtx?.type === 'schedule' && this.currentCtx.id === publicFile;
+    dayHtml += `<div class="dev-de-sb-day${publicActive ? ' active' : ''}" onclick="_de._selectSchedule('${publicFile}',0)">${this.currentQueue === 'work' ? 'Work' : 'Social'} 公共日程${publicSchedule.entries.length ? `（${publicSchedule.entries.length} 条）` : ''}</div>`;
+    if (publicActive) dayHtml += publicSchedule.entries.map((entry, index) => `<div class="dev-de-sb-item active" onclick="_de._selectSchedule('${publicFile}',${index})">${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</div>`).join('');
     dayEl.innerHTML = dayHtml;
     evEl.innerHTML  = Object.keys(this.project.events||{}).map(id=>
       `<div class="dev-de-sb-item${this.currentCtx?.id===id?' active':''}" onclick="_de._selectCtx('event','${id}')">
@@ -271,45 +325,92 @@ export class DevDialogueEditorTab {
     ).join('')||'<div class="dev-de-sb-empty">暂无</div>';
   }
 
+  _selectQueue(queue) {
+    this.currentQueue = queue;
+    const phase = this.currentCtx?.type === 'schedule' && this.currentCtx.id.endsWith('b') ? 'b' : 'a';
+    const day = this.currentCtx?.type === 'schedule' ? this.currentCtx.id.slice(5, 7) : '01';
+    this._selectSchedule(`${queue}${day}${phase}`, 0);
+  }
+
   _selectDayGroup(d) {
     const pad = String(d).padStart(2,'0');
-    const curPh = (this.currentCtx?.type==='day'&&this.currentCtx.id.endsWith('b')) ? 'b' : 'a';
-    this._selectCtx('day', `day${pad}${curPh}`);
+    const curPh = (this.currentCtx?.type==='schedule'&&this.currentCtx.id.endsWith('b')) ? 'b' : 'a';
+    this._selectSchedule(`${this.currentQueue}${pad}${curPh}`, 0);
   }
 
   _selectPhase(ph) {
-    if (!this.currentCtx||this.currentCtx.type!=='day') return;
-    this._selectCtx('day', this.currentCtx.id.slice(0,-1)+ph);
+    if (!this.currentCtx||this.currentCtx.type!=='schedule') return;
+    this._selectSchedule(this.currentCtx.id.slice(0,-1)+ph, 0);
   }
 
-  _selectCtx(type, id) {
-    this.currentCtx = {type, id};
+  _selectSchedule(id, entryIndex = 0) {
+    this.currentQueue = id.startsWith('social') ? 'social' : 'work';
+    const schedule = this.project.schedules?.[id] || { entries: [] };
+    if (!schedule.entries.length) {
+      this._st(`${id}.json 暂无条目，请先导入或新增条目`);
+      this.currentCtx = { type: 'schedule', id, entryIndex: 0 };
+      this.selectedNodeId = null;
+      this._renderSidebar(); this._renderCanvas();
+      return;
+    }
+    this._selectCtx('schedule', id, Math.min(entryIndex, schedule.entries.length - 1));
+  }
+
+  _selectCtx(type, id, entryIndex = 0) {
+    this.currentCtx = {type, id, entryIndex};
     this.selectedNodeId = null;
     const ptabs = this._el('de-phase-tabs');
     if (ptabs) {
-      ptabs.style.display = type==='day' ? 'flex' : 'none';
-      if (type==='day') {
+      ptabs.style.display = type==='schedule' ? 'flex' : 'none';
+      if (type==='schedule') {
         const ph = id.endsWith('b') ? 'b' : 'a';
         ptabs.querySelectorAll('.dev-de-ptab').forEach(t=>t.classList.toggle('active', t.dataset.phase===ph));
       }
     }
     const lbl = this._el('de-canvas-ctx');
     if (lbl) {
-      if (type==='day') {
-        const d=parseInt(id.slice(3,5)), ph=id.endsWith('b')?'傍晚/夜晚':'白天';
-        lbl.textContent=`第 ${d} 天 · ${ph}`;
+      if (type==='schedule') {
+        const d=parseInt(id.slice(5,7)), ph=id.endsWith('b')?'16:00 夜班':'08:00 白班';
+        lbl.textContent=`${id.startsWith('social')?'Social 联系人':'Work 患者'} · 第 ${d} 天 · ${ph} · 条目 ${this.currentCtx.entryIndex + 1}`;
       } else { lbl.textContent=`${type==='event'?'事件':'结局'} · ${id}`; }
     }
     this._renderSidebar();
     this._renderCanvas();
     const ef=this._el('de-editor-empty'),ff=this._el('de-editor-form');
     if(ef) ef.style.display=''; if(ff) ff.style.display='none';
-  }
+ }
+
+ _addScheduleEntry() {
+ if (!this.currentCtx || this.currentCtx.type !== 'schedule') {
+   this._st('请先选择 Work 或 Social 日程文件');
+   return;
+ }
+ const schedule = this.project.schedules[this.currentCtx.id] || (this.project.schedules[this.currentCtx.id] = { entries: [] });
+ const isWork = this.currentCtx.id.startsWith('work');
+ const entry = { id: `${isWork ? 'patient' : 'contact'}_${Date.now().toString(36).slice(-5)}`,
+   ...(isWork ? { name: '新患者', age: 0 } : { type: 'other', name: '新联系人', avatar: '🙂' }),
+   dialogueTree: this._emptyCtx() };
+ schedule.entries.push(entry);
+ this.loadedScheduleFiles.add(this.currentCtx.id);
+ this._saveLS();
+ this._selectSchedule(this.currentCtx.id, schedule.entries.length - 1);
+ }
+
+ _deleteScheduleEntry() {
+ if (!this.currentCtx || this.currentCtx.type !== 'schedule') return;
+ const schedule = this.project.schedules[this.currentCtx.id];
+ if (!schedule?.entries?.length || !confirm('确认删除当前日程条目？')) return;
+ schedule.entries.splice(this.currentCtx.entryIndex, 1);
+ this.loadedScheduleFiles.add(this.currentCtx.id);
+ this._saveLS();
+ if (!schedule.entries.length) this._selectSchedule(this.currentCtx.id, 0);
+ else this._selectSchedule(this.currentCtx.id, Math.min(this.currentCtx.entryIndex, schedule.entries.length - 1));
+ }
 
   _deleteCtx(type, id) {
     if (!confirm(`确认删除 ${type} "${id}"？`)) return;
-    if (type==='event')  delete this.project.events[id];
-    if (type==='ending') delete this.project.endings[id];
+    if (type==='event')  { delete this.project.events[id]; this.loadedMetaFiles.add('special_events.json'); }
+    if (type==='ending') { delete this.project.endings[id]; this.loadedMetaFiles.add('endings.json'); }
     if (this.currentCtx?.id===id) { this.currentCtx=null; this._renderCanvas(); }
     this._renderSidebar(); this._saveLS();
   }
@@ -345,23 +446,54 @@ export class DevDialogueEditorTab {
       div.style.cssText=`left:${node.x||60}px;top:${node.y||60}px`;
       const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
       const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
+      const optionPins = (node.options||[]).map((opt, i) =>
+        `<div class="dev-de-node-opt"><span>${this._e((opt.label||`选项 ${i+1}`).slice(0,24))}</span><span class="dev-de-option-pin" data-node-id="${this._e(node.id)}" data-option-index="${i}" title="拖动到目标节点连线">${i+1}</span></div>`
+      ).join('');
       div.innerHTML=`
         <div class="dev-de-node-hd" style="background:${spk.color}">
           <span>${this._e(spk.label)}${isStart?' 🏠':''}</span>
           <button type="button" class="dev-de-node-link" onclick="event.stopPropagation();_de._startConnect('${node.id}',null)" title="连线">🔗</button>
         </div>
         <div class="dev-de-node-body">${this._e((node.text||'').slice(0,60))}</div>
+        ${optionPins ? `<div class="dev-de-node-options">${optionPins}</div>` : ''}
         <div class="dev-de-node-ft">${optBadge}${nxtBadge}</div>`;
-      div.addEventListener('mousedown', e=>{
+      div.querySelectorAll('.dev-de-option-pin').forEach(pin => pin.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const optIdx = Number(pin.dataset.optionIndex);
+        this._startConnect(node.id, optIdx);
+        this._connectDrag = { nodeId: node.id, optIdx, pin };
+        this._drawArrows(data);
+        const onMove = mv => {
+          this._drawArrows(data);
+          this._drawTempConnection(pin, mv.clientX, mv.clientY);
+        };
+        const onUp = up => {
+          document.removeEventListener('pointermove', onMove);
+          document.removeEventListener('pointerup', onUp);
+          const target = document.elementFromPoint(up.clientX, up.clientY)?.closest('.dev-de-node');
+          const targetId = target?.id?.startsWith('de-node-') ? target.id.slice('de-node-'.length) : null;
+          if (targetId && data.nodes[targetId]) this._finishConnect(targetId);
+          else this._cancelConnect();
+        };
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onUp, { once: true });
+      }));
+      div.addEventListener('pointerdown', e=>{
         if (e.button!==0) return;
+        if (e.target.closest('.dev-de-option-pin') || e.target.closest('button')) return;
         if (this._connectMode) { this._finishConnect(node.id); return; }
         e.stopPropagation();
-        this._selectNode(node.id);
+        this.selectedNodeId=node.id;
+        this._loadNodeEditor();
+        div.classList.add('selected');
         const sx=e.clientX, sy=e.clientY, ox=node.x||60, oy=node.y||60;
         let moved=false;
         const onMove=mv=>{ moved=true; node.x=Math.max(0,ox+(mv.clientX-sx)); node.y=Math.max(0,oy+(mv.clientY-sy)); div.style.left=node.x+'px'; div.style.top=node.y+'px'; this._drawArrows(data); };
-        const onUp=()=>{ document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); if(moved) this._saveLS(); };
-        document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
+        const onUp=()=>{ document.removeEventListener('pointermove',onMove); document.removeEventListener('pointerup',onUp); this._dragState=null; if(moved) this._saveLS(); };
+        this._dragState={nodeId:node.id};
+        document.addEventListener('pointermove',onMove);
+        document.addEventListener('pointerup',onUp, { once: true });
       });
       container.appendChild(div);
     });
@@ -373,11 +505,13 @@ export class DevDialogueEditorTab {
     const wrap=this._el('de-canvas-container');
     const wr=wrap?wrap.getBoundingClientRect():{left:0,top:0};
     const sx=wrap?wrap.scrollLeft:0, sy=wrap?wrap.scrollTop:0;
-    const arc=(fId,tId,color,dashed)=>{
+    const arc=(fId,tId,color,dashed,sourceEl=null)=>{
       const fEl=document.getElementById(`de-node-${fId}`), tEl=document.getElementById(`de-node-${tId}`);
       if(!fEl||!tEl) return;
       const fr=fEl.getBoundingClientRect(), tr=tEl.getBoundingClientRect();
-      const x1=fr.left-wr.left+fr.width/2+sx, y1=fr.top-wr.top+fr.height+sy;
+      const sourceRect=sourceEl?.getBoundingClientRect();
+      const x1=sourceRect ? sourceRect.left-wr.left+sourceRect.width/2+sx : fr.left-wr.left+fr.width/2+sx;
+      const y1=sourceRect ? sourceRect.top-wr.top+sourceRect.height/2+sy : fr.top-wr.top+fr.height+sy;
       const x2=tr.left-wr.left+tr.width/2+sx, y2=tr.top-wr.top+sy;
       const dy=Math.max(40,Math.abs(y2-y1)/2);
       const p=document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -389,8 +523,27 @@ export class DevDialogueEditorTab {
     };
     Object.values(data.nodes||{}).forEach(node=>{
       if(node.next) arc(node.id,node.next,'#000080',false);
-      (node.options||[]).forEach((opt,i)=>{ if(opt.next) arc(node.id,opt.next,`hsl(${(i*55+200)%360},60%,40%)`,true); });
+      (node.options||[]).forEach((opt,i)=>{
+        if (!opt.next) return;
+        const pin = document.getElementById(`de-node-${node.id}`)?.querySelectorAll('.dev-de-option-pin')[i];
+        arc(node.id,opt.next,`hsl(${(i*55+200)%360},60%,40%)`,true,pin);
+      });
     });
+  }
+
+  _drawTempConnection(source, clientX, clientY) {
+    const svg=this._el('de-canvas-svg'), wrap=this._el('de-canvas-container');
+    if(!svg||!wrap||!source) return;
+    const wr=wrap.getBoundingClientRect(), sx=wrap.scrollLeft, sy=wrap.scrollTop;
+    const sr=source.getBoundingClientRect();
+    const x1=sr.left-wr.left+sr.width/2+sx, y1=sr.top-wr.top+sr.height/2+sy;
+    const x2=clientX-wr.left+sx, y2=clientY-wr.top+sy;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const dx=Math.max(40, Math.abs(x2-x1)/2);
+    p.setAttribute('d',`M${x1},${y1} C${x1+dx},${y1} ${x2-dx},${y2} ${x2},${y2}`);
+    p.setAttribute('stroke','#cc6600'); p.setAttribute('stroke-width','2');
+    p.setAttribute('stroke-dasharray','5,3'); p.setAttribute('fill','none');
+    svg.appendChild(p);
   }
 
   _selectNode(id) {
@@ -610,6 +763,7 @@ export class DevDialogueEditorTab {
 
   _cancelConnect() {
     this._connectMode = false; this._connectFrom = null;
+    this._connectDrag = null;
     const container = this._el('de-canvas-nodes');
     if (container) container.style.cursor = '';
     this._st('');
@@ -688,9 +842,9 @@ export class DevDialogueEditorTab {
     this.totalDays += 1;
     this.project.totalDays = this.totalDays;
     const pad = String(this.totalDays).padStart(2,'0');
-    for (const ph of ['a','b']) {
-      const k = `day${pad}${ph}`;
-      if (!this.project.days[k]) this.project.days[k] = this._emptyCtx();
+    for (const queue of ['work','social']) for (const ph of ['a','b']) {
+      const k = `${queue}${pad}${ph}`;
+      if (!this.project.schedules[k]) this.project.schedules[k] = {entries:[]};
     }
     this._renderSidebar(); this._saveLS();
     this._st(`已添加第 ${this.totalDays} 天`);
@@ -701,6 +855,7 @@ export class DevDialogueEditorTab {
     if (!id?.trim()) return;
     if (this.project.events[id]) { alert('ID 已存在'); return; }
     this.project.events[id] = this._emptyCtx();
+    this.loadedMetaFiles.add('special_events.json');
     this._renderSidebar(); this._saveLS(); this._selectCtx('event', id);
   }
 
@@ -709,12 +864,13 @@ export class DevDialogueEditorTab {
     if (!id?.trim()) return;
     if (this.project.endings[id]) { alert('ID 已存在'); return; }
     this.project.endings[id] = this._emptyCtx();
+    this.loadedMetaFiles.add('endings.json');
     this._renderSidebar(); this._saveLS(); this._selectCtx('ending', id);
   }
 
   // ── persistence ───────────────────────────────────────────────────────────
   _saveLS() {
-    try { localStorage.setItem(_DE_LS, JSON.stringify(this.project)); } catch(e) {}
+    try { localStorage.setItem(_DE_LS, JSON.stringify({ ...this.project, loadedScheduleFiles: [...this.loadedScheduleFiles], loadedMetaFiles: [...this.loadedMetaFiles] })); } catch(e) {}
   }
   _loadLS() {
     try {
@@ -728,6 +884,8 @@ export class DevDialogueEditorTab {
   _newProject() {
     if (!confirm('新建项目会清除未保存的内容，继续？')) return;
     this.project = this._emptyProject();
+    this.loadedScheduleFiles = new Set();
+    this.loadedMetaFiles = new Set();
     this.totalDays = 5; this.currentCtx = null; this.selectedNodeId = null;
     this._saveLS(); this._renderSidebar(); this._renderCanvas();
     const ef=this._el('de-editor-empty'),ff=this._el('de-editor-form');
@@ -748,7 +906,7 @@ export class DevDialogueEditorTab {
       try {
         const d = JSON.parse(e.target.result);
         if (!d.version) { alert('无法识别的项目格式'); return; }
-        this.project = d; this.totalDays = d.totalDays || 5;
+        this.project = this._migrateProject(d); this.loadedScheduleFiles = new Set(Object.keys(this.project.schedules || {})); this.loadedMetaFiles = new Set(['special_events.json', 'endings.json']); this.totalDays = d.totalDays || 5;
         this.currentCtx = null; this.selectedNodeId = null;
         this._saveLS(); this._renderSidebar(); this._renderCanvas();
         this._st('项目已载入：' + f.name);
@@ -757,7 +915,44 @@ export class DevDialogueEditorTab {
     r.readAsText(f, 'utf-8'); ev.target.value = '';
   }
 
-  _importFromGame() { this._el('de-game-input')?.click(); }
+  async _loadCurrentGame() {
+    try {
+      await scheduleData.init();
+      this.totalDays = scheduleData.totalDays;
+      this.project = this._emptyProject(this.totalDays);
+      this.project.schedules.socialpub = { entries: [] };
+      this.project.schedules.workpub = { entries: [] };
+      this.loadedScheduleFiles = new Set();
+      this.loadedMetaFiles = new Set(['special_events.json', 'endings.json']);
+      const files = Object.keys(this.project.schedules);
+      await Promise.all(files.map(async (name) => {
+        const data = await dataLoader.loadJSON(`${name}.json`);
+        if (!Array.isArray(data.entries)) throw new Error(`${name}.json 缺少 entries 数组`);
+        if (data.entries.some((entry) => !entry || typeof entry !== 'object' || Array.isArray(entry))) {
+          throw new Error(`${name}.json 的 entries 必须全部是 JSON 对象`);
+        }
+        this.project.schedules[name] = { ...data, entries: data.entries.map((entry) => ({
+          ...entry, dialogueTree: this._normalizeGameTree(entry.dialogueTree),
+        })) };
+        this.loadedScheduleFiles.add(name);
+      }));
+      const [eventFileDoc, endingFileDoc] = await Promise.all([
+        dataLoader.loadJSON('special_events.json'),
+        dataLoader.loadJSON('endings.json'),
+      ]);
+      this.project.eventFileDoc = eventFileDoc;
+      this.project.endingFileDoc = endingFileDoc;
+      this.project.events = Object.fromEntries((eventFileDoc.events || []).map((entry) => [
+        entry.id, this._normalizeGameTree(entry.dialogueTree),
+      ]));
+      this.project.endings = Object.fromEntries((endingFileDoc.endings || []).map((entry) => [
+        entry.id, this._normalizeGameTree(entry.dialogueTree),
+      ]));
+      this.currentCtx = null; this.selectedNodeId = null;
+      this._saveLS(); this._renderSidebar(); this._renderCanvas();
+      this._st(`已从当前游戏读取 ${files.length} 个日程文件`);
+    } catch (err) { this._st(`读取当前游戏失败：${err.message}`, true); }
+  }
 
   _onGameFiles(ev) {
     const files = Array.from(ev.target.files); if (!files.length) return;
@@ -771,11 +966,22 @@ export class DevDialogueEditorTab {
       r.onload = e => {
         try {
           const d = JSON.parse(e.target.result);
-          // detect day file: has contacts or patients array
+          // New schedule files are queue-specific and always use { entries: [] }.
           const name = f.name.replace(/\.json$/,'');
-          if (d.contacts || d.patients) {
-            if (!this.project.days[name]) this.project.days[name] = this._emptyCtx();
-            // just preserve raw – user can author manually
+          if (/^(work|social)\d{2}[ab]$/.test(name) && Array.isArray(d.entries)) {
+            this.project.schedules[name] = { ...d, entries: d.entries.map((entry) => ({
+              ...entry, dialogueTree: this._normalizeGameTree(entry.dialogueTree),
+            })) };
+            this.loadedScheduleFiles.add(name);
+          } else {
+            // Accept legacy dayXXa/b files as Social files during migration.
+          if (/^day\d{2}[ab]$/.test(name) && (d.contacts || d.patients)) {
+            const target = `social${name.slice(3)}`;
+            this.project.schedules[target] = { entries: (d.contacts || d.patients || []).map((entry) => ({
+              ...entry, dialogueTree: this._normalizeGameTree(entry.dialogueTree),
+            })) };
+            this.loadedScheduleFiles.add(target);
+          }
           }
         } catch(_) {}
         done();
@@ -791,7 +997,8 @@ export class DevDialogueEditorTab {
       <p style="font-size:12px;margin-bottom:8px">选择导出格式：</p>
       <div style="display:flex;flex-direction:column;gap:6px">
         <button type="button" class="win95-btn dev-btn" onclick="_de._exportProject()">💾 导出完整编辑器项目（.json）</button>
-        <button type="button" class="win95-btn dev-btn" onclick="_de._exportGameFiles()">🎮 导出游戏格式（每天一个 JSON）</button>
+        <button type="button" class="win95-btn dev-btn" onclick="_de._exportGameFiles()">🎮 导出游戏格式（每个日程文件一个 JSON）</button>
+        <button type="button" class="win95-btn dev-btn" onclick="_de._writeGameFiles()">💽 写入所有日程文件</button>
       </div>`);
   }
 
@@ -803,27 +1010,65 @@ export class DevDialogueEditorTab {
   }
 
   _exportGameFiles() {
-    const days = this.project?.days || {};
-    Object.entries(days).forEach(([key, ctx]) => {
-      const out = this._ctxToGameContacts(key, ctx);
+    const schedules = this.project?.schedules || {};
+    Object.entries(schedules).filter(([key]) => this.loadedScheduleFiles.has(key)).forEach(([key, schedule]) => {
+      const out = this._scheduleToGame(schedule);
       if (!out) return;
       const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = key + '.json'; a.click(); URL.revokeObjectURL(a.href);
     });
+    if (this.loadedMetaFiles.has('special_events.json')) downloadJson('special_events.json', this._eventFileToGame());
+    if (this.loadedMetaFiles.has('endings.json')) downloadJson('endings.json', this._endingFileToGame());
     this._closeModal(); this._st('游戏格式已导出');
   }
 
-  _ctxToGameContacts(key, ctx) {
-    const nodes = ctx?.nodes; if (!nodes || !Object.keys(nodes).length) return null;
-    // Convert editor node format → game dialogueTree format
+  async _writeGameFiles() {
+    const schedules = this.project?.schedules || {};
+    const files = Object.entries(schedules).filter(([key, schedule]) => this.loadedScheduleFiles.has(key) && schedule?.entries);
+    const writes = files.map(([key, schedule]) => this._dev.writeToDisk(`${key}.json`, this._scheduleToGame(schedule)));
+    if (this.loadedMetaFiles.has('special_events.json')) writes.push(this._dev.writeToDisk('special_events.json', this._eventFileToGame()));
+    if (this.loadedMetaFiles.has('endings.json')) writes.push(this._dev.writeToDisk('endings.json', this._endingFileToGame()));
+    await Promise.all(writes);
+    this._st(`已写入 ${writes.length} 个文件`);
+  }
+
+  _scheduleToGame(schedule) {
+    return { entries: (schedule?.entries || []).map((entry) => {
+      const { day, time, ...out } = entry;
+      out.dialogueTree = this._ctxToGameTree(entry.dialogueTree);
+      return out;
+    }) };
+  }
+
+  _metaFileToGame(fileDoc, contexts, key) {
+    const source = Array.isArray(fileDoc?.[key]) ? fileDoc[key] : [];
+    const byId = new Map(source.map((entry) => [entry.id, entry]));
+    return { ...fileDoc, [key]: Object.entries(contexts || {}).map(([id, ctx]) => {
+      const out = { ...(byId.get(id) || {}), id };
+      if (ctx?.nodes && Object.keys(ctx.nodes).length) out.dialogueTree = this._ctxToGameTree(ctx);
+      return out;
+    }) };
+  }
+
+  _eventFileToGame() { return this._metaFileToGame(this.project.eventFileDoc, this.project.events, 'events'); }
+  _endingFileToGame() { return this._metaFileToGame(this.project.endingFileDoc, this.project.endings, 'endings'); }
+
+  _ctxToGameTree(ctx) {
+    const nodes = ctx?.nodes; if (!nodes || !Object.keys(nodes).length) return { start: ctx?.startNodeId || null, nodes: {} };
     const gameNodes = {};
     Object.values(nodes).forEach(n => {
-      const gn = { speaker: n.speaker === 'player' ? 'player' : 'npc', text: n.text || '' };
-      if (n.options?.length) gn.options = n.options.map(o => ({ label: o.label||'', next: o.next||null }));
+      const gn = { speaker: n.speaker === 'player' ? 'player' : 'npc', text: n.text || '', x: n.x ?? 100, y: n.y ?? 100 };
+      if (n.entryConds?.length) gn.condition = n.entryConds[0];
+      if (n.options?.length) gn.options = n.options.map(o => {
+        const option = { label: o.label || '', next: o.next || null };
+        if (o.conditions?.length) option.condition = o.conditions[0];
+        if (o.effects && Object.keys(o.effects).length) option.effects = o.effects;
+        return option;
+      });
       if (n.next) gn.next = n.next;
       if (n.onShow && Object.keys(n.onShow).length) {
-        const os = {};
+        const os = { ...n.onShow };
         if (n.onShow.grantItems?.length) os.grantItems = n.onShow.grantItems;
         if (n.onShow.removeItems?.length) os.removeItems = n.onShow.removeItems;
         if (n.onShow.ending) os.ending = n.onShow.ending;
@@ -833,7 +1078,7 @@ export class DevDialogueEditorTab {
       }
       gameNodes[n.id] = gn;
     });
-    return { id: key, dialogueTree: { start: ctx.startNodeId || Object.keys(gameNodes)[0], nodes: gameNodes } };
+    return { start: ctx.startNodeId || Object.keys(gameNodes)[0], nodes: gameNodes };
   }
 
   // ── variables modal ───────────────────────────────────────────────────────

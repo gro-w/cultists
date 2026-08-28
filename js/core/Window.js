@@ -1,7 +1,7 @@
 /**
  * Window - represents a single Win95-style window instance.
  * Handles its own DOM creation, dragging, focus styling, resize and
- * close/minimize behaviour. Window content is provided by the app that
+ * close/minimize/maximize behaviour. Window content is provided by the app that
  * requests it (see WindowManager.createWindow).
  */
 
@@ -29,6 +29,8 @@ export default class Win95Window {
     this.onClose = options.onClose || null;
     this.onFocus = options.onFocus || null;
     this.minimized = false;
+    this.maximized = false;
+    this._normalBounds = null;
 
     this._buildDom(options);
     this._bindDrag();
@@ -47,13 +49,22 @@ export default class Win95Window {
     el.innerHTML = `
       <div class="win95-titlebar">
         <div class="win95-titlebar-title">
-          <span class="win95-titlebar-icon">${this.icon}</span>
+          <span class="win95-titlebar-icon" title="窗口菜单">${this.icon}</span>
           <span class="win95-titlebar-text"></span>
         </div>
         <div class="win95-titlebar-controls">
-          <button type="button" class="bevel-out win95-min" title="最小化">_</button>
+          <button type="button" class="bevel-out win95-min" title="最小化" aria-label="最小化">_</button>
+          <button type="button" class="bevel-out win95-max" title="最大化" aria-label="最大化">□</button>
           <button type="button" class="bevel-out win95-close" title="关闭">✕</button>
         </div>
+      </div>
+      <div class="win95-system-menu" role="menu" hidden>
+        <button type="button" data-window-command="restore">还原(R)</button>
+        <button type="button" data-window-command="move">移动(M)</button>
+        <button type="button" data-window-command="minimize">最小化(N)</button>
+        <button type="button" data-window-command="maximize">最大化(X)</button>
+        <div class="win95-system-menu-separator"></div>
+        <button type="button" data-window-command="close">关闭(C)</button>
       </div>
       <div class="win95-window-body"></div>
       ${this.resizable ? '<div class="win95-window-resize-handle"></div>' : ""}
@@ -76,11 +87,57 @@ export default class Win95Window {
       e.stopPropagation();
       this.toggleMinimize();
     });
+    el.querySelector(".win95-max").addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.toggleMaximize();
+    });
     el.addEventListener("mousedown", () => this.focus());
 
     this.el = el;
     this.bodyEl = body;
     this.titlebarEl = el.querySelector(".win95-titlebar");
+    this.systemMenuEl = el.querySelector(".win95-system-menu");
+    this._bindSystemMenu();
+  }
+
+  _bindSystemMenu() {
+    const icon = this.el.querySelector(".win95-titlebar-icon");
+    const menu = this.systemMenuEl;
+    if (!icon || !menu) return;
+    icon.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (menu.hidden) { this.focus(); menu.hidden = false; } else menu.hidden = true;
+    });
+    icon.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
+      this.close();
+    });
+    menu.querySelectorAll("[data-window-command]").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this._runSystemCommand(button.dataset.windowCommand);
+      });
+    });
+    this._menuOutsideHandler = (e) => {
+      if (!this.el.contains(e.target)) menu.hidden = true;
+    };
+    document.addEventListener("click", this._menuOutsideHandler);
+  }
+
+  _runSystemCommand(command) {
+    if (this.systemMenuEl) this.systemMenuEl.hidden = true;
+    if (command === "close") return this.close();
+    if (command === "move") return this.focus();
+    if (command === "minimize") return this.toggleMinimize();
+    if (command === "maximize") {
+      if (this.minimized) this.restore();
+      if (!this.maximized) this.toggleMaximize();
+      return;
+    }
+    if (command === "restore") {
+      if (this.minimized) this.restore();
+      if (this.maximized) this._restoreNormalBounds();
+    }
   }
 
   _bindDrag() {
@@ -104,7 +161,7 @@ export default class Win95Window {
     };
 
     this.titlebarEl.addEventListener("mousedown", (e) => {
-      if (e.target.closest("button")) return;
+      if (e.target.closest("button") || e.target.closest(".win95-titlebar-icon")) return;
       dragging = true;
       startX = e.clientX;
       startY = e.clientY;
@@ -113,6 +170,10 @@ export default class Win95Window {
       this.focus();
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("mouseup", onMouseUp);
+    });
+    this.titlebarEl.addEventListener("dblclick", (e) => {
+      if (e.target.closest("button") || e.target.closest(".win95-titlebar-icon")) return;
+      this.toggleMaximize();
     });
   }
 
@@ -164,6 +225,42 @@ export default class Win95Window {
     this.el.style.display = this.minimized ? "none" : "flex";
   }
 
+  toggleMaximize() {
+    if (this.maximized) {
+      this._restoreNormalBounds();
+      return;
+    }
+    this._normalBounds = {
+      left: this.el.style.left,
+      top: this.el.style.top,
+      width: this.el.style.width,
+      height: this.el.style.height,
+    };
+    this.maximized = true;
+    this.el.classList.add("maximized");
+    this.el.style.left = "0px";
+    this.el.style.top = "0px";
+    this.el.style.width = "100%";
+    this.el.style.height = "100%";
+    const button = this.el.querySelector(".win95-max");
+    button.title = "还原";
+    button.setAttribute("aria-label", "还原");
+  }
+
+  _restoreNormalBounds() {
+    if (!this._normalBounds) return;
+    const { left, top, width, height } = this._normalBounds;
+    this.maximized = false;
+    this.el.classList.remove("maximized");
+    this.el.style.left = left;
+    this.el.style.top = top;
+    this.el.style.width = width;
+    this.el.style.height = height;
+    const button = this.el.querySelector(".win95-max");
+    button.title = "最大化";
+    button.setAttribute("aria-label", "最大化");
+  }
+
   restore() {
     this.minimized = false;
     this.el.style.display = "flex";
@@ -176,6 +273,10 @@ export default class Win95Window {
   }
 
   close() {
+    if (this._menuOutsideHandler) {
+      document.removeEventListener("click", this._menuOutsideHandler);
+      this._menuOutsideHandler = null;
+    }
     this.el.remove();
     if (this.onClose) this.onClose(this);
   }

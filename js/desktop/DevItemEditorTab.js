@@ -1,4 +1,6 @@
 // DEV-TOOLS:START
+import { dataLoader } from "../core/DataLoader.js";
+
 /**
  * DevItemEditorTab — item-editor.html/js ported into the DeveloperMode panel.
  * Inline onclick= handlers reference window._ie (set to `this` on mount).
@@ -53,14 +55,7 @@ export class DevItemEditorTab {
   /** Called by DeveloperMode after injecting html() into the panel. */
   mount() {
     window._ie = this;
-    if (!this._loadLS()) {
-      this._dev.loadDoc('items.json').then(doc => {
-        this.items = (doc.items||[]).map(g=>this._fromGame(g));
-        this._persist();
-        this._renderList();
-        this._st('从 items.json 加载了 '+this.items.length+' 个物品');
-      }).catch(()=>{});
-    }
+    this._loadCurrentGame();
     this._renderList();
   }
 
@@ -69,9 +64,9 @@ export class DevItemEditorTab {
     return `<div class="dev-ie-root">
 <div class="dev-ie-toolbar">
   <strong style="font-size:13px">物品编辑器</strong>
-  <button type="button" class="win95-btn dev-btn" onclick="_ie.importJSON()">📂 导入</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_ie.exportJSON()">💾 导出</button>
-  <button type="button" class="win95-btn dev-btn" onclick="_ie.writeToGame()">🎮 写入磁盘</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie._loadCurrentGame()">⬇ 从当前游戏读取</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie.exportJSON()">📤 导出 JSON</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie.writeToGame()">💽 写入磁盘</button>
   <input type="file" id="ie-file-input" accept=".json" style="display:none" onchange="_ie._onFile(event)">
 </div>
 <div class="dev-ie-main">
@@ -440,6 +435,18 @@ export class DevItemEditorTab {
   }
 
   importJSON() { this._el('ie-file-input')?.click(); }
+  async _loadCurrentGame() {
+    try {
+      const data = await dataLoader.loadJSON('items.json');
+      if (!Array.isArray(data.items)) throw new Error('items.json 缺少 items 数组');
+      if (data.items.some((item) => !item || typeof item !== 'object' || Array.isArray(item))) {
+        throw new Error('items.json 的 items 必须全部是 JSON 对象');
+      }
+      this.items = data.items.map(g=>this._fromGame(g));
+      this.currentId=null; this.dirty=false; this._persist(); this._renderList();
+      this._st('已从当前游戏读取 items.json：'+this.items.length+' 个物品');
+    } catch (err) { this._st('读取当前游戏失败：'+err.message); }
+  }
   _onFile(ev) {
     const f=ev.target.files[0]; if(!f) return;
     const r=new FileReader();
@@ -456,9 +463,11 @@ export class DevItemEditorTab {
     r.readAsText(f,'utf-8'); ev.target.value='';
   }
   exportJSON() {
-    const blob=new Blob([JSON.stringify({_editorFormat:true,items:this.items},null,2)],{type:'application/json'});
+    if(this.currentId&&this.dirty) this.saveItem(true);
+    const blob=new Blob([JSON.stringify({items:this.items.map(it=>this._toGame(it))},null,2)+'\n'],{type:'application/json'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download='items-editor.json'; a.click(); URL.revokeObjectURL(a.href);
+    a.download='items.json'; a.click(); URL.revokeObjectURL(a.href);
+    this._st('items.json 已下载');
   }
   async writeToGame() {
     if(this.currentId&&this.dirty) this.saveItem(true);
@@ -469,90 +478,34 @@ export class DevItemEditorTab {
 
   // ── format converters ─────────────────────────────────────────────────────
   _toGame(it) {
-    // Start from the original game object (preserves inspectCheck, inspectOutcomes,
-    // useEffect.add/remove, useCondition.requires, startingInventory, etc.)
-    // then overwrite only the fields this editor manages.
-    const out = it._rawGame ? JSON.parse(JSON.stringify(it._rawGame)) : {};
-
-    // Always-managed scalar fields
-    out.id = it.id;
-    out.name = it.defaultName;
-    out.consumable = it.consumable;
-    out.usable = it.usable;
-    if (it.pickable) out.pickable = true; else delete out.pickable;
-    out.worldCount = it.worldCount;
-    out.locations = it.locations;
-
-    if (it.inspectText) out.inspectText = it.inspectText; else delete out.inspectText;
-    if (it.inspectTimeAdvance) out.inspectTimeAdvance = it.inspectTimeAdvance; else delete out.inspectTimeAdvance;
-
-    // useCondition: merge sanMin/sanMax, keep requires if present
-    const uc = it.useCondition || {};
-    if (uc.sanMin || uc.sanMax) {
-      if (!out.useCondition) out.useCondition = {};
-      if (uc.sanMin) out.useCondition.sanMin = uc.sanMin; else delete out.useCondition?.sanMin;
-      if (uc.sanMax) out.useCondition.sanMax = uc.sanMax; else delete out.useCondition?.sanMax;
-    } else if (out.useCondition) {
-      // remove only the san fields we manage; keep requires etc.
-      delete out.useCondition.sanMin; delete out.useCondition.sanMax;
-      if (!Object.keys(out.useCondition).length) delete out.useCondition;
-    }
-
-    if (it.revealKeywordIds && it.revealKeywordIds.length) out.revealKeywordIds = it.revealKeywordIds;
-    else delete out.revealKeywordIds;
-
-    // sanVariants: merge editor-authored fields into existing variant objects
-    const variants = out.sanVariants ? JSON.parse(JSON.stringify(out.sanVariants)) : {};
-    _IE_BANDS.forEach(b => {
-      const v = it.sanVariants[b.key] || {};
-      const entry = variants[b.key] ? { ...variants[b.key] } : {};
-      if (v.name) entry.name = v.name; else delete entry.name;
-      if (v.description) entry.description = v.description; else delete entry.description;
-      if (v.imageData) entry.imageData = v.imageData; else delete entry.imageData;
-      if (v.revealKeywordIds && v.revealKeywordIds.length) entry.revealKeywordIds = v.revealKeywordIds;
-      else delete entry.revealKeywordIds;
-      const ie = v.inspEffect || {};
-      if (ie.gameEvent || ie.mental || ie.ending) {
-        entry.inspectEffect = entry.inspectEffect || {};
-        if (ie.gameEvent) entry.inspectEffect.gameEvent = ie.gameEvent; else delete entry.inspectEffect.gameEvent;
-        if (ie.mental) entry.inspectEffect.statChanges = { mental: ie.mental }; else delete entry.inspectEffect.statChanges;
-        if (ie.ending) entry.inspectEffect.ending = ie.ending; else delete entry.inspectEffect.ending;
-        if (!Object.keys(entry.inspectEffect).length) delete entry.inspectEffect;
-      } else {
-        delete entry.inspectEffect;
-      }
-      if (Object.keys(entry).length) variants[b.key] = entry; else delete variants[b.key];
+    const out={id:it.id,name:it.defaultName,consumable:it.consumable,usable:it.usable,
+      pickable:it.pickable,worldCount:it.worldCount,locations:it.locations};
+    if(it.inspectText) out.inspectText=it.inspectText;
+    if(it.inspectTimeAdvance) out.inspectTimeAdvance=it.inspectTimeAdvance;
+    const uc=it.useCondition||{};
+    if(uc.sanMin||uc.sanMax){out.useCondition={};if(uc.sanMin)out.useCondition.sanMin=uc.sanMin;if(uc.sanMax)out.useCondition.sanMax=uc.sanMax;}
+    if(it.revealKeywordIds&&it.revealKeywordIds.length) out.revealKeywordIds=it.revealKeywordIds;
+    const variants={};
+    _IE_BANDS.forEach(b=>{
+      const v=it.sanVariants[b.key]||{}; const entry={};
+      if(v.name) entry.name=v.name; if(v.description) entry.description=v.description;
+      if(v.imageData) entry.imageData=v.imageData;
+      if(v.revealKeywordIds&&v.revealKeywordIds.length) entry.revealKeywordIds=v.revealKeywordIds;
+      const ie=v.inspEffect||{};
+      if(ie.gameEvent||ie.mental||ie.ending){entry.inspectEffect={};if(ie.gameEvent)entry.inspectEffect.gameEvent=ie.gameEvent;if(ie.mental)entry.inspectEffect.statChanges={mental:ie.mental};if(ie.ending)entry.inspectEffect.ending=ie.ending;}
+      if(Object.keys(entry).length) variants[b.key]=entry;
     });
-    if (Object.keys(variants).length) out.sanVariants = variants; else delete out.sanVariants;
-
-    if (it.isBook) out.isBook = true; else delete out.isBook;
-    if (it.bookContents && it.bookContents.length) out.bookContents = it.bookContents; else delete out.bookContents;
-    if (it.spells && it.spells.length)
-      out.spells = it.spells.filter(s => s.name).map(s => ({ name: s.name, description: s.description || '', learnTimeMinutes: 240, castSanCost: 5 }));
-    else delete out.spells;
-
-    // useEffect: merge stat/ending/event changes, keep add/remove/other keys
-    const ue = it.useEffect || {};
-    if (it.usable) {
-      if (!out.useEffect) out.useEffect = {};
-      if (ue.ending) out.useEffect.ending = ue.ending; else delete out.useEffect.ending;
-      if (ue.gameEvent) out.useEffect.gameEvent = ue.gameEvent; else delete out.useEffect.gameEvent;
-      if (ue.timeAdvance) out.useEffect.timeAdvance = ue.timeAdvance; else delete out.useEffect.timeAdvance;
-      const sc = {};
-      if (ue.mental) sc.mental = ue.mental;
-      if (ue.physical) sc.physical = ue.physical;
-      if (ue.satiety) sc.satiety = ue.satiety;
-      if (ue.energy) sc.energy = ue.energy;
-      if (Object.keys(sc).length) out.useEffect.statChanges = sc; else delete out.useEffect.statChanges;
-      if (ue.successMsg) out.successMessage = ue.successMsg; else delete out.successMessage;
-      if (ue.failMsg) out.failMessage = ue.failMsg; else delete out.failMessage;
-      if (!Object.keys(out.useEffect).length) delete out.useEffect;
-    }
+    if(Object.keys(variants).length) out.sanVariants=variants;
+    if(it.isBook) out.isBook=true;
+    if(it.bookContents&&it.bookContents.length) out.bookContents=it.bookContents;
+    if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>({name:s.name,description:s.description||'',learnTimeMinutes:240,castSanCost:5}));
+    const ue=it.useEffect;
+    if(it.usable){out.useEffect={};if(ue.ending)out.useEffect.ending=ue.ending;if(ue.gameEvent)out.useEffect.gameEvent=ue.gameEvent;if(ue.timeAdvance)out.useEffect.timeAdvance=ue.timeAdvance;const sc={};if(ue.mental)sc.mental=ue.mental;if(ue.physical)sc.physical=ue.physical;if(ue.satiety)sc.satiety=ue.satiety;if(ue.energy)sc.energy=ue.energy;if(Object.keys(sc).length)out.useEffect.statChanges=sc;if(ue.successMsg)out.successMessage=ue.successMsg;if(ue.failMsg)out.failMessage=ue.failMsg;}
     return out;
   }
   _fromGame(g) {
     const it=this._emptyItem();
-    it._rawGame = g; // preserve unknown fields (inspectCheck, inspectOutcomes, useEffect.add/remove …) for lossless round-trip
+    it._rawGame=g; // preserve unknown fields (inspectCheck, inspectOutcomes, useEffect.add/remove …) for lossless round-trip
     it.id=g.id||it.id; it.defaultName=g.name||''; it.consumable=!!g.consumable;
     it.usable=!!g.usable; it.pickable=!!g.pickable; it.worldCount=g.worldCount||1;
     it.locations=g.locations||[]; it.inspectText=g.inspectText||'';

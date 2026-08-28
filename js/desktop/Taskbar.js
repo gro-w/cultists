@@ -3,7 +3,7 @@ import { eventBus } from "../core/EventBus.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { i18n } from "../core/I18n.js";
 import { gameState } from "../core/GameState.js";
-import { actionBudget } from "../core/ActionBudget.js";
+import { timeService } from "../core/TimeService.js";
 // DEV-TOOLS:START
 import { scheduleData } from "../core/ScheduleData.js";
 // DEV-TOOLS:END
@@ -30,7 +30,7 @@ export default class Taskbar {
     this._bindDayNight();
     eventBus.on("daynight:changed", () => this._renderStartMenu());
     eventBus.on("daynight:changed", () => this._tickClock());
-    eventBus.on("actionBudget:changed", () => this._tickClock());
+    eventBus.on("time:changed", () => this._tickClock());
     eventBus.on("gamestate:changed", () => this._bindDayNightUpdate());
     this._tickClock();
   }
@@ -96,7 +96,7 @@ export default class Taskbar {
 
   _tickClock() {
     const phaseStart = gameState.phase === "day" ? 8 * 60 : 16 * 60;
-    const phaseMinutes = actionBudget.snapshot().phaseMinutes || 0;
+    const phaseMinutes = timeService.snapshot().phaseMinutes || 0;
     const totalMinutes = (phaseStart + phaseMinutes) % (24 * 60);
     const isEarlyMorning = totalMinutes < 7 * 60 + 40;
     this.clockEl.classList.toggle("early-morning-warning", isEarlyMorning);

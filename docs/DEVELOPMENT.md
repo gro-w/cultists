@@ -46,13 +46,18 @@ node dev-server.js --port 8001 --lang zh-hans
 
 新增开发工具代码必须放在 `// DEV-TOOLS:START` / `// DEV-TOOLS:END`（或对应 CSS/HTML 注释）之间，以便 `publish.js` 删除。
 
+### 日程编辑器工作台
+
+「日程编辑器」首页是一个大画面，包含六张独立日程表：日期 Social、日期 Work、公共 Social、公共 Work、特殊事件和结局。日期 Social/Work 使用「日期」和 `a/b` 两个下拉框选择一个目标文件；公共 Social/Work 分别固定对应 `socialpub.json` 与 `workpub.json`；特殊事件和结局分别固定对应 `special_events.json` 与 `endings.json`，不提供日程选择或新建控件。每张表都有编辑按钮及「从当前游戏读取」「从文件读取」「导出 JSON」「写入磁盘」四类文件级操作，每次只处理一个 JSON 文件。空日程也可以打开蓝图编辑器，之后通过「＋ 日程条目」新建条目。编辑按钮会通过 `WindowManager` 打开填满窗口的独立蓝图子窗口；子窗口可以同时打开多个，并且左侧只列出当前文件中的条目。蓝图窗口顶部同样只有四个单文件操作按钮，不提供项目级新建、保存或载入；未选中节点时可编辑当前日程 ID 和 `displayName`（显示名称）。
+
 ## 修改流程
 
 1. 先读 `AGENTS.md`、相关模块、数据 schema 和所有调用点。
-2. 保持职责归属：全局状态放核心单例，跨模块通知用 `EventBus`，内容放 JSON。
-3. 所有文本文件使用 LF；不读取、不提交凭据和 `.env` 文件。
-4. 不添加构建工具、框架或依赖，除非先讨论。
-5. 修改后执行静态检查：
+2. 保持职责归属：全局状态放核心单例，跨模块通知用 `EventBus`，内容放 JSON；所有普通计时操作先创建日程实例，由 `ScheduleRunner`/`ItemScheduleRuntime` 执行。
+3. 不要在 App 中直接调用 `TimeService.advanceBy()`，不要在日程创建前调用 `SpellManager.learn()`、`MedicalCaseManager.submit()` 或写入 NPC offline 状态。法术学习必须是“240 分钟 `consumeTime` → `spellOperation`”，NPC 离线必须是 realtime 日程。
+4. 所有文本文件使用 LF；不读取、不提交凭据和 `.env` 文件。
+5. 不添加构建工具、框架或依赖，除非先讨论。
+6. 修改后执行静态检查：
 
 ```bash
 for f in $(git ls-files '*.js'); do node --check "$f"; done

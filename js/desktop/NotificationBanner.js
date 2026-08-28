@@ -12,7 +12,7 @@ export default class NotificationBanner {
     this._timer = null;
     this._onTransitionEnd = null;
     eventBus.on("daynight:changed", ({ phase, settlement }) => {
-      // A settlement (ActionBudget.settlePhase(), see DayNightSystem.toggle)
+      // A settlement (TimeService.settlePhase(), see DayNightSystem.toggle)
       // takes priority over the plain "phase changed" toast, since it's the
       // more actionable piece of news (加班/熬夜 consequence just landed).
       const settlementMessage = this._settlementMessage(settlement);

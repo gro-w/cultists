@@ -56,9 +56,9 @@ export default ExampleManager;
 | --- | --- |
 | `GameState` | day、clockMinutes、phase、duty、location、energy、mental、physical、satiety |
 | `DayNightSystem` | 上班/下班/睡眠、工作日/休息日、最终阶段 |
-| `ActionBudget` | 默认 20 分钟行动、调查/物品覆盖时间、240 分钟法术学习、睡眠日结 |
+| `TimeService` | 唯一普通游戏时间推进与阶段结算 owner；处理 20 分钟行动、物品/法术时间、睡眠日结 |
 | `ScheduleData` | 加载 `workXXa/b` 和 `socialXXa/b`，按时间追加队列 |
-| `ScheduleQueue` | 独立 `workQueue` 与 `socialQueue` FIFO |
+| `ScheduleQueue` | 独立 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `realtimeQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件/效果 |
 | `ItemPlacementManager` | 场景物品摆放、可见条件、拾取/放回 |
 | `GlobalVariableManager` | 全局变量定义、值、条件比较、效果、存档快照 |
@@ -74,6 +74,8 @@ export default ExampleManager;
 - 初始为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`。
 - 工作窗口严格是 `[08:00, 16:00)`；天文白昼 `[06:00, 18:00)`，两者不可混用。
 - 普通成功行动默认推进 20 分钟；不要使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
+- 所有玩家可见的计时操作（ChatGTP 查询、HIS 提交、物品调查/使用、法术学习/施放）必须先创建日程实例，再由 `ScheduleRunner` 或 `ItemScheduleRuntime` 执行；副作用和时间推进不得由 App 直接调用。
+- 法术学习日程的顺序固定为“`consumeTime(240)` → `spellOperation` 调整已学习状态”。NPC 离线也必须通过 realtime 日程完成状态切换及后果。
 - phase、duty、location 是独立字段；存档恢复时必须保持派生关系一致。
 - 工作/夜班未完成的当前批次分别阻塞下班/睡觉；`entries: []` 是显式空批次，不是缺失数据。
 - 午夜增加游戏日期；到次日 `08:00` 只结算一次睡眠、医疗、收入支出和睡眠债。

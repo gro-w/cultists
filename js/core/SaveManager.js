@@ -4,13 +4,13 @@ import { itemManager } from "./ItemManager.js";
 import { dialogueProgress } from "./DialogueProgress.js";
 import { windowManager } from "./WindowManager.js";
 import { scheduleData } from "./ScheduleData.js";
-import { actionBudget } from "./ActionBudget.js";
+import { timeService } from "./TimeService.js";
 import { favorabilityManager, NPC_IDS } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { spellManager } from "./SpellManager.js";
 import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
-import { workQueue, socialQueue } from "./ScheduleQueue.js";
+import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
@@ -176,12 +176,15 @@ class SaveManager {
   _encode() {
     const payload = {
       gameState: gameState.snapshot(),
-      actionBudget: actionBudget.snapshot(),
+      timeService: timeService.snapshot(),
       workQueue: workQueue.snapshot(),
       socialQueue: socialQueue.snapshot(),
+      chatgtpQueue: chatgtpQueue.snapshot(),
+      realtimeQueue: realtimeQueue.snapshot(),
       keywords: keywordManager.all().map((kw) => ({ id: kw.id, collectedDay: kw.collectedDay })),
       inventory: itemManager.all(),
       medical: medicalCaseManager.snapshot(),
+      npcState: npcStateManager.snapshot(),
       globalVariables: globalVariableManager.snapshot(),
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
       spells: spellManager.all(),
@@ -199,7 +202,7 @@ class SaveManager {
     bytes.push(clampByte(gameState.mental));
     bytes.push(clampByte(gameState.physical));
     bytes.push(clampByte(gameState.satiety));
-    const budget = actionBudget.snapshot();
+    const budget = timeService.snapshot();
     push16(bytes, gameState.recoverableMentalLoss);
     bytes.push(clampByte(budget.used.dialogue));
     bytes.push(clampByte(budget.used.inspect));
@@ -291,7 +294,8 @@ class SaveManager {
     const version = bytes[i++];
     if (version !== SAVE_FORMAT_VERSION) throw new Error("Unsupported save version");
     const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
-    if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)) {
+    if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)
+      || !Array.isArray(payload.chatgtpQueue || []) || !Array.isArray(payload.realtimeQueue || [])) {
       throw new Error("Invalid save data");
     }
     if (!Number.isInteger(payload.gameState.day) || payload.gameState.day < 1 || payload.gameState.day > MAX_GAME_DAYS) {
@@ -299,13 +303,16 @@ class SaveManager {
     }
     globalVariableManager.restore(payload.globalVariables || []);
     gameState.restore(payload.gameState);
-    actionBudget.restore(payload.actionBudget || {});
+    timeService.restore(payload.timeService || payload.actionBudget || {});
     workQueue.restore(payload.workQueue);
     socialQueue.restore(payload.socialQueue);
+    chatgtpQueue.restore(payload.chatgtpQueue || []);
+    realtimeQueue.restore(payload.realtimeQueue || []);
     scheduleData.restoreScheduled(payload.scheduledAdds || []);
     keywordManager.restoreCollected(payload.keywords || []);
     itemManager.restoreInventory(payload.inventory || []);
     spellManager.restore(payload.spells || []);
+    npcStateManager.restore(payload.npcState || {});
     medicalCaseManager.restore(payload.medical || {});
     scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
     this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
@@ -383,7 +390,7 @@ class SaveManager {
 
     medicalCaseManager.beginRestore();
     gameState.restore({ day, phase, location, energy, mental, physical, satiety, recoverableMentalLoss });
-    if (budgetSnapshot) actionBudget.restore(budgetSnapshot);
+    if (budgetSnapshot) timeService.restore(budgetSnapshot);
     keywordManager.restoreCollected(keywordEntries);
     itemManager.restoreInventory(itemEntries);
 

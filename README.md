@@ -92,7 +92,7 @@ docs/                      架构、数据 schema 和协作指南
 - 场景物品：`item_placements.json`。
 - 对话、关键词、ChatGTP、NPC、特殊事件、结局、成就和医疗数据见对应 JSON。
 
-完整字段、示例和引用约束见 [`docs/DATA-SCHEMAS.md`](docs/DATA-SCHEMAS.md)。架构和状态机见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
+完整字段、示例和引用约束见 [`docs/DATA-SCHEMAS.md`](docs/DATA-SCHEMAS.md)。架构和状态机见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。面向二次开发的完整引擎手册见 [`docs/ENGINEERING.md`](docs/ENGINEERING.md)。
 
 ## 验证与发布
 

@@ -34,8 +34,8 @@
 | `ScheduleRunner` | HIS/Social/Monitor 对话及所有对象式日程蓝图执行器 |
 | `DialogueEffects` | 对话显示时的物品、NPC、好感度、结局、变量和游戏事件效果 |
 | `EndingManager` | 事件、对话、物品、属性阈值和最终阶段结局 |
-| `SaveManager` | v11 存档编码/恢复、窗口布局、队列实例和所有持久状态 |
-| `DeveloperMode` | 仅源码开发版中的状态调节和数据编辑 |
+| `SaveManager` | v12 存档编码/恢复、窗口布局、队列实例和所有持久状态 |
+| `DeveloperMode` | 仅源码开发版中的状态调节、JSON/内容编辑和日程蓝图编辑 |
 
 典型事件流：
 

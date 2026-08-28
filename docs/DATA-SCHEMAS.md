@@ -108,9 +108,9 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 
 只有 number 支持 `delta`；其他类型使用 `value`。
 
-## 对话树
+## 旧式 dialogueTree（仅兼容读取）
 
-HIS、Social 和 Monitor 使用共用的 `DialogueRunner`：
+历史数据中的 `dialogueTree` 仍可由 `ScheduleBlueprint.migrateDialogueTree()` 转换，但新内容不得再使用它。HIS、Social 和 Monitor 的正式运行入口都是对象式日程蓝图和共用的 `ScheduleRunner`：
 
 ```json
 {
@@ -132,7 +132,7 @@ HIS、Social 和 Monitor 使用共用的 `DialogueRunner`：
 }
 ```
 
-关键词只通过文本中的 `[[keyword_id]]` 引用；不要为角色添加额外的 `keywordIds` 代替标记。终点节点应保留 `options: []`。
+该示例仅用于理解旧数据，不应作为新数据模板。关键词只通过文本中的 `[[keyword_id]]` 引用；新 entry 不要添加额外的 `keywordIds` 代替标记。
 
 ## 日程蓝图
 

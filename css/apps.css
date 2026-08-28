@@ -59,10 +59,30 @@
 }
 
 .his-dialogue,
-.his-record,
 .his-prescription {
   flex: 1;
   min-height: 60px;
+}
+
+.diagnosis-form {
+  flex-shrink: 0;
+}
+
+.diagnosis-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0;
+}
+
+.diagnosis-row label {
+  width: 42px;
+  flex-shrink: 0;
+}
+
+.diagnosis-row select {
+  flex: 1;
+  min-width: 0;
 }
 
 .his-patient-btn {
@@ -100,18 +120,6 @@
   color: var(--w95-gray-dark);
   font-style: italic;
   margin: 6px 0 0;
-}
-
-.record-form {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.record-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -167,58 +175,90 @@
 /* ---------------------------------------------------------------------- */
 /* ChatGTP App                                                             */
 /* ---------------------------------------------------------------------- */
+.app-chatgtp {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
 .chatgtp-layout {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   gap: 6px;
 }
 
 .chatgtp-history {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .chatgtp-keywords {
-  max-height: 130px;
-  flex-shrink: 0;
+  flex: 0 0 150px;
+  height: 150px;
+  min-height: 150px;
+  max-height: 150px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  overflow: hidden;
 }
 
-.chatgtp-keyword-chips {
+.chatgtp-disease-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 4px;
 }
 
-.keyword-chip {
-  font-size: 11px;
+.chatgtp-disease-row select {
+  flex: 1;
+  min-width: 0;
 }
 
-.keyword-chip.selected {
+.chatgtp-notebook-row {
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+}
+
+.chatgtp-notebook-category-select {
+  flex: 0.7;
+  min-width: 0;
+}
+
+.chatgtp-notebook-select {
+  flex: 1.6;
+  min-width: 0;
+}
+
+.chatgtp-selected-keywords {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.chatgtp-selected-keyword {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chatgtp-selected-keyword.selected {
   background: var(--w95-blue);
   color: var(--w95-white);
 }
 
-.keyword-chip:disabled {
-  color: var(--w95-gray-dark);
-  cursor: not-allowed;
-}
-
 .chatgtp-query-btn {
   align-self: flex-start;
+  flex: 0 0 auto;
 }
 
-.chatgtp-input-row {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.chatgtp-input {
-  flex: 1;
-}
 
 .chatgtp-tabs {
   display: flex;
@@ -251,7 +291,9 @@
 }
 
 .chatgtp-tab-panel {
-  height: calc(100% - 26px);
+  flex: 1;
+  min-height: 0;
+  height: auto;
 }
 
 .chatgtp-dialogue-layout {

@@ -122,13 +122,14 @@ Key files inside `data/zh-hans/`:
 | File | Purpose |
 |---|---|
 | `days.json` | `{ "totalDays": N }` — drives `ScheduleData`'s day-phase cycling. |
-| `day01a.json` … `dayNNb.json` | Per-day-phase content (`a` = day, `b` = night): `patients` remain in the existing patient schema; NPC dialogue entries in `contacts` use `{ type: "npc", npcId, dialogueTree }` to reference `npcs.json`, while custom entries use `{ type: "other", name, avatar, dialogueTree }`. Each dialogue tree has nodes with `text`, `[[keywordId]]` inline highlight markers, `options[]`, and optional `onShow` effects. The markers are the sole dialogue-keyword references; actors do not need a `keywordIds` field. |
-| `keywords.json` | Central keyword registry: `{ id, content }` only. Dialogue text references keywords with `[[keywordId]]` markers; never inline-define a keyword elsewhere. Item data may still use keyword IDs for reveal effects. ChatGTP normal/corrupted answers live in `chatgtp_qa.json`. |
+| `day01a.json` … `dayNNb.json` | Per-day-phase content (`a` = day, `b` = night): `patients` remain in the existing patient schema; HIS patients reference `diagnoses.json` through `correctDiagnosisId` and `diagnosisOptionIds`; NPC dialogue entries in `contacts` use `{ type: "npc", npcId, dialogueTree }` to reference `npcs.json`, while custom entries use `{ type: "other", name, avatar, dialogueTree }`. Each dialogue tree has nodes with `text`, `[[keywordId]]` inline highlight markers, `options[]`, and optional `onShow` effects. The markers are the sole dialogue-keyword references; actors do not need a `keywordIds` field. |
+| `keywords.json` | Central keyword registry. Every keyword, including the two fixed normal/low entities for each diagnosis, uses exactly `{ id, content }`. Disease keyword details are stored in `chatgtp_qa.json`, not here; ChatGTP parses the disease keyword ID to resolve its diagnosis and version. Dialogue text references keywords with `[[keywordId]]` markers. |
 | `items.json` | Inventory item defs: `consumable`, `usable`, `inspectText`, `revealKeywordIds`, `useCondition.requires`, `useEffect.{grant,remove,ending,stat deltas}`. |
 | `endings.json` | `endings[]` (id/title/icon/text), `statTriggers[]` (stat/op/value/endingId), `finalConditions[]` (condition/endingId, checked in order on the final night), `defaultEndingId` (fallback). |
 | `special_events.json` | Conditional NPC replacements: `npcId`, `phase`, inclusive `startDay`/`endDay`, optional `favorability`/`san` min/max, and a replacement `dialogueTree`. |
-| `medical_records.json`, `medicines.json` | HIS record templates (fill-in-the-blank slots) and prescribable medicine list. |
-| `chatgtp_qa.json` | Keyword-combination → answer map for the ChatGTP app; each entry has `revealKeywordIds` for keywords the answer teaches. |
+| `medicines.json` | HIS prescribable medicine list and commission values. |
+| `diagnoses.json` | HIS diagnosis registry grouped by ICD-10 chapters as `categories[]` → `diagnoses[]`. Each category has `icdChapter`/`icdLetter`/`icdRange`; each diagnosis has a stable `id`, an ICD-10-CM `icd10`, normal/low-SAN names, and patient diagnosis linkage uses the stable ID. `lowSanThreshold` controls which fixed disease-keyword variant is offered. |
+| `chatgtp_qa.json` | Unified keyword-combination → answer map for the ChatGTP app. Every entry uses the same `keywords`, `answer`, `corruptedAnswer`, and `corruptedSameAsNormal` fields; disease and disease-category keyword answers are pre-authored here, not generated or concatenated at runtime. |
 
 **Dialogue node schema** (used by both HIS patients and Social contacts):
 ```jsonc

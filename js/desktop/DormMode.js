@@ -6,6 +6,7 @@ import { scheduleData } from "../core/ScheduleData.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { itemManager } from "../core/ItemManager.js";
+import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
@@ -121,6 +122,7 @@ export default class DormMode {
     this._moveTo(this.playerPos.x, this.playerPos.y);
     this._renderClock();
     this.markers.innerHTML = "";
+    this._renderItemPlacements(scene);
     const listKey = gameState.phase === "day" ? "patients" : "contacts";
     this.entry = await scheduleData.load(gameState.day, gameState.phase);
     const actors = this.entry?.[listKey] || [];
@@ -185,6 +187,66 @@ export default class DormMode {
       this._openComputer();
     });
     this.markers.appendChild(computer);
+  }
+
+  _renderItemPlacements(scene) {
+    itemPlacementManager.visibleFor("dorm").forEach((placement) => {
+      const hotspot = placement.hotspot || {};
+      const marker = document.createElement("button");
+      marker.type = "button";
+      marker.className = "win95-btn bevel-out dorm-item-placement-marker";
+      marker.style.left = `${hotspot.x}px`;
+      marker.style.top = `${hotspot.y}px`;
+      marker.textContent = hotspot.icon || "❔";
+      marker.title = hotspot.label || itemManager.getDef(placement.itemId)?.name || placement.itemId;
+      marker.setAttribute("aria-label", marker.title);
+      marker.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this._inspectPlacedItem(placement.id);
+      });
+      this.markers.appendChild(marker);
+    });
+  }
+
+  _inspectPlacedItem(placementId) {
+    const inspected = itemPlacementManager.inspect(placementId);
+    if (!inspected.ok) {
+      this._message(inspected.message);
+      return;
+    }
+    this.interaction.innerHTML = "";
+    const heading = document.createElement("h3");
+    heading.textContent = itemManager.getDef(inspected.placement.itemId)?.name || "物品";
+    this.interaction.appendChild(heading);
+    const resultEl = document.createElement("div");
+    this.interaction.appendChild(resultEl);
+    renderInspectResult(inspected.result, resultEl);
+    const takeButton = document.createElement("button");
+    takeButton.className = "win95-btn bevel-out";
+    takeButton.textContent = "拿起并放入物品栏";
+    takeButton.addEventListener("click", () => {
+      const result = itemPlacementManager.take(placementId);
+      this._message(result.message, result.ok ? "success" : "");
+      if (result.ok) {
+        this._renderScene();
+        this._showHeldPlacement(placementId);
+      }
+    });
+    this.interaction.appendChild(takeButton);
+  }
+
+  _showHeldPlacement(placementId) {
+    const placement = itemPlacementManager.get(placementId);
+    if (!placement) return;
+    const putBackButton = document.createElement("button");
+    putBackButton.className = "win95-btn bevel-out";
+    putBackButton.textContent = "放回书桌";
+    putBackButton.addEventListener("click", () => {
+      const result = itemPlacementManager.putBack(placementId);
+      this._message(result.message, result.ok ? "success" : "");
+      if (result.ok) this._renderScene();
+    });
+    this.interaction.appendChild(putBackButton);
   }
 
   _openComputer() {

@@ -1,31 +1,16 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
+import { scheduleData } from "./ScheduleData.js";
+import { medicalCaseManager } from "./MedicalCaseManager.js";
 
 const DEFAULT_LIMITS = { dialogueLimit: Infinity, inspectLimit: Infinity };
 
-/**
- * ActionBudget - singleton tracking how many "actions" (NPC dialogue turns,
- * item inspections) the player has spent in the current day/night phase,
- * and applying the configured consequence once a phase ends over budget:
- *   - overspending during the DAY is banked as overtime debt that shrinks
- *     the *upcoming night's* budget (加班侵占夜间时间);
- *   - overspending at NIGHT directly costs 精神 (SAN) once the night ends
- *     (熬夜熬过头掉 san).
- * Limits are data-driven via `data/action_budget.json`.
- *
- * Wiring: `recordDialogueTurn()`/`recordInspection()` are driven by the
- * `dialogue:turn` (emitted by HIS/Social/Monitor when the player picks a
- * dialogue option) and `item:inspected` (emitted by ItemManager.inspect())
- * events, so this module stays decoupled from the apps/managers that
- * generate those actions - same one-way event-bus pattern EndingManager
- * uses for `item:used`.
- *
- * Time is measured in 20-minute units: every dialogue turn or inspection advances
- * the shared phase clock. Crossing the configured work/night duration creates
- * overtime or all-nighter consequences; ending a night models sleep and
- * recovery before the next day begins. Runtime state is included in save v3.
- */
+function elapsedFromDayStart() {
+  const clock = gameState.clockMinutes;
+  return gameState.phase === "day" ? Math.max(0, clock - 8 * 60) : (clock >= 16 * 60 ? clock - 16 * 60 : clock + 8 * 60);
+}
+
 class ActionBudget {
   constructor() {
     this.config = null;
@@ -34,30 +19,13 @@ class ActionBudget {
     this.sleepHistory = [];
     this.insufficientSleepStreak = 0;
     this.currentLimits = { ...DEFAULT_LIMITS };
-    this._pendingNightDebt = 0;
     this._initPromise = null;
-
     eventBus.on("item:inspected", () => this.recordInspection());
     eventBus.on("item:used", () => this.recordTimedAction());
     eventBus.on("dialogue:turn", () => this.recordDialogueTurn());
-    // DayNightSystem.toggle() settles the ending phase's overage and then
-    // emits this same event with the new phase - listening here (rather
-    // than DayNightSystem calling startPhase directly) means GameState's
-    // own daynight:changed emission (e.g. from SaveManager restoring a
-    // save) also correctly resets the budget for whatever phase was
-    // loaded, with a single code path.
-    eventBus.on("daynight:changed", ({ phase, phaseChanged = true, phaseMinutes }) => {
-      if (phaseChanged) this.startPhase(phase, phaseMinutes);
-    });
+    eventBus.on("gamestate:changed", () => this._syncClock());
   }
 
-  /**
-   * Load `data/action_budget.json` (idempotent, safe to call concurrently)
-   * and activate the CURRENT phase's limits immediately - `startPhase()`
-   * is otherwise only driven by the `daynight:changed` event, which does
-   * not fire at boot, so without this the very first day/night would sit
-   * at the Infinity default until the first phase toggle.
-   */
   async init() {
     if (!this._initPromise) {
       this._initPromise = dataLoader.loadJSON("action_budget.json").then((data) => {
@@ -68,161 +36,100 @@ class ActionBudget {
     return this._initPromise;
   }
 
-  /**
-   * Activate the limits for `phase`, applying any overtime debt carried
-   * over from the day that just ended (only relevant when phase="night")
-   * and resetting the used-action counters for the new phase.
-   */
-  startPhase(phase, preservedMinutes = 0) {
-    // Action count is intentionally unlimited. Time consumed by each action
-    // is the only action constraint; phase limits remain for overtime/sleep
-    // consequences, not for blocking or rationing actions.
+  startPhase(phase, preservedMinutes = null) {
     this.currentLimits = { ...DEFAULT_LIMITS };
-    this._pendingNightDebt = 0;
     this.used = { dialogue: 0, inspect: 0 };
-    this.phaseMinutes = Math.max(0, Number(preservedMinutes) || 0);
+    this.phaseMinutes = preservedMinutes == null ? elapsedFromDayStart() : Math.max(0, Number(preservedMinutes) || 0);
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
-  /**
-   * Tally the (about-to-end) `phase`'s overage against its limits and
-   * apply the matching consequence.
-   * @returns {{ totalOverage: number, kind: "overtime"|"allnighter"|null, debt?: number, sanLoss?: number }}
-   */
   settlePhase(phase) {
     const phaseLimit = phase === "day"
-      ? (this.config && this.config.day.workMinutes) || 480
-      : (this.config && this.config.night.nightMinutes) || 960;
-    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
-    const timeOverage = Math.max(0, Math.ceil((this.phaseMinutes - phaseLimit) / minutesPerAction));
-    const totalOverage = timeOverage;
-    if (phase === "day" && totalOverage <= 0) return { totalOverage: 0, kind: null };
-
-    const perAction = (this.config && this.config.overtimePenaltyPerAction) || 1;
+      ? (this.config?.day?.workMinutes || 480)
+      : (this.config?.night?.nightMinutes || 960);
+    const minutesPerAction = this.config?.minutesPerAction || 20;
+    const totalOverage = Math.max(0, Math.ceil((this.phaseMinutes - phaseLimit) / minutesPerAction));
     if (phase === "day") {
-      this._pendingNightDebt += totalOverage * perAction;
-      return { totalOverage, kind: "overtime", debt: this._pendingNightDebt };
+      return { totalOverage, kind: totalOverage ? "overtime" : null };
     }
+    const sanLoss = totalOverage * (this.config?.sanLossPerLateNightAction || 0);
+    if (sanLoss) gameState.applyMentalLoss(sanLoss, { recoverable: true });
+    return { totalOverage, kind: totalOverage ? "allnighter" : null, sanLoss };
+  }
 
-    const sanLossPerAction = (this.config && this.config.sanLossPerLateNightAction) || 0;
-    const sanLoss = totalOverage * sanLossPerAction;
-    if (sanLoss > 0) gameState.applyMentalLoss(sanLoss, { recoverable: true });
-    const nightMinutes = (this.config && this.config.night.nightMinutes) || 960;
-    const sleepMinutes = Math.max(0, nightMinutes - this.phaseMinutes);
-    const recoveryPerHour = (this.config && this.config.sanRecoveryPerSleepHour) || 0;
-    const recoveredSan = gameState.recoverMental((sleepMinutes / 60) * recoveryPerHour);
-    const insufficientThreshold = (this.config && this.config.insufficientSleepMinutes) || nightMinutes;
-    const insufficient = sleepMinutes < insufficientThreshold;
-    this.sleepHistory.push(sleepMinutes);
+  settleAtEight({ sleepMinutes = 0, day = gameState.day, phaseSettlement = null } = {}) {
+    const safeSleepMinutes = Math.max(0, Number(sleepMinutes) || 0);
+    const fullSleepMinutes = this.config?.fullSleepMinutes || 480;
+    const recoveryMinutes = Math.min(safeSleepMinutes, fullSleepMinutes);
+    const recoveredSan = safeSleepMinutes > 0
+      ? gameState.recoverMental((recoveryMinutes / 60) * (this.config?.sanRecoveryPerSleepHour || 0))
+      : 0;
+    this.sleepHistory.push(safeSleepMinutes);
     this.sleepHistory = this.sleepHistory.slice(-3);
+    const insufficient = safeSleepMinutes < (this.config?.insufficientSleepMinutes || 360);
     this.insufficientSleepStreak = insufficient ? this.insufficientSleepStreak + 1 : 0;
     let sleepDebtSanLoss = 0;
     if (this.insufficientSleepStreak >= 3) {
-      sleepDebtSanLoss = (this.config && this.config.threeDaySleepDebtSanLoss) || 0;
-      if (sleepDebtSanLoss > 0) gameState.modify({ mental: -sleepDebtSanLoss });
+      sleepDebtSanLoss = this.config?.threeDaySleepDebtSanLoss || 0;
+      if (sleepDebtSanLoss) gameState.modify({ mental: -sleepDebtSanLoss });
       this.insufficientSleepStreak = 0;
     }
-    return {
-      totalOverage,
-      kind: totalOverage > 0 ? "allnighter" : null,
-      sanLoss,
-      sleepMinutes,
-      recoveredSan,
-      sleepDebtSanLoss,
-    };
+    const medical = medicalCaseManager.settleDay(day - 1);
+    const result = { day, sleepMinutes: safeSleepMinutes, recoveredSan, sleepDebtSanLoss, medical, phaseSettlement };
+    eventBus.emit("day:settled", result);
+    return result;
   }
 
   recordDialogueTurn() {
     this.used.dialogue += 1;
     this._consumeTime();
-    eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
   recordInspection() {
     this.used.inspect += 1;
     this._consumeTime();
-    eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
   recordTimedAction() {
     this._consumeTime();
+  }
+
+  applyPenalty() {
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
-  /**
-   * Permanently shrink the CURRENT phase's remaining budget (used by
-   * NpcStateManager's offline consequence: an NPC going offline dumps
-   * their workload on the protagonist for the rest of this phase).
-   * Cannot raise a limit, only lower it, and never below what's already
-   * been used (so it shows up immediately as "over budget" rather than
-   * silently vanishing).
-   * @param {{dialogueLimit?: number, inspectLimit?: number}} penalty
-   */
-  applyPenalty(penalty = {}) {
-    // Kept as a compatibility no-op for old NPC data. There are no action
-    // count limits to reduce anymore.
-    eventBus.emit("actionBudget:changed", this.snapshot());
-  }
-
-  /** Compatibility API: action counts are unlimited. */
-  remaining(kind) {
+  remaining() {
     return Infinity;
   }
 
-  snapshot() {
-    return {
-      used: { ...this.used },
-      limits: { ...this.currentLimits },
-      pendingNightDebt: this._pendingNightDebt,
-      phaseMinutes: this.phaseMinutes,
-      sleepHistory: [...this.sleepHistory],
-      insufficientSleepStreak: this.insufficientSleepStreak,
-    };
+  _consumeTime() {
+    const previousPhase = gameState.phase;
+    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
+    const crossesEight = previousPhase === "night"
+      && gameState.clockMinutes < 8 * 60
+      && gameState.clockMinutes + minutesPerAction >= 8 * 60;
+    const phaseSettlement = crossesEight ? this.settlePhase("night") : null;
+    gameState.advanceClock(minutesPerAction);
+    scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
+    if (previousPhase === "night" && gameState.phase === "day" && gameState.clockMinutes === 8 * 60) {
+      this.settleAtEight({ day: gameState.day, sleepMinutes: 0, phaseSettlement });
+    }
+    this._syncClock();
+    if (previousPhase !== gameState.phase) {
+      eventBus.emit("daynight:changed", {
+        day: gameState.day,
+        phase: gameState.phase,
+        duty: gameState.duty,
+        location: gameState.location,
+        phaseChanged: true,
+        automatic: true,
+      });
+    }
   }
 
-  _consumeTime() {
-    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
-    const previousMinutes = this.phaseMinutes;
-    this.phaseMinutes += minutesPerAction;
-    const phaseStart = gameState.phase === "night" ? 16 * 60 : 8 * 60;
-    const previousClock = phaseStart + previousMinutes;
-    const nextClock = phaseStart + this.phaseMinutes;
-    if (Math.floor(nextClock / (24 * 60)) > Math.floor(previousClock / (24 * 60))) {
-      gameState.advanceDayAtMidnight();
-    }
-    // The schedule phase is clock-driven, not duty-driven. Crossing 16:00
-    // enters the night slot even during overtime, and crossing the next
-    // 08:00 enters the following day's day slot even if the player stayed in
-    // the dorm instead of clicking the bed. Preserve any minutes beyond the
-    // boundary so the displayed clock remains continuous.
-    if (gameState.phase === "day" && this.phaseMinutes >= 8 * 60) {
-      const settlement = this.settlePhase(gameState.phase);
-      const preservedMinutes = this.phaseMinutes - 8 * 60;
-      const phase = gameState.advancePhase({ incrementDay: false, location: gameState.location });
-      this.phaseMinutes = preservedMinutes;
-      eventBus.emit("daynight:changed", {
-        phase,
-        day: gameState.day,
-        location: gameState.location,
-        settlement,
-        phaseChanged: true,
-        phaseMinutes: preservedMinutes,
-        automatic: true,
-      });
-    }
-    if (gameState.phase === "night" && this.phaseMinutes >= 16 * 60) {
-      const phase = gameState.advancePhase({ incrementDay: false, location: gameState.location });
-      const preservedMinutes = this.phaseMinutes - 16 * 60;
-      this.phaseMinutes = preservedMinutes;
-      eventBus.emit("daynight:changed", {
-        phase,
-        day: gameState.day,
-        location: gameState.location,
-        phaseChanged: true,
-        phaseMinutes: preservedMinutes,
-        automatic: true,
-      });
-    }
+  _syncClock() {
+    this.phaseMinutes = elapsedFromDayStart();
+    eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
   restore(snapshot = {}) {
@@ -231,14 +138,22 @@ class ActionBudget {
       inspect: Math.max(0, Number(snapshot.used?.inspect) || 0),
     };
     this.currentLimits = { ...DEFAULT_LIMITS };
-    this._pendingNightDebt = 0;
-    this.phaseMinutes = Math.max(0, Number(snapshot.phaseMinutes) || 0);
+    this.phaseMinutes = elapsedFromDayStart();
     this.sleepHistory = Array.isArray(snapshot.sleepHistory) ? snapshot.sleepHistory.slice(-3) : [];
     this.insufficientSleepStreak = Math.max(0, Number(snapshot.insufficientSleepStreak) || 0);
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
-  /** Subscribe to any change in used actions / limits. Returns an unsubscribe function. */
+  snapshot() {
+    return {
+      used: { ...this.used },
+      limits: { ...this.currentLimits },
+      phaseMinutes: this.phaseMinutes,
+      sleepHistory: [...this.sleepHistory],
+      insufficientSleepStreak: this.insufficientSleepStreak,
+    };
+  }
+
   onChange(handler) {
     return eventBus.on("actionBudget:changed", handler);
   }

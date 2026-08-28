@@ -7,6 +7,7 @@ import { eventBus } from "../core/EventBus.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { createScheduleRunner } from "../core/ScheduleRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
@@ -125,7 +126,7 @@ export async function launchHISApp() {
     const npcId = patient.npcId || patient.id;
     renderDiagnosis(patient);
 
-    if (npcStateManager.isOffline(npcId)) {
+    if (npcStateManager.isOffline(npcId) && patient.queueStatus !== "completed") {
       dialogueEl.innerHTML +=
         '<p class="dialogue-end">（该患者情绪崩溃，已请假离开，暂时无法继续问诊。）</p>';
       return;
@@ -156,7 +157,15 @@ export async function launchHISApp() {
       dialogueEl.scrollTop = dialogueEl.scrollHeight;
     }
 
-    const runner = createDialogueRunner({
+    const runner = patient.queueEntry ? createScheduleRunner({
+      definition: patient,
+      instance: patient.queueEntry,
+      appendLine,
+      optionsEl,
+      appId: "his",
+      onCheckpoint: (instance) => workQueue.updateInstance(instance.instanceId, instance),
+      onComplete: (instance) => workQueue.complete(instance.instanceId),
+    }) : createDialogueRunner({
       actor: patient,
       appendLine,
       optionsEl,
@@ -168,7 +177,8 @@ export async function launchHISApp() {
 
     const resumeNodeId =
       dialogueProgress.get("his").actorId === patient.id ? dialogueProgress.get("his").nodeId : null;
-    runner.showNode(resumeNodeId || (patient.dialogueTree && patient.dialogueTree.start));
+    if (patient.queueEntry) runner.start();
+    else runner.showNode(resumeNodeId || (patient.dialogueTree && patient.dialogueTree.start));
 
   }
 
@@ -274,7 +284,7 @@ export async function launchHISApp() {
     await scheduleData.init();
     const patients = workQueue.getAll()
       .filter((item) => item.payload?.type === "his" || item.payload?.patient || item.payload?.correctDiagnosisId)
-      .map((item) => ({ ...item.payload?.patient || item.payload, id: item.instanceId, queueInstanceId: item.instanceId, receivedDay: item.receivedDay, receivedTime: item.receivedTime }));
+      .map((item) => ({ ...item.payload?.patient || item.payload, id: item.instanceId, queueInstanceId: item.instanceId, queueStatus: item.status, receivedDay: item.receivedDay, receivedTime: item.receivedTime, queueEntry: item }));
     const entry = { patients };
     const keywordDefs = registerKeywords(entry);
     renderPatients(entry, keywordDefs);

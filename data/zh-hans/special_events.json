@@ -24,8 +24,8 @@
           "n_fe.4xu": {
             "speaker": "player",
             "text": "",
-            "x": 1060,
-            "y": 308,
+            "x": 784,
+            "y": 386,
             "options": [
               {
                 "label": "",
@@ -36,8 +36,8 @@
           "n_uh.lw6": {
             "speaker": "player",
             "text": "",
-            "x": 747,
-            "y": 497,
+            "x": 484,
+            "y": 521,
             "options": [
               {
                 "label": "test3",
@@ -45,7 +45,8 @@
               }
             ]
           }
-        }
+        },
+        "startNodeId": "n_mc.o56"
       }
     }
   ]

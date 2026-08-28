@@ -1,0 +1,38 @@
+{
+  "locations": [
+    {
+      "id": "dorm",
+      "name": "宿舍",
+      "backgroundImage": "",
+      "layer": "above",
+      "subLocations": [
+        { "id": "player_desk", "name": "主角书桌",  "zone": { "x": 20,  "y": 320, "width": 180, "height": 80 } },
+        { "id": "ajie_desk",   "name": "阿杰书桌",  "zone": { "x": 230, "y": 320, "width": 180, "height": 80 } },
+        { "id": "awei_desk",   "name": "阿伟书桌",  "zone": { "x": 440, "y": 320, "width": 180, "height": 80 } },
+        { "id": "binbin_desk", "name": "彬彬书桌",  "zone": { "x": 650, "y": 320, "width": 180, "height": 80 } },
+        { "id": "fridge",      "name": "宿舍小冰柜","zone": { "x": 850, "y": 200, "width": 120, "height": 160 } }
+      ]
+    },
+    {
+      "id": "hospital",
+      "name": "医院",
+      "backgroundImage": "",
+      "layer": "above",
+      "subLocations": []
+    },
+    {
+      "id": "restaurant",
+      "name": "火锅店",
+      "backgroundImage": "",
+      "layer": "above",
+      "subLocations": []
+    },
+    {
+      "id": "seaside",
+      "name": "海边",
+      "backgroundImage": "",
+      "layer": "above",
+      "subLocations": []
+    }
+  ]
+}

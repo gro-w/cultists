@@ -243,6 +243,16 @@ class ItemManager {
       return { ok: false, message: def.failMessage || "当前条件不满足，使用无效。" };
     }
 
+    // SAN 范围条件：书籍仅在 0 < SAN ≤ 50 时可使用
+    const sanMin = def.useCondition && def.useCondition.sanMin;
+    const sanMax = def.useCondition && def.useCondition.sanMax;
+    if (sanMin !== undefined && sanMin > 0 && gameState.mental < sanMin) {
+      return { ok: false, message: def.failMessage || "理智值过低，无法使用。" };
+    }
+    if (sanMax !== undefined && sanMax > 0 && gameState.mental > sanMax) {
+      return { ok: false, message: def.failMessage || "理智值过高，此时已无法从书籍中学习法术。" };
+    }
+
     const effect = def.useEffect || {};
     (effect.remove || []).forEach((r) => this.remove(r.itemId, r.count || 1));
     (effect.add || []).forEach((a) => this.add(a.itemId, a.count || 1));
@@ -253,6 +263,16 @@ class ItemManager {
     // Let EndingManager (and anything else) react to a successful item use
     // without ItemManager needing to import it directly.
     eventBus.emit("item:used", { id, result });
+
+    // 书籍法术学习：0 < SAN ≤ 50 时使用书籍触发，游戏层负责展示学习界面
+    if (def.isBook && def.spells && def.spells.length > 0) {
+      eventBus.emit("book:learnSpell", {
+        id,
+        bookName: def.name,
+        spells: def.spells, // [{ name, description, learnTimeMinutes:240, castSanCost:5 }]
+      });
+    }
+
     return result;
   }
 

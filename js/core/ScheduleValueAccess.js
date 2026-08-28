@@ -3,7 +3,7 @@ import { itemManager } from "./ItemManager.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
-import { actionBudget } from "./ActionBudget.js";
+import { timeService } from "./TimeService.js";
 
 const GAME_STATS = new Set(["energy", "mental", "physical", "satiety", "recoverableMentalLoss"]);
 
@@ -12,9 +12,9 @@ export function getStatValue(statId) {
   if (GAME_STATS.has(id)) return gameState[id];
   if (id.startsWith("npcSan:")) return npcStateManager.get(id.slice(7));
   if (id.startsWith("favorability:")) return favorabilityManager.get(id.slice(14));
-  if (id === "actionBudget:phaseMinutes") return actionBudget.phaseMinutes;
-  if (id === "actionBudget:dialogue") return actionBudget.used.dialogue;
-  if (id === "actionBudget:inspect") return actionBudget.used.inspect;
+  if (id === "actionBudget:phaseMinutes") return timeService.phaseMinutes;
+  if (id === "actionBudget:dialogue") return timeService.snapshot().used.dialogue;
+  if (id === "actionBudget:inspect") return timeService.snapshot().used.inspect;
   if (id === "gameTime") return gameState.getGameTime();
   return undefined;
 }
@@ -42,5 +42,5 @@ export function modifyStatValue(statId, delta) {
 }
 
 export function getScheduleValueContext() {
-  return { gameState, itemManager, globalVariableManager, npcStateManager, favorabilityManager, actionBudget };
+  return { gameState, itemManager, globalVariableManager, npcStateManager, favorabilityManager, timeService };
 }

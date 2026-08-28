@@ -3,9 +3,11 @@ import { windowManager } from "../core/WindowManager.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
+import { timeService } from "../core/TimeService.js";
 import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
-import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { chatgtpQueue } from "../core/ScheduleQueue.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
 import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js";
 import { getPinyinInitial } from "../core/Pinyin.js";
@@ -26,8 +28,7 @@ const NOTEBOOK_CATEGORY_LABELS = {
  *   - "关键词问答": select 1-2 keywords and get a looked-up answer from
  *     `data/chatgtp_qa.json`.
  *   - "对话模式": a normal branching NPC-style conversation (walked via the
- *     same `createDialogueRunner` HIS/Social/Monitor use), authored as
- *     `chatgtp_qa.json`'s `dialogueMode` tree.
+ *     the shared schedule runner, authored in `chatgtp_dialog.json`.
  *
  * ChatGTP has its OWN SAN (tracked via NpcStateManager under the actor id
  * "chatgtp", same mechanism as any patient/contact): every keyword-QA
@@ -57,8 +58,9 @@ export async function launchChatGTPApp(options = {}) {
     return existing;
   }
 
-  const [qa, diagnoses, medicines] = await Promise.all([
+  const [qa, dialog, diagnoses, medicines] = await Promise.all([
     dataLoader.loadJSON("chatgtp_qa.json"),
+    dataLoader.loadJSON("chatgtp_dialog.json"),
     dataLoader.loadJSON("diagnoses.json"),
     dataLoader.loadJSON("medicines.json"),
   ]);
@@ -395,9 +397,8 @@ export async function launchChatGTPApp(options = {}) {
 
   function ask(queryText, labels) {
     if (!queryText) return;
-    // A keyword query is still an active conversation with ChatGTP, so it
-    // advances the shared phase clock just like an NPC dialogue turn.
-    eventBus.emit("dialogue:turn", { appId: "chatgtp", actorId: CHATGTP_ACTOR_ID });
+    // Keyword lookup is a direct timed operation, not a dialogue turn.
+    timeService.advanceBy(20);
     appendMessage("me", escapeHtml(queryText));
 
     if (npcStateManager.isOffline(CHATGTP_ACTOR_ID)) {
@@ -466,13 +467,11 @@ export async function launchChatGTPApp(options = {}) {
 
   /** "对话模式" tab: walk `chatgtp_qa.json`'s `dialogueMode` tree like any NPC. */
   function startDialogueMode() {
-    const tree = qa.dialogueMode;
-    if (!tree) {
-      dialogueLinesEl.innerHTML = '<p class="dialogue-end">（暂无对话模式内容）</p>';
+    const definition = dialog;
+    if (!definition?.blueprint) {
+      dialogueLinesEl.innerHTML = '<p class="dialogue-end">（暂无日程对话内容）</p>';
       return;
     }
-    const actor = { id: CHATGTP_ACTOR_ID, name: "ChatGTP", dialogueTree: tree };
-
     function appendLine(speaker, label, text) {
       const p = document.createElement("p");
       p.className = `dialogue-line speaker-${speaker}`;
@@ -481,25 +480,24 @@ export async function launchChatGTPApp(options = {}) {
       keywordManager.bindHighlights(p, ownKeywordDefs);
       dialogueLinesEl.scrollTop = dialogueLinesEl.scrollHeight;
     }
-
-    const runner = createDialogueRunner({
-      actor,
-      appendLine,
-      optionsEl: dialogueOptionsEl,
-      optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
-      appId: "chatgtp",
-      onNodeShown: (nodeId) => {
-        dialogueCurrentNode = nodeId;
-        dialogueProgress.set("chatgtp", CHATGTP_ACTOR_ID, nodeId);
-      },
-      emptyMessage: "（暂无对话模式内容）",
-    });
-
     if (npcStateManager.isOffline(CHATGTP_ACTOR_ID)) {
       dialogueLinesEl.innerHTML = '<p class="dialogue-end">（ChatGTP 已经宕机，无法进入对话模式。）</p>';
       return;
     }
-    runner.showNode(dialogueCurrentNode || tree.start);
+    let instance = chatgtpQueue.current();
+    if (!instance || instance.scheduleId !== definition.id) {
+      instance = chatgtpQueue.append([{ scheduleId: definition.id, payload: definition, status: "unresolved", transcript: [] }])[0];
+    }
+    const runner = createScheduleRunner({
+      definition,
+      instance,
+      appendLine,
+      optionsEl: dialogueOptionsEl,
+      appId: "chatgtp",
+      onCheckpoint: (next) => chatgtpQueue.updateInstance(instance.instanceId, next),
+      onComplete: () => chatgtpQueue.complete(instance.instanceId),
+    });
+    runner.start();
   }
 
   const offSelectKeyword = eventBus.on("chatgtp:select-keyword", ({ id }) => selectKeyword(id));

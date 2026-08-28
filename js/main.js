@@ -10,7 +10,7 @@ import { endingManager } from "./core/EndingManager.js";
 import { i18n } from "./core/I18n.js";
 import { dataLoader } from "./core/DataLoader.js";
 import { skillManager } from "./core/SkillManager.js";
-import { actionBudget } from "./core/ActionBudget.js";
+import { timeService } from "./core/TimeService.js";
 import { npcStateManager } from "./core/NpcStateManager.js";
 import { favorabilityManager } from "./core/FavorabilityManager.js";
 import { gameState } from "./core/GameState.js";
@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
     endingManager.load(),
     saveManager.init(),
     skillManager.load(),
-    actionBudget.init(),
+    timeService.init(),
     npcStateManager.load(),
     favorabilityManager.load(),
     achievementManager.init(),

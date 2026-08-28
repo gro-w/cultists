@@ -47,13 +47,13 @@ workpub.json / socialpub.json     # 仅供 addSchedule 操作选择
 }
 ```
 
-对话节点或其它 `onShow` 效果可使用 `addSchedule`，把指定 ID 在指定时间加入对应队列：
+任何效果对象都可以使用公用操作 `operations`，把指定 ID 的日程计时到指定的游戏绝对分钟：
 
 ```json
-{ "addSchedule": [{ "scheduleId": "pub-night-01", "queue": "social", "day": 3, "time": 1200 }] }
+{ "operations": [{ "type": "addSchedule", "scheduleId": "pub-night-01", "addTime": 3360 }] }
 ```
 
-`socialpub.json` / `workpub.json` 的条目不会随日期检查点自动追加，只会被 `addSchedule` 选中后加入队列。
+`addTime` 必须是非负、20 分钟的整数倍，使用与游戏时钟相同的绝对分钟坐标。执行操作时只创建计时器；计时器到期后才检查日程先决条件，并把日程加入其来源文件决定的 Work 或 Social 队列。`socialpub.json` / `workpub.json` 的条目不会随日期检查点自动追加。旧的 `addSchedule` 简写仍可读取，但新内容应使用 `operations`。
 
 ## 全局变量
 

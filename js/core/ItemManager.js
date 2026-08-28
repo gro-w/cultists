@@ -4,6 +4,7 @@ import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
 import { checkSkill } from "./DiceCheck.js";
+import { applyScheduleOperations } from "./ScheduleOperations.js";
 
 /**
  * ItemManager - singleton owning the player's inventory and the data-driven
@@ -260,6 +261,7 @@ class ItemManager {
     (effect.add || []).forEach((a) => this.add(a.itemId, a.count || 1));
     if (effect.statChanges) gameState.modify(effect.statChanges);
     globalVariableManager.applyEffects(effect.globalVariables || effect.globalVariableChanges);
+    applyScheduleOperations(effect);
     if (def.consumable) this.remove(id, 1);
 
     const skipTimeAdvance = !!(def.isBook && def.spells && def.spells.length > 0);

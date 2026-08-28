@@ -138,16 +138,19 @@ class ScheduleData {
   }
 
   _appendScheduledThrough(target) {
-    const ready = this.pendingAdds.filter((request) => request.day * 1440 + request.time <= target);
-    this.pendingAdds = this.pendingAdds.filter((request) => request.day * 1440 + request.time > target);
-    ready.sort((a, b) => (a.day * 1440 + a.time) - (b.day * 1440 + b.time));
+    const ready = this.pendingAdds.filter((request) => request.addTime <= target);
+    this.pendingAdds = this.pendingAdds.filter((request) => request.addTime > target);
+    ready.sort((a, b) => a.addTime - b.addTime);
     ready.forEach((request) => {
       const definition = this.scheduleById.get(request.scheduleId);
       if (!definition || !this.matchesPrerequisites(definition.prerequisites || definition.condition)) return;
-      const entry = { ...definition, receivedDay: request.day, receivedTime: request.time,
-        receivedPhase: request.time < 16 * 60 ? "day" : "night" };
+      const day = Math.floor(request.addTime / 1440);
+      const time = request.addTime % 1440;
+      const entry = { ...definition, receivedDay: day, receivedTime: time,
+        receivedPhase: time < 16 * 60 ? "day" : "night" };
       delete entry.queueId;
-      this.queue(request.queueId || definition.queueId).append([entry]);
+      this.queue(definition.queueId).append([entry]);
+      this._applyScheduleOperations(entry);
     });
   }
 
@@ -185,16 +188,29 @@ class ScheduleData {
     return false;
   }
 
-  addSchedule(scheduleId, { queue, day, time } = {}) {
+  _applyScheduleOperations(entry) {
+    const effects = entry?.operations ? entry : (entry?.effects || entry?.onAdd || {});
+    const operations = [
+      ...(Array.isArray(effects.operations) ? effects.operations : []),
+      ...(effects.addSchedule ? (Array.isArray(effects.addSchedule) ? effects.addSchedule : [effects.addSchedule]) : []),
+    ];
+    operations.forEach((operation) => {
+      if (operation?.type === "addSchedule" || operation?.scheduleId) {
+        const addTime = operation.addTime ?? (Number.isInteger(Number(operation.day)) && Number.isInteger(Number(operation.time))
+          ? Number(operation.day) * 1440 + Number(operation.time) : undefined);
+        this.addSchedule(operation.scheduleId, addTime);
+      }
+    });
+  }
+
+  addSchedule(scheduleId, addTime) {
     const definition = this.scheduleById.get(scheduleId);
     if (!definition) return { ok: false, reason: "unknownSchedule" };
-    const requestedDay = Number(day);
-    const requestedTime = Number(time);
-    const targetDay = Number.isInteger(requestedDay) && requestedDay >= 1 ? requestedDay : gameState.day;
-    const targetTime = Number.isInteger(requestedTime) && requestedTime >= 0 ? Math.min(1439, requestedTime) : gameState.clockMinutes;
-    const request = { scheduleId, queueId: queue || definition.queueId, day: targetDay, time: targetTime };
+    const target = Number(addTime);
+    if (!Number.isInteger(target) || target < 0 || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
+    const request = { scheduleId, addTime: target };
     this.pendingAdds.push(request);
-    if (this.lastAbsoluteMinute != null && targetDay * 1440 + targetTime <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
+    if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
     return { ok: true, request };
   }
 

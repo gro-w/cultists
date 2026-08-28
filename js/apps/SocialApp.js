@@ -129,7 +129,7 @@ export async function launchSocialApp() {
       const bubble = document.createElement("div");
       bubble.className = `chat-bubble bubble-${from}`;
       bubble.innerHTML = keywordManager.renderHighlightedText(text, keywordDefs);
-      bubblesEl.appendChild(bubble);
+      bubblesEl.replaceChildren(bubble);
       keywordManager.bindHighlights(bubble, keywordDefs);
       chatEl.scrollTop = chatEl.scrollHeight;
     }

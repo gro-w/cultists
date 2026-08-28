@@ -163,7 +163,7 @@ export async function launchHISApp() {
         text,
         keywordDefs
       )}`;
-      linesEl.appendChild(p);
+      linesEl.replaceChildren(p);
       keywordManager.bindHighlights(p, keywordDefs);
       dialogueEl.scrollTop = dialogueEl.scrollHeight;
     }

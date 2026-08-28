@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "id": 0,
+    "name": "变量0",
+    "type": "bool",
+    "default": false
+  }
+]

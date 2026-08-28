@@ -1,5 +1,102 @@
 {
-  "day": 1,
-  "time": "16:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "roommate_xiaomei_d1night",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "你昨晚有没有听到[[night_noise]]？我吓死了。",
+            "options": [
+              {
+                "label": "没有诶，说来听听？",
+                "next": "ask_detail"
+              },
+              {
+                "label": "会不会是你做梦了？",
+                "next": "ask_dream"
+              }
+            ]
+          },
+          "ask_detail": {
+            "speaker": "npc",
+            "text": "真的很奇怪，像是有人在楼梯间搬东西。",
+            "options": [
+              {
+                "label": "会不会是值班的人？",
+                "next": "end"
+              }
+            ]
+          },
+          "ask_dream": {
+            "speaker": "npc",
+            "text": "才不是呢！我清清楚楚听到了，绝对不是幻觉。",
+            "options": [
+              {
+                "label": "好吧，那你早点休息。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "嗯，我先睡了，改天再聊。",
+            "options": []
+          }
+        }
+      },
+      "npcId": "xiaomei",
+      "type": "npc"
+    },
+    {
+      "id": "roommate_ajun_d1night",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "听说过[[night_shift_rumor]]吗？我室友说的，毛骨悚然。",
+            "options": [
+              {
+                "label": "认真的？说来听听。",
+                "next": "ask_more"
+              },
+              {
+                "label": "别吓我，我还要值夜班呢。",
+                "next": "reassure"
+              }
+            ]
+          },
+          "ask_more": {
+            "speaker": "npc",
+            "text": "改天吧，我先喝瓶[[energy_drink]]续命，明天还要早起。",
+            "options": [
+              {
+                "label": "行吧，早点休息。",
+                "next": "end"
+              }
+            ]
+          },
+          "reassure": {
+            "speaker": "npc",
+            "text": "放心，都是传闻而已。我先喝瓶[[energy_drink]]提提神。",
+            "options": [
+              {
+                "label": "好，你也早点睡。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "晚安，做个好梦。",
+            "options": []
+          }
+        }
+      },
+      "npcId": "ajun",
+      "type": "npc"
+    }
+  ]
 }

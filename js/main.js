@@ -76,7 +76,15 @@ async function handlePhaseToggle() {
     const ok = await confirmDialog(message, { title, icon: goingToWork || isWorkEnd ? "🚪" : "🛏️" });
     if (!ok) return;
   }
-  dayNightSystem.toggle();
+  const result = dayNightSystem.toggle();
+  if (result && result.ok === false && result.reason === "unfinishedWork") {
+    await confirmDialog(
+      result.batch === "a"
+        ? "您有未完成的工作，必须完成当前白班内容后才能下班。"
+        : "您有未完成的工作，必须完成当前夜班内容后才能睡觉。",
+      { title: "无法切换状态", icon: "⚠️" }
+    );
+  }
 }
 
 const APP_REGISTRY = [

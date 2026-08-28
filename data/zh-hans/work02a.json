@@ -1,5 +1,65 @@
 {
-  "day": 2,
-  "time": "08:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "patient_zhaoqiang_d2",
+      "name": "赵强",
+      "age": 27,
+      "correctDiagnosisId": "acute_pharyngitis",
+      "diagnosisOptionIds": [
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "benign_positional_vertigo"
+      ],
+      "applicableMedicineIds": [
+        "med_cough_syrup"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "医生，我嗓子疼得厉害，[[sore_throat]]已经两天了。",
+            "options": [
+              {
+                "label": "是怎么引起的？",
+                "next": "ask_cause"
+              },
+              {
+                "label": "先给你检查一下嗓子。",
+                "next": "check_direct"
+              }
+            ]
+          },
+          "ask_cause": {
+            "speaker": "npc",
+            "text": "唉，说来话长，前几天[[night_shift_injury]]，之后就一直没恢复好。",
+            "options": [
+              {
+                "label": "好的，我先给你做个记录。",
+                "next": "end"
+              }
+            ]
+          },
+          "check_direct": {
+            "speaker": "npc",
+            "text": "好的，麻烦您了。",
+            "options": [
+              {
+                "label": "好的，我先给你做个记录。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "谢谢医生。",
+            "options": []
+          }
+        }
+      }
+    }
+  ]
 }

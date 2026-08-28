@@ -106,12 +106,24 @@ class GameState {
 
   /** Overwrite every stat at once (used by SaveManager when restoring a save). */
   restore({ day, clockMinutes, phase, duty, location, energy, mental, physical, satiety, recoverableMentalLoss } = {}) {
-    if (typeof day === "number") this.day = day;
-    if (typeof clockMinutes === "number") this.clockMinutes = ((clockMinutes % 1440) + 1440) % 1440;
-    if (phase === "day" || phase === "night") this.phase = phase;
-    if (duty === "on-duty" || duty === "off-duty") this.duty = duty;
-    if (location === "work" || location === "dorm") this.location = location;
-    else this.location = this.duty === "on-duty" ? "work" : "dorm";
+    if (day !== undefined && (!Number.isInteger(day) || day < 1)) throw new Error("Invalid save day");
+    if (clockMinutes !== undefined && (!Number.isInteger(clockMinutes) || clockMinutes < 0 || clockMinutes >= 1440)) {
+      throw new Error("Invalid save clock");
+    }
+    const nextDay = day === undefined ? this.day : day;
+    const nextClock = clockMinutes === undefined ? this.clockMinutes : clockMinutes;
+    const derivedPhase = phaseForClock(nextClock);
+    if (phase !== undefined && phase !== derivedPhase) throw new Error("Inconsistent save phase");
+    if (duty !== undefined && duty !== "on-duty" && duty !== "off-duty") throw new Error("Invalid save duty");
+    if (location !== undefined && location !== "work" && location !== "dorm") throw new Error("Invalid save location");
+    if (duty !== undefined && location !== undefined && (duty === "on-duty") !== (location === "work")) {
+      throw new Error("Inconsistent save duty/location");
+    }
+    this.day = nextDay;
+    this.clockMinutes = nextClock;
+    this.phase = derivedPhase;
+    this.duty = duty || (location === "dorm" ? "off-duty" : "on-duty");
+    this.location = location || (this.duty === "on-duty" ? "work" : "dorm");
     if (typeof energy === "number") this.energy = clamp(energy);
     if (typeof mental === "number") this.mental = clamp(mental);
     if (typeof physical === "number") this.physical = clamp(physical);

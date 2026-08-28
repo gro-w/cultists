@@ -1,5 +1,29 @@
 {
-  "day": 5,
-  "time": "08:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "roommate_ajun_d5day",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "这周实习感觉怎么样？马上就要告一段落了。",
+            "options": [
+              {
+                "label": "经历了不少事，但也算收获满满。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "辛苦啦，好好休息一下吧。",
+            "options": []
+          }
+        }
+      },
+      "npcId": "ajun",
+      "type": "npc"
+    }
+  ]
 }

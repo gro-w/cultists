@@ -1,5 +1,54 @@
 {
-  "day": 1,
-  "time": "08:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "roommate_xiaomei_d1day",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "白天要上班啦，晚点聊～",
+            "options": [
+              {
+                "label": "好，晚上聊。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "👌",
+            "options": []
+          }
+        }
+      },
+      "npcId": "xiaomei",
+      "type": "npc"
+    },
+    {
+      "id": "roommate_ajun_d1day",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "在医院呢，白天太忙了，回头联系。",
+            "options": [
+              {
+                "label": "行，注意休息。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "嗯嗯～",
+            "options": []
+          }
+        }
+      },
+      "npcId": "ajun",
+      "type": "npc"
+    }
+  ]
 }

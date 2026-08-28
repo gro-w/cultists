@@ -14,6 +14,9 @@ class MedicalCaseManager {
     this.lowSanThreshold = 30;
     this.submissions = new Map();
     this.income = 0;
+    this.pendingIncome = 0;
+    this.pendingExpenses = 0;
+    this.settledDays = new Set();
     this.pendingIncidents = [];
     this._restoring = false;
     this._loadPromise = null;
@@ -83,9 +86,9 @@ class MedicalCaseManager {
       processed: false,
     };
     this.submissions.set(key, submission);
-    this.income += bonus + commission;
-    eventBus.emit("medical:submitted", { ...submission, income: this.income });
-    return { ok: true, ...submission, income: this.income };
+    this.pendingIncome += bonus + commission;
+    eventBus.emit("medical:submitted", { ...submission, income: this.income, pendingIncome: this.pendingIncome });
+    return { ok: true, ...submission, income: this.income, pendingIncome: this.pendingIncome };
   }
 
   resolveDiagnosisId(value) {
@@ -146,7 +149,7 @@ class MedicalCaseManager {
       } else {
         const multiplier = check.outcome === "criticalFailure" ? 2 : 1;
         const fine = Number(this.config?.complaintFine || 0) * multiplier;
-        this.income -= fine;
+        this.pendingExpenses += fine;
         result = { kind: "fine", fine, message: `投诉处理失败，罚款 ${fine} 元。` };
       }
     } else if (check.outcome === "failure" || check.outcome === "criticalFailure") {
@@ -157,7 +160,7 @@ class MedicalCaseManager {
     } else {
       const multiplier = check.outcome === "success" ? 2 : 1;
       const fine = Number(this.config?.riotFine || 0) * multiplier;
-      this.income -= fine;
+      this.pendingExpenses += fine;
       result = { kind: "fine", fine, message: `医闹暂时平息，罚款 ${fine} 元。` };
     }
     const incident = { type, text, check, result, submission };
@@ -172,12 +175,38 @@ class MedicalCaseManager {
     return incidents;
   }
 
+  settleDay(day) {
+    const targetDay = Number(day);
+    if (!Number.isInteger(targetDay) || targetDay < 1 || this.settledDays.has(targetDay)) {
+      return { day: targetDay, income: 0, expenses: 0, balance: this.income };
+    }
+    this.settledDays.add(targetDay);
+    const income = this.pendingIncome;
+    const expenses = this.pendingExpenses;
+    this.pendingIncome = 0;
+    this.pendingExpenses = 0;
+    this.income += income - expenses;
+    const result = { day: targetDay, income, expenses, balance: this.income };
+    eventBus.emit("medical:incomeChanged", { income: this.income, settlement: result });
+    return result;
+  }
+
   snapshot() {
-    return { income: this.income, submissions: [...this.submissions.values()], pendingIncidents: this.pendingIncidents };
+    return {
+      income: this.income,
+      pendingIncome: this.pendingIncome,
+      pendingExpenses: this.pendingExpenses,
+      settledDays: [...this.settledDays],
+      submissions: [...this.submissions.values()],
+      pendingIncidents: this.pendingIncidents,
+    };
   }
 
   restore(snapshot = {}) {
     this.income = Number(snapshot.income) || 0;
+    this.pendingIncome = Number(snapshot.pendingIncome) || 0;
+    this.pendingExpenses = Number(snapshot.pendingExpenses) || 0;
+    this.settledDays = new Set(Array.isArray(snapshot.settledDays) ? snapshot.settledDays.filter((day) => Number.isInteger(day)) : []);
     this.submissions = new Map((snapshot.submissions || []).filter((s) => s && s.patientId).map((s) => [s.patientId, { ...s }]));
     this.pendingIncidents = Array.isArray(snapshot.pendingIncidents) ? snapshot.pendingIncidents : [];
     eventBus.emit("medical:incomeChanged", { income: this.income });

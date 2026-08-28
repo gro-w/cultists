@@ -1,5 +1,42 @@
 {
-  "day": 5,
-  "time": "08:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "patient_wangfang_d5",
+      "name": "王芳（复查）",
+      "age": 34,
+      "correctDiagnosisId": "acute_upper_respiratory_infection",
+      "diagnosisOptionIds": [
+        "acute_upper_respiratory_infection",
+        "acute_pharyngitis",
+        "insomnia_disorder"
+      ],
+      "applicableMedicineIds": [
+        "med_paracetamol",
+        "med_cough_syrup"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "医生，我这几天感觉好多了，[[fever]]也退了，特地来道个谢。",
+            "options": [
+              {
+                "label": "恢复得不错，继续注意休息。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "谢谢医生这几天的照顾！",
+            "options": []
+          }
+        }
+      }
+    }
+  ]
 }

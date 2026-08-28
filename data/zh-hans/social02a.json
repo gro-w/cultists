@@ -1,5 +1,54 @@
 {
-  "day": 2,
-  "time": "08:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "roommate_xiaomei_d2day",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "对了，昨晚捡到的那把[[old_key_clue]]，我放你桌上了，你看看能打开什么。",
+            "options": [
+              {
+                "label": "好，我找找看。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "嗯，有发现记得告诉我！",
+            "options": []
+          }
+        }
+      },
+      "npcId": "xiaomei",
+      "type": "npc"
+    },
+    {
+      "id": "roommate_ajun_d2day",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "今天你值夜班对吧？路上小心点。",
+            "options": [
+              {
+                "label": "嗯，我会注意的。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "加油！",
+            "options": []
+          }
+        }
+      },
+      "npcId": "ajun",
+      "type": "npc"
+    }
+  ]
 }

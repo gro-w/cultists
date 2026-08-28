@@ -14,7 +14,7 @@ import { dialogueProgress } from "../core/DialogueProgress.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
-const DAY_FILES = () => Array.from({ length: scheduleData.totalDays }, (_, i) => [`day${String(i + 1).padStart(2, "0")}a.json`, `day${String(i + 1).padStart(2, "0")}b.json`]).flat();
+const DAY_FILES = () => Array.from({ length: scheduleData.totalDays }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
 const JSON_FILES = () => [...DAY_FILES(), "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json"];
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }

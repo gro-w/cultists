@@ -1,5 +1,9 @@
 import { eventBus } from "./EventBus.js";
 
+function phaseForClock(clockMinutes) {
+  return clockMinutes >= 8 * 60 && clockMinutes < 16 * 60 ? "day" : "night";
+}
+
 // Satiety is allowed to climb well past the "healthy" 0-100 range so that
 // stat-threshold endings (e.g. "satiety > 150" gluttony ending) are
 // reachable. It still fits in a single save-string byte (0-255).
@@ -15,13 +19,39 @@ const SATIETY_MAX = 255;
 class GameState {
   constructor() {
     this.day = 1;
+    this.clockMinutes = 8 * 60;
     this.phase = "day"; // "day" | "night"
-    this.location = "work"; // "work" | "dorm"
+    this.duty = "on-duty"; // "on-duty" | "off-duty"
+    this.location = "work"; // compatibility alias for the current duty mode
     this.energy = 100;
     this.mental = 100;
     this.physical = 100;
     this.satiety = 70;
     this.recoverableMentalLoss = 0;
+  }
+
+  setClock(day, clockMinutes) {
+    this.day = Math.max(1, Math.floor(Number(day) || 1));
+    this.clockMinutes = ((Math.floor(Number(clockMinutes) || 0) % 1440) + 1440) % 1440;
+    this.phase = phaseForClock(this.clockMinutes);
+    eventBus.emit("gamestate:changed", this.snapshot());
+  }
+
+  setDuty(duty) {
+    this.duty = duty === "off-duty" ? "off-duty" : "on-duty";
+    this.location = this.duty === "on-duty" ? "work" : "dorm";
+    eventBus.emit("gamestate:changed", this.snapshot());
+  }
+
+  advanceClock(minutes) {
+    let total = this.clockMinutes + Math.max(0, Number(minutes) || 0);
+    while (total >= 1440) {
+      total -= 1440;
+      this.day += 1;
+    }
+    this.clockMinutes = total;
+    this.phase = phaseForClock(this.clockMinutes);
+    eventBus.emit("gamestate:changed", this.snapshot());
   }
 
   advancePhase({ incrementDay = true, location } = {}) {
@@ -75,10 +105,13 @@ class GameState {
   }
 
   /** Overwrite every stat at once (used by SaveManager when restoring a save). */
-  restore({ day, phase, location, energy, mental, physical, satiety, recoverableMentalLoss } = {}) {
+  restore({ day, clockMinutes, phase, duty, location, energy, mental, physical, satiety, recoverableMentalLoss } = {}) {
     if (typeof day === "number") this.day = day;
+    if (typeof clockMinutes === "number") this.clockMinutes = ((clockMinutes % 1440) + 1440) % 1440;
     if (phase === "day" || phase === "night") this.phase = phase;
+    if (duty === "on-duty" || duty === "off-duty") this.duty = duty;
     if (location === "work" || location === "dorm") this.location = location;
+    else this.location = this.duty === "on-duty" ? "work" : "dorm";
     if (typeof energy === "number") this.energy = clamp(energy);
     if (typeof mental === "number") this.mental = clamp(mental);
     if (typeof physical === "number") this.physical = clamp(physical);
@@ -93,7 +126,9 @@ class GameState {
   snapshot() {
     return {
       day: this.day,
+      clockMinutes: this.clockMinutes,
       phase: this.phase,
+      duty: this.duty,
       location: this.location,
       energy: this.energy,
       mental: this.mental,

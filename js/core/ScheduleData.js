@@ -2,73 +2,154 @@ import { dataLoader } from "./DataLoader.js";
 import { specialEventManager } from "./SpecialEventManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
+import { calendarData } from "./CalendarData.js";
+import { gameState } from "./GameState.js";
+import { workQueue, socialQueue } from "./ScheduleQueue.js";
 
-/**
- * ScheduleData - resolves the per-day-phase content file for HIS/Social.
- *
- * Content used to live in two flat `*_schedule.json` arrays; it now lives
- * in one merged file per day-phase slot (`data/day01a.json` = day 1
- * day-phase, `data/day01b.json` = day 1 night-phase, ... `day05b.json` =
- * day 5 night-phase), each carrying both `patients` (HIS) and `contacts`
- * (Social) for that slot. `data/days.json` only records how many days were
- * authored (`totalDays`); once `day` exceeds that, slots cycle so the game
- * never runs out of content.
- */
+const CHECKPOINTS = [
+  { suffix: "a", time: 8 * 60 },
+  { suffix: "b", time: 16 * 60 },
+];
+
 class ScheduleData {
   constructor() {
-    this.totalDays = 1;
+    this.totalDays = 30;
+    this.slots = new Map();
+    this.fired = new Set();
+    this.lastAbsoluteMinute = null;
     this._initPromise = null;
   }
 
-  /**
-   * Load `data/days.json` (idempotent, and safe to call concurrently from
-   * multiple callers - the in-flight promise is cached so overlapping
-   * callers all await the same load instead of racing past a boolean
-   * guard set only after the `await` resolves).
-   */
   async init() {
-    if (!this._initPromise) {
-      this._initPromise = dataLoader.loadJSON("days.json").then((data) => {
-        this.totalDays = Math.max(1, Number(data.totalDays) || 1);
-      });
-    }
+    if (!this._initPromise) this._initPromise = this._loadAll();
     return this._initPromise;
   }
 
-  /** Whether `day`/`phase` is (or is past) the final authored slot. */
-  isFinalPhase(day, phase) {
-    return phase === "night" && day >= this.totalDays;
-  }
-
-  /** File name for a given day/phase, cycling through authored days. */
-  fileNameFor(day, phase) {
-    const cappedDay = ((Math.max(1, day) - 1) % this.totalDays) + 1;
-    const suffix = phase === "night" ? "b" : "a";
-    return `day${String(cappedDay).padStart(2, "0")}${suffix}.json`;
-  }
-
-  /** Load (and cache, via DataLoader) the day-phase file for day/phase. */
-  async load(day, phase) {
-    const [schedule] = await Promise.all([
-      dataLoader.loadJSON(this.fileNameFor(day, phase)),
-      specialEventManager.load(),
-      favorabilityManager.load(),
-      npcStateManager.load(),
-    ]);
-    return specialEventManager.apply(schedule, day, phase);
-  }
-
-  /** Load every authored day-phase file (used by SaveManager to build canonical index tables). */
-  async loadAllEntries() {
-    const entries = [];
+  async _loadAll() {
+    await calendarData.init();
+    this.totalDays = calendarData.totalDays;
+    const requests = [];
     for (let day = 1; day <= this.totalDays; day += 1) {
-      for (const phase of ["day", "night"]) {
-        // eslint-disable-next-line no-await-in-loop
-        const data = await this.load(day, phase);
-        entries.push({ day, phase, data });
+      for (const checkpoint of CHECKPOINTS) {
+        for (const queueId of ["work", "social"]) {
+          const file = `${queueId}${String(day).padStart(2, "0")}${checkpoint.suffix}.json`;
+          requests.push(dataLoader.loadJSON(file).then((data) => {
+            this.slots.set(`${day}:${checkpoint.time}:${queueId}`, data.entries || []);
+          }));
+        }
       }
     }
-    return entries;
+    await Promise.all(requests);
+    await Promise.all([specialEventManager.load(), favorabilityManager.load(), npcStateManager.load()]);
+    this.initializeAt(gameState.day, gameState.clockMinutes);
+  }
+
+  initializeAt(day, clockMinutes) {
+    this.fired.clear();
+    this.lastAbsoluteMinute = null;
+    const target = Number(day) * 1440 + Number(clockMinutes);
+    this._appendThrough(target);
+    this.lastAbsoluteMinute = target;
+  }
+
+  restoreAt(day, clockMinutes) {
+    this.fired.clear();
+    const target = Number(day) * 1440 + Number(clockMinutes);
+    for (let absolute = 0; absolute <= target; absolute += 1) {
+      const dayNumber = Math.floor(absolute / 1440);
+      const minute = absolute % 1440;
+      if (minute === 8 * 60 || minute === 16 * 60) {
+        for (const queueId of ["work", "social"]) this.fired.add(`${dayNumber}:${minute}:${queueId}`);
+      }
+    }
+    this.lastAbsoluteMinute = target;
+  }
+
+  advanceTo(day, clockMinutes) {
+    const target = Number(day) * 1440 + Number(clockMinutes);
+    if (this.lastAbsoluteMinute == null || target < this.lastAbsoluteMinute) {
+      this.initializeAt(day, clockMinutes);
+      return;
+    }
+    this._appendThrough(target);
+    this.lastAbsoluteMinute = target;
+  }
+
+  _appendThrough(target) {
+    const start = this.lastAbsoluteMinute == null ? target : this.lastAbsoluteMinute;
+    for (let absolute = start; absolute <= target; absolute += 1) {
+      const day = Math.floor(absolute / 1440);
+      const minute = absolute % 1440;
+      for (const checkpoint of CHECKPOINTS) {
+        if (minute !== checkpoint.time || absolute !== target && absolute <= start) continue;
+        this._appendSlot(day, checkpoint.time, checkpoint.suffix);
+      }
+    }
+    if (this.lastAbsoluteMinute == null) {
+      const day = Math.floor(target / 1440);
+      const minute = target % 1440;
+      for (const checkpoint of CHECKPOINTS) {
+        if (minute >= checkpoint.time) this._appendSlot(day, checkpoint.time, checkpoint.suffix);
+      }
+    }
+  }
+
+  _appendSlot(day, time, suffix) {
+    for (const queueId of ["work", "social"]) {
+      const key = `${day}:${time}:${queueId}`;
+      if (this.fired.has(key)) continue;
+      this.fired.add(key);
+      const sourceEntries = this.slots.get(key) || [];
+      const entries = sourceEntries.map((entry) => ({
+        ...entry,
+        receivedDay: day,
+        receivedTime: time,
+        receivedPhase: time === 8 * 60 ? "day" : "night",
+      }));
+      if (queueId === "work") workQueue.append(entries);
+      else socialQueue.append(entries);
+    }
+  }
+
+  queue(queueId) {
+    return queueId === "work" ? workQueue : socialQueue;
+  }
+
+  fileNameFor(day, phase) {
+    const suffix = phase === "night" ? "b" : "a";
+    return `work${String(Math.max(1, Number(day) || 1)).padStart(2, "0")}${suffix}.json`;
+  }
+
+  async load(day, phase) {
+    await this.init();
+    return {
+      day,
+      phase,
+      patients: workQueue.getAll().map((item) => ({ ...item.payload, id: item.instanceId })),
+      contacts: socialQueue.getAll().map((item) => ({ ...item.payload, id: item.instanceId })),
+    };
+  }
+
+  async loadAllEntries() {
+    await this.init();
+    return [];
+  }
+
+  history(queueId) {
+    const grouped = new Map();
+    this.queue(queueId).getAll().forEach((entry) => {
+      const key = `${entry.receivedDay}:${entry.receivedTime}`;
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key).push(entry);
+    });
+    return [...grouped.entries()].map(([key, entries]) => {
+      const [day, time] = key.split(":").map(Number);
+      return { day, time, phase: time === 8 * 60 ? "day" : "night", entries };
+    });
+  }
+
+  isFinalPhase(day, phase) {
+    return phase === "night" && day >= this.totalDays;
   }
 }
 

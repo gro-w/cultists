@@ -11,6 +11,7 @@ import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 import { OUTCOME_LABELS } from "../core/DiceCheck.js";
+import { workQueue } from "../core/ScheduleQueue.js";
 
 const dialogueKeywordIds = (tree) => {
   if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
@@ -93,7 +94,16 @@ export async function launchHISApp() {
       prescriptionEl.innerHTML = "<h4>处方</h4>";
       return;
     }
+    let groupKey = "";
     entry.patients.forEach((patient) => {
+      const nextGroupKey = `${patient.receivedDay}:${patient.receivedTime}`;
+      if (nextGroupKey !== groupKey) {
+        groupKey = nextGroupKey;
+        const group = document.createElement("h5");
+        group.className = "schedule-group-heading";
+        group.textContent = `第${patient.receivedDay}天 · ${patient.receivedTime === 480 ? "白班" : "夜班"} · ${String(Math.floor(patient.receivedTime / 60)).padStart(2, "0")}:${String(patient.receivedTime % 60).padStart(2, "0")}`;
+        patientListEl.appendChild(group);
+      }
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out his-patient-btn";
       const npcId = patient.npcId || patient.id;
@@ -153,6 +163,7 @@ export async function launchHISApp() {
       optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
       appId: "his",
       onNodeShown: (nodeId) => dialogueProgress.set("his", patient.id, nodeId),
+      onComplete: () => patient.queueInstanceId && workQueue.complete(patient.queueInstanceId),
     });
 
     const resumeNodeId =
@@ -260,11 +271,11 @@ export async function launchHISApp() {
   }
 
   async function renderCurrentEntry() {
-    const entry = await scheduleData.load(gameState.day, gameState.phase);
-    if (!entry) {
-      patientListEl.innerHTML = "<h4>候诊病人</h4><p class=\"his-empty\">（今日暂无安排）</p>";
-      return;
-    }
+    await scheduleData.init();
+    const patients = workQueue.getAll()
+      .filter((item) => item.payload?.type === "his" || item.payload?.patient || item.payload?.correctDiagnosisId)
+      .map((item) => ({ ...item.payload?.patient || item.payload, id: item.instanceId, queueInstanceId: item.instanceId, receivedDay: item.receivedDay, receivedTime: item.receivedTime }));
+    const entry = { patients };
     const keywordDefs = registerKeywords(entry);
     renderPatients(entry, keywordDefs);
     renderMedicalIncidents();

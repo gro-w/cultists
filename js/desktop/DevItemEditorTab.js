@@ -44,7 +44,7 @@ export class DevItemEditorTab {
   _emptyItem() {
     const v={};
     _IE_BANDS.forEach(b=>{
-      v[b.key]={name:'',description:'',imageData:'',revealKeywordIds:[],
+      v[b.key]={name:'',description:'',image:'',revealKeywordIds:[],
         inspEffect:{gameEvent:'',mental:0,ending:''}};
     });
     return {
@@ -71,7 +71,7 @@ export class DevItemEditorTab {
   html() {
     return `<div class="dev-ie-root">
 <div class="dev-ie-toolbar">
-  <strong style="font-size:13px">物品和法术编辑器</strong>
+  <strong style="font-size:13px">物品与法术编辑器</strong>
   <button type="button" class="win95-btn dev-btn" onclick="_ie._switchTab('items')">📦 物品</button>
   <button type="button" class="win95-btn dev-btn" onclick="_ie._switchTab('spells')">✨ 法术</button>
   <button type="button" class="win95-btn dev-btn" onclick="_ie._loadCurrentGame()">⬇ 从当前游戏读取</button>
@@ -411,11 +411,11 @@ export class DevItemEditorTab {
 
   _renderSanPanel() {
     const it=this.items.find(i=>i.id===this.currentId); if(!it) return;
-    const v=it.sanVariants[this.activeSanKey]||{name:'',description:'',imageData:'',revealKeywordIds:[],inspEffect:{gameEvent:'',mental:0,ending:''}};
+    const v=it.sanVariants[this.activeSanKey]||{name:'',description:'',image:'',revealKeywordIds:[],inspEffect:{gameEvent:'',mental:0,ending:''}};
     if(!v.inspEffect) v.inspEffect={gameEvent:'',mental:0,ending:''};
     const band=_IE_BANDS.find(b=>b.key===this.activeSanKey);
-    const imgHTML=v.imageData
-      ?`<img style="width:64px;height:64px;border:1px solid #ccc;object-fit:contain;background:#f9f9f9" src="${v.imageData}" id="ie-sp-img">`
+    const imgHTML=v.image
+      ?`<img style="width:96px;height:96px;border:1px solid #ccc;object-fit:contain;background:#f9f9f9" src="${this._e(v.image)}" id="ie-sp-img" alt="图片预览" onerror="this.alt='图片加载失败'">`
       :`<div style="width:64px;height:64px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:10px" id="ie-sp-img">无图片</div>`;
     const kwHTML=(v.revealKeywordIds||[]).map((k,i)=>
       `<span class="dev-ie-tag kw">${this._e(k)}<button type="button" onclick="_ie._removeSanKwTag(${i})">✕</button></span>`
@@ -443,15 +443,11 @@ export class DevItemEditorTab {
           <div class="dev-ie-field" style="flex:1;min-width:140px"><label>触发结局</label>
             <input type="text" id="ie-sp-insp-ending" value="${this._e(v.inspEffect.ending||'')}" oninput="_ie._sanInspInput()"></div>
         </div></details>
-      <div class="dev-ie-field"><label>外观图片</label>
+      <div class="dev-ie-field"><label>外观图片地址</label>
         <div style="display:flex;gap:10px;align-items:flex-start">
           ${imgHTML}
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <button type="button" class="win95-btn dev-btn" onclick="_ie._el('ie-sp-file').click()">上传图片</button>
-            ${v.imageData?'<button type="button" class="win95-btn dev-btn" onclick="_ie._clearSanImg()">清除</button>':''}
-          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;flex:1"><input type="text" id="ie-sp-image" value="${this._e(v.image||'')}" placeholder="data/assets/item_book_nahan_90_xxx.jpg" oninput="_ie._sanImageInput()"><span style="font-size:11px;color:#888">填写 data/assets/ 下的图片地址，或其他可访问的图片 URL。</span></div>
         </div>
-        <input type="file" id="ie-sp-file" accept="image/*" style="display:none" onchange="_ie._onSanImg(event)">
       </div>`;
   }
 
@@ -460,6 +456,14 @@ export class DevItemEditorTab {
     const sv=it.sanVariants[this.activeSanKey];
     const n=this._el('ie-sp-name'), d=this._el('ie-sp-desc');
     if(n) sv.name=n.value; if(d) sv.description=d.value; this.dirty=true;
+  }
+  _sanImageInput() {
+    const it=this.items.find(i=>i.id===this.currentId); if(!it) return;
+    const sv=it.sanVariants[this.activeSanKey];
+    sv.image=this._v('ie-sp-image').trim();
+    this.dirty=true;
+    this._renderSanPanel();
+    const input=this._el('ie-sp-image'); if(input) { input.focus(); input.selectionStart=input.selectionEnd=input.value.length; }
   }
   _sanInspInput() {
     const it=this.items.find(i=>i.id===this.currentId); if(!it) return;
@@ -471,18 +475,7 @@ export class DevItemEditorTab {
     if(en) sv.inspEffect.ending=en.value;
     this.dirty=true;
   }
-  _onSanImg(ev) {
-    const f=ev.target.files[0]; if(!f) return;
-    const r=new FileReader();
-    r.onload=e=>{ const it=this.items.find(i=>i.id===this.currentId); if(!it) return;
-      it.sanVariants[this.activeSanKey].imageData=e.target.result;
-      this._renderSanPanel(); this.dirty=true; };
-    r.readAsDataURL(f);
-  }
-  _clearSanImg() {
-    const it=this.items.find(i=>i.id===this.currentId); if(!it) return;
-    it.sanVariants[this.activeSanKey].imageData=''; this._renderSanPanel(); this.dirty=true;
-  }
+
   _addSanKwTag() {
     const inp=this._el('ie-sp-kw-input'); if(!inp) return;
     const v=inp.value.trim(); if(!v) return;
@@ -636,7 +629,7 @@ export class DevItemEditorTab {
     _IE_BANDS.forEach(b=>{
       const v=it.sanVariants[b.key]||{}; const entry={};
       if(v.name) entry.name=v.name; if(v.description) entry.description=v.description;
-      if(v.imageData) entry.imageData=v.imageData;
+      if(v.image) entry.image=v.image;
       if(v.revealKeywordIds&&v.revealKeywordIds.length) entry.revealKeywordIds=v.revealKeywordIds;
       const ie=v.inspEffect||{};
       if(ie.gameEvent||ie.mental||ie.ending){entry.inspectEffect={};if(ie.gameEvent)entry.inspectEffect.gameEvent=ie.gameEvent;if(ie.mental)entry.inspectEffect.statChanges={mental:ie.mental};if(ie.ending)entry.inspectEffect.ending=ie.ending;}
@@ -675,7 +668,7 @@ export class DevItemEditorTab {
     it.revealKeywordIds=g.revealKeywordIds||[];
     const topIE=g.inspectEffect||null;
     const readIE=src=>({gameEvent:src.gameEvent||'',mental:(src.statChanges&&src.statChanges.mental)||0,ending:src.ending||''});
-    if(g.sanVariants){_IE_BANDS.forEach(b=>{const src=g.sanVariants[b.key];const dst=it.sanVariants[b.key];if(src){if(src.name!==undefined)dst.name=src.name;if(src.description!==undefined)dst.description=src.description;if(src.imageData!==undefined)dst.imageData=src.imageData;if(src.revealKeywordIds)dst.revealKeywordIds=[...src.revealKeywordIds];if(src.inspectEffect)dst.inspEffect=readIE(src.inspectEffect);else if(topIE)dst.inspEffect=readIE(topIE);}else if(topIE){dst.inspEffect=readIE(topIE);}});}
+    if(g.sanVariants){_IE_BANDS.forEach(b=>{const src=g.sanVariants[b.key];const dst=it.sanVariants[b.key];if(src){if(src.name!==undefined)dst.name=src.name;if(src.description!==undefined)dst.description=src.description;if(src.image!==undefined)dst.image=src.image;if(src.revealKeywordIds)dst.revealKeywordIds=[...src.revealKeywordIds];if(src.inspectEffect)dst.inspEffect=readIE(src.inspectEffect);else if(topIE)dst.inspEffect=readIE(topIE);}else if(topIE){dst.inspEffect=readIE(topIE);}});}
     else if(topIE){_IE_BANDS.forEach(b=>{it.sanVariants[b.key].inspEffect=readIE(topIE);});}
     if(g.useEffect){it.useEffect.ending=g.useEffect.ending||'';it.useEffect.gameEvent=g.useEffect.gameEvent||'';it.useEffect.timeAdvance=g.useEffect.timeAdvance||0;const sc=g.useEffect.statChanges||{};it.useEffect.mental=sc.mental||0;it.useEffect.physical=sc.physical||0;it.useEffect.satiety=sc.satiety||0;it.useEffect.energy=sc.energy||0;it.useEffect.successMsg=g.successMessage||'';it.useEffect.failMsg=g.failMessage||'';}
     return it;

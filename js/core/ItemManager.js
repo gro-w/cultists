@@ -287,8 +287,8 @@ class ItemManager {
   }
 
   /**
-   * Return the appearance image (base64 data URL) for the given item at the
-   * player's current SAN band, or null when no image has been uploaded for
+   * Return the appearance image URL for the given item at the player's
+   * current SAN band, or null when no image path has been configured for
    * that band (or the item has no sanVariants at all).
    * @param {string} id
    * @returns {string|null}
@@ -297,19 +297,19 @@ class ItemManager {
     const def = this.defs.get(id);
     if (!def?.sanVariants) return null;
     const bandKey = this._getSanBandKey(gameState.mental);
-    return def.sanVariants[bandKey]?.imageData || null;
+    return def.sanVariants[bandKey]?.image || null;
   }
 
   /**
-   * Return true when the item has at least one uploaded image across any
-   * SAN band (used by the UI to decide whether to show the "外观" button).
+   * Return true when the item has at least one configured image path across
+   * any SAN band (used by the UI to decide whether to show the "外观" button).
    * @param {string} id
    * @returns {boolean}
    */
   hasAnyImage(id) {
     const def = this.defs.get(id);
     if (!def?.sanVariants) return false;
-    return Object.values(def.sanVariants).some((v) => v?.imageData);
+    return Object.values(def.sanVariants).some((v) => v?.image);
   }
 
   snapshot() {

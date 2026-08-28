@@ -41,6 +41,82 @@
       "title": "平凡的结束",
       "icon": "🏁",
       "text": "忙碌又充实的一周实习结束了。你顺利完成了每一项任务，虽然没能解开所有谜团，但也算是一段难忘的经历。"
+    },
+    {
+      "id": "end_mtclbgjx",
+      "title": "GOOD END 组一辈子少年乐队！",
+      "icon": "🌟",
+      "text": "",
+      "dialogueTree": {
+        "start": "n_mtclbgjy",
+        "nodes": {
+          "n_mtclbgjy": {
+            "id": "n_mtclbgjy",
+            "speaker": "player",
+            "text": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "end_mtcrd07r",
+      "title": "GOOD END 游戏王の福利！",
+      "icon": "🌟",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07s",
+      "title": "GOOD END 用真爱感化邪教徒？",
+      "icon": "🌟",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07t",
+      "title": "BAD END 邪神の小曲",
+      "icon": "💀",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07u",
+      "title": "BAD END 混沌一瞥",
+      "icon": "💀",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07v",
+      "title": "BAD END 牺牲之血",
+      "icon": "💀",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07w",
+      "title": "NORMAL END 生死有命",
+      "icon": "🏁",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07x",
+      "title": "ABNORMAL END 人定胜天！",
+      "icon": "🌀",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07y",
+      "title": "BAD END 药物过量",
+      "icon": "💀",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd07z",
+      "title": "BAD END 蹈海",
+      "icon": "💀",
+      "text": ""
+    },
+    {
+      "id": "end_mtcrd080",
+      "title": "TRUE END 现实=现实",
+      "icon": "✨",
+      "text": ""
     }
   ],
   "statTriggers": [

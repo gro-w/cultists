@@ -183,7 +183,10 @@ class TimeService {
   }
 
   restore(snapshot = {}) {
-    this.phaseMinutes = elapsedFromDayStart();
+    const savedPhaseMinutes = Number(snapshot.phaseMinutes);
+    this.phaseMinutes = Number.isFinite(savedPhaseMinutes) && savedPhaseMinutes >= 0
+      ? savedPhaseMinutes
+      : elapsedFromDayStart();
     this.sleepHistory = Array.isArray(snapshot.sleepHistory) ? snapshot.sleepHistory.slice(-3) : [];
     this.insufficientSleepStreak = Math.max(0, Number(snapshot.insufficientSleepStreak) || 0);
     eventBus.emit("time:changed", this.snapshot());

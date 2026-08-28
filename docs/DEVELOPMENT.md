@@ -75,7 +75,7 @@ git diff --check
 
 ## 存档注意事项
 
-`SaveManager.js` 当前格式为 v12，payload 包括游戏状态、TimeService、四条队列、医疗、关键词、背包、NPC 状态、全局变量、法术、动态日程和窗口布局。任何 payload 结构或编码布局改变都要评估版本兼容性。旧版本不会自动迁移。新增可恢复窗口时，要把 `appId` 追加到 `WINDOW_APP_IDS`，并注册 launcher。
+`SaveManager.js` 当前格式为 v13，payload 包括游戏状态、TimeService、四条队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、对话进度、结局锁定、全局变量、法术、动态日程和窗口布局。任何 payload 结构或编码布局改变都要评估版本兼容性。旧版本不会自动迁移。新增可恢复窗口时，要把 `appId` 追加到 `WINDOW_APP_IDS`，并注册 launcher。
 
 ## 发布玩家版本
 

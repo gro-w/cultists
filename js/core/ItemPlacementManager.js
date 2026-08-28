@@ -93,6 +93,13 @@ class ItemPlacementManager {
     return { ok: true, message: placement.returnMessage || "你把物品放回了原处。" };
   }
 
+  setPlaced(id, placed) {
+    if (!this.get(id)) return false;
+    this.placed.set(id, placed === true);
+    eventBus.emit("item-placements:changed", this.snapshot());
+    return true;
+  }
+
   snapshot() {
     return this.placements.map((placement) => ({ id: placement.id, placed: this.isPlaced(placement.id) }));
   }

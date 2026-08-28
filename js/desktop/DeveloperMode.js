@@ -49,6 +49,11 @@ const DEDICATED_EDITOR_TITLES = {
   "time-rules": "时间规则编辑器", calendar: "日历规则编辑器", achievements: "成就定义编辑器",
   skills: "技能定义编辑器", "monitor-scenes": "监控场景编辑器",
 };
+const DEV_EDITOR_ICONS = {
+  "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
+  "tab-item-editor": "📦", "tab-dialogue-editor": "📅", "tab-bgm-editor": "🎵", "tab-location-editor": "📍",
+  "tab-dorm-computer": "💻", "tab-state": "📊", "tab-npc-state": "👤", "tab-inventory": "🎒",
+};
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
 function phaseForClock(total) { const normalized = ((total % 1440) + 1440) % 1440; return normalized >= 480 && normalized < 960 ? { phase: "day", phaseMinutes: normalized - 480 } : { phase: "night", phaseMinutes: normalized >= 960 ? normalized - 960 : normalized + 480 }; }
@@ -127,7 +132,8 @@ export class DeveloperMode {
     const existing = windowManager.getByAppId(appId);
     if (existing) { windowManager.focus(existing.id); return; }
     const root = document.createElement("div"); root.className = "developer-mode-root";
-    const win = windowManager.createWindow({ appId, title, icon: kind === "data" ? "🗄️" : "🐞", width: kind === "data" ? 900 : 820, height: kind === "data" ? 680 : 620, content: root });
+    const icon = DEV_EDITOR_ICONS[action] || (action.startsWith("tab-structured-") ? "🗃️" : kind === "data" ? "🗄️" : "🐞");
+    const win = windowManager.createWindow({ appId, title, icon, width: kind === "data" ? 900 : 820, height: kind === "data" ? 680 : 620, content: root });
     const editor = new DeveloperMode(root, win, false);
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });

@@ -5,6 +5,7 @@ import { favorabilityManager } from "./FavorabilityManager.js";
 import { eventBus } from "./EventBus.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { applyScheduleOperations } from "./ScheduleOperations.js";
+import { bgmManager } from "./BgmManager.js";
 
 /**
  * applyDialogueOnShow - applies a dialogue node's optional `onShow` effects
@@ -56,4 +57,10 @@ export function applyDialogueOnShow(node, actorId) {
   }
   globalVariableManager.applyEffects(onShow.globalVariables || onShow.globalVariableChanges);
   applyScheduleOperations(onShow);
+
+  // BGM layer: onShow.bgm = { action: "play"|"restore"|"stop", bgmId?: string }
+  const bgm = onShow.bgm;
+  if (bgm && bgm.action) {
+    bgmManager.applyDialogueBgm(bgm.action, bgm.bgmId || null);
+  }
 }

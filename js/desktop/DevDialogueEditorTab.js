@@ -4,6 +4,7 @@ import { scheduleData } from "../core/ScheduleData.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition } from "../core/ScheduleNodeRegistry.js";
 import { validateBlueprint } from "../core/ScheduleBlueprint.js";
+import { bgmManager } from "../core/BgmManager.js";
 
 /**
  * DevDialogueEditorTab — the schedule editor graph UI.
@@ -294,6 +295,19 @@ export class DevDialogueEditorTab {
             <div style="display:flex;align-items:center;gap:4px;font-size:11px">
               <span>触发结局</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-ending" placeholder="ending_id" oninput="_de._saveOnShow()">
             </div>
+            <div class="dev-de-onshow-bgm">
+              <span>🎵 BGM 动作</span>
+              <select id="de-os-bgm-action" onchange="_de._saveOnShow()">
+                <option value="">(不改变)</option>
+                <option value="play">play — 播放指定 BGM</option>
+                <option value="stop">stop — 停止（静音）</option>
+                <option value="restore">restore — 恢复上层 BGM</option>
+              </select>
+              <select id="de-os-bgm-id" onchange="_de._saveOnShow()">
+                <option value="">(选择曲目)</option>
+              </select>
+              <span class="dev-de-onshow-bgm-indicator" id="de-os-bgm-warn" style="display:none">⚠️ BGM ID 无效</span>
+            </div>
           </div>
         </div>
         <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
@@ -496,6 +510,13 @@ export class DevDialogueEditorTab {
       div.style.cssText=`left:${node.x||60}px;top:${node.y||60}px`;
       const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
       const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
+      const bgmBadge=node.onShow?.bgm?.action==='play'&&node.onShow.bgm.bgmId
+        ? `<span class="dev-de-nbadge" title="BGM: ${this._e(node.onShow.bgm.bgmId)}" style="background:#006600;color:#fff">🎵</span>`
+        : node.onShow?.bgm?.action==='stop'
+        ? `<span class="dev-de-nbadge" title="BGM: stop" style="background:#660000;color:#fff">🎵✕</span>`
+        : node.onShow?.bgm?.action==='restore'
+        ? `<span class="dev-de-nbadge" title="BGM: restore" style="background:#004080;color:#fff">🎵↩</span>`
+        : '';
       div.innerHTML=`
         <div class="dev-de-node-hd" style="background:${spk.color}">
           <span>${this._e(nodeLabel)} · ${this._e(spk.label)}${isStart?' 🏠':''}</span>
@@ -504,7 +525,7 @@ export class DevDialogueEditorTab {
         <div class="dev-de-node-body">${this._e((node.type&&node.type!=='text') ? JSON.stringify(node.inputs||{}) : (node.text||'').slice(0,60))}</div>
         <div class="dev-de-port-layer inputs">${this._portMarkup(node, 'input')}</div>
         <div class="dev-de-port-layer outputs">${this._portMarkup(node, 'output')}</div>
-        <div class="dev-de-node-ft">${optBadge}${nxtBadge}</div>`;
+        <div class="dev-de-node-ft">${optBadge}${nxtBadge}${bgmBadge}</div>`;
       div.querySelectorAll('.dev-de-port-pin').forEach(pin => pin.addEventListener('pointerdown', e => {
         e.preventDefault();
         e.stopPropagation();
@@ -649,6 +670,29 @@ export class DevDialogueEditorTab {
     set('de-os-grant',   (os.grantItems||[]).join(', '));
     set('de-os-remove',  (os.removeItems||[]).join(', '));
     set('de-os-ending',  os.ending);
+    // BGM selects: populate track options, then restore saved values
+    const bgmActionSel = this._el('de-os-bgm-action');
+    const bgmIdSel     = this._el('de-os-bgm-id');
+    const bgmWarn      = this._el('de-os-bgm-warn');
+    if (bgmIdSel) {
+      bgmIdSel.innerHTML = '<option value="">(选择曲目)</option>' +
+        bgmManager.allTracks().map(t =>
+          `<option value="${this._e(t.id)}">${this._e(t.name || t.id)}</option>`
+        ).join('');
+    }
+    const bgm = os.bgm || {};
+    if (bgmActionSel) bgmActionSel.value = bgm.action || '';
+    if (bgmIdSel)     bgmIdSel.value     = bgm.bgmId  || '';
+    // show id selector only when action === 'play'
+    if (bgmIdSel)  bgmIdSel.style.display  = (bgm.action === 'play') ? '' : 'none';
+    // warn when bgmId is set but the track no longer exists
+    const idInvalid = bgm.action === 'play' && bgm.bgmId && !bgmManager.tracks.has(bgm.bgmId);
+    if (bgmWarn) bgmWarn.style.display = idInvalid ? '' : 'none';
+    // Show/hide bgmId select live when action changes
+    if (bgmActionSel) bgmActionSel.onchange = () => {
+      if (bgmIdSel) bgmIdSel.style.display = (bgmActionSel.value === 'play') ? '' : 'none';
+      _de._saveOnShow();
+    };
     // entry conditions
     this._renderEntryConds(node);
   }
@@ -772,6 +816,10 @@ export class DevDialogueEditorTab {
     const grant=str('de-os-grant'); if(grant) os.grantItems=grant.split(',').map(s=>s.trim()).filter(Boolean);
     const rem=str('de-os-remove');  if(rem)   os.removeItems=rem.split(',').map(s=>s.trim()).filter(Boolean);
     const end=str('de-os-ending');  if(end)   os.ending=end;
+    // BGM
+    const bgmAction=str('de-os-bgm-action');
+    const bgmId=str('de-os-bgm-id');
+    if(bgmAction) { os.bgm={ action:bgmAction }; if(bgmAction==='play' && bgmId) os.bgm.bgmId=bgmId; }
     node.onShow=os; this._saveLS();
   }
 

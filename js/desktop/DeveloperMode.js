@@ -97,7 +97,24 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  _bindRuntimeRefresh() {
+    const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "dialogueProgress:changed", "dialogueProgress:restored", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset"];
+    events.push("npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored");
+    events.forEach((event) => this._runtimeUnsubs.push(eventBus.on(event, () => this._queueRuntimeRefresh())));
+    this.win?.element?.addEventListener("remove", () => {
+      this._runtimeUnsubs.forEach((unsubscribe) => unsubscribe());
+      this._runtimeUnsubs = [];
+    }, { once: true });
+  }
+  _queueRuntimeRefresh() {
+    if (!this._activeRuntimeMethod || this._runtimeRefreshQueued) return;
+    this._runtimeRefreshQueued = true;
+    queueMicrotask(() => {
+      this._runtimeRefreshQueued = false;
+      if (this._activeRuntimeMethod && typeof this[this._activeRuntimeMethod] === "function") this[this._activeRuntimeMethod]();
+    });
+  }
   render() {
     const icon = (label, iconText, action, kind) => `<div class="dev-app-icon ${kind === "data" ? "dev-app-icon-data" : kind === "runtime" ? "dev-app-icon-runtime" : "dev-app-icon-mature"}" data-dev-dblclick="open-editor" data-editor-action="${action}" data-editor-title="${label}" data-editor-kind="${kind}" tabindex="0"><span class="dev-app-icon-glyph">${iconText}</span><span>${label}</span></div>`;
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
@@ -145,8 +162,16 @@ export class DeveloperMode {
   downloadFile(fileName, value) { downloadJson(fileName, value); }
 
   bindPanel() {
-    this.root.querySelectorAll("[data-dev-action]").forEach((el) => el.addEventListener("click", () => this.handle(el.dataset.devAction, el)));
-    this.root.querySelectorAll("[data-dev-dblclick]").forEach((el) => el.addEventListener("dblclick", () => this.handle(el.dataset.devDblclick, el)));
+    this.root.querySelectorAll("[data-dev-action]").forEach((el) => {
+      if (el.dataset.devBound) return;
+      el.dataset.devBound = "1";
+      el.addEventListener("click", () => this.handle(el.dataset.devAction, el));
+    });
+    this.root.querySelectorAll("[data-dev-dblclick]").forEach((el) => {
+      if (el.dataset.devBound) return;
+      el.dataset.devBound = "1";
+      el.addEventListener("dblclick", () => this.handle(el.dataset.devDblclick, el));
+    });
   }
   async openEditorWindow(action, title, kind) {
     const appId = `developer-editor-${action}`;
@@ -245,6 +270,7 @@ export class DeveloperMode {
   }
 
   showState() {
+    this._activeRuntimeMethod = "showState";
     const { total, hour, minute } = clockParts();
     const time = timeService.snapshot();
     const achievements = achievementManager.getAllAchievements().map(({ def, state }) => `<tr><td>${esc(def.name || def.title || def.id)}</td><td><code>${esc(def.id)}</code></td><td>${state?.unlocked ? "已解锁" : "未解锁"}</td><td>${state?.progress || 0}</td><td>${state?.seen ? "已查看" : "未查看"}</td><td>${state?.unlocked ? button("标记已查看", `mark-achievement-${def.id}`) : button("强制解锁", `unlock-achievement-${def.id}`)}</td></tr>`).join("");
@@ -270,6 +296,7 @@ export class DeveloperMode {
   }
 
   showNpcState() {
+    this._activeRuntimeMethod = "showNpcState";
     const actors = [{ id: "chatgtp", name: "ChatGTP", favorability: null }, ...npcStateManager.npcs.map((npc) => ({ id: npc.id, name: npc.name, favorability: favorabilityManager.get(npc.id) }))];
     const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="100" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="100" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
     const hisProgress = dialogueProgress.get("his");
@@ -285,6 +312,7 @@ export class DeveloperMode {
   }
 
   showInventory() {
+    this._activeRuntimeMethod = "showInventory";
     const defs = itemManager.allDefIds().map((id) => {
       const def = itemManager.getDef(id);
       return `<option value="${id}">${def.name || id} (${id})</option>`;
@@ -301,6 +329,7 @@ export class DeveloperMode {
   }
 
   showSchedules() {
+    this._activeRuntimeMethod = "showSchedules";
     const queues = [["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue], ["realtime", realtimeQueue]];
     const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td>${esc(entry.scheduleId)}</td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
     const scheduled = scheduleData.snapshotScheduled();
@@ -308,12 +337,14 @@ export class DeveloperMode {
   }
 
   showWorld() {
+    this._activeRuntimeMethod = "showWorld";
     const placements = itemPlacementManager.all().map((placement) => `<tr><td>${esc(placement.id)}</td><td>${esc(placement.itemId)}</td><td>${itemPlacementManager.isPlaced(placement.id) ? "已放置" : "已取走"}</td><td>${itemPlacementManager.isVisible(placement.id) ? "可见" : "不可见"}</td><td>${button(itemPlacementManager.isPlaced(placement.id) ? "取走" : "放回", `toggle-placement-${placement.id}`)}</td></tr>`).join("");
     const variables = globalVariableManager.all().map((variable) => `<tr><td>${variable.id}</td><td>${esc(variable.name)}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"></td></tr>`).join("");
     this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和全局变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>全局变量当前值</h3><table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用全局变量", "apply-runtime-variables")}</div></section>`);
   }
 
   showMedicalEnding() {
+    this._activeRuntimeMethod = "showMedicalEnding";
     const medical = medicalCaseManager.snapshot();
     const submissions = (medical.submissions || []).map((submission) => `<tr><td>${esc(submission.patientId)}</td><td>${submission.day}</td><td>${submission.dueDay}</td><td>${esc(submission.diagnosisId)}</td><td>${submission.processed ? "已处理" : "待处理"}</td></tr>`).join("");
     const endings = [...endingManager.defs.keys()].map((id) => `<option value="${esc(id)}">${esc(id)}</option>`).join("");

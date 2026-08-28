@@ -4,26 +4,29 @@
       "id": "evt_mtcrd081",
       "name": "悔恨之泪",
       "dialogueTree": {
+        "start": "n_mtcrd087",
         "nodes": {
           "n_mtcrd087": {
-            "id": "n_mtcrd087",
             "speaker": "player",
             "text": "又把耳机买回来了？听着怎么样？",
+            "x": 100,
+            "y": 100,
             "next": "n_mtcrd088"
           },
           "n_mtcrd088": {
-            "id": "n_mtcrd088",
             "speaker": "npc",
             "text": "其实没我想象的那么惊艳。",
+            "x": 295.20001220703125,
+            "y": 110.4000244140625,
             "next": "n_mtcrd089"
           },
           "n_mtcrd089": {
-            "id": "n_mtcrd089",
             "speaker": "player",
-            "text": "笑死，得不到的永远在骚动，得到了白月光就变成白米饭。"
+            "text": "笑死，得不到的永远在骚动，得到了白月光就变成白米饭。",
+            "x": 495.5999755859375,
+            "y": 115.19998168945312
           }
-        },
-        "start": "n_mtcrd087"
+        }
       }
     },
     {

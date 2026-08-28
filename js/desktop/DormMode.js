@@ -658,7 +658,7 @@ export default class DormMode {
       appendLine: (speaker, label, text) => {
         const line = document.createElement("p");
         line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, keywordDefs)}`;
-        lines.appendChild(line);
+        lines.replaceChildren(line);
         keywordManager.bindHighlights(line, keywordDefs);
       },
       optionsEl: options,

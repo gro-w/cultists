@@ -486,7 +486,7 @@ export async function launchChatGTPApp(options = {}) {
       const p = document.createElement("p");
       p.className = `dialogue-line speaker-${speaker}`;
       p.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, ownKeywordDefs)}`;
-      dialogueLinesEl.appendChild(p);
+      dialogueLinesEl.replaceChildren(p);
       keywordManager.bindHighlights(p, ownKeywordDefs);
       dialogueLinesEl.scrollTop = dialogueLinesEl.scrollHeight;
     }

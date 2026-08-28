@@ -138,7 +138,7 @@ export async function launchMonitorApp() {
       const p = document.createElement("p");
       p.className = `dialogue-line speaker-${speaker}`;
       p.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, keywordDefs)}`;
-      linesEl.appendChild(p);
+      linesEl.replaceChildren(p);
       keywordManager.bindHighlights(p, keywordDefs);
       interactionEl.scrollTop = interactionEl.scrollHeight;
     }

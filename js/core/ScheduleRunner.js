@@ -74,7 +74,18 @@ export class ScheduleRunner {
       }
       const result = this._execute(node);
       if (result?.waitChoice) { this._showChoice(node); return; }
-      if (result?.wait) return;
+      if (result?.wait) {
+        const next = result.next || nextFlow(this.blueprint, node);
+        this.instance.executedNodeIds.push(node.id);
+        this.instance.currentNodeId = next || null;
+        this.onCheckpoint(this.instance);
+        if (!this.optionsEl) {
+          current = next;
+          continue;
+        }
+        this._showContinue(next);
+        return;
+      }
       if (result?.stop) return;
       current = result?.next || nextFlow(this.blueprint, node);
       this.instance.executedNodeIds.push(node.id);
@@ -96,7 +107,7 @@ export class ScheduleRunner {
         if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
         this._record({ type: "text", speaker, text });
         this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
-        return { waitChoice: Array.isArray(node.options) && node.options.length > 0 };
+        return { wait: true };
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
       case "diceCheck": {
@@ -172,6 +183,21 @@ export class ScheduleRunner {
       this.optionsEl.appendChild(button);
     });
     this.onCheckpoint(this.instance);
+  }
+
+  _showContinue(nextNodeId) {
+    if (!this.optionsEl) throw new Error("Text node requires an options container");
+    this.optionsEl.innerHTML = "";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "win95-btn dialogue-continue";
+    button.textContent = "继续";
+    button.addEventListener("click", () => {
+      if (this.readOnly) return;
+      this.optionsEl.innerHTML = "";
+      this._run(nextNodeId);
+    });
+    this.optionsEl.appendChild(button);
   }
 
   _record(record) {

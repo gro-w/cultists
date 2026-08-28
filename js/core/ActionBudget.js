@@ -21,10 +21,13 @@ const DEFAULT_LIMITS = { dialogueLimit: Infinity, inspectLimit: Infinity };
  * generate those actions - same one-way event-bus pattern EndingManager
  * uses for `item:used`.
  *
- * Time is measured in 20-minute units: every dialogue turn or inspection advances
- * the shared phase clock. Crossing the configured work/night duration creates
- * overtime or all-nighter consequences; ending a night models sleep and
- * recovery before the next day begins. Runtime state is included in save v3.
+ * Time tracking:
+ *   - Dialogue turns: fixed minutesPerAction (data-driven, default 20 min).
+ *   - Item inspections: use item-level `inspectTimeAdvance` when set,
+ *     otherwise fall back to minutesPerAction.
+ *   - Item use (non-book): use `timeMinutes` from the event (useEffect value).
+ *   - Book spell-learning: ActionBudget listens to `spell:learned` and charges
+ *     the fixed 240-minute (4 h) learning cost directly.
  */
 class ActionBudget {
   constructor() {
@@ -37,8 +40,14 @@ class ActionBudget {
     this._pendingNightDebt = 0;
     this._initPromise = null;
 
-    eventBus.on("item:inspected", () => this.recordInspection());
-    eventBus.on("item:used", () => this.recordTimedAction());
+    eventBus.on("item:inspected", ({ inspectTimeAdvance } = {}) =>
+      this.recordInspection(inspectTimeAdvance || 0));
+    // Books with spells set skipTimeAdvance=true — time is charged when the
+    // player confirms learning via SpellLearnDialog (spell:learned event).
+    eventBus.on("item:used", ({ skipTimeAdvance, timeMinutes } = {}) => {
+      if (!skipTimeAdvance) this.recordTimedAction(timeMinutes || 0);
+    });
+    eventBus.on("spell:learned", () => this.recordTimedAction(240));
     eventBus.on("dialogue:turn", () => this.recordDialogueTurn());
     // DayNightSystem.toggle() settles the ending phase's overage and then
     // emits this same event with the new phase - listening here (rather
@@ -134,33 +143,37 @@ class ActionBudget {
 
   recordDialogueTurn() {
     this.used.dialogue += 1;
-    this._consumeTime();
-    eventBus.emit("actionBudget:changed", this.snapshot());
-  }
-
-  recordInspection() {
-    this.used.inspect += 1;
-    this._consumeTime();
-    eventBus.emit("actionBudget:changed", this.snapshot());
-  }
-
-  recordTimedAction() {
-    this._consumeTime();
+    this._consumeTime(0);
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
   /**
-   * Permanently shrink the CURRENT phase's remaining budget (used by
-   * NpcStateManager's offline consequence: an NPC going offline dumps
-   * their workload on the protagonist for the rest of this phase).
-   * Cannot raise a limit, only lower it, and never below what's already
-   * been used (so it shows up immediately as "over budget" rather than
-   * silently vanishing).
+   * Record one item inspection.
+   * @param {number} [overrideMinutes]  Use item's inspectTimeAdvance when > 0.
+   */
+  recordInspection(overrideMinutes = 0) {
+    this.used.inspect += 1;
+    this._consumeTime(overrideMinutes);
+    eventBus.emit("actionBudget:changed", this.snapshot());
+  }
+
+  /**
+   * Record a timed action that is not a dialogue turn or inspection
+   * (item use, spell learning, etc.).
+   * @param {number} [overrideMinutes]  Exact time cost; falls back to minutesPerAction.
+   */
+  recordTimedAction(overrideMinutes = 0) {
+    this._consumeTime(overrideMinutes);
+    eventBus.emit("actionBudget:changed", this.snapshot());
+  }
+
+  /**
+   * Permanently shrink the CURRENT phase's remaining budget (compatibility
+   * no-op — action count limits were removed; kept so old NPC data doesn't
+   * throw).
    * @param {{dialogueLimit?: number, inspectLimit?: number}} penalty
    */
   applyPenalty(penalty = {}) {
-    // Kept as a compatibility no-op for old NPC data. There are no action
-    // count limits to reduce anymore.
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
 
@@ -180,8 +193,14 @@ class ActionBudget {
     };
   }
 
-  _consumeTime() {
-    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
+  /**
+   * Advance the phase clock.
+   * @param {number} [overrideMinutes]  If > 0, use this exact value instead of minutesPerAction.
+   */
+  _consumeTime(overrideMinutes = 0) {
+    const minutesPerAction = overrideMinutes > 0
+      ? overrideMinutes
+      : (this.config && this.config.minutesPerAction) || 20;
     const previousMinutes = this.phaseMinutes;
     this.phaseMinutes += minutesPerAction;
     const phaseStart = gameState.phase === "night" ? 16 * 60 : 8 * 60;

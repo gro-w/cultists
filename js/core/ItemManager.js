@@ -259,10 +259,19 @@ class ItemManager {
     if (effect.statChanges) gameState.modify(effect.statChanges);
     if (def.consumable) this.remove(id, 1);
 
+    const skipTimeAdvance = !!(def.isBook && def.spells && def.spells.length > 0);
     const result = { ok: true, message: def.successMessage || `使用了${def.name}。` };
     // Let EndingManager (and anything else) react to a successful item use
     // without ItemManager needing to import it directly.
-    eventBus.emit("item:used", { id, result });
+    // timeMinutes: non-book items carry useEffect.timeAdvance so ActionBudget
+    // can charge the right amount; book-with-spells items skip here and let
+    // SpellLearnDialog emit spell:learned (which charges 240 min) instead.
+    eventBus.emit("item:used", {
+      id,
+      result,
+      skipTimeAdvance,
+      timeMinutes: skipTimeAdvance ? 0 : (effect.timeAdvance || 0),
+    });
 
     // 书籍法术学习：0 < SAN ≤ 50 时使用书籍触发，游戏层负责展示学习界面
     if (def.isBook && def.spells && def.spells.length > 0) {

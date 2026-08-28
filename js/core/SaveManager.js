@@ -7,9 +7,10 @@ import { scheduleData } from "./ScheduleData.js";
 import { actionBudget } from "./ActionBudget.js";
 import { favorabilityManager, NPC_IDS } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
+import { spellManager } from "./SpellManager.js";
 
-// v7 = v6 plus a data-driven NPC state table (favorability, SAN, flags).
-const SAVE_FORMAT_VERSION = 7;
+// v8 = v7 plus spell list (variable-length string table).
+const SAVE_FORMAT_VERSION = 8;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements"];
@@ -236,6 +237,29 @@ class SaveManager {
       bytes.push(npcStateManager.isOffline(id) ? 1 : 0);
     });
 
+    // v8: learned spell list.
+    // Each spell is encoded as:
+    //   2 bytes – item index for sourceBookId (0xFFFF if unknown)
+    //   1 byte  – spellIndex within that book's spells[] array
+    //   1 byte  – name byte-length (UTF-8, capped at 255)
+    //   N bytes – name UTF-8
+    //   2 bytes – description byte-length (capped at 0xFFFF)
+    //   M bytes – description UTF-8
+    const encoder = new TextEncoder();
+    const spells = spellManager.all();
+    bytes.push(clampByte(spells.length, 255));
+    spells.forEach((spell) => {
+      const bookIdx = this.itemIds.indexOf(spell.sourceBookId);
+      push16(bytes, bookIdx >= 0 ? bookIdx : 0xffff);
+      bytes.push(clampByte(spell.spellIndex || 0));
+      const nameBytes = encoder.encode((spell.name || "").slice(0, 85)); // max ~255 UTF-8 bytes
+      bytes.push(nameBytes.length);
+      nameBytes.forEach((b) => bytes.push(b));
+      const descBytes = encoder.encode((spell.description || "").slice(0, 1000));
+      push16(bytes, descBytes.length);
+      descBytes.forEach((b) => bytes.push(b));
+    });
+
     return Uint8Array.from(bytes);
   }
 
@@ -243,7 +267,7 @@ class SaveManager {
     if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
     const version = bytes[i++];
-    if (version < 2 || version > 7) throw new Error("Unsupported save version");
+    if (version < 2 || version > 8) throw new Error("Unsupported save version");
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
     // location byte present from v5 onward; advance i unconditionally when present
@@ -343,6 +367,34 @@ class SaveManager {
       }
       favorabilityManager.restore({ values: favValues, hadPositive });
       npcStateManager.restore({ san: sanValues, offline });
+    }
+
+    // v8: learned spell list.
+    if (version >= 8 && i < bytes.length) {
+      const decoder = new TextDecoder();
+      const spellCount = bytes[i++] || 0;
+      const restoredSpells = [];
+      for (let s = 0; s < spellCount && i < bytes.length; s += 1) {
+        const bookIdx  = read16(bytes, i); i += 2;
+        const spellIdx = bytes[i++];
+        const nameLen  = bytes[i++];
+        const name     = decoder.decode(bytes.slice(i, i + nameLen)); i += nameLen;
+        const descLen  = read16(bytes, i); i += 2;
+        const description = decoder.decode(bytes.slice(i, i + descLen)); i += descLen;
+        const sourceBookId = bookIdx !== 0xffff ? (this.itemIds[bookIdx] || "") : "";
+        const sourceDef    = sourceBookId ? itemManager.getDef(sourceBookId) : null;
+        restoredSpells.push({
+          id: `${sourceBookId}__${spellIdx}`,
+          name,
+          description,
+          learnTimeMinutes: 240,
+          castSanCost: 5,
+          sourceBookId,
+          sourceBookName: sourceDef ? sourceDef.name : sourceBookId,
+          spellIndex: spellIdx,
+        });
+      }
+      spellManager.restore(restoredSpells);
     }
 
     if (hisActorIdx >= 0 && this.hisActors[hisActorIdx]) {

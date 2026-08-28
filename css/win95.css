@@ -355,7 +355,7 @@ html, body {
   position: fixed;
   left: 2px;
   bottom: 32px;
-  width: 200px;
+  width: 240px;
   background: var(--w95-gray);
   z-index: 1001;
   padding: 4px;
@@ -363,6 +363,21 @@ html, body {
 
 .start-menu.hidden {
   display: none;
+}
+
+.start-menu-group-title {
+  padding: 5px 8px 3px;
+  color: var(--w95-gray-dark);
+  border-bottom: 1px solid var(--w95-gray-dark);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.start-menu-separator {
+  height: 2px;
+  margin: 4px 0;
+  border-top: 1px solid var(--w95-gray-dark);
+  border-bottom: 1px solid var(--w95-white);
 }
 
 .start-menu-item {
@@ -377,6 +392,32 @@ html, body {
 .start-menu-item:hover {
   background: var(--w95-blue);
   color: var(--w95-white);
+}
+
+.start-menu-item-icon {
+  width: 22px;
+  flex: 0 0 22px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.start-menu-phase-item {
+  min-height: 42px;
+  margin: 2px 0;
+  padding: 8px 10px;
+  background: var(--w95-blue);
+  color: var(--w95-white);
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), inset -1px -1px 0 rgba(0, 0, 0, 0.45);
+}
+
+.start-menu-phase-item .start-menu-item-icon {
+  font-size: 22px;
+}
+
+.start-menu-phase-item:hover {
+  background: #174a9c;
 }
 
 /* -------------------------------------------------------------------------

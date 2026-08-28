@@ -126,6 +126,11 @@
 .dev-de-node-link { border:none; background:rgba(255,255,255,.25); cursor:pointer; color:#fff; padding:0 4px; font-size:11px; border-radius:2px; }
 .dev-de-node-link:hover { background:rgba(255,255,255,.5); }
 .dev-de-node-body { padding:4px 6px; color:#333; line-height:1.4; min-height:20px; word-break:break-all; }
+.dev-de-node-options { padding:2px 6px; border-top:1px solid #ddd; background:#fafafa; }
+.dev-de-node-opt { position:relative; display:flex; align-items:center; min-height:18px; padding-right:13px; color:#555; font-size:10px; white-space:nowrap; }
+.dev-de-node-opt > span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.dev-de-option-pin { position:absolute; right:-9px; display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border:1px solid #000080; border-radius:50%; background:#d8d8ff; color:#000080; font-size:9px; font-weight:bold; cursor:crosshair; user-select:none; z-index:2; }
+.dev-de-option-pin:hover { background:#ffcc66; border-color:#cc6600; color:#000; }
 .dev-de-node-ft { padding:2px 6px 4px; display:flex; gap:4px; flex-wrap:wrap; }
 .dev-de-nbadge { background:#e8e8ff; border:1px solid #9999cc; border-radius:3px; font-size:10px; padding:1px 4px; color:#333; }
 

@@ -18,7 +18,7 @@
 .dev-app-icon:hover, .dev-app-icon:focus { outline: 1px dotted #111; background: rgba(255, 255, 255, .35); }
 .dev-app-icon-data { color: #000080; }
 .dev-app-icon-runtime { color: #222; }
-.dev-app-icon-mature { color: inherit; }
+.dev-app-icon-mature { color: #222; }
 .dev-app-icon-glyph { font-size: 28px; line-height: 30px; }
 .dev-btn { margin: 2px 0; padding: 3px 8px; min-height: 24px; }
 .dev-status { margin: 8px 0; padding: 5px; background: #ffffe1; border: 1px solid #808080; }

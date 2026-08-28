@@ -12,13 +12,14 @@
 
 ## 日程文件
 
-当前使用两条独立队列，每天两个时间点：
+当前使用两条独立队列，每天两个时间点，并有不自动追加的公共日程：
 
 ```text
 work01a.json ... work30a.json   # 工作日/白班批次，08:00 追加
 work01b.json ... work30b.json   # 工作/夜班批次，16:00 追加
 social01a.json ... social30a.json
 social01b.json ... social30b.json
+workpub.json / socialpub.json     # 仅供 addSchedule 操作选择
 ```
 
 文件最小结构：
@@ -27,7 +28,32 @@ social01b.json ... social30b.json
 { "entries": [] }
 ```
 
-`entries` 中的患者放在 `patients`，社交角色放在 `contacts`。NPC 联系人使用稳定 `npcId`，自定义角色使用 `type: "other"`、`name` 和 `avatar`。条目可带 `condition` 或 `globalVariableCondition`。
+`entries` 中的每项必须有全局唯一的稳定字符串 `id`。患者放在 `patients`，社交角色放在 `contacts`。NPC 联系人使用稳定 `npcId`，自定义角色使用 `type: "other"`、`name` 和 `avatar`。
+
+日程先决条件写在 `prerequisites`，支持 `all` / `any`，以及 `scheduleCompleted`、`globalVariables`、`protagonist`、`npc` 和 `item` 条件。条件在日程实际入队时检查。
+
+```json
+{
+  "id": "case-02",
+  "prerequisites": {
+    "all": [
+      { "scheduleCompleted": "case-01" },
+      { "globalVariables": [{ "id": 1, "op": "gte", "value": 2 }] },
+      { "protagonist": { "stat": "mental", "op": "gte", "value": 50 } },
+      { "npc": { "npcId": "ajie", "stat": "favorability", "op": "gte", "value": 60 } },
+      { "item": { "itemId": "key", "held": true, "count": 1 } }
+    ]
+  }
+}
+```
+
+对话节点或其它 `onShow` 效果可使用 `addSchedule`，把指定 ID 在指定时间加入对应队列：
+
+```json
+{ "addSchedule": [{ "scheduleId": "pub-night-01", "queue": "social", "day": 3, "time": 1200 }] }
+```
+
+`socialpub.json` / `workpub.json` 的条目不会随日期检查点自动追加，只会被 `addSchedule` 选中后加入队列。
 
 ## 全局变量
 

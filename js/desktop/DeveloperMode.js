@@ -18,7 +18,7 @@ import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
 const DAY_FILES = () => Array.from({ length: scheduleData.totalDays }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
-const JSON_FILES = () => [...DAY_FILES(), "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json", "global_variables.json"];
+const JSON_FILES = () => [...DAY_FILES(), "socialpub.json", "workpub.json", "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json", "global_variables.json"];
 const QA_PAGE_SIZE = 50;
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",

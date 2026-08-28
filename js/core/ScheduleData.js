@@ -6,6 +6,7 @@ import { calendarData } from "./CalendarData.js";
 import { gameState } from "./GameState.js";
 import { workQueue, socialQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
+import { itemManager } from "./ItemManager.js";
 
 const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
@@ -17,6 +18,9 @@ class ScheduleData {
     this.totalDays = 30;
     this.slots = new Map();
     this.fired = new Set();
+    this.scheduleById = new Map();
+    this.publicEntries = new Map();
+    this.pendingAdds = [];
     this.lastAbsoluteMinute = null;
     this._initPromise = null;
   }
@@ -27,7 +31,7 @@ class ScheduleData {
   }
 
   async _loadAll() {
-    await Promise.all([calendarData.init(), globalVariableManager.init()]);
+    await Promise.all([calendarData.init(), globalVariableManager.init(), itemManager.load()]);
     this.totalDays = calendarData.totalDays;
     const requests = [];
     for (let day = 1; day <= this.totalDays; day += 1) {
@@ -35,18 +39,38 @@ class ScheduleData {
         for (const queueId of ["work", "social"]) {
           const file = `${queueId}${String(day).padStart(2, "0")}${checkpoint.suffix}.json`;
           requests.push(dataLoader.loadJSON(file).then((data) => {
-            this.slots.set(`${day}:${checkpoint.time}:${queueId}`, Array.isArray(data.entries) ? data.entries : []);
+            const entries = Array.isArray(data.entries) ? data.entries : [];
+            this.slots.set(`${day}:${checkpoint.time}:${queueId}`, entries);
+            this._indexEntries(entries, queueId);
           }));
         }
       }
+    }
+    for (const queueId of ["work", "social"]) {
+      requests.push(dataLoader.loadJSON(`${queueId}pub.json`).then((data) => {
+        const entries = Array.isArray(data.entries) ? data.entries : [];
+        this.publicEntries.set(queueId, entries);
+        this._indexEntries(entries, queueId);
+      }));
     }
     await Promise.all(requests);
     await Promise.all([specialEventManager.load(), favorabilityManager.load(), npcStateManager.load()]);
     this.initializeAt(gameState.day, gameState.clockMinutes);
   }
 
+  _indexEntries(entries, queueId) {
+    entries.forEach((entry) => {
+      if (!entry || typeof entry.id !== "string" || !entry.id.trim()) {
+        throw new Error(`Schedule entry in ${queueId} needs a stable string id`);
+      }
+      if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
+      this.scheduleById.set(entry.id, { ...entry, queueId });
+    });
+  }
+
   initializeAt(day, clockMinutes) {
     this.fired.clear();
+    this.pendingAdds = [];
     this.lastAbsoluteMinute = null;
     const target = Number(day) * 1440 + Number(clockMinutes);
     this._appendThrough(target);
@@ -73,6 +97,7 @@ class ScheduleData {
       return;
     }
     this._appendThrough(target);
+    this._appendScheduledThrough(target);
     this.lastAbsoluteMinute = target;
   }
 
@@ -101,7 +126,7 @@ class ScheduleData {
       if (this.fired.has(key)) continue;
       this.fired.add(key);
       const sourceEntries = this.slots.get(key) || [];
-      const entries = sourceEntries.filter((entry) => globalVariableManager.matches(entry.condition || entry.globalVariableCondition)).map((entry) => ({
+      const entries = sourceEntries.filter((entry) => this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)).map((entry) => ({
         ...entry,
         receivedDay: day,
         receivedTime: time,
@@ -110,6 +135,67 @@ class ScheduleData {
       if (queueId === "work") workQueue.append(entries);
       else socialQueue.append(entries);
     }
+  }
+
+  _appendScheduledThrough(target) {
+    const ready = this.pendingAdds.filter((request) => request.day * 1440 + request.time <= target);
+    this.pendingAdds = this.pendingAdds.filter((request) => request.day * 1440 + request.time > target);
+    ready.sort((a, b) => (a.day * 1440 + a.time) - (b.day * 1440 + b.time));
+    ready.forEach((request) => {
+      const definition = this.scheduleById.get(request.scheduleId);
+      if (!definition || !this.matchesPrerequisites(definition.prerequisites || definition.condition)) return;
+      const entry = { ...definition, receivedDay: request.day, receivedTime: request.time,
+        receivedPhase: request.time < 16 * 60 ? "day" : "night" };
+      delete entry.queueId;
+      this.queue(request.queueId || definition.queueId).append([entry]);
+    });
+  }
+
+  matchesPrerequisites(condition) {
+    if (!condition) return true;
+    if (Array.isArray(condition)) return condition.every((item) => this.matchesPrerequisites(item));
+    if (condition.all) return condition.all.every((item) => this.matchesPrerequisites(item));
+    if (condition.any) return condition.any.some((item) => this.matchesPrerequisites(item));
+    if (condition.scheduleCompleted !== undefined) return workQueue.hasCompletedId(condition.scheduleCompleted) || socialQueue.hasCompletedId(condition.scheduleCompleted);
+    if (condition.globalVariables) return globalVariableManager.matches(condition.globalVariables);
+    if (condition.protagonist) return this._matchesValue(gameState[condition.protagonist.stat], condition.protagonist);
+    if (condition.npc) {
+      const source = condition.npc.stat === "favorability" ? favorabilityManager.get(condition.npc.npcId) : npcStateManager.get(condition.npc.npcId);
+      return this._matchesValue(source, condition.npc);
+    }
+    if (condition.item || condition.items) {
+      const items = condition.item ? [condition.item] : condition.items;
+      return (Array.isArray(items) ? items : [items]).every((item) => {
+        const held = itemManager.has(item.itemId, item.count || 1);
+        return item.held === undefined ? held : Boolean(item.held) === held;
+      });
+    }
+    return globalVariableManager.matches(condition);
+  }
+
+  _matchesValue(actual, condition) {
+    const expected = Object.hasOwn(condition, "equals") ? condition.equals : condition.value;
+    const op = condition.op || "eq";
+    if (op === "eq") return actual === expected;
+    if (op === "neq") return actual !== expected;
+    if (op === "gt") return actual > expected;
+    if (op === "gte") return actual >= expected;
+    if (op === "lt") return actual < expected;
+    if (op === "lte") return actual <= expected;
+    return false;
+  }
+
+  addSchedule(scheduleId, { queue, day, time } = {}) {
+    const definition = this.scheduleById.get(scheduleId);
+    if (!definition) return { ok: false, reason: "unknownSchedule" };
+    const requestedDay = Number(day);
+    const requestedTime = Number(time);
+    const targetDay = Number.isInteger(requestedDay) && requestedDay >= 1 ? requestedDay : gameState.day;
+    const targetTime = Number.isInteger(requestedTime) && requestedTime >= 0 ? Math.min(1439, requestedTime) : gameState.clockMinutes;
+    const request = { scheduleId, queueId: queue || definition.queueId, day: targetDay, time: targetTime };
+    this.pendingAdds.push(request);
+    if (this.lastAbsoluteMinute != null && targetDay * 1440 + targetTime <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
+    return { ok: true, request };
   }
 
   queue(queueId) {
@@ -133,10 +219,24 @@ class ScheduleData {
 
   async loadAllEntries() {
     await this.init();
-    return [...this.slots.entries()].map(([key, entries]) => {
+    const entries = [...this.slots.entries()].map(([key, slotEntries]) => {
       const [, time, queueId] = key.split(":");
-      return { key, data: queueId === "work" ? { patients: entries } : { contacts: entries } };
+      return { key, data: queueId === "work" ? { patients: slotEntries } : { contacts: slotEntries } };
     });
+    this.publicEntries.forEach((slotEntries, queueId) => {
+      entries.push({ key: `public:${queueId}`, data: queueId === "work" ? { patients: slotEntries } : { contacts: slotEntries } });
+    });
+    return entries;
+  }
+
+  snapshotScheduled() {
+    return this.pendingAdds.map((entry) => ({ ...entry }));
+  }
+
+  restoreScheduled(entries = []) {
+    this.pendingAdds = Array.isArray(entries)
+      ? entries.filter((entry) => this.scheduleById.has(entry?.scheduleId)).map((entry) => ({ ...entry }))
+      : [];
   }
 
   hasPendingBatch(queueId, day, time) {

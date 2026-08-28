@@ -184,6 +184,7 @@ class SaveManager {
       globalVariables: globalVariableManager.snapshot(),
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
       spells: spellManager.all(),
+      scheduledAdds: scheduleData.snapshotScheduled(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
 
@@ -297,6 +298,7 @@ class SaveManager {
     actionBudget.restore(payload.actionBudget || {});
     workQueue.restore(payload.workQueue);
     socialQueue.restore(payload.socialQueue);
+    scheduleData.restoreScheduled(payload.scheduledAdds || []);
     keywordManager.restoreCollected(payload.keywords || []);
     itemManager.restoreInventory(payload.inventory || []);
     spellManager.restore(payload.spells || []);

@@ -73,14 +73,15 @@ export const launchDeveloperMode = launchDatabaseApp;
 export class DeveloperMode {
   constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; if (renderShell) this.render(); }
   render() {
-    const icon = (label, iconText, action, kind) => `<div class="dev-app-icon ${kind === "data" ? "dev-app-icon-data" : "dev-app-icon-runtime"}" data-dev-dblclick="open-editor" data-editor-action="${action}" data-editor-title="${label}" data-editor-kind="${kind}" tabindex="0"><span class="dev-app-icon-glyph">${iconText}</span><span>${label}</span></div>`;
+    const icon = (label, iconText, action, kind) => `<div class="dev-app-icon ${kind === "data" ? "dev-app-icon-data" : kind === "runtime" ? "dev-app-icon-runtime" : "dev-app-icon-mature"}" data-dev-dblclick="open-editor" data-editor-action="${action}" data-editor-title="${label}" data-editor-kind="${kind}" tabindex="0"><span class="dev-app-icon-glyph">${iconText}</span><span>${label}</span></div>`;
+    const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
       ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["全局变量定义", "🔢", "tab-global-variables"],
       ["物品编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
     const runtimeIcons = [["状态调节", "📊", "tab-state"], ["NPC 状态调节", "👤", "tab-npc-state"], ["背包控制器", "🎒", "tab-inventory"]];
-    this.root.innerHTML = `<section class="dev-app-section dev-database-section"><div class="dev-app-heading"><strong>数据库 App</strong><span>静态数据编辑器。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${dataIcons.map(([label, glyph, action]) => icon(label, glyph, action, "data")).join("")}</div></section><section class="dev-app-section dev-debugger-section"><div class="dev-app-heading dev-runtime-heading"><strong>调试器</strong><span>观察或修改当前游戏运行时变量。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${runtimeIcons.map(([label, glyph, action]) => icon(label, glyph, action, "runtime")).join("")}</div></section><div class="dev-status" data-dev-status>开发人员模式就绪。</div>`;
+    this.root.innerHTML = `<section class="dev-app-section dev-database-section"><div class="dev-app-heading"><strong>数据库 App</strong><span>静态数据编辑器。蓝色表示仍在开发，灰色表示较为成熟；双击图标在新窗口打开。</span></div><div class="dev-app-grid">${dataIcons.map(([label, glyph, action]) => icon(label, glyph, action, matureActions.has(action) ? "mature" : "data")).join("")}</div></section><section class="dev-app-section dev-debugger-section"><div class="dev-app-heading dev-runtime-heading"><strong>调试器</strong><span>观察或修改当前游戏运行时变量。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${runtimeIcons.map(([label, glyph, action]) => icon(label, glyph, action, "runtime")).join("")}</div></section><div class="dev-status" data-dev-status>开发人员模式就绪。</div>`;
     this.bindPanel();
   }
 

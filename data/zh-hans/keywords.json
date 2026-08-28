@@ -87,6 +87,2498 @@
     {
       "id": "basement_secret",
       "content": "地下室秘密"
+    },
+    {
+      "id": "roommate_necklace_clue",
+      "content": "项链上的奇怪符号"
+    },
+    {
+      "id": "disease:acute_bronchitis:low",
+      "content": "黑色枝杈缠住气管"
+    },
+    {
+      "id": "disease:acute_bronchitis:normal",
+      "content": "急性支气管炎，未特指"
+    },
+    {
+      "id": "disease:acute_cystitis:low",
+      "content": "膀胱被灼热的红印污染"
+    },
+    {
+      "id": "disease:acute_cystitis:normal",
+      "content": "急性膀胱炎，无血尿"
+    },
+    {
+      "id": "disease:acute_gastritis:low",
+      "content": "胃壁被饥饿火焰灼穿"
+    },
+    {
+      "id": "disease:acute_gastritis:normal",
+      "content": "胃炎，未特指，不伴出血"
+    },
+    {
+      "id": "disease:acute_laryngitis:low",
+      "content": "失声诅咒侵蚀声带"
+    },
+    {
+      "id": "disease:acute_laryngitis:normal",
+      "content": "急性喉炎"
+    },
+    {
+      "id": "disease:acute_maxillary_sinusitis:low",
+      "content": "颅骨窦穴积满黑雾"
+    },
+    {
+      "id": "disease:acute_maxillary_sinusitis:normal",
+      "content": "急性上颌窦炎"
+    },
+    {
+      "id": "disease:acute_myocardial_infarction:low",
+      "content": "心脏被献祭般地撕裂"
+    },
+    {
+      "id": "disease:acute_myocardial_infarction:normal",
+      "content": "急性心肌梗死，未特指"
+    },
+    {
+      "id": "disease:acute_nasopharyngitis:low",
+      "content": "寒雾侵入肺腑"
+    },
+    {
+      "id": "disease:acute_nasopharyngitis:normal",
+      "content": "急性鼻咽炎（普通感冒）"
+    },
+    {
+      "id": "disease:acute_pharyngitis:low",
+      "content": "深渊低语灼烧咽喉"
+    },
+    {
+      "id": "disease:acute_pharyngitis:normal",
+      "content": "急性咽炎，未特指"
+    },
+    {
+      "id": "disease:acute_pyelonephritis:low",
+      "content": "肾脏成为黑色祭坛"
+    },
+    {
+      "id": "disease:acute_pyelonephritis:normal",
+      "content": "急性肾盂肾炎"
+    },
+    {
+      "id": "disease:acute_stress_disorder:low",
+      "content": "创伤在现实表面撕开裂口"
+    },
+    {
+      "id": "disease:acute_stress_disorder:normal",
+      "content": "急性应激障碍"
+    },
+    {
+      "id": "disease:acute_tonsillitis:low",
+      "content": "扁桃体上的邪印发炎"
+    },
+    {
+      "id": "disease:acute_tonsillitis:normal",
+      "content": "急性扁桃体炎，未特指"
+    },
+    {
+      "id": "disease:acute_upper_respiratory_infection:low",
+      "content": "诅咒之气侵蚀"
+    },
+    {
+      "id": "disease:acute_upper_respiratory_infection:normal",
+      "content": "急性上呼吸道感染，未特指"
+    },
+    {
+      "id": "disease:alzheimer_disease:low",
+      "content": "记忆正在被灰色蠕虫啃食"
+    },
+    {
+      "id": "disease:alzheimer_disease:normal",
+      "content": "阿尔茨海默病，未特指"
+    },
+    {
+      "id": "disease:angina_pectoris:low",
+      "content": "胸腔被铁环缓慢收紧"
+    },
+    {
+      "id": "disease:angina_pectoris:normal",
+      "content": "心绞痛，未特指"
+    },
+    {
+      "id": "disease:asthma_unspecified:low",
+      "content": "窒息之手扼住胸腔"
+    },
+    {
+      "id": "disease:asthma_unspecified:normal",
+      "content": "哮喘，未特指，未伴并发症"
+    },
+    {
+      "id": "disease:atherosclerotic_heart_disease:low",
+      "content": "血管内堆积着黑色祭石"
+    },
+    {
+      "id": "disease:atherosclerotic_heart_disease:normal",
+      "content": "动脉粥样硬化性心脏病"
+    },
+    {
+      "id": "disease:atopic_dermatitis:low",
+      "content": "皮肤下孵化着梦魇的卵"
+    },
+    {
+      "id": "disease:atopic_dermatitis:normal",
+      "content": "特应性皮炎，未特指"
+    },
+    {
+      "id": "disease:atrial_fibrillation:low",
+      "content": "心脏被混沌节拍接管"
+    },
+    {
+      "id": "disease:atrial_fibrillation:normal",
+      "content": "心房颤动，未特指"
+    },
+    {
+      "id": "disease:benign_positional_vertigo:low",
+      "content": "重力诅咒使世界翻转"
+    },
+    {
+      "id": "disease:benign_positional_vertigo:normal",
+      "content": "良性阵发性位置性眩晕，未特指耳"
+    },
+    {
+      "id": "disease:benign_prostatic_hyperplasia:low",
+      "content": "前列腺被无名肿物占据"
+    },
+    {
+      "id": "disease:benign_prostatic_hyperplasia:normal",
+      "content": "良性前列腺增生，无下尿路症状"
+    },
+    {
+      "id": "disease:candidiasis:low",
+      "content": "白色菌丝在体内建立巢穴"
+    },
+    {
+      "id": "disease:candidiasis:normal",
+      "content": "念珠菌病，未特指"
+    },
+    {
+      "id": "disease:carpal_tunnel_syndrome:low",
+      "content": "腕中囚禁着看不见的虫群"
+    },
+    {
+      "id": "disease:carpal_tunnel_syndrome:normal",
+      "content": "右上肢腕管综合征"
+    },
+    {
+      "id": "disease:cellulitis:low",
+      "content": "腐败的暗影正在皮下扩散"
+    },
+    {
+      "id": "disease:cellulitis:normal",
+      "content": "蜂窝织炎，部位未特指"
+    },
+    {
+      "id": "disease:cerebral_infarction:low",
+      "content": "思维之河被暗潮截断"
+    },
+    {
+      "id": "disease:cerebral_infarction:normal",
+      "content": "脑梗死，未特指"
+    },
+    {
+      "id": "disease:chest_pain:low",
+      "content": "胸腔传来来自墓穴的敲击"
+    },
+    {
+      "id": "disease:chest_pain:normal",
+      "content": "胸痛，未特指"
+    },
+    {
+      "id": "disease:cholelithiasis:low",
+      "content": "胆囊中孕育着黑色石卵"
+    },
+    {
+      "id": "disease:cholelithiasis:normal",
+      "content": "胆囊结石，无胆囊炎，无梗阻"
+    },
+    {
+      "id": "disease:chronic_kidney_disease:low",
+      "content": "肾脏正在被缓慢风化"
+    },
+    {
+      "id": "disease:chronic_kidney_disease:normal",
+      "content": "慢性肾脏病，未特指"
+    },
+    {
+      "id": "disease:chronic_obstructive_pulmonary_disease:low",
+      "content": "锈蚀的肺门正在闭合"
+    },
+    {
+      "id": "disease:chronic_obstructive_pulmonary_disease:normal",
+      "content": "慢性阻塞性肺疾病，未特指"
+    },
+    {
+      "id": "disease:chronic_sinusitis:low",
+      "content": "永不散去的颅内回声"
+    },
+    {
+      "id": "disease:chronic_sinusitis:normal",
+      "content": "慢性鼻窦炎，未特指"
+    },
+    {
+      "id": "disease:constipation:low",
+      "content": "体内的门被古老符文封死"
+    },
+    {
+      "id": "disease:constipation:normal",
+      "content": "便秘，未特指"
+    },
+    {
+      "id": "disease:contact_dermatitis:low",
+      "content": "接触过的地方留下诅咒烙印"
+    },
+    {
+      "id": "disease:contact_dermatitis:normal",
+      "content": "未特指的接触性皮炎"
+    },
+    {
+      "id": "disease:cough:low",
+      "content": "肺部在咳出黑色回声"
+    },
+    {
+      "id": "disease:cough:normal",
+      "content": "咳嗽，未特指"
+    },
+    {
+      "id": "disease:covid19:low",
+      "content": "冠状病毒化作黑色王冠"
+    },
+    {
+      "id": "disease:covid19:normal",
+      "content": "新型冠状病毒感染"
+    },
+    {
+      "id": "disease:epilepsy_unspecified:low",
+      "content": "灵魂被闪电反复劈开"
+    },
+    {
+      "id": "disease:epilepsy_unspecified:normal",
+      "content": "癫痫，未特指，不伴难治性癫痫持续状态"
+    },
+    {
+      "id": "disease:essential_hypertension:low",
+      "content": "血压被无形祭司操纵"
+    },
+    {
+      "id": "disease:essential_hypertension:normal",
+      "content": "原发性高血压"
+    },
+    {
+      "id": "disease:fatty_liver:low",
+      "content": "肝脏被油腻的阴影覆盖"
+    },
+    {
+      "id": "disease:fatty_liver:normal",
+      "content": "脂肪变性肝，未分类处"
+    },
+    {
+      "id": "disease:fever_unspecified:low",
+      "content": "额头燃烧着不属于太阳的火"
+    },
+    {
+      "id": "disease:fever_unspecified:normal",
+      "content": "发热，未特指"
+    },
+    {
+      "id": "disease:gastroesophageal_reflux:low",
+      "content": "胃酸是来自深渊的黑潮"
+    },
+    {
+      "id": "disease:gastroesophageal_reflux:normal",
+      "content": "胃食管反流病，无食管炎"
+    },
+    {
+      "id": "disease:generalized_anxiety:low",
+      "content": "无数细小的眼睛在脑内睁开"
+    },
+    {
+      "id": "disease:generalized_anxiety:normal",
+      "content": "广泛性焦虑障碍"
+    },
+    {
+      "id": "disease:gout:low",
+      "content": "关节中结晶出邪神的盐"
+    },
+    {
+      "id": "disease:gout:normal",
+      "content": "痛风，未特指"
+    },
+    {
+      "id": "disease:headache_unspecified:low",
+      "content": "颅骨内回荡着永恒钟声"
+    },
+    {
+      "id": "disease:headache_unspecified:normal",
+      "content": "头痛，未特指"
+    },
+    {
+      "id": "disease:heart_failure:low",
+      "content": "心室拒绝再为凡人跳动"
+    },
+    {
+      "id": "disease:heart_failure:normal",
+      "content": "心力衰竭，未特指"
+    },
+    {
+      "id": "disease:herpes_zoster:low",
+      "content": "皮肤上爬过一条燃烧的蛇"
+    },
+    {
+      "id": "disease:herpes_zoster:normal",
+      "content": "带状疱疹，未特指"
+    },
+    {
+      "id": "disease:hyperlipidemia:low",
+      "content": "血管漂浮着贪食的油之灵"
+    },
+    {
+      "id": "disease:hyperlipidemia:normal",
+      "content": "高脂血症，未特指"
+    },
+    {
+      "id": "disease:hypertensive_crisis:low",
+      "content": "血管中的钟声即将爆裂"
+    },
+    {
+      "id": "disease:hypertensive_crisis:normal",
+      "content": "高血压危象，未特指"
+    },
+    {
+      "id": "disease:hyperthyroidism:low",
+      "content": "体内燃起无法熄灭的星火"
+    },
+    {
+      "id": "disease:hyperthyroidism:normal",
+      "content": "甲状腺毒症，未特指"
+    },
+    {
+      "id": "disease:hypothyroidism:low",
+      "content": "时间在体内逐渐冻结"
+    },
+    {
+      "id": "disease:hypothyroidism:normal",
+      "content": "甲状腺功能减退，未特指"
+    },
+    {
+      "id": "disease:infectious_gastroenteritis:low",
+      "content": "腹中滋生来自疫界的虫群"
+    },
+    {
+      "id": "disease:infectious_gastroenteritis:normal",
+      "content": "感染性胃肠炎和结肠炎，未特指"
+    },
+    {
+      "id": "disease:influenza_unspecified:low",
+      "content": "群鸦般的热疫盘踞肺部"
+    },
+    {
+      "id": "disease:influenza_unspecified:normal",
+      "content": "流行性感冒伴其他呼吸道表现"
+    },
+    {
+      "id": "disease:insomnia_disorder:low",
+      "content": "梦魇拒绝让意识入睡"
+    },
+    {
+      "id": "disease:insomnia_disorder:normal",
+      "content": "原发性失眠"
+    },
+    {
+      "id": "disease:irritable_bowel_syndrome:low",
+      "content": "肠道被混沌的低语驱使"
+    },
+    {
+      "id": "disease:irritable_bowel_syndrome:normal",
+      "content": "肠易激综合征，无腹泻"
+    },
+    {
+      "id": "disease:kidney_stone:low",
+      "content": "肾中滚动着来自异界的碎石"
+    },
+    {
+      "id": "disease:kidney_stone:normal",
+      "content": "肾结石"
+    },
+    {
+      "id": "disease:low_back_pain:low",
+      "content": "脊柱被沉重的黑门压弯"
+    },
+    {
+      "id": "disease:low_back_pain:normal",
+      "content": "腰痛，未特指"
+    },
+    {
+      "id": "disease:major_depressive_disorder:low",
+      "content": "灵魂沉入没有光的井底"
+    },
+    {
+      "id": "disease:major_depressive_disorder:normal",
+      "content": "重性抑郁障碍，单次发作，未特指"
+    },
+    {
+      "id": "disease:migraine_unspecified:low",
+      "content": "邪神的独眼凝视颅内"
+    },
+    {
+      "id": "disease:migraine_unspecified:normal",
+      "content": "偏头痛，未特指，不伴持续状态"
+    },
+    {
+      "id": "disease:nausea_vomiting:low",
+      "content": "胃中翻涌着不洁的海"
+    },
+    {
+      "id": "disease:nausea_vomiting:normal",
+      "content": "恶心伴呕吐，未特指"
+    },
+    {
+      "id": "disease:neck_pain:low",
+      "content": "脖颈被看不见的绳索牵引"
+    },
+    {
+      "id": "disease:neck_pain:normal",
+      "content": "颈痛"
+    },
+    {
+      "id": "disease:noninfective_gastroenteritis:low",
+      "content": "肠壁渗出不属于此世的液体"
+    },
+    {
+      "id": "disease:noninfective_gastroenteritis:normal",
+      "content": "非感染性胃肠炎和结肠炎，未特指"
+    },
+    {
+      "id": "disease:obesity:low",
+      "content": "肉身被无底深渊拖拽"
+    },
+    {
+      "id": "disease:obesity:normal",
+      "content": "肥胖，未特指"
+    },
+    {
+      "id": "disease:osteoarthritis_knee:low",
+      "content": "膝中骨骼长出锈蚀尖牙"
+    },
+    {
+      "id": "disease:osteoarthritis_knee:normal",
+      "content": "膝关节骨关节炎，未特指"
+    },
+    {
+      "id": "disease:parkinsons_disease:low",
+      "content": "身体被衰朽木偶师操纵"
+    },
+    {
+      "id": "disease:parkinsons_disease:normal",
+      "content": "帕金森病，伴运动波动"
+    },
+    {
+      "id": "disease:peptic_ulcer_unspecified:low",
+      "content": "腹中张开一只无底之眼"
+    },
+    {
+      "id": "disease:peptic_ulcer_unspecified:normal",
+      "content": "消化性溃疡，未特指，无出血或穿孔"
+    },
+    {
+      "id": "disease:pneumonia_unspecified:low",
+      "content": "肺泡中滋长异界孢子"
+    },
+    {
+      "id": "disease:pneumonia_unspecified:normal",
+      "content": "肺炎，未特指"
+    },
+    {
+      "id": "disease:rheumatoid_arthritis:low",
+      "content": "关节被群聚的灰色虫灵啃咬"
+    },
+    {
+      "id": "disease:rheumatoid_arthritis:normal",
+      "content": "类风湿关节炎，未特指"
+    },
+    {
+      "id": "disease:sciatica:low",
+      "content": "黑色电流沿脊柱向下爬行"
+    },
+    {
+      "id": "disease:sciatica:normal",
+      "content": "坐骨神经痛，未特指"
+    },
+    {
+      "id": "disease:soft_tissue_contusion:low",
+      "content": "无形之手撕裂了皮下组织"
+    },
+    {
+      "id": "disease:soft_tissue_contusion:normal",
+      "content": "胸部挫伤，未特指，初次就诊"
+    },
+    {
+      "id": "disease:streptococcal_pharyngitis:low",
+      "content": "赤色菌群在喉中举行仪式"
+    },
+    {
+      "id": "disease:streptococcal_pharyngitis:normal",
+      "content": "链球菌性咽炎"
+    },
+    {
+      "id": "disease:tension_headache:low",
+      "content": "无形绞索缠绕意识"
+    },
+    {
+      "id": "disease:tension_headache:normal",
+      "content": "紧张型头痛，未特指"
+    },
+    {
+      "id": "disease:transient_cerebral_ischemic_attack:low",
+      "content": "意识短暂坠入无光深渊"
+    },
+    {
+      "id": "disease:transient_cerebral_ischemic_attack:normal",
+      "content": "短暂性脑缺血发作，未特指"
+    },
+    {
+      "id": "disease:type1_diabetes:low",
+      "content": "胰岛被饥饿之神吞噬"
+    },
+    {
+      "id": "disease:type1_diabetes:normal",
+      "content": "1型糖尿病，无并发症"
+    },
+    {
+      "id": "disease:type2_diabetes:low",
+      "content": "血液变成甜腻的献祭蜜浆"
+    },
+    {
+      "id": "disease:type2_diabetes:normal",
+      "content": "2型糖尿病，无并发症"
+    },
+    {
+      "id": "disease:urinary_tract_infection:low",
+      "content": "膀胱中回响着地下祷词"
+    },
+    {
+      "id": "disease:urinary_tract_infection:normal",
+      "content": "尿路感染，部位未特指"
+    },
+    {
+      "id": "disease:urticaria:low",
+      "content": "皮肤浮起一片红色符文"
+    },
+    {
+      "id": "disease:urticaria:normal",
+      "content": "荨麻疹，未特指"
+    },
+    {
+      "id": "disease:varicose_veins:low",
+      "content": "腿中爬满盘绕的血蛇"
+    },
+    {
+      "id": "disease:varicose_veins:normal",
+      "content": "下肢静脉曲张，未特指"
+    },
+    {
+      "id": "disease:vertigo:low",
+      "content": "世界正在围绕裂隙旋转"
+    },
+    {
+      "id": "disease:vertigo:normal",
+      "content": "头晕和眩晕"
+    },
+    {
+      "id": "disease:vitamin_d_deficiency:low",
+      "content": "太阳的碎片已从骨中消失"
+    },
+    {
+      "id": "disease:vitamin_d_deficiency:normal",
+      "content": "维生素D缺乏，未特指"
+    },
+    {
+      "id": "disease-category:icd_a:normal",
+      "content": "某些传染病和寄生虫病"
+    },
+    {
+      "id": "disease-category:icd_a:low",
+      "content": "被深渊侵蚀的某些传染病和寄生虫病"
+    },
+    {
+      "id": "disease-category:icd_e:normal",
+      "content": "内分泌、营养和代谢疾病"
+    },
+    {
+      "id": "disease-category:icd_e:low",
+      "content": "被深渊侵蚀的内分泌、营养和代谢疾病"
+    },
+    {
+      "id": "disease-category:icd_f:normal",
+      "content": "精神和行为障碍"
+    },
+    {
+      "id": "disease-category:icd_f:low",
+      "content": "被深渊侵蚀的精神和行为障碍"
+    },
+    {
+      "id": "disease-category:icd_g:normal",
+      "content": "神经系统疾病"
+    },
+    {
+      "id": "disease-category:icd_g:low",
+      "content": "被深渊侵蚀的神经系统疾病"
+    },
+    {
+      "id": "disease-category:icd_h:normal",
+      "content": "耳和乳突疾病"
+    },
+    {
+      "id": "disease-category:icd_h:low",
+      "content": "被深渊侵蚀的耳和乳突疾病"
+    },
+    {
+      "id": "disease-category:icd_i:normal",
+      "content": "循环系统疾病"
+    },
+    {
+      "id": "disease-category:icd_i:low",
+      "content": "被深渊侵蚀的循环系统疾病"
+    },
+    {
+      "id": "disease-category:icd_j:normal",
+      "content": "呼吸系统疾病"
+    },
+    {
+      "id": "disease-category:icd_j:low",
+      "content": "被深渊侵蚀的呼吸系统疾病"
+    },
+    {
+      "id": "disease-category:icd_k:normal",
+      "content": "消化系统疾病"
+    },
+    {
+      "id": "disease-category:icd_k:low",
+      "content": "被深渊侵蚀的消化系统疾病"
+    },
+    {
+      "id": "disease-category:icd_l:normal",
+      "content": "皮肤和皮下组织疾病"
+    },
+    {
+      "id": "disease-category:icd_l:low",
+      "content": "被深渊侵蚀的皮肤和皮下组织疾病"
+    },
+    {
+      "id": "disease-category:icd_m:normal",
+      "content": "肌肉骨骼系统和结缔组织疾病"
+    },
+    {
+      "id": "disease-category:icd_m:low",
+      "content": "被深渊侵蚀的肌肉骨骼系统和结缔组织疾病"
+    },
+    {
+      "id": "disease-category:icd_n:normal",
+      "content": "泌尿生殖系统疾病"
+    },
+    {
+      "id": "disease-category:icd_n:low",
+      "content": "被深渊侵蚀的泌尿生殖系统疾病"
+    },
+    {
+      "id": "disease-category:icd_r:normal",
+      "content": "症状、体征和异常的临床及实验室检查结果"
+    },
+    {
+      "id": "disease-category:icd_r:low",
+      "content": "被深渊侵蚀的症状、体征和异常的临床及实验室检查结果"
+    },
+    {
+      "id": "disease-category:icd_s:normal",
+      "content": "损伤、中毒和外因的某些其他后果"
+    },
+    {
+      "id": "disease-category:icd_s:low",
+      "content": "被深渊侵蚀的损伤、中毒和外因的某些其他后果"
+    },
+    {
+      "id": "disease-category:icd_u:normal",
+      "content": "用于特殊目的的编码"
+    },
+    {
+      "id": "disease-category:icd_u:low",
+      "content": "被深渊侵蚀的用于特殊目的的编码"
+    },
+    {
+      "id": "symptom_001",
+      "content": "乏力"
+    },
+    {
+      "id": "symptom_002",
+      "content": "食欲减退"
+    },
+    {
+      "id": "symptom_003",
+      "content": "恶心"
+    },
+    {
+      "id": "symptom_004",
+      "content": "呕吐"
+    },
+    {
+      "id": "symptom_005",
+      "content": "腹痛"
+    },
+    {
+      "id": "symptom_006",
+      "content": "腹泻"
+    },
+    {
+      "id": "symptom_007",
+      "content": "便秘"
+    },
+    {
+      "id": "symptom_008",
+      "content": "腹胀"
+    },
+    {
+      "id": "symptom_009",
+      "content": "反酸"
+    },
+    {
+      "id": "symptom_010",
+      "content": "烧心"
+    },
+    {
+      "id": "symptom_011",
+      "content": "吞咽困难"
+    },
+    {
+      "id": "symptom_012",
+      "content": "口干"
+    },
+    {
+      "id": "symptom_013",
+      "content": "口苦"
+    },
+    {
+      "id": "symptom_014",
+      "content": "口腔溃疡"
+    },
+    {
+      "id": "symptom_015",
+      "content": "牙龈出血"
+    },
+    {
+      "id": "symptom_016",
+      "content": "鼻塞"
+    },
+    {
+      "id": "symptom_017",
+      "content": "流鼻涕"
+    },
+    {
+      "id": "symptom_018",
+      "content": "打喷嚏"
+    },
+    {
+      "id": "symptom_019",
+      "content": "鼻痒"
+    },
+    {
+      "id": "symptom_020",
+      "content": "嗅觉减退"
+    },
+    {
+      "id": "symptom_021",
+      "content": "声音嘶哑"
+    },
+    {
+      "id": "symptom_022",
+      "content": "咽部异物感"
+    },
+    {
+      "id": "symptom_023",
+      "content": "咽干"
+    },
+    {
+      "id": "symptom_024",
+      "content": "咽痒"
+    },
+    {
+      "id": "symptom_025",
+      "content": "胸痛"
+    },
+    {
+      "id": "symptom_026",
+      "content": "胸闷"
+    },
+    {
+      "id": "symptom_027",
+      "content": "心悸"
+    },
+    {
+      "id": "symptom_028",
+      "content": "气短"
+    },
+    {
+      "id": "symptom_029",
+      "content": "呼吸困难"
+    },
+    {
+      "id": "symptom_030",
+      "content": "喘息"
+    },
+    {
+      "id": "symptom_031",
+      "content": "咳痰"
+    },
+    {
+      "id": "symptom_032",
+      "content": "咯血"
+    },
+    {
+      "id": "symptom_033",
+      "content": "夜间盗汗"
+    },
+    {
+      "id": "symptom_034",
+      "content": "寒战"
+    },
+    {
+      "id": "symptom_035",
+      "content": "体重下降"
+    },
+    {
+      "id": "symptom_036",
+      "content": "体重增加"
+    },
+    {
+      "id": "symptom_037",
+      "content": "水肿"
+    },
+    {
+      "id": "symptom_038",
+      "content": "面部水肿"
+    },
+    {
+      "id": "symptom_039",
+      "content": "下肢水肿"
+    },
+    {
+      "id": "symptom_040",
+      "content": "皮肤瘙痒"
+    },
+    {
+      "id": "symptom_041",
+      "content": "皮疹"
+    },
+    {
+      "id": "symptom_042",
+      "content": "红斑"
+    },
+    {
+      "id": "symptom_043",
+      "content": "丘疹"
+    },
+    {
+      "id": "symptom_044",
+      "content": "风团"
+    },
+    {
+      "id": "symptom_045",
+      "content": "水疱"
+    },
+    {
+      "id": "symptom_046",
+      "content": "脓疱"
+    },
+    {
+      "id": "symptom_047",
+      "content": "脱屑"
+    },
+    {
+      "id": "symptom_048",
+      "content": "皮肤干燥"
+    },
+    {
+      "id": "symptom_049",
+      "content": "皮肤脱色"
+    },
+    {
+      "id": "symptom_050",
+      "content": "色素沉着"
+    },
+    {
+      "id": "symptom_051",
+      "content": "伤口疼痛"
+    },
+    {
+      "id": "symptom_052",
+      "content": "伤口红肿"
+    },
+    {
+      "id": "symptom_053",
+      "content": "伤口渗液"
+    },
+    {
+      "id": "symptom_054",
+      "content": "眼睛干涩"
+    },
+    {
+      "id": "symptom_055",
+      "content": "眼睛发红"
+    },
+    {
+      "id": "symptom_056",
+      "content": "眼睛疼痛"
+    },
+    {
+      "id": "symptom_057",
+      "content": "畏光"
+    },
+    {
+      "id": "symptom_058",
+      "content": "流泪"
+    },
+    {
+      "id": "symptom_059",
+      "content": "视物模糊"
+    },
+    {
+      "id": "symptom_060",
+      "content": "视力下降"
+    },
+    {
+      "id": "symptom_061",
+      "content": "耳鸣"
+    },
+    {
+      "id": "symptom_062",
+      "content": "耳痛"
+    },
+    {
+      "id": "symptom_063",
+      "content": "听力下降"
+    },
+    {
+      "id": "symptom_064",
+      "content": "耳闷"
+    },
+    {
+      "id": "symptom_065",
+      "content": "鼻出血"
+    },
+    {
+      "id": "symptom_066",
+      "content": "牙痛"
+    },
+    {
+      "id": "symptom_067",
+      "content": "面部疼痛"
+    },
+    {
+      "id": "symptom_068",
+      "content": "颈部疼痛"
+    },
+    {
+      "id": "symptom_069",
+      "content": "颈部僵硬"
+    },
+    {
+      "id": "symptom_070",
+      "content": "肩痛"
+    },
+    {
+      "id": "symptom_071",
+      "content": "肩部活动受限"
+    },
+    {
+      "id": "symptom_072",
+      "content": "背部疼痛"
+    },
+    {
+      "id": "symptom_073",
+      "content": "腰部僵硬"
+    },
+    {
+      "id": "symptom_074",
+      "content": "关节疼痛"
+    },
+    {
+      "id": "symptom_075",
+      "content": "关节肿胀"
+    },
+    {
+      "id": "symptom_076",
+      "content": "关节僵硬"
+    },
+    {
+      "id": "symptom_077",
+      "content": "关节发热"
+    },
+    {
+      "id": "symptom_078",
+      "content": "肌肉酸痛"
+    },
+    {
+      "id": "symptom_079",
+      "content": "肌肉无力"
+    },
+    {
+      "id": "symptom_080",
+      "content": "肢体麻木"
+    },
+    {
+      "id": "symptom_081",
+      "content": "手脚发麻"
+    },
+    {
+      "id": "symptom_082",
+      "content": "针刺感"
+    },
+    {
+      "id": "symptom_083",
+      "content": "烧灼感"
+    },
+    {
+      "id": "symptom_084",
+      "content": "触觉减退"
+    },
+    {
+      "id": "symptom_085",
+      "content": "步态不稳"
+    },
+    {
+      "id": "symptom_086",
+      "content": "协调障碍"
+    },
+    {
+      "id": "symptom_087",
+      "content": "震颤"
+    },
+    {
+      "id": "symptom_088",
+      "content": "抽搐"
+    },
+    {
+      "id": "symptom_089",
+      "content": "晕厥"
+    },
+    {
+      "id": "symptom_090",
+      "content": "意识模糊"
+    },
+    {
+      "id": "symptom_091",
+      "content": "记忆力减退"
+    },
+    {
+      "id": "symptom_092",
+      "content": "注意力不集中"
+    },
+    {
+      "id": "symptom_093",
+      "content": "言语含糊"
+    },
+    {
+      "id": "symptom_094",
+      "content": "吞咽障碍"
+    },
+    {
+      "id": "symptom_095",
+      "content": "面部麻木"
+    },
+    {
+      "id": "symptom_096",
+      "content": "单侧无力"
+    },
+    {
+      "id": "symptom_097",
+      "content": "手臂无力"
+    },
+    {
+      "id": "symptom_098",
+      "content": "腿部无力"
+    },
+    {
+      "id": "symptom_099",
+      "content": "尿频"
+    },
+    {
+      "id": "symptom_100",
+      "content": "尿急"
+    },
+    {
+      "id": "symptom_101",
+      "content": "尿痛"
+    },
+    {
+      "id": "symptom_102",
+      "content": "排尿困难"
+    },
+    {
+      "id": "symptom_103",
+      "content": "尿潴留"
+    },
+    {
+      "id": "symptom_104",
+      "content": "血尿"
+    },
+    {
+      "id": "symptom_105",
+      "content": "夜尿增多"
+    },
+    {
+      "id": "symptom_106",
+      "content": "尿失禁"
+    },
+    {
+      "id": "symptom_107",
+      "content": "腰腹绞痛"
+    },
+    {
+      "id": "symptom_108",
+      "content": "阴囊疼痛"
+    },
+    {
+      "id": "symptom_109",
+      "content": "月经不规律"
+    },
+    {
+      "id": "symptom_110",
+      "content": "月经过多"
+    },
+    {
+      "id": "symptom_111",
+      "content": "月经量少"
+    },
+    {
+      "id": "symptom_112",
+      "content": "痛经"
+    },
+    {
+      "id": "symptom_113",
+      "content": "经间期出血"
+    },
+    {
+      "id": "symptom_114",
+      "content": "白带增多"
+    },
+    {
+      "id": "symptom_115",
+      "content": "外阴瘙痒"
+    },
+    {
+      "id": "symptom_116",
+      "content": "性欲减退"
+    },
+    {
+      "id": "symptom_117",
+      "content": "勃起困难"
+    },
+    {
+      "id": "symptom_118",
+      "content": "乳房疼痛"
+    },
+    {
+      "id": "symptom_120",
+      "content": "潮热"
+    },
+    {
+      "id": "symptom_121",
+      "content": "盗汗"
+    },
+    {
+      "id": "symptom_122",
+      "content": "怕冷"
+    },
+    {
+      "id": "symptom_123",
+      "content": "怕热"
+    },
+    {
+      "id": "symptom_124",
+      "content": "手抖"
+    },
+    {
+      "id": "symptom_125",
+      "content": "多汗"
+    },
+    {
+      "id": "symptom_127",
+      "content": "毛发脱落"
+    },
+    {
+      "id": "symptom_128",
+      "content": "毛发增多"
+    },
+    {
+      "id": "symptom_129",
+      "content": "痤疮"
+    },
+    {
+      "id": "symptom_130",
+      "content": "脱发"
+    },
+    {
+      "id": "symptom_131",
+      "content": "伤口愈合慢"
+    },
+    {
+      "id": "symptom_132",
+      "content": "口渴"
+    },
+    {
+      "id": "symptom_133",
+      "content": "多饮"
+    },
+    {
+      "id": "symptom_134",
+      "content": "多尿"
+    },
+    {
+      "id": "symptom_136",
+      "content": "视物重影"
+    },
+    {
+      "id": "symptom_137",
+      "content": "眼球突出"
+    },
+    {
+      "id": "symptom_138",
+      "content": "颈部肿大"
+    },
+    {
+      "id": "symptom_139",
+      "content": "声音低沉"
+    },
+    {
+      "id": "symptom_140",
+      "content": "反应迟钝"
+    },
+    {
+      "id": "symptom_141",
+      "content": "情绪低落"
+    },
+    {
+      "id": "symptom_142",
+      "content": "兴趣减退"
+    },
+    {
+      "id": "symptom_143",
+      "content": "自责感"
+    },
+    {
+      "id": "symptom_144",
+      "content": "紧张不安"
+    },
+    {
+      "id": "symptom_145",
+      "content": "坐立不安"
+    },
+    {
+      "id": "symptom_146",
+      "content": "易怒"
+    },
+    {
+      "id": "symptom_147",
+      "content": "情绪波动"
+    },
+    {
+      "id": "symptom_148",
+      "content": "惊恐发作"
+    },
+    {
+      "id": "symptom_149",
+      "content": "强迫思维"
+    },
+    {
+      "id": "symptom_150",
+      "content": "睡眠过多"
+    },
+    {
+      "id": "symptom_151",
+      "content": "早醒"
+    },
+    {
+      "id": "symptom_152",
+      "content": "噩梦"
+    },
+    {
+      "id": "symptom_153",
+      "content": "注意力涣散"
+    },
+    {
+      "id": "symptom_154",
+      "content": "疲劳感"
+    },
+    {
+      "id": "symptom_155",
+      "content": "晨僵"
+    },
+    {
+      "id": "symptom_156",
+      "content": "活动后疼痛"
+    },
+    {
+      "id": "symptom_157",
+      "content": "静息痛"
+    },
+    {
+      "id": "symptom_158",
+      "content": "夜间疼痛"
+    },
+    {
+      "id": "symptom_159",
+      "content": "间歇性跛行"
+    },
+    {
+      "id": "symptom_160",
+      "content": "肢端发冷"
+    },
+    {
+      "id": "symptom_162",
+      "content": "皮下结节"
+    },
+    {
+      "id": "symptom_163",
+      "content": "淋巴结肿大"
+    },
+    {
+      "id": "symptom_164",
+      "content": "脖子肿块"
+    },
+    {
+      "id": "symptom_165",
+      "content": "腋窝肿块"
+    },
+    {
+      "id": "symptom_166",
+      "content": "腹股沟肿块"
+    },
+    {
+      "id": "symptom_167",
+      "content": "肝区不适"
+    },
+    {
+      "id": "symptom_168",
+      "content": "右上腹痛"
+    },
+    {
+      "id": "symptom_169",
+      "content": "左上腹痛"
+    },
+    {
+      "id": "symptom_170",
+      "content": "黄疸"
+    },
+    {
+      "id": "symptom_171",
+      "content": "眼白发黄"
+    },
+    {
+      "id": "symptom_172",
+      "content": "黑便"
+    },
+    {
+      "id": "symptom_173",
+      "content": "便血"
+    },
+    {
+      "id": "symptom_174",
+      "content": "黏液便"
+    },
+    {
+      "id": "symptom_175",
+      "content": "里急后重"
+    },
+    {
+      "id": "symptom_176",
+      "content": "排便不尽"
+    },
+    {
+      "id": "symptom_177",
+      "content": "肛门疼痛"
+    },
+    {
+      "id": "symptom_178",
+      "content": "肛门瘙痒"
+    },
+    {
+      "id": "symptom_179",
+      "content": "肛门出血"
+    },
+    {
+      "id": "symptom_180",
+      "content": "皮肤苍白"
+    },
+    {
+      "id": "symptom_181",
+      "content": "口唇发绀"
+    },
+    {
+      "id": "symptom_182",
+      "content": "指甲脆裂"
+    },
+    {
+      "id": "symptom_183",
+      "content": "头发干枯"
+    },
+    {
+      "id": "symptom_184",
+      "content": "骨痛"
+    },
+    {
+      "id": "symptom_185",
+      "content": "骨折后疼痛"
+    },
+    {
+      "id": "symptom_186",
+      "content": "活动受限"
+    },
+    {
+      "id": "symptom_187",
+      "content": "关节弹响"
+    },
+    {
+      "id": "symptom_188",
+      "content": "足跟痛"
+    },
+    {
+      "id": "symptom_189",
+      "content": "足底痛"
+    },
+    {
+      "id": "symptom_190",
+      "content": "手腕痛"
+    },
+    {
+      "id": "symptom_191",
+      "content": "手指僵硬"
+    },
+    {
+      "id": "symptom_192",
+      "content": "手指变形"
+    },
+    {
+      "id": "symptom_193",
+      "content": "小腿抽筋"
+    },
+    {
+      "id": "symptom_194",
+      "content": "腿部沉重"
+    },
+    {
+      "id": "symptom_195",
+      "content": "静脉曲张"
+    },
+    {
+      "id": "symptom_196",
+      "content": "伤口感染"
+    },
+    {
+      "id": "symptom_197",
+      "content": "发冷"
+    },
+    {
+      "id": "symptom_198",
+      "content": "虚弱感"
+    },
+    {
+      "id": "symptom_199",
+      "content": "脱水感"
+    },
+    {
+      "id": "symptom_200",
+      "content": "站立头晕"
+    },
+    {
+      "id": "med_paracetamol",
+      "content": "对乙酰氨基酚"
+    },
+    {
+      "id": "med_cough_syrup",
+      "content": "止咳糖浆"
+    },
+    {
+      "id": "med_001",
+      "content": "布洛芬"
+    },
+    {
+      "id": "med_002",
+      "content": "阿司匹林"
+    },
+    {
+      "id": "med_003",
+      "content": "双氯芬酸钠"
+    },
+    {
+      "id": "med_004",
+      "content": "塞来昔布"
+    },
+    {
+      "id": "med_005",
+      "content": "吲哚美辛"
+    },
+    {
+      "id": "med_006",
+      "content": "萘普生"
+    },
+    {
+      "id": "med_007",
+      "content": "洛索洛芬钠"
+    },
+    {
+      "id": "med_008",
+      "content": "美洛昔康"
+    },
+    {
+      "id": "med_009",
+      "content": "曲马多"
+    },
+    {
+      "id": "med_010",
+      "content": "盐酸氨酚曲马多"
+    },
+    {
+      "id": "med_011",
+      "content": "复方氨酚烷胺"
+    },
+    {
+      "id": "med_012",
+      "content": "氯雷他定"
+    },
+    {
+      "id": "med_013",
+      "content": "西替利嗪"
+    },
+    {
+      "id": "med_014",
+      "content": "地氯雷他定"
+    },
+    {
+      "id": "med_015",
+      "content": "依巴斯汀"
+    },
+    {
+      "id": "med_016",
+      "content": "孟鲁司特钠"
+    },
+    {
+      "id": "med_017",
+      "content": "氨溴索"
+    },
+    {
+      "id": "med_018",
+      "content": "乙酰半胱氨酸"
+    },
+    {
+      "id": "med_019",
+      "content": "盐酸氨溴索"
+    },
+    {
+      "id": "med_020",
+      "content": "右美沙芬"
+    },
+    {
+      "id": "med_021",
+      "content": "喷托维林"
+    },
+    {
+      "id": "med_022",
+      "content": "多索茶碱"
+    },
+    {
+      "id": "med_023",
+      "content": "沙丁胺醇"
+    },
+    {
+      "id": "med_024",
+      "content": "布地奈德"
+    },
+    {
+      "id": "med_025",
+      "content": "异丙托溴铵"
+    },
+    {
+      "id": "med_026",
+      "content": "糠酸莫米松鼻喷雾剂"
+    },
+    {
+      "id": "med_027",
+      "content": "丙酸氟替卡松"
+    },
+    {
+      "id": "med_028",
+      "content": "羟甲唑啉"
+    },
+    {
+      "id": "med_029",
+      "content": "生理性海水鼻喷雾"
+    },
+    {
+      "id": "med_030",
+      "content": "阿莫西林"
+    },
+    {
+      "id": "med_031",
+      "content": "阿莫西林克拉维酸钾"
+    },
+    {
+      "id": "med_032",
+      "content": "头孢氨苄"
+    },
+    {
+      "id": "med_033",
+      "content": "头孢呋辛酯"
+    },
+    {
+      "id": "med_034",
+      "content": "头孢克洛"
+    },
+    {
+      "id": "med_035",
+      "content": "头孢地尼"
+    },
+    {
+      "id": "med_036",
+      "content": "头孢曲松"
+    },
+    {
+      "id": "med_037",
+      "content": "阿奇霉素"
+    },
+    {
+      "id": "med_038",
+      "content": "克拉霉素"
+    },
+    {
+      "id": "med_039",
+      "content": "罗红霉素"
+    },
+    {
+      "id": "med_040",
+      "content": "左氧氟沙星"
+    },
+    {
+      "id": "med_041",
+      "content": "莫西沙星"
+    },
+    {
+      "id": "med_042",
+      "content": "环丙沙星"
+    },
+    {
+      "id": "med_043",
+      "content": "甲硝唑"
+    },
+    {
+      "id": "med_044",
+      "content": "替硝唑"
+    },
+    {
+      "id": "med_045",
+      "content": "呋喃妥因"
+    },
+    {
+      "id": "med_046",
+      "content": "磷霉素氨丁三醇"
+    },
+    {
+      "id": "med_047",
+      "content": "阿昔洛韦"
+    },
+    {
+      "id": "med_048",
+      "content": "伐昔洛韦"
+    },
+    {
+      "id": "med_049",
+      "content": "泛昔洛韦"
+    },
+    {
+      "id": "med_050",
+      "content": "奥司他韦"
+    },
+    {
+      "id": "med_051",
+      "content": "利巴韦林"
+    },
+    {
+      "id": "med_052",
+      "content": "恩替卡韦"
+    },
+    {
+      "id": "med_053",
+      "content": "氟康唑"
+    },
+    {
+      "id": "med_054",
+      "content": "伊曲康唑"
+    },
+    {
+      "id": "med_055",
+      "content": "特比萘芬"
+    },
+    {
+      "id": "med_056",
+      "content": "硝酸咪康唑"
+    },
+    {
+      "id": "med_057",
+      "content": "克霉唑"
+    },
+    {
+      "id": "med_058",
+      "content": "制霉菌素"
+    },
+    {
+      "id": "med_059",
+      "content": "蒙脱石散"
+    },
+    {
+      "id": "med_060",
+      "content": "口服补液盐"
+    },
+    {
+      "id": "med_061",
+      "content": "双歧杆菌三联活菌"
+    },
+    {
+      "id": "med_062",
+      "content": "枯草杆菌二联活菌"
+    },
+    {
+      "id": "med_063",
+      "content": "乳果糖"
+    },
+    {
+      "id": "med_064",
+      "content": "聚乙二醇电解质"
+    },
+    {
+      "id": "med_065",
+      "content": "开塞露"
+    },
+    {
+      "id": "med_066",
+      "content": "洛哌丁胺"
+    },
+    {
+      "id": "med_067",
+      "content": "复方黄连素"
+    },
+    {
+      "id": "med_068",
+      "content": "奥美拉唑"
+    },
+    {
+      "id": "med_069",
+      "content": "埃索美拉唑"
+    },
+    {
+      "id": "med_070",
+      "content": "泮托拉唑"
+    },
+    {
+      "id": "med_071",
+      "content": "雷贝拉唑"
+    },
+    {
+      "id": "med_072",
+      "content": "法莫替丁"
+    },
+    {
+      "id": "med_073",
+      "content": "铝碳酸镁"
+    },
+    {
+      "id": "med_074",
+      "content": "硫糖铝"
+    },
+    {
+      "id": "med_075",
+      "content": "枸橼酸铋钾"
+    },
+    {
+      "id": "med_076",
+      "content": "多潘立酮"
+    },
+    {
+      "id": "med_077",
+      "content": "莫沙必利"
+    },
+    {
+      "id": "med_078",
+      "content": "曲美布汀"
+    },
+    {
+      "id": "med_079",
+      "content": "消旋山莨菪碱"
+    },
+    {
+      "id": "med_080",
+      "content": "硝酸甘油"
+    },
+    {
+      "id": "med_081",
+      "content": "速效救心丸"
+    },
+    {
+      "id": "med_082",
+      "content": "美托洛尔"
+    },
+    {
+      "id": "med_083",
+      "content": "比索洛尔"
+    },
+    {
+      "id": "med_084",
+      "content": "氨氯地平"
+    },
+    {
+      "id": "med_085",
+      "content": "硝苯地平"
+    },
+    {
+      "id": "med_086",
+      "content": "非洛地平"
+    },
+    {
+      "id": "med_087",
+      "content": "缬沙坦"
+    },
+    {
+      "id": "med_088",
+      "content": "氯沙坦"
+    },
+    {
+      "id": "med_089",
+      "content": "厄贝沙坦"
+    },
+    {
+      "id": "med_090",
+      "content": "贝那普利"
+    },
+    {
+      "id": "med_091",
+      "content": "依那普利"
+    },
+    {
+      "id": "med_092",
+      "content": "卡托普利"
+    },
+    {
+      "id": "med_093",
+      "content": "氢氯噻嗪"
+    },
+    {
+      "id": "med_094",
+      "content": "呋塞米"
+    },
+    {
+      "id": "med_095",
+      "content": "螺内酯"
+    },
+    {
+      "id": "med_096",
+      "content": "阿托伐他汀"
+    },
+    {
+      "id": "med_097",
+      "content": "瑞舒伐他汀"
+    },
+    {
+      "id": "med_098",
+      "content": "辛伐他汀"
+    },
+    {
+      "id": "med_099",
+      "content": "非诺贝特"
+    },
+    {
+      "id": "med_100",
+      "content": "二甲双胍"
+    },
+    {
+      "id": "med_101",
+      "content": "格列美脲"
+    },
+    {
+      "id": "med_102",
+      "content": "格列齐特"
+    },
+    {
+      "id": "med_103",
+      "content": "阿卡波糖"
+    },
+    {
+      "id": "med_104",
+      "content": "西格列汀"
+    },
+    {
+      "id": "med_105",
+      "content": "达格列净"
+    },
+    {
+      "id": "med_106",
+      "content": "胰岛素注射液"
+    },
+    {
+      "id": "med_107",
+      "content": "左甲状腺素钠"
+    },
+    {
+      "id": "med_108",
+      "content": "甲巯咪唑"
+    },
+    {
+      "id": "med_109",
+      "content": "丙硫氧嘧啶"
+    },
+    {
+      "id": "med_110",
+      "content": "泼尼松"
+    },
+    {
+      "id": "med_111",
+      "content": "甲泼尼龙"
+    },
+    {
+      "id": "med_112",
+      "content": "地塞米松"
+    },
+    {
+      "id": "med_113",
+      "content": "氯喹"
+    },
+    {
+      "id": "med_114",
+      "content": "羟氯喹"
+    },
+    {
+      "id": "med_115",
+      "content": "甲氨蝶呤"
+    },
+    {
+      "id": "med_116",
+      "content": "别嘌醇"
+    },
+    {
+      "id": "med_117",
+      "content": "秋水仙碱"
+    },
+    {
+      "id": "med_118",
+      "content": "阿仑膦酸钠"
+    },
+    {
+      "id": "med_119",
+      "content": "碳酸钙D3"
+    },
+    {
+      "id": "med_120",
+      "content": "骨化三醇"
+    },
+    {
+      "id": "med_121",
+      "content": "维生素D滴剂"
+    },
+    {
+      "id": "med_122",
+      "content": "维生素B1"
+    },
+    {
+      "id": "med_123",
+      "content": "维生素B12"
+    },
+    {
+      "id": "med_124",
+      "content": "叶酸"
+    },
+    {
+      "id": "med_125",
+      "content": "硫酸亚铁"
+    },
+    {
+      "id": "med_126",
+      "content": "复方硫酸亚铁"
+    },
+    {
+      "id": "med_127",
+      "content": "琥珀酸亚铁"
+    },
+    {
+      "id": "med_128",
+      "content": "氯化钾"
+    },
+    {
+      "id": "med_129",
+      "content": "氯己定"
+    },
+    {
+      "id": "med_130",
+      "content": "碘伏"
+    },
+    {
+      "id": "med_131",
+      "content": "莫匹罗星"
+    },
+    {
+      "id": "med_132",
+      "content": "夫西地酸"
+    },
+    {
+      "id": "med_133",
+      "content": "炉甘石洗剂"
+    },
+    {
+      "id": "med_134",
+      "content": "糠酸莫米松乳膏"
+    },
+    {
+      "id": "med_135",
+      "content": "丁酸氢化可的松"
+    },
+    {
+      "id": "med_136",
+      "content": "尿素乳膏"
+    },
+    {
+      "id": "med_137",
+      "content": "维A酸乳膏"
+    },
+    {
+      "id": "med_138",
+      "content": "过氧化苯甲酰"
+    },
+    {
+      "id": "med_139",
+      "content": "他克莫司软膏"
+    },
+    {
+      "id": "med_140",
+      "content": "玻璃酸钠滴眼液"
+    },
+    {
+      "id": "med_141",
+      "content": "妥布霉素滴眼液"
+    },
+    {
+      "id": "med_142",
+      "content": "氧氟沙星滴眼液"
+    },
+    {
+      "id": "med_143",
+      "content": "金霉素眼膏"
+    },
+    {
+      "id": "med_144",
+      "content": "人工泪液"
+    },
+    {
+      "id": "med_145",
+      "content": "盐酸氟桂利嗪"
+    },
+    {
+      "id": "med_146",
+      "content": "倍他司汀"
+    },
+    {
+      "id": "med_147",
+      "content": "加巴喷丁"
+    },
+    {
+      "id": "med_148",
+      "content": "普瑞巴林"
+    },
+    {
+      "id": "med_149",
+      "content": "舍曲林"
+    },
+    {
+      "id": "med_150",
+      "content": "帕罗西汀"
+    },
+    {
+      "id": "medicine-category:analgesic",
+      "content": "解热镇痛药"
+    },
+    {
+      "id": "medicine-category:antiallergic",
+      "content": "抗过敏药"
+    },
+    {
+      "id": "medicine-category:respiratory",
+      "content": "呼吸系统用药"
+    },
+    {
+      "id": "medicine-category:antibacterial",
+      "content": "抗菌药"
+    },
+    {
+      "id": "medicine-category:antiviral",
+      "content": "抗病毒药"
+    },
+    {
+      "id": "medicine-category:antifungal",
+      "content": "抗真菌药"
+    },
+    {
+      "id": "medicine-category:gastrointestinal",
+      "content": "消化系统用药"
+    },
+    {
+      "id": "medicine-category:cardiovascular",
+      "content": "心血管用药"
+    },
+    {
+      "id": "medicine-category:lipid_lowering",
+      "content": "调脂药"
+    },
+    {
+      "id": "medicine-category:antidiabetic",
+      "content": "降糖药"
+    },
+    {
+      "id": "medicine-category:thyroid",
+      "content": "甲状腺用药"
+    },
+    {
+      "id": "medicine-category:steroid_immunomodulator",
+      "content": "糖皮质激素与免疫调节药"
+    },
+    {
+      "id": "medicine-category:bone_gout",
+      "content": "骨代谢与痛风用药"
+    },
+    {
+      "id": "medicine-category:dermatology",
+      "content": "皮肤科用药"
+    },
+    {
+      "id": "medicine-category:ophthalmology",
+      "content": "眼科用药"
+    },
+    {
+      "id": "medicine-category:neurology",
+      "content": "神经系统用药"
+    },
+    {
+      "id": "medicine-category:psychiatry",
+      "content": "精神科用药"
+    },
+    {
+      "id": "medicine-category:supplement",
+      "content": "维生素与电解质补充剂"
+    },
+    {
+      "id": "disease:otitis_media:normal",
+      "content": "中耳炎，未特指"
+    },
+    {
+      "id": "disease:otitis_media:low",
+      "content": "耳内回响着深海的炎潮"
+    },
+    {
+      "id": "disease:sensorineural_hearing_loss:normal",
+      "content": "感音神经性听力损失，未特指"
+    },
+    {
+      "id": "disease:sensorineural_hearing_loss:low",
+      "content": "声音正从世界边缘逐渐剥落"
+    },
+    {
+      "id": "disease:dry_eye:normal",
+      "content": "双眼干眼症"
+    },
+    {
+      "id": "disease:dry_eye:low",
+      "content": "泪膜变薄，眼表像久未落雨的土地"
+    },
+    {
+      "id": "disease:bacterial_conjunctivitis:normal",
+      "content": "结膜炎，未特指"
+    },
+    {
+      "id": "disease:bacterial_conjunctivitis:low",
+      "content": "结膜的红与痛提示眼表正在发炎"
+    },
+    {
+      "id": "disease:diplopia:normal",
+      "content": "复视"
+    },
+    {
+      "id": "disease:diplopia:low",
+      "content": "两重影像提示眼球运动或视觉通路需要检查"
+    },
+    {
+      "id": "disease:allergic_rhinitis:normal",
+      "content": "变应性鼻炎，未特指"
+    },
+    {
+      "id": "disease:allergic_rhinitis:low",
+      "content": "鼻腔被无形花粉反复灼烧"
+    },
+    {
+      "id": "disease:bronchiectasis:normal",
+      "content": "支气管扩张，未特指"
+    },
+    {
+      "id": "disease:bronchiectasis:low",
+      "content": "扩张的气道积存着难以咳尽的暗潮"
+    },
+    {
+      "id": "disease:chronic_hepatitis_b:normal",
+      "content": "慢性乙型病毒性肝炎"
+    },
+    {
+      "id": "disease:chronic_hepatitis_b:low",
+      "content": "肝脏藏着一枚持续复制的病毒印记"
+    },
+    {
+      "id": "disease:hepatitis_c:normal",
+      "content": "慢性丙型病毒性肝炎"
+    },
+    {
+      "id": "disease:hepatitis_c:low",
+      "content": "血液深处潜伏着慢性肝炎的影子"
+    },
+    {
+      "id": "disease:thiamine_deficiency:normal",
+      "content": "硫胺素缺乏，未特指"
+    },
+    {
+      "id": "disease:thiamine_deficiency:low",
+      "content": "身体的能量炉缺少维生素B1的火种"
+    },
+    {
+      "id": "disease:vitamin_b12_deficiency_anemia:normal",
+      "content": "维生素B12缺乏性贫血"
+    },
+    {
+      "id": "disease:vitamin_b12_deficiency_anemia:low",
+      "content": "造血所需的B12在血液里留下空缺"
+    },
+    {
+      "id": "disease:folate_deficiency_anemia:normal",
+      "content": "叶酸缺乏性贫血"
+    },
+    {
+      "id": "disease:folate_deficiency_anemia:low",
+      "content": "细胞更新因叶酸不足而变得迟缓"
+    },
+    {
+      "id": "disease:polycystic_ovary_syndrome:normal",
+      "content": "多囊卵巢综合征"
+    },
+    {
+      "id": "disease:polycystic_ovary_syndrome:low",
+      "content": "排卵和雄激素变化可能共同影响月经与皮肤"
+    },
+    {
+      "id": "disease:iron_deficiency_anemia:normal",
+      "content": "缺铁性贫血，未特指"
+    },
+    {
+      "id": "disease:iron_deficiency_anemia:low",
+      "content": "铁不足会影响血红蛋白生成并造成苍白和乏力"
+    },
+    {
+      "id": "disease:gingivitis:normal",
+      "content": "慢性牙龈炎，未特指"
+    },
+    {
+      "id": "disease:gingivitis:low",
+      "content": "牙龈在刷牙和进食时容易渗血"
+    },
+    {
+      "id": "disease:ulcerative_colitis:normal",
+      "content": "溃疡性结肠炎，未伴并发症"
+    },
+    {
+      "id": "disease:ulcerative_colitis:low",
+      "content": "结肠黏膜炎症可导致血便、黏液便和里急后重"
+    },
+    {
+      "id": "disease:hemorrhoids:normal",
+      "content": "痔，未特指"
+    },
+    {
+      "id": "disease:hemorrhoids:low",
+      "content": "肛门出血、瘙痒或疼痛常见于痔，但仍需排除其他病因"
+    },
+    {
+      "id": "disease:acne_vulgaris:normal",
+      "content": "痤疮，未特指"
+    },
+    {
+      "id": "disease:acne_vulgaris:low",
+      "content": "毛囊皮脂腺单位的堵塞和炎症形成痤疮"
+    },
+    {
+      "id": "disease:vitiligo:normal",
+      "content": "白癜风"
+    },
+    {
+      "id": "disease:vitiligo:low",
+      "content": "局部黑色素细胞减少会形成边界清楚的脱色斑"
+    },
+    {
+      "id": "disease:postinflammatory_hyperpigmentation:normal",
+      "content": "炎症后色素沉着"
+    },
+    {
+      "id": "disease:postinflammatory_hyperpigmentation:low",
+      "content": "皮肤炎症消退后可能留下色素加深"
+    },
+    {
+      "id": "disease:alopecia_areata:normal",
+      "content": "斑秃，未特指"
+    },
+    {
+      "id": "disease:alopecia_areata:low",
+      "content": "免疫相关的毛囊改变可造成斑片状脱发"
+    },
+    {
+      "id": "disease:hirsutism:normal",
+      "content": "多毛症"
+    },
+    {
+      "id": "disease:hirsutism:low",
+      "content": "雄激素作用增强可使体毛分布发生改变"
+    },
+    {
+      "id": "disease:panic_disorder:normal",
+      "content": "惊恐障碍"
+    },
+    {
+      "id": "disease:panic_disorder:low",
+      "content": "突发强烈恐惧伴自主神经症状需要与躯体疾病鉴别"
+    },
+    {
+      "id": "disease:obsessive_compulsive_disorder:normal",
+      "content": "强迫症，未特指"
+    },
+    {
+      "id": "disease:obsessive_compulsive_disorder:low",
+      "content": "反复侵入的想法和难以抵抗的仪式行为会造成困扰"
+    },
+    {
+      "id": "disease:urinary_incontinence:normal",
+      "content": "其他尿失禁"
+    },
+    {
+      "id": "disease:urinary_incontinence:low",
+      "content": "膀胱控制下降会造成不自主漏尿"
+    },
+    {
+      "id": "disease:epididymitis:normal",
+      "content": "附睾炎"
+    },
+    {
+      "id": "disease:epididymitis:low",
+      "content": "阴囊疼痛可能来自附睾的感染性炎症"
+    },
+    {
+      "id": "disease:dysmenorrhea:normal",
+      "content": "痛经，未特指"
+    },
+    {
+      "id": "disease:dysmenorrhea:low",
+      "content": "月经期前列腺素变化可引起痉挛性疼痛"
+    },
+    {
+      "id": "disease:menopause:normal",
+      "content": "绝经期和围绝经期疾病"
+    },
+    {
+      "id": "disease:menopause:low",
+      "content": "激素波动可带来潮热、盗汗和性欲变化"
+    },
+    {
+      "id": "disease:erectile_dysfunction:normal",
+      "content": "勃起功能障碍，未特指"
+    },
+    {
+      "id": "disease:erectile_dysfunction:low",
+      "content": "血管、神经、药物及心理因素都可能参与勃起困难"
+    },
+    {
+      "id": "disease:mastalgia:normal",
+      "content": "乳房痛"
+    },
+    {
+      "id": "disease:mastalgia:low",
+      "content": "乳房疼痛需要结合周期、触诊和影像检查判断"
+    },
+    {
+      "id": "disease:shoulder_impingement:normal",
+      "content": "肩峰撞击综合征，未特指"
+    },
+    {
+      "id": "disease:shoulder_impingement:low",
+      "content": "抬臂时肩峰下空间反复受到刺激"
+    },
+    {
+      "id": "disease:plantar_fasciitis:normal",
+      "content": "足底筋膜炎"
+    },
+    {
+      "id": "disease:plantar_fasciitis:low",
+      "content": "足底筋膜负荷过大常引起晨起或行走时足跟痛"
+    },
+    {
+      "id": "disease:lymphadenopathy:normal",
+      "content": "淋巴结肿大"
+    },
+    {
+      "id": "disease:lymphadenopathy:low",
+      "content": "颈部、腋窝或腹股沟肿块可能是淋巴结反应，需寻找原因"
+    },
+    {
+      "id": "disease:splenomegaly:normal",
+      "content": "脾肿大"
+    },
+    {
+      "id": "disease:splenomegaly:low",
+      "content": "左上腹不适有时与脾脏增大有关"
+    },
+    {
+      "id": "disease:orthostatic_hypotension:normal",
+      "content": "体位性低血压"
+    },
+    {
+      "id": "disease:orthostatic_hypotension:low",
+      "content": "站立后头晕提示血压调节需要评估"
+    },
+    {
+      "id": "disease:closed_foot_fracture:normal",
+      "content": "足部骨折，未特指，初次就诊"
+    },
+    {
+      "id": "disease:closed_foot_fracture:low",
+      "content": "外伤后的持续足部疼痛需要影像检查排除骨折"
+    },
+    {
+      "id": "disease:benign_breast_lump:normal",
+      "content": "乳房局限性肿块，未特指"
+    },
+    {
+      "id": "disease:benign_breast_lump:low",
+      "content": "乳房肿块必须通过查体和影像学进一步区分"
+    },
+    {
+      "id": "disease:hypoglycemia:normal",
+      "content": "低血糖，未特指"
+    },
+    {
+      "id": "disease:hypoglycemia:low",
+      "content": "出汗、心悸、乏力或发抖等低血糖表现需要结合实际血糖确认"
     }
   ]
 }

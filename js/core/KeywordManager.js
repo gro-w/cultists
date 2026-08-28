@@ -43,9 +43,9 @@ class KeywordManager {
    */
   async load() {
     if (!this._loadPromise) {
-      this._loadPromise = dataLoader
-        .loadJSON("keywords.json")
-        .then((data) => this.registerDefinitions(data.keywords || []));
+      this._loadPromise = dataLoader.loadJSON("keywords.json").then((data) => {
+        this.registerDefinitions(data.keywords || []);
+      });
     }
     return this._loadPromise;
   }
@@ -70,6 +70,15 @@ class KeywordManager {
   /** Look up a globally-registered keyword definition (no local override). */
   getDefinition(id) {
     return this.definitions.get(id);
+  }
+
+  /** Return the fixed content of a keyword entity. SAN never mutates it. */
+  displayContent(keywordOrId) {
+    const definition = typeof keywordOrId === "string"
+      ? this.definitions.get(keywordOrId)
+      : keywordOrId;
+    if (!definition) return typeof keywordOrId === "string" ? keywordOrId : "";
+    return definition.content || definition.label || definition.id;
   }
 
   /** Extract every canonical keyword id referenced by [[...]] markers. */
@@ -121,7 +130,7 @@ class KeywordManager {
     if (!text) return "";
     return text.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (match, id, display) => {
       const def = this._resolveDefinition(id, keywordDefs);
-      const label = display || (def ? (def.content || def.label || id) : id);
+      const label = display || (def ? this.displayContent(def) : id);
       if (!def) {
         console.warn(`[KeywordManager] Unknown keyword id "${id}" referenced in text.`);
         return label;

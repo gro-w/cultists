@@ -15,8 +15,13 @@ import { npcStateManager } from "./core/NpcStateManager.js";
 import { favorabilityManager } from "./core/FavorabilityManager.js";
 import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
+<<<<<<< HEAD
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
+=======
+import { medicalCaseManager } from "./core/MedicalCaseManager.js";
+import { globalVariableManager } from "./core/GlobalVariableManager.js";
+>>>>>>> origin/main
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -32,6 +37,7 @@ import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchMonitorApp } from "./apps/MonitorApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
+import { launchCalendarApp } from "./apps/CalendarApp.js";
 // DEV-TOOLS:START
 import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
 import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
@@ -77,7 +83,15 @@ async function handlePhaseToggle() {
     const ok = await confirmDialog(message, { title, icon: goingToWork || isWorkEnd ? "🚪" : "🛏️" });
     if (!ok) return;
   }
-  dayNightSystem.toggle();
+  const result = dayNightSystem.toggle();
+  if (result && result.ok === false && result.reason === "unfinishedWork") {
+    await confirmDialog(
+      result.batch === "a"
+        ? "您有未完成的工作，必须完成当前白班内容后才能下班。"
+        : "您有未完成的工作，必须完成当前夜班内容后才能睡觉。",
+      { title: "无法切换状态", icon: "⚠️" }
+    );
+  }
 }
 
 const APP_REGISTRY = [
@@ -88,6 +102,7 @@ const APP_REGISTRY = [
   { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },
   { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },
   { id: "achievements", label: () => i18n.t("apps.achievements", "成就"), icon: "🏆", launch: () => launchAchievementsApp() },
+  { id: "calendar", label: () => i18n.t("apps.calendar", "日历"), icon: "📅", launch: () => launchCalendarApp() },
   { id: "settings", label: () => i18n.t("apps.settings", "设置"), icon: "⚙️", launch: () => launchSettingsApp() },
   // DEV-TOOLS:START
   ...(developerModeEnabled ? [{ id: "developer-mode", label: "开发人员模式", icon: "🛠️", launch: () => launchDeveloperMode() }] : []),
@@ -153,14 +168,16 @@ function boot({ welcomeBack }) {
   });
   saveManager.registerLaunchers(launcherMap);
 
+  let saveLoaded = true;
   if (welcomeBack) {
-    saveManager.loadFromLocation();
-    notificationBanner.showWelcomeBack();
+    saveLoaded = saveManager.loadFromLocation();
+    if (saveLoaded) notificationBanner.showWelcomeBack();
   }
 
   console.info(
     `[Cultists] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
   );
+  return { saveLoaded };
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -183,6 +200,8 @@ document.addEventListener("DOMContentLoaded", () => {
     npcStateManager.load(),
     favorabilityManager.load(),
     achievementManager.init(),
+    medicalCaseManager.load(),
+    globalVariableManager.init(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {
@@ -197,17 +216,32 @@ document.addEventListener("DOMContentLoaded", () => {
         && !developerMode
         // DEV-TOOLS:END
         ;
-      boot({ welcomeBack });
+      const bootResult = boot({ welcomeBack });
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
         onNewGame: () => {
           window.history.replaceState(null, "", window.location.pathname);
         },
         onLoadSave: (saveString) => {
           const ok = saveManager.loadFromString(saveString);
+          if (!ok) {
+            confirmDialog("该存档格式已不再支持。由于日程系统已经重构，旧存档无法继续使用，请重新开始游戏。", {
+              title: "存档不受支持",
+              icon: "⚠️",
+            });
+          }
           return ok;
         },
       });
-      if (welcomeBack) mainMenu.hide();
+      if (welcomeBack && bootResult.saveLoaded) mainMenu.hide();
+      else if (welcomeBack) {
+        mainMenu.show();
+        confirmDialog("该存档格式已不再支持。由于日程系统已经重构，旧存档无法继续使用，请重新开始游戏。", {
+          title: "存档不受支持",
+          icon: "⚠️",
+        }).then(() => {
+          window.history.replaceState(null, "", window.location.pathname);
+        });
+      }
       else {
         // DEV-TOOLS:START
         if (developerMode) {

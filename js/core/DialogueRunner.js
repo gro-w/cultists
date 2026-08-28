@@ -3,6 +3,7 @@ import { endingManager } from "./EndingManager.js";
 import { eventBus } from "./EventBus.js";
 import { resolveOptionNext, OUTCOME_LABELS } from "./DiceCheck.js";
 import { gameState } from "./GameState.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 /**
  * createDialogueRunner - shared driver for walking a single actor's
@@ -30,6 +31,7 @@ import { gameState } from "./GameState.js";
  * @param {string} opts.optionBtnClass
  * @param {string} [opts.appId] - forwarded on the emitted `dialogue:turn` event
  * @param {(nodeId:string) => void} [opts.onNodeShown] - e.g. persist to DialogueProgress
+ * @param {() => void} [opts.onComplete] - called when the dialogue reaches a leaf node
  * @param {string} [opts.emptyMessage] - shown (as an npc line) when the actor has no dialogueTree
  */
 export function createDialogueRunner({
@@ -39,6 +41,7 @@ export function createDialogueRunner({
   optionBtnClass,
   appId,
   onNodeShown,
+  onComplete,
   emptyMessage = "（暂无对话内容）",
 }) {
   const stateActorId = actor.npcId || actor.id;
@@ -48,6 +51,10 @@ export function createDialogueRunner({
     optionsEl.innerHTML = "";
     if (!node) {
       if (!tree) appendLine("npc", actor.name, emptyMessage);
+      return;
+    }
+    if (!globalVariableManager.matches(node.condition || node.globalVariableCondition)) {
+      appendLine("npc", actor.name, "（当前条件不满足，无法继续。）");
       return;
     }
     if (onNodeShown) onNodeShown(nodeId);
@@ -60,8 +67,9 @@ export function createDialogueRunner({
     applyDialogueOnShow(node, stateActorId);
     if (endingManager.isEnded) return;
 
-    if (node.options && node.options.length > 0) {
-      node.options.forEach((opt) => {
+    const availableOptions = (node.options || []).filter((opt) => globalVariableManager.matches(opt.condition || opt.globalVariableCondition));
+    if (availableOptions.length > 0) {
+      availableOptions.forEach((opt) => {
         const btn = document.createElement("button");
         btn.className = optionBtnClass;
         btn.textContent = opt.label;
@@ -105,6 +113,7 @@ export function createDialogueRunner({
       });
     } else {
       optionsEl.innerHTML = '<p class="dialogue-end">（对话已结束）</p>';
+      if (onComplete) onComplete();
     }
   }
 

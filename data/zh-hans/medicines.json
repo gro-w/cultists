@@ -3,22 +3,2732 @@
     {
       "id": "med_paracetamol",
       "name": "对乙酰氨基酚",
-      "effect": "解热镇痛，用于发热与轻中度疼痛"
+      "effect": "解热镇痛，用于发热与轻中度疼痛",
+      "commission": 30.0,
+      "price": 300,
+      "applicableDiagnosisIds": [
+        "cough",
+        "covid19",
+        "fever_unspecified",
+        "headache_unspecified",
+        "infectious_gastroenteritis",
+        "influenza_unspecified",
+        "migraine_unspecified",
+        "soft_tissue_contusion"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_cough_syrup",
       "name": "止咳糖浆",
-      "effect": "缓解咳嗽症状"
+      "effect": "缓解咳嗽症状",
+      "commission": 25.0,
+      "price": 250,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
-      "id": "med_sleep_aid",
-      "name": "助眠片",
-      "effect": "改善失眠，帮助入睡"
+      "id": "med_001",
+      "name": "布洛芬",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "plantar_fasciitis",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "shoulder_impingement",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
-      "id": "med_vertigo_pill",
-      "name": "眩晕宁",
-      "effect": "缓解头晕、眩晕症状"
+      "id": "med_002",
+      "name": "阿司匹林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "acute_gastritis",
+        "chronic_kidney_disease",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_003",
+      "name": "双氯芬酸钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_004",
+      "name": "塞来昔布",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "plantar_fasciitis",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "shoulder_impingement",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_005",
+      "name": "吲哚美辛",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_006",
+      "name": "萘普生",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_007",
+      "name": "洛索洛芬钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_008",
+      "name": "美洛昔康",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_009",
+      "name": "曲马多",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_010",
+      "name": "盐酸氨酚曲马多",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "analgesic"
+    },
+    {
+      "id": "med_011",
+      "name": "复方氨酚烷胺",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_012",
+      "name": "氯雷他定",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "allergic_rhinitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
+    },
+    {
+      "id": "med_013",
+      "name": "西替利嗪",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "allergic_rhinitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
+    },
+    {
+      "id": "med_014",
+      "name": "地氯雷他定",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
+    },
+    {
+      "id": "med_015",
+      "name": "依巴斯汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
+    },
+    {
+      "id": "med_016",
+      "name": "孟鲁司特钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_017",
+      "name": "氨溴索",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "bronchiectasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_018",
+      "name": "乙酰半胱氨酸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "bronchiectasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_019",
+      "name": "盐酸氨溴索",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "bronchiectasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_020",
+      "name": "右美沙芬",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_021",
+      "name": "喷托维林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_022",
+      "name": "多索茶碱",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_023",
+      "name": "沙丁胺醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_024",
+      "name": "布地奈德",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_025",
+      "name": "异丙托溴铵",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_026",
+      "name": "糠酸莫米松鼻喷雾剂",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "allergic_rhinitis",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_027",
+      "name": "丙酸氟替卡松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_028",
+      "name": "羟甲唑啉",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_029",
+      "name": "生理性海水鼻喷雾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
+    },
+    {
+      "id": "med_030",
+      "name": "阿莫西林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_031",
+      "name": "阿莫西林克拉维酸钾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_032",
+      "name": "头孢氨苄",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_033",
+      "name": "头孢呋辛酯",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_034",
+      "name": "头孢克洛",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_035",
+      "name": "头孢地尼",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_036",
+      "name": "头孢曲松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_037",
+      "name": "阿奇霉素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_038",
+      "name": "克拉霉素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_039",
+      "name": "罗红霉素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_040",
+      "name": "左氧氟沙星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_041",
+      "name": "莫西沙星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_042",
+      "name": "环丙沙星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_043",
+      "name": "甲硝唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "acute_pyelonephritis",
+        "cellulitis",
+        "infectious_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_044",
+      "name": "替硝唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "acute_pyelonephritis",
+        "cellulitis",
+        "infectious_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_045",
+      "name": "呋喃妥因",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_046",
+      "name": "磷霉素氨丁三醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
+    },
+    {
+      "id": "med_047",
+      "name": "阿昔洛韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "herpes_zoster"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
+    },
+    {
+      "id": "med_048",
+      "name": "伐昔洛韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "herpes_zoster"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
+    },
+    {
+      "id": "med_049",
+      "name": "泛昔洛韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "herpes_zoster"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
+    },
+    {
+      "id": "med_050",
+      "name": "奥司他韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
+    },
+    {
+      "id": "med_051",
+      "name": "利巴韦林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "hepatitis_c"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
+    },
+    {
+      "id": "med_052",
+      "name": "恩替卡韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "chronic_hepatitis_b"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
+    },
+    {
+      "id": "med_053",
+      "name": "氟康唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
+    },
+    {
+      "id": "med_054",
+      "name": "伊曲康唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
+    },
+    {
+      "id": "med_055",
+      "name": "特比萘芬",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
+    },
+    {
+      "id": "med_056",
+      "name": "硝酸咪康唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
+    },
+    {
+      "id": "med_057",
+      "name": "克霉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
+    },
+    {
+      "id": "med_058",
+      "name": "制霉菌素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
+    },
+    {
+      "id": "med_059",
+      "name": "蒙脱石散",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_060",
+      "name": "口服补液盐",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_061",
+      "name": "双歧杆菌三联活菌",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_062",
+      "name": "枯草杆菌二联活菌",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_063",
+      "name": "乳果糖",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "constipation",
+        "hemorrhoids"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_064",
+      "name": "聚乙二醇电解质",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "constipation"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_065",
+      "name": "开塞露",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "constipation",
+        "hemorrhoids"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_066",
+      "name": "洛哌丁胺",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "ulcerative_colitis"
+      ],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_067",
+      "name": "复方黄连素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_068",
+      "name": "奥美拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_069",
+      "name": "埃索美拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_070",
+      "name": "泮托拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_071",
+      "name": "雷贝拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_072",
+      "name": "法莫替丁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_073",
+      "name": "铝碳酸镁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_074",
+      "name": "硫糖铝",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_075",
+      "name": "枸橼酸铋钾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_076",
+      "name": "多潘立酮",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_077",
+      "name": "莫沙必利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_078",
+      "name": "曲美布汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_079",
+      "name": "消旋山莨菪碱",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
+    },
+    {
+      "id": "med_080",
+      "name": "硝酸甘油",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "acute_myocardial_infarction",
+        "angina_pectoris"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_081",
+      "name": "速效救心丸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "acute_myocardial_infarction",
+        "angina_pectoris"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_082",
+      "name": "美托洛尔",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "asthma_unspecified"
+      ],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_083",
+      "name": "比索洛尔",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "asthma_unspecified"
+      ],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_084",
+      "name": "氨氯地平",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_085",
+      "name": "硝苯地平",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_086",
+      "name": "非洛地平",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_087",
+      "name": "缬沙坦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_088",
+      "name": "氯沙坦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_089",
+      "name": "厄贝沙坦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_090",
+      "name": "贝那普利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_091",
+      "name": "依那普利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_092",
+      "name": "卡托普利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_093",
+      "name": "氢氯噻嗪",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "orthostatic_hypotension"
+      ],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_094",
+      "name": "呋塞米",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "orthostatic_hypotension"
+      ],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_095",
+      "name": "螺内酯",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
+    },
+    {
+      "id": "med_096",
+      "name": "阿托伐他汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
+    },
+    {
+      "id": "med_097",
+      "name": "瑞舒伐他汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
+    },
+    {
+      "id": "med_098",
+      "name": "辛伐他汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
+    },
+    {
+      "id": "med_099",
+      "name": "非诺贝特",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
+    },
+    {
+      "id": "med_100",
+      "name": "二甲双胍",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "polycystic_ovary_syndrome",
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease"
+      ],
+      "categoryId": "antidiabetic"
+    },
+    {
+      "id": "med_101",
+      "name": "格列美脲",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
+    },
+    {
+      "id": "med_102",
+      "name": "格列齐特",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
+    },
+    {
+      "id": "med_103",
+      "name": "阿卡波糖",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
+    },
+    {
+      "id": "med_104",
+      "name": "西格列汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
+    },
+    {
+      "id": "med_105",
+      "name": "达格列净",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
+    },
+    {
+      "id": "med_106",
+      "name": "胰岛素注射液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease"
+      ],
+      "categoryId": "antidiabetic"
+    },
+    {
+      "id": "med_107",
+      "name": "左甲状腺素钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "hypothyroidism"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "thyroid"
+    },
+    {
+      "id": "med_108",
+      "name": "甲巯咪唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "hyperthyroidism"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "thyroid"
+    },
+    {
+      "id": "med_109",
+      "name": "丙硫氧嘧啶",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "hyperthyroidism"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "thyroid"
+    },
+    {
+      "id": "med_110",
+      "name": "泼尼松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "alopecia_areata",
+        "asthma_unspecified",
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
+    },
+    {
+      "id": "med_111",
+      "name": "甲泼尼龙",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "asthma_unspecified",
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
+    },
+    {
+      "id": "med_112",
+      "name": "地塞米松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "asthma_unspecified",
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
+    },
+    {
+      "id": "med_113",
+      "name": "氯喹",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
+    },
+    {
+      "id": "med_114",
+      "name": "羟氯喹",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
+    },
+    {
+      "id": "med_115",
+      "name": "甲氨蝶呤",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
+    },
+    {
+      "id": "med_116",
+      "name": "别嘌醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "gout"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
+    },
+    {
+      "id": "med_117",
+      "name": "秋水仙碱",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "gout"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
+    },
+    {
+      "id": "med_118",
+      "name": "阿仑膦酸钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
+    },
+    {
+      "id": "med_119",
+      "name": "碳酸钙D3",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
+    },
+    {
+      "id": "med_120",
+      "name": "骨化三醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
+    },
+    {
+      "id": "med_121",
+      "name": "维生素D滴剂",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
+    },
+    {
+      "id": "med_122",
+      "name": "维生素B1",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "thiamine_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
+    },
+    {
+      "id": "med_123",
+      "name": "维生素B12",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
+    },
+    {
+      "id": "med_124",
+      "name": "叶酸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "folate_deficiency_anemia"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
+    },
+    {
+      "id": "med_125",
+      "name": "硫酸亚铁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
+    },
+    {
+      "id": "med_126",
+      "name": "复方硫酸亚铁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
+    },
+    {
+      "id": "med_127",
+      "name": "琥珀酸亚铁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
+    },
+    {
+      "id": "med_128",
+      "name": "氯化钾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
+    },
+    {
+      "id": "med_129",
+      "name": "氯己定",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "cellulitis",
+        "gingivitis",
+        "soft_tissue_contusion"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_130",
+      "name": "碘伏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "cellulitis",
+        "soft_tissue_contusion"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_131",
+      "name": "莫匹罗星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "cellulitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_132",
+      "name": "夫西地酸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "cellulitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_133",
+      "name": "炉甘石洗剂",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_134",
+      "name": "糠酸莫米松乳膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "alopecia_areata",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_135",
+      "name": "丁酸氢化可的松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_136",
+      "name": "尿素乳膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_137",
+      "name": "维A酸乳膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_138",
+      "name": "过氧化苯甲酰",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "applicableDiagnosisIds": [
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_139",
+      "name": "他克莫司软膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "applicableDiagnosisIds": [
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria",
+        "vitiligo"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
+    },
+    {
+      "id": "med_140",
+      "name": "玻璃酸钠滴眼液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39.0,
+      "applicableDiagnosisIds": [
+        "dry_eye"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
+    },
+    {
+      "id": "med_141",
+      "name": "妥布霉素滴眼液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "applicableDiagnosisIds": [
+        "bacterial_conjunctivitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
+    },
+    {
+      "id": "med_142",
+      "name": "氧氟沙星滴眼液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "applicableDiagnosisIds": [
+        "bacterial_conjunctivitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
+    },
+    {
+      "id": "med_143",
+      "name": "金霉素眼膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2.0,
+      "applicableDiagnosisIds": [
+        "bacterial_conjunctivitis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
+    },
+    {
+      "id": "med_144",
+      "name": "人工泪液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "applicableDiagnosisIds": [
+        "dry_eye"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
+    },
+    {
+      "id": "med_145",
+      "name": "盐酸氟桂利嗪",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "applicableDiagnosisIds": [
+        "benign_positional_vertigo",
+        "migraine_unspecified",
+        "vertigo"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
+    },
+    {
+      "id": "med_146",
+      "name": "倍他司汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "applicableDiagnosisIds": [
+        "benign_positional_vertigo",
+        "migraine_unspecified",
+        "vertigo"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
+    },
+    {
+      "id": "med_147",
+      "name": "加巴喷丁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "applicableDiagnosisIds": [
+        "carpal_tunnel_syndrome",
+        "herpes_zoster",
+        "sciatica"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
+    },
+    {
+      "id": "med_148",
+      "name": "普瑞巴林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "applicableDiagnosisIds": [
+        "carpal_tunnel_syndrome",
+        "herpes_zoster",
+        "sciatica"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
+    },
+    {
+      "id": "med_149",
+      "name": "舍曲林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "applicableDiagnosisIds": [
+        "acute_stress_disorder",
+        "generalized_anxiety",
+        "insomnia_disorder",
+        "major_depressive_disorder",
+        "obsessive_compulsive_disorder",
+        "panic_disorder"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "psychiatry"
+    },
+    {
+      "id": "med_150",
+      "name": "帕罗西汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "applicableDiagnosisIds": [
+        "acute_stress_disorder",
+        "generalized_anxiety",
+        "insomnia_disorder",
+        "major_depressive_disorder",
+        "obsessive_compulsive_disorder",
+        "panic_disorder"
+      ],
+      "prohibitedDiagnosisIds": [
+        "menopause"
+      ],
+      "categoryId": "psychiatry"
+    }
+  ],
+  "categories": [
+    {
+      "id": "analgesic",
+      "name": "解热镇痛药",
+      "medicineIds": [
+        "med_paracetamol",
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_j",
+        "icd_k",
+        "icd_m",
+        "icd_n",
+        "icd_r",
+        "icd_s",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antiallergic",
+      "name": "抗过敏药",
+      "medicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l"
+      ]
+    },
+    {
+      "id": "respiratory",
+      "name": "呼吸系统用药",
+      "medicineIds": [
+        "med_cough_syrup",
+        "med_011",
+        "med_016",
+        "med_017",
+        "med_018",
+        "med_019",
+        "med_020",
+        "med_021",
+        "med_022",
+        "med_023",
+        "med_024",
+        "med_025",
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_r",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antibacterial",
+      "name": "抗菌药",
+      "medicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_043",
+        "med_044",
+        "med_045",
+        "med_046"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_h",
+        "icd_j",
+        "icd_l",
+        "icd_n"
+      ]
+    },
+    {
+      "id": "antiviral",
+      "name": "抗病毒药",
+      "medicineIds": [
+        "med_047",
+        "med_048",
+        "med_049",
+        "med_050",
+        "med_051",
+        "med_052"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_j"
+      ]
+    },
+    {
+      "id": "antifungal",
+      "name": "抗真菌药",
+      "medicineIds": [
+        "med_053",
+        "med_054",
+        "med_055",
+        "med_056",
+        "med_057",
+        "med_058"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a"
+      ]
+    },
+    {
+      "id": "gastrointestinal",
+      "name": "消化系统用药",
+      "medicineIds": [
+        "med_059",
+        "med_060",
+        "med_061",
+        "med_062",
+        "med_063",
+        "med_064",
+        "med_065",
+        "med_066",
+        "med_067",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075",
+        "med_076",
+        "med_077",
+        "med_078",
+        "med_079"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_k"
+      ]
+    },
+    {
+      "id": "cardiovascular",
+      "name": "心血管用药",
+      "medicineIds": [
+        "med_080",
+        "med_081",
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_i"
+      ]
+    },
+    {
+      "id": "lipid_lowering",
+      "name": "调脂药",
+      "medicineIds": [
+        "med_096",
+        "med_097",
+        "med_098",
+        "med_099"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_i"
+      ]
+    },
+    {
+      "id": "antidiabetic",
+      "name": "降糖药",
+      "medicineIds": [
+        "med_100",
+        "med_101",
+        "med_102",
+        "med_103",
+        "med_104",
+        "med_105",
+        "med_106"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "thyroid",
+      "name": "甲状腺用药",
+      "medicineIds": [
+        "med_107",
+        "med_108",
+        "med_109"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "steroid_immunomodulator",
+      "name": "糖皮质激素与免疫调节药",
+      "medicineIds": [
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_113",
+        "med_114",
+        "med_115"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "bone_gout",
+      "name": "骨代谢与痛风用药",
+      "medicineIds": [
+        "med_116",
+        "med_117",
+        "med_118",
+        "med_119",
+        "med_120",
+        "med_121"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "dermatology",
+      "name": "皮肤科用药",
+      "medicineIds": [
+        "med_129",
+        "med_130",
+        "med_131",
+        "med_132",
+        "med_133",
+        "med_134",
+        "med_135",
+        "med_136",
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_k",
+        "icd_l",
+        "icd_s"
+      ]
+    },
+    {
+      "id": "ophthalmology",
+      "name": "眼科用药",
+      "medicineIds": [
+        "med_140",
+        "med_141",
+        "med_142",
+        "med_143",
+        "med_144"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_h"
+      ]
+    },
+    {
+      "id": "neurology",
+      "name": "神经系统用药",
+      "medicineIds": [
+        "med_145",
+        "med_146",
+        "med_147",
+        "med_148"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_h",
+        "icd_m",
+        "icd_r"
+      ]
+    },
+    {
+      "id": "psychiatry",
+      "name": "精神科用药",
+      "medicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_f"
+      ]
+    },
+    {
+      "id": "supplement",
+      "name": "维生素与电解质补充剂",
+      "medicineIds": [
+        "med_122",
+        "med_123",
+        "med_124",
+        "med_125",
+        "med_126",
+        "med_127",
+        "med_128"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_h",
+        "icd_n"
+      ]
     }
   ]
 }

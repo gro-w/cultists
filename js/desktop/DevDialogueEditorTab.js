@@ -1035,12 +1035,25 @@ export class DevDialogueEditorTab {
       nexts.forEach(nid => { if (!visited.has(nid)) { visited.add(nid); queue.push(nid); } });
     }
     ids.filter(id => !visited.has(id)).forEach(id => order.push(id));
-    // Place in a grid: COLS columns, rows grow downward — all nodes stay in visible area
+    // Place in a grid: COLS columns, rows grow downward
     order.forEach((id, i) => {
       nodes[id].x = PAD + (i % COLS) * (W + GAPX);
       nodes[id].y = PAD + Math.floor(i / COLS) * (H + GAPY);
     });
+    // Expand canvas to fit all placed nodes so nothing is clipped
+    const rows = Math.ceil(order.length / COLS);
+    const needW = PAD + COLS * (W + GAPX) + PAD;
+    const needH = PAD + rows * (H + GAPY) + PAD;
+    const nodesDiv = this._el('de-canvas-nodes');
+    const svgEl    = this._el('de-canvas-svg');
+    if (nodesDiv) { nodesDiv.style.minWidth  = Math.max(2000, needW) + 'px';
+                    nodesDiv.style.minHeight = Math.max(1200, needH) + 'px'; }
+    if (svgEl)    { svgEl.setAttribute('width',  Math.max(2000, needW));
+                    svgEl.setAttribute('height', Math.max(1200, needH)); }
     this._saveLS(); this._renderCanvas();
+    // Scroll back to origin so newly placed nodes are immediately visible
+    const wrap = this._el('de-canvas-container');
+    if (wrap) { wrap.scrollLeft = 0; wrap.scrollTop = 0; }
   }
 
   // ── day / event / ending ──────────────────────────────────────────────────

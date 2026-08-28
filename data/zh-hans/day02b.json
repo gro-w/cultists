@@ -7,7 +7,18 @@
       "id": "patient_night_duty_d2",
       "name": "无名氏（急诊）",
       "age": 40,
-      "recordTemplateId": "record_headache",
+      "correctDiagnosisId": "soft_tissue_contusion",
+      "diagnosisOptionIds": [
+        "soft_tissue_contusion",
+        "migraine_unspecified",
+        "benign_positional_vertigo"
+      ],
+      "applicableMedicineIds": [
+        "med_paracetamol"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
       "dialogueTree": {
         "start": "greet",
         "nodes": {

@@ -107,7 +107,7 @@ js/
     special_events.json      # 按天数/阶段/好感度/SAN 覆盖 NPC 的特殊事件
     chatgtp_qa.json          # ChatGTP 关键词/组合的正常与损坏回答
     endings.json             # 结局、属性触发和最终条件
-    medical_records.json     # 病历模板
+    diagnoses.json           # ICD-10-CM 诊断分类与诊断名称
     medicines.json           # 药品列表
     achievements.json        # 成就定义
     npc_state.json           # NPC 状态配置

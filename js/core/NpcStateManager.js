@@ -98,6 +98,16 @@ class NpcStateManager {
     }
   }
 
+  /** Set an actor's SAN directly for developer tools and deterministic probes. */
+  setSan(actorId, value, { offline = false } = {}) {
+    if (!actorId) return;
+    const next = clamp(value);
+    this.san.set(actorId, next);
+    if (offline) this.offlineActors.add(actorId);
+    else this.offlineActors.delete(actorId);
+    eventBus.emit("npcState:changed", { actorId, san: next, offline: this.offlineActors.has(actorId), developer: true });
+  }
+
   _goOffline(actorId) {
     this.offlineActors.add(actorId);
     const consequence = (this.config && this.config.offlineConsequence) || {};

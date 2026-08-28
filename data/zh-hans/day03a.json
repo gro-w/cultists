@@ -7,7 +7,18 @@
       "id": "patient_family_d3",
       "name": "患者家属-陈刚",
       "age": 45,
-      "recordTemplateId": "record_headache",
+      "correctDiagnosisId": "headache_unspecified",
+      "diagnosisOptionIds": [
+        "headache_unspecified",
+        "benign_positional_vertigo",
+        "acute_pharyngitis"
+      ],
+      "applicableMedicineIds": [
+        "med_paracetamol"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
       "dialogueTree": {
         "start": "greet",
         "nodes": {

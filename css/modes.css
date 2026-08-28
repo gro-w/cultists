@@ -120,6 +120,13 @@
   white-space: nowrap;
 }
 .dorm-npc-marker { transform: translate(-50%, -100%); }
+.dorm-item-placement-marker {
+  position: absolute;
+  z-index: 6;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  font-size: 16px;
+}
 .dorm-bed-marker { left: 82px; top: 220px; }
 .dorm-phone-marker { left: 330px; top: 178px; }
 .dorm-clue-wall-marker { left: 26px; top: 168px; }

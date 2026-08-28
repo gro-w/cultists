@@ -436,27 +436,62 @@
   display: flex;
   gap: 4px;
   padding: 6px 6px 0;
-  background: #1e1a3a;
-  border: 2px outset #5a4a8a;
-  border-bottom: none;
+  background: #e8e0f0;
+  border: 2px outset #c0a0d0;
+  border-bottom: 2px solid #b090c0;
   flex-shrink: 0;
 }
-.dorm-comp-tab-btn { font-size: 12px; }
+.dorm-comp-tab-btn { font-size: 12px; color: #222; }
 .dorm-comp-tab-btn.active {
-  background: #3a2e6e;
-  color: #f4ecc9;
-  box-shadow: inset 1px 1px 0 #6a5aaa;
+  background: #c8a8e8;
+  color: #111;
+  box-shadow: inset 1px 1px 0 #e0c8f8;
 }
 .dorm-comp-close { margin-left: auto; }
 
 .dorm-computer-panel {
   flex: 1;
   overflow-y: auto;
-  background: #12102a;
-  border: 2px inset #3a2e6e;
+  background: #f8f7fc;
+  border: 2px inset #c0a8d8;
   padding: 8px;
+  color: #111;
 }
 .dorm-computer-panel.hidden { display: none; }
+
+/* Override dark-themed social media colors inside computer */
+.dorm-computer-panel .sm-post-body { color: #333; white-space: pre-wrap; }
+.dorm-computer-panel .sm-post-meta { color: #666; }
+.dorm-computer-panel .sm-post-title { color: #111; }
+.dorm-computer-panel .sm-msg-text { color: #222; }
+.dorm-computer-panel .sm-msg-sender { color: #1a5fa8; }
+.dorm-computer-panel .sm-answer { color: #444; }
+.dorm-computer-panel .sm-answers { border-left-color: #bbb; }
+.dorm-computer-panel .sm-app-header { border-bottom-color: #ccc; }
+.dorm-computer-panel .sm-app-icon { font-size: 20px; }
+.dorm-computer-panel .sm-app-desc { color: #666; }
+.dorm-computer-panel .sm-tag { background: #e8f0fe; color: #1a5fa8; }
+.dorm-computer-panel .sm-group-name { color: #111; }
+.dorm-computer-panel .sm-loading { color: #666; }
+.dorm-computer-panel .sm-tab-btn { color: #222; }
+.dorm-computer-panel .sm-tab-btn.active { background: #c0a060; color: #111; }
+.dorm-computer-panel .sm-unread-badge {
+  display: inline-block;
+  background: #e53935;
+  color: #fff;
+  font-size: 10px;
+  border-radius: 8px;
+  padding: 0 5px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+/* ChatGTP inside computer */
+.dorm-computer-panel .chatgtp-history { background: #f0eef8; color: #111; }
+.dorm-computer-panel .chatgtp-keywords { background: #f5f3fc; color: #111; }
+.dorm-computer-panel .chatgtp-dialogue-layout { background: #f0eef8; color: #111; }
+.dorm-computer-panel .bubble-npc { background: #e8f0fe; border-color: #aac; color: #111; }
+.dorm-computer-panel .bubble-me { background: #d4edda; border-color: #8bc; color: #111; }
+.dorm-computer-panel .chatgtp-san-indicator { color: #444; }
 
 /* ── Social media (sm-) ────────────────────────────────────────────────── */
 .app-social-media,
@@ -523,6 +558,7 @@
 .sm-msg-sender { font-weight: 600; color: #90c0e8; }
 .sm-msg-text { color: #ddd; }
 .sm-loading { color: #888; padding: 24px; text-align: center; }
+.sm-panel.hidden { display: none; }
 .sm-answers.hidden { display: none; }
 
 /* ── Location scene overlay ─────────────────────────────────────────────── */
@@ -629,3 +665,19 @@
 .dev-le-toolbar { padding: 6px 8px; flex-shrink: 0; }
 .dev-le-main { display: flex; flex: 1; min-height: 0; overflow: hidden; }
 
+/* ── ChatGTP daily banner (dorm computer) ───────────────────────────────── */
+.chatgtp-daily-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #e8f4fd;
+  border: 1px solid #b3d8f5;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #1a5fa8;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.chatgtp-daily-label { flex: 1; }
+.chatgtp-daily-btn { font-size: 11px; }

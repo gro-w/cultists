@@ -134,6 +134,16 @@ HIS、Social 和 Monitor 使用共用的 `DialogueRunner`：
 
 关键词只通过文本中的 `[[keyword_id]]` 引用；不要为角色添加额外的 `keywordIds` 代替标记。终点节点应保留 `options: []`。
 
+## 日程蓝图
+
+新日程可以使用对象式蓝图：`nodes` 是节点 ID 到节点对象的映射，`connections` 保存类型化引脚连接，`startNodeId` 指向唯一的 `flowStart` 节点。流程引脚只能连接流程引脚，数值引脚只能连接数值引脚；一个节点不能同时拥有流程输出和数值输出。旧 `dialogueTree` 会在运行时兼容迁移。
+
+当前注册的 17 种节点包括：`flowStart`、`text`、`choice`、`branch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`inventoryOperation`、`statOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+
+`consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。输入必须是非负整数且为 20 分钟的倍数；执行时通过 `ActionBudget`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点。数值输入可以连接运算或取值节点。
+
+日程队列中的实例使用 `${scheduleId}:${sequence}` 作为稳定实例 ID，并保存 `status`、`currentNodeId` 和 `transcript`。已完成实例可以重复打开并只读查看历史文本，但不会再次执行节点或重新选择。
+
 ## 物品
 
 文件：`items.json`，顶层为 `items` 和可选的 `startingInventory`。常用字段：
@@ -147,6 +157,7 @@ HIS、Social 和 Monitor 使用共用的 `DialogueRunner`：
 - `useCondition.globalVariables`：全局变量条件
 - `useEffect.remove` / `add` / `statChanges` / `timeAdvance` / `ending`
 - `useEffect.globalVariables`：使用成功后的变量效果
+- `schedules.inspect` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图
 - `isBook`、`spells`：可学习法术的书籍
 
 物品调查文本中的关键词标记会传给 `KeywordManager`；显式 `revealKeywordIds` 会自动收集，文本标记则由玩家点击收集。

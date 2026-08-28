@@ -505,6 +505,7 @@ export class DevItemEditorTab {
   }
   _fromGame(g) {
     const it=this._emptyItem();
+    it._rawGame=g; // preserve unknown fields (inspectCheck, inspectOutcomes, useEffect.add/remove …) for lossless round-trip
     it.id=g.id||it.id; it.defaultName=g.name||''; it.consumable=!!g.consumable;
     it.usable=!!g.usable; it.pickable=!!g.pickable; it.worldCount=g.worldCount||1;
     it.locations=g.locations||[]; it.inspectText=g.inspectText||'';

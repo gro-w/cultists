@@ -55,8 +55,39 @@ class ScheduleData {
       }));
     }
     await Promise.all(requests);
-    await Promise.all([specialEventManager.load(), favorabilityManager.load(), npcStateManager.load()]);
+    const [specialEvents, endings] = await Promise.all([
+      specialEventManager.load(),
+      dataLoader.loadJSON("endings.json"),
+      favorabilityManager.load(),
+      npcStateManager.load(),
+    ]).then(([events, endingDoc]) => [events, endingDoc]);
+    this._indexExternalEntries(specialEventManager.events, "social");
+    this._indexExternalEntries((endings.endings || []).map((ending) => ({
+      ...ending,
+      blueprint: ending.blueprint || ending.dialogueTree || {
+        startNodeId: "start",
+        nodes: {
+          start: { id: "start", type: "flowStart" },
+          text: { id: "text", type: "text", inputs: { speaker: "narrator", text: ending.text || ending.title || "" } },
+        },
+        connections: [{ fromNodeId: "start", fromPort: "flowOut", toNodeId: "text", toPort: "flowIn" }],
+      },
+    })), "social");
+    for (const def of itemManager.defs.values()) {
+      Object.values(def.schedules || def.scheduleTable || {}).forEach((schedule) => {
+        const entries = Array.isArray(schedule?.entries) ? schedule.entries : [schedule];
+        this._indexExternalEntries(entries.filter((entry) => entry && entry.id), "social");
+      });
+    }
     this.initializeAt(gameState.day, gameState.clockMinutes);
+  }
+
+  _indexExternalEntries(entries, defaultQueueId) {
+    (entries || []).forEach((entry) => {
+      if (!entry || typeof entry.id !== "string" || !entry.id.trim()) return;
+      if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
+      this.scheduleById.set(entry.id, { ...entry, queueId: entry.queueId || defaultQueueId });
+    });
   }
 
   _indexEntries(entries, queueId) {
@@ -129,6 +160,7 @@ class ScheduleData {
       const sourceEntries = this.slots.get(key) || [];
       const entries = sourceEntries.filter((entry) => this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)).map((entry) => ({
         ...entry,
+        scheduleId: entry.scheduleId || entry.id,
         receivedDay: day,
         receivedTime: time,
         receivedPhase: time === 8 * 60 ? "day" : "night",
@@ -147,10 +179,10 @@ class ScheduleData {
       if (!definition || !this.matchesPrerequisites(definition.prerequisites || definition.condition)) return;
       const day = Math.floor(request.addTime / 1440);
       const time = request.addTime % 1440;
-      const entry = { ...definition, receivedDay: day, receivedTime: time,
+      const entry = { ...definition, scheduleId: definition.id, receivedDay: day, receivedTime: time,
         receivedPhase: time < 16 * 60 ? "day" : "night" };
       delete entry.queueId;
-      this.queue(definition.queueId).append([entry]);
+      this.queue(request.queueId || definition.queueId).append([entry]);
       this._applyScheduleOperations(entry);
     });
   }
@@ -204,13 +236,14 @@ class ScheduleData {
     });
   }
 
-  addSchedule(scheduleId, addTime) {
+  addSchedule(scheduleId, addTime, queueId = undefined) {
     const definition = this.scheduleById.get(scheduleId);
     if (!definition) return { ok: false, reason: "unknownSchedule" };
     const target = Number(addTime);
     const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
     if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
-    const request = { scheduleId, addTime: target };
+    if (queueId !== undefined && queueId !== "work" && queueId !== "social") return { ok: false, reason: "invalidQueue" };
+    const request = { scheduleId, addTime: target, ...(queueId ? { queueId } : {}) };
     this.pendingAdds.push(request);
     if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
     return { ok: true, request };

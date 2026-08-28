@@ -309,6 +309,11 @@ export class DevDialogueEditorTab {
       const entries = schedule.entries.map((entry, index) => `<div class="dev-de-sb-item${isActive && this.currentCtx.entryIndex === index ? ' active' : ''}" onclick="_de._selectSchedule('${file}',${index})">${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</div>`).join('');
       dayHtml += `<div class="dev-de-sb-day${isActive?' active':''}" onclick="_de._selectSchedule('${file}',0)">第 ${d} 天 · ${phase === 'a' ? '08:00' : '16:00'}${schedule.entries.length ? `（${schedule.entries.length} 条）` : ''}</div>${entries}`;
     }
+    const publicFile = `${this.currentQueue}pub`;
+    const publicSchedule = this.project.schedules?.[publicFile] || { entries: [] };
+    const publicActive = this.currentCtx?.type === 'schedule' && this.currentCtx.id === publicFile;
+    dayHtml += `<div class="dev-de-sb-day${publicActive ? ' active' : ''}" onclick="_de._selectSchedule('${publicFile}',0)">${this.currentQueue === 'work' ? 'Work' : 'Social'} 公共日程${publicSchedule.entries.length ? `（${publicSchedule.entries.length} 条）` : ''}</div>`;
+    if (publicActive) dayHtml += publicSchedule.entries.map((entry, index) => `<div class="dev-de-sb-item active" onclick="_de._selectSchedule('${publicFile}',${index})">${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</div>`).join('');
     dayEl.innerHTML = dayHtml;
     evEl.innerHTML  = Object.keys(this.project.events||{}).map(id=>
       `<div class="dev-de-sb-item${this.currentCtx?.id===id?' active':''}" onclick="_de._selectCtx('event','${id}')">
@@ -915,6 +920,8 @@ export class DevDialogueEditorTab {
       await scheduleData.init();
       this.totalDays = scheduleData.totalDays;
       this.project = this._emptyProject(this.totalDays);
+      this.project.schedules.socialpub = { entries: [] };
+      this.project.schedules.workpub = { entries: [] };
       this.loadedScheduleFiles = new Set();
       this.loadedMetaFiles = new Set(['special_events.json', 'endings.json']);
       const files = Object.keys(this.project.schedules);
@@ -1061,7 +1068,7 @@ export class DevDialogueEditorTab {
       });
       if (n.next) gn.next = n.next;
       if (n.onShow && Object.keys(n.onShow).length) {
-        const os = {};
+        const os = { ...n.onShow };
         if (n.onShow.grantItems?.length) os.grantItems = n.onShow.grantItems;
         if (n.onShow.removeItems?.length) os.removeItems = n.onShow.removeItems;
         if (n.onShow.ending) os.ending = n.onShow.ending;

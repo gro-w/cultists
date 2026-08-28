@@ -116,10 +116,12 @@
 /* canvas */
 .dev-de-canvas-wrap { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
 .dev-de-canvas-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:4px 6px; background:#d0d0d0; border-bottom:1px solid #808080; }
+.dev-de-node-type-label { display:inline-flex; align-items:center; gap:4px; padding:2px 3px; font-size:11px; }
+.dev-de-node-type { min-height:24px; border:2px inset #eee; font-size:11px; }
 .dev-de-canvas-container { flex:1; position:relative; overflow:auto; background:#f0f0f8; cursor:default; }
 
 /* nodes */
-.dev-de-node { position:absolute; width:185px; background:#fff; border:2px outset #ccc; box-shadow:2px 2px 4px rgba(0,0,0,.15); cursor:pointer; user-select:none; font-size:12px; }
+.dev-de-node { position:absolute; width:185px; min-height:90px; background:#fff; border:2px outset #ccc; box-shadow:2px 2px 4px rgba(0,0,0,.15); cursor:pointer; user-select:none; font-size:12px; }
 .dev-de-node.selected { border-color:#000080; box-shadow:0 0 0 2px #000080; }
 .dev-de-node.start { border-color:#cc6600; }
 .dev-de-node-hd { padding:3px 6px; color:#fff; font-size:11px; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
@@ -133,6 +135,24 @@
 .dev-de-option-pin:hover { background:#ffcc66; border-color:#cc6600; color:#000; }
 .dev-de-node-ft { padding:2px 6px 4px; display:flex; gap:4px; flex-wrap:wrap; }
 .dev-de-nbadge { background:#e8e8ff; border:1px solid #9999cc; border-radius:3px; font-size:10px; padding:1px 4px; color:#333; }
+.dev-de-port-layer { position:absolute; inset:0; pointer-events:none; }
+.dev-de-port-row { position:absolute; height:17px; line-height:17px; width:100%; display:flex; align-items:center; pointer-events:none; }
+.dev-de-port-row.input { justify-content:flex-start; padding-left:0; }
+.dev-de-port-row.output { justify-content:flex-end; padding-right:0; }
+.dev-de-port-label { color:#555; font-size:9px; max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dev-de-port-pin { width:11px; height:11px; margin:0 -7px; border:2px solid #000080; border-radius:50%; background:#d8d8ff; pointer-events:auto; cursor:crosshair; z-index:3; box-sizing:border-box; }
+.dev-de-port-row.output .dev-de-port-pin { background:#c8f0d0; border-color:#08752d; }
+.dev-de-port-pin:hover { background:#ffcc66 !important; border-color:#cc6600 !important; }
+.dev-de-input-row { display:flex; align-items:center; gap:3px; margin:3px 0; font-size:11px; }
+.dev-de-input-row label { width:65px; overflow:hidden; text-overflow:ellipsis; }
+.dev-de-input-row em { color:#777; font-style:normal; }
+.dev-de-input-mode, .dev-de-input-source, .dev-de-input-value { min-width:0; flex:1; min-height:21px; border:2px inset #eee; font-size:11px; }
+.dev-de-input-ref { color:#075; font-size:10px; }
+.dev-de-port-summary { margin-top:5px; color:#555; font-size:11px; }
+.dev-de-port-chip { display:inline-block; margin:2px; padding:1px 4px; border:1px solid #888; border-radius:3px; }
+.dev-de-port-chip.flow { background:#e8e8ff; }
+.dev-de-port-chip.value { background:#dff5e5; }
+.dev-de-no-ports { color:#999; font-size:11px; }
 
 /* right-side node editor panel */
 .dev-de-editor { width:260px; min-width:220px; flex-shrink:0; border-left:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; background:#d4d0c8; }

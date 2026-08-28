@@ -102,6 +102,16 @@ class ActionBudget {
     this._consumeTime(overrideMinutes);
   }
 
+  /** Consume an explicit amount of deterministic in-game time from a schedule node. */
+  consumeTime(minutes) {
+    const amount = Number(minutes);
+    if (!Number.isInteger(amount) || amount < 0 || amount % 20 !== 0) {
+      throw new Error("Schedule time must be a non-negative multiple of 20 minutes");
+    }
+    if (amount > 0) this._consumeTime(amount);
+    return amount;
+  }
+
   applyPenalty() {
     eventBus.emit("actionBudget:changed", this.snapshot());
   }
@@ -113,14 +123,25 @@ class ActionBudget {
   _consumeTime(overrideMinutes = 0) {
     const previousPhase = gameState.phase;
     const minutesPerAction = overrideMinutes > 0 ? overrideMinutes : (this.config && this.config.minutesPerAction) || 20;
-    const crossesEight = previousPhase === "night"
-      && gameState.clockMinutes < 8 * 60
-      && gameState.clockMinutes + minutesPerAction >= 8 * 60;
-    const phaseSettlement = crossesEight ? this.settlePhase("night") : null;
+    const currentAbsoluteMinute = gameState.day * 1440 + gameState.clockMinutes;
+    const finalAbsoluteMinute = currentAbsoluteMinute + minutesPerAction;
+    const maximumAbsoluteMinute = 7 * 1440 + 1439;
+    if (finalAbsoluteMinute > maximumAbsoluteMinute) throw new Error("Cannot consume time beyond the final game day");
+    const eightOClock = previousPhase === "night"
+      ? (gameState.clockMinutes < 8 * 60 ? gameState.day * 1440 + 8 * 60 : (gameState.day + 1) * 1440 + 8 * 60)
+      : null;
+    const crossesEight = eightOClock != null && finalAbsoluteMinute >= eightOClock;
+    const phaseMinutesBeforeSettlement = this.phaseMinutes;
+    const phaseSettlement = crossesEight
+      ? (() => {
+        this.phaseMinutes = phaseMinutesBeforeSettlement + (eightOClock - currentAbsoluteMinute);
+        return this.settlePhase("night");
+      })()
+      : null;
     gameState.advanceClock(minutesPerAction);
     scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
-    if (previousPhase === "night" && gameState.phase === "day" && gameState.clockMinutes === 8 * 60) {
-      this.settleAtEight({ day: gameState.day, sleepMinutes: 0, phaseSettlement });
+    if (crossesEight) {
+      this.settleAtEight({ day: Math.floor(eightOClock / 1440), sleepMinutes: 0, phaseSettlement });
     }
     this._syncClock();
     if (previousPhase !== gameState.phase) {

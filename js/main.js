@@ -17,6 +17,7 @@ import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
+import "./core/ItemScheduleRuntime.js"; // side-effect: executes item-owned schedules
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import Desktop from "./desktop/Desktop.js";

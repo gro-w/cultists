@@ -4,6 +4,7 @@ import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
 import { checkSkill } from "./DiceCheck.js";
+import { applyScheduleOperations } from "./ScheduleOperations.js";
 
 /**
  * ItemManager - singleton owning the player's inventory and the data-driven
@@ -103,6 +104,7 @@ class ItemManager {
   add(id, count = 1) {
     this._addRaw(id, count);
     eventBus.emit("items:changed", this.snapshot());
+    this._emitItemSchedule(id, "obtain", { count });
   }
 
   remove(id, count = 1) {
@@ -111,6 +113,18 @@ class ItemManager {
     if (next <= 0) this.inventory.delete(id);
     else this.inventory.set(id, next);
     eventBus.emit("items:changed", this.snapshot());
+    this._emitItemSchedule(id, "lose", { count });
+  }
+
+  scheduleFor(id, action) {
+    const def = this.defs.get(id);
+    const schedules = def?.schedules || def?.scheduleTable || {};
+    return schedules[action] || null;
+  }
+
+  _emitItemSchedule(id, action, context = {}) {
+    const blueprint = this.scheduleFor(id, action);
+    if (blueprint) eventBus.emit("schedule:triggered", { source: "item", itemId: id, action, blueprint, context });
   }
 
   /** Replace the whole inventory (used by SaveManager when restoring a save). */
@@ -164,6 +178,7 @@ class ItemManager {
     // Broadcast: include effect and inspectTimeAdvance so callers (ActionBudget etc.) can handle them.
     eventBus.emit("item:inspected", { id, effect: resolvedEffect,
       inspectTimeAdvance: def.inspectTimeAdvance || 0 });
+    this._emitItemSchedule(id, "inspect");
 
     if (def.inspectCheck && def.inspectCheck.skillId) {
       const check = checkSkill(def.inspectCheck.skillId);
@@ -260,6 +275,7 @@ class ItemManager {
     (effect.add || []).forEach((a) => this.add(a.itemId, a.count || 1));
     if (effect.statChanges) gameState.modify(effect.statChanges);
     globalVariableManager.applyEffects(effect.globalVariables || effect.globalVariableChanges);
+    applyScheduleOperations(effect);
     if (def.consumable) this.remove(id, 1);
 
     const skipTimeAdvance = !!(def.isBook && def.spells && def.spells.length > 0);
@@ -275,6 +291,7 @@ class ItemManager {
       skipTimeAdvance,
       timeMinutes: skipTimeAdvance ? 0 : (effect.timeAdvance || 0),
     });
+    this._emitItemSchedule(id, "use", { effect });
 
     // 书籍法术学习：0 < SAN ≤ 50 时使用书籍触发，游戏层负责展示学习界面
     if (def.isBook && def.spells && def.spells.length > 0) {

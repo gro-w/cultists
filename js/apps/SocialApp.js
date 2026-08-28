@@ -6,6 +6,7 @@ import { eventBus } from "../core/EventBus.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { createScheduleRunner } from "../core/ScheduleRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { socialQueue } from "../core/ScheduleQueue.js";
@@ -90,7 +91,7 @@ export async function launchSocialApp() {
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out social-contact-btn";
       btn.textContent = `${contact.name}${contact.queueStatus === "completed" ? " ✓" : ""}${offline ? " 🚫" : unavailable ? " 💤" : distressed ? " ⚠️" : ""}`;
-      btn.disabled = offline || unavailable;
+      btn.disabled = (offline || unavailable) && contact.queueStatus !== "completed";
       btn.addEventListener("click", () => renderChat(contact, keywordDefs));
       contactListEl.appendChild(btn);
     });
@@ -104,11 +105,11 @@ export async function launchSocialApp() {
     const npcId = contact.npcId || contact.id;
     chatEl.innerHTML = `<h4>与 ${contact.name} 的聊天</h4>`;
 
-    if (npcStateManager.isOffline(npcId)) {
+    if (npcStateManager.isOffline(npcId) && contact.queueStatus !== "completed") {
       chatEl.innerHTML += '<p class="dialogue-end">（对方已经很久没有上线了，消息始终没有回音。）</p>';
       return;
     }
-    if (!dayNightSystem.areRoommatesAvailable()) {
+    if (!dayNightSystem.areRoommatesAvailable() && contact.queueStatus !== "completed") {
       chatEl.innerHTML += `<p class="dialogue-end">（${dayNightSystem.areRoommatesSleeping() ? "对方正在睡觉" : "对方正在上班"}，暂时无法聊天。）</p>`;
       return;
     }
@@ -135,7 +136,15 @@ export async function launchSocialApp() {
       chatEl.scrollTop = chatEl.scrollHeight;
     }
 
-    const runner = createDialogueRunner({
+    const runner = contact.queueEntry ? createScheduleRunner({
+      definition: contact,
+      instance: contact.queueEntry,
+      appendLine: (speaker, label, text) => appendBubble(speaker === "npc" ? "npc" : "me", text),
+      optionsEl,
+      appId: "social",
+      onCheckpoint: (instance) => socialQueue.updateInstance(instance.instanceId, instance),
+      onComplete: (instance) => socialQueue.complete(instance.instanceId),
+    }) : createDialogueRunner({
       actor: contact,
       appendLine: (speaker, label, text) => appendBubble(speaker === "npc" ? "npc" : "me", text),
       optionsEl,
@@ -149,7 +158,8 @@ export async function launchSocialApp() {
       dialogueProgress.get("social").actorId === contact.id
         ? dialogueProgress.get("social").nodeId
         : null;
-    runner.showNode(resumeNodeId || (contact.dialogueTree && contact.dialogueTree.start));
+    if (contact.queueEntry) runner.start();
+    else runner.showNode(resumeNodeId || (contact.dialogueTree && contact.dialogueTree.start));
   }
 
   async function renderCurrentEntry() {
@@ -161,6 +171,7 @@ export async function launchSocialApp() {
       queueStatus: item.status,
       receivedDay: item.receivedDay,
       receivedTime: item.receivedTime,
+      queueEntry: item,
     }));
     const entry = { contacts };
     const keywordDefs = registerKeywords(entry);

@@ -12,9 +12,10 @@ import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
 import { workQueue, socialQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
+import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v11 = v10 plus spell list in JSON payload.
-const SAVE_FORMAT_VERSION = 11;
+// v12 = v11 plus unified schedule instance payloads and checkpoints.
+const SAVE_FORMAT_VERSION = 12;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];
@@ -292,6 +293,9 @@ class SaveManager {
     const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)) {
       throw new Error("Invalid save data");
+    }
+    if (!Number.isInteger(payload.gameState.day) || payload.gameState.day < 1 || payload.gameState.day > MAX_GAME_DAYS) {
+      throw new Error("Save belongs to an unsupported game day");
     }
     globalVariableManager.restore(payload.globalVariables || []);
     gameState.restore(payload.gameState);

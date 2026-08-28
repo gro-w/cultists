@@ -8,19 +8,21 @@
 - `data/strings.<lang>.json`：UI 外壳、按钮、通知和菜单文本。
 - `data/<lang>/`：该语言的完整游戏内容副本。
 
-新增语言必须复制全部内容文件，包括所有 `workXXa/b.json`、`socialXXa/b.json`、`global_variables.json`、`item_placements.json` 和 `items.json`。
+- 新增语言必须复制全部内容文件，包括 `work01a/b.json` 至 `work07a/b.json`、`social01a/b.json` 至 `social07a/b.json`、`global_variables.json`、`item_placements.json` 和 `items.json`。
 
 ## 日程文件
 
 当前使用两条独立队列，每天两个时间点，并有不自动追加的公共日程：
 
 ```text
-work01a.json ... work30a.json   # 工作日/白班批次，08:00 追加
-work01b.json ... work30b.json   # 工作/夜班批次，16:00 追加
-social01a.json ... social30a.json
-social01b.json ... social30b.json
+work01a.json ... work07a.json   # 工作日/白班批次，08:00 追加
+work01b.json ... work07b.json   # 工作/夜班批次，16:00 追加
+social01a.json ... social07a.json
+social01b.json ... social07b.json
 workpub.json / socialpub.json     # 仅供 addSchedule 操作选择
 ```
+
+游戏流程只有第 1 至第 7 天。日历配置和运行时都会将天数上限限制为 7；第 7 天最终阶段结束后进入结局，不会推进到第 8 天。包含第 8 天及以后状态的旧存档会被拒绝加载，不会静默截断玩家进度。
 
 文件最小结构：
 

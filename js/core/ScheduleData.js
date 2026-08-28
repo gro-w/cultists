@@ -7,6 +7,7 @@ import { gameState } from "./GameState.js";
 import { workQueue, socialQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
+import { MAX_GAME_DAYS } from "./GameRules.js";
 
 const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
@@ -15,7 +16,7 @@ const CHECKPOINTS = [
 
 class ScheduleData {
   constructor() {
-    this.totalDays = 30;
+    this.totalDays = MAX_GAME_DAYS;
     this.slots = new Map();
     this.fired = new Set();
     this.scheduleById = new Map();
@@ -32,7 +33,7 @@ class ScheduleData {
 
   async _loadAll() {
     await Promise.all([calendarData.init(), globalVariableManager.init(), itemManager.load()]);
-    this.totalDays = calendarData.totalDays;
+    this.totalDays = Math.min(MAX_GAME_DAYS, calendarData.totalDays);
     const requests = [];
     for (let day = 1; day <= this.totalDays; day += 1) {
       for (const checkpoint of CHECKPOINTS) {
@@ -207,7 +208,8 @@ class ScheduleData {
     const definition = this.scheduleById.get(scheduleId);
     if (!definition) return { ok: false, reason: "unknownSchedule" };
     const target = Number(addTime);
-    if (!Number.isInteger(target) || target < 0 || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
+    const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
+    if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
     const request = { scheduleId, addTime: target };
     this.pendingAdds.push(request);
     if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);

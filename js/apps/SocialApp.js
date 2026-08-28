@@ -144,7 +144,10 @@ export async function launchSocialApp() {
       appendLine: (speaker, label, text) => appendBubble(speaker === "npc" ? "npc" : "me", text),
       optionsEl,
       appId: "social",
-      onCheckpoint: (instance) => socialQueue.updateInstance(instance.instanceId, instance),
+      onCheckpoint: (instance) => {
+        dialogueProgress.set("social", contact.id, instance.currentNodeId || null);
+        return socialQueue.updateInstance(instance.instanceId, instance);
+      },
       onComplete: (instance) => socialQueue.complete(instance.instanceId),
     });
 
@@ -152,7 +155,7 @@ export async function launchSocialApp() {
       dialogueProgress.get("social").actorId === contact.id
         ? dialogueProgress.get("social").nodeId
         : null;
-    runner.start();
+    runner.start(resumeNodeId);
   }
 
   async function renderCurrentEntry() {

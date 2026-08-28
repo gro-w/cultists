@@ -40,6 +40,11 @@ export class DevItemEditorTab {
   _e(s)   { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   _uid()  { return 'item_'+Math.random().toString(36).slice(2,8); }
   _st(s)  { this._dev.setStatus(s); }
+  _imageSrc(value) {
+    const path = typeof value === 'string' ? value.trim() : '';
+    if (!path) return '';
+    try { return new URL(path, document.baseURI).href; } catch (_) { return path; }
+  }
 
   _emptyItem() {
     const v={};
@@ -414,8 +419,9 @@ export class DevItemEditorTab {
     const v=it.sanVariants[this.activeSanKey]||{name:'',description:'',image:'',revealKeywordIds:[],inspEffect:{gameEvent:'',mental:0,ending:''}};
     if(!v.inspEffect) v.inspEffect={gameEvent:'',mental:0,ending:''};
     const band=_IE_BANDS.find(b=>b.key===this.activeSanKey);
-    const imgHTML=v.image
-      ?`<img style="width:96px;height:96px;border:1px solid #ccc;object-fit:contain;background:#f9f9f9" src="${this._e(v.image)}" id="ie-sp-img" alt="图片预览" onerror="this.alt='图片加载失败'">`
+    const imageSrc=this._imageSrc(v.image);
+    const imgHTML=imageSrc
+      ?`<img style="width:96px;height:96px;border:1px solid #ccc;object-fit:contain;background:#f9f9f9" src="${this._e(imageSrc)}" id="ie-sp-img" alt="图片预览" onerror="this.alt='图片加载失败'">`
       :`<div style="width:64px;height:64px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:10px" id="ie-sp-img">无图片</div>`;
     const kwHTML=(v.revealKeywordIds||[]).map((k,i)=>
       `<span class="dev-ie-tag kw">${this._e(k)}<button type="button" onclick="_ie._removeSanKwTag(${i})">✕</button></span>`
@@ -579,7 +585,8 @@ export class DevItemEditorTab {
       }
       this.items = data.items.map(g=>this._fromGame(g));
       this.currentId=null; this.dirty=false; this._persist(); this._renderList();
-      this._st('已从当前游戏读取 items.json：'+this.items.length+' 个物品');
+      const imageCount=this.items.reduce((n,item)=>n+        +Object.values(item.sanVariants||{}).filter(v=>typeof v.image==='string'&&v.image.trim()).length,0);
+      this._st('已从当前游戏读取 items.json：'+this.items.length+' 个物品，图片路径 '+imageCount+' 条');
     } catch (err) { this._st('读取当前游戏失败：'+err.message); }
   }
   _onFile(ev) {
@@ -668,7 +675,7 @@ export class DevItemEditorTab {
     it.revealKeywordIds=g.revealKeywordIds||[];
     const topIE=g.inspectEffect||null;
     const readIE=src=>({gameEvent:src.gameEvent||'',mental:(src.statChanges&&src.statChanges.mental)||0,ending:src.ending||''});
-    if(g.sanVariants){_IE_BANDS.forEach(b=>{const src=g.sanVariants[b.key];const dst=it.sanVariants[b.key];if(src){if(src.name!==undefined)dst.name=src.name;if(src.description!==undefined)dst.description=src.description;if(src.image!==undefined)dst.image=src.image;if(src.revealKeywordIds)dst.revealKeywordIds=[...src.revealKeywordIds];if(src.inspectEffect)dst.inspEffect=readIE(src.inspectEffect);else if(topIE)dst.inspEffect=readIE(topIE);}else if(topIE){dst.inspEffect=readIE(topIE);}});}
+    if(g.sanVariants){_IE_BANDS.forEach(b=>{const src=g.sanVariants[b.key];const dst=it.sanVariants[b.key];if(src){if(src.name!==undefined)dst.name=src.name;if(src.description!==undefined)dst.description=src.description;const image=src.image??src.imagePath??src.imageUrl;if(image!==undefined)dst.image=String(image);if(src.revealKeywordIds)dst.revealKeywordIds=[...src.revealKeywordIds];if(src.inspectEffect)dst.inspEffect=readIE(src.inspectEffect);else if(topIE)dst.inspEffect=readIE(topIE);}else if(topIE){dst.inspEffect=readIE(topIE);}});}
     else if(topIE){_IE_BANDS.forEach(b=>{it.sanVariants[b.key].inspEffect=readIE(topIE);});}
     if(g.useEffect){it.useEffect.ending=g.useEffect.ending||'';it.useEffect.gameEvent=g.useEffect.gameEvent||'';it.useEffect.timeAdvance=g.useEffect.timeAdvance||0;const sc=g.useEffect.statChanges||{};it.useEffect.mental=sc.mental||0;it.useEffect.physical=sc.physical||0;it.useEffect.satiety=sc.satiety||0;it.useEffect.energy=sc.energy||0;it.useEffect.successMsg=g.successMessage||'';it.useEffect.failMsg=g.failMessage||'';}
     return it;

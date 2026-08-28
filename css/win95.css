@@ -168,6 +168,34 @@ html, body {
   text-overflow: ellipsis;
 }
 
+.win95-titlebar-icon { cursor: pointer; line-height: 16px; }
+.win95-system-menu {
+  position: absolute;
+  top: 24px;
+  left: 2px;
+  z-index: 1000;
+  min-width: 130px;
+  padding: 2px;
+  background: var(--w95-gray);
+  border: 2px outset var(--w95-white);
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, .3);
+}
+.win95-system-menu[hidden] { display: none; }
+.win95-system-menu button {
+  display: block;
+  width: 100%;
+  padding: 3px 14px;
+  border: 0;
+  background: transparent;
+  color: #000;
+  font: inherit;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.win95-system-menu button:hover { background: var(--w95-blue); color: var(--w95-white); }
+.win95-system-menu-separator { height: 1px; margin: 2px 0; border-top: 1px solid var(--w95-gray-dark); border-bottom: 1px solid var(--w95-white); }
+
 .win95-titlebar-controls {
   display: flex;
   gap: 2px;

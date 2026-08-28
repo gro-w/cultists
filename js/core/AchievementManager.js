@@ -247,6 +247,10 @@ class AchievementManager {
       this._checkEventTriggers("ending:triggered", { id: def.id, ...def });
     });
 
+    on("developer:opened", () => {
+      this._checkEventTriggers("developer:opened", {});
+    });
+
     // ── Favorability ──────────────────────────────────────────────────────
 
     on("favorability:changed", (payload) => {

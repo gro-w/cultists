@@ -142,6 +142,10 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 
 `consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。输入必须是非负整数且为 20 分钟的倍数；执行时通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点。数值输入可以连接运算或取值节点。
 
+### 时间规则文件
+
+每种语言目录可以提供 `time_rules.json`，供 `TimeService` 读取阶段结算参数：`day.workMinutes`、`night.nightMinutes`、`fullSleepMinutes`、`insufficientSleepMinutes`、`sanRecoveryPerSleepHour`、`threeDaySleepDebtSanLoss` 和 `sanLossPerLateNightAction`。旧的 `action_budget.json`、`dialogueLimit`、`inspectLimit` 和按行动计数的预算字段已删除；不要在新数据中恢复这些字段。
+
 `spellOperation` 是一个流程节点，使用节点上的 `spell` 对象调用 `SpellManager.learn()`。法术学习蓝图必须把 `consumeTime(240)` 放在 `spellOperation` 之前；创建蓝图前不得调用 `spellManager.learn()`。
 
 日程队列中的实例使用 `${scheduleId}:${sequence}` 作为稳定实例 ID，并保存 `status`、`currentNodeId` 和 `transcript`。已完成实例可以重复打开并只读查看历史文本，但不会再次执行节点或重新选择。

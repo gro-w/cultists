@@ -1,7 +1,6 @@
 import { windowManager } from "../core/WindowManager.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { eventBus } from "../core/EventBus.js";
-import { actionBudget } from "../core/ActionBudget.js";
 
 /**
  * SocialMediaApp — 吱乎 / 小绿书 / 企鹅群 三合一窗口应用。

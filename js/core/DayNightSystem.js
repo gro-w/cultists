@@ -3,6 +3,8 @@ import { gameState } from "./GameState.js";
 import { calendarData } from "./CalendarData.js";
 import { scheduleData } from "./ScheduleData.js";
 import { endingManager } from "./EndingManager.js";
+import { actionBudget } from "./ActionBudget.js";
+import { medicalCaseManager } from "./MedicalCaseManager.js";
 
 class DayNightSystem {
   get phase() { return gameState.phase; }
@@ -33,7 +35,12 @@ class DayNightSystem {
     });
   }
 
-  _setTime(day, minutes, automatic = false) {
+  _setTime(day, minutes, automatic = false, sleepMinutes = 0) {
+    if (minutes === 8 * 60 && Number(day) > gameState.day) {
+      medicalCaseManager.processDue(Number(day));
+      const phaseSettlement = actionBudget.settlePhase("night");
+      actionBudget.settleAtEight({ day: Number(day), sleepMinutes, phaseSettlement });
+    }
     gameState.setClock(day, minutes);
     scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
   }
@@ -56,7 +63,12 @@ class DayNightSystem {
     const previousPhase = gameState.phase;
 
     if (gameState.duty === "on-duty") {
-      if (!restToday && inWorkWindow) this._setTime(gameState.day, 16 * 60);
+      if (!restToday && inWorkWindow) {
+        if (scheduleData.hasPendingBatch("work", gameState.day, 8 * 60)) {
+          return { ok: false, reason: "unfinishedWork", batch: "a" };
+        }
+        this._setTime(gameState.day, 16 * 60);
+      }
       gameState.setDuty("off-duty");
       this._emitChanged(previousPhase);
       return gameState.phase;
@@ -76,7 +88,13 @@ class DayNightSystem {
 
     const target = this._nextEightOClock();
     const targetIsRest = this.isRestDay(target.day);
-    this._setTime(target.day, target.minutes, true);
+    if (scheduleData.hasPendingBatch("work", gameState.day, 16 * 60)) {
+      return { ok: false, reason: "unfinishedWork", batch: "b" };
+    }
+    const sleepMinutes = target.day === gameState.day
+      ? target.minutes - gameState.clockMinutes
+      : (1440 - gameState.clockMinutes) + target.minutes;
+    this._setTime(target.day, target.minutes, true, sleepMinutes);
     gameState.setDuty(targetIsRest ? "off-duty" : "on-duty");
     this._emitChanged(previousPhase, true);
 

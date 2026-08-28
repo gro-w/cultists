@@ -267,6 +267,18 @@ class SaveManager {
     return Uint8Array.from(bytes);
   }
 
+  _restoreWindows(windowEntries) {
+    const savedAppIds = new Set(windowEntries.map((window) => window.appId));
+    WINDOW_APP_IDS.forEach((appId) => {
+      if (!savedAppIds.has(appId) && windowManager.getByAppId(appId)) windowManager.closeByAppId(appId);
+    });
+    windowEntries.forEach(({ appId, x, y }) => {
+      if (!WINDOW_APP_IDS.includes(appId)) return;
+      if (!windowManager.getByAppId(appId) && this._launchers[appId]) this._launchers[appId]();
+      windowManager.moveWindow(appId, Number(x) || 0, Number(y) || 0);
+    });
+  }
+
   _decode(bytes) {
     if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
@@ -284,6 +296,7 @@ class SaveManager {
     itemManager.restoreInventory(payload.inventory || []);
     medicalCaseManager.restore(payload.medical || {});
     scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
+    this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     return;
 
     /* Legacy binary decoder retained below only as historical reference. */

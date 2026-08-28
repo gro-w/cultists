@@ -34,7 +34,7 @@ class ScheduleData {
         for (const queueId of ["work", "social"]) {
           const file = `${queueId}${String(day).padStart(2, "0")}${checkpoint.suffix}.json`;
           requests.push(dataLoader.loadJSON(file).then((data) => {
-            this.slots.set(`${day}:${checkpoint.time}:${queueId}`, data.entries || []);
+            this.slots.set(`${day}:${checkpoint.time}:${queueId}`, Array.isArray(data.entries) ? data.entries : []);
           }));
         }
       }
@@ -132,7 +132,14 @@ class ScheduleData {
 
   async loadAllEntries() {
     await this.init();
-    return [];
+    return [...this.slots.entries()].map(([key, entries]) => {
+      const [, time, queueId] = key.split(":");
+      return { key, data: queueId === "work" ? { patients: entries } : { contacts: entries } };
+    });
+  }
+
+  hasPendingBatch(queueId, day, time) {
+    return this.queue(queueId).hasPendingBatch(Number(day), Number(time));
   }
 
   history(queueId) {

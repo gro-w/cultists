@@ -1,5 +1,29 @@
 {
-  "day": 5,
-  "time": "16:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "roommate_xiaomei_d5night",
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "这周终于要结束了，你还好吗？",
+            "options": [
+              {
+                "label": "还好，只是经历了很多事。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "无论如何，早点休息吧。",
+            "options": []
+          }
+        }
+      },
+      "npcId": "xiaomei",
+      "type": "npc"
+    }
+  ]
 }

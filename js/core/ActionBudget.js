@@ -2,6 +2,7 @@ import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { scheduleData } from "./ScheduleData.js";
+import { medicalCaseManager } from "./MedicalCaseManager.js";
 
 const DEFAULT_LIMITS = { dialogueLimit: Infinity, inspectLimit: Infinity };
 
@@ -43,9 +44,40 @@ class ActionBudget {
   }
 
   settlePhase(phase) {
-    const limit = phase === "day" ? 480 : 960;
-    const overage = Math.max(0, Math.ceil((this.phaseMinutes - limit) / 20));
-    return { totalOverage: overage, kind: overage ? (phase === "day" ? "overtime" : "allnighter") : null };
+    const phaseLimit = phase === "day"
+      ? (this.config?.day?.workMinutes || 480)
+      : (this.config?.night?.nightMinutes || 960);
+    const minutesPerAction = this.config?.minutesPerAction || 20;
+    const totalOverage = Math.max(0, Math.ceil((this.phaseMinutes - phaseLimit) / minutesPerAction));
+    if (phase === "day") {
+      return { totalOverage, kind: totalOverage ? "overtime" : null };
+    }
+    const sanLoss = totalOverage * (this.config?.sanLossPerLateNightAction || 0);
+    if (sanLoss) gameState.applyMentalLoss(sanLoss, { recoverable: true });
+    return { totalOverage, kind: totalOverage ? "allnighter" : null, sanLoss };
+  }
+
+  settleAtEight({ sleepMinutes = 0, day = gameState.day, phaseSettlement = null } = {}) {
+    const safeSleepMinutes = Math.max(0, Number(sleepMinutes) || 0);
+    const fullSleepMinutes = this.config?.fullSleepMinutes || 480;
+    const recoveryMinutes = Math.min(safeSleepMinutes, fullSleepMinutes);
+    const recoveredSan = safeSleepMinutes > 0
+      ? gameState.recoverMental((recoveryMinutes / 60) * (this.config?.sanRecoveryPerSleepHour || 0))
+      : 0;
+    this.sleepHistory.push(safeSleepMinutes);
+    this.sleepHistory = this.sleepHistory.slice(-3);
+    const insufficient = safeSleepMinutes < (this.config?.insufficientSleepMinutes || 360);
+    this.insufficientSleepStreak = insufficient ? this.insufficientSleepStreak + 1 : 0;
+    let sleepDebtSanLoss = 0;
+    if (this.insufficientSleepStreak >= 3) {
+      sleepDebtSanLoss = this.config?.threeDaySleepDebtSanLoss || 0;
+      if (sleepDebtSanLoss) gameState.modify({ mental: -sleepDebtSanLoss });
+      this.insufficientSleepStreak = 0;
+    }
+    const medical = medicalCaseManager.settleDay(day - 1);
+    const result = { day, sleepMinutes: safeSleepMinutes, recoveredSan, sleepDebtSanLoss, medical, phaseSettlement };
+    eventBus.emit("day:settled", result);
+    return result;
   }
 
   recordDialogueTurn() {
@@ -72,14 +104,23 @@ class ActionBudget {
 
   _consumeTime() {
     const previousPhase = gameState.phase;
-    gameState.advanceClock((this.config && this.config.minutesPerAction) || 20);
+    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
+    const crossesEight = previousPhase === "night"
+      && gameState.clockMinutes < 8 * 60
+      && gameState.clockMinutes + minutesPerAction >= 8 * 60;
+    const phaseSettlement = crossesEight ? this.settlePhase("night") : null;
+    gameState.advanceClock(minutesPerAction);
     scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
+    if (previousPhase === "night" && gameState.phase === "day" && gameState.clockMinutes === 8 * 60) {
+      this.settleAtEight({ day: gameState.day, sleepMinutes: 0, phaseSettlement });
+    }
     this._syncClock();
     if (previousPhase !== gameState.phase) {
       eventBus.emit("daynight:changed", {
         day: gameState.day,
         phase: gameState.phase,
         duty: gameState.duty,
+        location: gameState.location,
         phaseChanged: true,
         automatic: true,
       });

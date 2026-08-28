@@ -34,8 +34,18 @@ class ScheduleQueue {
     return this.entries.filter((entry) => entry.status === "pending");
   }
 
+  getPendingForBatch(day, time) {
+    return this.entries.filter((entry) =>
+      entry.status === "pending" && entry.receivedDay === day && entry.receivedTime === time
+    );
+  }
+
+  hasPendingBatch(day, time) {
+    return this.getPendingForBatch(day, time).length > 0;
+  }
+
   restore(entries = []) {
-    this.entries = entries.map((entry) => ({
+    this.entries = (Array.isArray(entries) ? entries : []).map((entry) => ({
       ...entry,
       status: entry.status === "completed" ? "completed" : "pending",
     }));

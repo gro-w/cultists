@@ -1,5 +1,73 @@
 {
-  "day": 4,
-  "time": "08:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "patient_stranger_d4",
+      "name": "神秘病人",
+      "age": 38,
+      "correctDiagnosisId": "migraine_unspecified",
+      "diagnosisOptionIds": [
+        "migraine_unspecified",
+        "benign_positional_vertigo",
+        "acute_upper_respiratory_infection"
+      ],
+      "applicableMedicineIds": [
+        "med_paracetamol"
+      ],
+      "forbiddenMedicineIds": [
+        "med_sleep_aid"
+      ],
+      "dialogueTree": {
+        "start": "greet",
+        "nodes": {
+          "greet": {
+            "speaker": "npc",
+            "text": "医生，我这几天总是[[headache]]，朋友给了我一瓶偏方，说喝了就好，我不太敢喝，你要不要也看看？[[strange_liquid]]",
+            "options": [
+              {
+                "label": "这种来源不明的东西，还是交给我处理比较安全。",
+                "next": "give"
+              },
+              {
+                "label": "不了解成分，建议不要尝试，我帮你扔掉。",
+                "next": "refuse"
+              }
+            ]
+          },
+          "give": {
+            "speaker": "npc",
+            "text": "行吧，那我就给你了，你自己看着办。",
+            "options": [
+              {
+                "label": "好的，我拿去化验看看。",
+                "next": "end"
+              }
+            ],
+            "onShow": {
+              "grantItems": [
+                {
+                  "itemId": "mystery_potion",
+                  "count": 1
+                }
+              ]
+            }
+          },
+          "refuse": {
+            "speaker": "npc",
+            "text": "好吧，那我扔了就是。",
+            "options": [
+              {
+                "label": "这样比较稳妥。",
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "speaker": "npc",
+            "text": "谢谢医生。",
+            "options": []
+          }
+        }
+      }
+    }
+  ]
 }

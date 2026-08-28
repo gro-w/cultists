@@ -22,7 +22,7 @@ import { DevDormComputerTab } from "./DevDormComputerTab.js";
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
 const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, scheduleData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
-const JSON_FILES = () => [...DAY_FILES(), "socialpub.json", "workpub.json", "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json", "global_variables.json", "locations.json", "social_apps.json"];
+const JSON_FILES = () => [...DAY_FILES(), "socialpub.json", "workpub.json", "chatgtp_qa.json", "chatgtp_dialog.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "item_placements.json", "diagnoses.json", "medicines.json", "medical_events.json", "endings.json", "npc_state.json", "global_variables.json", "locations.json", "social_apps.json", "bgm.json", "time_rules.json", "calendar.json", "achievements.json", "skills.json", "monitor_scenes.json"];
 const QA_PAGE_SIZE = 50;
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",
@@ -63,7 +63,7 @@ export function launchDeveloperMode() {
 class DeveloperMode {
   constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("JSON 文件", "tab-json")}${button("物品编辑器", "tab-item-editor", "dev-btn-tool")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-tool")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-tool")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-tool")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-tool")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("关键词编辑器", "tab-keywords", "dev-btn-data")}${button("ChatGTP 编辑器", "tab-chatgtp", "dev-btn-data")}${button("NPC 列表", "tab-npcs", "dev-btn-data")}${button("全局变量", "tab-global-variables", "dev-btn-data")}${button("JSON 文件", "tab-json", "dev-btn-data")}${button("物品编辑器", "tab-item-editor", "dev-btn-data")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-data")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-data")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-data")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-data")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
 
@@ -99,8 +99,16 @@ class DeveloperMode {
   }
 
   bindPanel() { this.root.querySelectorAll("[data-dev-action]").forEach((el) => el.addEventListener("click", () => this.handle(el.dataset.devAction))); }
-  panel(html) {
-    this.root.querySelector("[data-dev-panel]").innerHTML = html;
+  _setPanelKind(kind) {
+    const panel = this.root.querySelector("[data-dev-panel]");
+    if (!panel) return;
+    panel.classList.toggle("dev-data-panel", kind === "data");
+    panel.classList.toggle("dev-runtime-panel", kind !== "data");
+  }
+  panel(html, kind = "runtime") {
+    const panel = this.root.querySelector("[data-dev-panel]");
+    this._setPanelKind(kind);
+    panel.innerHTML = html;
     this.bindPanel();
     const jsonFile = this.root.querySelector("[data-json-file]");
     if (jsonFile) jsonFile.addEventListener("change", () => this.showJson(jsonFile.value));
@@ -119,6 +127,7 @@ class DeveloperMode {
 
   showItemEditor() {
     this._unmountEditorTabs();
+    this._setPanelKind("data");
     this._itemEditorTab = new DevItemEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._itemEditorTab.html();
     this.bindPanel();
@@ -127,6 +136,7 @@ class DeveloperMode {
 
   showDialogueEditor() {
     this._unmountEditorTabs();
+    this._setPanelKind("data");
     this._dialogueEditorTab = new DevDialogueEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dialogueEditorTab.html();
     this.bindPanel();
@@ -135,6 +145,7 @@ class DeveloperMode {
 
   showBgmEditor() {
     this._unmountEditorTabs();
+    this._setPanelKind("data");
     this._bgmEditorTab = new DevBgmEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._bgmEditorTab.html();
     this.bindPanel();
@@ -143,6 +154,7 @@ class DeveloperMode {
 
   showLocationEditor() {
     this._unmountEditorTabs();
+    this._setPanelKind("data");
     this._locationEditorTab = new DevLocationEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._locationEditorTab.html();
     this.bindPanel();
@@ -151,6 +163,7 @@ class DeveloperMode {
 
   showDormComputerEditor() {
     this._unmountEditorTabs();
+    this._setPanelKind("data");
     this._dormComputerTab = new DevDormComputerTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dormComputerTab.html();
     this.bindPanel();
@@ -219,7 +232,7 @@ class DeveloperMode {
       <label>文件 <select data-json-file>${JSON_FILES().map((file) => `<option ${file === fileName ? "selected" : ""}>${file}</option>`).join("")}</select></label>
       <textarea data-json-editor class="dev-textarea dev-json-editor">${JSON.stringify(doc, null, 2)}</textarea>
       <div>${button("校验并保存到内存", "save-json")} ${button("下载 JSON", "download-json")} ${button("写入磁盘", "write-json")}</div>
-    </section>`);
+    </section>`, "data");
   }
 
 
@@ -227,7 +240,7 @@ class DeveloperMode {
   async showKeywords() {
     const doc = await this.loadDoc("keywords.json");
     const rows = (doc.keywords || []).map((k, i) => `<tr data-keyword-row="${i}"><td><input data-k-id value="${esc(k.id)}"></td><td><input data-k-content value="${esc(k.content || k.label || "")}"></td><td>${button("删除", `remove-keyword-${i}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3><p>关键词只保存稳定 ID 和显示内容。疾病关键词的介绍、药物和秘药资料请在 ChatGTP 编辑器中修改。</p><table class="dev-table dev-keyword-table"><thead><tr><th>ID</th><th>内容</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3><p>关键词只保存稳定 ID 和显示内容。疾病关键词的介绍、药物和秘药资料请在 ChatGTP 编辑器中修改。</p><table class="dev-table dev-keyword-table"><thead><tr><th>ID</th><th>内容</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div></section>`, "data");
   }
 
   _syncQaPage() {
@@ -269,7 +282,7 @@ class DeveloperMode {
       const same = Boolean(entry.corruptedSameAsNormal);
       return `<article class="dev-qa-entry" data-qa-entry="${index}"><header><strong>${index + 1}. 关键词组合</strong>${option(0)} + ${option(1)}${button("删除", `remove-qa-entry-${index}`)}</header><label>正常回答<textarea data-qa-answer rows="3">${esc(entry.answer)}</textarea></label><label class="dev-checkbox-label"><input type="checkbox" data-qa-same ${same ? "checked" : ""}> SAN 较低时使用正常回答</label><label>损坏时回答<textarea data-qa-corrupted rows="3" ${same ? "disabled" : ""}>${esc(entry.corruptedAnswer || "")}</textarea></label></article>`;
     }).join("");
-    this.panel(`<section class="dev-section"><h3>ChatGTP 问答编辑器</h3><p>先按关键词类别筛选，再为每条问答选择两个关键词。列表每页最多显示 ${QA_PAGE_SIZE} 条，避免一次创建数万条编辑 DOM。</p><label>关键词类别 <select data-qa-category>${categoryOptions}</select></label><span>当前显示 ${page.length} / ${filtered.length} 条（总计 ${this.qaDraft.length} 条）</span><div class="dev-qa-list">${rows || "暂无符合条件的问答条目"}</div><div>${button("上一页", "qa-page-prev")} <span>第 ${this.qaPage} / ${totalPages} 页</span> ${button("下一页", "qa-page-next")} ${button("新增问答", "add-qa-entry")} ${button("保存问答到内存", "save-qa")} ${button("下载 chatgtp_qa.json", "download-qa")} ${button("写入磁盘", "write-qa")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>ChatGTP 问答编辑器</h3><p>先按关键词类别筛选，再为每条问答选择两个关键词。列表每页最多显示 ${QA_PAGE_SIZE} 条，避免一次创建数万条编辑 DOM。</p><label>关键词类别 <select data-qa-category>${categoryOptions}</select></label><span>当前显示 ${page.length} / ${filtered.length} 条（总计 ${this.qaDraft.length} 条）</span><div class="dev-qa-list">${rows || "暂无符合条件的问答条目"}</div><div>${button("上一页", "qa-page-prev")} <span>第 ${this.qaPage} / ${totalPages} 页</span> ${button("下一页", "qa-page-next")} ${button("新增问答", "add-qa-entry")} ${button("保存问答到内存", "save-qa")} ${button("下载 chatgtp_qa.json", "download-qa")} ${button("写入磁盘", "write-qa")}</div></section>`, "data");
     this.root.querySelector("[data-qa-category]")?.addEventListener("change", (event) => { this._syncQaPage(); this.qaCategory = event.target.value; this.qaPage = 1; this.showChatgtp(); });
     this.root.querySelectorAll("[data-qa-same]").forEach((checkbox) => checkbox.addEventListener("change", () => {
       checkbox.closest("[data-qa-entry]").querySelector("[data-qa-corrupted]").disabled = checkbox.checked;
@@ -280,13 +293,13 @@ class DeveloperMode {
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
     const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td><input data-npc-favor type="number" min="0" max="100" value="${Number(npc.initialFavorability) || 0}"></td><td><input data-npc-san type="number" min="0" max="100" value="${Number(npc.initialSan) || 0}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。主角对话节点可通过 <code>onShow.favorabilityChange</code> 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。主角对话节点可通过 <code>onShow.favorabilityChange</code> 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
   }
 
   showGlobalVariables() {
     const valueText = (variable, value) => variable.type === "string" ? value : String(value);
     const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
   }
 
   _readGlobalVariableRows() {

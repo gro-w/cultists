@@ -184,12 +184,48 @@ App 点击
 - `diagnoses.json`、`medicines.json`：医疗知识图谱。
 - `global_variables.json`：顶层数组，ID 唯一，类型为 bool/number/string。
 - `special_events.json`、`endings.json`、`achievements.json`：特殊事件、结局和成就。
+- `social_apps.json`：宿舍电脑中的社交网站、群聊和 ChatGTP 每日内容。
+- `bgm.json`、`locations.json`：BGM 资源/规则和位置、子位置、热点定义。
+- `time_rules.json`、`calendar.json`、`skills.json`、`monitor_scenes.json`：时间规则、日历、技能和宿舍监控场景。
 
 生成内容时先读取 schema 和同类条目，再写入目标文件；保持原有条目、LF 换行和稳定 ID。新增角色、关键词、物品或诊断后，搜索日程、特殊事件、结局、存档索引和编辑器中的全部引用。
 
+### 7.1 数据文件与开发人员模式编辑器映射
+
+下面的清单按当前 `data/zh-hans/` 实际存在的 51 个 JSON 文件逐项列出。除注明“无专用编辑器”外，文件均有对应的专用入口；通用 JSON 编辑器可以读取、下载并在开发服务器运行时写回所有这些文件。
+
+| 数据文件 | 专用编辑器/入口 | 说明 |
+| --- | --- | --- |
+| `work01a.json`、`work01b.json`、`work02a.json`、`work02b.json`、`work03a.json`、`work03b.json`、`work04a.json`、`work04b.json`、`work05a.json`、`work05b.json`、`work06a.json`、`work06b.json`、`work07a.json`、`work07b.json` | 日程编辑器 | 工作/患者日程及对象式蓝图 |
+| `social01a.json`、`social01b.json`、`social02a.json`、`social02b.json`、`social03a.json`、`social03b.json`、`social04a.json`、`social04b.json`、`social05a.json`、`social05b.json`、`social06a.json`、`social06b.json`、`social07a.json`、`social07b.json` | 日程编辑器 | 社交日程及对象式蓝图 |
+| `workpub.json`、`socialpub.json` | 日程编辑器 | 公共 Work/Social 日程 |
+| `special_events.json` | 日程编辑器 | 特殊事件上下文 |
+| `endings.json` | 日程编辑器 | 结局上下文 |
+| `items.json` | 物品和法术编辑器 | 物品、调查、使用效果、书籍和法术 |
+| `locations.json` | 位置编辑器 | 位置、背景图、子位置和热点 |
+| `bgm.json` | BGM 编辑器 | 曲目、默认规则、回退策略 |
+| `social_apps.json` | 宿舍电脑内容编辑器 | 吱乎、小绿书、企鹅群和 ChatGTP 每日内容 |
+| `keywords.json` | 关键词编辑器 | 稳定关键词 ID 和内容 |
+| `chatgtp_qa.json` | ChatGTP 问答编辑器 | 关键词组合问答 |
+| `npcs.json` | NPC 列表编辑器 | 稳定 NPC ID、名称、头像和初始值 |
+| `global_variables.json` | 全局变量编辑器 | 变量定义；“当前值”列是运行时值操作，不是另一份数据文件 |
+| `chatgtp_dialog.json` | 无专用编辑器；JSON 文件 | ChatGTP 对话/兼容内容，仅可通过通用 JSON 编辑器维护 |
+| `item_placements.json` | 无专用编辑器；JSON 文件 | 场景物品摆放，运行时由 `ItemPlacementManager` 使用 |
+| `diagnoses.json` | 无专用编辑器；JSON 文件 | 医疗诊断知识数据，由 HIS/医疗管理器读取 |
+| `medicines.json` | 无专用编辑器；JSON 文件 | 药品知识数据，由 HIS/医疗管理器读取 |
+| `medical_events.json` | 无专用编辑器；JSON 文件 | 医疗事件数据，由医疗管理器读取 |
+| `npc_state.json` | 无专用数据编辑器；NPC 状态调节器操作运行时状态 | 文件提供 NPC 状态配置；调节器不会把运行时状态写回该文件 |
+| `time_rules.json` | 无专用编辑器；JSON 文件 | `TimeService` 的时间、睡眠和 SAN 规则 |
+| `calendar.json` | 无专用编辑器；JSON 文件 | 日历内容，由 `CalendarData` 读取 |
+| `achievements.json` | 无专用编辑器；JSON 文件 | 成就定义，由 `AchievementManager` 读取 |
+| `skills.json` | 无专用编辑器；JSON 文件 | 技能定义，由 `SkillManager` 读取 |
+| `monitor_scenes.json` | 无专用编辑器；JSON 文件 | 宿舍监控场景，由 Monitor/Dorm 读取 |
+
+因此，当前没有专用编辑器的文件是：`chatgtp_dialog.json`、`item_placements.json`、`diagnoses.json`、`medicines.json`、`medical_events.json`、`npc_state.json`、`time_rules.json`、`calendar.json`、`achievements.json`、`skills.json`、`monitor_scenes.json`。它们现在都已纳入“JSON 文件”通用编辑器的文件列表；其中 `npc_state.json` 还要特别区分静态配置和运行时 NPC 状态。
+
 ## 8. 开发人员模式
 
-开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。当前入口包括状态、NPC 状态、背包、关键词、ChatGTP、NPC 列表、全局变量、JSON、物品、日程蓝图、BGM、位置和电脑内容编辑器。
+开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。当前入口包括状态、NPC 状态、背包、关键词、ChatGTP、NPC 列表、全局变量、JSON、物品、日程蓝图、BGM、位置和电脑内容编辑器。数据编辑器入口使用蓝色背景；状态调节、NPC 状态调节和背包属于运行时状态操作，保持无色/中性背景。
 
 旧的“对话分支树”“患者分支树”“Work 事件队列”“Social 事件队列”已删除；不要恢复这些旧入口。对话/患者内容统一通过“日程编辑器”按源文件和 entry 编辑对象式蓝图。运行时 queue 仅用于执行与保存，不是编辑器的内容来源。
 

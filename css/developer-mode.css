@@ -5,6 +5,13 @@
 .dev-status { margin: 8px 0; padding: 5px; background: #ffffe1; border: 1px solid #808080; }
 .dev-status.dev-error { color: #900; background: #ffe0e0; }
 .dev-panel { display: grid; gap: 8px; }
+/* Data editors use a blue tint; runtime state tools stay neutral. */
+.dev-panel.dev-data-panel { padding: 8px; background: #c7d9f7; border: 1px solid #6f86ad; }
+.dev-panel.dev-data-panel .dev-section,
+.dev-panel.dev-data-panel .dev-ie-sec,
+.dev-panel.dev-data-panel .dev-qa-entry { background: #dce8fb; border-color: #8da4c8; }
+.dev-panel.dev-runtime-panel .dev-section,
+.dev-panel.dev-runtime-panel .dev-ie-sec { background: transparent; border-color: transparent; box-shadow: none; }
 .dev-section { padding: 8px; background: #d4d0c8; border: 1px solid #808080; box-shadow: inset 1px 1px #fff; }
 .dev-section h3 { margin: 0 0 8px; font-size: 14px; }
 .dev-section label { display: inline-flex; align-items: center; gap: 4px; margin: 3px 8px 3px 0; }
@@ -35,6 +42,8 @@
 /* ── shared tool button style ─────────────────────────────────────────── */
 .dev-btn-tool { background: #1a1a6e; color: #fff; border-color: #4040b0; }
 .dev-btn-tool:hover { background: #2828a0; }
+.dev-btn-data { background: #1a1a6e; color: #fff; border-color: #4040b0; }
+.dev-btn-data:hover { background: #2828a0; }
 
 /* ══════════════════════════════════════════════════════════════════════════
    ITEM EDITOR TAB

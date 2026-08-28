@@ -23,10 +23,32 @@ There is no build step. Because the engine `fetch()`s JSON from `data/` at
 runtime, the browser's same-origin policy requires serving over HTTP(S) —
 you cannot double-click `index.html` directly.
 
+**Quick play (read-only):**
 ```bash
 python3 -m http.server 8000
 # then open http://localhost:8000/
 ```
+
+**Developer mode (read + live JSON editing):**
+```bash
+node dev-server.js          # default port 8000
+node dev-server.js --port 8001 --lang zh-hans
+# then open http://localhost:8000/?dev
+```
+
+`dev-server.js` adds a CGI-style REST API on top of the static server:
+
+| Method | Path | What it does |
+|--------|------|--------------|
+| `GET`  | `/api/files` | List all `.json` files in `data/<lang>/` |
+| `GET`  | `/api/file?f=<name>` | Read one file |
+| `POST` | `/api/file?f=<name>` | Atomically overwrite one file |
+| `GET`  | `/api/events` | SSE stream — emits `file-changed` when disk changes |
+
+Opening the game with `?dev` auto-detects the server and unlocks **「写入磁盘」**
+buttons in the developer panel (🛠️) so edits persist to disk without a
+download/replace cycle. The SSE stream clears the DataLoader cache when a
+file changes so hot-editing from outside the browser also reflects instantly.
 
 ## Validating changes
 

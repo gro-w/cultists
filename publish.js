@@ -35,7 +35,7 @@ function stripDeveloperBlocks(text, fileName) {
 
 function copyTree(source, destination) {
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
-    if ([".git", "publish", "publish.js"].includes(entry.name)) continue;
+    if ([".git", "publish", "publish.js", "dev-server.js", "node_modules"].includes(entry.name)) continue;
     const from = path.join(source, entry.name);
     const to = path.join(destination, entry.name);
     if (entry.isDirectory()) {

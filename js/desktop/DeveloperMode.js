@@ -1,6 +1,6 @@
 // DEV-TOOLS:START
 import { windowManager } from "../core/WindowManager.js";
-import { dataLoader } from "../core/DataLoader.js";
+import { dataLoader, detectDevServer, writeJSONToDisk } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { saveManager } from "../core/SaveManager.js";
 import { gameState } from "../core/GameState.js";
@@ -11,11 +11,12 @@ import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { favorabilityManager } from "../core/FavorabilityManager.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
+import { globalVariableManager } from "../core/GlobalVariableManager.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
 const DAY_FILES = () => Array.from({ length: scheduleData.totalDays }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
-const JSON_FILES = () => [...DAY_FILES(), "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json"];
+const JSON_FILES = () => [...DAY_FILES(), "chatgtp_qa.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "diagnoses.json", "medicines.json", "endings.json", "npc_state.json", "global_variables.json"];
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
@@ -26,14 +27,44 @@ export function launchDeveloperMode() {
   if (existing) { windowManager.focus(existing.id); return; }
   const root = document.createElement("div"); root.className = "developer-mode-root";
   const win = windowManager.createWindow({ appId: "developer-mode", title: "开发人员模式", icon: "🛠️", width: 900, height: 680, content: root });
-  new DeveloperMode(root, win);
+  const mode = new DeveloperMode(root, win);
+  // Probe for dev-server in the background; update UI when we know.
+  detectDevServer().then((active) => {
+    mode.setDevServer(active);
+    if (active) mode.connectSSE();
+  });
 }
 
 class DeveloperMode {
-  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this.render(); }
+  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.actorFile = DAY_FILES()[0] || "day01a.json"; this.actorType = "contacts"; this.actorId = ""; this.actorTreeDraft = null; this.activeText = null; this._devServerActive = false; this._sse = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("JSON 文件", "tab-json")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("对话分支树", "tab-dialogue")}${button("患者分支树", "tab-patient")}${button("关键词编辑器", "tab-keywords")}${button("ChatGTP 编辑器", "tab-chatgtp")}${button("NPC 列表", "tab-npcs")}${button("全局变量", "tab-global-variables")}${button("JSON 文件", "tab-json")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
+  }
+
+  /** Called once detectDevServer() resolves. Updates status bar. */
+  setDevServer(active) {
+    this._devServerActive = active;
+    if (active) this.setStatus("✅ 开发服务器已连接 — 「写入磁盘」按钮已启用。");
+  }
+
+  /** Open SSE connection; clears DataLoader cache on file-changed events. */
+  connectSSE() {
+    if (this._sse) return;
+    const es = new EventSource("/api/events");
+    this._sse = es;
+    es.addEventListener("file-changed", (e) => {
+      try { const { filename } = JSON.parse(e.data); dataLoader.clearCache(filename); this.setStatus(`📂 磁盘文件已变更：${filename}（缓存已清除）`); } catch (_) { /* ignore */ }
+    });
+    es.onerror = () => { this.setStatus("⚠️ SSE 连接中断，磁盘变更通知已停止。", true); };
+    this.win.element?.addEventListener("remove", () => { es.close(); this._sse = null; }, { once: true });
+  }
+
+  /** Write a validated doc to disk via the dev-server API. Returns true on success. */
+  async writeToDisk(filename, value) {
+    if (!this._devServerActive) { this.setStatus("未检测到开发服务器，无法写入磁盘。请用「下载」按钮代替。", true); return false; }
+    try { await writeJSONToDisk(filename, value); this.setStatus(`✅ ${filename} 已写入磁盘。`); return true; }
+    catch (err) { this.setStatus(`✗ 写入磁盘失败：${err.message}`, true); return false; }
   }
 
   setStatus(message, error = false) {
@@ -125,7 +156,7 @@ class DeveloperMode {
     this.panel(`<section class="dev-section"><h3>JSON 编辑器</h3>
       <label>文件 <select data-json-file>${JSON_FILES().map((file) => `<option ${file === fileName ? "selected" : ""}>${file}</option>`).join("")}</select></label>
       <textarea data-json-editor class="dev-textarea dev-json-editor">${JSON.stringify(doc, null, 2)}</textarea>
-      <div>${button("校验并保存到内存", "save-json")} ${button("下载 JSON", "download-json")}</div>
+      <div>${button("校验并保存到内存", "save-json")} ${button("下载 JSON", "download-json")} ${button("写入磁盘", "write-json")}</div>
     </section>`);
   }
 
@@ -160,14 +191,14 @@ class DeveloperMode {
       <p>这是可视化分支树：节点内容、说话者、选项文本和箭头目标均可直接编辑。关键词按钮会插入当前聚焦节点。</p>
       <div class="dev-actor-meta">${type === "patients" ? `<label>角色名称 <input data-actor-name value="${esc(actor.name)}"></label>` : `<label>角色类型 <select data-actor-kind><option value="npc" ${actor.npcId ? "selected" : ""}>NPC 列表角色</option><option value="other" ${!actor.npcId ? "selected" : ""}>other（自定义角色）</option></select></label><label>NPC ID <select data-actor-npc-id><option value="">（选择 NPC）</option>${npcOptions}</select></label><label>自定义名称 <input data-actor-name value="${esc(actor.name)}" placeholder="仅 other 使用"></label><label>自定义头像 <input data-actor-avatar value="${esc(actor.avatar)}" placeholder="仅 other 使用"></label>`}</div>
       ${this.treeHtml(tree, keywordDoc)}
-      <div>${button("保存角色到内存", "save-actor")} ${button("下载日程 JSON", "download-actor-file")}</div>
+      <div>${button("保存角色到内存", "save-actor")} ${button("下载日程 JSON", "download-actor-file")} ${button("写入磁盘", "write-actor-file")}</div>
     </section>`);
   }
 
   async showKeywords() {
     const doc = await this.loadDoc("keywords.json");
     const rows = (doc.keywords || []).map((k, i) => `<tr data-keyword-row="${i}"><td><input data-k-id value="${esc(k.id)}"></td><td><input data-k-content value="${esc(k.content || k.label || "")}"></td><td>${button("删除", `remove-keyword-${i}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3><p>关键词只保存稳定 ID 和显示内容。疾病关键词的介绍、药物和秘药资料请在 ChatGTP 编辑器中修改。</p><table class="dev-table dev-keyword-table"><thead><tr><th>ID</th><th>内容</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3><p>关键词只保存稳定 ID 和显示内容。疾病关键词的介绍、药物和秘药资料请在 ChatGTP 编辑器中修改。</p><table class="dev-table dev-keyword-table"><thead><tr><th>ID</th><th>内容</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div></section>`);
   }
 
   async showChatgtp() {
@@ -183,7 +214,7 @@ class DeveloperMode {
       const same = Boolean(entry.corruptedSameAsNormal);
       return `<article class="dev-qa-entry" data-qa-entry="${index}"><header><strong>${index + 1}. 关键词组合</strong>${option(0)} + ${option(1)}${button("删除", `remove-qa-entry-${index}`)}</header><label>正常回答<textarea data-qa-answer rows="3">${esc(entry.answer)}</textarea></label><label class="dev-checkbox-label"><input type="checkbox" data-qa-same ${same ? "checked" : ""}> SAN 较低时使用正常回答</label><label>损坏时回答<textarea data-qa-corrupted rows="3" ${same ? "disabled" : ""}>${esc(entry.corruptedAnswer || "")}</textarea></label></article>`;
     }).join("");
-    this.panel(`<section class="dev-section"><h3>ChatGTP 问答编辑器</h3><p>所有关键词（包括疾病和疾病类别关键词）都使用同一套 1～2 个关键词问答字段。正常回答对应高 SAN，损坏回答对应低 SAN；疾病关键词的内容按既定规则预先写入这里。</p><div class="dev-qa-list">${rows || "暂无问答条目"}</div><div>${button("新增问答", "add-qa-entry")} ${button("保存问答到内存", "save-qa")} ${button("下载 chatgtp_qa.json", "download-qa")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>ChatGTP 问答编辑器</h3><p>所有关键词（包括疾病和疾病类别关键词）都使用同一套 1～2 个关键词问答字段。正常回答对应高 SAN，损坏回答对应低 SAN；疾病关键词的内容按既定规则预先写入这里。</p><div class="dev-qa-list">${rows || "暂无问答条目"}</div><div>${button("新增问答", "add-qa-entry")} ${button("保存问答到内存", "save-qa")} ${button("下载 chatgtp_qa.json", "download-qa")} ${button("写入磁盘", "write-qa")}</div></section>`);
     this.root.querySelectorAll("[data-qa-same]").forEach((checkbox) => checkbox.addEventListener("change", () => {
       checkbox.closest("[data-qa-entry]").querySelector("[data-qa-corrupted]").disabled = checkbox.checked;
     }));
@@ -192,7 +223,39 @@ class DeveloperMode {
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
     const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td><input data-npc-favor type="number" min="0" max="100" value="${Number(npc.initialFavorability) || 0}"></td><td><input data-npc-san type="number" min="0" max="100" value="${Number(npc.initialSan) || 0}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。主角对话节点可通过 <code>onShow.favorabilityChange</code> 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。主角对话节点可通过 <code>onShow.favorabilityChange</code> 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`);
+  }
+
+  showGlobalVariables() {
+    const valueText = (variable, value) => variable.type === "string" ? value : String(value);
+    const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`);
+  }
+
+  _readGlobalVariableRows() {
+    const parse = (raw, type, id, field) => {
+      if (type === "bool") {
+        if (raw !== "true" && raw !== "false") throw new Error(`变量 ${id} 的${field}必须是 true 或 false`);
+        return raw === "true";
+      }
+      if (type === "number") {
+        const value = Number(raw);
+        if (!Number.isFinite(value) || value < 0 || value > 256) throw new Error(`变量 ${id} 的${field}必须是 0-256 的数字`);
+        return value;
+      }
+      return raw;
+    };
+    return Array.from(this.root.querySelectorAll("[data-global-variable-row]"), (row) => {
+      const id = Number(row.querySelector("[data-gv-id]").value);
+      const type = row.querySelector("[data-gv-type]").value;
+      return {
+        id,
+        name: row.querySelector("[data-gv-name]").value.trim(),
+        type,
+        default: parse(row.querySelector("[data-gv-default]").value, type, id, "默认值"),
+        value: parse(row.querySelector("[data-gv-value]").value, type, id, "当前值"),
+      };
+    });
   }
 
   collectTree() {
@@ -242,7 +305,42 @@ class DeveloperMode {
     if (action === "tab-keywords") return this.showKeywords();
     if (action === "tab-chatgtp") return this.showChatgtp();
     if (action === "tab-npcs") return this.showNpcs();
+    if (action === "tab-global-variables") return this.showGlobalVariables();
     if (action === "tab-json") return this.showJson();
+    if (action === "add-global-variable") {
+      const nextId = globalVariableManager.all().reduce((max, variable) => Math.max(max, variable.id), -1) + 1;
+      const doc = await this.loadDoc("global_variables.json");
+      const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
+      variables.push({ id: nextId, name: `变量${nextId}`, type: "bool", default: false });
+      this.docs.set("global_variables.json", variables);
+      globalVariableManager.replaceDefinitions(variables);
+      return this.showGlobalVariables();
+    }
+    const removeGlobalVariable = action.match(/^remove-global-variable-(\d+)$/);
+    if (removeGlobalVariable) {
+      const doc = await this.loadDoc("global_variables.json");
+      const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
+      variables.splice(Number(removeGlobalVariable[1]), 1);
+      this.docs.set("global_variables.json", variables);
+      globalVariableManager.replaceDefinitions(variables);
+      return this.showGlobalVariables();
+    }
+    if (action === "save-global-variables" || action === "download-global-variables" || action === "write-global-variables") {
+      try {
+        const variables = this._readGlobalVariableRows();
+        globalVariableManager.replaceDefinitions(variables);
+        variables.forEach((variable) => globalVariableManager.set(variable.id, variable.value));
+        const doc = variables.map(({ id, name, type, default: defaultValue }) => ({ id, name, type, default: defaultValue }));
+        this.docs.set("global_variables.json", doc);
+        if (action === "download-global-variables") { downloadJson("global_variables.json", doc); this.setStatus("global_variables.json 已下载。"); return this.showGlobalVariables(); }
+        if (action === "write-global-variables") { await this.writeToDisk("global_variables.json", doc); return this.showGlobalVariables(); }
+        this.setStatus("global_variables.json 已保存到内存。");
+        return this.showGlobalVariables();
+      } catch (err) {
+        this.setStatus(`全局变量保存失败：${err.message}`, true);
+        return;
+      }
+    }
     if (action === "load-save") {
       const raw = this.root.querySelector("[data-save-input]").value.trim().replace(/^\?/, "");
       const ok = raw && saveManager.loadFromString(raw, { updateLocation: false });
@@ -301,7 +399,17 @@ class DeveloperMode {
       return this.showNpcState();
     }
     if (action === "save-json") {
-      try { this.docs.set(this.selectedFile, JSON.parse(this.root.querySelector("[data-json-editor]").value)); this.setStatus(`${this.selectedFile} 已校验并保存到内存。`); }
+      try {
+        const value = JSON.parse(this.root.querySelector("[data-json-editor]").value);
+        if (this.selectedFile === "global_variables.json") {
+          const variables = Array.isArray(value) ? value : value.variables;
+          globalVariableManager.replaceDefinitions(Array.isArray(variables) ? variables : []);
+          this.docs.set(this.selectedFile, Array.isArray(variables) ? variables : []);
+        } else {
+          this.docs.set(this.selectedFile, value);
+        }
+        this.setStatus(`${this.selectedFile} 已校验并保存到内存。`);
+      }
       catch (err) { this.setStatus(`JSON 无效：${err.message}`, true); }
       return;
     }
@@ -311,12 +419,21 @@ class DeveloperMode {
       catch (err) { this.setStatus(`JSON 无效，无法下载：${err.message}`, true); }
       return;
     }
+    if (action === "write-json") {
+      const raw = this.root.querySelector("[data-json-editor]").value;
+      let value; try { value = JSON.parse(raw); } catch (err) { this.setStatus(`JSON 无效，无法写入磁盘：${err.message}`, true); return; }
+      this.docs.set(this.selectedFile, value); await this.writeToDisk(this.selectedFile, value); return;
+    }
     if (action === "save-actor") {
       try { await this.saveActorToMemory(); this.setStatus(`${this.actorFile} 的 ${this.actorId} 已保存到内存。`); }
       catch (err) { this.setStatus(`角色保存失败：${err.message}`, true); }
       return;
     }
     if (action === "download-actor-file") { await this.saveActorToMemory(); const doc = await this.loadDoc(this.actorFile); downloadJson(this.actorFile, doc); this.setStatus(`${this.actorFile} 已下载。`); return; }
+    if (action === "write-actor-file") {
+      try { await this.saveActorToMemory(); } catch (err) { this.setStatus(`角色保存失败：${err.message}`, true); return; }
+      await this.writeToDisk(this.actorFile, await this.loadDoc(this.actorFile)); return;
+    }
     if (action === "add-actor") {
       const id = this.root.querySelector("[data-new-actor-id]")?.value.trim();
       const name = this.root.querySelector("[data-new-actor-name]")?.value.trim() || id;
@@ -348,14 +465,17 @@ class DeveloperMode {
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
     if (removeNpc) { const doc = await this.loadDoc("npcs.json"); doc.npcs.splice(Number(removeNpc[1]), 1); this.docs.set("npcs.json", doc); return this.showNpcs(); }
     if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂", initialFavorability: 50, initialSan: 80 }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
-    if (action === "save-npcs" || action === "download-npcs") {
+    if (action === "save-npcs" || action === "download-npcs" || action === "write-npcs") {
       const doc = await this.loadDoc("npcs.json"); const rows = Array.from(this.root.querySelectorAll("[data-npc-row]")); const ids = rows.map((row) => row.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
       doc.npcs = rows.map((row) => ({ id: row.querySelector("[data-npc-id]").value.trim(), name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂", initialFavorability: Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-favor]").value) || 0)), initialSan: Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-san]").value) || 0)) }));
-      this.docs.set("npcs.json", doc); if (action === "download-npcs") downloadJson("npcs.json", doc); this.setStatus(`npcs.json 已${action === "download-npcs" ? "下载" : "保存到内存"}。`); return;
+      this.docs.set("npcs.json", doc);
+      if (action === "download-npcs") { downloadJson("npcs.json", doc); this.setStatus("npcs.json 已下载。"); return; }
+      if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }
+      this.setStatus("npcs.json 已保存到内存。"); return;
     }
     if (action === "add-qa-entry") { const qa = await this.loadDoc("chatgtp_qa.json"); const keywords = await this.loadDoc("keywords.json"); const firstId = keywords.keywords?.[0]?.id || ""; qa.entries = qa.entries || []; qa.entries.push({ keywords: firstId ? [firstId] : [], answer: "", corruptedAnswer: "", corruptedSameAsNormal: true }); this.docs.set("chatgtp_qa.json", qa); return this.showChatgtp(); }
-    if (action === "save-qa" || action === "download-qa") {
+    if (action === "save-qa" || action === "download-qa" || action === "write-qa") {
       const qa = await this.loadDoc("chatgtp_qa.json");
       const rows = Array.from(this.root.querySelectorAll("[data-qa-entry]"));
       const entries = rows.map((row) => {
@@ -367,12 +487,15 @@ class DeveloperMode {
       });
       const keys = entries.map((entry) => [...entry.keywords].sort().join("+"));
       if (entries.some((entry) => entry.keywords.length === 0 || entry.keywords.length > 2 || !entry.answer.trim()) || new Set(keys).size !== keys.length) { this.setStatus("ChatGTP 保存失败：每条问答需要 1～2 个关键词、正常回答，且关键词组合不能重复。", true); return; }
-      qa.entries = entries; this.docs.set("chatgtp_qa.json", qa); if (action === "download-qa") downloadJson("chatgtp_qa.json", qa); this.setStatus(`chatgtp_qa.json 已${action === "download-qa" ? "下载" : "保存到内存"}。`); return;
+      qa.entries = entries; this.docs.set("chatgtp_qa.json", qa);
+      if (action === "download-qa") { downloadJson("chatgtp_qa.json", qa); this.setStatus("chatgtp_qa.json 已下载。"); return; }
+      if (action === "write-qa") { await this.writeToDisk("chatgtp_qa.json", qa); return; }
+      this.setStatus("chatgtp_qa.json 已保存到内存。"); return;
     }
     if (action === "add-keyword") { const doc = await this.loadDoc("keywords.json"); doc.keywords.push({ id: `new_keyword_${doc.keywords.length + 1}`, content: "新关键词" }); this.docs.set("keywords.json", doc); return this.showKeywords(); }
     if (action === "remove-keyword" || action.startsWith("remove-keyword-")) { const index = Number(action.split("-").pop()); const doc = await this.loadDoc("keywords.json"); doc.keywords.splice(index, 1); this.docs.set("keywords.json", doc); return this.showKeywords(); }
 
-    if (action === "save-keywords" || action === "download-keywords") {
+    if (action === "save-keywords" || action === "download-keywords" || action === "write-keywords") {
       const doc = await this.loadDoc("keywords.json");
       const rows = Array.from(this.root.querySelectorAll("[data-keyword-row]"));
       const ids = rows.map((row) => row.querySelector("[data-k-id]").value.trim());
@@ -380,7 +503,10 @@ class DeveloperMode {
       doc.keywords = rows.map((row) => {
         return { id: row.querySelector("[data-k-id]").value.trim(), content: row.querySelector("[data-k-content]").value };
       });
-      this.docs.set("keywords.json", doc); if (action === "download-keywords") downloadJson("keywords.json", doc); this.setStatus(`keywords.json 已${action === "download-keywords" ? "下载" : "保存到内存"}。`); return;
+      this.docs.set("keywords.json", doc);
+      if (action === "download-keywords") { downloadJson("keywords.json", doc); this.setStatus("keywords.json 已下载。"); return; }
+      if (action === "write-keywords") { await this.writeToDisk("keywords.json", doc); return; }
+      this.setStatus("keywords.json 已保存到内存。"); return;
     }
   }
 

@@ -2,6 +2,8 @@
 import { dataLoader } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
+import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition } from "../core/ScheduleNodeRegistry.js";
+import { validateBlueprint } from "../core/ScheduleBlueprint.js";
 
 /**
  * DevDialogueEditorTab — dialogue-editor.html/js ported into DeveloperMode.
@@ -39,6 +41,7 @@ const _DE_BUILTIN_VARS = [
 ];
 const _DE_NUMVARS = ['sanity','clarity','aje_favor','awei_favor','binbin_favor','suspicion'];
 const _DE_COND_OPS = ['==','!=','>','>=','<','<=','has','nothas'];
+const _DE_NODE_LABELS = Object.fromEntries(SCHEDULE_NODE_TYPES.map(type => [type, getScheduleNodeDefinition(type).label]));
 
 export class DevDialogueEditorTab {
   constructor(devMode) {
@@ -78,10 +81,10 @@ export class DevDialogueEditorTab {
     return null;
   }
   _emptyNode(x=100,y=100) {
-    return {id:this._uid('n'),speaker:'player',text:'',keywordIds:[],next:null,options:[],onShow:{},entryConds:[],x,y};
+    return {id:this._uid('n'),type:'text',speaker:'player',text:'',keywordIds:[],next:null,options:[],onShow:{},entryConds:[],inputs:{},outputs:{},x,y};
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
-  _emptyCtx() { return {nodes:{},startNodeId:null}; }
+  _emptyCtx() { return {nodes:{},connections:[],startNodeId:null}; }
   _emptyProject(totalDays = MAX_GAME_DAYS) {
     totalDays = Math.min(MAX_GAME_DAYS, Math.max(1, Number(totalDays) || MAX_GAME_DAYS));
     const schedules={};
@@ -93,14 +96,14 @@ export class DevDialogueEditorTab {
     if (!tree?.nodes) return this._emptyCtx();
     const nodes = {};
     Object.entries(tree.nodes).forEach(([id, node]) => {
-      nodes[id] = { id, speaker: node.speaker || 'npc', text: node.text || '',
+      nodes[id] = { id, type: node.type || 'text', speaker: node.speaker || 'npc', text: node.text || '', inputs: node.inputs || {}, outputs: node.outputs || {},
         keywordIds: [], next: node.next || null, options: (node.options || []).map(opt => ({
           id: this._uid('opt'), label: opt.label || '', next: opt.next || null,
           effects: opt.effects || {}, conditions: opt.condition ? [opt.condition] : (opt.conditions || []),
         })), onShow: node.onShow || {}, entryConds: node.condition ? [node.condition] : (node.entryConds || []),
         x: node.x ?? 100, y: node.y ?? 100 };
     });
-    return { nodes, startNodeId: tree.start || tree.startNodeId || Object.keys(nodes)[0] || null };
+    return { nodes, connections: Array.isArray(tree.connections) ? tree.connections.map(connection => ({ ...connection })) : [], startNodeId: tree.start || tree.startNodeId || Object.keys(nodes)[0] || null };
   }
 
   _migrateProject(project) {
@@ -215,6 +218,14 @@ export class DevDialogueEditorTab {
     <div id="de-editor-body" style="flex:1;overflow-y:auto;padding:6px">
       <div id="de-editor-empty" style="padding:20px;text-align:center;color:#555;font-size:12px">👈 点击画布中的节点来编辑</div>
       <div id="de-editor-form" style="display:none">
+        <div class="dev-de-ed-sec">
+          <div class="dev-de-ed-label">节点种类</div>
+          <select id="de-ed-type" style="width:100%;min-height:23px;border:2px inset #eee" onchange="_de._saveNodeType(this.value)">
+            ${SCHEDULE_NODE_TYPES.map(type=>`<option value="${type}">${this._e(_DE_NODE_LABELS[type])} (${type})</option>`).join('')}
+          </select>
+          <div class="dev-de-ed-label" style="margin-top:4px">数值输入（JSON 对象）</div>
+          <textarea id="de-ed-inputs" class="dev-textarea" style="width:100%;height:48px;resize:vertical" placeholder='{"minutes":20}' oninput="_de._saveNodeInputs()"></textarea>
+        </div>
         <div class="dev-de-ed-sec">
           <div class="dev-de-ed-label">发言角色</div>
           <div style="display:flex;gap:3px;flex-wrap:wrap" id="de-spk-btns">
@@ -441,6 +452,7 @@ export class DevDialogueEditorTab {
     container.style.cursor = this._connectMode ? 'crosshair' : '';
     Object.values(data.nodes||{}).forEach(node=>{
       const spk=this._spk(node.speaker);
+      const nodeLabel=_DE_NODE_LABELS[node.type||'text']||'显示文字';
       const isStart=node.id===data.startNodeId, isSel=node.id===this.selectedNodeId;
       const div=document.createElement('div');
       div.className=`dev-de-node${isSel?' selected':''}${isStart?' start':''}`;
@@ -453,10 +465,10 @@ export class DevDialogueEditorTab {
       ).join('');
       div.innerHTML=`
         <div class="dev-de-node-hd" style="background:${spk.color}">
-          <span>${this._e(spk.label)}${isStart?' 🏠':''}</span>
+          <span>${this._e(nodeLabel)} · ${this._e(spk.label)}${isStart?' 🏠':''}</span>
           <button type="button" class="dev-de-node-link" onclick="event.stopPropagation();_de._startConnect('${node.id}',null)" title="连线">🔗</button>
         </div>
-        <div class="dev-de-node-body">${this._e((node.text||'').slice(0,60))}</div>
+        <div class="dev-de-node-body">${this._e((node.type&&node.type!=='text') ? JSON.stringify(node.inputs||{}) : (node.text||'').slice(0,60))}</div>
         ${optionPins ? `<div class="dev-de-node-options">${optionPins}</div>` : ''}
         <div class="dev-de-node-ft">${optBadge}${nxtBadge}</div>`;
       div.querySelectorAll('.dev-de-option-pin').forEach(pin => pin.addEventListener('pointerdown', e => {
@@ -531,6 +543,9 @@ export class DevDialogueEditorTab {
         arc(node.id,opt.next,`hsl(${(i*55+200)%360},60%,40%)`,true,pin);
       });
     });
+    (data.connections||[]).forEach(connection=>{
+      if(connection.fromNodeId && connection.toNodeId) arc(connection.fromNodeId, connection.toNodeId, connection.fromPort?.startsWith('option') ? '#804000' : '#000080', false);
+    });
   }
 
   _drawTempConnection(source, clientX, clientY) {
@@ -571,6 +586,8 @@ export class DevDialogueEditorTab {
     const node = data.nodes[this.selectedNodeId]; if (!node) return;
     const ef=this._el('de-editor-empty'), ff=this._el('de-editor-form');
     if (ef) ef.style.display='none'; if (ff) ff.style.display='';
+    const typeEl=this._el('de-ed-type'); if(typeEl) typeEl.value=node.type||'text';
+    const inputsEl=this._el('de-ed-inputs'); if(inputsEl) inputsEl.value=JSON.stringify(node.inputs||{}, null, 2);
     // speaker buttons
     this._el('de-spk-btns')?.querySelectorAll('.dev-de-spk-btn').forEach(b=>{
       b.classList.toggle('active', b.dataset.spk===node.speaker);
@@ -596,6 +613,23 @@ export class DevDialogueEditorTab {
     set('de-os-ending',  os.ending);
     // entry conditions
     this._renderEntryConds(node);
+  }
+
+  _saveNodeType(type) {
+    const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
+    if(!node || !getScheduleNodeDefinition(type)) return;
+    node.type=type;
+    if(type==='flowStart') { node.speaker=undefined; node.text=undefined; node.options=[]; }
+    this._saveLS(); this._renderCanvas(); this._loadNodeEditor();
+  }
+
+  _saveNodeInputs() {
+    const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
+    if(!node) return;
+    try {
+      const value=JSON.parse(this._el('de-ed-inputs')?.value||'{}');
+      if(value && typeof value==='object' && !Array.isArray(value)) { node.inputs=value; this._saveLS(); }
+    } catch { this._st('数值输入必须是合法 JSON 对象'); }
   }
 
   _rebuildNextDropdown(dropId, currentVal, data) {
@@ -754,7 +788,12 @@ export class DevDialogueEditorTab {
     const { nodeId, optIdx } = this._connectFrom;
     const node = data.nodes[nodeId];
     if (node) {
-      if (optIdx !== null && node.options?.[optIdx]) node.options[optIdx].next = targetId;
+      const fromPort = optIdx !== null ? `option${optIdx}` : 'flowOut';
+      const typed = node.type && node.type !== 'text';
+      if (typed) {
+        data.connections = (data.connections || []).filter(connection => !(connection.fromNodeId === nodeId && connection.fromPort === fromPort));
+        data.connections.push({ fromNodeId: nodeId, fromPort, toNodeId: targetId, toPort: 'flowIn' });
+      } else if (optIdx !== null && node.options?.[optIdx]) node.options[optIdx].next = targetId;
       else node.next = targetId;
     }
     this._cancelConnect();
@@ -774,7 +813,10 @@ export class DevDialogueEditorTab {
   // ── node CRUD ─────────────────────────────────────────────────────────────
   addNode() {
     const data = this._ctxData(); if (!data) { this._st('请先从左侧选择天数或事件'); return; }
+    const type = window.prompt(`选择节点种类：\n${SCHEDULE_NODE_TYPES.map((item,index)=>`${index + 1}. ${_DE_NODE_LABELS[item]} (${item})`).join('\n')}`, 'text');
+    if (!type || !getScheduleNodeDefinition(type)) { this._st('已取消或节点种类无效'); return; }
     const node = this._emptyNode(80 + Object.keys(data.nodes).length * 20, 80 + Object.keys(data.nodes).length * 20);
+    node.type=type;
     data.nodes[node.id] = node;
     if (!data.startNodeId) data.startNodeId = node.id;
     this._saveLS(); this._renderCanvas(); this._selectNode(node.id);
@@ -793,6 +835,7 @@ export class DevDialogueEditorTab {
     const data = this._ctxData(); if (!data || !this.selectedNodeId) return;
     if (!confirm('确认删除此节点？')) return;
     delete data.nodes[this.selectedNodeId];
+    data.connections = (data.connections || []).filter(connection => connection.fromNodeId !== this.selectedNodeId && connection.toNodeId !== this.selectedNodeId);
     Object.values(data.nodes).forEach(n => {
       if (n.next === this.selectedNodeId) n.next = null;
       (n.options||[]).forEach(o => { if (o.next === this.selectedNodeId) o.next = null; });
@@ -897,7 +940,23 @@ export class DevDialogueEditorTab {
   }
 
   _saveProject() {
+    const errors=this._validateTypedBlueprints();
+    if(errors.length){ alert(`蓝图校验失败：\n${errors.slice(0,8).join('\n')}`); return; }
     this._saveLS(); this._st('已保存到浏览器');
+  }
+
+  _validateTypedBlueprints() {
+    const errors=[];
+    const visit=(ctx,label)=>{
+      if(!ctx?.nodes || !Object.values(ctx.nodes).some(node=>node.type && node.type!=='text')) return;
+      const result=validateBlueprint(ctx);
+      if(!result.ok) result.errors.forEach(error=>errors.push(`${label}: ${error}`));
+    };
+    Object.entries(this.project?.schedules||{}).forEach(([file,schedule])=>
+      (schedule.entries||[]).forEach((entry,index)=>visit(entry.dialogueTree,`${file} 条目 ${index+1}`)));
+    Object.entries(this.project?.events||{}).forEach(([id,ctx])=>visit(ctx,`事件 ${id}`));
+    Object.entries(this.project?.endings||{}).forEach(([id,ctx])=>visit(ctx,`结局 ${id}`));
+    return errors;
   }
 
   _loadProjectFile() { this._el('de-file-input')?.click(); }
@@ -1065,6 +1124,7 @@ export class DevDialogueEditorTab {
     const gameNodes = {};
     Object.values(nodes).forEach(n => {
       const gn = { speaker: n.speaker === 'player' ? 'player' : 'npc', text: n.text || '', x: n.x ?? 100, y: n.y ?? 100 };
+      if (n.type && n.type !== 'text') { gn.type = n.type; gn.inputs = { ...(n.inputs || {}) }; gn.outputs = { ...(n.outputs || {}) }; }
       if (n.entryConds?.length) gn.condition = n.entryConds[0];
       if (n.options?.length) gn.options = n.options.map(o => {
         const option = { label: o.label || '', next: o.next || null };
@@ -1084,7 +1144,10 @@ export class DevDialogueEditorTab {
       }
       gameNodes[n.id] = gn;
     });
-    return { start: ctx.startNodeId || Object.keys(gameNodes)[0], nodes: gameNodes };
+    const out = { start: ctx.startNodeId || Object.keys(gameNodes)[0], nodes: gameNodes };
+    if (Array.isArray(ctx.connections) && ctx.connections.length) out.connections = ctx.connections.map(connection => ({ ...connection }));
+    if (ctx.startNodeId) out.startNodeId = ctx.startNodeId;
+    return out;
   }
 
   // ── variables modal ───────────────────────────────────────────────────────

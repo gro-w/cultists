@@ -11,6 +11,7 @@ import { saveManager } from "../core/SaveManager.js";
 import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
+import { renderInspectResult } from "../core/InspectFormat.js";
 
 const roommateImage = (npcId) => ({
   ajie: "data/assets/char_ajie_01.png",
@@ -25,8 +26,6 @@ const dialogueKeywordIds = (tree) => {
   return ids;
 };
 
-const MOVE_STEP = 18;
-const ROOM = { minX: 20, maxX: 460, minY: 195, maxY: 285 };
 
 /** Full-screen off-duty room: movement, NPC interaction, bed, and player menu. */
 export default class DormMode {
@@ -36,8 +35,6 @@ export default class DormMode {
     this.launchWorkApp = launchWorkApp;
     this.scenes = null;
     this.entry = null;
-    this.playerPos = { x: 240, y: 260 };
-    this.facing = 1;
     this._transitioning = false;
     this._build();
     eventBus.on("daynight:changed", (detail) => this._onStateChanged(detail));
@@ -54,15 +51,66 @@ export default class DormMode {
   _build() {
     this.root.className = "dorm-mode-overlay hidden";
     this.root.innerHTML = `
-      <div class="dorm-room-frame">
-        <div class="dorm-room-header"><strong>宿舍</strong><span class="dorm-mode-tip">点击场景移动 · 点击人物交互</span></div>
-        <div class="dorm-viewport panel-inset">
-          <img class="dorm-scene-bg" alt="宿舍" />
-          <div class="dorm-wall-clock"><span class="dorm-wall-clock-label">GAME TIME</span><strong></strong></div>
-          <div class="dorm-marker-layer"></div>
-          <img class="dorm-player" alt="主角" width="30" height="110" />
+      <div class="dorm-fs-root">
+        <div class="dorm-fs-header">
+          <strong class="dorm-fs-title">🏠 宿舍</strong>
+          <div class="dorm-wall-clock">
+            <span class="dorm-wall-clock-label">GAME TIME</span><strong></strong>
+          </div>
+          <div class="dorm-fs-actions">
+            <button type="button" class="win95-btn bevel-out" data-action="bed">🛏️ 睡觉</button>
+            <button type="button" class="win95-btn bevel-out" data-action="phone">📱 手机</button>
+            <button type="button" class="win95-btn bevel-out" data-action="clue">🧵 线索墙</button>
+            <button type="button" class="win95-btn bevel-out" data-action="computer">🖥️ 电脑</button>
+          </div>
         </div>
-        <div class="dorm-interaction panel-inset"><p>点击主角查看状态、物品与保存菜单。</p></div>
+        <div class="dorm-fs-scene">
+          <div class="dorm-bunk-unit" data-npc="player">
+            <div class="dorm-bunk-top" title="主角（点击查看状态）">
+              <img class="dorm-bunk-char" src="data/assets/char01_01_stage.png" alt="主角" />
+              <span class="dorm-bunk-bed-rail"></span>
+            </div>
+            <div class="dorm-bunk-bottom">
+              <div class="dorm-bunk-desk" id="desk-player_desk"></div>
+              <span class="dorm-bunk-label">主角</span>
+            </div>
+          </div>
+          <div class="dorm-bunk-unit" data-npc="ajie">
+            <div class="dorm-bunk-top" id="bed-ajie">
+              <span class="dorm-bunk-bed-rail"></span>
+            </div>
+            <div class="dorm-bunk-bottom">
+              <div class="dorm-bunk-desk" id="desk-ajie_desk"></div>
+              <span class="dorm-bunk-label">阿杰</span>
+            </div>
+          </div>
+          <div class="dorm-bunk-unit" data-npc="awei">
+            <div class="dorm-bunk-top" id="bed-awei">
+              <span class="dorm-bunk-bed-rail"></span>
+            </div>
+            <div class="dorm-bunk-bottom">
+              <div class="dorm-bunk-desk" id="desk-awei_desk"></div>
+              <span class="dorm-bunk-label">阿伟</span>
+            </div>
+          </div>
+          <div class="dorm-bunk-unit" data-npc="binbin">
+            <div class="dorm-bunk-top" id="bed-binbin">
+              <span class="dorm-bunk-bed-rail"></span>
+            </div>
+            <div class="dorm-bunk-bottom">
+              <div class="dorm-bunk-desk" id="desk-binbin_desk"></div>
+              <span class="dorm-bunk-label">彬彬</span>
+            </div>
+          </div>
+          <div class="dorm-fridge-col">
+            <div class="dorm-fridge" id="desk-fridge">
+              <div class="dorm-fridge-label">🧊 小冰柜</div>
+            </div>
+          </div>
+        </div>
+        <div class="dorm-interaction panel-inset">
+          <p class="dorm-interaction-hint">点击铺位上的人物交互 · 点击主角查看状态与物品</p>
+        </div>
         <div class="dorm-bed-confirm hidden" role="dialog" aria-modal="true">
           <div class="dorm-bed-confirm-box panel-inset">
             <strong class="dorm-bed-confirm-title"></strong>
@@ -74,29 +122,30 @@ export default class DormMode {
           </div>
         </div>
       </div>`;
-    this.viewport = this.root.querySelector(".dorm-viewport");
-    this.bg = this.root.querySelector(".dorm-scene-bg");
-    this.clock = this.root.querySelector(".dorm-wall-clock strong");
-    this.markers = this.root.querySelector(".dorm-marker-layer");
-    this.player = this.root.querySelector(".dorm-player");
+
+    this.clock       = this.root.querySelector(".dorm-wall-clock strong");
     this.interaction = this.root.querySelector(".dorm-interaction");
-    this.confirmPanel = this.root.querySelector(".dorm-bed-confirm");
-    this.confirmTitle = this.root.querySelector(".dorm-bed-confirm-title");
+    this.confirmPanel   = this.root.querySelector(".dorm-bed-confirm");
+    this.confirmTitle   = this.root.querySelector(".dorm-bed-confirm-title");
     this.confirmMessage = this.root.querySelector(".dorm-bed-confirm-message");
-    this.computerClose = document.getElementById("computer-close-button");
+    this.computerClose  = document.getElementById("computer-close-button");
+
     this.computerClose.addEventListener("click", () => this._closeComputer());
     this.confirmPanel.querySelector(".dorm-bed-confirm-cancel").addEventListener("click", () => {
       this.confirmPanel.classList.add("hidden");
     });
-    this.player.src = "data/assets/char01_01_stage.png";
-    this.player.addEventListener("click", (event) => {
-      event.stopPropagation();
-      this._showPlayerMenu();
+
+    this.root.querySelector('[data-action="bed"]').addEventListener("click", () => this._bedAction());
+    this.root.querySelector('[data-action="phone"]').addEventListener("click", () => {
+      launchChatGTPApp({ container: this.interaction })
+        .catch((err) => this._message(`ChatGTP 无法打开：${err.message}`));
     });
-    this.viewport.addEventListener("click", (event) => {
-      const rect = this.viewport.getBoundingClientRect();
-      this._moveTo(event.clientX - rect.left, event.clientY - rect.top);
-    });
+    this.root.querySelector('[data-action="clue"]').addEventListener("click", () => this._showClueWall());
+    this.root.querySelector('[data-action="computer"]').addEventListener("click", () => this._openComputer());
+
+    // Player bunk top click → show player menu
+    this.root.querySelector('[data-npc="player"] .dorm-bunk-top')
+      .addEventListener("click", () => this._showPlayerMenu());
   }
 
   _clockMinutes() {
@@ -109,124 +158,90 @@ export default class DormMode {
     this.clock.textContent = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
   }
 
-  _moveTo(x, y) {
-    const previousX = this.playerPos.x;
-    this.playerPos = {
-      x: Math.max(ROOM.minX, Math.min(ROOM.maxX, x)),
-      y: Math.max(ROOM.minY, Math.min(ROOM.maxY, y)),
-    };
-    this.facing = x >= previousX ? 1 : -1;
-    this.player.style.left = `${this.playerPos.x}px`;
-    this.player.style.top = `${this.playerPos.y}px`;
-    this.player.style.transform = `translate(-50%, -100%) scaleX(${this.facing})`;
-  }
-
   async _renderScene() {
     if (!this.scenes) return;
-    const scene = this.scenes.night;
-    this.bg.src = scene.backgroundAsset;
-    this._moveTo(this.playerPos.x, this.playerPos.y);
     this._renderClock();
-    this.markers.innerHTML = "";
-    this._renderItemPlacements(scene);
+
+    // ── NPC characters on their bunks ──────────────────────────────────────
     const listKey = gameState.phase === "day" ? "patients" : "contacts";
     this.entry = await scheduleData.load(gameState.day, gameState.phase);
     const actors = this.entry?.[listKey] || [];
-    const slots = scene.actorSlots || [];
-    const keywordDefs = {};
-    actors.forEach((actor) => Object.assign(keywordDefs, keywordManager.definitionsWithSource(dialogueKeywordIds(actor.dialogueTree), `宿舍-${actor.name}`)));
-    actors.slice(0, slots.length).forEach((actor, index) => {
+
+    // Map npcId → actor for the three roommates
+    const npcMap = new Map();
+    actors.forEach((actor) => {
       const npcId = actor.npcId || actor.id;
-      const slot = slots[index];
-      const image = roommateImage(npcId);
-      const marker = image ? document.createElement("img") : document.createElement("button");
-      if (!image) marker.type = "button";
-      marker.className = `${image ? "dorm-npc-image" : "win95-btn bevel-out dorm-npc-marker"}${npcStateManager.isOffline(npcId) ? " offline" : ""}`;
-      marker.style.left = `${slot.x}px`;
-      marker.style.top = `${slot.y}px`;
-      marker.title = `${actor.name}${npcStateManager.isOffline(npcId) ? "（暂时离线）" : ""}`;
-      marker.setAttribute("aria-label", marker.title);
-      if (image) {
-        marker.src = image;
-        marker.alt = actor.name;
-        marker.setAttribute("role", "button");
-        marker.tabIndex = 0;
-      } else {
-        marker.textContent = `${actor.avatar || "🙂"} ${actor.name}`;
-      }
-      marker.addEventListener("click", (event) => {
-        event.stopPropagation();
-        this._showDialogue(actor, keywordDefs);
-      });
-      if (image) marker.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          this._showDialogue(actor, keywordDefs);
+      if (["ajie", "awei", "binbin"].includes(npcId)) npcMap.set(npcId, actor);
+    });
+
+    // Pre-build keyword defs for all visible actors
+    const keywordDefs = {};
+    npcMap.forEach((actor, npcId) =>
+      Object.assign(keywordDefs, keywordManager.definitionsWithSource(
+        dialogueKeywordIds(actor.dialogueTree), `宿舍-${actor.name}`))
+    );
+
+    ["ajie", "awei", "binbin"].forEach((npcId) => {
+      const bedEl = this.root.querySelector(`#bed-${npcId}`);
+      if (!bedEl) return;
+      // Clear previous render (keep bed-rail)
+      [...bedEl.querySelectorAll(".dorm-bunk-char, .dorm-npc-btn")].forEach((el) => el.remove());
+
+      const actor = npcMap.get(npcId);
+      const imgSrc = roommateImage(npcId);
+      const offline = npcStateManager.isOffline(npcId);
+
+      if (imgSrc) {
+        const img = document.createElement("img");
+        img.className = `dorm-bunk-char${offline ? " offline" : ""}`;
+        img.src = imgSrc;
+        img.alt = actor?.name || npcId;
+        img.title = actor ? `${actor.name}${offline ? "（暂时离线）" : ""}` : npcId;
+        img.setAttribute("role", "button");
+        img.tabIndex = 0;
+        if (actor) {
+          const onClick = () => this._showDialogue(actor, keywordDefs);
+          img.addEventListener("click", onClick);
+          img.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); }
+          });
         }
-      });
-      this.markers.appendChild(marker);
+        bedEl.insertBefore(img, bedEl.querySelector(".dorm-bunk-bed-rail"));
+      } else if (actor) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `win95-btn bevel-out dorm-npc-btn${offline ? " offline" : ""}`;
+        btn.textContent = `${actor.avatar || "🙂"} ${actor.name}`;
+        btn.addEventListener("click", () => this._showDialogue(actor, keywordDefs));
+        bedEl.insertBefore(btn, bedEl.querySelector(".dorm-bunk-bed-rail"));
+      }
     });
-    const bed = document.createElement("button");
-    bed.type = "button";
-    bed.className = "win95-btn bevel-out dorm-bed-marker";
-    bed.textContent = "🛏️ 床";
-    bed.title = "睡觉 / 去上班";
-    bed.addEventListener("click", (event) => {
-      event.stopPropagation();
-      this._bedAction();
-    });
-    this.markers.appendChild(bed);
 
-    const phone = document.createElement("button");
-    phone.type = "button";
-    phone.className = "win95-btn bevel-out dorm-phone-marker";
-    phone.textContent = "📱 手机";
-    phone.title = "打开 ChatGTP";
-    phone.addEventListener("click", (event) => {
-      event.stopPropagation();
-      launchChatGTPApp({ container: this.interaction }).catch((err) => this._message(`ChatGTP 无法打开：${err.message}`));
-    });
-    this.markers.appendChild(phone);
-
-    const clueWall = document.createElement("button");
-    clueWall.type = "button";
-    clueWall.className = "win95-btn bevel-out dorm-clue-wall-marker";
-    clueWall.textContent = "🧵 线索墙";
-    clueWall.title = "查看线索之间的关系";
-    clueWall.addEventListener("click", (event) => {
-      event.stopPropagation();
-      this._showClueWall();
-    });
-    this.markers.appendChild(clueWall);
-
-    const computer = document.createElement("button");
-    computer.type = "button";
-    computer.className = "win95-btn bevel-out dorm-computer-marker";
-    computer.textContent = "🖥️ 电脑";
-    computer.title = "打开电脑屏幕";
-    computer.addEventListener("click", (event) => {
-      event.stopPropagation();
-      this._openComputer();
-    });
-    this.markers.appendChild(computer);
+    // ── Item placements on desks / fridge ──────────────────────────────────
+    this._renderItemPlacements();
   }
 
-  _renderItemPlacements(scene) {
+  _renderItemPlacements() {
+    // Clear all desk/fridge slots first
+    this.root.querySelectorAll(".dorm-bunk-desk, .dorm-fridge").forEach((el) => {
+      // Remove only item buttons, keep .dorm-fridge-label
+      [...el.querySelectorAll(".dorm-item-slot-btn")].forEach((b) => b.remove());
+    });
+
     itemPlacementManager.visibleFor("dorm").forEach((placement) => {
+      const zone = placement.zone || "player_desk";
+      const container = this.root.querySelector(`#desk-${zone}`);
+      if (!container) return;
+
       const hotspot = placement.hotspot || {};
-      const marker = document.createElement("button");
-      marker.type = "button";
-      marker.className = "win95-btn bevel-out dorm-item-placement-marker";
-      marker.style.left = `${hotspot.x}px`;
-      marker.style.top = `${hotspot.y}px`;
-      marker.textContent = hotspot.icon || "❔";
-      marker.title = hotspot.label || itemManager.getDef(placement.itemId)?.name || placement.itemId;
-      marker.setAttribute("aria-label", marker.title);
-      marker.addEventListener("click", (event) => {
-        event.stopPropagation();
-        this._inspectPlacedItem(placement.id);
-      });
-      this.markers.appendChild(marker);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "win95-btn bevel-out dorm-item-slot-btn";
+      btn.textContent = hotspot.icon || "❔";
+      btn.title = hotspot.label || itemManager.getDef(placement.itemId)?.name || placement.itemId;
+      btn.setAttribute("aria-label", btn.title);
+      btn.addEventListener("click", () => this._inspectPlacedItem(placement.id));
+      container.appendChild(btn);
     });
   }
 

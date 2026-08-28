@@ -12,14 +12,31 @@
       "name": "一把旧钥匙",
       "consumable": false,
       "usable": true,
-      "revealKeywordIds": ["old_key_clue"],
+      "revealKeywordIds": [
+        "old_key_clue"
+      ],
       "inspectText": "一把生了锈的[[old_key_clue|旧钥匙]]，边缘还留着划痕，不知道能打开什么。",
       "useCondition": {
-        "requires": [{ "itemId": "locked_box", "count": 1 }]
+        "requires": [
+          {
+            "itemId": "locked_box",
+            "count": 1
+          }
+        ]
       },
       "useEffect": {
-        "remove": [{ "itemId": "locked_box", "count": 1 }],
-        "add": [{ "itemId": "opened_box", "count": 1 }]
+        "remove": [
+          {
+            "itemId": "locked_box",
+            "count": 1
+          }
+        ],
+        "add": [
+          {
+            "itemId": "opened_box",
+            "count": 1
+          }
+        ]
       },
       "failMessage": "身上没有需要用这把钥匙打开的盒子，这把钥匙暂时用不上。",
       "successMessage": "你用旧钥匙打开了锁住的盒子。"
@@ -30,11 +47,15 @@
       "consumable": false,
       "usable": false,
       "inspectText": "一个上了锁的木盒，摇一摇里面似乎有东西碰撞的声响。也许有钥匙能打开它。",
-      "inspectCheck": { "skillId": "observation" },
+      "inspectCheck": {
+        "skillId": "observation"
+      },
       "inspectOutcomes": {
         "criticalSuccess": {
           "text": "你借着窗外的光仔细端详木盒的缝隙，隐约看清了里面除了硬物之外，还压着一张折起的[[mystery_note|纸片]]——不用打开锁也能猜到些什么了。",
-          "revealKeywordIds": ["mystery_note"]
+          "revealKeywordIds": [
+            "mystery_note"
+          ]
         },
         "success": {
           "text": "一个上了锁的木盒，摇一摇里面似乎有东西碰撞的声响。也许有钥匙能打开它。"
@@ -44,7 +65,9 @@
         },
         "criticalFailure": {
           "text": "你凑得太近，木盒边缘一根倒刺扎进了指腹，吓得手一抖差点没摔了它。",
-          "statChanges": { "mental": -3 }
+          "statChanges": {
+            "mental": -3
+          }
         }
       }
     },
@@ -53,7 +76,9 @@
       "name": "一个打开的盒子",
       "consumable": false,
       "usable": false,
-      "revealKeywordIds": ["mystery_note"],
+      "revealKeywordIds": [
+        "mystery_note"
+      ],
       "inspectText": "盒子已经打开了，里面只剩下一些灰尘和一张[[mystery_note|看不清字迹的纸片]]。"
     },
     {
@@ -63,7 +88,9 @@
       "usable": true,
       "inspectText": "便利店买的三明治，看起来还算新鲜，可以填填肚子。",
       "useEffect": {
-        "statChanges": { "satiety": 6 }
+        "statChanges": {
+          "satiety": 6
+        }
       },
       "successMessage": "吃掉了三明治，饱腹感增加了。"
     },
@@ -74,7 +101,9 @@
       "usable": true,
       "inspectText": "食堂阿姨特意多打的一整份套餐，分量大得惊人，吃完可能会撑到走不动路。",
       "useEffect": {
-        "statChanges": { "satiety": 90 }
+        "statChanges": {
+          "satiety": 90
+        }
       },
       "successMessage": "你把整份套餐都吃光了，感觉肚子快要撑破了。"
     },
@@ -84,11 +113,15 @@
       "consumable": true,
       "usable": true,
       "inspectText": "一小瓶来源不明的[[strange_liquid|液体]]，气味刺鼻，说明书也没有，喝下去后果难以预料。",
-      "inspectCheck": { "skillId": "medicine" },
+      "inspectCheck": {
+        "skillId": "medicine"
+      },
       "inspectOutcomes": {
         "criticalSuccess": {
           "text": "凑近对光看了看沉淀物和颜色，你几乎可以断定这不是能喝的东西——是[[strange_liquid|不明液体]]，绝对不能尝试。",
-          "revealKeywordIds": ["strange_liquid"]
+          "revealKeywordIds": [
+            "strange_liquid"
+          ]
         },
         "success": {
           "text": "一小瓶来源不明的液体，气味刺鼻，说明书也没有，喝下去后果难以预料。"
@@ -98,7 +131,9 @@
         },
         "criticalFailure": {
           "text": "凑得太近，刺鼻的气味直冲鼻腔，你被熏得眼泪直流，一阵反胃。",
-          "statChanges": { "physical": -3 }
+          "statChanges": {
+            "physical": -3
+          }
         }
       },
       "useEffect": {
@@ -112,12 +147,1061 @@
       "consumable": false,
       "usable": false,
       "inspectText": "同事情绪崩溃请假后留下的一堆未处理事务，全都压在了你一个人身上。走廊里有人低声提起[[night_shift_rumor|夜班传闻]]，你没心思去听。"
+    },
+    {
+      "id": "book_nahan",
+      "name": "《呐喊》",
+      "consumable": false,
+      "usable": true,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "ajie_desk"
+      ],
+      "inspectTimeAdvance": 60,
+      "useCondition": {
+        "sanMin": 1,
+        "sanMax": 50
+      },
+      "sanVariants": {
+        ">90": {
+          "description": "阿杰喜欢中国文学，总是翻看这本鲁迅的小说集。"
+        },
+        "70-90": {
+          "description": "阿杰喜欢中国文学，总是翻看这本鲁迅的小说集。"
+        },
+        "50-70": {
+          "name": "《□□□□□》",
+          "description": "阿杰总是翻看这本奇怪的书，它印刷极其模糊，比起字更像描述神秘法术的符号。",
+          "revealKeywordIds": [
+            "神秘法术"
+          ]
+        },
+        "30-50": {
+          "name": "《尸食教典仪》",
+          "description": "阿杰总是翻看这本奇怪的书，它印刷极其模糊，比起字更像描述神秘法术的符号。传闻说其中记载了导致疾病的法术。",
+          "revealKeywordIds": [
+            "神秘法术",
+            "导致疾病的法术"
+          ]
+        },
+        "15-30": {
+          "name": "《尸食教典仪》",
+          "description": "看来这本书只有阿杰能看懂其中文字，其他人看了，只会显示一片模糊。传闻说其中记载了导致疾病的法术。",
+          "revealKeywordIds": [
+            "导致疾病的法术"
+          ]
+        },
+        "0-15": {
+          "name": "《尸食教典仪》",
+          "description": "医院……为什么它们要来医院实习……我都明白了……这是炼制深潜秘药的必备条件！",
+          "revealKeywordIds": [
+            "深潜秘药"
+          ]
+        }
+      },
+      "isBook": true,
+      "bookContents": [
+        "今天全没月光，我知道不妙。早上小心出门，赵贵翁的眼色便怪：似乎怕我，似乎想害我。还有七八个人，交头接耳的议论我，又怕我看见。一路上的人，都是如此。其中最凶的一个人，张着嘴，对我笑了一笑；我便从头直冷到脚跟，晓得他们布置，都已妥当了。",
+        "凡事总须研究，才会明白。古来时常吃人，我也还记得，可是不甚清楚。我翻开历史一查，这历史没有年代，歪歪斜斜的每叶上都写着“仁义道德”几个字。我横竖睡不著，仔细看了半夜，才从字缝里看出字来，满本都写着两个字是“吃人”！\n\n书上写着这许多字，佃户说了这许多话、却都笑吟吟的睁着怪眼睛看我。\n\n我也是人，他们想要吃我了！",
+        "这鱼的眼睛，白而且硬，张着嘴，同那一伙想吃人的人一样。吃了几筷，滑溜溜的不知是鱼是人，便把他兜肚连肠的吐出。",
+        "“我只有几句话，可是说不出来。大哥，大约当初野蛮的人，都吃过一点人。后来因为心思不同，有的不吃人了，一味要好，便变了人，变了真的人。有的却还吃，——也同虫子一样，有的变了鱼鸟猴子，一直变到人。有的不要好，至今还是虫子。这吃人的人比不吃人的人，何等惭愧。怕比虫子的惭愧猴子，还差得很远很远。",
+        "易牙蒸了他儿子，给桀纣吃，还是一直从前的事。谁晓得从盘古开辟天地以后，一直吃到易牙的儿子；从易牙的儿子，一直吃到徐锡林；从徐锡林，又一直吃到狼子村捉住的人。去年城里杀了犯人，还有一个生痨病的人，用馒头蘸着血舐。",
+        "不能想了。\n\n四千年来时时吃人的地方，今天才明白，我也在其中混了多年；大哥正管着家务，妹子恰恰死了，他未必不和在饭菜里，暗暗给我们吃。\n\n我未必无意之中，不吃了我妹子的几片肉，现在也轮到我自己，……\n\n有了四千年吃人履历的我，当初虽然不知道，现在明白，难见真的人！\n\n没有吃过人的孩子，或者还有？\n\n救救孩子……"
+      ]
+    },
+    {
+      "id": "book_wangxb",
+      "name": "《王小波小说选集》",
+      "consumable": false,
+      "usable": true,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "ajie_desk"
+      ],
+      "inspectTimeAdvance": 60,
+      "useCondition": {
+        "sanMin": 1,
+        "sanMax": 50
+      },
+      "sanVariants": {
+        ">90": {
+          "description": "阿杰喜欢中国文学，总是翻看这本王小波的小说集。"
+        },
+        "70-90": {
+          "description": "阿杰喜欢中国文学，总是翻看这本王小波的小说集。其中有一篇《绿毛水怪》似乎磨损程度明显高于其他章节。难道……"
+        },
+        "50-70": {
+          "name": "《绿毛水怪》",
+          "description": "蝙蝠的翅膀靠趾骨来支撑……三叉戟、铜盔与短剑……像鱼又像人的绿色水怪……这样的描述很难不令人感到恐惧。",
+          "revealKeywordIds": [
+            "三叉戟",
+            "像鱼又像人",
+            "绿色水怪"
+          ]
+        },
+        "30-50": {
+          "name": "《绿毛水怪》",
+          "description": "它们都是吃了一种药变成这样的。",
+          "revealKeywordIds": [
+            "药"
+          ]
+        },
+        "15-30": {
+          "name": "《拉莱耶文本》",
+          "description": "拉莱耶、深潜者、大衮、海德拉、星之眷族、以及伟大的克苏鲁……对上了，都对上了……它们要用深潜秘药同化全人类！",
+          "revealKeywordIds": [
+            "深潜者",
+            "大衮",
+            "克苏鲁",
+            "拉莱耶",
+            "深潜秘药"
+          ]
+        },
+        "0-15": {
+          "name": "《拉莱耶文本》",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
+        }
+      },
+      "isBook": true,
+      "bookContents": [
+        "绿",
+        "水",
+        "怪",
+        "它们都是吃了一种药变成这样的。"
+      ]
+    },
+    {
+      "id": "statue_ajie",
+      "name": "彬彬同款雕像（阿杰桌）",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "ajie_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一个奇怪的雕像，散发着说不清的气息。可能是跑团道具，但淘宝识图没有识别出来。",
+          "revealKeywordIds": [
+            "跑团道具",
+            "奇怪的雕像"
+          ]
+        },
+        "70-90": {
+          "description": "一个奇怪的雕像，散发着说不清的气息。它真的只是跑团道具吗？",
+          "revealKeywordIds": [
+            "奇怪的雕像",
+            "跑团道具"
+          ]
+        },
+        "50-70": {
+          "name": "邪教雕像",
+          "description": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。",
+          "revealKeywordIds": [
+            "邪教"
+          ]
+        },
+        "30-50": {
+          "name": "邪教雕像",
+          "description": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。",
+          "revealKeywordIds": [
+            "邪教"
+          ]
+        },
+        "15-30": {
+          "name": "邪教雕像",
+          "description": "一个用于完成邪教献祭仪式的雕像，似乎描绘着伟大之克苏鲁的形象。",
+          "revealKeywordIds": [
+            "克苏鲁",
+            "献祭仪式",
+            "邪教"
+          ]
+        },
+        "0-15": {
+          "name": "邪教雕像",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
+        }
+      }
+    },
+    {
+      "id": "necklace_ajie",
+      "name": "金色倒五芒星项链（阿杰桌）",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "ajie_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一个奇怪的倒五芒星项链，为什么他们三个戴同款？难道是……",
+          "revealKeywordIds": [
+            "倒五芒星"
+          ]
+        },
+        "70-90": {
+          "description": "这个项链似乎是用一种奇怪的合金制成。",
+          "revealKeywordIds": [
+            "奇怪的合金"
+          ]
+        },
+        "50-70": {
+          "name": "教团项链",
+          "description": "我明白了，倒五芒星与异教一向相关，这是邪教成员互认身份的象征符号。",
+          "revealKeywordIds": [
+            "互认身份"
+          ]
+        },
+        "30-50": {
+          "name": "教团项链",
+          "description": "五芒星是所罗门王魔法书中记载的召唤法阵形象……",
+          "revealKeywordIds": [
+            "所罗门",
+            "召唤法阵"
+          ]
+        },
+        "15-30": {
+          "name": "教团项链",
+          "description": "大衮是所罗门七十二魔神之一，五芒星是所罗门王魔法书中记载的召唤法阵形象……它们就是大衮密教！",
+          "revealKeywordIds": [
+            "大衮",
+            "大衮密教"
+          ]
+        },
+        "0-15": {
+          "name": "教团项链",
+          "description": "一切都对上了！我明白了！我￥%WFDaTE"
+        }
+      }
+    },
+    {
+      "id": "book_moon",
+      "name": "《月亮与六便士》",
+      "consumable": false,
+      "usable": true,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "awei_desk"
+      ],
+      "inspectTimeAdvance": 60,
+      "useCondition": {
+        "sanMin": 1,
+        "sanMax": 50
+      },
+      "sanVariants": {
+        ">90": {
+          "description": "阿伟这小子自以为是小众文艺青年，其实看的也不过是这种烂大街的书，整个一嘉豪。"
+        },
+        "70-90": {
+          "description": "文笔也没网上说的那么牛，而且这男主抛妻弃子的，能是好人吗？"
+        },
+        "50-70": {
+          "description": "这个男主像是被邪教洗脑了一样，不会真有关系吧？",
+          "revealKeywordIds": [
+            "邪教"
+          ]
+        },
+        "30-50": {
+          "description": "真的是表面上那个故事吗？真的吗？离奇的剧情，诡异的文风，描述着令人感到猥亵的水果静物……"
+        },
+        "15-30": {
+          "name": "《死灵之书中的克苏鲁》",
+          "description": "我明白了，此书描写的是伟大之克苏鲁的一个侧面，长眠的祂候汝入梦，并在梦境中引导艺术家走向疯狂……",
+          "revealKeywordIds": [
+            "克苏鲁"
+          ]
+        },
+        "0-15": {
+          "name": "《死灵之书中的克苏鲁》",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
+        }
+      },
+      "isBook": true,
+      "bookContents": [
+        "牛奶很好吃，特别是加上几滴白兰地。但是母牛却巴不得赶快让它淌出去。肿胀的乳头是很不舒服的。",
+        "有些人的生活只是社会有机体的一部分，他们只能生活在这个有机体内，也只能依靠它而生活，这种人总是给人以虚幻的感觉；思特里克兰德夫妇正是这样的人。他们有如体内的细胞，是身体所决不能缺少的，但是只要他们健康存在一天，就被吞没在一个重大的整体里。",
+        "“他逃跑了。他同一个女人跑到巴黎去了。他把阿美扔了，一个便士也没留下。”",
+        "他的画奇异而荒诞，好象是宇宙初创时的图景——伊甸园，亚当和夏娃……我怎么知道呢？是对人体美——男性和女性的形体——的一首赞美诗，是对大自然的颂歌；大自然，既崇高又冷漠，既美丽又残忍……它使你感到空间的无限和时间的永恒，叫你产生一种畏惧的感觉。他画了许多树，椰子树、榕树、火焰花、鳄梨……所有那些我天天看到的；但是这些树经他一画，我再看的时候就完全不同了，我仿佛看到它们都有了灵魂，都各自有一个秘密，仿佛它们的灵魂和秘密眼看就要被我抓到手里，但又总是被它们逃脱掉。那些颜色都是我熟悉的颜色，可是又有所不同；它们都具有自己的独特的重要性。而那些赤身裸体的男男女女，他们既都是尘寰的、是他们揉捏而成的尘土，又都是神灵。人的最原始的天性赤裸裸地呈现在你眼前，你看到的时候不由得感到恐惧，因为你看到的是你自己。",
+        "我不知道那究竟是什么，但它确实叫我不能平静。它给我一种印象，仿佛我正坐在一间空荡荡的屋子隔壁，我知道那间屋子是空的，但不知为什么，我又觉得里面有一个人，叫我惊恐万状。你责骂你自己吧；你知道这只不过是你的神经在作祟——但是，但是……过一小会儿，你就再也不能抗拒那紧紧捕捉住你的恐惧了。你被握在一种无形的恐怖的掌心里，无法逃脱。是的，我承认当我听到这些奇异的杰作被毁掉的时候，我并不是只觉得遗憾的。",
+        "谁能知道，是什么痛苦的幻想创造出这些果实的呢？该不是看管金苹果园的赫斯珀里得斯三姐妹在波利尼西亚果园中培植出来的吧！奇怪的是，这些果实都象活的一样，仿佛是在混沌初开时创造出来的，当时任何事物还都没有固定的形体，丰实肥硕，散发着浓郁的热带气息，好象具有一种独特的忧郁的感情。它们是被施展了魔法的果子，任何人尝了就能打开通向不知道哪些灵魂秘密的门扉，就可以走进幻境的神秘宫殿。它们孕育着无法预知的危险，咬一口就可能把一个人变成野兽，但也说不定变成神灵。一切健康的、正常的东西，淳朴人们所有的一切美好的情谊、朴素的欢乐都远远地避开了它们；但它们又具有莫大的诱惑力，就象伊甸园中能分辨善恶的智慧果一样，能把人带进未知的境界。"
+      ]
+    },
+    {
+      "id": "poster_jesus",
+      "name": "耶稣海报",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "awei_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "name": "摇滚海报",
+          "description": "一个摇滚音乐剧的海报，阿伟常常哼唱其中的歌曲。"
+        },
+        "70-90": {
+          "name": "摇滚海报",
+          "description": "一个摇滚音乐剧的海报，阿伟常常哼唱其中的歌曲。"
+        },
+        "50-70": {
+          "name": "奇怪的海报",
+          "description": "这个音乐剧海报中人物的姿势与神态，似乎暗示着他处于痛苦之中，如同一场献祭仪式。",
+          "revealKeywordIds": [
+            "献祭仪式"
+          ]
+        },
+        "30-50": {
+          "name": "人祭的铁证",
+          "description": "邪教徒举行活人献祭仪式时拍下的照片，血腥的场面让人汗毛倒竖。",
+          "revealKeywordIds": [
+            "献祭仪式",
+            "邪教"
+          ]
+        },
+        "15-30": {
+          "name": "人祭的铁证",
+          "description": "大衮密教的仪式实录。如宰羊一般，在仪式完成后，邪教徒会分食祭品的血与肉——吃人。这血肉就是深潜秘药的成分，若无一种生命的献祭则无另一种生命的延续……",
+          "revealKeywordIds": [
+            "深潜秘药",
+            "大衮密教",
+            "吃人"
+          ]
+        },
+        "0-15": {
+          "name": "人祭的铁证",
+          "description": "四千年来时时吃人的地方，今天才明白……",
+          "revealKeywordIds": [
+            "吃人"
+          ]
+        }
+      }
+    },
+    {
+      "id": "statue_awei",
+      "name": "彬彬同款雕像（阿伟桌）",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "awei_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一个奇怪的雕像，散发着说不清的气息。可能是跑团道具，但淘宝识图没有识别出来。",
+          "revealKeywordIds": [
+            "奇怪的雕像",
+            "跑团道具"
+          ]
+        },
+        "70-90": {
+          "description": "一个奇怪的雕像，散发着说不清的气息。它真的只是跑团道具吗？",
+          "revealKeywordIds": [
+            "奇怪的雕像",
+            "跑团道具"
+          ]
+        },
+        "50-70": {
+          "name": "邪教雕像",
+          "description": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。",
+          "revealKeywordIds": [
+            "邪教"
+          ]
+        },
+        "30-50": {
+          "name": "邪教雕像",
+          "description": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。",
+          "revealKeywordIds": [
+            "邪教"
+          ]
+        },
+        "15-30": {
+          "name": "邪教雕像",
+          "description": "一个用于完成邪教献祭仪式的雕像，似乎描绘着伟大之克苏鲁的形象。",
+          "revealKeywordIds": [
+            "邪教",
+            "献祭仪式",
+            "克苏鲁"
+          ]
+        },
+        "0-15": {
+          "name": "邪教雕像",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
+        }
+      }
+    },
+    {
+      "id": "necklace_awei",
+      "name": "金色倒五芒星项链（阿伟桌）",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "awei_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一个奇怪的倒五芒星项链，为什么他们三个戴同款？难道是……",
+          "revealKeywordIds": [
+            "倒五芒星"
+          ]
+        },
+        "70-90": {
+          "description": "这个项链似乎是用一种奇怪的合金制成。",
+          "revealKeywordIds": [
+            "奇怪的合金"
+          ]
+        },
+        "50-70": {
+          "name": "教团项链",
+          "description": "我明白了，倒五芒星与异教一向相关，这是邪教成员互认身份的象征符号。",
+          "revealKeywordIds": [
+            "互认身份"
+          ]
+        },
+        "30-50": {
+          "name": "教团项链",
+          "description": "五芒星是所罗门王魔法书中记载的召唤法阵形象……",
+          "revealKeywordIds": [
+            "所罗门",
+            "召唤法阵"
+          ]
+        },
+        "15-30": {
+          "name": "教团项链",
+          "description": "大衮是所罗门七十二魔神之一，五芒星是所罗门王魔法书中记载的召唤法阵形象……它们就是大衮密教！",
+          "revealKeywordIds": [
+            "大衮",
+            "大衮密教"
+          ]
+        },
+        "0-15": {
+          "name": "教团项链",
+          "description": "一切都对上了！我明白了！我￥%WFDaTE"
+        }
+      }
+    },
+    {
+      "id": "book_innsmouth",
+      "name": "《印斯茅斯的阴霾》",
+      "consumable": false,
+      "usable": true,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "binbin_desk"
+      ],
+      "inspectTimeAdvance": 60,
+      "useCondition": {
+        "sanMin": 1,
+        "sanMax": 50
+      },
+      "sanVariants": {
+        ">90": {
+          "description": "一篇洛夫克拉夫特的小说，被彬彬单独打印出来。",
+          "revealKeywordIds": [
+            "洛夫克拉夫特",
+            "单独打印"
+          ]
+        },
+        "70-90": {
+          "description": "彬彬为什么要单独打印这篇令人惊骇的恐怖小说？这里潜藏着什么秘密？"
+        },
+        "50-70": {
+          "description": "彬彬把它当作跑团模组的素材，不，这不仅是跑团……",
+          "revealKeywordIds": [
+            "跑团"
+          ]
+        },
+        "30-50": {
+          "name": "《水神克塔亚特》",
+          "description": "这是一部关于克苏鲁神话中深潜者的研究著作，也包括描述克苏鲁、大衮等亵渎存在的内容。",
+          "revealKeywordIds": [
+            "深潜者",
+            "克苏鲁",
+            "大衮"
+          ]
+        },
+        "15-30": {
+          "name": "《水神克塔亚特》",
+          "description": "这一切都不仅是虚构的小说……不仅是跑团模组……这是一场预演……邪教徒就要开始献祭了。伟大之克苏鲁在长眠中呼唤吾等。",
+          "revealKeywordIds": [
+            "邪教",
+            "克苏鲁"
+          ]
+        },
+        "0-15": {
+          "name": "《水神克塔亚特》",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
+        }
+      },
+      "isBook": true,
+      "bookContents": [
+        "这是我第一次听说印斯茅斯——这个阴霾笼罩的地方。",
+        "这件装饰的前端很高，有着一个宽大却不太规则的古怪轮廓，就像是特地为了一个几乎呈奇特椭圆形的头部而设计的。它的材质似乎以黄金为主，但是却散发着一种颜色稍浅的奇异光泽，似乎暗示着制作者向这些黄金中掺入了部分同样华丽、而且几乎无法鉴别的金属，将它们熔炼成了某些古怪的合金……所有的图案都在隐喻着某些时空之中的遥远隐秘与无法想象的深渊，而那种浮雕反映出来的、有关水的单调意象也一同变得近乎凶险与不祥起来。在这些浮雕中有着许多传说般的怪物——它们诡诞凶恶得令人厌恶，表现出一种半鱼类半巨蛙的模样——让人产生了一种徘徊不去、令人不快、仿佛记忆般的感觉，无法摆脱；就好象它们从人类躯体深处那些记忆功能依旧非常原始、极其接近先祖的某些细胞与组织中唤起了部分图像。有几次，我不由得幻想着这些亵渎神明的鱼蛙怪物所具备的轮廓里充溢着不洁的精华，完美地象征了那种未知陌生、非人类所能想象的邪恶。",
+        "不知为何，这些人看起来比那些阴森凄凉的建筑更加让人不安——每一个人的动作与面孔中都有着某种古怪，虽然我无法确定为何古怪，也无法理解这种感觉，却本能地厌恶这些异状。有一会儿，我觉得这种典型的体形暗示了某些我之前见过的图像，也许是在书中，或是在某种特别恐怖或悲伤忧郁的气氛里；但是这种类似回忆的感觉很快便消散了。",
+        "在有些地方还撒着一些小时候——就像是护身符——上面有些类似我们现在称为卐字的符号。或许那就是上古者的印记。",
+        "“全都要信教——大衮教团——儿童将永生不死，但却要回到母神海德拉与父神大衮那里去，因为我们过去都来自那里——Iä! Iä! Cthulhu fhtagn! Ph’nglui mglw’nafh Cthulhu R’lyeh wgah-nagl fhtagn—”",
+        "“嘿，你，你为什么不说点什么？你觉得住在这个镇上怎么样？所有东西都在腐烂死亡，每个转角都能听到关起来的怪物在黑暗的地下室和阁楼里爬行、嚎叫、四处乱跳。住在这样的镇子里怎么样？你想要听那些从大衮教团大厅里一晚又一晚传来的嚎叫吗？你知道那些嚎叫是在做什么吗？你愿意在五朔节和万圣节时听见那些从礁石上传来的恐怖声音吗？哈？觉得老头疯了吗？哈，先生，我告诉你那不是最糟糕的！”",
+        "而这就是一切的终结，我在这颗星球表面所度过的余生，还有精神上的每一寸平静以及对自然世界与人类心智保持完整的信心全都终结了。我所想象到的任何东西——甚至，即便以最为字面地意识采信了老扎多克的疯狂故事后，我所猜想出某些东西——都不能与我所看见的——或者我以为我看见的——那亵渎神明、恶魔般的现实相提并论。我之前努力试图用暗示描述那些东西，以便延后鼓起勇气将它们写下的时间。这个星球上是否真的可能孕育出这样的东西？人类的肉眼真的能够看见那样鲜活而又客观存在的怪物？看见那种迄今为止只会在高烧的幻觉与飘渺的传说中才能略知一二的东西？",
+        "辽阔的水域展现在我眼前，而我似乎在一些奇异怪鱼的陪伴下游荡着穿过一些沉没在水底的雄伟柱廊与由生长着水草的巨墙组成的迷宫。接着，其他一些身影开始逐渐显现，让我醒来时充满了莫可名状的恐惧。但在梦境之中，它们却并不让我感到害怕——我就是它们中的一个；穿戴着它们那种不同于人类的装饰，沿着它们的水底道路漫游，在它们那邪恶的海底神殿中进行可怖的祷告……当地表的人类向海洋中发射死亡时，伊哈斯雷并没有被毁于一旦。它受到了伤害，但却并没有被毁掉。深潜者永远不会被摧毁，即便那些被遗忘的上古者所使用的远古魔法偶尔会阻挡它们。",
+        "我要计划帮助表弟从康顿市的疯人院里逃出来，然后一同回到被奇迹笼罩着的印斯茅斯。我们将游到海中那块若隐若现的礁石边，然后下潜进黑色的深渊里，进入耸立着无数立柱、雄伟壮丽的伊哈斯雷。此后，我们将在奇迹与荣光的围绕下，永远生活在那片深潜者的栖身之地里。"
+      ]
+    },
+    {
+      "id": "book_coc7",
+      "name": "《克苏鲁的呼唤第七版规则书》",
+      "consumable": false,
+      "usable": true,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "binbin_desk"
+      ],
+      "inspectTimeAdvance": 60,
+      "useCondition": {
+        "sanMin": 1,
+        "sanMax": 50
+      },
+      "sanVariants": {
+        ">90": {
+          "description": "彬彬视若珍宝的跑团规则书。"
+        },
+        "70-90": {
+          "description": "它真的只是规则书吗？"
+        },
+        "50-70": {
+          "description": "规则？不，这是法则，宇宙真实的法则……"
+        },
+        "30-50": {
+          "name": "《死灵之书》",
+          "description": "包罗万象的克苏鲁神话大典，当然会在大衮密教的总部有一份副本。盐、香料、活人祭品的血肉……这些材料是用于什么仪式的？",
+          "revealKeywordIds": [
+            "大衮密教"
+          ]
+        },
+        "15-30": {
+          "name": "《死灵之书》",
+          "description": "这里记载的咒文和仪式太过艰深，无法完全理解，更别提使用，但是我现在明白了，盐、香料、活人祭品的血肉——其中明明地写有深潜秘药的配方！",
+          "revealKeywordIds": [
+            "深潜秘药"
+          ]
+        },
+        "0-15": {
+          "name": "《死灵之书》",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
+        }
+      },
+      "isBook": true,
+      "bookContents": [
+        "“那永恒沉眠的并非亡者，而在诡异的万古中连死亡也会死去。”",
+        "“Cthulhu noster qui es in maribus : sanctificetur nomen tuum; adveniat regnum tuum; fiat voluntas tua, sicut in R’lyeh, et in Y’ha-nthlei. ”（我们在海中的克苏鲁，愿你的名受显扬，愿你的国来临，愿你的旨意奉行在拉莱耶，如同在伊哈斯雷。）",
+        "“不要认为人类是地球上最古老和最后的支配者，也不要认为在地球上行走的全是寻常可见的生命和形体。古神们昔在，今在，永在。”"
+      ]
+    },
+    {
+      "id": "statue_binbin",
+      "name": "奇怪的雕像（彬彬桌）",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "binbin_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一个奇怪的雕像，散发着说不清的气息。可能是跑团道具，但淘宝识图没有识别出来。",
+          "revealKeywordIds": [
+            "跑团道具",
+            "奇怪的雕像"
+          ]
+        },
+        "50-70": {
+          "name": "邪教雕像",
+          "description": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。",
+          "revealKeywordIds": [
+            "邪教"
+          ]
+        },
+        "30-50": {
+          "name": "邪教雕像",
+          "description": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。",
+          "revealKeywordIds": [
+            "邪教"
+          ]
+        },
+        "15-30": {
+          "name": "邪教雕像",
+          "description": "一个用于完成邪教献祭仪式的雕像，似乎描绘着伟大之克苏鲁的形象。",
+          "revealKeywordIds": [
+            "献祭仪式",
+            "邪教",
+            "克苏鲁"
+          ]
+        },
+        "0-15": {
+          "name": "邪教雕像",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
+        }
+      }
+    },
+    {
+      "id": "necklace_binbin",
+      "name": "金色倒五芒星项链（彬彬桌）",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "binbin_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一个奇怪的倒五芒星项链，为什么他们三个戴同款？难道是……",
+          "revealKeywordIds": [
+            "倒五芒星"
+          ]
+        },
+        "70-90": {
+          "description": "这个项链似乎是用一种奇怪的合金制成。",
+          "revealKeywordIds": [
+            "奇怪的合金"
+          ]
+        },
+        "50-70": {
+          "name": "教团项链",
+          "description": "我明白了，倒五芒星与异教一向相关，这是邪教成员互认身份的象征符号。",
+          "revealKeywordIds": [
+            "互认身份"
+          ]
+        },
+        "30-50": {
+          "name": "教团项链",
+          "description": "五芒星是所罗门王魔法书中记载的召唤法阵形象……",
+          "revealKeywordIds": [
+            "召唤法阵",
+            "所罗门"
+          ]
+        },
+        "15-30": {
+          "name": "教团项链",
+          "description": "大衮是所罗门七十二魔神之一，五芒星是所罗门王魔法书中记载的召唤法阵形象……它们就是大衮密教！",
+          "revealKeywordIds": [
+            "大衮",
+            "大衮密教"
+          ]
+        },
+        "0-15": {
+          "name": "教团项链",
+          "description": "一切都对上了！我明白了！我￥%WFDaTE"
+        }
+      }
+    },
+    {
+      "id": "book_blue_love",
+      "name": "《蓝色生死恋》",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "player_desk"
+      ],
+      "inspectTimeAdvance": 240,
+      "inspectEffect": {
+        "gameEvent": "game:study_night",
+        "statChanges": {
+          "mental": 5
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "description": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷点题。"
+        },
+        "70-90": {
+          "description": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷点题。"
+        },
+        "50-70": {
+          "description": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷点题。"
+        },
+        "30-50": {
+          "description": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去"
+        },
+        "15-30": {
+          "description": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷刷刷刷刷刷刷刷刷刷刷尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂"
+        },
+        "0-15": {
+          "description": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷刷刷刷刷刷刷刷刷刷刷尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂"
+        }
+      },
+      "isBook": true
+    },
+    {
+      "id": "frozen_meat",
+      "name": "冻肉",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "fridge"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "宿舍里不让用小锅做菜，为什么有一份冻肉？",
+          "revealKeywordIds": [
+            "冻肉"
+          ]
+        },
+        "70-90": {
+          "name": "动物尸块",
+          "description": "为什么为什么为什么"
+        },
+        "50-70": {
+          "name": "冷冻尸块",
+          "description": "不知从何物尸体上切割而来的肉块。",
+          "revealKeywordIds": [
+            "尸体"
+          ]
+        },
+        "30-50": {
+          "name": "身体碎片",
+          "description": "肌肉细胞肌肉组织脂肪组织结缔组织谁的身体肌肉组织好吃！香啊！造谁的身体啊！狂炫小火谁的身体锅！",
+          "revealKeywordIds": [
+            "身体"
+          ]
+        },
+        "15-30": {
+          "name": "祭品的肉",
+          "description": "大衮密教在活人献祭之后，像宰羊一样从其身体上割下肉块，用作深潜秘药的材料。",
+          "revealKeywordIds": [
+            "深潜秘药",
+            "活人献祭",
+            "大衮密教"
+          ]
+        },
+        "0-15": {
+          "name": "祭品的肉",
+          "description": "像宰羊一样。"
+        }
+      }
+    },
+    {
+      "id": "ketchup",
+      "name": "番茄酱",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "fridge"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一瓶番茄酱，似乎是用其他空瓶子重新灌装的。",
+          "revealKeywordIds": [
+            "重新灌装",
+            "番茄酱"
+          ]
+        },
+        "70-90": {
+          "description": "为什么要重新灌装呢？原来的瓶子出了什么问题吗？"
+        },
+        "50-70": {
+          "name": "可疑的红色液体",
+          "description": "一瓶可疑的红色液体，不知道是什么成分。",
+          "revealKeywordIds": [
+            "可疑的红色液体"
+          ]
+        },
+        "30-50": {
+          "name": "血",
+          "description": "血",
+          "revealKeywordIds": [
+            "血"
+          ]
+        },
+        "15-30": {
+          "name": "祭品的血",
+          "description": "大衮密教在活人献祭之后，像宰羊一样割开其血管收集血液，用作深潜秘药的材料。",
+          "revealKeywordIds": [
+            "深潜秘药",
+            "活人献祭",
+            "大衮密教"
+          ]
+        },
+        "0-15": {
+          "name": "祭品的血",
+          "description": "鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜"
+        }
+      }
+    },
+    {
+      "id": "pasta",
+      "name": "意面",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "fridge"
+      ],
+      "inspectText": "上面印着飞天意面神教的logo。",
+      "sanVariants": {
+        ">90": {
+          "description": "上面印着飞天意面神教的logo。",
+          "revealKeywordIds": [
+            "飞天意面神教"
+          ]
+        },
+        "70-90": {
+          "description": "上面印着飞天意面神教的logo，没听说过意面还有教，难道是一种邪教？"
+        },
+        "50-70": {
+          "name": "邪教圣餐",
+          "description": "某种邪教奉为神圣的食物。"
+        },
+        "30-50": {
+          "name": "邪教圣餐",
+          "description": "某种邪教奉为神圣的食物，但似乎不是大衮密教本身的崇拜对象。"
+        },
+        "15-30": {
+          "name": "邪教圣餐",
+          "description": "某种邪教奉为神圣的食物，但似乎不是大衮密教本身的崇拜对象。"
+        },
+        "0-15": {
+          "name": "邪教圣餐",
+          "description": "圣洁！圣洁！圣洁！"
+        }
+      }
+    },
+    {
+      "id": "salt_bag",
+      "name": "袋装盐",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 3,
+      "locations": [
+        "dorm",
+        "fridge"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "三袋普通的盐。",
+          "revealKeywordIds": [
+            "盐"
+          ]
+        },
+        "70-90": {
+          "description": "为什么要买这么多盐……"
+        },
+        "50-70": {
+          "name": "可疑的白色粉末",
+          "description": "这真的是盐吗？"
+        },
+        "30-50": {
+          "name": "仪式材料",
+          "description": "用盐画五芒星法阵，可以用于召唤仪式。",
+          "revealKeywordIds": [
+            "五芒星"
+          ]
+        },
+        "15-30": {
+          "name": "秘药成分",
+          "description": "不，这根本不是什么简单的仪式——这是深潜秘药的成分。",
+          "revealKeywordIds": [
+            "深潜秘药"
+          ]
+        },
+        "0-15": {
+          "name": "秘药成分",
+          "description": "无使活人之身化盐柱"
+        }
+      }
+    },
+    {
+      "id": "perfume",
+      "name": "香薰",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "dorm",
+        "binbin_desk"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "气味有些奇怪的香薰，彬彬说这叫水生调。",
+          "revealKeywordIds": [
+            "水生调",
+            "香薰"
+          ]
+        },
+        "70-90": {
+          "description": "一直散发出萦绕不去的海水味。",
+          "revealKeywordIds": [
+            "海水味"
+          ]
+        },
+        "50-70": {
+          "description": "近在咫尺之海。",
+          "revealKeywordIds": [
+            "海"
+          ]
+        },
+        "30-50": {
+          "name": "仪式材料",
+          "description": "香料是各种魔法仪式的必备材料。",
+          "revealKeywordIds": [
+            "魔法仪式"
+          ]
+        },
+        "15-30": {
+          "name": "秘药成分",
+          "description": "不，这根本不是什么简单的仪式——这是深潜秘药的成分。",
+          "revealKeywordIds": [
+            "深潜秘药"
+          ]
+        },
+        "0-15": {
+          "description": "令活人之心如波形长存"
+        }
+      }
+    },
+    {
+      "id": "swastika",
+      "name": "万字符",
+      "consumable": false,
+      "usable": true,
+      "pickable": true,
+      "worldCount": 1,
+      "locations": [
+        "hospital"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "一个患者康复后赠送的物品，说是祖传的开光宝物。材质只是普通的金属，看起来不像商周的，像上周的。"
+        },
+        "70-90": {
+          "description": "一个患者康复后赠送的物品，说是祖传的开光宝物。"
+        },
+        "50-70": {
+          "description": "一个患者康复后赠送的物品，说是祖传的开光宝物。论材质和工艺，一看就是古董货。"
+        },
+        "30-50": {
+          "name": "上古者的印记",
+          "description": "一位贵人赠送的法器，可以抵御□□□。"
+        },
+        "15-30": {
+          "name": "上古者的印记",
+          "description": "一位贵人赠送的法器，可以抵御深潜者。",
+          "revealKeywordIds": [
+            "深潜者"
+          ]
+        },
+        "0-15": {
+          "name": "上古者的印记",
+          "description": "唯一的希望。"
+        }
+      },
+      "useEffect": {
+        "ending": "abnormal_end"
+      }
+    },
+    {
+      "id": "hotpot",
+      "name": "火锅",
+      "consumable": true,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "restaurant"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "香啊！造啊！狂炫小火锅啊！"
+        },
+        "70-90": {
+          "name": "油锅",
+          "description": "好吃吗？值得吗？真的要吃这么多吗？"
+        },
+        "50-70": {
+          "name": "涮尸片",
+          "description": "动物尸体切切薄薄片，放进沸腾的油锅里涮上几秒，喷喷香！喷喷香！"
+        },
+        "30-50": {
+          "name": "涮尸片",
+          "description": "肌肉细胞肌肉组织脂肪组织结缔组织谁的身体肌肉组织好吃！香啊！造谁的身体啊！狂炫小火谁的身体锅！"
+        },
+        "15-30": {
+          "name": "长眠于腹中",
+          "description": "长眠于腹中"
+        },
+        "0-15": {
+          "name": "快迯",
+          "description": "迯"
+        }
+      }
+    },
+    {
+      "id": "menu",
+      "name": "菜单",
+      "consumable": false,
+      "usable": false,
+      "worldCount": 1,
+      "locations": [
+        "restaurant"
+      ],
+      "sanVariants": {
+        ">90": {
+          "description": "金钱肚，血豆腐，鱿鱼须，羊眼球，海带结，腌猪肉，烫脑花，西红柿。"
+        },
+        "70-90": {
+          "description": "破碎的内脏，凝固的鲜血，缠绕的触手，无神的眼珠，扭曲的植物，干瘪的肢体，残缺的大脑，猩红的果实。"
+        },
+        "50-70": {
+          "description": "破碎的内脏，凝固的鲜血，缠绕的触手，无神的眼珠，扭曲的植物，干瘪的肢体，残缺的大脑，猩红的果实。"
+        },
+        "30-50": {
+          "name": "尸肉刻录",
+          "description": "碎脏凝血腕足涸眼曲藻干肢残脑血实"
+        },
+        "15-30": {
+          "name": "尸肉刻录",
+          "description": "碎脏凝血腕足涸眼曲藻干肢残脑血实碎脏凝血腕足涸眼曲藻干肢残脑血实碎脏凝血腕足涸眼曲藻干肢残脑血实碎脏凝血腕足涸眼曲藻干肢残脑血实"
+        },
+        "0-15": {
+          "name": "肉录",
+          "description": "脏血腕眼藻肢脑实迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯"
+        }
+      }
     }
   ],
   "startingInventory": [
-    { "itemId": "physician_cert", "count": 1 },
-    { "itemId": "old_key", "count": 1 },
-    { "itemId": "locked_box", "count": 1 },
-    { "itemId": "sandwich", "count": 2 }
+    {
+      "itemId": "physician_cert",
+      "count": 1
+    },
+    {
+      "itemId": "old_key",
+      "count": 1
+    },
+    {
+      "itemId": "locked_box",
+      "count": 1
+    },
+    {
+      "itemId": "sandwich",
+      "count": 2
+    }
   ]
 }

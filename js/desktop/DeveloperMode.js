@@ -52,7 +52,7 @@ const DEDICATED_EDITOR_TITLES = {
 const DEV_EDITOR_ICONS = {
   "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
   "tab-item-editor": "📦", "tab-dialogue-editor": "📅", "tab-bgm-editor": "🎵", "tab-location-editor": "📍",
-  "tab-dorm-computer": "💻", "tab-state": "📊", "tab-npc-state": "👤", "tab-inventory": "🎒",
+  "tab-dorm-computer": "💻", "tab-state": "🕒", "tab-npc-state": "👤", "tab-inventory": "🎒",
 };
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
@@ -85,7 +85,7 @@ export class DeveloperMode {
       ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
-    const runtimeIcons = [["状态调节", "📊", "tab-state"], ["NPC 状态调节", "👤", "tab-npc-state"], ["背包控制器", "🎒", "tab-inventory"]];
+    const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["NPC 状态调节", "👤", "tab-npc-state"], ["背包控制器", "🎒", "tab-inventory"]];
     this.root.innerHTML = `<section class="dev-app-section dev-database-section"><div class="dev-app-heading"><strong>数据库 App</strong><span>静态数据编辑器。蓝色表示仍在开发，灰色表示较为成熟；双击图标在新窗口打开。</span></div><div class="dev-app-grid">${dataIcons.map(([label, glyph, action]) => icon(label, glyph, action, matureActions.has(action) ? "mature" : "data")).join("")}</div></section><section class="dev-app-section dev-debugger-section"><div class="dev-app-heading dev-runtime-heading"><strong>调试器</strong><span>观察或修改当前游戏运行时变量。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${runtimeIcons.map(([label, glyph, action]) => icon(label, glyph, action, "runtime")).join("")}</div></section><div class="dev-status" data-dev-status>开发人员模式就绪。</div>`;
     this.bindPanel();
   }
@@ -225,7 +225,6 @@ export class DeveloperMode {
 
   showState() {
     const { total, hour, minute } = clockParts();
-    const stats = ["energy", "mental", "physical", "satiety"];
     this.panel(`
       <section class="dev-section"><h3>快速读档</h3>
         <textarea data-save-input class="dev-textarea dev-save-input" placeholder="粘贴存档字符串（可带 ?）"></textarea>
@@ -238,11 +237,6 @@ export class DeveloperMode {
         <label>地点 <select data-location><option value="work" ${gameState.location === "work" ? "selected" : ""}>工作</option><option value="dorm" ${gameState.location === "dorm" ? "selected" : ""}>宿舍</option></select></label>
         <div>${button("应用时间", "apply-time")} ${button("强制下班（忽略阻塞）", "force-end-work")} <span>当前总分钟：${total}</span></div>
       </section>
-      <section class="dev-section"><h3>玩家数值</h3>
-        ${stats.map((stat) => `<label>${stat} <input data-stat="${stat}" type="number" min="0" max="${stat === "satiety" ? 255 : 100}" value="${gameState[stat]}"> ${button("−", `stat-minus-${stat}`)} ${button("＋", `stat-plus-${stat}`)}</label>`).join("")}
-        <div>${button("应用数值", "apply-stats")}</div>
-      </section>
-      <section class="dev-section"><h3>当前数据文件</h3><p class="dev-current-file">${scheduleData.fileNameFor(gameState.day, gameState.phase)}</p></section>
     `);
   }
 
@@ -466,7 +460,7 @@ export class DeveloperMode {
       const minute = Math.min(59, Math.max(0, Number(this.root.querySelector("[data-minute]").value) || 0));
       const clock = hour * 60 + minute;
       const adjusted = timeService.debugSetTime(day, clock, this.root.querySelector("[data-location]").value);
-      this.setStatus(`时间已调整为第 ${day} 日 ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}，数据文件 ${scheduleData.fileNameFor(day, adjusted.phase)}。`);
+      this.setStatus(`时间已调整为第 ${day} 日 ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}。`);
       return this.showState();
     }
     if (action === "force-end-work") {
@@ -476,19 +470,7 @@ export class DeveloperMode {
         : "强制下班失败：当前不在工作值班状态。", !result.ok);
       return this.showState();
     }
-    if (action === "apply-stats") {
-      const changes = {};
-      ["energy", "mental", "physical", "satiety"].forEach((stat) => { changes[stat] = Number(this.root.querySelector(`[data-stat="${stat}"]`).value) - gameState[stat]; });
-      gameState.modify(changes);
-      this.setStatus("玩家数值已应用。");
-      return this.showState();
-    }
-    const statMatch = action.match(/^stat-(minus|plus)-(.+)$/);
-    if (statMatch) {
-      const input = this.root.querySelector(`[data-stat="${statMatch[2]}"]`);
-      input.value = Number(input.value) + (statMatch[1] === "plus" ? 1 : -1);
-      return;
-    }
+
     const itemMatch = action.match(/^(remove|clear)-item-(.+)$/);
     if (itemMatch) { itemManager.remove(itemMatch[2], itemMatch[1] === "clear" ? itemManager.count(itemMatch[2]) : 1); return this.showInventory(); }
     if (action === "add-item") { itemManager.add(this.root.querySelector("[data-item-id]").value, Math.max(1, Number(this.root.querySelector("[data-item-count]").value) || 1)); return this.showInventory(); }

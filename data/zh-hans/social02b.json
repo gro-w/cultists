@@ -1,29 +1,3 @@
 {
-  "entries": [
-    {
-      "id": "roommate_ajun_d2night",
-      "dialogueTree": {
-        "start": "greet",
-        "nodes": {
-          "greet": {
-            "speaker": "npc",
-            "text": "既然你今晚值班，我就告诉你吧——[[night_shift_rumor_detail]]。",
-            "options": [
-              {
-                "label": "……谢谢你告诉我，我会小心的。",
-                "next": "end"
-              }
-            ]
-          },
-          "end": {
-            "speaker": "npc",
-            "text": "别太紧张，有事随时找我。",
-            "options": []
-          }
-        }
-      },
-      "npcId": "ajun",
-      "type": "npc"
-    }
-  ]
+  "entries": []
 }

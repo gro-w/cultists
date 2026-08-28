@@ -4,15 +4,23 @@ class ScheduleQueue {
   constructor(queueId) {
     this.queueId = queueId;
     this.entries = [];
+    this.sequenceBySchedule = new Map();
   }
 
   append(entries = []) {
-    const added = entries.map((entry) => ({
-      ...entry,
-      payload: entry.payload || entry,
-      instanceId: `${this.queueId}:${entry.id || entry.npcId || this.entries.length}:${this.entries.length}`,
-      status: "pending",
-    }));
+    const added = entries.map((entry) => {
+      const scheduleId = entry.scheduleId || entry.payload?.scheduleId || entry.id || entry.payload?.id;
+      const sequence = this.sequenceBySchedule.get(scheduleId) || 0;
+      this.sequenceBySchedule.set(scheduleId, sequence + 1);
+      return {
+        ...entry,
+        scheduleId,
+        payload: entry.payload || entry,
+        instanceId: entry.instanceId || `${scheduleId}:${sequence + 1}`,
+        status: entry.status === "completed" ? "completed" : "pending",
+        transcript: Array.isArray(entry.transcript) ? [...entry.transcript] : [],
+      };
+    });
     this.entries.push(...added);
     if (added.length) eventBus.emit("schedule:appended", { queueId: this.queueId, entries: added });
     return added;
@@ -22,6 +30,14 @@ class ScheduleQueue {
     const entry = this.entries.find((item) => item.instanceId === instanceId);
     if (!entry) return false;
     entry.status = "completed";
+    eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
+    return true;
+  }
+
+  updateInstance(instanceId, patch = {}) {
+    const entry = this.entries.find((item) => item.instanceId === instanceId);
+    if (!entry) return false;
+    Object.assign(entry, patch);
     eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
     return true;
   }
@@ -54,12 +70,20 @@ class ScheduleQueue {
     this.entries = (Array.isArray(entries) ? entries : []).map((entry) => ({
       ...entry,
       status: entry.status === "completed" ? "completed" : "pending",
+      transcript: Array.isArray(entry.transcript) ? [...entry.transcript] : [],
     }));
+    this.sequenceBySchedule = new Map();
+    this.entries.forEach((entry) => {
+      const scheduleId = entry.scheduleId || entry.payload?.scheduleId || entry.id || entry.payload?.id;
+      const match = String(entry.instanceId || "").match(/:(\d+)$/);
+      const next = match ? Number(match[1]) : 0;
+      this.sequenceBySchedule.set(scheduleId, Math.max(this.sequenceBySchedule.get(scheduleId) || 0, next));
+    });
     eventBus.emit("schedule:changed", { queueId: this.queueId });
   }
 
   snapshot() {
-    return this.getAll();
+    return this.getAll().map((entry) => ({ ...entry, transcript: [...(entry.transcript || [])] }));
   }
 }
 

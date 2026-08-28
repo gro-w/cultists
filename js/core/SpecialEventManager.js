@@ -72,7 +72,11 @@ class SpecialEventManager {
         return {
           ...actor,
           ...(npc ? { name: npc.name, avatar: npc.avatar || actor.avatar } : {}),
-          ...(event ? { npcId: event.npcId, dialogueTree: clone(event.dialogueTree) } : {}),
+          ...(event ? {
+            npcId: event.npcId,
+            dialogueTree: clone(event.dialogueTree),
+            blueprint: clone(event.blueprint || event.dialogueTree),
+          } : {}),
         };
       });
     });

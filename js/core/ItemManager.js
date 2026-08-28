@@ -149,18 +149,25 @@ class ItemManager {
   inspect(id) {
     const def = this.defs.get(id);
     if (!def) return null;
-    eventBus.emit("item:inspected", { id });
 
     // Pick the SAN-band variant for the player's current mental value.
     const bandKey = this._getSanBandKey(gameState.mental);
     const band = def.sanVariants && def.sanVariants[bandKey];
+
+    // Resolve inspectEffect: per-band entry takes priority over top-level.
+    const resolvedEffect = (band && band.inspectEffect) || def.inspectEffect || null;
+    if (resolvedEffect) {
+      if (resolvedEffect.statChanges) gameState.modify(resolvedEffect.statChanges);
+    }
+
+    // Broadcast: include effect so ActionBudget/callers can handle timeAdvance/gameEvent.
+    eventBus.emit("item:inspected", { id, effect: resolvedEffect });
 
     if (def.inspectCheck && def.inspectCheck.skillId) {
       const check = checkSkill(def.inspectCheck.skillId);
       const outcomes = def.inspectOutcomes || {};
       const outcome =
         outcomes[check.outcome] || outcomes.success || outcomes.failure || {};
-      // Merge: outcome-specific > top-level > band
       const revealIds = [
         ...(outcome.revealKeywordIds || def.revealKeywordIds || []),
         ...((band && band.revealKeywordIds) || []),
@@ -170,7 +177,7 @@ class ItemManager {
       if (outcome.statChanges) gameState.modify(outcome.statChanges);
       const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
       revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
-      return { text, check, keywordDefs };
+      return { text, check, keywordDefs, effect: resolvedEffect };
     }
 
     const revealIds = [
@@ -180,20 +187,22 @@ class ItemManager {
     const text = (band && band.description) || def.inspectText || "（没有更多可以查看的信息。）";
     const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
     revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
-    return { text, check: null, keywordDefs };
+    return { text, check: null, keywordDefs, effect: resolvedEffect };
   }
 
   /**
    * Map a mental value to the matching SAN-band key used in `sanVariants`.
+   * Matches the 7-band layout used by the item editor and game data.
    * @param {number} mental
    * @returns {string}
    */
   _getSanBandKey(mental) {
-    if (mental > 90) return ">90";
-    if (mental > 70) return "70-90";
-    if (mental > 50) return "50-70";
-    if (mental > 30) return "30-50";
-    if (mental > 15) return "15-30";
+    if (mental === 0) return "=0";
+    if (mental > 90)  return ">90";
+    if (mental > 70)  return "70-90";
+    if (mental > 50)  return "50-70";
+    if (mental > 30)  return "30-50";
+    if (mental > 15)  return "15-30";
     return "0-15";
   }
 

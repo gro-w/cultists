@@ -1,6 +1,9 @@
 // DEV-TOOLS:START
 import { dataLoader } from "../core/DataLoader.js";
 import { locationSystem } from "../core/LocationSystem.js";
+import { windowManager } from "../core/WindowManager.js";
+import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
+import { createEmptyBlueprint } from "../core/ScheduleBlueprint.js";
 
 /**
  * DevItemEditorTab — item-editor.html/js ported into the DeveloperMode panel.
@@ -23,6 +26,8 @@ export class DevItemEditorTab {
     this._dev = devMode;
     this.items = [];
     this.currentId = null;
+    this.activeTab = 'items';
+    this.currentSpellKey = null;
     this.activeSanKey = '>90';
     this.dirty = false;
   }
@@ -46,6 +51,7 @@ export class DevItemEditorTab {
       id:this._uid(), defaultName:'', worldCount:1, inspectText:'', inspectTimeAdvance:0,
       revealKeywordIds:[], locations:[], pickable:false, usable:false, consumable:false, isBook:false,
       useCondition:{sanMin:0,sanMax:0},
+      schedules:{},
       sanVariants:v,
       useEffect:{timeAdvance:0,gameEvent:'',ending:'',mental:0,physical:0,satiety:0,energy:0,successMsg:'',failMsg:''},
       bookContents:[], spells:[],
@@ -65,13 +71,15 @@ export class DevItemEditorTab {
   html() {
     return `<div class="dev-ie-root">
 <div class="dev-ie-toolbar">
-  <strong style="font-size:13px">物品编辑器</strong>
+  <strong style="font-size:13px">物品和法术编辑器</strong>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie._switchTab('items')">📦 物品</button>
+  <button type="button" class="win95-btn dev-btn" onclick="_ie._switchTab('spells')">✨ 法术</button>
   <button type="button" class="win95-btn dev-btn" onclick="_ie._loadCurrentGame()">⬇ 从当前游戏读取</button>
   <button type="button" class="win95-btn dev-btn" onclick="_ie.exportJSON()">📤 导出 JSON</button>
   <button type="button" class="win95-btn dev-btn" onclick="_ie.writeToGame()">💽 写入磁盘</button>
   <input type="file" id="ie-file-input" accept=".json" style="display:none" onchange="_ie._onFile(event)">
 </div>
-<div class="dev-ie-main">
+<div class="dev-ie-main" id="ie-item-main">
   <aside class="dev-ie-sidebar">
     <div class="dev-ie-sidebar-hd">
       <input id="ie-search" placeholder="搜索名称/ID…" oninput="_ie._renderList()">
@@ -127,7 +135,11 @@ export class DevItemEditorTab {
           <button type="button" class="win95-btn dev-btn" onclick="_ie._addKwTag()">添加</button>
         </div>
       </div>
+      <div class="dev-section dev-ie-sec"><h3>🧩 内嵌日程表</h3><p style="font-size:11px;color:#888">use 在物品使用时加入 realtime；obtain 在物品获得时加入 realtime。</p>
+        <div style="display:flex;gap:8px"><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('item',null,'use')">编辑 use 内嵌日程表</button><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('item',null,'obtain')">编辑 obtain 内嵌日程表</button></div>
+      </div>
       <div class="dev-section dev-ie-sec" id="ie-sec-use" style="display:none"><h3>⚡ 使用效果</h3>
+
         <div class="dev-ie-row">
           <div class="dev-ie-field"><label>推进时间（分钟）</label><input type="number" id="f-useTimeAdv" value="0" style="width:90px"></div>
           <div class="dev-ie-field"><label>触发游戏事件</label><input type="text" id="f-useGameEvent" placeholder="game:study"></div>
@@ -167,6 +179,13 @@ export class DevItemEditorTab {
     </div>
   </section>
 </div>
+<div id="ie-spell-main" class="dev-ie-main" style="display:none">
+  <aside class="dev-ie-sidebar">
+    <div class="dev-ie-sidebar-hd"><input id="ie-spell-search" placeholder="搜索法术名称/ID…" oninput="_ie._renderSpellList()"><button type="button" class="win95-btn dev-btn" onclick="_ie._addStandaloneSpell()">＋</button></div>
+    <div id="ie-spell-list" class="dev-ie-item-list"></div>
+  </aside>
+  <section class="dev-ie-editor"><div id="ie-spell-empty" style="color:#aaa;padding:40px;text-align:center">← 选择法术或点击 ＋ 新建</div><div id="ie-spell-form" style="display:none;padding:10px"></div></section>
+</div>
 </div>`;
   }
 
@@ -185,6 +204,101 @@ export class DevItemEditorTab {
           ${flags?`<div style="font-size:10px;color:#999;margin-left:auto">${flags}</div>`:''}
         </div>`;
       }).join('')||'<div style="padding:16px;color:#aaa;text-align:center;font-size:12px">暂无物品</div>';
+  }
+
+  _switchTab(tab) {
+    this.activeTab = tab;
+    const items = this._el('ie-item-main'), spells = this._el('ie-spell-main');
+    if (items) items.style.display = tab === 'items' ? '' : 'none';
+    if (spells) spells.style.display = tab === 'spells' ? '' : 'none';
+    if (tab === 'spells') this._renderSpellList();
+  }
+
+  _allSpells() {
+    return this.items.flatMap((item) => (item.spells || []).map((spell, index) => ({
+      item, spell, index, key: `${item.id}__${index}`,
+      id: spell.id || `${item.id}__${index}`,
+    })));
+  }
+
+  _renderSpellList() {
+    const el = this._el('ie-spell-list'); if (!el) return;
+    const query = (this._el('ie-spell-search')?.value || '').toLowerCase();
+    const rows = this._allSpells().filter(({ item, spell, id }) =>
+      !query || id.toLowerCase().includes(query) || String(spell.name || '').toLowerCase().includes(query));
+    el.innerHTML = rows.map(({ item, spell, key, id }) =>
+      `<div class="dev-ie-item-row${key === this.currentSpellKey ? ' active' : ''}" onclick="_ie._selectSpell('${this._e(key)}')">
+        <div style="flex:1;overflow:hidden"><div style="font-weight:600">${this._e(spell.name) || '(未命名法术)'}</div>
+        <div style="font-size:10px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${this._e(id)} · ${this._e(item.defaultName)}</div></div>
+      </div>`).join('') || '<div style="padding:16px;color:#aaa;text-align:center;font-size:12px">暂无法术</div>';
+  }
+
+  _selectSpell(key) {
+    this.currentSpellKey = key;
+    this._renderSpellForm();
+    this._renderSpellList();
+  }
+
+  _spellRecord() { return this._allSpells().find((entry) => entry.key === this.currentSpellKey) || null; }
+
+  _addStandaloneSpell() {
+    let item = this.items.find((entry) => entry.id === 'dev_spells') || this.items[0];
+    if (!item) { this.addItem(); item = this.items.find((entry) => entry.id === this.currentId); }
+    if (!item.spells) item.spells = [];
+    item.spells.push({ name: '', description: '', learnTimeMinutes: 240, castSanCost: 5 });
+    this.currentSpellKey = `${item.id}__${item.spells.length - 1}`;
+    this.dirty = true; this._renderSpellList(); this._renderSpellForm();
+  }
+
+  _renderSpellForm() {
+    const empty = this._el('ie-spell-empty'), form = this._el('ie-spell-form'), record = this._spellRecord();
+    if (!empty || !form) return;
+    if (!record) { empty.style.display = ''; form.style.display = 'none'; return; }
+    empty.style.display = 'none'; form.style.display = '';
+    const { spell, item, index, id } = record;
+    form.innerHTML = `<div class="dev-section dev-ie-sec"><h3>✨ 法术基本信息</h3>
+      <div class="dev-ie-field"><label>法术 ID（由宿主物品和序号稳定生成）</label><input type="text" value="${this._e(id)}" disabled></div>
+      <div class="dev-ie-field"><label>宿主物品</label><div>${this._e(item.defaultName)}（${this._e(item.id)}）</div></div>
+      <div class="dev-ie-field"><label>名称</label><input id="ie-spell-name" value="${this._e(spell.name)}" oninput="_ie._spellField('name',this.value)"></div>
+      <div class="dev-ie-field"><label>效果描述</label><textarea id="ie-spell-desc" class="dev-textarea" rows="4" oninput="_ie._spellField('description',this.value)">${this._e(spell.description)}</textarea></div>
+      <div class="dev-ie-row"><div class="dev-ie-field"><label>学习时间（分钟）</label><input type="number" min="0" value="${Number(spell.learnTimeMinutes || 240)}" oninput="_ie._spellField('learnTimeMinutes',this.value)"></div>
+      <div class="dev-ie-field"><label>施放 SAN 消耗</label><input type="number" min="0" value="${Number(spell.castSanCost || 5)}" oninput="_ie._spellField('castSanCost',this.value)"></div></div>
+      <div style="display:flex;gap:8px;padding-top:8px"><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('spell',${index},'use')">🧩 编辑 use 内嵌日程表</button><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('spell',${index},'obtain')">🧩 编辑 obtain 内嵌日程表</button></div>
+      <p style="font-size:11px;color:#888">use：法术施放时加入 realtime；obtain：法术习得完成时加入 realtime。</p></div>`;
+  }
+
+  _spellField(field, value) {
+    const record = this._spellRecord(); if (!record) return;
+    record.spell[field] = ['learnTimeMinutes', 'castSanCost'].includes(field) ? (parseInt(value, 10) || 0) : value;
+    this.dirty = true; if (field === 'name') this._renderSpellList();
+  }
+
+  _defaultSchedule() {
+    const blueprint = createEmptyBlueprint();
+    blueprint.nodes.end = { id: 'end', type: 'scheduleEnd', inputs: {}, outputs: {}, x: 280, y: 80 };
+    blueprint.connections.push({ fromNodeId: 'start', fromPort: 'flowOut', toNodeId: 'end', toPort: 'flowIn' });
+    return blueprint;
+  }
+
+  _openEmbeddedSchedule(kind, spellIndex, action) {
+    const item = this.items.find((entry) => entry.id === this.currentId);
+    const spell = kind === 'spell' ? item?.spells?.[spellIndex] : null;
+    const host = spell || item;
+    if (!host) return;
+    host.schedules ||= {};
+    host.schedules[action] ||= this._defaultSchedule();
+    const schedule = host.schedules[action];
+    const project = { version: 2, totalDays: 1, customVars: [], schedules: { embedded: { displayName: `${action}`, entries: [{ id: action, name: action, dialogueTree: JSON.parse(JSON.stringify(schedule)) }] } }, events: {}, endings: {}, eventFileDoc: { events: [] }, endingFileDoc: { endings: [] } };
+    const hostName = spell ? spell.name || '未命名法术' : item.defaultName || item.id;
+    const editor = new DevDialogueEditorTab(this._dev, {
+      workspace: false, project, initialCtx: { type: 'schedule', id: 'embedded', entryIndex: 0 },
+      fileScope: { fileName: 'embedded.json', type: 'schedule' },
+      embeddedScope: { title: `${hostName} · ${action}`, onSave: (blueprint) => { host.schedules[action] = JSON.parse(JSON.stringify(blueprint)); this.dirty = true; this._persist(); this._renderSpellForm(); } },
+    });
+    const root = document.createElement('div');
+    const win = windowManager.createWindow({ title: `蓝图编辑器 · ${hostName} · ${action}`, icon: '🧩', width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: root, onClose: () => editor.unmount() });
+    win.el?.classList.add('dev-blueprint-window');
+    root.innerHTML = editor.html(); editor.mount(root.querySelector('.dev-de-root'));
   }
 
   _selectItem(id, skipSave) {
@@ -531,7 +645,8 @@ export class DevItemEditorTab {
     if(Object.keys(variants).length) out.sanVariants=variants; else delete out.sanVariants;
     if(it.isBook) out.isBook=true; else delete out.isBook;
     if(it.bookContents&&it.bookContents.length) out.bookContents=it.bookContents; else delete out.bookContents;
-    if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>({name:s.name,description:s.description||'',learnTimeMinutes:240,castSanCost:5})); else delete out.spells;
+    if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>{ const spell={...s,name:s.name,description:s.description||'',learnTimeMinutes:Number(s.learnTimeMinutes||240),castSanCost:Number(s.castSanCost||5)}; return spell; }); else delete out.spells;
+    if(it.schedules && Object.keys(it.schedules).length) out.schedules=JSON.parse(JSON.stringify(it.schedules)); else delete out.schedules;
     const ue=it.useEffect;
     if(it.usable){
       // Merge into rawGame's useEffect so add/remove arrays are preserved.
@@ -555,7 +670,8 @@ export class DevItemEditorTab {
     it.inspectTimeAdvance=g.inspectTimeAdvance||0; it.isBook=!!g.isBook;
     it.useCondition={sanMin:(g.useCondition&&g.useCondition.sanMin)||0,sanMax:(g.useCondition&&g.useCondition.sanMax)||0};
     it.bookContents=g.bookContents||[];
-    it.spells=(g.spells||[]).map(s=>({name:s.name||'',description:s.description||''}));
+    it.spells=(g.spells||[]).map(s=>({ ...s, name:s.name||'', description:s.description||'', learnTimeMinutes:Number(s.learnTimeMinutes||240), castSanCost:Number(s.castSanCost||5), schedules:s.schedules ? JSON.parse(JSON.stringify(s.schedules)) : {} }));
+    it.schedules=g.schedules ? JSON.parse(JSON.stringify(g.schedules)) : {};
     it.revealKeywordIds=g.revealKeywordIds||[];
     const topIE=g.inspectEffect||null;
     const readIE=src=>({gameEvent:src.gameEvent||'',mental:(src.statChanges&&src.statChanges.mental)||0,ending:src.ending||''});

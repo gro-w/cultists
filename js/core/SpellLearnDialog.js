@@ -1,6 +1,8 @@
 import { windowManager } from "./WindowManager.js";
 import { eventBus } from "./EventBus.js";
 import { spellManager } from "./SpellManager.js";
+import { realtimeQueue } from "./ScheduleQueue.js";
+import { createScheduleRunner } from "./ScheduleRunner.js";
 
 /**
  * SpellLearnDialog — subscribes to the "book:learnSpell" event emitted by
@@ -8,8 +10,9 @@ import { spellManager } from "./SpellManager.js";
  *
  * Opens a Win95-style window listing the spells in that book. For each spell
  * the player can click "学习" to learn it; learning a spell:
- *   1. Calls spellManager.learn(spell)
- *   2. Emits "spell:learned" so ActionBudget charges 240 min (4 hours)
+ *   1. Creates a realtime schedule instance.
+ *   2. Consumes 240 minutes.
+ *   3. Executes a spellOperation node that changes learned-spell state.
  *
  * Already-known spells are shown greyed out with "已知晓" instead.
  * The window closes itself once all spells are either learned or dismissed.
@@ -63,7 +66,8 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
       } else {
         btn.textContent = "学习";
         btn.addEventListener("click", () => {
-          const learned = spellManager.learn({
+          const spell = {
+            ...s,
             id: spellId,
             name: s.name,
             description: s.description || "",
@@ -72,11 +76,36 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             sourceBookId: bookId,
             sourceBookName: bookName,
             spellIndex: idx,
+          };
+          const instance = realtimeQueue.append([{
+            scheduleId: `spell-learn:${spell.id}`,
+            status: "unresolved",
+            transcript: [],
+          }])[0];
+          const runner = createScheduleRunner({
+            definition: {
+              id: `spell-learn:${spell.id}`,
+              blueprint: {
+                startNodeId: "start",
+                nodes: {
+                  start: { id: "start", type: "flowStart" },
+                  wait: { id: "wait", type: "consumeTime", inputs: { minutes: spell.learnTimeMinutes || 240 } },
+                  learn: { id: "learn", type: "spellOperation", spell },
+                  end: { id: "end", type: "scheduleEnd" },
+                },
+                connections: [
+                  { fromNodeId: "start", fromPort: "flowOut", toNodeId: "wait", toPort: "flowIn" },
+                  { fromNodeId: "wait", fromPort: "flowOut", toNodeId: "learn", toPort: "flowIn" },
+                  { fromNodeId: "learn", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
+                ],
+              },
+            },
+            instance,
+            appId: "spell-learn",
+            onCheckpoint: (next) => realtimeQueue.updateInstance(instance.instanceId, next),
+            onComplete: () => realtimeQueue.complete(instance.instanceId),
           });
-          if (learned) {
-            // ActionBudget listens to this and charges 240 min
-            eventBus.emit("spell:learned", { spellId, bookId, bookName });
-          }
+          runner.start();
           rebuildList();
         });
       }

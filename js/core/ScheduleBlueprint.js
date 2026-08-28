@@ -34,6 +34,9 @@ export function validateBlueprint(raw) {
   const starts = entries.filter(([, node]) => node.type === "flowStart");
   if (starts.length !== 1) errors.push(`流程起始节点必须恰好有一个，当前为 ${starts.length} 个`);
   if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push("缺少有效的流程起始节点");
+  if (blueprint.startNodeId && blueprint.nodes[blueprint.startNodeId]?.type !== "flowStart") errors.push("流程起点必须是起点节点");
+  const ends = entries.filter(([, node]) => node.type === "scheduleEnd");
+  if (!ends.length) errors.push("流程必须至少有一个日程结束节点");
 
   for (const [id, node] of entries) {
     if (!getScheduleNodeDefinition(node.type)) errors.push(`节点 ${id} 使用未知类型 ${node.type}`);
@@ -50,7 +53,7 @@ export function validateBlueprint(raw) {
     if (reachable.has(id)) continue;
     reachable.add(id);
     for (const connection of blueprint.connections) {
-      if (connection.fromNodeId === id && portKind(getScheduleNodePort(blueprint.nodes[id]?.type, connection.fromPort, "output")) === "flow") {
+      if (connection.fromNodeId === id && portKind(getScheduleNodePort(blueprint.nodes[id]?.type, connection.fromPort, "output", blueprint.nodes[id])) === "flow") {
         pending.push(connection.toNodeId);
       }
     }
@@ -60,14 +63,20 @@ export function validateBlueprint(raw) {
   }
   entries.forEach(([id, node]) => {
     if (isFlowNode(node.type) && !reachable.has(id)) errors.push(`流程节点 ${id} 不可从流程起始到达`);
+    if (isFlowNode(node.type) && node.type !== "scheduleEnd") {
+      const hasNext = blueprint.connections.some((connection) => connection.fromNodeId === id && portKind(getScheduleNodePort(node.type, connection.fromPort, "output", node)) === "flow")
+        || Boolean(node.next)
+        || (node.type === "choice" && (node.options || []).some((option) => option.next));
+      if (!hasNext) errors.push(`流程终点 ${id} 必须是日程结束节点`);
+    }
   });
 
   blueprint.connections.forEach((connection, index) => {
     const from = blueprint.nodes[connection.fromNodeId];
     const to = blueprint.nodes[connection.toNodeId];
     if (!from || !to) { errors.push(`连接 ${index} 引用了不存在的节点`); return; }
-    const sourcePort = getScheduleNodePort(from.type, connection.fromPort, "output");
-    const targetPort = getScheduleNodePort(to.type, connection.toPort, "input");
+    const sourcePort = getScheduleNodePort(from.type, connection.fromPort, "output", from);
+    const targetPort = getScheduleNodePort(to.type, connection.toPort, "input", to);
     if (!sourcePort) errors.push(`连接 ${index} 的输出引脚不存在`);
     if (!targetPort) errors.push(`连接 ${index} 的输入引脚不存在`);
     if (sourcePort && targetPort && (portKind(sourcePort) !== portKind(targetPort) || (portKind(sourcePort) !== "flow" && targetPort.type !== "any" && sourcePort.type !== "any" && sourcePort.type !== targetPort.type))) {

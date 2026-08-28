@@ -5,7 +5,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { eventBus } from "../core/EventBus.js";
 import { saveManager } from "../core/SaveManager.js";
 import { skillManager } from "../core/SkillManager.js";
-import { actionBudget } from "../core/ActionBudget.js";
+import { timeService } from "../core/TimeService.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { formatInspectResult, renderInspectResult } from "../core/InspectFormat.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
@@ -15,7 +15,7 @@ import { medicalCaseManager } from "../core/MedicalCaseManager.js";
  * StatusApp - "状态与属性": the protagonist's stats, inventory, and save/load
  * UI, organized into four tabs:
  *   - 状态: energy/mental/physical/satiety bars + current day/phase, plus
- *     this phase's remaining 对话/调查 action budget (ActionBudget) and the
+ *     this phase's elapsed time (TimeService) and the
  *     protagonist's skill values (SkillManager, used by dice checks).
  *   - 物品: inventory list backed by ItemManager, with 调查/使用 actions.
  *     Inspecting an item with a configured `inspectCheck` re-rolls a dice
@@ -26,7 +26,7 @@ import { medicalCaseManager } from "../core/MedicalCaseManager.js";
  *     shown here at a glance instead of only inside each app.
  *   - 保存: builds/display the save-string URL (SaveManager) and lets the
  *     player load a save string back in.
- * Always available; live-updates via GameState/ItemManager/ActionBudget/
+ * Always available; live-updates via GameState/ItemManager/TimeService/
  * NpcStateManager events.
  */
 export async function launchStatusApp() {
@@ -81,11 +81,11 @@ export async function launchStatusApp() {
 
   function renderStats() {
     const s = gameState.snapshot();
-    const budgetSnapshot = actionBudget.snapshot();
+    const budgetSnapshot = timeService.snapshot();
     const { phaseMinutes } = budgetSnapshot;
     const phaseLimit = s.phase === "day"
-      ? actionBudget.config?.day?.workMinutes || 480
-      : actionBudget.config?.night?.nightMinutes || 960;
+      ? timeService.config?.day?.workMinutes || 480
+      : timeService.config?.night?.nightMinutes || 960;
     const clockMinutes = (s.phase === "day" ? 8 * 60 : 16 * 60) + phaseMinutes;
     const clock = `${String(Math.floor((clockMinutes % 1440) / 60)).padStart(2, "0")}:${String(clockMinutes % 60).padStart(2, "0")}`;
     panels.stats.innerHTML = `
@@ -268,7 +268,7 @@ export async function launchStatusApp() {
   const offDayNight = eventBus.on("daynight:changed", renderStats);
   const offMedicalIncome = eventBus.on("medical:incomeChanged", renderStats);
   const offItems = eventBus.on("items:changed", renderItems);
-  const offBudget = eventBus.on("actionBudget:changed", renderStats);
+  const offBudget = timeService.onChange(renderStats);
   const offNpcState = npcStateManager.onChange(renderNpcStates);
 
   renderAll();

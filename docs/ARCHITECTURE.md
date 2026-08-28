@@ -23,18 +23,18 @@
 | --- | --- |
 | `GameState` | 日期、绝对游戏时钟、昼夜 phase、duty/location、精力、SAN、体力、饱腹 |
 | `DayNightSystem` | 上班、下班、睡眠、工作日/休息日和最终阶段切换 |
-| `ActionBudget` | 行动计时、调查时间覆盖、法术学习时间、睡眠和日结 |
+| `TimeService` | 唯一普通游戏时间推进、跨日和阶段结算 |
 | `ScheduleData` | 加载 work/social 日程，并按时间点追加批次 |
-| `ScheduleQueue` | 独立的 HIS `workQueue` 和 Social `socialQueue` FIFO 队列 |
+| `ScheduleQueue` | 独立的 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `realtimeQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件和使用效果 |
 | `ItemPlacementManager` | 场景中的条件物品摆放、拾取和放回 |
 | `GlobalVariableManager` | 数据定义的 bool/number/string 全局变量、条件和效果 |
 | `SpellManager` | 已学习法术、法术施放和法术状态事件 |
 | `KeywordManager` | 关键词注册、收集、来源和笔记本数据 |
-| `DialogueRunner` | HIS/Social/Monitor 共用的对话树执行器 |
+| `ScheduleRunner` | HIS/Social/Monitor 对话及所有对象式日程蓝图执行器 |
 | `DialogueEffects` | 对话显示时的物品、NPC、好感度、结局、变量和游戏事件效果 |
 | `EndingManager` | 事件、对话、物品、属性阈值和最终阶段结局 |
-| `SaveManager` | v11 存档编码/恢复、窗口布局和所有持久状态 |
+| `SaveManager` | v11 存档编码/恢复、窗口布局、队列实例和所有持久状态 |
 | `DeveloperMode` | 仅源码开发版中的状态调节和数据编辑 |
 
 典型事件流：
@@ -47,7 +47,24 @@
   -> 其他核心单例和已打开窗口
 ```
 
-常见事件包括：`gamestate:changed`、`daynight:changed`、`actionBudget:changed`、`item:inspected`、`item:used`、`spell:learned`、`spell:cast`、`global-variable:changed`、`global-variables:changed`、`ending:triggered`。
+常见事件包括：`gamestate:changed`、`time:changed`、`daynight:changed`、`schedule:triggered`、`schedule:resolved`、`schedule:completed`、`item:inspected`、`item:used`、`spells:changed`、`spell:cast`、`global-variable:changed`、`global-variables:changed`、`ending:triggered`。
+
+## 统一日程执行边界
+
+日程实例是所有普通计时操作和可持久化副作用的唯一执行身份。应用只创建实例、提供展示回调，不直接推进时间或提交状态：
+
+| 操作 | 队列 | 执行顺序 |
+| --- | --- | --- |
+| HIS/Social/Monitor 对话 | `workQueue` / `socialQueue` / `realtimeQueue` | `ScheduleRunner` 执行蓝图节点、对话效果和 `consumeTime` |
+| ChatGTP 关键词查询 | `chatgtpQueue` | 扣 NPC SAN、推进 20 分钟、提交回答 |
+| 物品调查/使用、法术施放 | `realtimeQueue` | `ItemScheduleRuntime` 执行效果、时间和完成事件 |
+| HIS 诊断提交 | `realtimeQueue` | 提交医疗记录、推进 20 分钟、完成实例 |
+| 法术学习 | `realtimeQueue` | `consumeTime(240)` 后执行 `spellOperation` |
+| NPC 离线 | `realtimeQueue` | 执行离线状态转换和 `offlineConsequence` |
+
+`TimeService` 是唯一的普通时间推进 owner。睡眠、醒来、下班、跨日、日结和最终结局是显式系统边界；其中医疗到期只在 `TimeService` 的醒来路径调用 `MedicalCaseManager.processDue()`，医疗管理器不得再通过 `daynight:changed` 自行执行该逻辑。EventBus listener 若改变状态或消耗时间，必须视为执行器审计，不能当作被动通知。
+
+法术学习的状态变更不得发生在创建日程之前：学习按钮只构造 spell 数据并创建蓝图，蓝图先消耗 240 分钟，随后由 `spellOperation` 调用 `SpellManager.learn()`。NPC SAN 跨过离线阈值时只登记 pending 状态并创建一个带 instance ID 的 realtime 日程；只有该日程执行到离线节点时才加入 `offlineActors` 并发出离线通知。
 
 ## 游戏时间与状态机
 
@@ -56,7 +73,7 @@
 - 工作窗口：`08:00 <= clock < 16:00`。
 - 天文白昼：`06:00 <= clock < 18:00`；仅用于场景/氛围判断，不替代工作 phase。
 - 夜间睡觉窗口：`16:00` 到次日 `08:00`；跨越午夜时日期立即增加。
-- 普通成功行动默认推进 20 分钟；行动数量没有上限。
+- 普通成功行动默认推进 20 分钟；行动数量没有上限。计时操作不得在 App 中直接调用 `TimeService.advanceBy()`。
 - 在工作窗口结束工作会把时钟推进到 `16:00`，但不是一次普通行动。
 - 睡眠到次日 `08:00` 时结算医疗收入/支出、SAN 恢复和睡眠债。
 - 当前批次未完成时不能下班或睡觉；显式空 `entries: []` 表示没有待完成工作。

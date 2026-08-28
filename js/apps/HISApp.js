@@ -6,13 +6,14 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
 import { scheduleData } from "../core/ScheduleData.js";
-import { createDialogueRunner } from "../core/DialogueRunner.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 import { OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { workQueue } from "../core/ScheduleQueue.js";
+import { realtimeQueue } from "../core/ScheduleQueue.js";
+import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
 
 const dialogueKeywordIds = (tree) => {
   if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
@@ -31,9 +32,8 @@ const dialogueKeywordIds = (tree) => {
  * conversation (click highlighted keywords to collect them) -> choose a
  * diagnosis -> prescribe medicines from the configured list.
  *
- * Dialogue tree walking (dice-check options, npcSanChange, dialogue:turn
- * budget accounting) is shared with SocialApp/MonitorApp via
- * `createDialogueRunner` (see DialogueRunner.js). A patient whose own SAN
+ * Dialogue tree walking is shared with SocialApp/MonitorApp via the schedule
+ * runner. A patient whose own SAN
  * (NpcStateManager) has dropped to "offline" can no longer be talked to.
  */
 export async function launchHISApp() {
@@ -126,7 +126,7 @@ export async function launchHISApp() {
     const npcId = patient.npcId || patient.id;
     renderDiagnosis(patient);
 
-    if (npcStateManager.isOffline(npcId) && patient.queueStatus !== "completed") {
+    if (npcStateManager.isOffline(npcId) && patient.queueStatus !== "resolved") {
       dialogueEl.innerHTML +=
         '<p class="dialogue-end">（该患者情绪崩溃，已请假离开，暂时无法继续问诊。）</p>';
       return;
@@ -157,7 +157,11 @@ export async function launchHISApp() {
       dialogueEl.scrollTop = dialogueEl.scrollHeight;
     }
 
-    const runner = patient.queueEntry ? createScheduleRunner({
+    if (!patient.queueEntry) {
+      linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      return;
+    }
+    const runner = createScheduleRunner({
       definition: patient,
       instance: patient.queueEntry,
       appendLine,
@@ -165,20 +169,11 @@ export async function launchHISApp() {
       appId: "his",
       onCheckpoint: (instance) => workQueue.updateInstance(instance.instanceId, instance),
       onComplete: (instance) => workQueue.complete(instance.instanceId),
-    }) : createDialogueRunner({
-      actor: patient,
-      appendLine,
-      optionsEl,
-      optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
-      appId: "his",
-      onNodeShown: (nodeId) => dialogueProgress.set("his", patient.id, nodeId),
-      onComplete: () => patient.queueInstanceId && workQueue.complete(patient.queueInstanceId),
     });
 
     const resumeNodeId =
       dialogueProgress.get("his").actorId === patient.id ? dialogueProgress.get("his").nodeId : null;
-    if (patient.queueEntry) runner.start();
-    else runner.showNode(resumeNodeId || (patient.dialogueTree && patient.dialogueTree.start));
+    runner.start();
 
   }
 
@@ -271,9 +266,28 @@ export async function launchHISApp() {
         return;
       }
       const medicineIds = [...select.selectedOptions].map((option) => option.value).filter(Boolean).slice(0, 5);
-      const result = medicalCaseManager.submit({ patient: currentRecord.patient, diagnosis: currentRecord.diagnosis, medicineIds });
-      if (!result.ok) return;
-      prescriptionEl.innerHTML = `<h4>处方已提交</h4><p>诊断${result.correctDiagnosis ? `正确，奖金 +${result.bonus}` : "错误，无诊断奖金"}。</p><p>药品提成 +${result.commission} 元；当前收入：${result.income} 元。</p>`;
+      const instance = realtimeQueue.append([{
+        scheduleId: "medical:submit",
+        status: "unresolved",
+        transcript: [],
+      }])[0];
+      try {
+        runItemSchedule({
+          source: "medical",
+          action: "submit",
+          instance,
+          context: {
+            effect: { medicalSubmission: { patient: currentRecord.patient, diagnosis: currentRecord.diagnosis, medicineIds } },
+            timeMinutes: 20,
+            onComplete: (resolved) => {
+              const result = resolved.result;
+              prescriptionEl.innerHTML = `<h4>处方已提交</h4><p>诊断${result.correctDiagnosis ? `正确，奖金 +${result.bonus}` : "错误，无诊断奖金"}。</p><p>药品提成 +${result.commission} 元；当前收入：${result.income} 元。</p>`;
+            },
+          },
+        });
+      } catch (error) {
+        prescriptionEl.insertAdjacentHTML("beforeend", `<p class="dialogue-end">${error.message}</p>`);
+      }
     });
 
     prescriptionEl.appendChild(select);

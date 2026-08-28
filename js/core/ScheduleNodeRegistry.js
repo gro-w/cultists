@@ -8,6 +8,7 @@ const flowOut = (name = "flowOut") => ({ name, kind: FLOW, type: null });
 
 const definitions = {
   flowStart: { label: "流程起始", flowOutputs: [flowOut()] },
+  scheduleEnd: { label: "日程结束", flowInputs: [flowIn()] },
   text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string")] },
   choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("branchCount", VALUE, "number")] },
   branch: { label: "逻辑分支", flowInputs: [flowIn()], flowOutputs: [flowOut("false"), flowOut("true")], valueInputs: [input("condition")] },
@@ -18,6 +19,7 @@ const definitions = {
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   inventoryOperation: { label: "操作背包", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("itemId", VALUE, "string"), input("count", VALUE, "number")] },
   statOperation: { label: "操作数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
+  spellOperation: { label: "调整法术状态", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getInventory: { label: "背包取值", valueInputs: [input("itemId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
@@ -36,8 +38,15 @@ export function getScheduleNodeDefinition(type) {
 export function getScheduleNodePort(type, portName, direction, node = null) {
   const def = getScheduleNodeDefinition(type);
   if (!def) return null;
-  if (type === "choice" && direction === "output" && /^option\d+$/.test(portName)) return { name: portName, kind: FLOW, type: null };
-  if (type === "choice" && direction === "input" && /^label\d+$/.test(portName)) return { name: portName, kind: VALUE, type: "string" };
+  if (type === "choice" && /^(option|label)\d+$/.test(portName)) {
+    const index = Number(portName.replace(/\D/g, ''));
+    const count = node && Number.isInteger(Number(node.inputs?.branchCount))
+      ? Math.max(0, Math.min(32, Number(node.inputs.branchCount)))
+      : (node?.options?.length ?? index + 1);
+    if (index >= count) return null;
+    if (direction === "output" && portName.startsWith("option")) return { name: portName, kind: FLOW, type: null };
+    if (direction === "input" && portName.startsWith("label")) return { name: portName, kind: VALUE, type: "string" };
+  }
   const ports = direction === "input"
     ? [...(def.flowInputs || []), ...(def.valueInputs || [])]
     : [...(def.flowOutputs || []), ...(def.valueOutputs || [])];

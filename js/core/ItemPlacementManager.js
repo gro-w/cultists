@@ -2,7 +2,7 @@ import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
-import { actionBudget } from "./ActionBudget.js";
+
 import { itemManager } from "./ItemManager.js";
 
 /**
@@ -41,7 +41,7 @@ class ItemPlacementManager {
 
   _clockMinutes() {
     const start = gameState.phase === "day" ? 8 * 60 : 16 * 60;
-    return (start + actionBudget.phaseMinutes) % 1440;
+    return (start + (gameState.clockMinutes - start + 1440) % 1440) % 1440;
   }
 
   _conditionMatches(condition = {}) {

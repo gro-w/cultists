@@ -1,14 +1,15 @@
 import { eventBus } from "../core/EventBus.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { gameState } from "../core/GameState.js";
-import { actionBudget } from "../core/ActionBudget.js";
+import { timeService } from "../core/TimeService.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
-import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { realtimeQueue } from "../core/ScheduleQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
@@ -38,9 +39,10 @@ export default class DormMode {
     this._transitioning = false;
     this._computerOpen = false;
     this._compTabInit = {};
+    this._transitionTimer = null;
     this._build();
     eventBus.on("daynight:changed", (detail) => this._onStateChanged(detail));
-    eventBus.on("actionBudget:changed", () => this._renderClock());
+    eventBus.on("time:changed", () => this._renderClock());
     eventBus.on("gamestate:changed", () => this._renderClock());
   }
 
@@ -165,7 +167,7 @@ export default class DormMode {
   // ── Clock ───────────────────────────────────────────────────────────────────
   _clockMinutes() {
     const start = gameState.phase === "day" ? 8 * 60 : 16 * 60;
-    return (start + actionBudget.phaseMinutes) % 1440;
+    return gameState.clockMinutes;
   }
 
   _renderClock() {
@@ -645,8 +647,14 @@ export default class DormMode {
     const options = document.createElement("div");
     options.className = "dialogue-options";
     this.interaction.append(lines, options);
-    const runner = createDialogueRunner({
-      actor,
+    if (!actor.blueprint) {
+      lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      return;
+    }
+    const instance = realtimeQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
+    const runner = createScheduleRunner({
+      definition: actor,
+      instance,
       appendLine: (speaker, label, text) => {
         const line = document.createElement("p");
         line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, keywordDefs)}`;
@@ -654,11 +662,11 @@ export default class DormMode {
         keywordManager.bindHighlights(line, keywordDefs);
       },
       optionsEl: options,
-      optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
       appId: "dorm",
-      emptyMessage: "（暂无对话内容）",
+      onCheckpoint: (next) => realtimeQueue.updateInstance(instance.instanceId, next),
+      onComplete: () => realtimeQueue.complete(instance.instanceId),
     });
-    runner.showNode(actor.dialogueTree?.start);
+    runner.start();
   }
 
   // ── Bed / sleep ─────────────────────────────────────────────────────────────
@@ -701,11 +709,17 @@ export default class DormMode {
   }
 
   _transition(showDorm) {
-    if (this._transitioning) return;
+    if (this._transitionTimer != null) {
+      window.clearTimeout(this._transitionTimer);
+      this._transitionTimer = null;
+      this.root.classList.remove("mode-transition", "opening-laptop", "closing-laptop");
+      this._transitioning = false;
+    }
     this._transitioning = true;
     this.root.classList.add("mode-transition", showDorm ? "opening-laptop" : "closing-laptop");
-    window.setTimeout(() => {
-      this._syncVisibility(showDorm);
+    this._transitionTimer = window.setTimeout(() => {
+      this._transitionTimer = null;
+      this._syncVisibility(gameState.location === "dorm");
       this.root.classList.remove("mode-transition", "opening-laptop", "closing-laptop");
       this._transitioning = false;
     }, 620);

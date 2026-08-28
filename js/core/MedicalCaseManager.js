@@ -20,7 +20,6 @@ class MedicalCaseManager {
     this.pendingIncidents = [];
     this._restoring = false;
     this._loadPromise = null;
-    this._listening = false;
   }
 
   async load() {
@@ -38,12 +37,6 @@ class MedicalCaseManager {
         this.diagnosisCategories = diagnosisData.categories || [{ id: "general", name: "全部诊断", diagnoses: diagnosisData.diagnoses || [] }];
         this.diagnoses = new Map(this.diagnosisCategories.flatMap((category) =>
           (category.diagnoses || []).map((diagnosis) => [diagnosis.id, { ...diagnosis, categoryId: category.id }])));
-        if (!this._listening) {
-          this._listening = true;
-          eventBus.on("daynight:changed", () => {
-            if (!this._restoring) this.processDue(gameState.day);
-          });
-        }
       });
     }
     return this._loadPromise;

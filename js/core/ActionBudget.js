@@ -11,6 +11,7 @@ function elapsedFromDayStart() {
   return gameState.phase === "day" ? Math.max(0, clock - 8 * 60) : (clock >= 16 * 60 ? clock - 16 * 60 : clock + 8 * 60);
 }
 
+
 class ActionBudget {
   constructor() {
     this.config = null;
@@ -20,8 +21,15 @@ class ActionBudget {
     this.insufficientSleepStreak = 0;
     this.currentLimits = { ...DEFAULT_LIMITS };
     this._initPromise = null;
-    eventBus.on("item:inspected", () => this.recordInspection());
-    eventBus.on("item:used", () => this.recordTimedAction());
+
+    eventBus.on("item:inspected", ({ inspectTimeAdvance } = {}) =>
+      this.recordInspection(inspectTimeAdvance || 0));
+    // Books with spells set skipTimeAdvance=true — time is charged when the
+    // player confirms learning via SpellLearnDialog (spell:learned event).
+    eventBus.on("item:used", ({ skipTimeAdvance, timeMinutes } = {}) => {
+      if (!skipTimeAdvance) this.recordTimedAction(timeMinutes || 0);
+    });
+    eventBus.on("spell:learned", () => this.recordTimedAction(240));
     eventBus.on("dialogue:turn", () => this.recordDialogueTurn());
     eventBus.on("gamestate:changed", () => this._syncClock());
   }
@@ -82,16 +90,16 @@ class ActionBudget {
 
   recordDialogueTurn() {
     this.used.dialogue += 1;
-    this._consumeTime();
+    this._consumeTime(0);
   }
 
-  recordInspection() {
+  recordInspection(overrideMinutes = 0) {
     this.used.inspect += 1;
-    this._consumeTime();
+    this._consumeTime(overrideMinutes);
   }
 
-  recordTimedAction() {
-    this._consumeTime();
+  recordTimedAction(overrideMinutes = 0) {
+    this._consumeTime(overrideMinutes);
   }
 
   applyPenalty() {
@@ -102,9 +110,9 @@ class ActionBudget {
     return Infinity;
   }
 
-  _consumeTime() {
+  _consumeTime(overrideMinutes = 0) {
     const previousPhase = gameState.phase;
-    const minutesPerAction = (this.config && this.config.minutesPerAction) || 20;
+    const minutesPerAction = overrideMinutes > 0 ? overrideMinutes : (this.config && this.config.minutesPerAction) || 20;
     const crossesEight = previousPhase === "night"
       && gameState.clockMinutes < 8 * 60
       && gameState.clockMinutes + minutesPerAction >= 8 * 60;

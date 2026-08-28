@@ -7,20 +7,14 @@ import { scheduleData } from "./ScheduleData.js";
 import { actionBudget } from "./ActionBudget.js";
 import { favorabilityManager, NPC_IDS } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
-<<<<<<< HEAD
 import { spellManager } from "./SpellManager.js";
-
-// v8 = v7 plus spell list (variable-length string table).
-const SAVE_FORMAT_VERSION = 8;
-=======
 import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
 import { workQueue, socialQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 
-// v10 is the schedule-system rewrite. Older binary formats are intentionally unsupported.
-const SAVE_FORMAT_VERSION = 10;
->>>>>>> origin/main
+// v11 = v10 plus spell list in JSON payload.
+const SAVE_FORMAT_VERSION = 11;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];
@@ -189,6 +183,7 @@ class SaveManager {
       medical: medicalCaseManager.snapshot(),
       globalVariables: globalVariableManager.snapshot(),
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
+      spells: spellManager.all(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
 
@@ -265,30 +260,6 @@ class SaveManager {
       bytes.push(npcStateManager.isOffline(id) ? 1 : 0);
     });
 
-<<<<<<< HEAD
-    // v8: learned spell list.
-    // Each spell is encoded as:
-    //   2 bytes – item index for sourceBookId (0xFFFF if unknown)
-    //   1 byte  – spellIndex within that book's spells[] array
-    //   1 byte  – name byte-length (UTF-8, capped at 255)
-    //   N bytes – name UTF-8
-    //   2 bytes – description byte-length (capped at 0xFFFF)
-    //   M bytes – description UTF-8
-    const encoder = new TextEncoder();
-    const spells = spellManager.all();
-    bytes.push(clampByte(spells.length, 255));
-    spells.forEach((spell) => {
-      const bookIdx = this.itemIds.indexOf(spell.sourceBookId);
-      push16(bytes, bookIdx >= 0 ? bookIdx : 0xffff);
-      bytes.push(clampByte(spell.spellIndex || 0));
-      const nameBytes = encoder.encode((spell.name || "").slice(0, 85)); // max ~255 UTF-8 bytes
-      bytes.push(nameBytes.length);
-      nameBytes.forEach((b) => bytes.push(b));
-      const descBytes = encoder.encode((spell.description || "").slice(0, 1000));
-      push16(bytes, descBytes.length);
-      descBytes.forEach((b) => bytes.push(b));
-    });
-=======
     // v8+: conditional world-item placements, in item_placements.json order.
     bytes.push(clampByte(this.placementIds.length));
     this.placementIds.forEach((id) => bytes.push(itemPlacementManager.isPlaced(id) ? 1 : 0));
@@ -296,7 +267,6 @@ class SaveManager {
     const medicalState = new TextEncoder().encode(JSON.stringify(medicalCaseManager.snapshot()));
     push16(bytes, medicalState.length);
     medicalState.forEach((byte) => bytes.push(byte));
->>>>>>> origin/main
 
     return Uint8Array.from(bytes);
   }
@@ -317,9 +287,6 @@ class SaveManager {
     if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
     const version = bytes[i++];
-<<<<<<< HEAD
-    if (version < 2 || version > 8) throw new Error("Unsupported save version");
-=======
     if (version !== SAVE_FORMAT_VERSION) throw new Error("Unsupported save version");
     const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)) {
@@ -332,13 +299,13 @@ class SaveManager {
     socialQueue.restore(payload.socialQueue);
     keywordManager.restoreCollected(payload.keywords || []);
     itemManager.restoreInventory(payload.inventory || []);
+    spellManager.restore(payload.spells || []);
     medicalCaseManager.restore(payload.medical || {});
     scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
     this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     return;
 
     /* Legacy binary decoder retained below only as historical reference. */
->>>>>>> origin/main
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
     // location byte present from v5 onward; advance i unconditionally when present
@@ -461,34 +428,6 @@ class SaveManager {
       medicalCaseManager.restore();
     }
     medicalCaseManager.endRestore();
-
-    // v8: learned spell list.
-    if (version >= 8 && i < bytes.length) {
-      const decoder = new TextDecoder();
-      const spellCount = bytes[i++] || 0;
-      const restoredSpells = [];
-      for (let s = 0; s < spellCount && i < bytes.length; s += 1) {
-        const bookIdx  = read16(bytes, i); i += 2;
-        const spellIdx = bytes[i++];
-        const nameLen  = bytes[i++];
-        const name     = decoder.decode(bytes.slice(i, i + nameLen)); i += nameLen;
-        const descLen  = read16(bytes, i); i += 2;
-        const description = decoder.decode(bytes.slice(i, i + descLen)); i += descLen;
-        const sourceBookId = bookIdx !== 0xffff ? (this.itemIds[bookIdx] || "") : "";
-        const sourceDef    = sourceBookId ? itemManager.getDef(sourceBookId) : null;
-        restoredSpells.push({
-          id: `${sourceBookId}__${spellIdx}`,
-          name,
-          description,
-          learnTimeMinutes: 240,
-          castSanCost: 5,
-          sourceBookId,
-          sourceBookName: sourceDef ? sourceDef.name : sourceBookId,
-          spellIndex: spellIdx,
-        });
-      }
-      spellManager.restore(restoredSpells);
-    }
 
     if (hisActorIdx >= 0 && this.hisActors[hisActorIdx]) {
       const actor = this.hisActors[hisActorIdx];

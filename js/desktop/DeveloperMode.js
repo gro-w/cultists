@@ -18,11 +18,12 @@ import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
 import { DevLocationEditorTab } from "./DevLocationEditorTab.js";
 import { DevDormComputerTab } from "./DevDormComputerTab.js";
+import { DevStructuredEditorTab } from "./DevStructuredEditorTab.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
 const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, scheduleData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
-const JSON_FILES = () => [...DAY_FILES(), "socialpub.json", "workpub.json", "chatgtp_qa.json", "chatgtp_dialog.json", "keywords.json", "npcs.json", "special_events.json", "items.json", "item_placements.json", "diagnoses.json", "medicines.json", "medical_events.json", "endings.json", "npc_state.json", "global_variables.json", "locations.json", "social_apps.json", "bgm.json", "time_rules.json", "calendar.json", "achievements.json", "skills.json", "monitor_scenes.json"];
+
 const QA_PAGE_SIZE = 50;
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",
@@ -61,9 +62,10 @@ export function launchDeveloperMode() {
 }
 
 class DeveloperMode {
-  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.selectedFile = "chatgtp_qa.json"; this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this.render(); }
+  constructor(root, win) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this.render(); }
   render() {
-    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("关键词编辑器", "tab-keywords", "dev-btn-data")}${button("ChatGTP 编辑器", "tab-chatgtp", "dev-btn-data")}${button("NPC 列表", "tab-npcs", "dev-btn-data")}${button("全局变量", "tab-global-variables", "dev-btn-data")}${button("JSON 文件", "tab-json", "dev-btn-data")}${button("物品编辑器", "tab-item-editor", "dev-btn-data")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-data")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-data")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-data")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-data")}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
+    const structuredButtons = DevStructuredEditorTab.keys().map((key) => button(DevStructuredEditorTab.config(key).title, `tab-structured-${key}`, "dev-btn-data")).join("");
+    this.root.innerHTML = `<div class="dev-toolbar">${button("状态调节", "tab-state")}${button("NPC 状态调节", "tab-npc-state")}${button("背包", "tab-inventory")}${button("关键词编辑器", "tab-keywords", "dev-btn-data")}${button("ChatGTP 编辑器", "tab-chatgtp", "dev-btn-data")}${button("NPC 列表", "tab-npcs", "dev-btn-data")}${button("全局变量", "tab-global-variables", "dev-btn-data")}${button("物品编辑器", "tab-item-editor", "dev-btn-data")}${button("日程编辑器", "tab-dialogue-editor", "dev-btn-data")}${button("🎵 BGM 编辑器", "tab-bgm-editor", "dev-btn-data")}${button("📍 位置编辑器", "tab-location-editor", "dev-btn-data")}${button("💻 电脑内容编辑器", "tab-dorm-computer", "dev-btn-data")}${structuredButtons}</div><div class="dev-status" data-dev-status>开发工具就绪。修改仅存在于当前页面，使用下载按钮导出。</div><div class="dev-panel" data-dev-panel></div>`;
     this.bindPanel(); this.showState();
   }
 
@@ -98,6 +100,8 @@ class DeveloperMode {
     el.classList.toggle("dev-error", error);
   }
 
+  downloadFile(fileName, value) { downloadJson(fileName, value); }
+
   bindPanel() { this.root.querySelectorAll("[data-dev-action]").forEach((el) => el.addEventListener("click", () => this.handle(el.dataset.devAction))); }
   _setPanelKind(kind) {
     const panel = this.root.querySelector("[data-dev-panel]");
@@ -110,8 +114,6 @@ class DeveloperMode {
     this._setPanelKind(kind);
     panel.innerHTML = html;
     this.bindPanel();
-    const jsonFile = this.root.querySelector("[data-json-file]");
-    if (jsonFile) jsonFile.addEventListener("change", () => this.showJson(jsonFile.value));
 
   }
 
@@ -121,6 +123,7 @@ class DeveloperMode {
     if (this._bgmEditorTab) { this._bgmEditorTab.unmount(); this._bgmEditorTab = null; }
     if (this._locationEditorTab) { this._locationEditorTab.unmount(); this._locationEditorTab = null; }
     if (this._dormComputerTab) { this._dormComputerTab.unmount(); this._dormComputerTab = null; }
+    if (this._structuredEditorTab) { this._structuredEditorTab.unmount(); this._structuredEditorTab = null; }
     // item editor has no document-level listeners, no explicit unmount needed
     this._itemEditorTab = null;
   }
@@ -168,6 +171,15 @@ class DeveloperMode {
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dormComputerTab.html();
     this.bindPanel();
     this._dormComputerTab.mount();
+  }
+
+  showStructuredEditor(key) {
+    this._unmountEditorTabs();
+    this._setPanelKind("data");
+    this._structuredEditorTab = new DevStructuredEditorTab(this, key);
+    this.root.querySelector("[data-dev-panel]").innerHTML = this._structuredEditorTab.html();
+    this.bindPanel();
+    this._structuredEditorTab.mount();
   }
 
   showState() {
@@ -224,17 +236,6 @@ class DeveloperMode {
     if (!this.docs.has(fileName)) this.docs.set(fileName, clone(await dataLoader.loadJSON(fileName)));
     return this.docs.get(fileName);
   }
-
-  async showJson(fileName = this.selectedFile) {
-    this.selectedFile = fileName;
-    const doc = await this.loadDoc(fileName);
-    this.panel(`<section class="dev-section"><h3>JSON 编辑器</h3>
-      <label>文件 <select data-json-file>${JSON_FILES().map((file) => `<option ${file === fileName ? "selected" : ""}>${file}</option>`).join("")}</select></label>
-      <textarea data-json-editor class="dev-textarea dev-json-editor">${JSON.stringify(doc, null, 2)}</textarea>
-      <div>${button("校验并保存到内存", "save-json")} ${button("下载 JSON", "download-json")} ${button("写入磁盘", "write-json")}</div>
-    </section>`, "data");
-  }
-
 
 
   async showKeywords() {
@@ -344,7 +345,21 @@ class DeveloperMode {
     if (action === "tab-npcs") { this._unmountEditorTabs(); return this.showNpcs(); }
     if (action === "tab-global-variables") { this._unmountEditorTabs(); return this.showGlobalVariables(); }
 
-    if (action === "tab-json") { this._unmountEditorTabs(); return this.showJson(); }
+    const structuredTab = action.match(/^tab-structured-(.+)$/);
+    if (structuredTab) return this.showStructuredEditor(structuredTab[1]);
+    if (action === "structured-reload") return this._structuredEditorTab?.reload();
+    if (action === "structured-save") {
+      try { return this._structuredEditorTab?.save(); }
+      catch (error) { this.setStatus(`保存失败：${error.message}`, true); return; }
+    }
+    if (action === "structured-download") {
+      try { return this._structuredEditorTab?.download(); }
+      catch (error) { this.setStatus(`下载失败：${error.message}`, true); return; }
+    }
+    if (action === "structured-write") {
+      try { return await this._structuredEditorTab?.write(); }
+      catch (error) { this.setStatus(`写入失败：${error.message}`, true); return; }
+    }
     if (action === "qa-page-prev" || action === "qa-page-next") {
       this._syncQaPage();
       this.qaPage += action === "qa-page-prev" ? -1 : 1;
@@ -443,32 +458,6 @@ class DeveloperMode {
       dialogueProgress.set(app, app === "chatgtp" ? "chatgtp" : actorId, nodeId);
       this.setStatus(action === "clear-dialogue-state" ? "对话状态已清除。" : `${app} 对话状态已设置为 ${actorId || "无"} / ${nodeId || "无"}。`);
       return this.showNpcState();
-    }
-    if (action === "save-json") {
-      try {
-        const value = JSON.parse(this.root.querySelector("[data-json-editor]").value);
-        if (this.selectedFile === "global_variables.json") {
-          const variables = Array.isArray(value) ? value : value.variables;
-          globalVariableManager.replaceDefinitions(Array.isArray(variables) ? variables : []);
-          this.docs.set(this.selectedFile, Array.isArray(variables) ? variables : []);
-        } else {
-          this.docs.set(this.selectedFile, value);
-        }
-        this.setStatus(`${this.selectedFile} 已校验并保存到内存。`);
-      }
-      catch (err) { this.setStatus(`JSON 无效：${err.message}`, true); }
-      return;
-    }
-    if (action === "download-json") {
-      const raw = this.root.querySelector("[data-json-editor]").value;
-      try { const value = JSON.parse(raw); this.docs.set(this.selectedFile, value); downloadJson(this.selectedFile, value); this.setStatus(`${this.selectedFile} 已下载。`); }
-      catch (err) { this.setStatus(`JSON 无效，无法下载：${err.message}`, true); }
-      return;
-    }
-    if (action === "write-json") {
-      const raw = this.root.querySelector("[data-json-editor]").value;
-      let value; try { value = JSON.parse(raw); } catch (err) { this.setStatus(`JSON 无效，无法写入磁盘：${err.message}`, true); return; }
-      this.docs.set(this.selectedFile, value); await this.writeToDisk(this.selectedFile, value); return;
     }
 
     const removeQa = action.match(/^remove-qa-entry-(\d+)$/);

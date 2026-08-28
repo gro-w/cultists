@@ -1,6 +1,6 @@
 import { normalizeBlueprint, validateBlueprint } from "./ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
-import { actionBudget } from "./ActionBudget.js";
+import { timeService } from "./TimeService.js";
 import { scheduleData } from "./ScheduleData.js";
 import { itemManager } from "./ItemManager.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
@@ -8,7 +8,7 @@ import { modifyStatValue } from "./ScheduleValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 
-const STATUS = Object.freeze({ nonexistent: 0, pending: 1, completed: 2 });
+const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
 function inputValue(blueprint, node, name, evaluator, fallback) {
   const connection = (blueprint.connections || []).find((item) => item.toNodeId === node.id && item.toPort === name);
@@ -26,7 +26,9 @@ function nextFlow(blueprint, node, port = "flowOut") {
 export class ScheduleRunner {
   constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
     this.definition = definition || {};
-    this.instance = instance || { status: "pending", transcript: [] };
+    this.instance = instance || { status: "unresolved", transcript: [] };
+    if (this.instance.status === "pending" || this.instance.status === "completed") this.instance.status = this.instance.status === "completed" ? "resolved" : "unresolved";
+    if (!Array.isArray(this.instance.executedNodeIds)) this.instance.executedNodeIds = [];
     this.blueprint = normalizeBlueprint(this.definition.blueprint || this.definition);
     this.random = random;
     this.appendLine = appendLine;
@@ -34,7 +36,7 @@ export class ScheduleRunner {
     this.onComplete = onComplete;
     this.onCheckpoint = onCheckpoint;
     this.appId = appId;
-    this.readOnly = readOnly || this.instance.status === "completed";
+    this.readOnly = readOnly || this.instance.status === "resolved";
     this.evaluator = new ScheduleValueEvaluator(this.blueprint, {
       scheduleStatus: (instanceId) => this._scheduleStatus(instanceId),
       scheduleInstanceCount: (scheduleId) => this._scheduleInstanceCount(scheduleId),
@@ -44,7 +46,7 @@ export class ScheduleRunner {
   }
 
   start(nodeId = this.instance.currentNodeId || this.blueprint.startNodeId) {
-    if (this.instance.status === "completed") {
+    if (this.instance.status === "resolved") {
       this._renderTranscript();
       return { ok: true, readOnly: true };
     }
@@ -60,31 +62,40 @@ export class ScheduleRunner {
       if (!node) throw new Error(`Unknown flow node: ${current}`);
       if (!globalVariableManager.matches(node.condition || node.globalVariableCondition)) {
         this.appendLine("npc", String(this.definition.name || this.definition.id || "日程"), "（当前条件不满足，无法继续。）");
-        this._complete();
+        this._resolve();
         return;
       }
       this.instance.currentNodeId = current;
-      this.onCheckpoint(this.instance);
       if (node.type === "choice") { this._showChoice(node); return; }
+      if (this.instance.executedNodeIds.includes(current)) {
+        current = nextFlow(this.blueprint, node);
+        continue;
+      }
       const result = this._execute(node);
+      if (result?.waitChoice) { this._showChoice(node); return; }
       if (result?.wait) return;
+      if (result?.stop) return;
       current = result?.next || nextFlow(this.blueprint, node);
+      this.instance.executedNodeIds.push(node.id);
+      this.instance.currentNodeId = current || null;
+      this.onCheckpoint(this.instance);
     }
     if (guard >= 1000) throw new Error("Schedule flow exceeded 1000 nodes");
-    this._complete();
+    this._resolve();
   }
 
   _execute(node) {
     const get = (name, fallback) => inputValue(this.blueprint, node, name, this.evaluator, fallback);
     switch (node.type) {
       case "flowStart": return {};
+      case "scheduleEnd": this._resolve(); return { stop: true };
       case "text": {
         const speaker = get("speaker", node.speaker || "npc");
         const text = String(get("text", node.text || ""));
         if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
         this._record({ type: "text", speaker, text });
         this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
-        return {};
+        return { waitChoice: Array.isArray(node.options) && node.options.length > 0 };
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
       case "diceCheck": {
@@ -96,7 +107,7 @@ export class ScheduleRunner {
           : roll <= n / 5 ? "largeSuccess" : roll <= n ? "success" : "failure";
         return { next: nextFlow(this.blueprint, node, port) };
       }
-      case "consumeTime": actionBudget.consumeTime(get("minutes", 0)); return {};
+      case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
       case "setGlobal": globalVariableManager.set(get("variableId"), get("value")); return {};
       case "insertSchedule": {
         const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"));
@@ -138,7 +149,11 @@ export class ScheduleRunner {
         if (option.effects) applyDialogueOnShow({ onShow: option.effects }, this.definition.npcId || this.definition.actorId || this.definition.id);
         this.appendLine("player", "我", button.textContent);
         this.optionsEl.innerHTML = "";
-        this._run(option.next || option.target || nextFlow(this.blueprint, node, `option${index}`));
+        const next = option.next || option.target || nextFlow(this.blueprint, node, `option${index}`);
+        this.instance.executedNodeIds.push(node.id);
+        this.instance.currentNodeId = next || null;
+        this.onCheckpoint(this.instance);
+        this._run(next);
       });
       this.optionsEl.appendChild(button);
     });
@@ -157,23 +172,24 @@ export class ScheduleRunner {
     });
   }
 
-  _complete() {
-    this.instance.status = "completed";
+  _resolve() {
+    if (this.instance.status === "resolved") return;
+    this.instance.status = "resolved";
     this.instance.currentNodeId = null;
     this.onCheckpoint(this.instance);
     this.onComplete(this.instance);
+    eventBus.emit("schedule:resolved", { appId: this.appId, instance: this.instance });
     eventBus.emit("schedule:completed", { appId: this.appId, instance: this.instance });
   }
 
   _scheduleStatus(instanceId) {
-    const workStatus = scheduleData.queue("work").statusOf(instanceId);
-    const socialStatus = scheduleData.queue("social").statusOf(instanceId);
-    const status = workStatus !== "nonexistent" ? workStatus : socialStatus;
-    return status === "nonexistent" ? STATUS.nonexistent : status === "completed" ? STATUS.completed : STATUS.pending;
+    const queues = ["work", "social", "chatgtp", "realtime"];
+    const status = queues.map((id) => scheduleData.queue(id).statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
+    return STATUS[status] ?? STATUS.nonexistent;
   }
 
   _scheduleInstanceCount(scheduleId) {
-    return scheduleData.queue("work").countBySchedule(scheduleId) + scheduleData.queue("social").countBySchedule(scheduleId);
+    return ["work", "social", "chatgtp", "realtime"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
   }
 }
 

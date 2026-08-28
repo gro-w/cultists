@@ -6,7 +6,8 @@ import { itemManager } from "../core/ItemManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { scheduleData } from "../core/ScheduleData.js";
-import { createDialogueRunner } from "../core/DialogueRunner.js";
+import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { realtimeQueue } from "../core/ScheduleQueue.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 
 import { formatInspectResult, renderInspectResult } from "../core/InspectFormat.js";
@@ -26,7 +27,7 @@ const CHARACTER_SPRITE = "data/assets/char01_01_stage.png";
  * The player token can be walked around a scene (click to move, or arrow
  * keys), talk to whichever NPCs the current day/phase schedule places in
  * the room (same `dialogueTree` data HISApp/SocialApp use, walked via the
- * shared `createDialogueRunner`), and inspect/use items that are visible
+ * shared schedule runner), and inspect/use items that are visible
  * in the room (same ItemManager definitions the Status app's inventory
  * tab uses - including repeatable dice-check inspections, see
  * `formatInspectResult`/ItemManager.inspect()).
@@ -142,17 +143,22 @@ export async function launchMonitorApp() {
       interactionEl.scrollTop = interactionEl.scrollHeight;
     }
 
-    const runner = createDialogueRunner({
-      actor,
+    if (!actor.blueprint) {
+      linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      return;
+    }
+    const instance = realtimeQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
+    const runner = createScheduleRunner({
+      definition: actor,
+      instance,
       appendLine,
       optionsEl,
-      optionBtnClass: "win95-btn bevel-out dialogue-option-btn",
       appId: "monitor",
-      onNodeShown: (nodeId) => dialogueNodeByActor.set(actor.id, nodeId),
-      emptyMessage: "（暂无对话内容）",
+      onCheckpoint: (next) => realtimeQueue.updateInstance(instance.instanceId, next),
+      onComplete: () => realtimeQueue.complete(instance.instanceId),
     });
 
-    runner.showNode(dialogueNodeByActor.get(actor.id) || (actor.dialogueTree && actor.dialogueTree.start));
+    runner.start();
   }
 
   /** Render the inspect/use UI for an item hotspot, mirroring StatusApp's inventory actions. */

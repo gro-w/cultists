@@ -5,7 +5,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { eventBus } from "../core/EventBus.js";
 import { saveManager } from "../core/SaveManager.js";
 import { skillManager } from "../core/SkillManager.js";
-import { actionBudget } from "../core/ActionBudget.js";
+import { timeService } from "../core/TimeService.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { formatInspectResult, renderInspectResult } from "../core/InspectFormat.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
@@ -81,11 +81,11 @@ export async function launchStatusApp() {
 
   function renderStats() {
     const s = gameState.snapshot();
-    const budgetSnapshot = actionBudget.snapshot();
+    const budgetSnapshot = timeService.snapshot();
     const { phaseMinutes } = budgetSnapshot;
     const phaseLimit = s.phase === "day"
-      ? actionBudget.config?.day?.workMinutes || 480
-      : actionBudget.config?.night?.nightMinutes || 960;
+      ? timeService.config?.day?.workMinutes || 480
+      : timeService.config?.night?.nightMinutes || 960;
     const clockMinutes = (s.phase === "day" ? 8 * 60 : 16 * 60) + phaseMinutes;
     const clock = `${String(Math.floor((clockMinutes % 1440) / 60)).padStart(2, "0")}:${String(clockMinutes % 60).padStart(2, "0")}`;
     panels.stats.innerHTML = `
@@ -244,7 +244,7 @@ export async function launchStatusApp() {
   const offDayNight = eventBus.on("daynight:changed", renderStats);
   const offMedicalIncome = eventBus.on("medical:incomeChanged", renderStats);
   const offItems = eventBus.on("items:changed", renderItems);
-  const offBudget = eventBus.on("actionBudget:changed", renderStats);
+  const offBudget = timeService.onChange(renderStats);
   const offNpcState = npcStateManager.onChange(renderNpcStates);
 
   renderAll();

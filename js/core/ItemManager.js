@@ -4,7 +4,7 @@ import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
 import { checkSkill } from "./DiceCheck.js";
-import { applyScheduleOperations } from "./ScheduleOperations.js";
+
 
 /**
  * ItemManager - singleton owning the player's inventory and the data-driven
@@ -124,7 +124,7 @@ class ItemManager {
 
   _emitItemSchedule(id, action, context = {}) {
     const blueprint = this.scheduleFor(id, action);
-    if (blueprint) eventBus.emit("schedule:triggered", { source: "item", itemId: id, action, blueprint, context });
+    eventBus.emit("schedule:triggered", { source: "item", itemId: id, action, blueprint, context });
   }
 
   /** Replace the whole inventory (used by SaveManager when restoring a save). */
@@ -146,8 +146,7 @@ class ItemManager {
   /**
    * Inspect an item: reveals any associated keywords and returns a result
    * describing what the player saw. Every call counts as one「调查」
-   * action (broadcast via `item:inspected` so ActionBudget can enforce the
-   * per-phase inspection limit).
+   * action (broadcast via `item:inspected` for UI/history consumers).
    *
    * SAN-band variants: if `def.sanVariants` contains an entry matching the
    * player's current SAN level, its `description` overrides `inspectText`
@@ -171,14 +170,6 @@ class ItemManager {
 
     // Resolve inspectEffect: per-band entry takes priority over top-level.
     const resolvedEffect = (band && band.inspectEffect) || def.inspectEffect || null;
-    if (resolvedEffect) {
-      if (resolvedEffect.statChanges) gameState.modify(resolvedEffect.statChanges);
-    }
-
-    // Broadcast: include effect and inspectTimeAdvance so callers (ActionBudget etc.) can handle them.
-    eventBus.emit("item:inspected", { id, effect: resolvedEffect,
-      inspectTimeAdvance: def.inspectTimeAdvance || 0 });
-    this._emitItemSchedule(id, "inspect");
 
     if (def.inspectCheck && def.inspectCheck.skillId) {
       const check = checkSkill(def.inspectCheck.skillId);
@@ -191,7 +182,11 @@ class ItemManager {
       ];
       const baseText = outcome.text || def.inspectText || "（没有更多可以查看的信息。）";
       const text = (band && band.description) || baseText;
-      if (outcome.statChanges) gameState.modify(outcome.statChanges);
+      const effect = {
+        ...(resolvedEffect || {}),
+        ...(outcome.statChanges ? { statChanges: { ...(resolvedEffect?.statChanges || {}), ...outcome.statChanges } } : {}),
+      };
+      this._emitItemSchedule(id, "inspect", { effect, timeMinutes: def.inspectTimeAdvance || 0 });
       const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
       revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
       return { text, check, keywordDefs, effect: resolvedEffect };
@@ -203,6 +198,7 @@ class ItemManager {
     ];
     const text = (band && band.description) || def.inspectText || "（没有更多可以查看的信息。）";
     const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
+    this._emitItemSchedule(id, "inspect", { effect: resolvedEffect, timeMinutes: def.inspectTimeAdvance || 0 });
     revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
     return { text, check: null, keywordDefs, effect: resolvedEffect };
   }
@@ -270,28 +266,13 @@ class ItemManager {
       return { ok: false, message: def.failMessage || "理智值过高，此时已无法从书籍中学习法术。" };
     }
 
-    const effect = def.useEffect || {};
-    (effect.remove || []).forEach((r) => this.remove(r.itemId, r.count || 1));
-    (effect.add || []).forEach((a) => this.add(a.itemId, a.count || 1));
-    if (effect.statChanges) gameState.modify(effect.statChanges);
-    globalVariableManager.applyEffects(effect.globalVariables || effect.globalVariableChanges);
-    applyScheduleOperations(effect);
-    if (def.consumable) this.remove(id, 1);
-
-    const skipTimeAdvance = !!(def.isBook && def.spells && def.spells.length > 0);
+    const effect = { ...(def.useEffect || {}) };
+    if (def.consumable) effect.remove = [...(effect.remove || []), { itemId: id, count: 1 }];
     const result = { ok: true, message: def.successMessage || `使用了${def.name}。` };
     // Let EndingManager (and anything else) react to a successful item use
     // without ItemManager needing to import it directly.
-    // timeMinutes: non-book items carry useEffect.timeAdvance so ActionBudget
-    // can charge the right amount; book-with-spells items skip here and let
-    // SpellLearnDialog emit spell:learned (which charges 240 min) instead.
-    eventBus.emit("item:used", {
-      id,
-      result,
-      skipTimeAdvance,
-      timeMinutes: skipTimeAdvance ? 0 : (effect.timeAdvance || 0),
-    });
-    this._emitItemSchedule(id, "use", { effect });
+    // The item-owned schedule is now the sole effect/time execution owner.
+    this._emitItemSchedule(id, "use", { effect, timeMinutes: effect.timeAdvance || 0 });
 
     // 书籍法术学习：0 < SAN ≤ 50 时使用书籍触发，游戏层负责展示学习界面
     if (def.isBook && def.spells && def.spells.length > 0) {

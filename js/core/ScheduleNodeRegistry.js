@@ -8,6 +8,7 @@ const flowOut = (name = "flowOut") => ({ name, kind: FLOW, type: null });
 
 const definitions = {
   flowStart: { label: "流程起始", flowOutputs: [flowOut()] },
+  scheduleEnd: { label: "日程结束", flowInputs: [flowIn()] },
   text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string")] },
   choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("branchCount", VALUE, "number")] },
   branch: { label: "逻辑分支", flowInputs: [flowIn()], flowOutputs: [flowOut("false"), flowOut("true")], valueInputs: [input("condition")] },

@@ -2,6 +2,7 @@ import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { itemManager } from "./ItemManager.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 /**
  * EndingManager - singleton resolving every path that can end the game,
@@ -123,6 +124,7 @@ class EndingManager {
         if ((snapshot[stat] ?? 0) > max) return false;
       }
     }
+    if (!globalVariableManager.matches(cond.globalVariables || cond.globalVariableCondition)) return false;
     return true;
   }
 

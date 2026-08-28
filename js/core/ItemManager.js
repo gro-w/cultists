@@ -1,4 +1,5 @@
 import { eventBus } from "./EventBus.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
@@ -238,7 +239,8 @@ class ItemManager {
 
     const requires = (def.useCondition && def.useCondition.requires) || [];
     const unmet = requires.some((r) => !this.has(r.itemId, r.count || 1));
-    if (unmet) {
+    const variableCondition = def.useCondition?.globalVariables || def.useCondition?.globalVariableCondition;
+    if (unmet || !globalVariableManager.matches(variableCondition)) {
       return { ok: false, message: def.failMessage || "当前条件不满足，使用无效。" };
     }
 
@@ -246,6 +248,7 @@ class ItemManager {
     (effect.remove || []).forEach((r) => this.remove(r.itemId, r.count || 1));
     (effect.add || []).forEach((a) => this.add(a.itemId, a.count || 1));
     if (effect.statChanges) gameState.modify(effect.statChanges);
+    globalVariableManager.applyEffects(effect.globalVariables || effect.globalVariableChanges);
     if (def.consumable) this.remove(id, 1);
 
     const result = { ok: true, message: def.successMessage || `使用了${def.name}。` };

@@ -16,6 +16,7 @@ import { favorabilityManager } from "./core/FavorabilityManager.js";
 import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
+import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -31,6 +32,7 @@ import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchMonitorApp } from "./apps/MonitorApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
+import { launchCalendarApp } from "./apps/CalendarApp.js";
 // DEV-TOOLS:START
 import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
 import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
@@ -95,6 +97,7 @@ const APP_REGISTRY = [
   { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },
   { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },
   { id: "achievements", label: () => i18n.t("apps.achievements", "成就"), icon: "🏆", launch: () => launchAchievementsApp() },
+  { id: "calendar", label: () => i18n.t("apps.calendar", "日历"), icon: "📅", launch: () => launchCalendarApp() },
   { id: "settings", label: () => i18n.t("apps.settings", "设置"), icon: "⚙️", launch: () => launchSettingsApp() },
   // DEV-TOOLS:START
   ...(developerModeEnabled ? [{ id: "developer-mode", label: "开发人员模式", icon: "🛠️", launch: () => launchDeveloperMode() }] : []),
@@ -193,6 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
     favorabilityManager.load(),
     achievementManager.init(),
     medicalCaseManager.load(),
+    globalVariableManager.init(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

@@ -4,6 +4,7 @@ class CalendarData {
   constructor() {
     this.totalDays = 30;
     this.restDays = new Set();
+    this.nightDutyDays = new Set();
     this._initPromise = null;
   }
 
@@ -12,6 +13,9 @@ class CalendarData {
       this._initPromise = dataLoader.loadJSON("calendar.json").then((data) => {
         this.totalDays = Math.max(1, Number(data.totalDays) || 30);
         this.restDays = new Set((data.restDays || []).map((day) => Number(day)).filter((day) => day >= 1));
+        this.nightDutyDays = new Set((data.nightDutyDays || [])
+          .map((day) => Number(day))
+          .filter((day) => day >= 1 && day <= this.totalDays));
       });
     }
     return this._initPromise;
@@ -19,6 +23,10 @@ class CalendarData {
 
   isRestDay(day) {
     return this.restDays.has(Number(day));
+  }
+
+  isNightDutyDay(day) {
+    return this.nightDutyDays.has(Number(day));
   }
 
   nextWorkDay(day) {

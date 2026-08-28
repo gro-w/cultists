@@ -3,6 +3,7 @@ import { endingManager } from "./EndingManager.js";
 import { eventBus } from "./EventBus.js";
 import { resolveOptionNext, OUTCOME_LABELS } from "./DiceCheck.js";
 import { gameState } from "./GameState.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 /**
  * createDialogueRunner - shared driver for walking a single actor's
@@ -52,6 +53,10 @@ export function createDialogueRunner({
       if (!tree) appendLine("npc", actor.name, emptyMessage);
       return;
     }
+    if (!globalVariableManager.matches(node.condition || node.globalVariableCondition)) {
+      appendLine("npc", actor.name, "（当前条件不满足，无法继续。）");
+      return;
+    }
     if (onNodeShown) onNodeShown(nodeId);
 
     // Emit game:text_read so AchievementManager can track "read all texts".
@@ -62,8 +67,9 @@ export function createDialogueRunner({
     applyDialogueOnShow(node, stateActorId);
     if (endingManager.isEnded) return;
 
-    if (node.options && node.options.length > 0) {
-      node.options.forEach((opt) => {
+    const availableOptions = (node.options || []).filter((opt) => globalVariableManager.matches(opt.condition || opt.globalVariableCondition));
+    if (availableOptions.length > 0) {
+      availableOptions.forEach((opt) => {
         const btn = document.createElement("button");
         btn.className = optionBtnClass;
         btn.textContent = opt.label;

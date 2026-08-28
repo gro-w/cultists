@@ -5,6 +5,7 @@ import { npcStateManager } from "./NpcStateManager.js";
 import { calendarData } from "./CalendarData.js";
 import { gameState } from "./GameState.js";
 import { workQueue, socialQueue } from "./ScheduleQueue.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
@@ -26,7 +27,7 @@ class ScheduleData {
   }
 
   async _loadAll() {
-    await calendarData.init();
+    await Promise.all([calendarData.init(), globalVariableManager.init()]);
     this.totalDays = calendarData.totalDays;
     const requests = [];
     for (let day = 1; day <= this.totalDays; day += 1) {
@@ -100,7 +101,7 @@ class ScheduleData {
       if (this.fired.has(key)) continue;
       this.fired.add(key);
       const sourceEntries = this.slots.get(key) || [];
-      const entries = sourceEntries.map((entry) => ({
+      const entries = sourceEntries.filter((entry) => globalVariableManager.matches(entry.condition || entry.globalVariableCondition)).map((entry) => ({
         ...entry,
         receivedDay: day,
         receivedTime: time,

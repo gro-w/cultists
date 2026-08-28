@@ -131,6 +131,19 @@ export default class LocationScene {
       });
       this._itemLayer.appendChild(btn);
     });
+
+    // ── Source 3: loc.hotspots (dev-placed character/item markers) ───────────
+    (loc.hotspots || []).forEach((h) => {
+      if (!h.targetId) return;
+      const def = itemManager.getDef(h.targetId);
+      const btn = this._makeItemBtn({
+        icon: h.icon || def?.icon || "👤",
+        label: h.label || def?.name || h.targetId,
+        x: h.x, y: h.y,
+        onClick: () => def ? this._inspectWorldItem(h.targetId) : this._message(`（${h.label || h.targetId}）`),
+      });
+      this._itemLayer.appendChild(btn);
+    });
   }
 
   /** Make a positioned item button. If x/y absent, floats naturally. */

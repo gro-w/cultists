@@ -90,95 +90,4048 @@
       "keywords": [
         "fever"
       ],
-      "answer": "发热通常是身体对感染或炎症的免疫反应，建议监测体温并配合解热药物。",
-      "corruptedSameAsNormal": true
+      "answer": "[[fever|发热]]通常是身体对感染或炎症的免疫反应，建议监测体温并配合解热药物。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[fever|发热]]通常是身体对感染或炎症的免疫反应，建议监测体温并配合解热药物。"
     },
     {
       "keywords": [
         "cough"
       ],
-      "answer": "咳嗽可能由上呼吸道感染引起，如伴随其他症状建议进一步检查。",
-      "corruptedSameAsNormal": true
+      "answer": "[[cough|咳嗽]]可能由上呼吸道感染引起，如伴随其他症状建议进一步检查。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[cough|咳嗽]]可能由上呼吸道感染引起，如伴随其他症状建议进一步检查。"
     },
     {
       "keywords": [
         "insomnia"
       ],
-      "answer": "失眠可能与压力、环境或潜在疾病有关，规律作息与放松训练有帮助。",
-      "corruptedSameAsNormal": true
+      "answer": "[[insomnia|失眠]]可能与压力、环境或潜在疾病有关，规律作息与放松训练有帮助。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[insomnia|失眠]]可能与压力、环境或潜在疾病有关，规律作息与放松训练有帮助。"
     },
     {
       "keywords": [
         "headache"
       ],
-      "answer": "头痛的常见诱因包括疲劳、紧张性头痛或血压异常，请结合其他症状判断。",
-      "corruptedSameAsNormal": true
+      "answer": "[[headache|头痛]]的常见诱因包括疲劳、紧张性[[headache|头痛]]或血压异常，请结合其他症状判断。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[headache|头痛]]的常见诱因包括疲劳、紧张性[[headache|头痛]]或血压异常，请结合其他症状判断。"
     },
     {
       "keywords": [
         "dizziness"
       ],
-      "answer": "眩晕可能与内耳平衡系统或血压波动有关，突发严重眩晕需及时就医。",
-      "corruptedSameAsNormal": true
+      "answer": "[[dizziness|眩晕]]可能与内耳平衡系统或血压波动有关，突发严重[[dizziness|眩晕]]需及时就医。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[dizziness|眩晕]]可能与内耳平衡系统或血压波动有关，突发严重[[dizziness|眩晕]]需及时就医。"
     },
     {
       "keywords": [
         "mystery_note"
       ],
       "answer": "根据现有信息，这张纸条的内容暂时无法解析，也许需要更多线索。",
-      "corruptedSameAsNormal": true
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "根据现有信息，这张纸条的内容暂时无法解析，也许需要更多线索。"
     },
     {
       "keywords": [
         "night_noise"
       ],
       "answer": "医院旧楼夜间的声响多为管道热胀冷缩所致，但也有传言与此无关。",
-      "corruptedSameAsNormal": true
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "医院旧楼夜间的声响多为管道热胀冷缩所致，但也有传言与此无关。"
     },
     {
       "keywords": [
         "old_key_clue"
       ],
       "answer": "这把钥匙的样式符合上世纪的地下室锁具，具体用途仍需调查。",
-      "corruptedSameAsNormal": true
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "这把钥匙的样式符合上世纪的地下室锁具，具体用途仍需调查。"
     },
     {
       "keywords": [
         "night_shift_rumor"
       ],
       "answer": "网络上流传着不少关于夜班的都市传说，真实性有待考证。",
-      "corruptedSameAsNormal": true
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "网络上流传着不少关于夜班的都市传说，真实性有待考证。"
     },
     {
       "keywords": [
         "energy_drink"
       ],
-      "answer": "功能饮料含有咖啡因等成分，短期提神但不建议长期依赖。",
-      "corruptedSameAsNormal": true
+      "answer": "[[energy_drink|功能饮料]]含有咖啡因等成分，短期提神但不建议长期依赖。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[energy_drink|功能饮料]]含有咖啡因等成分，短期提神但不建议长期依赖。"
     },
     {
       "keywords": [
         "fever",
         "cough"
       ],
-      "answer": "发热同时伴有咳嗽，这种组合让我怀疑存在[[flu_suspect]]，建议尽快完善呼吸道相关检查。",
-      "corruptedSameAsNormal": true
+      "answer": "[[fever|发热]]同时伴有[[cough|咳嗽]]，这种组合让我怀疑存在[[flu_suspect]]，建议尽快完善呼吸道相关检查。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[fever|发热]]同时伴有[[cough|咳嗽]]，这种组合让我怀疑存在[[flu_suspect]]，建议尽快完善呼吸道相关检查。"
     },
     {
       "keywords": [
         "headache",
         "dizziness"
       ],
-      "answer": "头痛合并眩晕需要格外留意，这可能是[[hypertension_risk]]的信号，建议监测血压。",
-      "corruptedSameAsNormal": true
+      "answer": "[[headache|头痛]]合并[[dizziness|眩晕]]需要格外留意，这可能是[[hypertension_risk]]的信号，建议监测血压。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "[[headache|头痛]]合并[[dizziness|眩晕]]需要格外留意，这可能是[[hypertension_risk]]的信号，建议监测血压。"
     },
     {
       "keywords": [
         "night_noise",
         "old_key_clue"
       ],
-      "answer": "把深夜的怪声和捡到的旧钥匙联系起来，我怀疑这背后藏着一个[[basement_secret]]，也许值得亲自去查看一下。",
-      "corruptedSameAsNormal": true
+      "answer": "把深夜的怪声和捡到的[[old_key_clue|旧钥匙]]联系起来，我怀疑这背后藏着一个[[basement_secret]]，也许值得亲自去查看一下。",
+      "corruptedSameAsNormal": true,
+      "corruptedAnswer": "把深夜的怪声和捡到的[[old_key_clue|旧钥匙]]联系起来，我怀疑这背后藏着一个[[basement_secret]]，也许值得亲自去查看一下。"
+    },
+    {
+      "keywords": [
+        "disease-category:icd_a:normal"
+      ],
+      "answer": "[[disease-category:icd_a:normal|某些传染病和寄生虫病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_a:low|被深渊侵蚀的某些传染病和寄生虫病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_a:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_a:low|被深渊侵蚀的某些传染病和寄生虫病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_e:normal"
+      ],
+      "answer": "[[disease-category:icd_e:normal|内分泌、营养和代谢疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_e:low|被深渊侵蚀的内分泌、营养和代谢疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_e:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_e:low|被深渊侵蚀的内分泌、营养和代谢疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_f:normal"
+      ],
+      "answer": "[[disease-category:icd_f:normal|精神和行为障碍]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_f:low|被深渊侵蚀的精神和行为障碍]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_f:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_f:low|被深渊侵蚀的精神和行为障碍]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_g:normal"
+      ],
+      "answer": "[[disease-category:icd_g:normal|神经系统疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_g:low|被深渊侵蚀的神经系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_g:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_g:low|被深渊侵蚀的神经系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_h:normal"
+      ],
+      "answer": "[[disease-category:icd_h:normal|耳和乳突疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_h:low|被深渊侵蚀的耳和乳突疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_h:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_h:low|被深渊侵蚀的耳和乳突疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_i:normal"
+      ],
+      "answer": "[[disease-category:icd_i:normal|循环系统疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_i:low|被深渊侵蚀的循环系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_i:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_i:low|被深渊侵蚀的循环系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_j:normal"
+      ],
+      "answer": "[[disease-category:icd_j:normal|呼吸系统疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_j:low|被深渊侵蚀的呼吸系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_j:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_j:low|被深渊侵蚀的呼吸系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_k:normal"
+      ],
+      "answer": "[[disease-category:icd_k:normal|消化系统疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_k:low|被深渊侵蚀的消化系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_k:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_k:low|被深渊侵蚀的消化系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_l:normal"
+      ],
+      "answer": "[[disease-category:icd_l:normal|皮肤和皮下组织疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_l:low|被深渊侵蚀的皮肤和皮下组织疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_l:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_l:low|被深渊侵蚀的皮肤和皮下组织疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_m:normal"
+      ],
+      "answer": "[[disease-category:icd_m:normal|肌肉骨骼系统和结缔组织疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_m:low|被深渊侵蚀的肌肉骨骼系统和结缔组织疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_m:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_m:low|被深渊侵蚀的肌肉骨骼系统和结缔组织疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_n:normal"
+      ],
+      "answer": "[[disease-category:icd_n:normal|泌尿生殖系统疾病]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_n:low|被深渊侵蚀的泌尿生殖系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_n:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_n:low|被深渊侵蚀的泌尿生殖系统疾病]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_r:normal"
+      ],
+      "answer": "[[disease-category:icd_r:normal|症状、体征和异常的临床及实验室检查结果]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_r:low|被深渊侵蚀的症状、体征和异常的临床及实验室检查结果]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_r:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_r:low|被深渊侵蚀的症状、体征和异常的临床及实验室检查结果]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_s:normal"
+      ],
+      "answer": "[[disease-category:icd_s:normal|损伤、中毒和外因的某些其他后果]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_s:low|被深渊侵蚀的损伤、中毒和外因的某些其他后果]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_s:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_s:low|被深渊侵蚀的损伤、中毒和外因的某些其他后果]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_u:normal"
+      ],
+      "answer": "[[disease-category:icd_u:normal|用于特殊目的的编码]]（ICD 分类）",
+      "corruptedAnswer": "[[disease-category:icd_u:low|被深渊侵蚀的用于特殊目的的编码]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease-category:icd_u:low"
+      ],
+      "answer": "无法回答",
+      "corruptedAnswer": "[[disease-category:icd_u:low|被深渊侵蚀的用于特殊目的的编码]]（异常分类）",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:infectious_gastroenteritis:normal"
+      ],
+      "answer": "[[disease:infectious_gastroenteritis:normal|感染性胃肠炎和结肠炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_001|乏力]]、[[symptom_002|食欲减退]]、[[symptom_003|恶心]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:infectious_gastroenteritis:low|腹中滋生来自疫界的虫群]]】？\n\n[[disease:infectious_gastroenteritis:low|腹中滋生来自疫界的虫群]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_001|乏力]]、[[symptom_002|食欲减退]]、[[symptom_003|恶心]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:infectious_gastroenteritis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_001|乏力]]、[[symptom_002|食欲减退]]、[[symptom_003|恶心]]。",
+      "corruptedAnswer": "[[disease:infectious_gastroenteritis:low|腹中滋生来自疫界的虫群]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_001|乏力]]、[[symptom_002|食欲减退]]、[[symptom_003|恶心]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:herpes_zoster:normal"
+      ],
+      "answer": "[[disease:herpes_zoster:normal|带状疱疹，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_004|呕吐]]、[[symptom_005|腹痛]]、[[symptom_006|腹泻]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:herpes_zoster:low|皮肤上爬过一条燃烧的蛇]]】？\n\n[[disease:herpes_zoster:low|皮肤上爬过一条燃烧的蛇]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_004|呕吐]]、[[symptom_005|腹痛]]、[[symptom_006|腹泻]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:herpes_zoster:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_004|呕吐]]、[[symptom_005|腹痛]]、[[symptom_006|腹泻]]。",
+      "corruptedAnswer": "[[disease:herpes_zoster:low|皮肤上爬过一条燃烧的蛇]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_004|呕吐]]、[[symptom_005|腹痛]]、[[symptom_006|腹泻]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:candidiasis:normal"
+      ],
+      "answer": "[[disease:candidiasis:normal|念珠菌病，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_007|便秘]]、[[symptom_008|腹胀]]、[[symptom_009|反酸]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:candidiasis:low|白色菌丝在体内建立巢穴]]】？\n\n[[disease:candidiasis:low|白色菌丝在体内建立巢穴]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_007|便秘]]、[[symptom_008|腹胀]]、[[symptom_009|反酸]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:candidiasis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_007|便秘]]、[[symptom_008|腹胀]]、[[symptom_009|反酸]]。",
+      "corruptedAnswer": "[[disease:candidiasis:low|白色菌丝在体内建立巢穴]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_007|便秘]]、[[symptom_008|腹胀]]、[[symptom_009|反酸]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:type2_diabetes:normal"
+      ],
+      "answer": "[[disease:type2_diabetes:normal|2型糖尿病，无并发症]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_010|烧心]]、[[symptom_011|吞咽困难]]、[[symptom_012|口干]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:type2_diabetes:low|血液变成甜腻的献祭蜜浆]]】？\n\n[[disease:type2_diabetes:low|血液变成甜腻的献祭蜜浆]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_010|烧心]]、[[symptom_011|吞咽困难]]、[[symptom_012|口干]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:type2_diabetes:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_010|烧心]]、[[symptom_011|吞咽困难]]、[[symptom_012|口干]]。",
+      "corruptedAnswer": "[[disease:type2_diabetes:low|血液变成甜腻的献祭蜜浆]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_010|烧心]]、[[symptom_011|吞咽困难]]、[[symptom_012|口干]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:type1_diabetes:normal"
+      ],
+      "answer": "[[disease:type1_diabetes:normal|1型糖尿病，无并发症]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_013|口苦]]、[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:type1_diabetes:low|胰岛被饥饿之神吞噬]]】？\n\n[[disease:type1_diabetes:low|胰岛被饥饿之神吞噬]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_013|口苦]]、[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:type1_diabetes:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_013|口苦]]、[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]。",
+      "corruptedAnswer": "[[disease:type1_diabetes:low|胰岛被饥饿之神吞噬]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_013|口苦]]、[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hypothyroidism:normal"
+      ],
+      "answer": "[[disease:hypothyroidism:normal|甲状腺功能减退，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_016|鼻塞]]、[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:hypothyroidism:low|时间在体内逐渐冻结]]】？\n\n[[disease:hypothyroidism:low|时间在体内逐渐冻结]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_016|鼻塞]]、[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hypothyroidism:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_016|鼻塞]]、[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]。",
+      "corruptedAnswer": "[[disease:hypothyroidism:low|时间在体内逐渐冻结]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_016|鼻塞]]、[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hyperthyroidism:normal"
+      ],
+      "answer": "[[disease:hyperthyroidism:normal|甲状腺毒症，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_019|鼻痒]]、[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:hyperthyroidism:low|体内燃起无法熄灭的星火]]】？\n\n[[disease:hyperthyroidism:low|体内燃起无法熄灭的星火]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_019|鼻痒]]、[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hyperthyroidism:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_019|鼻痒]]、[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]。",
+      "corruptedAnswer": "[[disease:hyperthyroidism:low|体内燃起无法熄灭的星火]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_019|鼻痒]]、[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hyperlipidemia:normal"
+      ],
+      "answer": "[[disease:hyperlipidemia:normal|高脂血症，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_022|咽部异物感]]、[[symptom_023|咽干]]、[[symptom_024|咽痒]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:hyperlipidemia:low|血管漂浮着贪食的油之灵]]】？\n\n[[disease:hyperlipidemia:low|血管漂浮着贪食的油之灵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_022|咽部异物感]]、[[symptom_023|咽干]]、[[symptom_024|咽痒]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hyperlipidemia:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_022|咽部异物感]]、[[symptom_023|咽干]]、[[symptom_024|咽痒]]。",
+      "corruptedAnswer": "[[disease:hyperlipidemia:low|血管漂浮着贪食的油之灵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_022|咽部异物感]]、[[symptom_023|咽干]]、[[symptom_024|咽痒]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:obesity:normal"
+      ],
+      "answer": "[[disease:obesity:normal|肥胖，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_025|胸痛]]、[[symptom_026|胸闷]]、[[symptom_027|心悸]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:obesity:low|肉身被无底深渊拖拽]]】？\n\n[[disease:obesity:low|肉身被无底深渊拖拽]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_025|胸痛]]、[[symptom_026|胸闷]]、[[symptom_027|心悸]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:obesity:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_025|胸痛]]、[[symptom_026|胸闷]]、[[symptom_027|心悸]]。",
+      "corruptedAnswer": "[[disease:obesity:low|肉身被无底深渊拖拽]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_025|胸痛]]、[[symptom_026|胸闷]]、[[symptom_027|心悸]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:vitamin_d_deficiency:normal"
+      ],
+      "answer": "[[disease:vitamin_d_deficiency:normal|维生素D缺乏，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_028|气短]]、[[symptom_029|呼吸困难]]、[[symptom_030|喘息]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:vitamin_d_deficiency:low|太阳的碎片已从骨中消失]]】？\n\n[[disease:vitamin_d_deficiency:low|太阳的碎片已从骨中消失]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_028|气短]]、[[symptom_029|呼吸困难]]、[[symptom_030|喘息]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:vitamin_d_deficiency:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_028|气短]]、[[symptom_029|呼吸困难]]、[[symptom_030|喘息]]。",
+      "corruptedAnswer": "[[disease:vitamin_d_deficiency:low|太阳的碎片已从骨中消失]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_028|气短]]、[[symptom_029|呼吸困难]]、[[symptom_030|喘息]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:generalized_anxiety:normal"
+      ],
+      "answer": "[[disease:generalized_anxiety:normal|广泛性焦虑障碍]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_031|咳痰]]、[[symptom_032|咯血]]、[[symptom_033|夜间盗汗]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:generalized_anxiety:low|无数细小的眼睛在脑内睁开]]】？\n\n[[disease:generalized_anxiety:low|无数细小的眼睛在脑内睁开]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_031|咳痰]]、[[symptom_032|咯血]]、[[symptom_033|夜间盗汗]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:generalized_anxiety:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_031|咳痰]]、[[symptom_032|咯血]]、[[symptom_033|夜间盗汗]]。",
+      "corruptedAnswer": "[[disease:generalized_anxiety:low|无数细小的眼睛在脑内睁开]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_031|咳痰]]、[[symptom_032|咯血]]、[[symptom_033|夜间盗汗]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:major_depressive_disorder:normal"
+      ],
+      "answer": "[[disease:major_depressive_disorder:normal|重性抑郁障碍，单次发作，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_034|寒战]]、[[symptom_035|体重下降]]、[[symptom_036|体重增加]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:major_depressive_disorder:low|灵魂沉入没有光的井底]]】？\n\n[[disease:major_depressive_disorder:low|灵魂沉入没有光的井底]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_034|寒战]]、[[symptom_035|体重下降]]、[[symptom_036|体重增加]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:major_depressive_disorder:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_034|寒战]]、[[symptom_035|体重下降]]、[[symptom_036|体重增加]]。",
+      "corruptedAnswer": "[[disease:major_depressive_disorder:low|灵魂沉入没有光的井底]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_034|寒战]]、[[symptom_035|体重下降]]、[[symptom_036|体重增加]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:insomnia_disorder:normal"
+      ],
+      "answer": "[[disease:insomnia_disorder:normal|原发性失眠]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：助眠片\n禁用药物：对乙酰氨基酚、止咳糖浆、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_037|水肿]]、[[symptom_038|面部水肿]]、[[symptom_039|下肢水肿]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:insomnia_disorder:low|梦魇拒绝让意识入睡]]】？\n\n[[disease:insomnia_disorder:low|梦魇拒绝让意识入睡]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：助眠片\n相关常见症状：[[symptom_037|水肿]]、[[symptom_038|面部水肿]]、[[symptom_039|下肢水肿]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:insomnia_disorder:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_037|水肿]]、[[symptom_038|面部水肿]]、[[symptom_039|下肢水肿]]。",
+      "corruptedAnswer": "[[disease:insomnia_disorder:low|梦魇拒绝让意识入睡]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：助眠片\n相关常见症状：[[symptom_037|水肿]]、[[symptom_038|面部水肿]]、[[symptom_039|下肢水肿]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_stress_disorder:normal"
+      ],
+      "answer": "[[disease:acute_stress_disorder:normal|急性应激障碍]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_040|皮肤瘙痒]]、[[symptom_041|皮疹]]、[[symptom_042|红斑]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]】？\n\n[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_040|皮肤瘙痒]]、[[symptom_041|皮疹]]、[[symptom_042|红斑]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_stress_disorder:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_040|皮肤瘙痒]]、[[symptom_041|皮疹]]、[[symptom_042|红斑]]。",
+      "corruptedAnswer": "[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_040|皮肤瘙痒]]、[[symptom_041|皮疹]]、[[symptom_042|红斑]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:transient_cerebral_ischemic_attack:normal"
+      ],
+      "answer": "[[disease:transient_cerebral_ischemic_attack:normal|短暂性脑缺血发作，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_043|丘疹]]、[[symptom_044|风团]]、[[symptom_045|水疱]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]】？\n\n[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_043|丘疹]]、[[symptom_044|风团]]、[[symptom_045|水疱]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:transient_cerebral_ischemic_attack:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_043|丘疹]]、[[symptom_044|风团]]、[[symptom_045|水疱]]。",
+      "corruptedAnswer": "[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_043|丘疹]]、[[symptom_044|风团]]、[[symptom_045|水疱]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:migraine_unspecified:normal"
+      ],
+      "answer": "[[disease:migraine_unspecified:normal|偏头痛，未特指，不伴持续状态]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_046|脓疱]]、[[symptom_047|脱屑]]、[[symptom_048|皮肤干燥]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]】？\n\n[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_046|脓疱]]、[[symptom_047|脱屑]]、[[symptom_048|皮肤干燥]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:migraine_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_046|脓疱]]、[[symptom_047|脱屑]]、[[symptom_048|皮肤干燥]]。",
+      "corruptedAnswer": "[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_046|脓疱]]、[[symptom_047|脱屑]]、[[symptom_048|皮肤干燥]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:tension_headache:normal"
+      ],
+      "answer": "[[disease:tension_headache:normal|紧张型头痛，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_049|皮肤脱色]]、[[symptom_050|色素沉着]]、[[symptom_051|伤口疼痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:tension_headache:low|无形绞索缠绕意识]]】？\n\n[[disease:tension_headache:low|无形绞索缠绕意识]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_049|皮肤脱色]]、[[symptom_050|色素沉着]]、[[symptom_051|伤口疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:tension_headache:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_049|皮肤脱色]]、[[symptom_050|色素沉着]]、[[symptom_051|伤口疼痛]]。",
+      "corruptedAnswer": "[[disease:tension_headache:low|无形绞索缠绕意识]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_049|皮肤脱色]]、[[symptom_050|色素沉着]]、[[symptom_051|伤口疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:epilepsy_unspecified:normal"
+      ],
+      "answer": "[[disease:epilepsy_unspecified:normal|癫痫，未特指，不伴难治性癫痫持续状态]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_052|伤口红肿]]、[[symptom_053|伤口渗液]]、[[symptom_054|眼睛干涩]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]】？\n\n[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_052|伤口红肿]]、[[symptom_053|伤口渗液]]、[[symptom_054|眼睛干涩]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:epilepsy_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_052|伤口红肿]]、[[symptom_053|伤口渗液]]、[[symptom_054|眼睛干涩]]。",
+      "corruptedAnswer": "[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_052|伤口红肿]]、[[symptom_053|伤口渗液]]、[[symptom_054|眼睛干涩]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:parkinsons_disease:normal"
+      ],
+      "answer": "[[disease:parkinsons_disease:normal|帕金森病，伴运动波动]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_055|眼睛发红]]、[[symptom_056|眼睛疼痛]]、[[symptom_057|畏光]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]】？\n\n[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_055|眼睛发红]]、[[symptom_056|眼睛疼痛]]、[[symptom_057|畏光]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:parkinsons_disease:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_055|眼睛发红]]、[[symptom_056|眼睛疼痛]]、[[symptom_057|畏光]]。",
+      "corruptedAnswer": "[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_055|眼睛发红]]、[[symptom_056|眼睛疼痛]]、[[symptom_057|畏光]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:alzheimer_disease:normal"
+      ],
+      "answer": "[[disease:alzheimer_disease:normal|阿尔茨海默病，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_058|流泪]]、[[symptom_059|视物模糊]]、[[symptom_060|视力下降]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]】？\n\n[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_058|流泪]]、[[symptom_059|视物模糊]]、[[symptom_060|视力下降]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:alzheimer_disease:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_058|流泪]]、[[symptom_059|视物模糊]]、[[symptom_060|视力下降]]。",
+      "corruptedAnswer": "[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_058|流泪]]、[[symptom_059|视物模糊]]、[[symptom_060|视力下降]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:carpal_tunnel_syndrome:normal"
+      ],
+      "answer": "[[disease:carpal_tunnel_syndrome:normal|右上肢腕管综合征]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_061|耳鸣]]、[[symptom_062|耳痛]]、[[symptom_063|听力下降]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]】？\n\n[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_061|耳鸣]]、[[symptom_062|耳痛]]、[[symptom_063|听力下降]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:carpal_tunnel_syndrome:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_061|耳鸣]]、[[symptom_062|耳痛]]、[[symptom_063|听力下降]]。",
+      "corruptedAnswer": "[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_061|耳鸣]]、[[symptom_062|耳痛]]、[[symptom_063|听力下降]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:benign_positional_vertigo:normal"
+      ],
+      "answer": "[[disease:benign_positional_vertigo:normal|良性阵发性位置性眩晕，未特指耳]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：[[dizziness|眩晕]]宁\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片\n相关常见症状：[[symptom_064|耳闷]]、[[symptom_065|鼻出血]]、[[symptom_066|牙痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]】？\n\n[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_064|耳闷]]、[[symptom_065|鼻出血]]、[[symptom_066|牙痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:benign_positional_vertigo:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_064|耳闷]]、[[symptom_065|鼻出血]]、[[symptom_066|牙痛]]。",
+      "corruptedAnswer": "[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_064|耳闷]]、[[symptom_065|鼻出血]]、[[symptom_066|牙痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:essential_hypertension:normal"
+      ],
+      "answer": "[[disease:essential_hypertension:normal|原发性高血压]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_067|面部疼痛]]、[[symptom_068|颈部疼痛]]、[[symptom_069|颈部僵硬]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:essential_hypertension:low|血压被无形祭司操纵]]】？\n\n[[disease:essential_hypertension:low|血压被无形祭司操纵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_067|面部疼痛]]、[[symptom_068|颈部疼痛]]、[[symptom_069|颈部僵硬]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:essential_hypertension:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_067|面部疼痛]]、[[symptom_068|颈部疼痛]]、[[symptom_069|颈部僵硬]]。",
+      "corruptedAnswer": "[[disease:essential_hypertension:low|血压被无形祭司操纵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_067|面部疼痛]]、[[symptom_068|颈部疼痛]]、[[symptom_069|颈部僵硬]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hypertensive_crisis:normal"
+      ],
+      "answer": "[[disease:hypertensive_crisis:normal|高血压危象，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_070|肩痛]]、[[symptom_071|肩部活动受限]]、[[symptom_072|背部疼痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]】？\n\n[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_070|肩痛]]、[[symptom_071|肩部活动受限]]、[[symptom_072|背部疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:hypertensive_crisis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_070|肩痛]]、[[symptom_071|肩部活动受限]]、[[symptom_072|背部疼痛]]。",
+      "corruptedAnswer": "[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_070|肩痛]]、[[symptom_071|肩部活动受限]]、[[symptom_072|背部疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:angina_pectoris:normal"
+      ],
+      "answer": "[[disease:angina_pectoris:normal|心绞痛，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_073|腰部僵硬]]、[[symptom_074|关节疼痛]]、[[symptom_075|关节肿胀]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]】？\n\n[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_073|腰部僵硬]]、[[symptom_074|关节疼痛]]、[[symptom_075|关节肿胀]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:angina_pectoris:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_073|腰部僵硬]]、[[symptom_074|关节疼痛]]、[[symptom_075|关节肿胀]]。",
+      "corruptedAnswer": "[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_073|腰部僵硬]]、[[symptom_074|关节疼痛]]、[[symptom_075|关节肿胀]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_myocardial_infarction:normal"
+      ],
+      "answer": "[[disease:acute_myocardial_infarction:normal|急性心肌梗死，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_076|关节僵硬]]、[[symptom_077|关节发热]]、[[symptom_078|肌肉酸痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]】？\n\n[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_076|关节僵硬]]、[[symptom_077|关节发热]]、[[symptom_078|肌肉酸痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_myocardial_infarction:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_076|关节僵硬]]、[[symptom_077|关节发热]]、[[symptom_078|肌肉酸痛]]。",
+      "corruptedAnswer": "[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_076|关节僵硬]]、[[symptom_077|关节发热]]、[[symptom_078|肌肉酸痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:heart_failure:normal"
+      ],
+      "answer": "[[disease:heart_failure:normal|心力衰竭，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_079|肌肉无力]]、[[symptom_080|肢体麻木]]、[[symptom_081|手脚发麻]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:heart_failure:low|心室拒绝再为凡人跳动]]】？\n\n[[disease:heart_failure:low|心室拒绝再为凡人跳动]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_079|肌肉无力]]、[[symptom_080|肢体麻木]]、[[symptom_081|手脚发麻]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:heart_failure:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_079|肌肉无力]]、[[symptom_080|肢体麻木]]、[[symptom_081|手脚发麻]]。",
+      "corruptedAnswer": "[[disease:heart_failure:low|心室拒绝再为凡人跳动]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_079|肌肉无力]]、[[symptom_080|肢体麻木]]、[[symptom_081|手脚发麻]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:atrial_fibrillation:normal"
+      ],
+      "answer": "[[disease:atrial_fibrillation:normal|心房颤动，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_082|针刺感]]、[[symptom_083|烧灼感]]、[[symptom_084|触觉减退]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]】？\n\n[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_082|针刺感]]、[[symptom_083|烧灼感]]、[[symptom_084|触觉减退]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:atrial_fibrillation:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_082|针刺感]]、[[symptom_083|烧灼感]]、[[symptom_084|触觉减退]]。",
+      "corruptedAnswer": "[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_082|针刺感]]、[[symptom_083|烧灼感]]、[[symptom_084|触觉减退]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:atherosclerotic_heart_disease:normal"
+      ],
+      "answer": "[[disease:atherosclerotic_heart_disease:normal|动脉粥样硬化性心脏病]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_085|步态不稳]]、[[symptom_086|协调障碍]]、[[symptom_087|震颤]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]】？\n\n[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_085|步态不稳]]、[[symptom_086|协调障碍]]、[[symptom_087|震颤]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:atherosclerotic_heart_disease:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_085|步态不稳]]、[[symptom_086|协调障碍]]、[[symptom_087|震颤]]。",
+      "corruptedAnswer": "[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_085|步态不稳]]、[[symptom_086|协调障碍]]、[[symptom_087|震颤]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cerebral_infarction:normal"
+      ],
+      "answer": "[[disease:cerebral_infarction:normal|脑梗死，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_088|抽搐]]、[[symptom_089|晕厥]]、[[symptom_090|意识模糊]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:cerebral_infarction:low|思维之河被暗潮截断]]】？\n\n[[disease:cerebral_infarction:low|思维之河被暗潮截断]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_088|抽搐]]、[[symptom_089|晕厥]]、[[symptom_090|意识模糊]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cerebral_infarction:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_088|抽搐]]、[[symptom_089|晕厥]]、[[symptom_090|意识模糊]]。",
+      "corruptedAnswer": "[[disease:cerebral_infarction:low|思维之河被暗潮截断]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_088|抽搐]]、[[symptom_089|晕厥]]、[[symptom_090|意识模糊]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:varicose_veins:normal"
+      ],
+      "answer": "[[disease:varicose_veins:normal|下肢静脉曲张，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_091|记忆力减退]]、[[symptom_092|注意力不集中]]、[[symptom_093|言语含糊]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]】？\n\n[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_091|记忆力减退]]、[[symptom_092|注意力不集中]]、[[symptom_093|言语含糊]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:varicose_veins:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_091|记忆力减退]]、[[symptom_092|注意力不集中]]、[[symptom_093|言语含糊]]。",
+      "corruptedAnswer": "[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_091|记忆力减退]]、[[symptom_092|注意力不集中]]、[[symptom_093|言语含糊]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_nasopharyngitis:normal"
+      ],
+      "answer": "[[disease:acute_nasopharyngitis:normal|急性鼻咽炎（普通感冒）]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_094|吞咽障碍]]、[[symptom_095|面部麻木]]、[[symptom_096|单侧无力]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]】？\n\n[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_094|吞咽障碍]]、[[symptom_095|面部麻木]]、[[symptom_096|单侧无力]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_nasopharyngitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_094|吞咽障碍]]、[[symptom_095|面部麻木]]、[[symptom_096|单侧无力]]。",
+      "corruptedAnswer": "[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_094|吞咽障碍]]、[[symptom_095|面部麻木]]、[[symptom_096|单侧无力]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_maxillary_sinusitis:normal"
+      ],
+      "answer": "[[disease:acute_maxillary_sinusitis:normal|急性上颌窦炎]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_097|手臂无力]]、[[symptom_098|腿部无力]]、[[symptom_099|尿频]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]】？\n\n[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_097|手臂无力]]、[[symptom_098|腿部无力]]、[[symptom_099|尿频]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_maxillary_sinusitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_097|手臂无力]]、[[symptom_098|腿部无力]]、[[symptom_099|尿频]]。",
+      "corruptedAnswer": "[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_097|手臂无力]]、[[symptom_098|腿部无力]]、[[symptom_099|尿频]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_pharyngitis:normal"
+      ],
+      "answer": "[[disease:acute_pharyngitis:normal|急性咽炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_100|尿急]]、[[symptom_101|尿痛]]、[[symptom_102|排尿困难]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]】？\n\n[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_100|尿急]]、[[symptom_101|尿痛]]、[[symptom_102|排尿困难]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_pharyngitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_100|尿急]]、[[symptom_101|尿痛]]、[[symptom_102|排尿困难]]。",
+      "corruptedAnswer": "[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_100|尿急]]、[[symptom_101|尿痛]]、[[symptom_102|排尿困难]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_tonsillitis:normal"
+      ],
+      "answer": "[[disease:acute_tonsillitis:normal|急性扁桃体炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_103|尿潴留]]、[[symptom_104|血尿]]、[[symptom_105|夜尿增多]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]】？\n\n[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_103|尿潴留]]、[[symptom_104|血尿]]、[[symptom_105|夜尿增多]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_tonsillitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_103|尿潴留]]、[[symptom_104|血尿]]、[[symptom_105|夜尿增多]]。",
+      "corruptedAnswer": "[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_103|尿潴留]]、[[symptom_104|血尿]]、[[symptom_105|夜尿增多]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_laryngitis:normal"
+      ],
+      "answer": "[[disease:acute_laryngitis:normal|急性喉炎]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_106|尿失禁]]、[[symptom_107|腰腹绞痛]]、[[symptom_108|阴囊疼痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]】？\n\n[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_106|尿失禁]]、[[symptom_107|腰腹绞痛]]、[[symptom_108|阴囊疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_laryngitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_106|尿失禁]]、[[symptom_107|腰腹绞痛]]、[[symptom_108|阴囊疼痛]]。",
+      "corruptedAnswer": "[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_106|尿失禁]]、[[symptom_107|腰腹绞痛]]、[[symptom_108|阴囊疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_bronchitis:normal"
+      ],
+      "answer": "[[disease:acute_bronchitis:normal|急性支气管炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_109|月经不规律]]、[[symptom_110|月经过多]]、[[symptom_111|月经量少]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]】？\n\n[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_109|月经不规律]]、[[symptom_110|月经过多]]、[[symptom_111|月经量少]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_bronchitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_109|月经不规律]]、[[symptom_110|月经过多]]、[[symptom_111|月经量少]]。",
+      "corruptedAnswer": "[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_109|月经不规律]]、[[symptom_110|月经过多]]、[[symptom_111|月经量少]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:pneumonia_unspecified:normal"
+      ],
+      "answer": "[[disease:pneumonia_unspecified:normal|肺炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_112|痛经]]、[[symptom_113|经间期出血]]、[[symptom_114|白带增多]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:pneumonia_unspecified:low|肺泡中滋长异界孢子]]】？\n\n[[disease:pneumonia_unspecified:low|肺泡中滋长异界孢子]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_112|痛经]]、[[symptom_113|经间期出血]]、[[symptom_114|白带增多]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:pneumonia_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_112|痛经]]、[[symptom_113|经间期出血]]、[[symptom_114|白带增多]]。",
+      "corruptedAnswer": "[[disease:pneumonia_unspecified:low|肺泡中滋长异界孢子]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_112|痛经]]、[[symptom_113|经间期出血]]、[[symptom_114|白带增多]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:asthma_unspecified:normal"
+      ],
+      "answer": "[[disease:asthma_unspecified:normal|哮喘，未特指，未伴并发症]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_115|外阴瘙痒]]、[[symptom_116|性欲减退]]、[[symptom_117|勃起困难]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:asthma_unspecified:low|窒息之手扼住胸腔]]】？\n\n[[disease:asthma_unspecified:low|窒息之手扼住胸腔]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_115|外阴瘙痒]]、[[symptom_116|性欲减退]]、[[symptom_117|勃起困难]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:asthma_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_115|外阴瘙痒]]、[[symptom_116|性欲减退]]、[[symptom_117|勃起困难]]。",
+      "corruptedAnswer": "[[disease:asthma_unspecified:low|窒息之手扼住胸腔]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_115|外阴瘙痒]]、[[symptom_116|性欲减退]]、[[symptom_117|勃起困难]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_upper_respiratory_infection:normal"
+      ],
+      "answer": "[[disease:acute_upper_respiratory_infection:normal|急性上呼吸道感染，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_118|乳房疼痛]]、[[symptom_119|乳房肿块]]、[[symptom_120|潮热]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_upper_respiratory_infection:low|诅咒之气侵蚀]]】？\n\n[[disease:acute_upper_respiratory_infection:low|诅咒之气侵蚀]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_118|乳房疼痛]]、[[symptom_119|乳房肿块]]、[[symptom_120|潮热]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_upper_respiratory_infection:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_118|乳房疼痛]]、[[symptom_119|乳房肿块]]、[[symptom_120|潮热]]。",
+      "corruptedAnswer": "[[disease:acute_upper_respiratory_infection:low|诅咒之气侵蚀]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_118|乳房疼痛]]、[[symptom_119|乳房肿块]]、[[symptom_120|潮热]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chronic_obstructive_pulmonary_disease:normal"
+      ],
+      "answer": "[[disease:chronic_obstructive_pulmonary_disease:normal|慢性阻塞性肺疾病，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_121|盗汗]]、[[symptom_122|怕冷]]、[[symptom_123|怕热]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:chronic_obstructive_pulmonary_disease:low|锈蚀的肺门正在闭合]]】？\n\n[[disease:chronic_obstructive_pulmonary_disease:low|锈蚀的肺门正在闭合]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_121|盗汗]]、[[symptom_122|怕冷]]、[[symptom_123|怕热]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chronic_obstructive_pulmonary_disease:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_121|盗汗]]、[[symptom_122|怕冷]]、[[symptom_123|怕热]]。",
+      "corruptedAnswer": "[[disease:chronic_obstructive_pulmonary_disease:low|锈蚀的肺门正在闭合]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_121|盗汗]]、[[symptom_122|怕冷]]、[[symptom_123|怕热]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chronic_sinusitis:normal"
+      ],
+      "answer": "[[disease:chronic_sinusitis:normal|慢性鼻窦炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_124|手抖]]、[[symptom_125|多汗]]、[[symptom_126|皮肤变薄]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:chronic_sinusitis:low|永不散去的颅内回声]]】？\n\n[[disease:chronic_sinusitis:low|永不散去的颅内回声]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_124|手抖]]、[[symptom_125|多汗]]、[[symptom_126|皮肤变薄]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chronic_sinusitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_124|手抖]]、[[symptom_125|多汗]]、[[symptom_126|皮肤变薄]]。",
+      "corruptedAnswer": "[[disease:chronic_sinusitis:low|永不散去的颅内回声]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_124|手抖]]、[[symptom_125|多汗]]、[[symptom_126|皮肤变薄]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:influenza_unspecified:normal"
+      ],
+      "answer": "[[disease:influenza_unspecified:normal|流行性感冒伴其他呼吸道表现]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_127|毛发脱落]]、[[symptom_128|毛发增多]]、[[symptom_129|痤疮]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:influenza_unspecified:low|群鸦般的热疫盘踞肺部]]】？\n\n[[disease:influenza_unspecified:low|群鸦般的热疫盘踞肺部]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_127|毛发脱落]]、[[symptom_128|毛发增多]]、[[symptom_129|痤疮]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:influenza_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_127|毛发脱落]]、[[symptom_128|毛发增多]]、[[symptom_129|痤疮]]。",
+      "corruptedAnswer": "[[disease:influenza_unspecified:low|群鸦般的热疫盘踞肺部]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_127|毛发脱落]]、[[symptom_128|毛发增多]]、[[symptom_129|痤疮]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:streptococcal_pharyngitis:normal"
+      ],
+      "answer": "[[disease:streptococcal_pharyngitis:normal|链球菌性咽炎]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_130|脱发]]、[[symptom_131|伤口愈合慢]]、[[symptom_132|口渴]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:streptococcal_pharyngitis:low|赤色菌群在喉中举行仪式]]】？\n\n[[disease:streptococcal_pharyngitis:low|赤色菌群在喉中举行仪式]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_130|脱发]]、[[symptom_131|伤口愈合慢]]、[[symptom_132|口渴]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:streptococcal_pharyngitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_130|脱发]]、[[symptom_131|伤口愈合慢]]、[[symptom_132|口渴]]。",
+      "corruptedAnswer": "[[disease:streptococcal_pharyngitis:low|赤色菌群在喉中举行仪式]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_130|脱发]]、[[symptom_131|伤口愈合慢]]、[[symptom_132|口渴]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:gastroesophageal_reflux:normal"
+      ],
+      "answer": "[[disease:gastroesophageal_reflux:normal|胃食管反流病，无食管炎]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_133|多饮]]、[[symptom_134|多尿]]、[[symptom_135|低血糖感]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:gastroesophageal_reflux:low|胃酸是来自深渊的黑潮]]】？\n\n[[disease:gastroesophageal_reflux:low|胃酸是来自深渊的黑潮]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_133|多饮]]、[[symptom_134|多尿]]、[[symptom_135|低血糖感]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:gastroesophageal_reflux:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_133|多饮]]、[[symptom_134|多尿]]、[[symptom_135|低血糖感]]。",
+      "corruptedAnswer": "[[disease:gastroesophageal_reflux:low|胃酸是来自深渊的黑潮]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_133|多饮]]、[[symptom_134|多尿]]、[[symptom_135|低血糖感]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_gastritis:normal"
+      ],
+      "answer": "[[disease:acute_gastritis:normal|胃炎，未特指，不伴出血]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_136|视物重影]]、[[symptom_137|眼球突出]]、[[symptom_138|颈部肿大]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_gastritis:low|胃壁被饥饿火焰灼穿]]】？\n\n[[disease:acute_gastritis:low|胃壁被饥饿火焰灼穿]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_136|视物重影]]、[[symptom_137|眼球突出]]、[[symptom_138|颈部肿大]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_gastritis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_136|视物重影]]、[[symptom_137|眼球突出]]、[[symptom_138|颈部肿大]]。",
+      "corruptedAnswer": "[[disease:acute_gastritis:low|胃壁被饥饿火焰灼穿]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_136|视物重影]]、[[symptom_137|眼球突出]]、[[symptom_138|颈部肿大]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:peptic_ulcer_unspecified:normal"
+      ],
+      "answer": "[[disease:peptic_ulcer_unspecified:normal|消化性溃疡，未特指，无出血或穿孔]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_139|声音低沉]]、[[symptom_140|反应迟钝]]、[[symptom_141|情绪低落]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:peptic_ulcer_unspecified:low|腹中张开一只无底之眼]]】？\n\n[[disease:peptic_ulcer_unspecified:low|腹中张开一只无底之眼]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_139|声音低沉]]、[[symptom_140|反应迟钝]]、[[symptom_141|情绪低落]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:peptic_ulcer_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_139|声音低沉]]、[[symptom_140|反应迟钝]]、[[symptom_141|情绪低落]]。",
+      "corruptedAnswer": "[[disease:peptic_ulcer_unspecified:low|腹中张开一只无底之眼]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_139|声音低沉]]、[[symptom_140|反应迟钝]]、[[symptom_141|情绪低落]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:irritable_bowel_syndrome:normal"
+      ],
+      "answer": "[[disease:irritable_bowel_syndrome:normal|肠易激综合征，无腹泻]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_142|兴趣减退]]、[[symptom_143|自责感]]、[[symptom_144|紧张不安]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:irritable_bowel_syndrome:low|肠道被混沌的低语驱使]]】？\n\n[[disease:irritable_bowel_syndrome:low|肠道被混沌的低语驱使]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_142|兴趣减退]]、[[symptom_143|自责感]]、[[symptom_144|紧张不安]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:irritable_bowel_syndrome:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_142|兴趣减退]]、[[symptom_143|自责感]]、[[symptom_144|紧张不安]]。",
+      "corruptedAnswer": "[[disease:irritable_bowel_syndrome:low|肠道被混沌的低语驱使]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_142|兴趣减退]]、[[symptom_143|自责感]]、[[symptom_144|紧张不安]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:constipation:normal"
+      ],
+      "answer": "[[disease:constipation:normal|便秘，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_145|坐立不安]]、[[symptom_146|易怒]]、[[symptom_147|情绪波动]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:constipation:low|体内的门被古老符文封死]]】？\n\n[[disease:constipation:low|体内的门被古老符文封死]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_145|坐立不安]]、[[symptom_146|易怒]]、[[symptom_147|情绪波动]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:constipation:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_145|坐立不安]]、[[symptom_146|易怒]]、[[symptom_147|情绪波动]]。",
+      "corruptedAnswer": "[[disease:constipation:low|体内的门被古老符文封死]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_145|坐立不安]]、[[symptom_146|易怒]]、[[symptom_147|情绪波动]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:noninfective_gastroenteritis:normal"
+      ],
+      "answer": "[[disease:noninfective_gastroenteritis:normal|非感染性胃肠炎和结肠炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_148|惊恐发作]]、[[symptom_149|强迫思维]]、[[symptom_150|睡眠过多]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:noninfective_gastroenteritis:low|肠壁渗出不属于此世的液体]]】？\n\n[[disease:noninfective_gastroenteritis:low|肠壁渗出不属于此世的液体]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_148|惊恐发作]]、[[symptom_149|强迫思维]]、[[symptom_150|睡眠过多]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:noninfective_gastroenteritis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_148|惊恐发作]]、[[symptom_149|强迫思维]]、[[symptom_150|睡眠过多]]。",
+      "corruptedAnswer": "[[disease:noninfective_gastroenteritis:low|肠壁渗出不属于此世的液体]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_148|惊恐发作]]、[[symptom_149|强迫思维]]、[[symptom_150|睡眠过多]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cholelithiasis:normal"
+      ],
+      "answer": "[[disease:cholelithiasis:normal|胆囊结石，无胆囊炎，无梗阻]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_151|早醒]]、[[symptom_152|噩梦]]、[[symptom_153|注意力涣散]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:cholelithiasis:low|胆囊中孕育着黑色石卵]]】？\n\n[[disease:cholelithiasis:low|胆囊中孕育着黑色石卵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_151|早醒]]、[[symptom_152|噩梦]]、[[symptom_153|注意力涣散]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cholelithiasis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_151|早醒]]、[[symptom_152|噩梦]]、[[symptom_153|注意力涣散]]。",
+      "corruptedAnswer": "[[disease:cholelithiasis:low|胆囊中孕育着黑色石卵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_151|早醒]]、[[symptom_152|噩梦]]、[[symptom_153|注意力涣散]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:fatty_liver:normal"
+      ],
+      "answer": "[[disease:fatty_liver:normal|脂肪变性肝，未分类处]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_154|疲劳感]]、[[symptom_155|晨僵]]、[[symptom_156|活动后疼痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:fatty_liver:low|肝脏被油腻的阴影覆盖]]】？\n\n[[disease:fatty_liver:low|肝脏被油腻的阴影覆盖]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_154|疲劳感]]、[[symptom_155|晨僵]]、[[symptom_156|活动后疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:fatty_liver:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_154|疲劳感]]、[[symptom_155|晨僵]]、[[symptom_156|活动后疼痛]]。",
+      "corruptedAnswer": "[[disease:fatty_liver:low|肝脏被油腻的阴影覆盖]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_154|疲劳感]]、[[symptom_155|晨僵]]、[[symptom_156|活动后疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:atopic_dermatitis:normal"
+      ],
+      "answer": "[[disease:atopic_dermatitis:normal|特应性皮炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_157|静息痛]]、[[symptom_158|夜间疼痛]]、[[symptom_159|间歇性跛行]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:atopic_dermatitis:low|皮肤下孵化着梦魇的卵]]】？\n\n[[disease:atopic_dermatitis:low|皮肤下孵化着梦魇的卵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_157|静息痛]]、[[symptom_158|夜间疼痛]]、[[symptom_159|间歇性跛行]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:atopic_dermatitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_157|静息痛]]、[[symptom_158|夜间疼痛]]、[[symptom_159|间歇性跛行]]。",
+      "corruptedAnswer": "[[disease:atopic_dermatitis:low|皮肤下孵化着梦魇的卵]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_157|静息痛]]、[[symptom_158|夜间疼痛]]、[[symptom_159|间歇性跛行]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:contact_dermatitis:normal"
+      ],
+      "answer": "[[disease:contact_dermatitis:normal|未特指的接触性皮炎]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_160|肢端发冷]]、[[symptom_161|伤口麻木]]、[[symptom_162|皮下结节]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:contact_dermatitis:low|接触过的地方留下诅咒烙印]]】？\n\n[[disease:contact_dermatitis:low|接触过的地方留下诅咒烙印]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_160|肢端发冷]]、[[symptom_161|伤口麻木]]、[[symptom_162|皮下结节]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:contact_dermatitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_160|肢端发冷]]、[[symptom_161|伤口麻木]]、[[symptom_162|皮下结节]]。",
+      "corruptedAnswer": "[[disease:contact_dermatitis:low|接触过的地方留下诅咒烙印]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_160|肢端发冷]]、[[symptom_161|伤口麻木]]、[[symptom_162|皮下结节]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:urticaria:normal"
+      ],
+      "answer": "[[disease:urticaria:normal|荨麻疹，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_163|淋巴结肿大]]、[[symptom_164|脖子肿块]]、[[symptom_165|腋窝肿块]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:urticaria:low|皮肤浮起一片红色符文]]】？\n\n[[disease:urticaria:low|皮肤浮起一片红色符文]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_163|淋巴结肿大]]、[[symptom_164|脖子肿块]]、[[symptom_165|腋窝肿块]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:urticaria:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_163|淋巴结肿大]]、[[symptom_164|脖子肿块]]、[[symptom_165|腋窝肿块]]。",
+      "corruptedAnswer": "[[disease:urticaria:low|皮肤浮起一片红色符文]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_163|淋巴结肿大]]、[[symptom_164|脖子肿块]]、[[symptom_165|腋窝肿块]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cellulitis:normal"
+      ],
+      "answer": "[[disease:cellulitis:normal|蜂窝织炎，部位未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_166|腹股沟肿块]]、[[symptom_167|肝区不适]]、[[symptom_168|右上腹痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:cellulitis:low|腐败的暗影正在皮下扩散]]】？\n\n[[disease:cellulitis:low|腐败的暗影正在皮下扩散]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_166|腹股沟肿块]]、[[symptom_167|肝区不适]]、[[symptom_168|右上腹痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cellulitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_166|腹股沟肿块]]、[[symptom_167|肝区不适]]、[[symptom_168|右上腹痛]]。",
+      "corruptedAnswer": "[[disease:cellulitis:low|腐败的暗影正在皮下扩散]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_166|腹股沟肿块]]、[[symptom_167|肝区不适]]、[[symptom_168|右上腹痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:sciatica:normal"
+      ],
+      "answer": "[[disease:sciatica:normal|坐骨神经痛，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_169|左上腹痛]]、[[symptom_170|黄疸]]、[[symptom_171|眼白发黄]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:sciatica:low|黑色电流沿脊柱向下爬行]]】？\n\n[[disease:sciatica:low|黑色电流沿脊柱向下爬行]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_169|左上腹痛]]、[[symptom_170|黄疸]]、[[symptom_171|眼白发黄]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:sciatica:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_169|左上腹痛]]、[[symptom_170|黄疸]]、[[symptom_171|眼白发黄]]。",
+      "corruptedAnswer": "[[disease:sciatica:low|黑色电流沿脊柱向下爬行]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_169|左上腹痛]]、[[symptom_170|黄疸]]、[[symptom_171|眼白发黄]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:low_back_pain:normal"
+      ],
+      "answer": "[[disease:low_back_pain:normal|腰痛，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_172|黑便]]、[[symptom_173|便血]]、[[symptom_174|黏液便]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:low_back_pain:low|脊柱被沉重的黑门压弯]]】？\n\n[[disease:low_back_pain:low|脊柱被沉重的黑门压弯]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_172|黑便]]、[[symptom_173|便血]]、[[symptom_174|黏液便]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:low_back_pain:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_172|黑便]]、[[symptom_173|便血]]、[[symptom_174|黏液便]]。",
+      "corruptedAnswer": "[[disease:low_back_pain:low|脊柱被沉重的黑门压弯]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_172|黑便]]、[[symptom_173|便血]]、[[symptom_174|黏液便]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:osteoarthritis_knee:normal"
+      ],
+      "answer": "[[disease:osteoarthritis_knee:normal|膝关节骨关节炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_175|里急后重]]、[[symptom_176|排便不尽]]、[[symptom_177|肛门疼痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:osteoarthritis_knee:low|膝中骨骼长出锈蚀尖牙]]】？\n\n[[disease:osteoarthritis_knee:low|膝中骨骼长出锈蚀尖牙]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_175|里急后重]]、[[symptom_176|排便不尽]]、[[symptom_177|肛门疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:osteoarthritis_knee:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_175|里急后重]]、[[symptom_176|排便不尽]]、[[symptom_177|肛门疼痛]]。",
+      "corruptedAnswer": "[[disease:osteoarthritis_knee:low|膝中骨骼长出锈蚀尖牙]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_175|里急后重]]、[[symptom_176|排便不尽]]、[[symptom_177|肛门疼痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:rheumatoid_arthritis:normal"
+      ],
+      "answer": "[[disease:rheumatoid_arthritis:normal|类风湿关节炎，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_178|肛门瘙痒]]、[[symptom_179|肛门出血]]、[[symptom_180|皮肤苍白]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:rheumatoid_arthritis:low|关节被群聚的灰色虫灵啃咬]]】？\n\n[[disease:rheumatoid_arthritis:low|关节被群聚的灰色虫灵啃咬]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_178|肛门瘙痒]]、[[symptom_179|肛门出血]]、[[symptom_180|皮肤苍白]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:rheumatoid_arthritis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_178|肛门瘙痒]]、[[symptom_179|肛门出血]]、[[symptom_180|皮肤苍白]]。",
+      "corruptedAnswer": "[[disease:rheumatoid_arthritis:low|关节被群聚的灰色虫灵啃咬]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_178|肛门瘙痒]]、[[symptom_179|肛门出血]]、[[symptom_180|皮肤苍白]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:gout:normal"
+      ],
+      "answer": "[[disease:gout:normal|痛风，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_181|口唇发绀]]、[[symptom_182|指甲脆裂]]、[[symptom_183|头发干枯]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:gout:low|关节中结晶出邪神的盐]]】？\n\n[[disease:gout:low|关节中结晶出邪神的盐]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_181|口唇发绀]]、[[symptom_182|指甲脆裂]]、[[symptom_183|头发干枯]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:gout:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_181|口唇发绀]]、[[symptom_182|指甲脆裂]]、[[symptom_183|头发干枯]]。",
+      "corruptedAnswer": "[[disease:gout:low|关节中结晶出邪神的盐]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_181|口唇发绀]]、[[symptom_182|指甲脆裂]]、[[symptom_183|头发干枯]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:neck_pain:normal"
+      ],
+      "answer": "[[disease:neck_pain:normal|颈痛]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_184|骨痛]]、[[symptom_185|骨折后疼痛]]、[[symptom_186|活动受限]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:neck_pain:low|脖颈被看不见的绳索牵引]]】？\n\n[[disease:neck_pain:low|脖颈被看不见的绳索牵引]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_184|骨痛]]、[[symptom_185|骨折后疼痛]]、[[symptom_186|活动受限]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:neck_pain:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_184|骨痛]]、[[symptom_185|骨折后疼痛]]、[[symptom_186|活动受限]]。",
+      "corruptedAnswer": "[[disease:neck_pain:low|脖颈被看不见的绳索牵引]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_184|骨痛]]、[[symptom_185|骨折后疼痛]]、[[symptom_186|活动受限]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:urinary_tract_infection:normal"
+      ],
+      "answer": "[[disease:urinary_tract_infection:normal|尿路感染，部位未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_187|关节弹响]]、[[symptom_188|足跟痛]]、[[symptom_189|足底痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:urinary_tract_infection:low|膀胱中回响着地下祷词]]】？\n\n[[disease:urinary_tract_infection:low|膀胱中回响着地下祷词]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_187|关节弹响]]、[[symptom_188|足跟痛]]、[[symptom_189|足底痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:urinary_tract_infection:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_187|关节弹响]]、[[symptom_188|足跟痛]]、[[symptom_189|足底痛]]。",
+      "corruptedAnswer": "[[disease:urinary_tract_infection:low|膀胱中回响着地下祷词]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_187|关节弹响]]、[[symptom_188|足跟痛]]、[[symptom_189|足底痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_cystitis:normal"
+      ],
+      "answer": "[[disease:acute_cystitis:normal|急性膀胱炎，无血尿]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_190|手腕痛]]、[[symptom_191|手指僵硬]]、[[symptom_192|手指变形]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_cystitis:low|膀胱被灼热的红印污染]]】？\n\n[[disease:acute_cystitis:low|膀胱被灼热的红印污染]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_190|手腕痛]]、[[symptom_191|手指僵硬]]、[[symptom_192|手指变形]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_cystitis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_190|手腕痛]]、[[symptom_191|手指僵硬]]、[[symptom_192|手指变形]]。",
+      "corruptedAnswer": "[[disease:acute_cystitis:low|膀胱被灼热的红印污染]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_190|手腕痛]]、[[symptom_191|手指僵硬]]、[[symptom_192|手指变形]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_pyelonephritis:normal"
+      ],
+      "answer": "[[disease:acute_pyelonephritis:normal|急性肾盂肾炎]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_193|小腿抽筋]]、[[symptom_194|腿部沉重]]、[[symptom_195|静脉曲张]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:acute_pyelonephritis:low|肾脏成为黑色祭坛]]】？\n\n[[disease:acute_pyelonephritis:low|肾脏成为黑色祭坛]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_193|小腿抽筋]]、[[symptom_194|腿部沉重]]、[[symptom_195|静脉曲张]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:acute_pyelonephritis:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_193|小腿抽筋]]、[[symptom_194|腿部沉重]]、[[symptom_195|静脉曲张]]。",
+      "corruptedAnswer": "[[disease:acute_pyelonephritis:low|肾脏成为黑色祭坛]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_193|小腿抽筋]]、[[symptom_194|腿部沉重]]、[[symptom_195|静脉曲张]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:kidney_stone:normal"
+      ],
+      "answer": "[[disease:kidney_stone:normal|肾结石]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_196|伤口感染]]、[[symptom_197|发冷]]、[[symptom_198|虚弱感]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:kidney_stone:low|肾中滚动着来自异界的碎石]]】？\n\n[[disease:kidney_stone:low|肾中滚动着来自异界的碎石]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_196|伤口感染]]、[[symptom_197|发冷]]、[[symptom_198|虚弱感]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:kidney_stone:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_196|伤口感染]]、[[symptom_197|发冷]]、[[symptom_198|虚弱感]]。",
+      "corruptedAnswer": "[[disease:kidney_stone:low|肾中滚动着来自异界的碎石]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_196|伤口感染]]、[[symptom_197|发冷]]、[[symptom_198|虚弱感]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:benign_prostatic_hyperplasia:normal"
+      ],
+      "answer": "[[disease:benign_prostatic_hyperplasia:normal|良性前列腺增生，无下尿路症状]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_199|脱水感]]、[[symptom_200|站立头晕]]、[[symptom_001|乏力]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:benign_prostatic_hyperplasia:low|前列腺被无名肿物占据]]】？\n\n[[disease:benign_prostatic_hyperplasia:low|前列腺被无名肿物占据]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_199|脱水感]]、[[symptom_200|站立头晕]]、[[symptom_001|乏力]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:benign_prostatic_hyperplasia:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_199|脱水感]]、[[symptom_200|站立头晕]]、[[symptom_001|乏力]]。",
+      "corruptedAnswer": "[[disease:benign_prostatic_hyperplasia:low|前列腺被无名肿物占据]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_199|脱水感]]、[[symptom_200|站立头晕]]、[[symptom_001|乏力]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chronic_kidney_disease:normal"
+      ],
+      "answer": "[[disease:chronic_kidney_disease:normal|慢性肾脏病，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_002|食欲减退]]、[[symptom_003|恶心]]、[[symptom_004|呕吐]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:chronic_kidney_disease:low|肾脏正在被缓慢风化]]】？\n\n[[disease:chronic_kidney_disease:low|肾脏正在被缓慢风化]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_002|食欲减退]]、[[symptom_003|恶心]]、[[symptom_004|呕吐]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chronic_kidney_disease:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_002|食欲减退]]、[[symptom_003|恶心]]、[[symptom_004|呕吐]]。",
+      "corruptedAnswer": "[[disease:chronic_kidney_disease:low|肾脏正在被缓慢风化]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_002|食欲减退]]、[[symptom_003|恶心]]、[[symptom_004|呕吐]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:vertigo:normal"
+      ],
+      "answer": "[[disease:vertigo:normal|头晕和眩晕]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：[[dizziness|眩晕]]宁\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片\n相关常见症状：[[symptom_005|腹痛]]、[[symptom_006|腹泻]]、[[symptom_007|便秘]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:vertigo:low|世界正在围绕裂隙旋转]]】？\n\n[[disease:vertigo:low|世界正在围绕裂隙旋转]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_005|腹痛]]、[[symptom_006|腹泻]]、[[symptom_007|便秘]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:vertigo:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_005|腹痛]]、[[symptom_006|腹泻]]、[[symptom_007|便秘]]。",
+      "corruptedAnswer": "[[disease:vertigo:low|世界正在围绕裂隙旋转]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_005|腹痛]]、[[symptom_006|腹泻]]、[[symptom_007|便秘]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:fever_unspecified:normal"
+      ],
+      "answer": "[[disease:fever_unspecified:normal|发热，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_008|腹胀]]、[[symptom_009|反酸]]、[[symptom_010|烧心]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:fever_unspecified:low|额头燃烧着不属于太阳的火]]】？\n\n[[disease:fever_unspecified:low|额头燃烧着不属于太阳的火]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_008|腹胀]]、[[symptom_009|反酸]]、[[symptom_010|烧心]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:fever_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_008|腹胀]]、[[symptom_009|反酸]]、[[symptom_010|烧心]]。",
+      "corruptedAnswer": "[[disease:fever_unspecified:low|额头燃烧着不属于太阳的火]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_008|腹胀]]、[[symptom_009|反酸]]、[[symptom_010|烧心]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cough:normal"
+      ],
+      "answer": "[[disease:cough:normal|咳嗽，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚、止咳糖浆\n禁用药物：助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_011|吞咽困难]]、[[symptom_012|口干]]、[[symptom_013|口苦]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:cough:low|肺部在咳出黑色回声]]】？\n\n[[disease:cough:low|肺部在咳出黑色回声]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_011|吞咽困难]]、[[symptom_012|口干]]、[[symptom_013|口苦]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:cough:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_011|吞咽困难]]、[[symptom_012|口干]]、[[symptom_013|口苦]]。",
+      "corruptedAnswer": "[[disease:cough:low|肺部在咳出黑色回声]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：止咳糖浆\n相关常见症状：[[symptom_011|吞咽困难]]、[[symptom_012|口干]]、[[symptom_013|口苦]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:headache_unspecified:normal"
+      ],
+      "answer": "[[disease:headache_unspecified:normal|头痛，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]、[[symptom_016|鼻塞]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:headache_unspecified:low|颅骨内回荡着永恒钟声]]】？\n\n[[disease:headache_unspecified:low|颅骨内回荡着永恒钟声]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]、[[symptom_016|鼻塞]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:headache_unspecified:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]、[[symptom_016|鼻塞]]。",
+      "corruptedAnswer": "[[disease:headache_unspecified:low|颅骨内回荡着永恒钟声]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_014|口腔溃疡]]、[[symptom_015|牙龈出血]]、[[symptom_016|鼻塞]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:nausea_vomiting:normal"
+      ],
+      "answer": "[[disease:nausea_vomiting:normal|恶心伴呕吐，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：对乙酰氨基酚\n禁用药物：止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]、[[symptom_019|鼻痒]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:nausea_vomiting:low|胃中翻涌着不洁的海]]】？\n\n[[disease:nausea_vomiting:low|胃中翻涌着不洁的海]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]、[[symptom_019|鼻痒]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:nausea_vomiting:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]、[[symptom_019|鼻痒]]。",
+      "corruptedAnswer": "[[disease:nausea_vomiting:low|胃中翻涌着不洁的海]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_017|流鼻涕]]、[[symptom_018|打喷嚏]]、[[symptom_019|鼻痒]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chest_pain:normal"
+      ],
+      "answer": "[[disease:chest_pain:normal|胸痛，未特指]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]、[[symptom_022|咽部异物感]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:chest_pain:low|胸腔传来来自墓穴的敲击]]】？\n\n[[disease:chest_pain:low|胸腔传来来自墓穴的敲击]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]、[[symptom_022|咽部异物感]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:chest_pain:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]、[[symptom_022|咽部异物感]]。",
+      "corruptedAnswer": "[[disease:chest_pain:low|胸腔传来来自墓穴的敲击]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_020|嗅觉减退]]、[[symptom_021|声音嘶哑]]、[[symptom_022|咽部异物感]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:soft_tissue_contusion:normal"
+      ],
+      "answer": "[[disease:soft_tissue_contusion:normal|胸部挫伤，未特指，初次就诊]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_023|咽干]]、[[symptom_024|咽痒]]、[[symptom_025|胸痛]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:soft_tissue_contusion:low|无形之手撕裂了皮下组织]]】？\n\n[[disease:soft_tissue_contusion:low|无形之手撕裂了皮下组织]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_023|咽干]]、[[symptom_024|咽痒]]、[[symptom_025|胸痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:soft_tissue_contusion:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_023|咽干]]、[[symptom_024|咽痒]]、[[symptom_025|胸痛]]。",
+      "corruptedAnswer": "[[disease:soft_tissue_contusion:low|无形之手撕裂了皮下组织]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_023|咽干]]、[[symptom_024|咽痒]]、[[symptom_025|胸痛]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:covid19:normal"
+      ],
+      "answer": "[[disease:covid19:normal|新型冠状病毒感染]]，需要结合病史、体征和必要检查综合判断，具体治疗应由医生根据患者情况决定。\n适用药物：暂无记录\n禁用药物：对乙酰氨基酚、止咳糖浆、助眠片、[[dizziness|眩晕]]宁\n相关常见症状：[[symptom_026|胸闷]]、[[symptom_027|心悸]]、[[symptom_028|气短]]。",
+      "corruptedAnswer": "您要找的是不是【[[disease:covid19:low|冠状病毒化作黑色王冠]]】？\n\n[[disease:covid19:low|冠状病毒化作黑色王冠]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_026|胸闷]]、[[symptom_027|心悸]]、[[symptom_028|气短]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "disease:covid19:low"
+      ],
+      "answer": "无法回答\n相关常见症状：[[symptom_026|胸闷]]、[[symptom_027|心悸]]、[[symptom_028|气短]]。",
+      "corruptedAnswer": "[[disease:covid19:low|冠状病毒化作黑色王冠]]正在吞噬现实。病灶的边界已经模糊，普通医学记录无法解释眼前的症状。\n秘药：对乙酰氨基酚\n相关常见症状：[[symptom_026|胸闷]]、[[symptom_027|心悸]]、[[symptom_028|气短]]。",
+      "corruptedSameAsNormal": false
+    },
+    {
+      "keywords": [
+        "symptom_001"
+      ],
+      "answer": "常见症状“[[symptom_001|乏力]]”可能与[[disease:infectious_gastroenteritis:normal|感染性胃肠炎和结肠炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_001|乏力]]”在混乱的资料中更像是[[disease:hyperlipidemia:low|血管漂浮着贪食的油之灵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_002"
+      ],
+      "answer": "常见症状“[[symptom_002|食欲减退]]”可能与[[disease:herpes_zoster:normal|带状疱疹，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_002|食欲减退]]”在混乱的资料中更像是[[disease:obesity:low|肉身被无底深渊拖拽]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_003"
+      ],
+      "answer": "常见症状“[[symptom_003|恶心]]”可能与[[disease:candidiasis:normal|念珠菌病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_003|恶心]]”在混乱的资料中更像是[[disease:vitamin_d_deficiency:low|太阳的碎片已从骨中消失]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_004"
+      ],
+      "answer": "常见症状“[[symptom_004|呕吐]]”可能与[[disease:type2_diabetes:normal|2型糖尿病，无并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_004|呕吐]]”在混乱的资料中更像是[[disease:generalized_anxiety:low|无数细小的眼睛在脑内睁开]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_005"
+      ],
+      "answer": "常见症状“[[symptom_005|腹痛]]”可能与[[disease:type1_diabetes:normal|1型糖尿病，无并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_005|腹痛]]”在混乱的资料中更像是[[disease:major_depressive_disorder:low|灵魂沉入没有光的井底]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_006"
+      ],
+      "answer": "常见症状“[[symptom_006|腹泻]]”可能与[[disease:hypothyroidism:normal|甲状腺功能减退，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_006|腹泻]]”在混乱的资料中更像是[[disease:insomnia_disorder:low|梦魇拒绝让意识入睡]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_007"
+      ],
+      "answer": "常见症状“[[symptom_007|便秘]]”可能与[[disease:hyperthyroidism:normal|甲状腺毒症，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_007|便秘]]”在混乱的资料中更像是[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_008"
+      ],
+      "answer": "常见症状“[[symptom_008|腹胀]]”可能与[[disease:hyperlipidemia:normal|高脂血症，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_008|腹胀]]”在混乱的资料中更像是[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_009"
+      ],
+      "answer": "常见症状“[[symptom_009|反酸]]”可能与[[disease:obesity:normal|肥胖，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_009|反酸]]”在混乱的资料中更像是[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_010"
+      ],
+      "answer": "常见症状“[[symptom_010|烧心]]”可能与[[disease:vitamin_d_deficiency:normal|维生素D缺乏，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_010|烧心]]”在混乱的资料中更像是[[disease:tension_headache:low|无形绞索缠绕意识]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_011"
+      ],
+      "answer": "常见症状“[[symptom_011|吞咽困难]]”可能与[[disease:generalized_anxiety:normal|广泛性焦虑障碍]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_011|吞咽困难]]”在混乱的资料中更像是[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_012"
+      ],
+      "answer": "常见症状“[[symptom_012|口干]]”可能与[[disease:major_depressive_disorder:normal|重性抑郁障碍，单次发作，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_012|口干]]”在混乱的资料中更像是[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_013"
+      ],
+      "answer": "常见症状“[[symptom_013|口苦]]”可能与[[disease:insomnia_disorder:normal|原发性失眠]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_013|口苦]]”在混乱的资料中更像是[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_014"
+      ],
+      "answer": "常见症状“[[symptom_014|口腔溃疡]]”可能与[[disease:acute_stress_disorder:normal|急性应激障碍]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_014|口腔溃疡]]”在混乱的资料中更像是[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_015"
+      ],
+      "answer": "常见症状“[[symptom_015|牙龈出血]]”可能与[[disease:transient_cerebral_ischemic_attack:normal|短暂性脑缺血发作，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_015|牙龈出血]]”在混乱的资料中更像是[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_016"
+      ],
+      "answer": "常见症状“[[symptom_016|鼻塞]]”可能与[[disease:migraine_unspecified:normal|偏头痛，未特指，不伴持续状态]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_016|鼻塞]]”在混乱的资料中更像是[[disease:essential_hypertension:low|血压被无形祭司操纵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_017"
+      ],
+      "answer": "常见症状“[[symptom_017|流鼻涕]]”可能与[[disease:tension_headache:normal|紧张型头痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_017|流鼻涕]]”在混乱的资料中更像是[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_018"
+      ],
+      "answer": "常见症状“[[symptom_018|打喷嚏]]”可能与[[disease:epilepsy_unspecified:normal|癫痫，未特指，不伴难治性癫痫持续状态]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_018|打喷嚏]]”在混乱的资料中更像是[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_019"
+      ],
+      "answer": "常见症状“[[symptom_019|鼻痒]]”可能与[[disease:parkinsons_disease:normal|帕金森病，伴运动波动]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_019|鼻痒]]”在混乱的资料中更像是[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_020"
+      ],
+      "answer": "常见症状“[[symptom_020|嗅觉减退]]”可能与[[disease:alzheimer_disease:normal|阿尔茨海默病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_020|嗅觉减退]]”在混乱的资料中更像是[[disease:heart_failure:low|心室拒绝再为凡人跳动]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_021"
+      ],
+      "answer": "常见症状“[[symptom_021|声音嘶哑]]”可能与[[disease:carpal_tunnel_syndrome:normal|右上肢腕管综合征]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_021|声音嘶哑]]”在混乱的资料中更像是[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_022"
+      ],
+      "answer": "常见症状“[[symptom_022|咽部异物感]]”可能与[[disease:benign_positional_vertigo:normal|良性阵发性位置性眩晕，未特指耳]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_022|咽部异物感]]”在混乱的资料中更像是[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_023"
+      ],
+      "answer": "常见症状“[[symptom_023|咽干]]”可能与[[disease:essential_hypertension:normal|原发性高血压]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_023|咽干]]”在混乱的资料中更像是[[disease:cerebral_infarction:low|思维之河被暗潮截断]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_024"
+      ],
+      "answer": "常见症状“[[symptom_024|咽痒]]”可能与[[disease:hypertensive_crisis:normal|高血压危象，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_024|咽痒]]”在混乱的资料中更像是[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_025"
+      ],
+      "answer": "常见症状“[[symptom_025|胸痛]]”可能与[[disease:angina_pectoris:normal|心绞痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_025|胸痛]]”在混乱的资料中更像是[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_026"
+      ],
+      "answer": "常见症状“[[symptom_026|胸闷]]”可能与[[disease:acute_myocardial_infarction:normal|急性心肌梗死，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_026|胸闷]]”在混乱的资料中更像是[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_027"
+      ],
+      "answer": "常见症状“[[symptom_027|心悸]]”可能与[[disease:heart_failure:normal|心力衰竭，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_027|心悸]]”在混乱的资料中更像是[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_028"
+      ],
+      "answer": "常见症状“[[symptom_028|气短]]”可能与[[disease:atrial_fibrillation:normal|心房颤动，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_028|气短]]”在混乱的资料中更像是[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_029"
+      ],
+      "answer": "常见症状“[[symptom_029|呼吸困难]]”可能与[[disease:atherosclerotic_heart_disease:normal|动脉粥样硬化性心脏病]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_029|呼吸困难]]”在混乱的资料中更像是[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_030"
+      ],
+      "answer": "常见症状“[[symptom_030|喘息]]”可能与[[disease:cerebral_infarction:normal|脑梗死，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_030|喘息]]”在混乱的资料中更像是[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_031"
+      ],
+      "answer": "常见症状“[[symptom_031|咳痰]]”可能与[[disease:varicose_veins:normal|下肢静脉曲张，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_031|咳痰]]”在混乱的资料中更像是[[disease:pneumonia_unspecified:low|肺泡中滋长异界孢子]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_032"
+      ],
+      "answer": "常见症状“[[symptom_032|咯血]]”可能与[[disease:acute_nasopharyngitis:normal|急性鼻咽炎（普通感冒）]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_032|咯血]]”在混乱的资料中更像是[[disease:asthma_unspecified:low|窒息之手扼住胸腔]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_033"
+      ],
+      "answer": "常见症状“[[symptom_033|夜间盗汗]]”可能与[[disease:acute_maxillary_sinusitis:normal|急性上颌窦炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_033|夜间盗汗]]”在混乱的资料中更像是[[disease:acute_upper_respiratory_infection:low|诅咒之气侵蚀]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_034"
+      ],
+      "answer": "常见症状“[[symptom_034|寒战]]”可能与[[disease:acute_pharyngitis:normal|急性咽炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_034|寒战]]”在混乱的资料中更像是[[disease:chronic_obstructive_pulmonary_disease:low|锈蚀的肺门正在闭合]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_035"
+      ],
+      "answer": "常见症状“[[symptom_035|体重下降]]”可能与[[disease:acute_tonsillitis:normal|急性扁桃体炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_035|体重下降]]”在混乱的资料中更像是[[disease:chronic_sinusitis:low|永不散去的颅内回声]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_036"
+      ],
+      "answer": "常见症状“[[symptom_036|体重增加]]”可能与[[disease:acute_laryngitis:normal|急性喉炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_036|体重增加]]”在混乱的资料中更像是[[disease:influenza_unspecified:low|群鸦般的热疫盘踞肺部]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_037"
+      ],
+      "answer": "常见症状“[[symptom_037|水肿]]”可能与[[disease:acute_bronchitis:normal|急性支气管炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_037|水肿]]”在混乱的资料中更像是[[disease:streptococcal_pharyngitis:low|赤色菌群在喉中举行仪式]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_038"
+      ],
+      "answer": "常见症状“[[symptom_038|面部水肿]]”可能与[[disease:pneumonia_unspecified:normal|肺炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_038|面部水肿]]”在混乱的资料中更像是[[disease:gastroesophageal_reflux:low|胃酸是来自深渊的黑潮]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_039"
+      ],
+      "answer": "常见症状“[[symptom_039|下肢水肿]]”可能与[[disease:asthma_unspecified:normal|哮喘，未特指，未伴并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_039|下肢水肿]]”在混乱的资料中更像是[[disease:acute_gastritis:low|胃壁被饥饿火焰灼穿]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_040"
+      ],
+      "answer": "常见症状“[[symptom_040|皮肤瘙痒]]”可能与[[disease:acute_upper_respiratory_infection:normal|急性上呼吸道感染，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_040|皮肤瘙痒]]”在混乱的资料中更像是[[disease:peptic_ulcer_unspecified:low|腹中张开一只无底之眼]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_041"
+      ],
+      "answer": "常见症状“[[symptom_041|皮疹]]”可能与[[disease:chronic_obstructive_pulmonary_disease:normal|慢性阻塞性肺疾病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_041|皮疹]]”在混乱的资料中更像是[[disease:irritable_bowel_syndrome:low|肠道被混沌的低语驱使]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_042"
+      ],
+      "answer": "常见症状“[[symptom_042|红斑]]”可能与[[disease:chronic_sinusitis:normal|慢性鼻窦炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_042|红斑]]”在混乱的资料中更像是[[disease:constipation:low|体内的门被古老符文封死]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_043"
+      ],
+      "answer": "常见症状“[[symptom_043|丘疹]]”可能与[[disease:influenza_unspecified:normal|流行性感冒伴其他呼吸道表现]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_043|丘疹]]”在混乱的资料中更像是[[disease:noninfective_gastroenteritis:low|肠壁渗出不属于此世的液体]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_044"
+      ],
+      "answer": "常见症状“[[symptom_044|风团]]”可能与[[disease:streptococcal_pharyngitis:normal|链球菌性咽炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_044|风团]]”在混乱的资料中更像是[[disease:cholelithiasis:low|胆囊中孕育着黑色石卵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_045"
+      ],
+      "answer": "常见症状“[[symptom_045|水疱]]”可能与[[disease:gastroesophageal_reflux:normal|胃食管反流病，无食管炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_045|水疱]]”在混乱的资料中更像是[[disease:fatty_liver:low|肝脏被油腻的阴影覆盖]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_046"
+      ],
+      "answer": "常见症状“[[symptom_046|脓疱]]”可能与[[disease:acute_gastritis:normal|胃炎，未特指，不伴出血]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_046|脓疱]]”在混乱的资料中更像是[[disease:atopic_dermatitis:low|皮肤下孵化着梦魇的卵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_047"
+      ],
+      "answer": "常见症状“[[symptom_047|脱屑]]”可能与[[disease:peptic_ulcer_unspecified:normal|消化性溃疡，未特指，无出血或穿孔]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_047|脱屑]]”在混乱的资料中更像是[[disease:contact_dermatitis:low|接触过的地方留下诅咒烙印]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_048"
+      ],
+      "answer": "常见症状“[[symptom_048|皮肤干燥]]”可能与[[disease:irritable_bowel_syndrome:normal|肠易激综合征，无腹泻]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_048|皮肤干燥]]”在混乱的资料中更像是[[disease:urticaria:low|皮肤浮起一片红色符文]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_049"
+      ],
+      "answer": "常见症状“[[symptom_049|皮肤脱色]]”可能与[[disease:constipation:normal|便秘，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_049|皮肤脱色]]”在混乱的资料中更像是[[disease:cellulitis:low|腐败的暗影正在皮下扩散]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_050"
+      ],
+      "answer": "常见症状“[[symptom_050|色素沉着]]”可能与[[disease:noninfective_gastroenteritis:normal|非感染性胃肠炎和结肠炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_050|色素沉着]]”在混乱的资料中更像是[[disease:sciatica:low|黑色电流沿脊柱向下爬行]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_051"
+      ],
+      "answer": "常见症状“[[symptom_051|伤口疼痛]]”可能与[[disease:cholelithiasis:normal|胆囊结石，无胆囊炎，无梗阻]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_051|伤口疼痛]]”在混乱的资料中更像是[[disease:low_back_pain:low|脊柱被沉重的黑门压弯]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_052"
+      ],
+      "answer": "常见症状“[[symptom_052|伤口红肿]]”可能与[[disease:fatty_liver:normal|脂肪变性肝，未分类处]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_052|伤口红肿]]”在混乱的资料中更像是[[disease:osteoarthritis_knee:low|膝中骨骼长出锈蚀尖牙]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_053"
+      ],
+      "answer": "常见症状“[[symptom_053|伤口渗液]]”可能与[[disease:atopic_dermatitis:normal|特应性皮炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_053|伤口渗液]]”在混乱的资料中更像是[[disease:rheumatoid_arthritis:low|关节被群聚的灰色虫灵啃咬]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_054"
+      ],
+      "answer": "常见症状“[[symptom_054|眼睛干涩]]”可能与[[disease:contact_dermatitis:normal|未特指的接触性皮炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_054|眼睛干涩]]”在混乱的资料中更像是[[disease:gout:low|关节中结晶出邪神的盐]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_055"
+      ],
+      "answer": "常见症状“[[symptom_055|眼睛发红]]”可能与[[disease:urticaria:normal|荨麻疹，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_055|眼睛发红]]”在混乱的资料中更像是[[disease:neck_pain:low|脖颈被看不见的绳索牵引]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_056"
+      ],
+      "answer": "常见症状“[[symptom_056|眼睛疼痛]]”可能与[[disease:cellulitis:normal|蜂窝织炎，部位未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_056|眼睛疼痛]]”在混乱的资料中更像是[[disease:urinary_tract_infection:low|膀胱中回响着地下祷词]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_057"
+      ],
+      "answer": "常见症状“[[symptom_057|畏光]]”可能与[[disease:sciatica:normal|坐骨神经痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_057|畏光]]”在混乱的资料中更像是[[disease:acute_cystitis:low|膀胱被灼热的红印污染]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_058"
+      ],
+      "answer": "常见症状“[[symptom_058|流泪]]”可能与[[disease:low_back_pain:normal|腰痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_058|流泪]]”在混乱的资料中更像是[[disease:acute_pyelonephritis:low|肾脏成为黑色祭坛]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_059"
+      ],
+      "answer": "常见症状“[[symptom_059|视物模糊]]”可能与[[disease:osteoarthritis_knee:normal|膝关节骨关节炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_059|视物模糊]]”在混乱的资料中更像是[[disease:kidney_stone:low|肾中滚动着来自异界的碎石]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_060"
+      ],
+      "answer": "常见症状“[[symptom_060|视力下降]]”可能与[[disease:rheumatoid_arthritis:normal|类风湿关节炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_060|视力下降]]”在混乱的资料中更像是[[disease:benign_prostatic_hyperplasia:low|前列腺被无名肿物占据]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_061"
+      ],
+      "answer": "常见症状“[[symptom_061|耳鸣]]”可能与[[disease:gout:normal|痛风，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_061|耳鸣]]”在混乱的资料中更像是[[disease:chronic_kidney_disease:low|肾脏正在被缓慢风化]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_062"
+      ],
+      "answer": "常见症状“[[symptom_062|耳痛]]”可能与[[disease:neck_pain:normal|颈痛]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_062|耳痛]]”在混乱的资料中更像是[[disease:vertigo:low|世界正在围绕裂隙旋转]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_063"
+      ],
+      "answer": "常见症状“[[symptom_063|听力下降]]”可能与[[disease:urinary_tract_infection:normal|尿路感染，部位未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_063|听力下降]]”在混乱的资料中更像是[[disease:fever_unspecified:low|额头燃烧着不属于太阳的火]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_064"
+      ],
+      "answer": "常见症状“[[symptom_064|耳闷]]”可能与[[disease:acute_cystitis:normal|急性膀胱炎，无血尿]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_064|耳闷]]”在混乱的资料中更像是[[disease:cough:low|肺部在咳出黑色回声]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_065"
+      ],
+      "answer": "常见症状“[[symptom_065|鼻出血]]”可能与[[disease:acute_pyelonephritis:normal|急性肾盂肾炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_065|鼻出血]]”在混乱的资料中更像是[[disease:headache_unspecified:low|颅骨内回荡着永恒钟声]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_066"
+      ],
+      "answer": "常见症状“[[symptom_066|牙痛]]”可能与[[disease:kidney_stone:normal|肾结石]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_066|牙痛]]”在混乱的资料中更像是[[disease:nausea_vomiting:low|胃中翻涌着不洁的海]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_067"
+      ],
+      "answer": "常见症状“[[symptom_067|面部疼痛]]”可能与[[disease:benign_prostatic_hyperplasia:normal|良性前列腺增生，无下尿路症状]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_067|面部疼痛]]”在混乱的资料中更像是[[disease:chest_pain:low|胸腔传来来自墓穴的敲击]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_068"
+      ],
+      "answer": "常见症状“[[symptom_068|颈部疼痛]]”可能与[[disease:chronic_kidney_disease:normal|慢性肾脏病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_068|颈部疼痛]]”在混乱的资料中更像是[[disease:soft_tissue_contusion:low|无形之手撕裂了皮下组织]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_069"
+      ],
+      "answer": "常见症状“[[symptom_069|颈部僵硬]]”可能与[[disease:vertigo:normal|头晕和眩晕]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_069|颈部僵硬]]”在混乱的资料中更像是[[disease:covid19:low|冠状病毒化作黑色王冠]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_070"
+      ],
+      "answer": "常见症状“[[symptom_070|肩痛]]”可能与[[disease:fever_unspecified:normal|发热，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_070|肩痛]]”在混乱的资料中更像是[[disease:infectious_gastroenteritis:low|腹中滋生来自疫界的虫群]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_071"
+      ],
+      "answer": "常见症状“[[symptom_071|肩部活动受限]]”可能与[[disease:cough:normal|咳嗽，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_071|肩部活动受限]]”在混乱的资料中更像是[[disease:herpes_zoster:low|皮肤上爬过一条燃烧的蛇]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_072"
+      ],
+      "answer": "常见症状“[[symptom_072|背部疼痛]]”可能与[[disease:headache_unspecified:normal|头痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_072|背部疼痛]]”在混乱的资料中更像是[[disease:candidiasis:low|白色菌丝在体内建立巢穴]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_073"
+      ],
+      "answer": "常见症状“[[symptom_073|腰部僵硬]]”可能与[[disease:nausea_vomiting:normal|恶心伴呕吐，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_073|腰部僵硬]]”在混乱的资料中更像是[[disease:type2_diabetes:low|血液变成甜腻的献祭蜜浆]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_074"
+      ],
+      "answer": "常见症状“[[symptom_074|关节疼痛]]”可能与[[disease:chest_pain:normal|胸痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_074|关节疼痛]]”在混乱的资料中更像是[[disease:type1_diabetes:low|胰岛被饥饿之神吞噬]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_075"
+      ],
+      "answer": "常见症状“[[symptom_075|关节肿胀]]”可能与[[disease:soft_tissue_contusion:normal|胸部挫伤，未特指，初次就诊]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_075|关节肿胀]]”在混乱的资料中更像是[[disease:hypothyroidism:low|时间在体内逐渐冻结]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_076"
+      ],
+      "answer": "常见症状“[[symptom_076|关节僵硬]]”可能与[[disease:covid19:normal|新型冠状病毒感染]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_076|关节僵硬]]”在混乱的资料中更像是[[disease:hyperthyroidism:low|体内燃起无法熄灭的星火]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_077"
+      ],
+      "answer": "常见症状“[[symptom_077|关节发热]]”可能与[[disease:infectious_gastroenteritis:normal|感染性胃肠炎和结肠炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_077|关节发热]]”在混乱的资料中更像是[[disease:hyperlipidemia:low|血管漂浮着贪食的油之灵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_078"
+      ],
+      "answer": "常见症状“[[symptom_078|肌肉酸痛]]”可能与[[disease:herpes_zoster:normal|带状疱疹，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_078|肌肉酸痛]]”在混乱的资料中更像是[[disease:obesity:low|肉身被无底深渊拖拽]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_079"
+      ],
+      "answer": "常见症状“[[symptom_079|肌肉无力]]”可能与[[disease:candidiasis:normal|念珠菌病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_079|肌肉无力]]”在混乱的资料中更像是[[disease:vitamin_d_deficiency:low|太阳的碎片已从骨中消失]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_080"
+      ],
+      "answer": "常见症状“[[symptom_080|肢体麻木]]”可能与[[disease:type2_diabetes:normal|2型糖尿病，无并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_080|肢体麻木]]”在混乱的资料中更像是[[disease:generalized_anxiety:low|无数细小的眼睛在脑内睁开]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_081"
+      ],
+      "answer": "常见症状“[[symptom_081|手脚发麻]]”可能与[[disease:type1_diabetes:normal|1型糖尿病，无并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_081|手脚发麻]]”在混乱的资料中更像是[[disease:major_depressive_disorder:low|灵魂沉入没有光的井底]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_082"
+      ],
+      "answer": "常见症状“[[symptom_082|针刺感]]”可能与[[disease:hypothyroidism:normal|甲状腺功能减退，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_082|针刺感]]”在混乱的资料中更像是[[disease:insomnia_disorder:low|梦魇拒绝让意识入睡]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_083"
+      ],
+      "answer": "常见症状“[[symptom_083|烧灼感]]”可能与[[disease:hyperthyroidism:normal|甲状腺毒症，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_083|烧灼感]]”在混乱的资料中更像是[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_084"
+      ],
+      "answer": "常见症状“[[symptom_084|触觉减退]]”可能与[[disease:hyperlipidemia:normal|高脂血症，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_084|触觉减退]]”在混乱的资料中更像是[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_085"
+      ],
+      "answer": "常见症状“[[symptom_085|步态不稳]]”可能与[[disease:obesity:normal|肥胖，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_085|步态不稳]]”在混乱的资料中更像是[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_086"
+      ],
+      "answer": "常见症状“[[symptom_086|协调障碍]]”可能与[[disease:vitamin_d_deficiency:normal|维生素D缺乏，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_086|协调障碍]]”在混乱的资料中更像是[[disease:tension_headache:low|无形绞索缠绕意识]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_087"
+      ],
+      "answer": "常见症状“[[symptom_087|震颤]]”可能与[[disease:generalized_anxiety:normal|广泛性焦虑障碍]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_087|震颤]]”在混乱的资料中更像是[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_088"
+      ],
+      "answer": "常见症状“[[symptom_088|抽搐]]”可能与[[disease:major_depressive_disorder:normal|重性抑郁障碍，单次发作，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_088|抽搐]]”在混乱的资料中更像是[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_089"
+      ],
+      "answer": "常见症状“[[symptom_089|晕厥]]”可能与[[disease:insomnia_disorder:normal|原发性失眠]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_089|晕厥]]”在混乱的资料中更像是[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_090"
+      ],
+      "answer": "常见症状“[[symptom_090|意识模糊]]”可能与[[disease:acute_stress_disorder:normal|急性应激障碍]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_090|意识模糊]]”在混乱的资料中更像是[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_091"
+      ],
+      "answer": "常见症状“[[symptom_091|记忆力减退]]”可能与[[disease:transient_cerebral_ischemic_attack:normal|短暂性脑缺血发作，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_091|记忆力减退]]”在混乱的资料中更像是[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_092"
+      ],
+      "answer": "常见症状“[[symptom_092|注意力不集中]]”可能与[[disease:migraine_unspecified:normal|偏头痛，未特指，不伴持续状态]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_092|注意力不集中]]”在混乱的资料中更像是[[disease:essential_hypertension:low|血压被无形祭司操纵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_093"
+      ],
+      "answer": "常见症状“[[symptom_093|言语含糊]]”可能与[[disease:tension_headache:normal|紧张型头痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_093|言语含糊]]”在混乱的资料中更像是[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_094"
+      ],
+      "answer": "常见症状“[[symptom_094|吞咽障碍]]”可能与[[disease:epilepsy_unspecified:normal|癫痫，未特指，不伴难治性癫痫持续状态]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_094|吞咽障碍]]”在混乱的资料中更像是[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_095"
+      ],
+      "answer": "常见症状“[[symptom_095|面部麻木]]”可能与[[disease:parkinsons_disease:normal|帕金森病，伴运动波动]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_095|面部麻木]]”在混乱的资料中更像是[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_096"
+      ],
+      "answer": "常见症状“[[symptom_096|单侧无力]]”可能与[[disease:alzheimer_disease:normal|阿尔茨海默病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_096|单侧无力]]”在混乱的资料中更像是[[disease:heart_failure:low|心室拒绝再为凡人跳动]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_097"
+      ],
+      "answer": "常见症状“[[symptom_097|手臂无力]]”可能与[[disease:carpal_tunnel_syndrome:normal|右上肢腕管综合征]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_097|手臂无力]]”在混乱的资料中更像是[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_098"
+      ],
+      "answer": "常见症状“[[symptom_098|腿部无力]]”可能与[[disease:benign_positional_vertigo:normal|良性阵发性位置性眩晕，未特指耳]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_098|腿部无力]]”在混乱的资料中更像是[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_099"
+      ],
+      "answer": "常见症状“[[symptom_099|尿频]]”可能与[[disease:essential_hypertension:normal|原发性高血压]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_099|尿频]]”在混乱的资料中更像是[[disease:cerebral_infarction:low|思维之河被暗潮截断]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_100"
+      ],
+      "answer": "常见症状“[[symptom_100|尿急]]”可能与[[disease:hypertensive_crisis:normal|高血压危象，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_100|尿急]]”在混乱的资料中更像是[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_101"
+      ],
+      "answer": "常见症状“[[symptom_101|尿痛]]”可能与[[disease:angina_pectoris:normal|心绞痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_101|尿痛]]”在混乱的资料中更像是[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_102"
+      ],
+      "answer": "常见症状“[[symptom_102|排尿困难]]”可能与[[disease:acute_myocardial_infarction:normal|急性心肌梗死，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_102|排尿困难]]”在混乱的资料中更像是[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_103"
+      ],
+      "answer": "常见症状“[[symptom_103|尿潴留]]”可能与[[disease:heart_failure:normal|心力衰竭，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_103|尿潴留]]”在混乱的资料中更像是[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_104"
+      ],
+      "answer": "常见症状“[[symptom_104|血尿]]”可能与[[disease:atrial_fibrillation:normal|心房颤动，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_104|血尿]]”在混乱的资料中更像是[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_105"
+      ],
+      "answer": "常见症状“[[symptom_105|夜尿增多]]”可能与[[disease:atherosclerotic_heart_disease:normal|动脉粥样硬化性心脏病]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_105|夜尿增多]]”在混乱的资料中更像是[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_106"
+      ],
+      "answer": "常见症状“[[symptom_106|尿失禁]]”可能与[[disease:cerebral_infarction:normal|脑梗死，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_106|尿失禁]]”在混乱的资料中更像是[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_107"
+      ],
+      "answer": "常见症状“[[symptom_107|腰腹绞痛]]”可能与[[disease:varicose_veins:normal|下肢静脉曲张，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_107|腰腹绞痛]]”在混乱的资料中更像是[[disease:pneumonia_unspecified:low|肺泡中滋长异界孢子]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_108"
+      ],
+      "answer": "常见症状“[[symptom_108|阴囊疼痛]]”可能与[[disease:acute_nasopharyngitis:normal|急性鼻咽炎（普通感冒）]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_108|阴囊疼痛]]”在混乱的资料中更像是[[disease:asthma_unspecified:low|窒息之手扼住胸腔]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_109"
+      ],
+      "answer": "常见症状“[[symptom_109|月经不规律]]”可能与[[disease:acute_maxillary_sinusitis:normal|急性上颌窦炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_109|月经不规律]]”在混乱的资料中更像是[[disease:acute_upper_respiratory_infection:low|诅咒之气侵蚀]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_110"
+      ],
+      "answer": "常见症状“[[symptom_110|月经过多]]”可能与[[disease:acute_pharyngitis:normal|急性咽炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_110|月经过多]]”在混乱的资料中更像是[[disease:chronic_obstructive_pulmonary_disease:low|锈蚀的肺门正在闭合]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_111"
+      ],
+      "answer": "常见症状“[[symptom_111|月经量少]]”可能与[[disease:acute_tonsillitis:normal|急性扁桃体炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_111|月经量少]]”在混乱的资料中更像是[[disease:chronic_sinusitis:low|永不散去的颅内回声]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_112"
+      ],
+      "answer": "常见症状“[[symptom_112|痛经]]”可能与[[disease:acute_laryngitis:normal|急性喉炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_112|痛经]]”在混乱的资料中更像是[[disease:influenza_unspecified:low|群鸦般的热疫盘踞肺部]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_113"
+      ],
+      "answer": "常见症状“[[symptom_113|经间期出血]]”可能与[[disease:acute_bronchitis:normal|急性支气管炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_113|经间期出血]]”在混乱的资料中更像是[[disease:streptococcal_pharyngitis:low|赤色菌群在喉中举行仪式]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_114"
+      ],
+      "answer": "常见症状“[[symptom_114|白带增多]]”可能与[[disease:pneumonia_unspecified:normal|肺炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_114|白带增多]]”在混乱的资料中更像是[[disease:gastroesophageal_reflux:low|胃酸是来自深渊的黑潮]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_115"
+      ],
+      "answer": "常见症状“[[symptom_115|外阴瘙痒]]”可能与[[disease:asthma_unspecified:normal|哮喘，未特指，未伴并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_115|外阴瘙痒]]”在混乱的资料中更像是[[disease:acute_gastritis:low|胃壁被饥饿火焰灼穿]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_116"
+      ],
+      "answer": "常见症状“[[symptom_116|性欲减退]]”可能与[[disease:acute_upper_respiratory_infection:normal|急性上呼吸道感染，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_116|性欲减退]]”在混乱的资料中更像是[[disease:peptic_ulcer_unspecified:low|腹中张开一只无底之眼]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_117"
+      ],
+      "answer": "常见症状“[[symptom_117|勃起困难]]”可能与[[disease:chronic_obstructive_pulmonary_disease:normal|慢性阻塞性肺疾病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_117|勃起困难]]”在混乱的资料中更像是[[disease:irritable_bowel_syndrome:low|肠道被混沌的低语驱使]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_118"
+      ],
+      "answer": "常见症状“[[symptom_118|乳房疼痛]]”可能与[[disease:chronic_sinusitis:normal|慢性鼻窦炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_118|乳房疼痛]]”在混乱的资料中更像是[[disease:constipation:low|体内的门被古老符文封死]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_119"
+      ],
+      "answer": "常见症状“[[symptom_119|乳房肿块]]”可能与[[disease:influenza_unspecified:normal|流行性感冒伴其他呼吸道表现]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_119|乳房肿块]]”在混乱的资料中更像是[[disease:noninfective_gastroenteritis:low|肠壁渗出不属于此世的液体]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_120"
+      ],
+      "answer": "常见症状“[[symptom_120|潮热]]”可能与[[disease:streptococcal_pharyngitis:normal|链球菌性咽炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_120|潮热]]”在混乱的资料中更像是[[disease:cholelithiasis:low|胆囊中孕育着黑色石卵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_121"
+      ],
+      "answer": "常见症状“[[symptom_121|盗汗]]”可能与[[disease:gastroesophageal_reflux:normal|胃食管反流病，无食管炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_121|盗汗]]”在混乱的资料中更像是[[disease:fatty_liver:low|肝脏被油腻的阴影覆盖]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_122"
+      ],
+      "answer": "常见症状“[[symptom_122|怕冷]]”可能与[[disease:acute_gastritis:normal|胃炎，未特指，不伴出血]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_122|怕冷]]”在混乱的资料中更像是[[disease:atopic_dermatitis:low|皮肤下孵化着梦魇的卵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_123"
+      ],
+      "answer": "常见症状“[[symptom_123|怕热]]”可能与[[disease:peptic_ulcer_unspecified:normal|消化性溃疡，未特指，无出血或穿孔]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_123|怕热]]”在混乱的资料中更像是[[disease:contact_dermatitis:low|接触过的地方留下诅咒烙印]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_124"
+      ],
+      "answer": "常见症状“[[symptom_124|手抖]]”可能与[[disease:irritable_bowel_syndrome:normal|肠易激综合征，无腹泻]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_124|手抖]]”在混乱的资料中更像是[[disease:urticaria:low|皮肤浮起一片红色符文]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_125"
+      ],
+      "answer": "常见症状“[[symptom_125|多汗]]”可能与[[disease:constipation:normal|便秘，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_125|多汗]]”在混乱的资料中更像是[[disease:cellulitis:low|腐败的暗影正在皮下扩散]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_126"
+      ],
+      "answer": "常见症状“[[symptom_126|皮肤变薄]]”可能与[[disease:noninfective_gastroenteritis:normal|非感染性胃肠炎和结肠炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_126|皮肤变薄]]”在混乱的资料中更像是[[disease:sciatica:low|黑色电流沿脊柱向下爬行]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_127"
+      ],
+      "answer": "常见症状“[[symptom_127|毛发脱落]]”可能与[[disease:cholelithiasis:normal|胆囊结石，无胆囊炎，无梗阻]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_127|毛发脱落]]”在混乱的资料中更像是[[disease:low_back_pain:low|脊柱被沉重的黑门压弯]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_128"
+      ],
+      "answer": "常见症状“[[symptom_128|毛发增多]]”可能与[[disease:fatty_liver:normal|脂肪变性肝，未分类处]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_128|毛发增多]]”在混乱的资料中更像是[[disease:osteoarthritis_knee:low|膝中骨骼长出锈蚀尖牙]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_129"
+      ],
+      "answer": "常见症状“[[symptom_129|痤疮]]”可能与[[disease:atopic_dermatitis:normal|特应性皮炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_129|痤疮]]”在混乱的资料中更像是[[disease:rheumatoid_arthritis:low|关节被群聚的灰色虫灵啃咬]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_130"
+      ],
+      "answer": "常见症状“[[symptom_130|脱发]]”可能与[[disease:contact_dermatitis:normal|未特指的接触性皮炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_130|脱发]]”在混乱的资料中更像是[[disease:gout:low|关节中结晶出邪神的盐]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_131"
+      ],
+      "answer": "常见症状“[[symptom_131|伤口愈合慢]]”可能与[[disease:urticaria:normal|荨麻疹，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_131|伤口愈合慢]]”在混乱的资料中更像是[[disease:neck_pain:low|脖颈被看不见的绳索牵引]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_132"
+      ],
+      "answer": "常见症状“[[symptom_132|口渴]]”可能与[[disease:cellulitis:normal|蜂窝织炎，部位未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_132|口渴]]”在混乱的资料中更像是[[disease:urinary_tract_infection:low|膀胱中回响着地下祷词]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_133"
+      ],
+      "answer": "常见症状“[[symptom_133|多饮]]”可能与[[disease:sciatica:normal|坐骨神经痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_133|多饮]]”在混乱的资料中更像是[[disease:acute_cystitis:low|膀胱被灼热的红印污染]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_134"
+      ],
+      "answer": "常见症状“[[symptom_134|多尿]]”可能与[[disease:low_back_pain:normal|腰痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_134|多尿]]”在混乱的资料中更像是[[disease:acute_pyelonephritis:low|肾脏成为黑色祭坛]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_135"
+      ],
+      "answer": "常见症状“[[symptom_135|低血糖感]]”可能与[[disease:osteoarthritis_knee:normal|膝关节骨关节炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_135|低血糖感]]”在混乱的资料中更像是[[disease:kidney_stone:low|肾中滚动着来自异界的碎石]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_136"
+      ],
+      "answer": "常见症状“[[symptom_136|视物重影]]”可能与[[disease:rheumatoid_arthritis:normal|类风湿关节炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_136|视物重影]]”在混乱的资料中更像是[[disease:benign_prostatic_hyperplasia:low|前列腺被无名肿物占据]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_137"
+      ],
+      "answer": "常见症状“[[symptom_137|眼球突出]]”可能与[[disease:gout:normal|痛风，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_137|眼球突出]]”在混乱的资料中更像是[[disease:chronic_kidney_disease:low|肾脏正在被缓慢风化]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_138"
+      ],
+      "answer": "常见症状“[[symptom_138|颈部肿大]]”可能与[[disease:neck_pain:normal|颈痛]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_138|颈部肿大]]”在混乱的资料中更像是[[disease:vertigo:low|世界正在围绕裂隙旋转]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_139"
+      ],
+      "answer": "常见症状“[[symptom_139|声音低沉]]”可能与[[disease:urinary_tract_infection:normal|尿路感染，部位未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_139|声音低沉]]”在混乱的资料中更像是[[disease:fever_unspecified:low|额头燃烧着不属于太阳的火]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_140"
+      ],
+      "answer": "常见症状“[[symptom_140|反应迟钝]]”可能与[[disease:acute_cystitis:normal|急性膀胱炎，无血尿]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_140|反应迟钝]]”在混乱的资料中更像是[[disease:cough:low|肺部在咳出黑色回声]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_141"
+      ],
+      "answer": "常见症状“[[symptom_141|情绪低落]]”可能与[[disease:acute_pyelonephritis:normal|急性肾盂肾炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_141|情绪低落]]”在混乱的资料中更像是[[disease:headache_unspecified:low|颅骨内回荡着永恒钟声]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_142"
+      ],
+      "answer": "常见症状“[[symptom_142|兴趣减退]]”可能与[[disease:kidney_stone:normal|肾结石]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_142|兴趣减退]]”在混乱的资料中更像是[[disease:nausea_vomiting:low|胃中翻涌着不洁的海]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_143"
+      ],
+      "answer": "常见症状“[[symptom_143|自责感]]”可能与[[disease:benign_prostatic_hyperplasia:normal|良性前列腺增生，无下尿路症状]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_143|自责感]]”在混乱的资料中更像是[[disease:chest_pain:low|胸腔传来来自墓穴的敲击]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_144"
+      ],
+      "answer": "常见症状“[[symptom_144|紧张不安]]”可能与[[disease:chronic_kidney_disease:normal|慢性肾脏病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_144|紧张不安]]”在混乱的资料中更像是[[disease:soft_tissue_contusion:low|无形之手撕裂了皮下组织]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_145"
+      ],
+      "answer": "常见症状“[[symptom_145|坐立不安]]”可能与[[disease:vertigo:normal|头晕和眩晕]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_145|坐立不安]]”在混乱的资料中更像是[[disease:covid19:low|冠状病毒化作黑色王冠]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_146"
+      ],
+      "answer": "常见症状“[[symptom_146|易怒]]”可能与[[disease:fever_unspecified:normal|发热，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_146|易怒]]”在混乱的资料中更像是[[disease:infectious_gastroenteritis:low|腹中滋生来自疫界的虫群]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_147"
+      ],
+      "answer": "常见症状“[[symptom_147|情绪波动]]”可能与[[disease:cough:normal|咳嗽，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_147|情绪波动]]”在混乱的资料中更像是[[disease:herpes_zoster:low|皮肤上爬过一条燃烧的蛇]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_148"
+      ],
+      "answer": "常见症状“[[symptom_148|惊恐发作]]”可能与[[disease:headache_unspecified:normal|头痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_148|惊恐发作]]”在混乱的资料中更像是[[disease:candidiasis:low|白色菌丝在体内建立巢穴]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_149"
+      ],
+      "answer": "常见症状“[[symptom_149|强迫思维]]”可能与[[disease:nausea_vomiting:normal|恶心伴呕吐，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_149|强迫思维]]”在混乱的资料中更像是[[disease:type2_diabetes:low|血液变成甜腻的献祭蜜浆]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_150"
+      ],
+      "answer": "常见症状“[[symptom_150|睡眠过多]]”可能与[[disease:chest_pain:normal|胸痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_150|睡眠过多]]”在混乱的资料中更像是[[disease:type1_diabetes:low|胰岛被饥饿之神吞噬]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_151"
+      ],
+      "answer": "常见症状“[[symptom_151|早醒]]”可能与[[disease:soft_tissue_contusion:normal|胸部挫伤，未特指，初次就诊]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_151|早醒]]”在混乱的资料中更像是[[disease:hypothyroidism:low|时间在体内逐渐冻结]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_152"
+      ],
+      "answer": "常见症状“[[symptom_152|噩梦]]”可能与[[disease:covid19:normal|新型冠状病毒感染]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_152|噩梦]]”在混乱的资料中更像是[[disease:hyperthyroidism:low|体内燃起无法熄灭的星火]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_153"
+      ],
+      "answer": "常见症状“[[symptom_153|注意力涣散]]”可能与[[disease:infectious_gastroenteritis:normal|感染性胃肠炎和结肠炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_153|注意力涣散]]”在混乱的资料中更像是[[disease:hyperlipidemia:low|血管漂浮着贪食的油之灵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_154"
+      ],
+      "answer": "常见症状“[[symptom_154|疲劳感]]”可能与[[disease:herpes_zoster:normal|带状疱疹，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_154|疲劳感]]”在混乱的资料中更像是[[disease:obesity:low|肉身被无底深渊拖拽]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_155"
+      ],
+      "answer": "常见症状“[[symptom_155|晨僵]]”可能与[[disease:candidiasis:normal|念珠菌病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_155|晨僵]]”在混乱的资料中更像是[[disease:vitamin_d_deficiency:low|太阳的碎片已从骨中消失]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_156"
+      ],
+      "answer": "常见症状“[[symptom_156|活动后疼痛]]”可能与[[disease:type2_diabetes:normal|2型糖尿病，无并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_156|活动后疼痛]]”在混乱的资料中更像是[[disease:generalized_anxiety:low|无数细小的眼睛在脑内睁开]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_157"
+      ],
+      "answer": "常见症状“[[symptom_157|静息痛]]”可能与[[disease:type1_diabetes:normal|1型糖尿病，无并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_157|静息痛]]”在混乱的资料中更像是[[disease:major_depressive_disorder:low|灵魂沉入没有光的井底]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_158"
+      ],
+      "answer": "常见症状“[[symptom_158|夜间疼痛]]”可能与[[disease:hypothyroidism:normal|甲状腺功能减退，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_158|夜间疼痛]]”在混乱的资料中更像是[[disease:insomnia_disorder:low|梦魇拒绝让意识入睡]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_159"
+      ],
+      "answer": "常见症状“[[symptom_159|间歇性跛行]]”可能与[[disease:hyperthyroidism:normal|甲状腺毒症，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_159|间歇性跛行]]”在混乱的资料中更像是[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_160"
+      ],
+      "answer": "常见症状“[[symptom_160|肢端发冷]]”可能与[[disease:hyperlipidemia:normal|高脂血症，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_160|肢端发冷]]”在混乱的资料中更像是[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_161"
+      ],
+      "answer": "常见症状“[[symptom_161|伤口麻木]]”可能与[[disease:obesity:normal|肥胖，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_161|伤口麻木]]”在混乱的资料中更像是[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_162"
+      ],
+      "answer": "常见症状“[[symptom_162|皮下结节]]”可能与[[disease:vitamin_d_deficiency:normal|维生素D缺乏，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_162|皮下结节]]”在混乱的资料中更像是[[disease:tension_headache:low|无形绞索缠绕意识]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_163"
+      ],
+      "answer": "常见症状“[[symptom_163|淋巴结肿大]]”可能与[[disease:generalized_anxiety:normal|广泛性焦虑障碍]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_163|淋巴结肿大]]”在混乱的资料中更像是[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_164"
+      ],
+      "answer": "常见症状“[[symptom_164|脖子肿块]]”可能与[[disease:major_depressive_disorder:normal|重性抑郁障碍，单次发作，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_164|脖子肿块]]”在混乱的资料中更像是[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_165"
+      ],
+      "answer": "常见症状“[[symptom_165|腋窝肿块]]”可能与[[disease:insomnia_disorder:normal|原发性失眠]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_165|腋窝肿块]]”在混乱的资料中更像是[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_166"
+      ],
+      "answer": "常见症状“[[symptom_166|腹股沟肿块]]”可能与[[disease:acute_stress_disorder:normal|急性应激障碍]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_166|腹股沟肿块]]”在混乱的资料中更像是[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_167"
+      ],
+      "answer": "常见症状“[[symptom_167|肝区不适]]”可能与[[disease:transient_cerebral_ischemic_attack:normal|短暂性脑缺血发作，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_167|肝区不适]]”在混乱的资料中更像是[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_168"
+      ],
+      "answer": "常见症状“[[symptom_168|右上腹痛]]”可能与[[disease:migraine_unspecified:normal|偏头痛，未特指，不伴持续状态]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_168|右上腹痛]]”在混乱的资料中更像是[[disease:essential_hypertension:low|血压被无形祭司操纵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_169"
+      ],
+      "answer": "常见症状“[[symptom_169|左上腹痛]]”可能与[[disease:tension_headache:normal|紧张型头痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_169|左上腹痛]]”在混乱的资料中更像是[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_170"
+      ],
+      "answer": "常见症状“[[symptom_170|黄疸]]”可能与[[disease:epilepsy_unspecified:normal|癫痫，未特指，不伴难治性癫痫持续状态]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_170|黄疸]]”在混乱的资料中更像是[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_171"
+      ],
+      "answer": "常见症状“[[symptom_171|眼白发黄]]”可能与[[disease:parkinsons_disease:normal|帕金森病，伴运动波动]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_171|眼白发黄]]”在混乱的资料中更像是[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_172"
+      ],
+      "answer": "常见症状“[[symptom_172|黑便]]”可能与[[disease:alzheimer_disease:normal|阿尔茨海默病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_172|黑便]]”在混乱的资料中更像是[[disease:heart_failure:low|心室拒绝再为凡人跳动]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_173"
+      ],
+      "answer": "常见症状“[[symptom_173|便血]]”可能与[[disease:carpal_tunnel_syndrome:normal|右上肢腕管综合征]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_173|便血]]”在混乱的资料中更像是[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_174"
+      ],
+      "answer": "常见症状“[[symptom_174|黏液便]]”可能与[[disease:benign_positional_vertigo:normal|良性阵发性位置性眩晕，未特指耳]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_174|黏液便]]”在混乱的资料中更像是[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_175"
+      ],
+      "answer": "常见症状“[[symptom_175|里急后重]]”可能与[[disease:essential_hypertension:normal|原发性高血压]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_175|里急后重]]”在混乱的资料中更像是[[disease:cerebral_infarction:low|思维之河被暗潮截断]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_176"
+      ],
+      "answer": "常见症状“[[symptom_176|排便不尽]]”可能与[[disease:hypertensive_crisis:normal|高血压危象，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_176|排便不尽]]”在混乱的资料中更像是[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_177"
+      ],
+      "answer": "常见症状“[[symptom_177|肛门疼痛]]”可能与[[disease:angina_pectoris:normal|心绞痛，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_177|肛门疼痛]]”在混乱的资料中更像是[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_178"
+      ],
+      "answer": "常见症状“[[symptom_178|肛门瘙痒]]”可能与[[disease:acute_myocardial_infarction:normal|急性心肌梗死，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_178|肛门瘙痒]]”在混乱的资料中更像是[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_179"
+      ],
+      "answer": "常见症状“[[symptom_179|肛门出血]]”可能与[[disease:heart_failure:normal|心力衰竭，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_179|肛门出血]]”在混乱的资料中更像是[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_180"
+      ],
+      "answer": "常见症状“[[symptom_180|皮肤苍白]]”可能与[[disease:atrial_fibrillation:normal|心房颤动，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_180|皮肤苍白]]”在混乱的资料中更像是[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_181"
+      ],
+      "answer": "常见症状“[[symptom_181|口唇发绀]]”可能与[[disease:atherosclerotic_heart_disease:normal|动脉粥样硬化性心脏病]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_181|口唇发绀]]”在混乱的资料中更像是[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_182"
+      ],
+      "answer": "常见症状“[[symptom_182|指甲脆裂]]”可能与[[disease:cerebral_infarction:normal|脑梗死，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_182|指甲脆裂]]”在混乱的资料中更像是[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_183"
+      ],
+      "answer": "常见症状“[[symptom_183|头发干枯]]”可能与[[disease:varicose_veins:normal|下肢静脉曲张，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_183|头发干枯]]”在混乱的资料中更像是[[disease:pneumonia_unspecified:low|肺泡中滋长异界孢子]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_184"
+      ],
+      "answer": "常见症状“[[symptom_184|骨痛]]”可能与[[disease:acute_nasopharyngitis:normal|急性鼻咽炎（普通感冒）]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_184|骨痛]]”在混乱的资料中更像是[[disease:asthma_unspecified:low|窒息之手扼住胸腔]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_185"
+      ],
+      "answer": "常见症状“[[symptom_185|骨折后疼痛]]”可能与[[disease:acute_maxillary_sinusitis:normal|急性上颌窦炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_185|骨折后疼痛]]”在混乱的资料中更像是[[disease:acute_upper_respiratory_infection:low|诅咒之气侵蚀]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_186"
+      ],
+      "answer": "常见症状“[[symptom_186|活动受限]]”可能与[[disease:acute_pharyngitis:normal|急性咽炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_186|活动受限]]”在混乱的资料中更像是[[disease:chronic_obstructive_pulmonary_disease:low|锈蚀的肺门正在闭合]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_187"
+      ],
+      "answer": "常见症状“[[symptom_187|关节弹响]]”可能与[[disease:acute_tonsillitis:normal|急性扁桃体炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_187|关节弹响]]”在混乱的资料中更像是[[disease:chronic_sinusitis:low|永不散去的颅内回声]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_188"
+      ],
+      "answer": "常见症状“[[symptom_188|足跟痛]]”可能与[[disease:acute_laryngitis:normal|急性喉炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_188|足跟痛]]”在混乱的资料中更像是[[disease:influenza_unspecified:low|群鸦般的热疫盘踞肺部]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_189"
+      ],
+      "answer": "常见症状“[[symptom_189|足底痛]]”可能与[[disease:acute_bronchitis:normal|急性支气管炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_189|足底痛]]”在混乱的资料中更像是[[disease:streptococcal_pharyngitis:low|赤色菌群在喉中举行仪式]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_190"
+      ],
+      "answer": "常见症状“[[symptom_190|手腕痛]]”可能与[[disease:pneumonia_unspecified:normal|肺炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_190|手腕痛]]”在混乱的资料中更像是[[disease:gastroesophageal_reflux:low|胃酸是来自深渊的黑潮]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_191"
+      ],
+      "answer": "常见症状“[[symptom_191|手指僵硬]]”可能与[[disease:asthma_unspecified:normal|哮喘，未特指，未伴并发症]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_191|手指僵硬]]”在混乱的资料中更像是[[disease:acute_gastritis:low|胃壁被饥饿火焰灼穿]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_192"
+      ],
+      "answer": "常见症状“[[symptom_192|手指变形]]”可能与[[disease:acute_upper_respiratory_infection:normal|急性上呼吸道感染，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_192|手指变形]]”在混乱的资料中更像是[[disease:peptic_ulcer_unspecified:low|腹中张开一只无底之眼]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_193"
+      ],
+      "answer": "常见症状“[[symptom_193|小腿抽筋]]”可能与[[disease:chronic_obstructive_pulmonary_disease:normal|慢性阻塞性肺疾病，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_193|小腿抽筋]]”在混乱的资料中更像是[[disease:irritable_bowel_syndrome:low|肠道被混沌的低语驱使]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_194"
+      ],
+      "answer": "常见症状“[[symptom_194|腿部沉重]]”可能与[[disease:chronic_sinusitis:normal|慢性鼻窦炎，未特指]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_194|腿部沉重]]”在混乱的资料中更像是[[disease:constipation:low|体内的门被古老符文封死]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_195"
+      ],
+      "answer": "常见症状“[[symptom_195|静脉曲张]]”可能与[[disease:influenza_unspecified:normal|流行性感冒伴其他呼吸道表现]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_195|静脉曲张]]”在混乱的资料中更像是[[disease:noninfective_gastroenteritis:low|肠壁渗出不属于此世的液体]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_196"
+      ],
+      "answer": "常见症状“[[symptom_196|伤口感染]]”可能与[[disease:streptococcal_pharyngitis:normal|链球菌性咽炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_196|伤口感染]]”在混乱的资料中更像是[[disease:cholelithiasis:low|胆囊中孕育着黑色石卵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_197"
+      ],
+      "answer": "常见症状“[[symptom_197|发冷]]”可能与[[disease:gastroesophageal_reflux:normal|胃食管反流病，无食管炎]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_197|发冷]]”在混乱的资料中更像是[[disease:fatty_liver:low|肝脏被油腻的阴影覆盖]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_198"
+      ],
+      "answer": "常见症状“[[symptom_198|虚弱感]]”可能与[[disease:acute_gastritis:normal|胃炎，未特指，不伴出血]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_198|虚弱感]]”在混乱的资料中更像是[[disease:atopic_dermatitis:low|皮肤下孵化着梦魇的卵]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_199"
+      ],
+      "answer": "常见症状“[[symptom_199|脱水感]]”可能与[[disease:peptic_ulcer_unspecified:normal|消化性溃疡，未特指，无出血或穿孔]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_199|脱水感]]”在混乱的资料中更像是[[disease:contact_dermatitis:low|接触过的地方留下诅咒烙印]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_200"
+      ],
+      "answer": "常见症状“[[symptom_200|站立头晕]]”可能与[[disease:irritable_bowel_syndrome:normal|肠易激综合征，无腹泻]]有关，需要结合病史、体征和必要检查判断。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "“[[symptom_200|站立头晕]]”在混乱的资料中更像是[[disease:urticaria:low|皮肤浮起一片红色符文]]（异病提示），不能替代正式诊断。"
+    },
+    {
+      "keywords": [
+        "symptom_001",
+        "symptom_002"
+      ],
+      "answer": "“[[symptom_001|乏力]]”合并“[[symptom_002|食欲减退]]”时，优先考虑[[disease:infectious_gastroenteritis:normal|感染性胃肠炎和结肠炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_003",
+        "symptom_004"
+      ],
+      "answer": "“[[symptom_003|恶心]]”合并“[[symptom_004|呕吐]]”时，优先考虑[[disease:herpes_zoster:normal|带状疱疹，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_005",
+        "symptom_006"
+      ],
+      "answer": "“[[symptom_005|腹痛]]”合并“[[symptom_006|腹泻]]”时，优先考虑[[disease:candidiasis:normal|念珠菌病，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_007",
+        "symptom_008"
+      ],
+      "answer": "“[[symptom_007|便秘]]”合并“[[symptom_008|腹胀]]”时，优先考虑[[disease:type2_diabetes:normal|2型糖尿病，无并发症]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:tension_headache:low|无形绞索缠绕意识]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_009",
+        "symptom_010"
+      ],
+      "answer": "“[[symptom_009|反酸]]”合并“[[symptom_010|烧心]]”时，优先考虑[[disease:type1_diabetes:normal|1型糖尿病，无并发症]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_011",
+        "symptom_012"
+      ],
+      "answer": "“[[symptom_011|吞咽困难]]”合并“[[symptom_012|口干]]”时，优先考虑[[disease:hypothyroidism:normal|甲状腺功能减退，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_013",
+        "symptom_014"
+      ],
+      "answer": "“[[symptom_013|口苦]]”合并“[[symptom_014|口腔溃疡]]”时，优先考虑[[disease:hyperthyroidism:normal|甲状腺毒症，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_015",
+        "symptom_016"
+      ],
+      "answer": "“[[symptom_015|牙龈出血]]”合并“[[symptom_016|鼻塞]]”时，优先考虑[[disease:hyperlipidemia:normal|高脂血症，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_017",
+        "symptom_018"
+      ],
+      "answer": "“[[symptom_017|流鼻涕]]”合并“[[symptom_018|打喷嚏]]”时，优先考虑[[disease:obesity:normal|肥胖，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_019",
+        "symptom_020"
+      ],
+      "answer": "“[[symptom_019|鼻痒]]”合并“[[symptom_020|嗅觉减退]]”时，优先考虑[[disease:vitamin_d_deficiency:normal|维生素D缺乏，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:essential_hypertension:low|血压被无形祭司操纵]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_021",
+        "symptom_022"
+      ],
+      "answer": "“[[symptom_021|声音嘶哑]]”合并“[[symptom_022|咽部异物感]]”时，优先考虑[[disease:generalized_anxiety:normal|广泛性焦虑障碍]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_023",
+        "symptom_024"
+      ],
+      "answer": "“[[symptom_023|咽干]]”合并“[[symptom_024|咽痒]]”时，优先考虑[[disease:major_depressive_disorder:normal|重性抑郁障碍，单次发作，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_025",
+        "symptom_026"
+      ],
+      "answer": "“[[symptom_025|胸痛]]”合并“[[symptom_026|胸闷]]”时，优先考虑[[disease:insomnia_disorder:normal|原发性失眠]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_027",
+        "symptom_028"
+      ],
+      "answer": "“[[symptom_027|心悸]]”合并“[[symptom_028|气短]]”时，优先考虑[[disease:acute_stress_disorder:normal|急性应激障碍]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:heart_failure:low|心室拒绝再为凡人跳动]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_029",
+        "symptom_030"
+      ],
+      "answer": "“[[symptom_029|呼吸困难]]”合并“[[symptom_030|喘息]]”时，优先考虑[[disease:transient_cerebral_ischemic_attack:normal|短暂性脑缺血发作，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_031",
+        "symptom_032"
+      ],
+      "answer": "“[[symptom_031|咳痰]]”合并“[[symptom_032|咯血]]”时，优先考虑[[disease:migraine_unspecified:normal|偏头痛，未特指，不伴持续状态]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_033",
+        "symptom_034"
+      ],
+      "answer": "“[[symptom_033|夜间盗汗]]”合并“[[symptom_034|寒战]]”时，优先考虑[[disease:tension_headache:normal|紧张型头痛，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:cerebral_infarction:low|思维之河被暗潮截断]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_035",
+        "symptom_036"
+      ],
+      "answer": "“[[symptom_035|体重下降]]”合并“[[symptom_036|体重增加]]”时，优先考虑[[disease:epilepsy_unspecified:normal|癫痫，未特指，不伴难治性癫痫持续状态]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_037",
+        "symptom_038"
+      ],
+      "answer": "“[[symptom_037|水肿]]”合并“[[symptom_038|面部水肿]]”时，优先考虑[[disease:parkinsons_disease:normal|帕金森病，伴运动波动]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_039",
+        "symptom_040"
+      ],
+      "answer": "“[[symptom_039|下肢水肿]]”合并“[[symptom_040|皮肤瘙痒]]”时，优先考虑[[disease:alzheimer_disease:normal|阿尔茨海默病，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_041",
+        "symptom_042"
+      ],
+      "answer": "“[[symptom_041|皮疹]]”合并“[[symptom_042|红斑]]”时，优先考虑[[disease:carpal_tunnel_syndrome:normal|右上肢腕管综合征]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_043",
+        "symptom_044"
+      ],
+      "answer": "“[[symptom_043|丘疹]]”合并“[[symptom_044|风团]]”时，优先考虑[[disease:benign_positional_vertigo:normal|良性阵发性位置性眩晕，未特指耳]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_045",
+        "symptom_046"
+      ],
+      "answer": "“[[symptom_045|水疱]]”合并“[[symptom_046|脓疱]]”时，优先考虑[[disease:essential_hypertension:normal|原发性高血压]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_047",
+        "symptom_048"
+      ],
+      "answer": "“[[symptom_047|脱屑]]”合并“[[symptom_048|皮肤干燥]]”时，优先考虑[[disease:hypertensive_crisis:normal|高血压危象，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_049",
+        "symptom_050"
+      ],
+      "answer": "“[[symptom_049|皮肤脱色]]”合并“[[symptom_050|色素沉着]]”时，优先考虑[[disease:angina_pectoris:normal|心绞痛，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:pneumonia_unspecified:low|肺泡中滋长异界孢子]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_051",
+        "symptom_052"
+      ],
+      "answer": "“[[symptom_051|伤口疼痛]]”合并“[[symptom_052|伤口红肿]]”时，优先考虑[[disease:acute_myocardial_infarction:normal|急性心肌梗死，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:asthma_unspecified:low|窒息之手扼住胸腔]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_053",
+        "symptom_054"
+      ],
+      "answer": "“[[symptom_053|伤口渗液]]”合并“[[symptom_054|眼睛干涩]]”时，优先考虑[[disease:heart_failure:normal|心力衰竭，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_upper_respiratory_infection:low|诅咒之气侵蚀]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_055",
+        "symptom_056"
+      ],
+      "answer": "“[[symptom_055|眼睛发红]]”合并“[[symptom_056|眼睛疼痛]]”时，优先考虑[[disease:atrial_fibrillation:normal|心房颤动，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:chronic_obstructive_pulmonary_disease:low|锈蚀的肺门正在闭合]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_057",
+        "symptom_058"
+      ],
+      "answer": "“[[symptom_057|畏光]]”合并“[[symptom_058|流泪]]”时，优先考虑[[disease:atherosclerotic_heart_disease:normal|动脉粥样硬化性心脏病]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:chronic_sinusitis:low|永不散去的颅内回声]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_059",
+        "symptom_060"
+      ],
+      "answer": "“[[symptom_059|视物模糊]]”合并“[[symptom_060|视力下降]]”时，优先考虑[[disease:cerebral_infarction:normal|脑梗死，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:influenza_unspecified:low|群鸦般的热疫盘踞肺部]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_061",
+        "symptom_062"
+      ],
+      "answer": "“[[symptom_061|耳鸣]]”合并“[[symptom_062|耳痛]]”时，优先考虑[[disease:varicose_veins:normal|下肢静脉曲张，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:streptococcal_pharyngitis:low|赤色菌群在喉中举行仪式]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_063",
+        "symptom_064"
+      ],
+      "answer": "“[[symptom_063|听力下降]]”合并“[[symptom_064|耳闷]]”时，优先考虑[[disease:acute_nasopharyngitis:normal|急性鼻咽炎（普通感冒）]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:gastroesophageal_reflux:low|胃酸是来自深渊的黑潮]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_065",
+        "symptom_066"
+      ],
+      "answer": "“[[symptom_065|鼻出血]]”合并“[[symptom_066|牙痛]]”时，优先考虑[[disease:acute_maxillary_sinusitis:normal|急性上颌窦炎]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_gastritis:low|胃壁被饥饿火焰灼穿]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_067",
+        "symptom_068"
+      ],
+      "answer": "“[[symptom_067|面部疼痛]]”合并“[[symptom_068|颈部疼痛]]”时，优先考虑[[disease:acute_pharyngitis:normal|急性咽炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:peptic_ulcer_unspecified:low|腹中张开一只无底之眼]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_069",
+        "symptom_070"
+      ],
+      "answer": "“[[symptom_069|颈部僵硬]]”合并“[[symptom_070|肩痛]]”时，优先考虑[[disease:acute_tonsillitis:normal|急性扁桃体炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:irritable_bowel_syndrome:low|肠道被混沌的低语驱使]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_071",
+        "symptom_072"
+      ],
+      "answer": "“[[symptom_071|肩部活动受限]]”合并“[[symptom_072|背部疼痛]]”时，优先考虑[[disease:acute_laryngitis:normal|急性喉炎]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:constipation:low|体内的门被古老符文封死]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_073",
+        "symptom_074"
+      ],
+      "answer": "“[[symptom_073|腰部僵硬]]”合并“[[symptom_074|关节疼痛]]”时，优先考虑[[disease:acute_bronchitis:normal|急性支气管炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:noninfective_gastroenteritis:low|肠壁渗出不属于此世的液体]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_075",
+        "symptom_076"
+      ],
+      "answer": "“[[symptom_075|关节肿胀]]”合并“[[symptom_076|关节僵硬]]”时，优先考虑[[disease:pneumonia_unspecified:normal|肺炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:cholelithiasis:low|胆囊中孕育着黑色石卵]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_077",
+        "symptom_078"
+      ],
+      "answer": "“[[symptom_077|关节发热]]”合并“[[symptom_078|肌肉酸痛]]”时，优先考虑[[disease:asthma_unspecified:normal|哮喘，未特指，未伴并发症]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:fatty_liver:low|肝脏被油腻的阴影覆盖]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_079",
+        "symptom_080"
+      ],
+      "answer": "“[[symptom_079|肌肉无力]]”合并“[[symptom_080|肢体麻木]]”时，优先考虑[[disease:acute_upper_respiratory_infection:normal|急性上呼吸道感染，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:atopic_dermatitis:low|皮肤下孵化着梦魇的卵]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_081",
+        "symptom_082"
+      ],
+      "answer": "“[[symptom_081|手脚发麻]]”合并“[[symptom_082|针刺感]]”时，优先考虑[[disease:chronic_obstructive_pulmonary_disease:normal|慢性阻塞性肺疾病，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:contact_dermatitis:low|接触过的地方留下诅咒烙印]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_083",
+        "symptom_084"
+      ],
+      "answer": "“[[symptom_083|烧灼感]]”合并“[[symptom_084|触觉减退]]”时，优先考虑[[disease:chronic_sinusitis:normal|慢性鼻窦炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:urticaria:low|皮肤浮起一片红色符文]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_085",
+        "symptom_086"
+      ],
+      "answer": "“[[symptom_085|步态不稳]]”合并“[[symptom_086|协调障碍]]”时，优先考虑[[disease:influenza_unspecified:normal|流行性感冒伴其他呼吸道表现]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:cellulitis:low|腐败的暗影正在皮下扩散]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_087",
+        "symptom_088"
+      ],
+      "answer": "“[[symptom_087|震颤]]”合并“[[symptom_088|抽搐]]”时，优先考虑[[disease:streptococcal_pharyngitis:normal|链球菌性咽炎]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:sciatica:low|黑色电流沿脊柱向下爬行]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_089",
+        "symptom_090"
+      ],
+      "answer": "“[[symptom_089|晕厥]]”合并“[[symptom_090|意识模糊]]”时，优先考虑[[disease:gastroesophageal_reflux:normal|胃食管反流病，无食管炎]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:low_back_pain:low|脊柱被沉重的黑门压弯]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_091",
+        "symptom_092"
+      ],
+      "answer": "“[[symptom_091|记忆力减退]]”合并“[[symptom_092|注意力不集中]]”时，优先考虑[[disease:acute_gastritis:normal|胃炎，未特指，不伴出血]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:osteoarthritis_knee:low|膝中骨骼长出锈蚀尖牙]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_093",
+        "symptom_094"
+      ],
+      "answer": "“[[symptom_093|言语含糊]]”合并“[[symptom_094|吞咽障碍]]”时，优先考虑[[disease:peptic_ulcer_unspecified:normal|消化性溃疡，未特指，无出血或穿孔]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:rheumatoid_arthritis:low|关节被群聚的灰色虫灵啃咬]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_095",
+        "symptom_096"
+      ],
+      "answer": "“[[symptom_095|面部麻木]]”合并“[[symptom_096|单侧无力]]”时，优先考虑[[disease:irritable_bowel_syndrome:normal|肠易激综合征，无腹泻]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:gout:low|关节中结晶出邪神的盐]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_097",
+        "symptom_098"
+      ],
+      "answer": "“[[symptom_097|手臂无力]]”合并“[[symptom_098|腿部无力]]”时，优先考虑[[disease:constipation:normal|便秘，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:neck_pain:low|脖颈被看不见的绳索牵引]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_099",
+        "symptom_100"
+      ],
+      "answer": "“[[symptom_099|尿频]]”合并“[[symptom_100|尿急]]”时，优先考虑[[disease:noninfective_gastroenteritis:normal|非感染性胃肠炎和结肠炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:urinary_tract_infection:low|膀胱中回响着地下祷词]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_101",
+        "symptom_102"
+      ],
+      "answer": "“[[symptom_101|尿痛]]”合并“[[symptom_102|排尿困难]]”时，优先考虑[[disease:cholelithiasis:normal|胆囊结石，无胆囊炎，无梗阻]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_cystitis:low|膀胱被灼热的红印污染]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_103",
+        "symptom_104"
+      ],
+      "answer": "“[[symptom_103|尿潴留]]”合并“[[symptom_104|血尿]]”时，优先考虑[[disease:fatty_liver:normal|脂肪变性肝，未分类处]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_pyelonephritis:low|肾脏成为黑色祭坛]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_105",
+        "symptom_106"
+      ],
+      "answer": "“[[symptom_105|夜尿增多]]”合并“[[symptom_106|尿失禁]]”时，优先考虑[[disease:atopic_dermatitis:normal|特应性皮炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:kidney_stone:low|肾中滚动着来自异界的碎石]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_107",
+        "symptom_108"
+      ],
+      "answer": "“[[symptom_107|腰腹绞痛]]”合并“[[symptom_108|阴囊疼痛]]”时，优先考虑[[disease:contact_dermatitis:normal|未特指的接触性皮炎]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:benign_prostatic_hyperplasia:low|前列腺被无名肿物占据]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_109",
+        "symptom_110"
+      ],
+      "answer": "“[[symptom_109|月经不规律]]”合并“[[symptom_110|月经过多]]”时，优先考虑[[disease:urticaria:normal|荨麻疹，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:chronic_kidney_disease:low|肾脏正在被缓慢风化]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_111",
+        "symptom_112"
+      ],
+      "answer": "“[[symptom_111|月经量少]]”合并“[[symptom_112|痛经]]”时，优先考虑[[disease:cellulitis:normal|蜂窝织炎，部位未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:vertigo:low|世界正在围绕裂隙旋转]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_113",
+        "symptom_114"
+      ],
+      "answer": "“[[symptom_113|经间期出血]]”合并“[[symptom_114|白带增多]]”时，优先考虑[[disease:sciatica:normal|坐骨神经痛，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:fever_unspecified:low|额头燃烧着不属于太阳的火]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_115",
+        "symptom_116"
+      ],
+      "answer": "“[[symptom_115|外阴瘙痒]]”合并“[[symptom_116|性欲减退]]”时，优先考虑[[disease:low_back_pain:normal|腰痛，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:cough:low|肺部在咳出黑色回声]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_117",
+        "symptom_118"
+      ],
+      "answer": "“[[symptom_117|勃起困难]]”合并“[[symptom_118|乳房疼痛]]”时，优先考虑[[disease:osteoarthritis_knee:normal|膝关节骨关节炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:headache_unspecified:low|颅骨内回荡着永恒钟声]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_119",
+        "symptom_120"
+      ],
+      "answer": "“[[symptom_119|乳房肿块]]”合并“[[symptom_120|潮热]]”时，优先考虑[[disease:rheumatoid_arthritis:normal|类风湿关节炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:nausea_vomiting:low|胃中翻涌着不洁的海]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_121",
+        "symptom_122"
+      ],
+      "answer": "“[[symptom_121|盗汗]]”合并“[[symptom_122|怕冷]]”时，优先考虑[[disease:gout:normal|痛风，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:chest_pain:low|胸腔传来来自墓穴的敲击]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_123",
+        "symptom_124"
+      ],
+      "answer": "“[[symptom_123|怕热]]”合并“[[symptom_124|手抖]]”时，优先考虑[[disease:neck_pain:normal|颈痛]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:soft_tissue_contusion:low|无形之手撕裂了皮下组织]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_125",
+        "symptom_126"
+      ],
+      "answer": "“[[symptom_125|多汗]]”合并“[[symptom_126|皮肤变薄]]”时，优先考虑[[disease:urinary_tract_infection:normal|尿路感染，部位未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:covid19:low|冠状病毒化作黑色王冠]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_127",
+        "symptom_128"
+      ],
+      "answer": "“[[symptom_127|毛发脱落]]”合并“[[symptom_128|毛发增多]]”时，优先考虑[[disease:acute_cystitis:normal|急性膀胱炎，无血尿]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:infectious_gastroenteritis:low|腹中滋生来自疫界的虫群]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_129",
+        "symptom_130"
+      ],
+      "answer": "“[[symptom_129|痤疮]]”合并“[[symptom_130|脱发]]”时，优先考虑[[disease:acute_pyelonephritis:normal|急性肾盂肾炎]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:herpes_zoster:low|皮肤上爬过一条燃烧的蛇]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_131",
+        "symptom_132"
+      ],
+      "answer": "“[[symptom_131|伤口愈合慢]]”合并“[[symptom_132|口渴]]”时，优先考虑[[disease:kidney_stone:normal|肾结石]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:candidiasis:low|白色菌丝在体内建立巢穴]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_133",
+        "symptom_134"
+      ],
+      "answer": "“[[symptom_133|多饮]]”合并“[[symptom_134|多尿]]”时，优先考虑[[disease:benign_prostatic_hyperplasia:normal|良性前列腺增生，无下尿路症状]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:type2_diabetes:low|血液变成甜腻的献祭蜜浆]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_135",
+        "symptom_136"
+      ],
+      "answer": "“[[symptom_135|低血糖感]]”合并“[[symptom_136|视物重影]]”时，优先考虑[[disease:chronic_kidney_disease:normal|慢性肾脏病，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:type1_diabetes:low|胰岛被饥饿之神吞噬]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_137",
+        "symptom_138"
+      ],
+      "answer": "“[[symptom_137|眼球突出]]”合并“[[symptom_138|颈部肿大]]”时，优先考虑[[disease:vertigo:normal|头晕和眩晕]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:hypothyroidism:low|时间在体内逐渐冻结]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_139",
+        "symptom_140"
+      ],
+      "answer": "“[[symptom_139|声音低沉]]”合并“[[symptom_140|反应迟钝]]”时，优先考虑[[disease:fever_unspecified:normal|发热，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:hyperthyroidism:low|体内燃起无法熄灭的星火]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_141",
+        "symptom_142"
+      ],
+      "answer": "“[[symptom_141|情绪低落]]”合并“[[symptom_142|兴趣减退]]”时，优先考虑[[disease:cough:normal|咳嗽，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:hyperlipidemia:low|血管漂浮着贪食的油之灵]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_143",
+        "symptom_144"
+      ],
+      "answer": "“[[symptom_143|自责感]]”合并“[[symptom_144|紧张不安]]”时，优先考虑[[disease:headache_unspecified:normal|头痛，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:obesity:low|肉身被无底深渊拖拽]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_145",
+        "symptom_146"
+      ],
+      "answer": "“[[symptom_145|坐立不安]]”合并“[[symptom_146|易怒]]”时，优先考虑[[disease:nausea_vomiting:normal|恶心伴呕吐，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:vitamin_d_deficiency:low|太阳的碎片已从骨中消失]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_147",
+        "symptom_148"
+      ],
+      "answer": "“[[symptom_147|情绪波动]]”合并“[[symptom_148|惊恐发作]]”时，优先考虑[[disease:chest_pain:normal|胸痛，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:generalized_anxiety:low|无数细小的眼睛在脑内睁开]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_149",
+        "symptom_150"
+      ],
+      "answer": "“[[symptom_149|强迫思维]]”合并“[[symptom_150|睡眠过多]]”时，优先考虑[[disease:soft_tissue_contusion:normal|胸部挫伤，未特指，初次就诊]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:major_depressive_disorder:low|灵魂沉入没有光的井底]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_151",
+        "symptom_152"
+      ],
+      "answer": "“[[symptom_151|早醒]]”合并“[[symptom_152|噩梦]]”时，优先考虑[[disease:covid19:normal|新型冠状病毒感染]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:insomnia_disorder:low|梦魇拒绝让意识入睡]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_153",
+        "symptom_154"
+      ],
+      "answer": "“[[symptom_153|注意力涣散]]”合并“[[symptom_154|疲劳感]]”时，优先考虑[[disease:infectious_gastroenteritis:normal|感染性胃肠炎和结肠炎，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_stress_disorder:low|创伤在现实表面撕开裂口]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_155",
+        "symptom_156"
+      ],
+      "answer": "“[[symptom_155|晨僵]]”合并“[[symptom_156|活动后疼痛]]”时，优先考虑[[disease:herpes_zoster:normal|带状疱疹，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:transient_cerebral_ischemic_attack:low|意识短暂坠入无光深渊]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_157",
+        "symptom_158"
+      ],
+      "answer": "“[[symptom_157|静息痛]]”合并“[[symptom_158|夜间疼痛]]”时，优先考虑[[disease:candidiasis:normal|念珠菌病，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:migraine_unspecified:low|邪神的独眼凝视颅内]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_159",
+        "symptom_160"
+      ],
+      "answer": "“[[symptom_159|间歇性跛行]]”合并“[[symptom_160|肢端发冷]]”时，优先考虑[[disease:type2_diabetes:normal|2型糖尿病，无并发症]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:tension_headache:low|无形绞索缠绕意识]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_161",
+        "symptom_162"
+      ],
+      "answer": "“[[symptom_161|伤口麻木]]”合并“[[symptom_162|皮下结节]]”时，优先考虑[[disease:type1_diabetes:normal|1型糖尿病，无并发症]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:epilepsy_unspecified:low|灵魂被闪电反复劈开]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_163",
+        "symptom_164"
+      ],
+      "answer": "“[[symptom_163|淋巴结肿大]]”合并“[[symptom_164|脖子肿块]]”时，优先考虑[[disease:hypothyroidism:normal|甲状腺功能减退，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:parkinsons_disease:low|身体被衰朽木偶师操纵]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_165",
+        "symptom_166"
+      ],
+      "answer": "“[[symptom_165|腋窝肿块]]”合并“[[symptom_166|腹股沟肿块]]”时，优先考虑[[disease:hyperthyroidism:normal|甲状腺毒症，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:alzheimer_disease:low|记忆正在被灰色蠕虫啃食]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_167",
+        "symptom_168"
+      ],
+      "answer": "“[[symptom_167|肝区不适]]”合并“[[symptom_168|右上腹痛]]”时，优先考虑[[disease:hyperlipidemia:normal|高脂血症，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:carpal_tunnel_syndrome:low|腕中囚禁着看不见的虫群]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_169",
+        "symptom_170"
+      ],
+      "answer": "“[[symptom_169|左上腹痛]]”合并“[[symptom_170|黄疸]]”时，优先考虑[[disease:obesity:normal|肥胖，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:benign_positional_vertigo:low|重力诅咒使世界翻转]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_171",
+        "symptom_172"
+      ],
+      "answer": "“[[symptom_171|眼白发黄]]”合并“[[symptom_172|黑便]]”时，优先考虑[[disease:vitamin_d_deficiency:normal|维生素D缺乏，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:essential_hypertension:low|血压被无形祭司操纵]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_173",
+        "symptom_174"
+      ],
+      "answer": "“[[symptom_173|便血]]”合并“[[symptom_174|黏液便]]”时，优先考虑[[disease:generalized_anxiety:normal|广泛性焦虑障碍]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:hypertensive_crisis:low|血管中的钟声即将爆裂]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_175",
+        "symptom_176"
+      ],
+      "answer": "“[[symptom_175|里急后重]]”合并“[[symptom_176|排便不尽]]”时，优先考虑[[disease:major_depressive_disorder:normal|重性抑郁障碍，单次发作，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:angina_pectoris:low|胸腔被铁环缓慢收紧]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_177",
+        "symptom_178"
+      ],
+      "answer": "“[[symptom_177|肛门疼痛]]”合并“[[symptom_178|肛门瘙痒]]”时，优先考虑[[disease:insomnia_disorder:normal|原发性失眠]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_myocardial_infarction:low|心脏被献祭般地撕裂]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_179",
+        "symptom_180"
+      ],
+      "answer": "“[[symptom_179|肛门出血]]”合并“[[symptom_180|皮肤苍白]]”时，优先考虑[[disease:acute_stress_disorder:normal|急性应激障碍]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:heart_failure:low|心室拒绝再为凡人跳动]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_181",
+        "symptom_182"
+      ],
+      "answer": "“[[symptom_181|口唇发绀]]”合并“[[symptom_182|指甲脆裂]]”时，优先考虑[[disease:transient_cerebral_ischemic_attack:normal|短暂性脑缺血发作，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:atrial_fibrillation:low|心脏被混沌节拍接管]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_183",
+        "symptom_184"
+      ],
+      "answer": "“[[symptom_183|头发干枯]]”合并“[[symptom_184|骨痛]]”时，优先考虑[[disease:migraine_unspecified:normal|偏头痛，未特指，不伴持续状态]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:atherosclerotic_heart_disease:low|血管内堆积着黑色祭石]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_185",
+        "symptom_186"
+      ],
+      "answer": "“[[symptom_185|骨折后疼痛]]”合并“[[symptom_186|活动受限]]”时，优先考虑[[disease:tension_headache:normal|紧张型头痛，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:cerebral_infarction:low|思维之河被暗潮截断]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_187",
+        "symptom_188"
+      ],
+      "answer": "“[[symptom_187|关节弹响]]”合并“[[symptom_188|足跟痛]]”时，优先考虑[[disease:epilepsy_unspecified:normal|癫痫，未特指，不伴难治性癫痫持续状态]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:varicose_veins:low|腿中爬满盘绕的血蛇]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_189",
+        "symptom_190"
+      ],
+      "answer": "“[[symptom_189|足底痛]]”合并“[[symptom_190|手腕痛]]”时，优先考虑[[disease:parkinsons_disease:normal|帕金森病，伴运动波动]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_nasopharyngitis:low|寒雾侵入肺腑]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_191",
+        "symptom_192"
+      ],
+      "answer": "“[[symptom_191|手指僵硬]]”合并“[[symptom_192|手指变形]]”时，优先考虑[[disease:alzheimer_disease:normal|阿尔茨海默病，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_maxillary_sinusitis:low|颅骨窦穴积满黑雾]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_193",
+        "symptom_194"
+      ],
+      "answer": "“[[symptom_193|小腿抽筋]]”合并“[[symptom_194|腿部沉重]]”时，优先考虑[[disease:carpal_tunnel_syndrome:normal|右上肢腕管综合征]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_pharyngitis:low|深渊低语灼烧咽喉]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_195",
+        "symptom_196"
+      ],
+      "answer": "“[[symptom_195|静脉曲张]]”合并“[[symptom_196|伤口感染]]”时，优先考虑[[disease:benign_positional_vertigo:normal|良性阵发性位置性眩晕，未特指耳]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_tonsillitis:low|扁桃体上的邪印发炎]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_197",
+        "symptom_198"
+      ],
+      "answer": "“[[symptom_197|发冷]]”合并“[[symptom_198|虚弱感]]”时，优先考虑[[disease:essential_hypertension:normal|原发性高血压]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_laryngitis:low|失声诅咒侵蚀声带]]（异病提示），请勿据此自行用药。"
+    },
+    {
+      "keywords": [
+        "symptom_199",
+        "symptom_200"
+      ],
+      "answer": "“[[symptom_199|脱水感]]”合并“[[symptom_200|站立头晕]]”时，优先考虑[[disease:hypertensive_crisis:normal|高血压危象，未特指]]，建议进一步检查。",
+      "corruptedSameAsNormal": false,
+      "corruptedAnswer": "这组症状被错误地指向[[disease:acute_bronchitis:low|黑色枝杈缠住气管]]（异病提示），请勿据此自行用药。"
     }
   ]
 }

@@ -7,9 +7,11 @@ import { scheduleData } from "./ScheduleData.js";
 import { actionBudget } from "./ActionBudget.js";
 import { favorabilityManager, NPC_IDS } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
+import { itemPlacementManager } from "./ItemPlacementManager.js";
+import { medicalCaseManager } from "./MedicalCaseManager.js";
 
-// v7 = v6 plus a data-driven NPC state table (favorability, SAN, flags).
-const SAVE_FORMAT_VERSION = 7;
+// v9 = v8 plus HIS medical case, income, and delayed incident state.
+const SAVE_FORMAT_VERSION = 9;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements"];
@@ -76,6 +78,8 @@ function base64UrlDecode(str) {
  *   [...]    per keyword: 2-byte keyword index + 1-byte collectedDay
  *   [next]   inventory-entry count (0-255)
  *   [...]    per item: 2-byte item index + 1-byte held count
+ *   [v8]     placement count + 1-byte placed flag per world-item placement
+ *   [v9]     2-byte UTF-8 length + medical case/income JSON payload
  */
 class SaveManager {
   constructor() {
@@ -103,12 +107,13 @@ class SaveManager {
   }
 
   async _doInit() {
-    await Promise.all([scheduleData.init(), keywordManager.load(), itemManager.load(), favorabilityManager.load(), npcStateManager.load()]);
+    await Promise.all([scheduleData.init(), keywordManager.load(), itemManager.load(), favorabilityManager.load(), npcStateManager.load(), itemPlacementManager.load(), medicalCaseManager.load()]);
 
     const entries = await scheduleData.loadAllEntries();
     this.hisActors = this._buildActorIndex(entries, "patients");
     this.socialActors = this._buildActorIndex(entries, "contacts");
     this.itemIds = itemManager.allDefIds();
+    this.placementIds = itemPlacementManager.all().map((placement) => placement.id);
     this.keywordIds = [...keywordManager.definitions.keys()];
     this.npcIds = [...new Set(favorabilityManager.npcs.map((npc) => npc.id))];
   }
@@ -151,6 +156,7 @@ class SaveManager {
       }
       return true;
     } catch (err) {
+      medicalCaseManager.endRestore();
       console.error("[SaveManager] Failed to load save string:", err);
       return false;
     }
@@ -236,6 +242,14 @@ class SaveManager {
       bytes.push(npcStateManager.isOffline(id) ? 1 : 0);
     });
 
+    // v8+: conditional world-item placements, in item_placements.json order.
+    bytes.push(clampByte(this.placementIds.length));
+    this.placementIds.forEach((id) => bytes.push(itemPlacementManager.isPlaced(id) ? 1 : 0));
+
+    const medicalState = new TextEncoder().encode(JSON.stringify(medicalCaseManager.snapshot()));
+    push16(bytes, medicalState.length);
+    medicalState.forEach((byte) => bytes.push(byte));
+
     return Uint8Array.from(bytes);
   }
 
@@ -243,7 +257,7 @@ class SaveManager {
     if (!(bytes instanceof Uint8Array) || bytes.length < 7) throw new Error("Invalid save data");
     let i = 0;
     const version = bytes[i++];
-    if (version < 2 || version > 7) throw new Error("Unsupported save version");
+    if (version < 2 || version > 9) throw new Error("Unsupported save version");
     const day = bytes[i++];
     const phase = bytes[i++] === 1 ? "night" : "day";
     // location byte present from v5 onward; advance i unconditionally when present
@@ -313,6 +327,7 @@ class SaveManager {
       if (id) itemEntries.push({ id, count });
     }
 
+    medicalCaseManager.beginRestore();
     gameState.restore({ day, phase, location, energy, mental, physical, satiety, recoverableMentalLoss });
     if (budgetSnapshot) actionBudget.restore(budgetSnapshot);
     keywordManager.restoreCollected(keywordEntries);
@@ -344,6 +359,27 @@ class SaveManager {
       favorabilityManager.restore({ values: favValues, hadPositive });
       npcStateManager.restore({ san: sanValues, offline });
     }
+    if (version >= 8) {
+      const placementCount = bytes[i++] || 0;
+      const placementEntries = [];
+      for (let n = 0; n < placementCount && i < bytes.length; n += 1) {
+        const id = this.placementIds[n];
+        const placed = bytes[i++] === 1;
+        if (id) placementEntries.push({ id, placed });
+      }
+      itemPlacementManager.restore(placementEntries);
+    }
+    if (version >= 9) {
+      const medicalLength = read16(bytes, i);
+      i += 2;
+      if (i + medicalLength > bytes.length) throw new Error("Invalid save data");
+      const medicalBytes = bytes.slice(i, i + medicalLength);
+      i += medicalLength;
+      medicalCaseManager.restore(JSON.parse(new TextDecoder().decode(medicalBytes)));
+    } else {
+      medicalCaseManager.restore();
+    }
+    medicalCaseManager.endRestore();
 
     if (hisActorIdx >= 0 && this.hisActors[hisActorIdx]) {
       const actor = this.hisActors[hisActorIdx];

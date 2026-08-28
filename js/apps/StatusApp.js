@@ -9,6 +9,7 @@ import { actionBudget } from "../core/ActionBudget.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { formatInspectResult, renderInspectResult } from "../core/InspectFormat.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
+import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 
 /**
  * StatusApp - "状态与属性": the protagonist's stats, inventory, and save/load
@@ -96,6 +97,7 @@ export async function launchStatusApp() {
       ${bar("饱腹", s.satiety)}
       <p class="action-budget-row">时间：${Math.floor(phaseMinutes / 60)} 小时 ${phaseMinutes % 60} 分 / ${phaseLimit / 60} 小时${phaseMinutes > phaseLimit ? "（已进入加班/熬夜）" : ""}</p>
       <p class="action-budget-hint">可恢复精神损失：${s.recoverableMentalLoss}</p>
+      <p class="income-row">当前收入：${medicalCaseManager.income} 元</p>
 
       <h4>技能</h4>
       ${skillManager
@@ -240,6 +242,7 @@ export async function launchStatusApp() {
 
   const offGameState = eventBus.on("gamestate:changed", renderStats);
   const offDayNight = eventBus.on("daynight:changed", renderStats);
+  const offMedicalIncome = eventBus.on("medical:incomeChanged", renderStats);
   const offItems = eventBus.on("items:changed", renderItems);
   const offBudget = eventBus.on("actionBudget:changed", renderStats);
   const offNpcState = npcStateManager.onChange(renderNpcStates);
@@ -257,6 +260,7 @@ export async function launchStatusApp() {
     onClose: () => {
       offGameState();
       offDayNight();
+      offMedicalIncome();
       offItems();
       offBudget();
       offNpcState();

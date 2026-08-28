@@ -15,6 +15,7 @@ import { npcStateManager } from "./core/NpcStateManager.js";
 import { favorabilityManager } from "./core/FavorabilityManager.js";
 import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
+import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -181,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     npcStateManager.load(),
     favorabilityManager.load(),
     achievementManager.init(),
+    medicalCaseManager.load(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

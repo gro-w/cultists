@@ -31,6 +31,7 @@ const FADE_MS = 400;
  * defaultRule fields:
  *   dayMin / dayMax  — null or absent = any day
  *   phase            — "day" | "night" | null = any phase
+ *   sanMin / sanMax  — 0–100; null or absent = any sanity (thresholds: 90/70/50/30/15)
  *   priority         — integer, higher number wins when multiple rules match
  *
  * onShow.bgm in dialogue nodes:
@@ -168,10 +169,13 @@ class BgmManager {
 
   _matchDefaultRule() {
     const { day, phase } = gameState;
+    const san = gameState.mental ?? 100;
     const candidates = this.defaultRules.filter((r) => {
       if (r.dayMin != null && day < Number(r.dayMin)) return false;
       if (r.dayMax != null && day > Number(r.dayMax)) return false;
-      if (r.phase != null && r.phase !== phase) return false;
+      if (r.phase  != null && r.phase !== phase) return false;
+      if (r.sanMin != null && san < Number(r.sanMin)) return false;
+      if (r.sanMax != null && san > Number(r.sanMax)) return false;
       return Boolean(r.bgmId);
     });
     if (!candidates.length) return null;

@@ -7,12 +7,17 @@
       "commission": 30.0,
       "price": 300,
       "applicableDiagnosisIds": [
+        "cough",
+        "covid19",
+        "fever_unspecified",
+        "headache_unspecified",
         "infectious_gastroenteritis",
-        "major_depressive_disorder"
+        "influenza_unspecified",
+        "migraine_unspecified",
+        "soft_tissue_contusion"
       ],
-      "prohibitedDiagnosisIds": [
-        "hypothyroidism"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_cough_syrup",
@@ -21,45 +26,17 @@
       "commission": 25.0,
       "price": 250,
       "applicableDiagnosisIds": [
-        "type2_diabetes",
-        "transient_cerebral_ischemic_attack",
-        "acute_myocardial_infarction"
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "insomnia_disorder",
-        "cerebral_infarction"
-      ]
-    },
-    {
-      "id": "med_sleep_aid",
-      "name": "助眠片",
-      "effect": "改善失眠，帮助入睡",
-      "commission": 40.0,
-      "price": 400,
-      "applicableDiagnosisIds": [
-        "hyperthyroidism",
-        "epilepsy_unspecified",
-        "atherosclerotic_heart_disease",
-        "acute_upper_respiratory_infection"
-      ],
-      "prohibitedDiagnosisIds": [
-        "alzheimer_disease"
-      ]
-    },
-    {
-      "id": "med_vertigo_pill",
-      "name": "眩晕宁",
-      "effect": "缓解头晕、眩晕症状",
-      "commission": 35.0,
-      "price": 350,
-      "applicableDiagnosisIds": [
-        "vitamin_d_deficiency",
-        "carpal_tunnel_syndrome"
-      ],
-      "prohibitedDiagnosisIds": [
-        "heart_failure",
-        "streptococcal_pharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_001",
@@ -68,13 +45,29 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "insomnia_disorder",
-        "hypertensive_crisis",
-        "acute_tonsillitis"
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "plantar_fasciitis",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "shoulder_impingement",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "acute_pharyngitis"
-      ]
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_002",
@@ -83,15 +76,25 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
         "migraine_unspecified",
-        "heart_failure",
-        "pneumonia_unspecified",
-        "constipation"
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "chronic_obstructive_pulmonary_disease",
-        "low_back_pain"
-      ]
+        "acute_gastritis",
+        "chronic_kidney_disease",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_003",
@@ -100,12 +103,26 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "parkinsons_disease",
-        "cerebral_infarction"
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "irritable_bowel_syndrome"
-      ]
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_004",
@@ -114,14 +131,28 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "benign_positional_vertigo",
-        "acute_maxillary_sinusitis",
-        "streptococcal_pharyngitis"
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "plantar_fasciitis",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "shoulder_impingement",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "urticaria",
-        "headache_unspecified"
-      ]
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_005",
@@ -130,14 +161,26 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "angina_pectoris",
-        "acute_laryngitis",
-        "peptic_ulcer_unspecified",
-        "low_back_pain"
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "neck_pain"
-      ]
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_006",
@@ -146,13 +189,27 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "atrial_fibrillation",
-        "asthma_unspecified"
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "vertigo",
-        "vitamin_d_deficiency"
-      ]
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_007",
@@ -161,13 +218,26 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "varicose_veins",
-        "chronic_sinusitis",
-        "atopic_dermatitis"
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "covid19"
-      ]
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_008",
@@ -176,15 +246,27 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "acute_pharyngitis",
-        "gastroesophageal_reflux",
-        "cellulitis",
-        "benign_prostatic_hyperplasia"
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
       "prohibitedDiagnosisIds": [
-        "hyperthyroidism",
-        "hypertensive_crisis"
-      ]
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_009",
@@ -193,12 +275,22 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "acute_bronchitis",
-        "irritable_bowel_syndrome"
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_stress_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_010",
@@ -207,14 +299,22 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "acute_upper_respiratory_infection",
-        "cholelithiasis",
-        "neck_pain"
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
       ],
-      "prohibitedDiagnosisIds": [
-        "carpal_tunnel_syndrome",
-        "pneumonia_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "analgesic"
     },
     {
       "id": "med_011",
@@ -223,14 +323,10 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "influenza_unspecified",
-        "contact_dermatitis",
-        "acute_pyelonephritis",
-        "covid19"
+        "acute_nasopharyngitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "atrial_fibrillation"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_012",
@@ -239,13 +335,15 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "acute_gastritis",
-        "sciatica"
+        "acute_nasopharyngitis",
+        "allergic_rhinitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_tonsillitis",
-        "fatty_liver"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
     },
     {
       "id": "med_013",
@@ -254,13 +352,15 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "constipation",
-        "rheumatoid_arthritis",
-        "cough"
+        "acute_nasopharyngitis",
+        "allergic_rhinitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "chronic_sinusitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
     },
     {
       "id": "med_014",
@@ -269,15 +369,14 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "fatty_liver",
-        "urinary_tract_infection",
-        "chest_pain",
-        "obesity"
+        "acute_nasopharyngitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "constipation",
-        "kidney_stone"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
     },
     {
       "id": "med_015",
@@ -286,12 +385,14 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "urticaria",
-        "kidney_stone"
+        "acute_nasopharyngitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "cellulitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiallergic"
     },
     {
       "id": "med_016",
@@ -300,13 +401,11 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "low_back_pain",
-        "vertigo",
-        "type2_diabetes"
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
       ],
-      "prohibitedDiagnosisIds": [
-        "urinary_tract_infection"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_017",
@@ -315,14 +414,10 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "gout",
-        "headache_unspecified",
-        "hyperthyroidism",
-        "epilepsy_unspecified"
+        "bronchiectasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "fever_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_018",
@@ -331,13 +426,10 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "acute_cystitis",
-        "soft_tissue_contusion"
+        "bronchiectasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "infectious_gastroenteritis",
-        "epilepsy_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_019",
@@ -346,13 +438,10 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "benign_prostatic_hyperplasia",
-        "herpes_zoster",
-        "insomnia_disorder"
+        "bronchiectasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "hyperlipidemia"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_020",
@@ -361,15 +450,17 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "fever_unspecified",
-        "type1_diabetes",
-        "migraine_unspecified",
-        "heart_failure"
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "transient_cerebral_ischemic_attack",
-        "acute_nasopharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_021",
@@ -378,12 +469,17 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "nausea_vomiting",
-        "hyperlipidemia"
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "benign_positional_vertigo"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_022",
@@ -392,14 +488,11 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "covid19",
-        "generalized_anxiety",
-        "benign_positional_vertigo"
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
       ],
-      "prohibitedDiagnosisIds": [
-        "atherosclerotic_heart_disease",
-        "acute_gastritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_023",
@@ -408,14 +501,11 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "candidiasis",
-        "acute_stress_disorder",
-        "angina_pectoris",
-        "acute_laryngitis"
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
       ],
-      "prohibitedDiagnosisIds": [
-        "atopic_dermatitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_024",
@@ -424,13 +514,11 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "hypothyroidism",
-        "tension_headache"
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
       ],
-      "prohibitedDiagnosisIds": [
-        "influenza_unspecified",
-        "rheumatoid_arthritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_025",
@@ -439,13 +527,11 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "obesity",
-        "alzheimer_disease",
-        "varicose_veins"
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
       ],
-      "prohibitedDiagnosisIds": [
-        "noninfective_gastroenteritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_026",
@@ -454,15 +540,14 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "major_depressive_disorder",
-        "essential_hypertension",
-        "acute_pharyngitis",
-        "gastroesophageal_reflux"
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "allergic_rhinitis",
+        "chronic_sinusitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "sciatica",
-        "chest_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_027",
@@ -471,12 +556,13 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "transient_cerebral_ischemic_attack",
-        "acute_myocardial_infarction"
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_cystitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_028",
@@ -485,14 +571,13 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "epilepsy_unspecified",
-        "atherosclerotic_heart_disease",
-        "acute_upper_respiratory_infection"
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "cough",
-        "major_depressive_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_029",
@@ -501,14 +586,13 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "carpal_tunnel_syndrome",
+        "acute_maxillary_sinusitis",
         "acute_nasopharyngitis",
-        "influenza_unspecified",
-        "contact_dermatitis"
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "herpes_zoster"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "respiratory"
     },
     {
       "id": "med_030",
@@ -517,13 +601,20 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "hypertensive_crisis",
-        "acute_tonsillitis"
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "obesity",
-        "acute_myocardial_infarction"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_031",
@@ -532,13 +623,18 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "heart_failure",
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
         "pneumonia_unspecified",
-        "constipation"
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "migraine_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_032",
@@ -547,15 +643,19 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "cerebral_infarction",
-        "chronic_obstructive_pulmonary_disease",
-        "fatty_liver",
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
         "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "essential_hypertension",
-        "acute_upper_respiratory_infection"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_033",
@@ -564,12 +664,18 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
         "acute_maxillary_sinusitis",
-        "streptococcal_pharyngitis"
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "cerebral_infarction"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_034",
@@ -578,14 +684,18 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "acute_laryngitis",
-        "peptic_ulcer_unspecified",
-        "low_back_pain"
-      ],
-      "prohibitedDiagnosisIds": [
         "acute_bronchitis",
-        "contact_dermatitis"
-      ]
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_035",
@@ -594,14 +704,18 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "asthma_unspecified",
-        "noninfective_gastroenteritis",
-        "gout",
-        "headache_unspecified"
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "streptococcal_pharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_036",
@@ -610,13 +724,18 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "chronic_sinusitis",
-        "atopic_dermatitis"
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "cholelithiasis",
-        "chronic_kidney_disease"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_037",
@@ -625,13 +744,20 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "gastroesophageal_reflux",
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
         "cellulitis",
-        "benign_prostatic_hyperplasia"
+        "epididymitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "low_back_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_038",
@@ -640,15 +766,18 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "irritable_bowel_syndrome",
-        "osteoarthritis_knee",
-        "fever_unspecified",
-        "type1_diabetes"
-      ],
-      "prohibitedDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
         "acute_pyelonephritis",
-        "hypothyroidism"
-      ]
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_039",
@@ -657,12 +786,18 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "cholelithiasis",
-        "neck_pain"
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "headache_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_040",
@@ -671,14 +806,19 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "contact_dermatitis",
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
         "acute_pyelonephritis",
-        "covid19"
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "candidiasis",
-        "alzheimer_disease"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_041",
@@ -687,14 +827,18 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "sciatica",
-        "chronic_kidney_disease",
-        "candidiasis",
-        "acute_stress_disorder"
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "vitamin_d_deficiency"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_042",
@@ -703,13 +847,18 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "rheumatoid_arthritis",
-        "cough"
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "tension_headache",
-        "acute_pharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_043",
@@ -718,13 +867,13 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "urinary_tract_infection",
-        "chest_pain",
-        "obesity"
+        "acute_cystitis",
+        "acute_pyelonephritis",
+        "cellulitis",
+        "infectious_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "hypertensive_crisis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_044",
@@ -733,15 +882,13 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "kidney_stone",
-        "infectious_gastroenteritis",
-        "major_depressive_disorder",
-        "essential_hypertension"
+        "acute_cystitis",
+        "acute_pyelonephritis",
+        "cellulitis",
+        "infectious_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "varicose_veins",
-        "irritable_bowel_syndrome"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_045",
@@ -750,12 +897,11 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "vertigo",
-        "type2_diabetes"
+        "acute_cystitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "pneumonia_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_046",
@@ -764,14 +910,11 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "headache_unspecified",
-        "hyperthyroidism",
-        "epilepsy_unspecified"
+        "acute_cystitis",
+        "urinary_tract_infection"
       ],
-      "prohibitedDiagnosisIds": [
-        "gastroesophageal_reflux",
-        "neck_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antibacterial"
     },
     {
       "id": "med_047",
@@ -780,14 +923,10 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "soft_tissue_contusion",
-        "vitamin_d_deficiency",
-        "carpal_tunnel_syndrome",
-        "acute_nasopharyngitis"
+        "herpes_zoster"
       ],
-      "prohibitedDiagnosisIds": [
-        "fatty_liver"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
     },
     {
       "id": "med_048",
@@ -796,13 +935,10 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "herpes_zoster",
-        "insomnia_disorder"
+        "herpes_zoster"
       ],
-      "prohibitedDiagnosisIds": [
-        "osteoarthritis_knee",
-        "covid19"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
     },
     {
       "id": "med_049",
@@ -811,13 +947,10 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "type1_diabetes",
-        "migraine_unspecified",
-        "heart_failure"
+        "herpes_zoster"
       ],
-      "prohibitedDiagnosisIds": [
-        "kidney_stone"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
     },
     {
       "id": "med_050",
@@ -826,15 +959,10 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "hyperlipidemia",
-        "parkinsons_disease",
-        "cerebral_infarction",
-        "chronic_obstructive_pulmonary_disease"
+        "influenza_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "nausea_vomiting",
-        "acute_stress_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
     },
     {
       "id": "med_051",
@@ -843,12 +971,10 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "generalized_anxiety",
-        "benign_positional_vertigo"
+        "hepatitis_c"
       ],
-      "prohibitedDiagnosisIds": [
-        "type2_diabetes"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
     },
     {
       "id": "med_052",
@@ -857,14 +983,10 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "acute_stress_disorder",
-        "angina_pectoris",
-        "acute_laryngitis"
+        "chronic_hepatitis_b"
       ],
-      "prohibitedDiagnosisIds": [
-        "generalized_anxiety",
-        "atrial_fibrillation"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antiviral"
     },
     {
       "id": "med_053",
@@ -873,14 +995,10 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "tension_headache",
-        "atrial_fibrillation",
-        "asthma_unspecified",
-        "noninfective_gastroenteritis"
+        "candidiasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "epilepsy_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
     },
     {
       "id": "med_054",
@@ -889,13 +1007,10 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "alzheimer_disease",
-        "varicose_veins"
+        "candidiasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "angina_pectoris",
-        "chronic_sinusitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
     },
     {
       "id": "med_055",
@@ -904,13 +1019,10 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "essential_hypertension",
-        "acute_pharyngitis",
-        "gastroesophageal_reflux"
+        "candidiasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_nasopharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
     },
     {
       "id": "med_056",
@@ -919,15 +1031,10 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "acute_myocardial_infarction",
-        "acute_bronchitis",
-        "irritable_bowel_syndrome",
-        "osteoarthritis_knee"
+        "candidiasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "asthma_unspecified",
-        "cellulitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
     },
     {
       "id": "med_057",
@@ -936,12 +1043,10 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "atherosclerotic_heart_disease",
-        "acute_upper_respiratory_infection"
+        "candidiasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_gastritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
     },
     {
       "id": "med_058",
@@ -950,14 +1055,10 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "acute_nasopharyngitis",
-        "influenza_unspecified",
-        "contact_dermatitis"
+        "candidiasis"
       ],
-      "prohibitedDiagnosisIds": [
-        "atopic_dermatitis",
-        "fever_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antifungal"
     },
     {
       "id": "med_059",
@@ -966,14 +1067,12 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "acute_tonsillitis",
-        "acute_gastritis",
-        "sciatica",
-        "chronic_kidney_disease"
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "rheumatoid_arthritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_060",
@@ -982,13 +1081,12 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "pneumonia_unspecified",
-        "constipation"
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "benign_prostatic_hyperplasia",
-        "hyperlipidemia"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_061",
@@ -997,13 +1095,12 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "chronic_obstructive_pulmonary_disease",
-        "fatty_liver",
-        "urinary_tract_infection"
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "chest_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_062",
@@ -1012,15 +1109,12 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "streptococcal_pharyngitis",
-        "urticaria",
-        "kidney_stone",
-        "infectious_gastroenteritis"
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "type1_diabetes",
-        "benign_positional_vertigo"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_063",
@@ -1029,12 +1123,11 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "peptic_ulcer_unspecified",
-        "low_back_pain"
+        "constipation",
+        "hemorrhoids"
       ],
-      "prohibitedDiagnosisIds": [
-        "major_depressive_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_064",
@@ -1043,14 +1136,10 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "noninfective_gastroenteritis",
-        "gout",
-        "headache_unspecified"
+        "constipation"
       ],
-      "prohibitedDiagnosisIds": [
-        "parkinsons_disease",
-        "acute_laryngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_065",
@@ -1059,14 +1148,11 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "atopic_dermatitis",
-        "acute_cystitis",
-        "soft_tissue_contusion",
-        "vitamin_d_deficiency"
+        "constipation",
+        "hemorrhoids"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_myocardial_infarction"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_066",
@@ -1075,13 +1161,14 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "cellulitis",
-        "benign_prostatic_hyperplasia"
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
       "prohibitedDiagnosisIds": [
-        "acute_maxillary_sinusitis",
-        "noninfective_gastroenteritis"
-      ]
+        "ulcerative_colitis"
+      ],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_067",
@@ -1090,13 +1177,12 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "osteoarthritis_knee",
-        "fever_unspecified",
-        "type1_diabetes"
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_upper_respiratory_infection"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_068",
@@ -1105,15 +1191,15 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "neck_pain",
-        "nausea_vomiting",
-        "hyperlipidemia",
-        "parkinsons_disease"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "peptic_ulcer_unspecified",
-        "acute_cystitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_069",
@@ -1122,12 +1208,15 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "acute_pyelonephritis",
-        "covid19"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "contact_dermatitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_070",
@@ -1136,14 +1225,15 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "chronic_kidney_disease",
-        "candidiasis",
-        "acute_stress_disorder"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "gout",
-        "herpes_zoster"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_071",
@@ -1152,14 +1242,15 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "cough",
-        "hypothyroidism",
-        "tension_headache",
-        "atrial_fibrillation"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "chronic_kidney_disease"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_072",
@@ -1168,13 +1259,15 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "chest_pain",
-        "obesity"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "soft_tissue_contusion",
-        "migraine_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_073",
@@ -1183,13 +1276,15 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "infectious_gastroenteritis",
-        "major_depressive_disorder",
-        "essential_hypertension"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "hypothyroidism"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_074",
@@ -1198,15 +1293,15 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "type2_diabetes",
-        "transient_cerebral_ischemic_attack",
-        "acute_myocardial_infarction",
-        "acute_bronchitis"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "insomnia_disorder",
-        "cerebral_infarction"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_075",
@@ -1215,12 +1310,15 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "hyperthyroidism",
-        "epilepsy_unspecified"
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
       ],
-      "prohibitedDiagnosisIds": [
-        "alzheimer_disease"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_076",
@@ -1229,14 +1327,12 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "vitamin_d_deficiency",
-        "carpal_tunnel_syndrome",
-        "acute_nasopharyngitis"
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "heart_failure",
-        "streptococcal_pharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_077",
@@ -1245,14 +1341,12 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "insomnia_disorder",
-        "hypertensive_crisis",
-        "acute_tonsillitis",
-        "acute_gastritis"
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_pharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_078",
@@ -1261,13 +1355,12 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "migraine_unspecified",
-        "heart_failure"
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "chronic_obstructive_pulmonary_disease",
-        "low_back_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_079",
@@ -1276,13 +1369,12 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "parkinsons_disease",
-        "cerebral_infarction",
-        "chronic_obstructive_pulmonary_disease"
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "irritable_bowel_syndrome"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "gastrointestinal"
     },
     {
       "id": "med_080",
@@ -1291,14 +1383,11 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "benign_positional_vertigo",
-        "acute_maxillary_sinusitis",
-        "streptococcal_pharyngitis",
-        "urticaria"
+        "acute_myocardial_infarction",
+        "angina_pectoris"
       ],
-      "prohibitedDiagnosisIds": [
-        "headache_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_081",
@@ -1307,12 +1396,11 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "angina_pectoris",
-        "acute_laryngitis"
+        "acute_myocardial_infarction",
+        "angina_pectoris"
       ],
-      "prohibitedDiagnosisIds": [
-        "neck_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_082",
@@ -1321,14 +1409,17 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
         "atrial_fibrillation",
-        "asthma_unspecified",
-        "noninfective_gastroenteritis"
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
       "prohibitedDiagnosisIds": [
-        "vertigo",
-        "vitamin_d_deficiency"
-      ]
+        "asthma_unspecified"
+      ],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_083",
@@ -1337,14 +1428,17 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "varicose_veins",
-        "chronic_sinusitis",
-        "atopic_dermatitis",
-        "acute_cystitis"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
       "prohibitedDiagnosisIds": [
-        "covid19"
-      ]
+        "asthma_unspecified"
+      ],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_084",
@@ -1353,13 +1447,15 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "acute_pharyngitis",
-        "gastroesophageal_reflux"
-      ],
-      "prohibitedDiagnosisIds": [
-        "hyperthyroidism",
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
         "hypertensive_crisis"
-      ]
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_085",
@@ -1368,13 +1464,15 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "acute_bronchitis",
-        "irritable_bowel_syndrome",
-        "osteoarthritis_knee"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_stress_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_086",
@@ -1383,15 +1481,15 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "acute_upper_respiratory_infection",
-        "cholelithiasis",
-        "neck_pain",
-        "nausea_vomiting"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "carpal_tunnel_syndrome",
-        "pneumonia_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_087",
@@ -1400,12 +1498,15 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "influenza_unspecified",
-        "contact_dermatitis"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "atrial_fibrillation"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_088",
@@ -1414,14 +1515,15 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "acute_gastritis",
-        "sciatica",
-        "chronic_kidney_disease"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_tonsillitis",
-        "fatty_liver"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_089",
@@ -1430,14 +1532,15 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "constipation",
-        "rheumatoid_arthritis",
-        "cough",
-        "hypothyroidism"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "chronic_sinusitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_090",
@@ -1446,13 +1549,15 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "fatty_liver",
-        "urinary_tract_infection"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "constipation",
-        "kidney_stone"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_091",
@@ -1461,13 +1566,15 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "urticaria",
-        "kidney_stone",
-        "infectious_gastroenteritis"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "cellulitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_092",
@@ -1476,14 +1583,15 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "low_back_pain",
-        "vertigo",
-        "type2_diabetes",
-        "transient_cerebral_ischemic_attack"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "urinary_tract_infection"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_093",
@@ -1492,12 +1600,17 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "gout",
-        "headache_unspecified"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
       "prohibitedDiagnosisIds": [
-        "fever_unspecified"
-      ]
+        "orthostatic_hypotension"
+      ],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_094",
@@ -1506,14 +1619,17 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "acute_cystitis",
-        "soft_tissue_contusion",
-        "vitamin_d_deficiency"
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
       ],
       "prohibitedDiagnosisIds": [
-        "infectious_gastroenteritis",
-        "epilepsy_unspecified"
-      ]
+        "orthostatic_hypotension"
+      ],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_095",
@@ -1522,14 +1638,15 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "benign_prostatic_hyperplasia",
-        "herpes_zoster",
-        "insomnia_disorder",
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
         "hypertensive_crisis"
       ],
-      "prohibitedDiagnosisIds": [
-        "hyperlipidemia"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "cardiovascular"
     },
     {
       "id": "med_096",
@@ -1538,13 +1655,11 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "fever_unspecified",
-        "type1_diabetes"
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
       ],
-      "prohibitedDiagnosisIds": [
-        "transient_cerebral_ischemic_attack",
-        "acute_nasopharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
     },
     {
       "id": "med_097",
@@ -1553,13 +1668,11 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "nausea_vomiting",
-        "hyperlipidemia",
-        "parkinsons_disease"
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
       ],
-      "prohibitedDiagnosisIds": [
-        "benign_positional_vertigo"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
     },
     {
       "id": "med_098",
@@ -1568,15 +1681,11 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "covid19",
-        "generalized_anxiety",
-        "benign_positional_vertigo",
-        "acute_maxillary_sinusitis"
-      ],
-      "prohibitedDiagnosisIds": [
         "atherosclerotic_heart_disease",
-        "acute_gastritis"
-      ]
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
     },
     {
       "id": "med_099",
@@ -1585,12 +1694,11 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "candidiasis",
-        "acute_stress_disorder"
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_laryngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "lipid_lowering"
     },
     {
       "id": "med_100",
@@ -1599,14 +1707,14 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "hypothyroidism",
-        "tension_headache",
-        "atrial_fibrillation"
+        "polycystic_ovary_syndrome",
+        "type1_diabetes",
+        "type2_diabetes"
       ],
       "prohibitedDiagnosisIds": [
-        "influenza_unspecified",
-        "rheumatoid_arthritis"
-      ]
+        "chronic_kidney_disease"
+      ],
+      "categoryId": "antidiabetic"
     },
     {
       "id": "med_101",
@@ -1615,14 +1723,11 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "obesity",
-        "alzheimer_disease",
-        "varicose_veins",
-        "chronic_sinusitis"
+        "type1_diabetes",
+        "type2_diabetes"
       ],
-      "prohibitedDiagnosisIds": [
-        "noninfective_gastroenteritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
     },
     {
       "id": "med_102",
@@ -1631,13 +1736,11 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "major_depressive_disorder",
-        "essential_hypertension"
+        "type1_diabetes",
+        "type2_diabetes"
       ],
-      "prohibitedDiagnosisIds": [
-        "sciatica",
-        "chest_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
     },
     {
       "id": "med_103",
@@ -1646,13 +1749,11 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "transient_cerebral_ischemic_attack",
-        "acute_myocardial_infarction",
-        "acute_bronchitis"
+        "type1_diabetes",
+        "type2_diabetes"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_cystitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
     },
     {
       "id": "med_104",
@@ -1661,15 +1762,11 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "epilepsy_unspecified",
-        "atherosclerotic_heart_disease",
-        "acute_upper_respiratory_infection",
-        "cholelithiasis"
+        "type1_diabetes",
+        "type2_diabetes"
       ],
-      "prohibitedDiagnosisIds": [
-        "cough",
-        "major_depressive_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
     },
     {
       "id": "med_105",
@@ -1678,12 +1775,11 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "carpal_tunnel_syndrome",
-        "acute_nasopharyngitis"
+        "type1_diabetes",
+        "type2_diabetes"
       ],
-      "prohibitedDiagnosisIds": [
-        "herpes_zoster"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "antidiabetic"
     },
     {
       "id": "med_106",
@@ -1692,14 +1788,13 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "hypertensive_crisis",
-        "acute_tonsillitis",
-        "acute_gastritis"
+        "type1_diabetes",
+        "type2_diabetes"
       ],
       "prohibitedDiagnosisIds": [
-        "obesity",
-        "acute_myocardial_infarction"
-      ]
+        "chronic_kidney_disease"
+      ],
+      "categoryId": "antidiabetic"
     },
     {
       "id": "med_107",
@@ -1708,14 +1803,10 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "heart_failure",
-        "pneumonia_unspecified",
-        "constipation",
-        "rheumatoid_arthritis"
+        "hypothyroidism"
       ],
-      "prohibitedDiagnosisIds": [
-        "migraine_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "thyroid"
     },
     {
       "id": "med_108",
@@ -1724,13 +1815,10 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "cerebral_infarction",
-        "chronic_obstructive_pulmonary_disease"
+        "hyperthyroidism"
       ],
-      "prohibitedDiagnosisIds": [
-        "essential_hypertension",
-        "acute_upper_respiratory_infection"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "thyroid"
     },
     {
       "id": "med_109",
@@ -1739,13 +1827,10 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "acute_maxillary_sinusitis",
-        "streptococcal_pharyngitis",
-        "urticaria"
+        "hyperthyroidism"
       ],
-      "prohibitedDiagnosisIds": [
-        "cerebral_infarction"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "thyroid"
     },
     {
       "id": "med_110",
@@ -1754,15 +1839,15 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "acute_laryngitis",
-        "peptic_ulcer_unspecified",
-        "low_back_pain",
-        "vertigo"
-      ],
-      "prohibitedDiagnosisIds": [
         "acute_bronchitis",
-        "contact_dermatitis"
-      ]
+        "alopecia_areata",
+        "asthma_unspecified",
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
     },
     {
       "id": "med_111",
@@ -1771,12 +1856,14 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
+        "acute_bronchitis",
         "asthma_unspecified",
-        "noninfective_gastroenteritis"
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "streptococcal_pharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
     },
     {
       "id": "med_112",
@@ -1785,14 +1872,14 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "chronic_sinusitis",
+        "acute_bronchitis",
+        "asthma_unspecified",
         "atopic_dermatitis",
-        "acute_cystitis"
+        "cellulitis",
+        "rheumatoid_arthritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "cholelithiasis",
-        "chronic_kidney_disease"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
     },
     {
       "id": "med_113",
@@ -1801,14 +1888,10 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "gastroesophageal_reflux",
-        "cellulitis",
-        "benign_prostatic_hyperplasia",
-        "herpes_zoster"
+        "rheumatoid_arthritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "low_back_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
     },
     {
       "id": "med_114",
@@ -1817,13 +1900,10 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "irritable_bowel_syndrome",
-        "osteoarthritis_knee"
+        "rheumatoid_arthritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_pyelonephritis",
-        "hypothyroidism"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
     },
     {
       "id": "med_115",
@@ -1832,13 +1912,10 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "cholelithiasis",
-        "neck_pain",
-        "nausea_vomiting"
+        "rheumatoid_arthritis"
       ],
-      "prohibitedDiagnosisIds": [
-        "headache_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "steroid_immunomodulator"
     },
     {
       "id": "med_116",
@@ -1847,15 +1924,10 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "contact_dermatitis",
-        "acute_pyelonephritis",
-        "covid19",
-        "generalized_anxiety"
+        "gout"
       ],
-      "prohibitedDiagnosisIds": [
-        "candidiasis",
-        "alzheimer_disease"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
     },
     {
       "id": "med_117",
@@ -1864,12 +1936,10 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "sciatica",
-        "chronic_kidney_disease"
+        "gout"
       ],
-      "prohibitedDiagnosisIds": [
-        "vitamin_d_deficiency"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
     },
     {
       "id": "med_118",
@@ -1878,14 +1948,10 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "rheumatoid_arthritis",
-        "cough",
-        "hypothyroidism"
+        "vitamin_d_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "tension_headache",
-        "acute_pharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
     },
     {
       "id": "med_119",
@@ -1894,14 +1960,10 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "urinary_tract_infection",
-        "chest_pain",
-        "obesity",
-        "alzheimer_disease"
+        "vitamin_d_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "hypertensive_crisis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
     },
     {
       "id": "med_120",
@@ -1910,13 +1972,10 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "kidney_stone",
-        "infectious_gastroenteritis"
+        "vitamin_d_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "varicose_veins",
-        "irritable_bowel_syndrome"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
     },
     {
       "id": "med_121",
@@ -1925,13 +1984,10 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "vertigo",
-        "type2_diabetes",
-        "transient_cerebral_ischemic_attack"
+        "vitamin_d_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "pneumonia_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "bone_gout"
     },
     {
       "id": "med_122",
@@ -1940,15 +1996,10 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "headache_unspecified",
-        "hyperthyroidism",
-        "epilepsy_unspecified",
-        "atherosclerotic_heart_disease"
+        "thiamine_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "gastroesophageal_reflux",
-        "neck_pain"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
     },
     {
       "id": "med_123",
@@ -1957,12 +2008,10 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "soft_tissue_contusion",
-        "vitamin_d_deficiency"
+        "vitamin_b12_deficiency_anemia"
       ],
-      "prohibitedDiagnosisIds": [
-        "fatty_liver"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
     },
     {
       "id": "med_124",
@@ -1971,14 +2020,10 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "herpes_zoster",
-        "insomnia_disorder",
-        "hypertensive_crisis"
+        "folate_deficiency_anemia"
       ],
-      "prohibitedDiagnosisIds": [
-        "osteoarthritis_knee",
-        "covid19"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
     },
     {
       "id": "med_125",
@@ -1987,14 +2032,12 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "type1_diabetes",
-        "migraine_unspecified",
-        "heart_failure",
-        "pneumonia_unspecified"
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "kidney_stone"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
     },
     {
       "id": "med_126",
@@ -2003,13 +2046,12 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "hyperlipidemia",
-        "parkinsons_disease"
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "nausea_vomiting",
-        "acute_stress_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
     },
     {
       "id": "med_127",
@@ -2018,13 +2060,12 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "generalized_anxiety",
-        "benign_positional_vertigo",
-        "acute_maxillary_sinusitis"
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
       ],
-      "prohibitedDiagnosisIds": [
-        "type2_diabetes"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
     },
     {
       "id": "med_128",
@@ -2033,15 +2074,10 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "acute_stress_disorder",
-        "angina_pectoris",
-        "acute_laryngitis",
-        "peptic_ulcer_unspecified"
+        "chronic_kidney_disease"
       ],
-      "prohibitedDiagnosisIds": [
-        "generalized_anxiety",
-        "atrial_fibrillation"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "supplement"
     },
     {
       "id": "med_129",
@@ -2050,12 +2086,12 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "tension_headache",
-        "atrial_fibrillation"
+        "cellulitis",
+        "gingivitis",
+        "soft_tissue_contusion"
       ],
-      "prohibitedDiagnosisIds": [
-        "epilepsy_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_130",
@@ -2064,13 +2100,11 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "alzheimer_disease",
-        "varicose_veins",
-        "chronic_sinusitis"
+        "cellulitis",
+        "soft_tissue_contusion"
       ],
-      "prohibitedDiagnosisIds": [
-        "angina_pectoris"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_131",
@@ -2079,14 +2113,10 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "essential_hypertension",
-        "acute_pharyngitis",
-        "gastroesophageal_reflux",
         "cellulitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_nasopharyngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_132",
@@ -2095,13 +2125,10 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "acute_myocardial_infarction",
-        "acute_bronchitis"
-      ],
-      "prohibitedDiagnosisIds": [
-        "asthma_unspecified",
         "cellulitis"
-      ]
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_133",
@@ -2110,13 +2137,12 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "atherosclerotic_heart_disease",
-        "acute_upper_respiratory_infection",
-        "cholelithiasis"
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_gastritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_134",
@@ -2125,15 +2151,13 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "acute_nasopharyngitis",
-        "influenza_unspecified",
-        "contact_dermatitis",
-        "acute_pyelonephritis"
-      ],
-      "prohibitedDiagnosisIds": [
+        "alopecia_areata",
         "atopic_dermatitis",
-        "fever_unspecified"
-      ]
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_135",
@@ -2142,12 +2166,12 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "acute_tonsillitis",
-        "acute_gastritis"
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "rheumatoid_arthritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_136",
@@ -2156,14 +2180,12 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "pneumonia_unspecified",
-        "constipation",
-        "rheumatoid_arthritis"
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "benign_prostatic_hyperplasia",
-        "hyperlipidemia"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_137",
@@ -2172,14 +2194,13 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "chronic_obstructive_pulmonary_disease",
-        "fatty_liver",
-        "urinary_tract_infection",
-        "chest_pain"
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "transient_cerebral_ischemic_attack"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_138",
@@ -2188,13 +2209,13 @@
       "price": 316,
       "commission": 31.6,
       "applicableDiagnosisIds": [
-        "streptococcal_pharyngitis",
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
         "urticaria"
       ],
-      "prohibitedDiagnosisIds": [
-        "type1_diabetes",
-        "benign_positional_vertigo"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_139",
@@ -2203,13 +2224,14 @@
       "price": 353,
       "commission": 35.3,
       "applicableDiagnosisIds": [
-        "peptic_ulcer_unspecified",
-        "low_back_pain",
-        "vertigo"
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria",
+        "vitiligo"
       ],
-      "prohibitedDiagnosisIds": [
-        "major_depressive_disorder"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "dermatology"
     },
     {
       "id": "med_140",
@@ -2218,15 +2240,10 @@
       "price": 390,
       "commission": 39.0,
       "applicableDiagnosisIds": [
-        "noninfective_gastroenteritis",
-        "gout",
-        "headache_unspecified",
-        "hyperthyroidism"
+        "dry_eye"
       ],
-      "prohibitedDiagnosisIds": [
-        "parkinsons_disease",
-        "acute_laryngitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
     },
     {
       "id": "med_141",
@@ -2235,12 +2252,10 @@
       "price": 427,
       "commission": 42.7,
       "applicableDiagnosisIds": [
-        "atopic_dermatitis",
-        "acute_cystitis"
+        "bacterial_conjunctivitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_myocardial_infarction"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
     },
     {
       "id": "med_142",
@@ -2249,14 +2264,10 @@
       "price": 464,
       "commission": 46.4,
       "applicableDiagnosisIds": [
-        "cellulitis",
-        "benign_prostatic_hyperplasia",
-        "herpes_zoster"
+        "bacterial_conjunctivitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_maxillary_sinusitis",
-        "noninfective_gastroenteritis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
     },
     {
       "id": "med_143",
@@ -2265,14 +2276,10 @@
       "price": 20,
       "commission": 2.0,
       "applicableDiagnosisIds": [
-        "osteoarthritis_knee",
-        "fever_unspecified",
-        "type1_diabetes",
-        "migraine_unspecified"
+        "bacterial_conjunctivitis"
       ],
-      "prohibitedDiagnosisIds": [
-        "acute_upper_respiratory_infection"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
     },
     {
       "id": "med_144",
@@ -2281,13 +2288,10 @@
       "price": 57,
       "commission": 5.7,
       "applicableDiagnosisIds": [
-        "neck_pain",
-        "nausea_vomiting"
+        "dry_eye"
       ],
-      "prohibitedDiagnosisIds": [
-        "peptic_ulcer_unspecified",
-        "acute_cystitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "ophthalmology"
     },
     {
       "id": "med_145",
@@ -2296,13 +2300,12 @@
       "price": 94,
       "commission": 9.4,
       "applicableDiagnosisIds": [
-        "acute_pyelonephritis",
-        "covid19",
-        "generalized_anxiety"
+        "benign_positional_vertigo",
+        "migraine_unspecified",
+        "vertigo"
       ],
-      "prohibitedDiagnosisIds": [
-        "contact_dermatitis"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
     },
     {
       "id": "med_146",
@@ -2311,15 +2314,12 @@
       "price": 131,
       "commission": 13.1,
       "applicableDiagnosisIds": [
-        "chronic_kidney_disease",
-        "candidiasis",
-        "acute_stress_disorder",
-        "angina_pectoris"
+        "benign_positional_vertigo",
+        "migraine_unspecified",
+        "vertigo"
       ],
-      "prohibitedDiagnosisIds": [
-        "gout",
-        "herpes_zoster"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
     },
     {
       "id": "med_147",
@@ -2328,12 +2328,12 @@
       "price": 168,
       "commission": 16.8,
       "applicableDiagnosisIds": [
-        "cough",
-        "hypothyroidism"
+        "carpal_tunnel_syndrome",
+        "herpes_zoster",
+        "sciatica"
       ],
-      "prohibitedDiagnosisIds": [
-        "chronic_kidney_disease"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
     },
     {
       "id": "med_148",
@@ -2342,14 +2342,12 @@
       "price": 205,
       "commission": 20.5,
       "applicableDiagnosisIds": [
-        "chest_pain",
-        "obesity",
-        "alzheimer_disease"
+        "carpal_tunnel_syndrome",
+        "herpes_zoster",
+        "sciatica"
       ],
-      "prohibitedDiagnosisIds": [
-        "soft_tissue_contusion",
-        "migraine_unspecified"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "neurology"
     },
     {
       "id": "med_149",
@@ -2358,14 +2356,15 @@
       "price": 242,
       "commission": 24.2,
       "applicableDiagnosisIds": [
-        "infectious_gastroenteritis",
+        "acute_stress_disorder",
+        "generalized_anxiety",
+        "insomnia_disorder",
         "major_depressive_disorder",
-        "essential_hypertension",
-        "acute_pharyngitis"
+        "obsessive_compulsive_disorder",
+        "panic_disorder"
       ],
-      "prohibitedDiagnosisIds": [
-        "hypothyroidism"
-      ]
+      "prohibitedDiagnosisIds": [],
+      "categoryId": "psychiatry"
     },
     {
       "id": "med_150",
@@ -2374,12 +2373,361 @@
       "price": 279,
       "commission": 27.9,
       "applicableDiagnosisIds": [
-        "type2_diabetes",
-        "transient_cerebral_ischemic_attack"
+        "acute_stress_disorder",
+        "generalized_anxiety",
+        "insomnia_disorder",
+        "major_depressive_disorder",
+        "obsessive_compulsive_disorder",
+        "panic_disorder"
       ],
       "prohibitedDiagnosisIds": [
-        "insomnia_disorder",
-        "cerebral_infarction"
+        "menopause"
+      ],
+      "categoryId": "psychiatry"
+    }
+  ],
+  "categories": [
+    {
+      "id": "analgesic",
+      "name": "解热镇痛药",
+      "medicineIds": [
+        "med_paracetamol",
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_j",
+        "icd_k",
+        "icd_m",
+        "icd_n",
+        "icd_r",
+        "icd_s",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antiallergic",
+      "name": "抗过敏药",
+      "medicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l"
+      ]
+    },
+    {
+      "id": "respiratory",
+      "name": "呼吸系统用药",
+      "medicineIds": [
+        "med_cough_syrup",
+        "med_011",
+        "med_016",
+        "med_017",
+        "med_018",
+        "med_019",
+        "med_020",
+        "med_021",
+        "med_022",
+        "med_023",
+        "med_024",
+        "med_025",
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_r",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antibacterial",
+      "name": "抗菌药",
+      "medicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_043",
+        "med_044",
+        "med_045",
+        "med_046"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_h",
+        "icd_j",
+        "icd_l",
+        "icd_n"
+      ]
+    },
+    {
+      "id": "antiviral",
+      "name": "抗病毒药",
+      "medicineIds": [
+        "med_047",
+        "med_048",
+        "med_049",
+        "med_050",
+        "med_051",
+        "med_052"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_j"
+      ]
+    },
+    {
+      "id": "antifungal",
+      "name": "抗真菌药",
+      "medicineIds": [
+        "med_053",
+        "med_054",
+        "med_055",
+        "med_056",
+        "med_057",
+        "med_058"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a"
+      ]
+    },
+    {
+      "id": "gastrointestinal",
+      "name": "消化系统用药",
+      "medicineIds": [
+        "med_059",
+        "med_060",
+        "med_061",
+        "med_062",
+        "med_063",
+        "med_064",
+        "med_065",
+        "med_066",
+        "med_067",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075",
+        "med_076",
+        "med_077",
+        "med_078",
+        "med_079"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_k"
+      ]
+    },
+    {
+      "id": "cardiovascular",
+      "name": "心血管用药",
+      "medicineIds": [
+        "med_080",
+        "med_081",
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_i"
+      ]
+    },
+    {
+      "id": "lipid_lowering",
+      "name": "调脂药",
+      "medicineIds": [
+        "med_096",
+        "med_097",
+        "med_098",
+        "med_099"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_i"
+      ]
+    },
+    {
+      "id": "antidiabetic",
+      "name": "降糖药",
+      "medicineIds": [
+        "med_100",
+        "med_101",
+        "med_102",
+        "med_103",
+        "med_104",
+        "med_105",
+        "med_106"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "thyroid",
+      "name": "甲状腺用药",
+      "medicineIds": [
+        "med_107",
+        "med_108",
+        "med_109"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "steroid_immunomodulator",
+      "name": "糖皮质激素与免疫调节药",
+      "medicineIds": [
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_113",
+        "med_114",
+        "med_115"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "bone_gout",
+      "name": "骨代谢与痛风用药",
+      "medicineIds": [
+        "med_116",
+        "med_117",
+        "med_118",
+        "med_119",
+        "med_120",
+        "med_121"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "dermatology",
+      "name": "皮肤科用药",
+      "medicineIds": [
+        "med_129",
+        "med_130",
+        "med_131",
+        "med_132",
+        "med_133",
+        "med_134",
+        "med_135",
+        "med_136",
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_k",
+        "icd_l",
+        "icd_s"
+      ]
+    },
+    {
+      "id": "ophthalmology",
+      "name": "眼科用药",
+      "medicineIds": [
+        "med_140",
+        "med_141",
+        "med_142",
+        "med_143",
+        "med_144"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_h"
+      ]
+    },
+    {
+      "id": "neurology",
+      "name": "神经系统用药",
+      "medicineIds": [
+        "med_145",
+        "med_146",
+        "med_147",
+        "med_148"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_h",
+        "icd_m",
+        "icd_r"
+      ]
+    },
+    {
+      "id": "psychiatry",
+      "name": "精神科用药",
+      "medicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_f"
+      ]
+    },
+    {
+      "id": "supplement",
+      "name": "维生素与电解质补充剂",
+      "medicineIds": [
+        "med_122",
+        "med_123",
+        "med_124",
+        "med_125",
+        "med_126",
+        "med_127",
+        "med_128"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_h",
+        "icd_n"
       ]
     }
   ]

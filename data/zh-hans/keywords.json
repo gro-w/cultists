@@ -1285,10 +1285,6 @@
       "content": "乳房疼痛"
     },
     {
-      "id": "symptom_119",
-      "content": "乳房肿块"
-    },
-    {
       "id": "symptom_120",
       "content": "潮热"
     },
@@ -1311,10 +1307,6 @@
     {
       "id": "symptom_125",
       "content": "多汗"
-    },
-    {
-      "id": "symptom_126",
-      "content": "皮肤变薄"
     },
     {
       "id": "symptom_127",
@@ -1347,10 +1339,6 @@
     {
       "id": "symptom_134",
       "content": "多尿"
-    },
-    {
-      "id": "symptom_135",
-      "content": "低血糖感"
     },
     {
       "id": "symptom_136",
@@ -1451,10 +1439,6 @@
     {
       "id": "symptom_160",
       "content": "肢端发冷"
-    },
-    {
-      "id": "symptom_161",
-      "content": "伤口麻木"
     },
     {
       "id": "symptom_162",
@@ -1611,6 +1595,990 @@
     {
       "id": "symptom_200",
       "content": "站立头晕"
+    },
+    {
+      "id": "med_paracetamol",
+      "content": "对乙酰氨基酚"
+    },
+    {
+      "id": "med_cough_syrup",
+      "content": "止咳糖浆"
+    },
+    {
+      "id": "med_001",
+      "content": "布洛芬"
+    },
+    {
+      "id": "med_002",
+      "content": "阿司匹林"
+    },
+    {
+      "id": "med_003",
+      "content": "双氯芬酸钠"
+    },
+    {
+      "id": "med_004",
+      "content": "塞来昔布"
+    },
+    {
+      "id": "med_005",
+      "content": "吲哚美辛"
+    },
+    {
+      "id": "med_006",
+      "content": "萘普生"
+    },
+    {
+      "id": "med_007",
+      "content": "洛索洛芬钠"
+    },
+    {
+      "id": "med_008",
+      "content": "美洛昔康"
+    },
+    {
+      "id": "med_009",
+      "content": "曲马多"
+    },
+    {
+      "id": "med_010",
+      "content": "盐酸氨酚曲马多"
+    },
+    {
+      "id": "med_011",
+      "content": "复方氨酚烷胺"
+    },
+    {
+      "id": "med_012",
+      "content": "氯雷他定"
+    },
+    {
+      "id": "med_013",
+      "content": "西替利嗪"
+    },
+    {
+      "id": "med_014",
+      "content": "地氯雷他定"
+    },
+    {
+      "id": "med_015",
+      "content": "依巴斯汀"
+    },
+    {
+      "id": "med_016",
+      "content": "孟鲁司特钠"
+    },
+    {
+      "id": "med_017",
+      "content": "氨溴索"
+    },
+    {
+      "id": "med_018",
+      "content": "乙酰半胱氨酸"
+    },
+    {
+      "id": "med_019",
+      "content": "盐酸氨溴索"
+    },
+    {
+      "id": "med_020",
+      "content": "右美沙芬"
+    },
+    {
+      "id": "med_021",
+      "content": "喷托维林"
+    },
+    {
+      "id": "med_022",
+      "content": "多索茶碱"
+    },
+    {
+      "id": "med_023",
+      "content": "沙丁胺醇"
+    },
+    {
+      "id": "med_024",
+      "content": "布地奈德"
+    },
+    {
+      "id": "med_025",
+      "content": "异丙托溴铵"
+    },
+    {
+      "id": "med_026",
+      "content": "糠酸莫米松鼻喷雾剂"
+    },
+    {
+      "id": "med_027",
+      "content": "丙酸氟替卡松"
+    },
+    {
+      "id": "med_028",
+      "content": "羟甲唑啉"
+    },
+    {
+      "id": "med_029",
+      "content": "生理性海水鼻喷雾"
+    },
+    {
+      "id": "med_030",
+      "content": "阿莫西林"
+    },
+    {
+      "id": "med_031",
+      "content": "阿莫西林克拉维酸钾"
+    },
+    {
+      "id": "med_032",
+      "content": "头孢氨苄"
+    },
+    {
+      "id": "med_033",
+      "content": "头孢呋辛酯"
+    },
+    {
+      "id": "med_034",
+      "content": "头孢克洛"
+    },
+    {
+      "id": "med_035",
+      "content": "头孢地尼"
+    },
+    {
+      "id": "med_036",
+      "content": "头孢曲松"
+    },
+    {
+      "id": "med_037",
+      "content": "阿奇霉素"
+    },
+    {
+      "id": "med_038",
+      "content": "克拉霉素"
+    },
+    {
+      "id": "med_039",
+      "content": "罗红霉素"
+    },
+    {
+      "id": "med_040",
+      "content": "左氧氟沙星"
+    },
+    {
+      "id": "med_041",
+      "content": "莫西沙星"
+    },
+    {
+      "id": "med_042",
+      "content": "环丙沙星"
+    },
+    {
+      "id": "med_043",
+      "content": "甲硝唑"
+    },
+    {
+      "id": "med_044",
+      "content": "替硝唑"
+    },
+    {
+      "id": "med_045",
+      "content": "呋喃妥因"
+    },
+    {
+      "id": "med_046",
+      "content": "磷霉素氨丁三醇"
+    },
+    {
+      "id": "med_047",
+      "content": "阿昔洛韦"
+    },
+    {
+      "id": "med_048",
+      "content": "伐昔洛韦"
+    },
+    {
+      "id": "med_049",
+      "content": "泛昔洛韦"
+    },
+    {
+      "id": "med_050",
+      "content": "奥司他韦"
+    },
+    {
+      "id": "med_051",
+      "content": "利巴韦林"
+    },
+    {
+      "id": "med_052",
+      "content": "恩替卡韦"
+    },
+    {
+      "id": "med_053",
+      "content": "氟康唑"
+    },
+    {
+      "id": "med_054",
+      "content": "伊曲康唑"
+    },
+    {
+      "id": "med_055",
+      "content": "特比萘芬"
+    },
+    {
+      "id": "med_056",
+      "content": "硝酸咪康唑"
+    },
+    {
+      "id": "med_057",
+      "content": "克霉唑"
+    },
+    {
+      "id": "med_058",
+      "content": "制霉菌素"
+    },
+    {
+      "id": "med_059",
+      "content": "蒙脱石散"
+    },
+    {
+      "id": "med_060",
+      "content": "口服补液盐"
+    },
+    {
+      "id": "med_061",
+      "content": "双歧杆菌三联活菌"
+    },
+    {
+      "id": "med_062",
+      "content": "枯草杆菌二联活菌"
+    },
+    {
+      "id": "med_063",
+      "content": "乳果糖"
+    },
+    {
+      "id": "med_064",
+      "content": "聚乙二醇电解质"
+    },
+    {
+      "id": "med_065",
+      "content": "开塞露"
+    },
+    {
+      "id": "med_066",
+      "content": "洛哌丁胺"
+    },
+    {
+      "id": "med_067",
+      "content": "复方黄连素"
+    },
+    {
+      "id": "med_068",
+      "content": "奥美拉唑"
+    },
+    {
+      "id": "med_069",
+      "content": "埃索美拉唑"
+    },
+    {
+      "id": "med_070",
+      "content": "泮托拉唑"
+    },
+    {
+      "id": "med_071",
+      "content": "雷贝拉唑"
+    },
+    {
+      "id": "med_072",
+      "content": "法莫替丁"
+    },
+    {
+      "id": "med_073",
+      "content": "铝碳酸镁"
+    },
+    {
+      "id": "med_074",
+      "content": "硫糖铝"
+    },
+    {
+      "id": "med_075",
+      "content": "枸橼酸铋钾"
+    },
+    {
+      "id": "med_076",
+      "content": "多潘立酮"
+    },
+    {
+      "id": "med_077",
+      "content": "莫沙必利"
+    },
+    {
+      "id": "med_078",
+      "content": "曲美布汀"
+    },
+    {
+      "id": "med_079",
+      "content": "消旋山莨菪碱"
+    },
+    {
+      "id": "med_080",
+      "content": "硝酸甘油"
+    },
+    {
+      "id": "med_081",
+      "content": "速效救心丸"
+    },
+    {
+      "id": "med_082",
+      "content": "美托洛尔"
+    },
+    {
+      "id": "med_083",
+      "content": "比索洛尔"
+    },
+    {
+      "id": "med_084",
+      "content": "氨氯地平"
+    },
+    {
+      "id": "med_085",
+      "content": "硝苯地平"
+    },
+    {
+      "id": "med_086",
+      "content": "非洛地平"
+    },
+    {
+      "id": "med_087",
+      "content": "缬沙坦"
+    },
+    {
+      "id": "med_088",
+      "content": "氯沙坦"
+    },
+    {
+      "id": "med_089",
+      "content": "厄贝沙坦"
+    },
+    {
+      "id": "med_090",
+      "content": "贝那普利"
+    },
+    {
+      "id": "med_091",
+      "content": "依那普利"
+    },
+    {
+      "id": "med_092",
+      "content": "卡托普利"
+    },
+    {
+      "id": "med_093",
+      "content": "氢氯噻嗪"
+    },
+    {
+      "id": "med_094",
+      "content": "呋塞米"
+    },
+    {
+      "id": "med_095",
+      "content": "螺内酯"
+    },
+    {
+      "id": "med_096",
+      "content": "阿托伐他汀"
+    },
+    {
+      "id": "med_097",
+      "content": "瑞舒伐他汀"
+    },
+    {
+      "id": "med_098",
+      "content": "辛伐他汀"
+    },
+    {
+      "id": "med_099",
+      "content": "非诺贝特"
+    },
+    {
+      "id": "med_100",
+      "content": "二甲双胍"
+    },
+    {
+      "id": "med_101",
+      "content": "格列美脲"
+    },
+    {
+      "id": "med_102",
+      "content": "格列齐特"
+    },
+    {
+      "id": "med_103",
+      "content": "阿卡波糖"
+    },
+    {
+      "id": "med_104",
+      "content": "西格列汀"
+    },
+    {
+      "id": "med_105",
+      "content": "达格列净"
+    },
+    {
+      "id": "med_106",
+      "content": "胰岛素注射液"
+    },
+    {
+      "id": "med_107",
+      "content": "左甲状腺素钠"
+    },
+    {
+      "id": "med_108",
+      "content": "甲巯咪唑"
+    },
+    {
+      "id": "med_109",
+      "content": "丙硫氧嘧啶"
+    },
+    {
+      "id": "med_110",
+      "content": "泼尼松"
+    },
+    {
+      "id": "med_111",
+      "content": "甲泼尼龙"
+    },
+    {
+      "id": "med_112",
+      "content": "地塞米松"
+    },
+    {
+      "id": "med_113",
+      "content": "氯喹"
+    },
+    {
+      "id": "med_114",
+      "content": "羟氯喹"
+    },
+    {
+      "id": "med_115",
+      "content": "甲氨蝶呤"
+    },
+    {
+      "id": "med_116",
+      "content": "别嘌醇"
+    },
+    {
+      "id": "med_117",
+      "content": "秋水仙碱"
+    },
+    {
+      "id": "med_118",
+      "content": "阿仑膦酸钠"
+    },
+    {
+      "id": "med_119",
+      "content": "碳酸钙D3"
+    },
+    {
+      "id": "med_120",
+      "content": "骨化三醇"
+    },
+    {
+      "id": "med_121",
+      "content": "维生素D滴剂"
+    },
+    {
+      "id": "med_122",
+      "content": "维生素B1"
+    },
+    {
+      "id": "med_123",
+      "content": "维生素B12"
+    },
+    {
+      "id": "med_124",
+      "content": "叶酸"
+    },
+    {
+      "id": "med_125",
+      "content": "硫酸亚铁"
+    },
+    {
+      "id": "med_126",
+      "content": "复方硫酸亚铁"
+    },
+    {
+      "id": "med_127",
+      "content": "琥珀酸亚铁"
+    },
+    {
+      "id": "med_128",
+      "content": "氯化钾"
+    },
+    {
+      "id": "med_129",
+      "content": "氯己定"
+    },
+    {
+      "id": "med_130",
+      "content": "碘伏"
+    },
+    {
+      "id": "med_131",
+      "content": "莫匹罗星"
+    },
+    {
+      "id": "med_132",
+      "content": "夫西地酸"
+    },
+    {
+      "id": "med_133",
+      "content": "炉甘石洗剂"
+    },
+    {
+      "id": "med_134",
+      "content": "糠酸莫米松乳膏"
+    },
+    {
+      "id": "med_135",
+      "content": "丁酸氢化可的松"
+    },
+    {
+      "id": "med_136",
+      "content": "尿素乳膏"
+    },
+    {
+      "id": "med_137",
+      "content": "维A酸乳膏"
+    },
+    {
+      "id": "med_138",
+      "content": "过氧化苯甲酰"
+    },
+    {
+      "id": "med_139",
+      "content": "他克莫司软膏"
+    },
+    {
+      "id": "med_140",
+      "content": "玻璃酸钠滴眼液"
+    },
+    {
+      "id": "med_141",
+      "content": "妥布霉素滴眼液"
+    },
+    {
+      "id": "med_142",
+      "content": "氧氟沙星滴眼液"
+    },
+    {
+      "id": "med_143",
+      "content": "金霉素眼膏"
+    },
+    {
+      "id": "med_144",
+      "content": "人工泪液"
+    },
+    {
+      "id": "med_145",
+      "content": "盐酸氟桂利嗪"
+    },
+    {
+      "id": "med_146",
+      "content": "倍他司汀"
+    },
+    {
+      "id": "med_147",
+      "content": "加巴喷丁"
+    },
+    {
+      "id": "med_148",
+      "content": "普瑞巴林"
+    },
+    {
+      "id": "med_149",
+      "content": "舍曲林"
+    },
+    {
+      "id": "med_150",
+      "content": "帕罗西汀"
+    },
+    {
+      "id": "medicine-category:analgesic",
+      "content": "解热镇痛药"
+    },
+    {
+      "id": "medicine-category:antiallergic",
+      "content": "抗过敏药"
+    },
+    {
+      "id": "medicine-category:respiratory",
+      "content": "呼吸系统用药"
+    },
+    {
+      "id": "medicine-category:antibacterial",
+      "content": "抗菌药"
+    },
+    {
+      "id": "medicine-category:antiviral",
+      "content": "抗病毒药"
+    },
+    {
+      "id": "medicine-category:antifungal",
+      "content": "抗真菌药"
+    },
+    {
+      "id": "medicine-category:gastrointestinal",
+      "content": "消化系统用药"
+    },
+    {
+      "id": "medicine-category:cardiovascular",
+      "content": "心血管用药"
+    },
+    {
+      "id": "medicine-category:lipid_lowering",
+      "content": "调脂药"
+    },
+    {
+      "id": "medicine-category:antidiabetic",
+      "content": "降糖药"
+    },
+    {
+      "id": "medicine-category:thyroid",
+      "content": "甲状腺用药"
+    },
+    {
+      "id": "medicine-category:steroid_immunomodulator",
+      "content": "糖皮质激素与免疫调节药"
+    },
+    {
+      "id": "medicine-category:bone_gout",
+      "content": "骨代谢与痛风用药"
+    },
+    {
+      "id": "medicine-category:dermatology",
+      "content": "皮肤科用药"
+    },
+    {
+      "id": "medicine-category:ophthalmology",
+      "content": "眼科用药"
+    },
+    {
+      "id": "medicine-category:neurology",
+      "content": "神经系统用药"
+    },
+    {
+      "id": "medicine-category:psychiatry",
+      "content": "精神科用药"
+    },
+    {
+      "id": "medicine-category:supplement",
+      "content": "维生素与电解质补充剂"
+    },
+    {
+      "id": "disease:otitis_media:normal",
+      "content": "中耳炎，未特指"
+    },
+    {
+      "id": "disease:otitis_media:low",
+      "content": "耳内回响着深海的炎潮"
+    },
+    {
+      "id": "disease:sensorineural_hearing_loss:normal",
+      "content": "感音神经性听力损失，未特指"
+    },
+    {
+      "id": "disease:sensorineural_hearing_loss:low",
+      "content": "声音正从世界边缘逐渐剥落"
+    },
+    {
+      "id": "disease:dry_eye:normal",
+      "content": "双眼干眼症"
+    },
+    {
+      "id": "disease:dry_eye:low",
+      "content": "泪膜变薄，眼表像久未落雨的土地"
+    },
+    {
+      "id": "disease:bacterial_conjunctivitis:normal",
+      "content": "结膜炎，未特指"
+    },
+    {
+      "id": "disease:bacterial_conjunctivitis:low",
+      "content": "结膜的红与痛提示眼表正在发炎"
+    },
+    {
+      "id": "disease:diplopia:normal",
+      "content": "复视"
+    },
+    {
+      "id": "disease:diplopia:low",
+      "content": "两重影像提示眼球运动或视觉通路需要检查"
+    },
+    {
+      "id": "disease:allergic_rhinitis:normal",
+      "content": "变应性鼻炎，未特指"
+    },
+    {
+      "id": "disease:allergic_rhinitis:low",
+      "content": "鼻腔被无形花粉反复灼烧"
+    },
+    {
+      "id": "disease:bronchiectasis:normal",
+      "content": "支气管扩张，未特指"
+    },
+    {
+      "id": "disease:bronchiectasis:low",
+      "content": "扩张的气道积存着难以咳尽的暗潮"
+    },
+    {
+      "id": "disease:chronic_hepatitis_b:normal",
+      "content": "慢性乙型病毒性肝炎"
+    },
+    {
+      "id": "disease:chronic_hepatitis_b:low",
+      "content": "肝脏藏着一枚持续复制的病毒印记"
+    },
+    {
+      "id": "disease:hepatitis_c:normal",
+      "content": "慢性丙型病毒性肝炎"
+    },
+    {
+      "id": "disease:hepatitis_c:low",
+      "content": "血液深处潜伏着慢性肝炎的影子"
+    },
+    {
+      "id": "disease:thiamine_deficiency:normal",
+      "content": "硫胺素缺乏，未特指"
+    },
+    {
+      "id": "disease:thiamine_deficiency:low",
+      "content": "身体的能量炉缺少维生素B1的火种"
+    },
+    {
+      "id": "disease:vitamin_b12_deficiency_anemia:normal",
+      "content": "维生素B12缺乏性贫血"
+    },
+    {
+      "id": "disease:vitamin_b12_deficiency_anemia:low",
+      "content": "造血所需的B12在血液里留下空缺"
+    },
+    {
+      "id": "disease:folate_deficiency_anemia:normal",
+      "content": "叶酸缺乏性贫血"
+    },
+    {
+      "id": "disease:folate_deficiency_anemia:low",
+      "content": "细胞更新因叶酸不足而变得迟缓"
+    },
+    {
+      "id": "disease:polycystic_ovary_syndrome:normal",
+      "content": "多囊卵巢综合征"
+    },
+    {
+      "id": "disease:polycystic_ovary_syndrome:low",
+      "content": "排卵和雄激素变化可能共同影响月经与皮肤"
+    },
+    {
+      "id": "disease:iron_deficiency_anemia:normal",
+      "content": "缺铁性贫血，未特指"
+    },
+    {
+      "id": "disease:iron_deficiency_anemia:low",
+      "content": "铁不足会影响血红蛋白生成并造成苍白和乏力"
+    },
+    {
+      "id": "disease:gingivitis:normal",
+      "content": "慢性牙龈炎，未特指"
+    },
+    {
+      "id": "disease:gingivitis:low",
+      "content": "牙龈在刷牙和进食时容易渗血"
+    },
+    {
+      "id": "disease:ulcerative_colitis:normal",
+      "content": "溃疡性结肠炎，未伴并发症"
+    },
+    {
+      "id": "disease:ulcerative_colitis:low",
+      "content": "结肠黏膜炎症可导致血便、黏液便和里急后重"
+    },
+    {
+      "id": "disease:hemorrhoids:normal",
+      "content": "痔，未特指"
+    },
+    {
+      "id": "disease:hemorrhoids:low",
+      "content": "肛门出血、瘙痒或疼痛常见于痔，但仍需排除其他病因"
+    },
+    {
+      "id": "disease:acne_vulgaris:normal",
+      "content": "痤疮，未特指"
+    },
+    {
+      "id": "disease:acne_vulgaris:low",
+      "content": "毛囊皮脂腺单位的堵塞和炎症形成痤疮"
+    },
+    {
+      "id": "disease:vitiligo:normal",
+      "content": "白癜风"
+    },
+    {
+      "id": "disease:vitiligo:low",
+      "content": "局部黑色素细胞减少会形成边界清楚的脱色斑"
+    },
+    {
+      "id": "disease:postinflammatory_hyperpigmentation:normal",
+      "content": "炎症后色素沉着"
+    },
+    {
+      "id": "disease:postinflammatory_hyperpigmentation:low",
+      "content": "皮肤炎症消退后可能留下色素加深"
+    },
+    {
+      "id": "disease:alopecia_areata:normal",
+      "content": "斑秃，未特指"
+    },
+    {
+      "id": "disease:alopecia_areata:low",
+      "content": "免疫相关的毛囊改变可造成斑片状脱发"
+    },
+    {
+      "id": "disease:hirsutism:normal",
+      "content": "多毛症"
+    },
+    {
+      "id": "disease:hirsutism:low",
+      "content": "雄激素作用增强可使体毛分布发生改变"
+    },
+    {
+      "id": "disease:panic_disorder:normal",
+      "content": "惊恐障碍"
+    },
+    {
+      "id": "disease:panic_disorder:low",
+      "content": "突发强烈恐惧伴自主神经症状需要与躯体疾病鉴别"
+    },
+    {
+      "id": "disease:obsessive_compulsive_disorder:normal",
+      "content": "强迫症，未特指"
+    },
+    {
+      "id": "disease:obsessive_compulsive_disorder:low",
+      "content": "反复侵入的想法和难以抵抗的仪式行为会造成困扰"
+    },
+    {
+      "id": "disease:urinary_incontinence:normal",
+      "content": "其他尿失禁"
+    },
+    {
+      "id": "disease:urinary_incontinence:low",
+      "content": "膀胱控制下降会造成不自主漏尿"
+    },
+    {
+      "id": "disease:epididymitis:normal",
+      "content": "附睾炎"
+    },
+    {
+      "id": "disease:epididymitis:low",
+      "content": "阴囊疼痛可能来自附睾的感染性炎症"
+    },
+    {
+      "id": "disease:dysmenorrhea:normal",
+      "content": "痛经，未特指"
+    },
+    {
+      "id": "disease:dysmenorrhea:low",
+      "content": "月经期前列腺素变化可引起痉挛性疼痛"
+    },
+    {
+      "id": "disease:menopause:normal",
+      "content": "绝经期和围绝经期疾病"
+    },
+    {
+      "id": "disease:menopause:low",
+      "content": "激素波动可带来潮热、盗汗和性欲变化"
+    },
+    {
+      "id": "disease:erectile_dysfunction:normal",
+      "content": "勃起功能障碍，未特指"
+    },
+    {
+      "id": "disease:erectile_dysfunction:low",
+      "content": "血管、神经、药物及心理因素都可能参与勃起困难"
+    },
+    {
+      "id": "disease:mastalgia:normal",
+      "content": "乳房痛"
+    },
+    {
+      "id": "disease:mastalgia:low",
+      "content": "乳房疼痛需要结合周期、触诊和影像检查判断"
+    },
+    {
+      "id": "disease:shoulder_impingement:normal",
+      "content": "肩峰撞击综合征，未特指"
+    },
+    {
+      "id": "disease:shoulder_impingement:low",
+      "content": "抬臂时肩峰下空间反复受到刺激"
+    },
+    {
+      "id": "disease:plantar_fasciitis:normal",
+      "content": "足底筋膜炎"
+    },
+    {
+      "id": "disease:plantar_fasciitis:low",
+      "content": "足底筋膜负荷过大常引起晨起或行走时足跟痛"
+    },
+    {
+      "id": "disease:lymphadenopathy:normal",
+      "content": "淋巴结肿大"
+    },
+    {
+      "id": "disease:lymphadenopathy:low",
+      "content": "颈部、腋窝或腹股沟肿块可能是淋巴结反应，需寻找原因"
+    },
+    {
+      "id": "disease:splenomegaly:normal",
+      "content": "脾肿大"
+    },
+    {
+      "id": "disease:splenomegaly:low",
+      "content": "左上腹不适有时与脾脏增大有关"
+    },
+    {
+      "id": "disease:orthostatic_hypotension:normal",
+      "content": "体位性低血压"
+    },
+    {
+      "id": "disease:orthostatic_hypotension:low",
+      "content": "站立后头晕提示血压调节需要评估"
+    },
+    {
+      "id": "disease:closed_foot_fracture:normal",
+      "content": "足部骨折，未特指，初次就诊"
+    },
+    {
+      "id": "disease:closed_foot_fracture:low",
+      "content": "外伤后的持续足部疼痛需要影像检查排除骨折"
+    },
+    {
+      "id": "disease:benign_breast_lump:normal",
+      "content": "乳房局限性肿块，未特指"
+    },
+    {
+      "id": "disease:benign_breast_lump:low",
+      "content": "乳房肿块必须通过查体和影像学进一步区分"
+    },
+    {
+      "id": "disease:hypoglycemia:normal",
+      "content": "低血糖，未特指"
+    },
+    {
+      "id": "disease:hypoglycemia:low",
+      "content": "出汗、心悸、乏力或发抖等低血糖表现需要结合实际血糖确认"
     }
   ]
 }

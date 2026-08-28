@@ -3,9 +3,9 @@ import { windowManager } from "../core/WindowManager.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
-import { timeService } from "../core/TimeService.js";
 import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
+import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
 import { chatgtpQueue } from "../core/ScheduleQueue.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
@@ -397,23 +397,33 @@ export async function launchChatGTPApp(options = {}) {
 
   function ask(queryText, labels) {
     if (!queryText) return;
-    // Keyword lookup is a direct timed operation, not a dialogue turn.
-    timeService.advanceBy(20);
-    appendMessage("me", escapeHtml(queryText));
-
-    if (npcStateManager.isOffline(CHATGTP_ACTOR_ID)) {
-      appendMessage("npc", escapeHtml(offlineAnswer));
-      return;
-    }
-
+    const instance = chatgtpQueue.append([{
+      scheduleId: "chatgtp:query",
+      status: "unresolved",
+      transcript: [],
+    }])[0];
     const entry = answerFor(labels);
     let answer = entry?.answer || FALLBACK_ANSWER;
     if (npcStateManager.isDistressed(CHATGTP_ACTOR_ID) && entry && !entry.corruptedSameAsNormal) {
       answer = entry.corruptedAnswer || entry.answer || FALLBACK_ANSWER;
     }
-    appendMessage("npc", keywordManager.renderHighlightedText(answer.replace(/\n/g, "<br>"), ownKeywordDefs));
-
-    if (sanCostPerQuery > 0) npcStateManager.modify(CHATGTP_ACTOR_ID, -sanCostPerQuery);
+    runItemSchedule({
+      source: "chatgtp",
+      action: "query",
+      queueId: "chatgtp",
+      instance,
+      context: {
+        effect: sanCostPerQuery > 0 ? { npcSanChanges: [{ actorId: CHATGTP_ACTOR_ID, delta: -sanCostPerQuery }] } : {},
+        timeMinutes: 20,
+        onComplete: () => {
+          appendMessage("me", escapeHtml(queryText));
+          appendMessage("npc", keywordManager.renderHighlightedText(
+            npcStateManager.isOffline(CHATGTP_ACTOR_ID) ? offlineAnswer : answer.replace(/\n/g, "<br>"),
+            ownKeywordDefs,
+          ));
+        },
+      },
+    });
   }
 
   function escapeHtml(s) {

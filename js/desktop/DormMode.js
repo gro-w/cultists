@@ -40,6 +40,7 @@ export default class DormMode {
     this.playerPos = { x: 240, y: 260 };
     this.facing = 1;
     this._transitioning = false;
+    this._transitionTimer = null;
     this._build();
     eventBus.on("daynight:changed", (detail) => this._onStateChanged(detail));
     eventBus.on("time:changed", () => this._renderClock());
@@ -429,11 +430,17 @@ export default class DormMode {
   }
 
   _transition(showDorm) {
-    if (this._transitioning) return;
+    if (this._transitionTimer != null) {
+      window.clearTimeout(this._transitionTimer);
+      this._transitionTimer = null;
+      this.root.classList.remove("mode-transition", "opening-laptop", "closing-laptop");
+      this._transitioning = false;
+    }
     this._transitioning = true;
     this.root.classList.add("mode-transition", showDorm ? "opening-laptop" : "closing-laptop");
-    window.setTimeout(() => {
-      this._syncVisibility(showDorm);
+    this._transitionTimer = window.setTimeout(() => {
+      this._transitionTimer = null;
+      this._syncVisibility(gameState.location === "dorm");
       this.root.classList.remove("mode-transition", "opening-laptop", "closing-laptop");
       this._transitioning = false;
     }, 620);

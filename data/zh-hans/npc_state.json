@@ -3,7 +3,6 @@
   "distressedThreshold": 50,
   "offlineThreshold": 20,
   "offlineConsequence": {
-    "grantItems": [{ "itemId": "extra_workload", "count": 1 }],
-    "actionBudgetPenalty": { "dialogueLimit": 1, "inspectLimit": 1 }
+    "grantItems": [{ "itemId": "extra_workload", "count": 1 }]
   }
 }

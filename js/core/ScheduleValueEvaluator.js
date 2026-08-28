@@ -52,6 +52,7 @@ export class ScheduleValueEvaluator {
       case "-": case "subtract": return Number(left) - Number(right);
       case "*": case "multiply": return Number(left) * Number(right);
       case "/": case "divide": if (Number(right) === 0) throw new Error("Division by zero"); return Number(left) / Number(right);
+      case "%": case "modulo": if (Number(right) === 0) throw new Error("Division by zero"); return Number(left) % Number(right);
       case "concat": case "拼接字符串": return String(left) + String(right);
       case "and": case "与": return bool(left) && bool(right);
       case "or": case "或": return bool(left) || bool(right);

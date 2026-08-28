@@ -20,9 +20,9 @@ import { gameState } from "./GameState.js";
  *   "spells:changed" — any time the known-spells list changes (learn/restore)
  *   "spell:cast"     — { spell } when a spell is successfully cast
  *
- * Events consumed (via ActionBudget, not here):
+ * Events consumed by the schedule runtime, not here:
  *   "spell:learned"  — emitted by SpellLearnDialog when the player confirms;
- *                      ActionBudget listens to this and charges 240 min.
+ *                      the learning schedule charges 240 min before state change.
  */
 class SpellManager {
   constructor() {
@@ -41,6 +41,14 @@ class SpellManager {
     if (this.spells.some((s) => s.id === spell.id)) return false;
     this.spells.push({ ...spell });
     eventBus.emit("spells:changed", this.snapshot());
+    eventBus.emit("schedule:triggered", {
+      source: "spell",
+      spell: this.spells[this.spells.length - 1],
+      action: "obtain",
+      scheduleId: `${spell.id}:obtain`,
+      blueprint: spell.schedules?.obtain || null,
+      context: { spell: this.spells[this.spells.length - 1] },
+    });
     return true;
   }
 
@@ -62,8 +70,9 @@ class SpellManager {
     eventBus.emit("schedule:triggered", {
       source: "spell",
       spell,
-      action: "cast",
-      blueprint: spell.useSchedule || spell.schedules?.cast || null,
+      action: "use",
+      scheduleId: `${spell.id}:use`,
+      blueprint: spell.useSchedule || spell.schedules?.use || null,
       context: { spell, effect: { statChanges: { mental: -cost } }, timeMinutes: spell.castTimeMinutes || 0 },
     });
     return { ok: true, message: `施放了「${spell.name}」，消耗 ${cost} SAN。` };

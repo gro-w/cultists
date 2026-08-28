@@ -184,6 +184,7 @@ class SaveManager {
       keywords: keywordManager.all().map((kw) => ({ id: kw.id, collectedDay: kw.collectedDay })),
       inventory: itemManager.all(),
       medical: medicalCaseManager.snapshot(),
+      npcState: npcStateManager.snapshot(),
       globalVariables: globalVariableManager.snapshot(),
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
       spells: spellManager.all(),
@@ -311,6 +312,7 @@ class SaveManager {
     keywordManager.restoreCollected(payload.keywords || []);
     itemManager.restoreInventory(payload.inventory || []);
     spellManager.restore(payload.spells || []);
+    npcStateManager.restore(payload.npcState || {});
     medicalCaseManager.restore(payload.medical || {});
     scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
     this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);

@@ -28,6 +28,7 @@ class NpcStateManager {
     this.san = new Map();
     /** @type {Set<string>} actorIds that have gone offline */
     this.offlineActors = new Set();
+    this.pendingOfflineActors = new Set();
     this.npcs = [];
     this._loadPromise = null;
   }
@@ -83,17 +84,13 @@ class NpcStateManager {
     return !this.isOffline(actorId) && this.get(actorId) < this._distressedThreshold();
   }
 
-  /**
-   * Adjust an actor's SAN by `delta` (positive or negative). Crossing the
-   * offline threshold for the first time triggers `_goOffline` once
-   * (idempotent - an NPC can only go offline a single time).
-   */
+  /** Adjust an actor's SAN. Crossing the threshold creates one offline schedule. */
   modify(actorId, delta) {
     if (!actorId || !delta) return;
     const next = clamp(this.get(actorId) + delta);
     this.san.set(actorId, next);
     eventBus.emit("npcState:changed", { actorId, san: next });
-    if (next <= this._offlineThreshold() && !this.offlineActors.has(actorId)) {
+    if (next <= this._offlineThreshold() && !this.offlineActors.has(actorId) && !this.pendingOfflineActors.has(actorId)) {
       this._goOffline(actorId);
     }
   }
@@ -109,7 +106,7 @@ class NpcStateManager {
   }
 
   _goOffline(actorId) {
-    this.offlineActors.add(actorId);
+    this.pendingOfflineActors.add(actorId);
     const consequence = (this.config && this.config.offlineConsequence) || {};
     const entry = {
       id: `npc-offline:${actorId}`,
@@ -125,21 +122,34 @@ class NpcStateManager {
       action: "offline",
       blueprint: consequence.blueprint,
       context: {
-        effect: { add: consequence.grantItems || [] },
+        effect: { add: consequence.grantItems || [], npcOffline: [actorId] },
       },
       instance: entry,
     });
   }
 
-  snapshot() {
-    return { san: Object.fromEntries(this.san), offline: [...this.offlineActors] };
+  completeOffline(actorId) {
+    if (!actorId || this.offlineActors.has(actorId)) return false;
+    this.pendingOfflineActors.delete(actorId);
+    this.offlineActors.add(actorId);
+    eventBus.emit("npcState:changed", { actorId, san: this.get(actorId), offline: true });
+    return true;
   }
 
-  restore({ san = {}, offline = [] } = {}) {
+  snapshot() {
+    return {
+      san: Object.fromEntries(this.san),
+      offline: [...this.offlineActors],
+      pendingOffline: [...this.pendingOfflineActors],
+    };
+  }
+
+  restore({ san = {}, offline = [], pendingOffline = [] } = {}) {
     Object.entries(san).forEach(([id, value]) => {
       if (this.san.has(id) || this.npcs.some((npc) => npc.id === id)) this.san.set(id, Math.max(0, Math.min(100, Number(value) || 0)));
     });
     this.offlineActors = new Set(offline.filter((id) => this.san.has(id)));
+    this.pendingOfflineActors = new Set(pendingOffline.filter((id) => this.san.has(id) && !this.offlineActors.has(id)));
     eventBus.emit("npcState:restored", this.snapshot());
   }
 

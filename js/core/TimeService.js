@@ -73,6 +73,9 @@ class TimeService {
       })()
       : null;
     gameState.advanceClock(amount);
+    if (previousPhase === "day" && gameState.phase === "night" && gameState.duty === "on-duty") {
+      gameState.setDuty("off-duty");
+    }
     scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
     if (crossesEight) {
       medicalCaseManager.processDue(gameState.day);

@@ -7,9 +7,6 @@
           "n_26.6nj": {
             "id": "n_26.6nj",
             "type": "flowStart",
-            "next": "n_5l.pvt",
-            "options": [],
-            "onShow": {},
             "inputs": {},
             "outputs": {},
             "x": 40,
@@ -18,9 +15,6 @@
           "n_5l.pvt": {
             "id": "n_5l.pvt",
             "type": "text",
-            "next": "n_fn7.wa",
-            "options": [],
-            "onShow": {},
             "inputs": {
               "speaker": "npc",
               "text": "对，一攒够钱我就买了——终于能给挚爱的Pink Floyd一个“容器”，还挺高兴的。"
@@ -32,9 +26,6 @@
           "n_4ym.ay": {
             "id": "n_4ym.ay",
             "type": "text",
-            "next": null,
-            "options": [],
-            "onShow": {},
             "inputs": {
               "speaker": "player",
               "text": "你别又说什么高音甜中音稳那一套。"
@@ -46,9 +37,6 @@
           "n_fn7.wa": {
             "id": "n_fn7.wa",
             "type": "text",
-            "next": "n_la.3dt",
-            "options": [],
-            "onShow": {},
             "inputs": {
               "speaker": "player",
               "text": "来让我康康，啊不，听听。"
@@ -60,9 +48,6 @@
           "n_la.3dt": {
             "id": "n_la.3dt",
             "type": "text",
-            "next": null,
-            "options": [],
-            "onShow": {},
             "inputs": {
               "speaker": "player",
               "text": ""
@@ -70,9 +55,51 @@
             "outputs": {},
             "x": 760,
             "y": 40
+          },
+          "n_0vk.kv": {
+            "id": "n_0vk.kv",
+            "type": "scheduleEnd",
+            "inputs": {
+              "speaker": "player",
+              "text": ""
+            },
+            "outputs": {},
+            "x": 280,
+            "y": 210
           }
         },
-        "connections": [],
+        "connections": [
+          {
+            "fromNodeId": "n_26.6nj",
+            "fromPort": "flowOut",
+            "toNodeId": "n_5l.pvt",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n_5l.pvt",
+            "fromPort": "flowOut",
+            "toNodeId": "n_fn7.wa",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n_fn7.wa",
+            "fromPort": "flowOut",
+            "toNodeId": "n_la.3dt",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n_la.3dt",
+            "fromPort": "flowOut",
+            "toNodeId": "n_4ym.ay",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n_4ym.ay",
+            "fromPort": "flowOut",
+            "toNodeId": "n_0vk.kv",
+            "toPort": "flowIn"
+          }
+        ],
         "startNodeId": "n_26.6nj"
       }
     },

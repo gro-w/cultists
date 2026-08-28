@@ -238,3 +238,174 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ── Full-screen dorm layout ─────────────────────────────────────────────── */
+.dorm-fs-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: #1a1530;
+  color: #f4ecc9;
+}
+
+.dorm-fs-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: #211c38;
+  border-bottom: 2px solid #51486d;
+  flex-shrink: 0;
+}
+.dorm-fs-title { font-size: 14px; font-weight: bold; color: #f4ecc9; margin-right: 6px; }
+.dorm-fs-header .dorm-wall-clock {
+  position: static;
+  transform: none;
+  margin: 0 8px;
+  padding: 3px 8px;
+  box-shadow: none;
+}
+.dorm-fs-actions { margin-left: auto; display: flex; gap: 6px; }
+.dorm-fs-actions button { font-size: 12px; }
+
+.dorm-fs-scene {
+  display: flex;
+  flex: 1;
+  gap: 0;
+  padding: 10px 16px 8px;
+  overflow: hidden;
+  align-items: stretch;
+  background: #1a1530;
+}
+
+/* ── Bunk unit (one bed + one desk per person) ───────────────────────────── */
+.dorm-bunk-unit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #3d3460;
+  border-radius: 4px;
+  background: #231d3e;
+  margin: 0 4px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Upper bunk: the bed + character */
+.dorm-bunk-top {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  background: #2c2548;
+  border-bottom: 3px solid #5a4a8a;
+  cursor: pointer;
+  min-height: 0;
+}
+.dorm-bunk-top:hover { background: #342d56; }
+
+/* Bed-rail pseudo-decoration */
+.dorm-bunk-bed-rail {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(90deg, #5a4a8a 0 6px, transparent 6px 14px);
+  pointer-events: none;
+}
+
+/* Character sprite on the bunk */
+.dorm-bunk-char {
+  display: block;
+  max-height: 88%;
+  max-width: 80%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(1px 1px 0 #171335);
+  z-index: 1;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  transition: border-color 0.12s;
+}
+.dorm-bunk-char:hover,
+.dorm-bunk-char:focus-visible { border-color: #f4ecc9; outline: none; }
+.dorm-bunk-char.offline { opacity: 0.45; filter: grayscale(0.7); }
+
+.dorm-npc-btn {
+  margin: 8px;
+  font-size: 11px;
+}
+.dorm-npc-btn.offline { opacity: 0.5; }
+
+/* Lower area: desk */
+.dorm-bunk-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 6px 6px;
+  background: #1e1936;
+  gap: 4px;
+}
+.dorm-bunk-label {
+  font-size: 11px;
+  color: #a090c8;
+  letter-spacing: 1px;
+}
+.dorm-bunk-desk {
+  width: 100%;
+  min-height: 30px;
+  background: #2a2240;
+  border: 1px solid #4a3e70;
+  border-radius: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 3px 4px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Item buttons inside desk/fridge */
+.dorm-item-slot-btn {
+  font-size: 18px;
+  padding: 2px 4px;
+  line-height: 1;
+  cursor: pointer;
+  background: #302a50;
+  border-color: #6a5a9a;
+}
+.dorm-item-slot-btn:hover { background: #3e3562; }
+
+/* ── Fridge column (right side) ─────────────────────────────────────────── */
+.dorm-fridge-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 72px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.dorm-fridge {
+  background: #2a3a4a;
+  border: 2px solid #4a7a9a;
+  border-radius: 4px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: 90px;
+}
+.dorm-fridge-label {
+  font-size: 10px;
+  color: #80c0d8;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+

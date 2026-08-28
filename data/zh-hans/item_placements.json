@@ -4,12 +4,11 @@
       "id": "roommate_necklace_on_desk",
       "itemId": "roommate_necklace",
       "location": "dorm",
+      "zone": "ajie_desk",
       "condition": {
         "roommatesSleeping": true
       },
       "hotspot": {
-        "x": 245,
-        "y": 205,
         "icon": "📿",
         "label": "书桌上的项链"
       },

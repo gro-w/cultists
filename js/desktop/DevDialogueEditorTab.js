@@ -441,23 +441,54 @@ export class DevDialogueEditorTab {
       div.style.cssText=`left:${node.x||60}px;top:${node.y||60}px`;
       const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
       const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
+      const optionPins = (node.options||[]).map((opt, i) =>
+        `<div class="dev-de-node-opt"><span class="dev-de-option-pin" data-node-id="${this._e(node.id)}" data-option-index="${i}" title="拖动到目标节点连线">${i+1}</span><span>${this._e((opt.label||`选项 ${i+1}`).slice(0,24))}</span></div>`
+      ).join('');
       div.innerHTML=`
         <div class="dev-de-node-hd" style="background:${spk.color}">
           <span>${this._e(spk.label)}${isStart?' 🏠':''}</span>
           <button type="button" class="dev-de-node-link" onclick="event.stopPropagation();_de._startConnect('${node.id}',null)" title="连线">🔗</button>
         </div>
         <div class="dev-de-node-body">${this._e((node.text||'').slice(0,60))}</div>
+        ${optionPins ? `<div class="dev-de-node-options">${optionPins}</div>` : ''}
         <div class="dev-de-node-ft">${optBadge}${nxtBadge}</div>`;
-      div.addEventListener('mousedown', e=>{
+      div.querySelectorAll('.dev-de-option-pin').forEach(pin => pin.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const optIdx = Number(pin.dataset.optionIndex);
+        this._startConnect(node.id, optIdx);
+        this._connectDrag = { nodeId: node.id, optIdx, pin };
+        this._drawArrows(data);
+        const onMove = mv => {
+          this._drawArrows(data);
+          this._drawTempConnection(pin, mv.clientX, mv.clientY);
+        };
+        const onUp = up => {
+          document.removeEventListener('pointermove', onMove);
+          document.removeEventListener('pointerup', onUp);
+          const target = document.elementFromPoint(up.clientX, up.clientY)?.closest('.dev-de-node');
+          const targetId = target?.id?.startsWith('de-node-') ? target.id.slice('de-node-'.length) : null;
+          if (targetId && data.nodes[targetId]) this._finishConnect(targetId);
+          else this._cancelConnect();
+        };
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onUp, { once: true });
+      }));
+      div.addEventListener('pointerdown', e=>{
         if (e.button!==0) return;
+        if (e.target.closest('.dev-de-option-pin') || e.target.closest('button')) return;
         if (this._connectMode) { this._finishConnect(node.id); return; }
         e.stopPropagation();
-        this._selectNode(node.id);
+        this.selectedNodeId=node.id;
+        this._loadNodeEditor();
+        div.classList.add('selected');
         const sx=e.clientX, sy=e.clientY, ox=node.x||60, oy=node.y||60;
         let moved=false;
         const onMove=mv=>{ moved=true; node.x=Math.max(0,ox+(mv.clientX-sx)); node.y=Math.max(0,oy+(mv.clientY-sy)); div.style.left=node.x+'px'; div.style.top=node.y+'px'; this._drawArrows(data); };
-        const onUp=()=>{ document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); if(moved) this._saveLS(); };
-        document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
+        const onUp=()=>{ document.removeEventListener('pointermove',onMove); document.removeEventListener('pointerup',onUp); this._dragState=null; if(moved) this._saveLS(); };
+        this._dragState={nodeId:node.id};
+        document.addEventListener('pointermove',onMove);
+        document.addEventListener('pointerup',onUp, { once: true });
       });
       container.appendChild(div);
     });
@@ -487,6 +518,21 @@ export class DevDialogueEditorTab {
       if(node.next) arc(node.id,node.next,'#000080',false);
       (node.options||[]).forEach((opt,i)=>{ if(opt.next) arc(node.id,opt.next,`hsl(${(i*55+200)%360},60%,40%)`,true); });
     });
+  }
+
+  _drawTempConnection(source, clientX, clientY) {
+    const svg=this._el('de-canvas-svg'), wrap=this._el('de-canvas-container');
+    if(!svg||!wrap||!source) return;
+    const wr=wrap.getBoundingClientRect(), sx=wrap.scrollLeft, sy=wrap.scrollTop;
+    const sr=source.getBoundingClientRect();
+    const x1=sr.left-wr.left+sr.width/2+sx, y1=sr.top-wr.top+sr.height/2+sy;
+    const x2=clientX-wr.left+sx, y2=clientY-wr.top+sy;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const dx=Math.max(40, Math.abs(x2-x1)/2);
+    p.setAttribute('d',`M${x1},${y1} C${x1+dx},${y1} ${x2-dx},${y2} ${x2},${y2}`);
+    p.setAttribute('stroke','#cc6600'); p.setAttribute('stroke-width','2');
+    p.setAttribute('stroke-dasharray','5,3'); p.setAttribute('fill','none');
+    svg.appendChild(p);
   }
 
   _selectNode(id) {
@@ -706,6 +752,7 @@ export class DevDialogueEditorTab {
 
   _cancelConnect() {
     this._connectMode = false; this._connectFrom = null;
+    this._connectDrag = null;
     const container = this._el('de-canvas-nodes');
     if (container) container.style.cursor = '';
     this._st('');

@@ -32,6 +32,26 @@ class DialogueProgress {
   reset(app) {
     this.set(app, null, null);
   }
+
+  snapshot() {
+    return {
+      his: { ...this.his },
+      social: { ...this.social },
+      chatgtp: { ...this.chatgtp },
+    };
+  }
+
+  restore(snapshot = {}) {
+    ["his", "social", "chatgtp"].forEach((app) => {
+      const value = snapshot[app];
+      if (!value || typeof value !== "object") return;
+      this[app] = {
+        actorId: value.actorId == null ? null : String(value.actorId),
+        nodeId: value.nodeId == null ? null : String(value.nodeId),
+      };
+    });
+    eventBus.emit("dialogueProgress:restored", this.snapshot());
+  }
 }
 
 export const dialogueProgress = new DialogueProgress();

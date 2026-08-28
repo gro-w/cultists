@@ -8,19 +8,19 @@
 
 | 状态域 | 所有者 | 重要变量 | 当前调试器 |
 | --- | --- | --- | --- |
-| 游戏时间与模式 | `GameState` / `TimeService` | `day`、`clockMinutes`、`phase`、`duty`、`location`、`phaseMinutes`、`sleepHistory`、`insufficientSleepStreak`、`energy`、`mental`、`physical`、`satiety`、`recoverableMentalLoss` | 时间与读档（部分） |
+| 游戏时间与模式 | `GameState` / `TimeService` | `day`、`clockMinutes`、`phase`、`duty`、`location`、`phaseMinutes`、`sleepHistory`、`insufficientSleepStreak`、`energy`、`mental`、`physical`、`satiety`、`recoverableMentalLoss` | 时间与读档 |
 | 工作/社交/ChatGTP/实时流程 | `ScheduleQueue` | `workQueue`、`socialQueue`、`chatgtpQueue`、`realtimeQueue` 的全部实例：`scheduleId`、`instanceId`、`status`、`payload`、接收时间、transcript 及实例扩展字段 | 无专用队列调试器 |
 | 日程来源与动态追加 | `ScheduleData` | `fired`、`pendingAdds`、`lastAbsoluteMinute`、动态日程请求及其目标队列 | 无 |
-| 玩家背包 | `ItemManager` | 物品 ID 与持有数量 | 背包控制器 |
-| 场景物品摆放 | `ItemPlacementManager` | 每个 placement 的 `placed` 状态 | 无 |
-| 关键词笔记本 | `KeywordManager` | 已收集关键词 ID、`collectedDay`；定义注册表为静态数据 | 无运行时调试器 |
-| 法术 | `SpellManager` | 已学习法术完整对象、来源书籍、索引及施放参数 | 无 |
-| NPC SAN/在线状态 | `NpcStateManager` | 每个 NPC 的 SAN、`offlineActors`、`pendingOfflineActors` | NPC 状态调节 |
-| NPC 好感度 | `FavorabilityManager` | `values`、`hadPositive` | NPC 状态调节可修改，但不是独立好感度调试器 |
-| 对话恢复位置 | `DialogueProgress` | HIS/Social/ChatGTP 的 `actorId`、`nodeId` | NPC 状态调节器内有入口 |
-| HIS/医疗流程 | `MedicalCaseManager` | `submissions`、`income`、`pendingIncome`、`pendingExpenses`、`settledDays`、`pendingIncidents` | 无 |
-| 全局变量当前值 | `GlobalVariableManager` | 每个定义 ID 对应的当前 `value` | 定义编辑器兼有当前值控件；应拆出运行时调试器 |
-| 结局锁定状态 | `EndingManager` | `_ended` | 无 |
+| 玩家背包 | `ItemManager` | 物品 ID 与持有数量 | 玩家与资源 |
+| 场景物品摆放 | `ItemPlacementManager` | 每个 placement 的 `placed` 状态 | 世界与场景 |
+| 关键词笔记本 | `KeywordManager` | 已收集关键词 ID、`collectedDay`；定义注册表为静态数据 | 玩家与资源（只读） |
+| 法术 | `SpellManager` | 已学习法术完整对象、来源书籍、索引及施放参数 | 玩家与资源（只读） |
+| NPC SAN/在线状态 | `NpcStateManager` | 每个 NPC 的 SAN、`offlineActors`、`pendingOfflineActors` | NPC与对话 |
+| NPC 好感度 | `FavorabilityManager` | `values`、`hadPositive` | NPC与对话 |
+| 对话恢复位置 | `DialogueProgress` | HIS/Social/ChatGTP 的 `actorId`、`nodeId` | NPC与对话 |
+| HIS/医疗流程 | `MedicalCaseManager` | `submissions`、`income`、`pendingIncome`、`pendingExpenses`、`settledDays`、`pendingIncidents` | 医疗与结局 |
+| 全局变量当前值 | `GlobalVariableManager` | 每个定义 ID 对应的当前 `value` | 世界与场景 |
+| 结局锁定状态 | `EndingManager` | `_ended` | 医疗与结局 |
 | 成就跨周目状态 | `AchievementManager` | 成就解锁、时间、进度、已读状态、`_sanEverLow`、`_readNodeIds` | 无；故意使用 localStorage 跨周目保存 |
 | BGM 播放层 | `BgmManager` | 当前轨道、对话 BGM 栈、结局 BGM、淡出/待播放状态 | 无；主要为临时表现状态 |
 | 窗口布局 | `WindowManager` | 已打开 appId、窗口 x/y 及窗口顺序 | 时间与读档中的读档恢复间接覆盖 |
@@ -28,7 +28,7 @@
 
 ## 2. 当前 URL 存档实际保存的运行时变量
 
-`SaveManager` 当前格式为 v12，`_encode()` 保存以下域：
+`SaveManager` 当前格式为 v13，`_encode()` 保存以下域：
 
 1. **`gameState`**：`day`、`clockMinutes`、`phase`、`duty`、`location`、`energy`、`mental`、`physical`、`satiety`、`recoverableMentalLoss`。
 2. **`timeService`**：`phaseMinutes`、最近三次 `sleepHistory`、`insufficientSleepStreak`。
@@ -44,20 +44,25 @@
 12. **`windows`**：打开窗口的 `appId`、`x`、`y`。
 13. **`spells`**：已学习法术完整对象数组。
 14. **`scheduledAdds`**：动态日程的 `scheduleId`、`addTime`、可选 `queueId`。
+15. **`favorability`**：NPC 好感度值和 `hadPositive`。
+16. **`itemPlacements`**：场景物品的 `placed` 状态。
+17. **`dialogueProgress`**：HIS/Social/ChatGTP 的当前 actor/node。
+18. **`ending`**：结局是否已经锁定。
 
 以上所有字段均为重要运行时状态。当前解码路径逐项恢复这些字段；不应把窗口布局、静态定义副本或实例 transcript 当成可忽略的临时数据。
 
-## 3. 存档缺口与需要后续决策的状态
+## 3. 已修复的存档缺口与仍需后续决策的状态
 
-以下对象存在运行时状态及 `snapshot/restore()`，但当前没有进入 `SaveManager._encode()`：
+审计发现并已在 v13 修复的缺口：
 
-- `FavorabilityManager`：好感度 `values` 与 `hadPositive`。
-- `ItemPlacementManager`：场景物品 `placed` 映射。
-- `DialogueProgress`：HIS/Social/ChatGTP 当前对话位置；其文件注释明确声称应参与存档，但当前 v12 编解码未实现。
+- `FavorabilityManager`：好感度 `values` 与 `hadPositive`，保存键为 `favorability`。
+- `ItemPlacementManager`：场景物品 `placed` 映射，保存键为 `itemPlacements`。
+- `DialogueProgress`：HIS/Social/ChatGTP 当前对话位置，保存键为 `dialogueProgress`。
+- `EndingManager`：结局锁定状态，保存键为 `ending`。
 
-这些不是“无需调试”的状态，而是“重要且当前持久化不完整”的状态。应在后续单独决定：加入 v13 存档，或明确将它们定义为读档后重新计算/清空的非持久状态。若加入存档，必须同时增加恢复校验和确定性 round-trip 探针。
+这些状态均由各自 owner 的 `snapshot/restore()` 负责，SaveManager 只负责编排保存和恢复顺序。
 
-`EndingManager._ended` 也没有存档。它是否需要持久化取决于产品规则：结局后是否允许保存并恢复到结局界面；当前实现没有提供该语义。
+`EndingManager._ended` 已由 v13 的 `ending.ended` 保存并恢复；开发调试器提供重置和触发操作，仍遵循 EndingManager 的首个结局规则。
 
 成就状态和设置不是 URL 游戏存档：
 
@@ -75,9 +80,9 @@
 - 通过 `TimeService.debugSetTime()` 调整时间。
 - 强制结束当前工作批次。
 
-它覆盖了 `GameState` 的基础时间/模式字段，但尚未提供 `TimeService` 的睡眠历史、睡眠债、阶段分钟等细粒度观察控件。
+它覆盖了 `GameState` 的基础时间/模式字段，以及 `TimeService` 的阶段分钟、睡眠历史和睡眠不足连续天数观察。
 
-### NPC 状态调节
+### NPC与对话
 
 当前覆盖：
 
@@ -86,33 +91,32 @@
 - 三名核心角色的好感度。
 - HIS/Social/ChatGTP 对话恢复位置。
 
-它实际上是“NPC 与对话状态”组合调试器，后续可保留组合，但应在界面上分成两个明确分组。
+它现在以“NPC与对话”为入口，并在界面上分成 NPC 状态和对话进度两个明确分组。
 
-### 背包控制器
+### 玩家与资源
 
 当前覆盖：
 
 - 增加物品。
 - 减少一个物品。
 - 清空某物品。
+- 修改玩家 energy、mental、physical、satiety。
+- 只读查看已学习法术和已收集关键词。
 
-它覆盖 `ItemManager.inventory`，但不覆盖场景物品摆放，也不直接展示物品相关实时日程。
+它覆盖 `GameState` 和 `ItemManager.inventory`，场景物品由“世界与场景”负责。
 
-## 5. 没有调试器的系统
+### 日程与队列、世界与场景、医疗与结局
 
-以下系统目前没有专用运行时调试器：
+三个新增入口分别覆盖四条队列及实例状态、场景物品/全局变量当前值，以及 HIS 医疗账目/提交和结局锁定状态。
 
-1. 四个日程队列的实例、状态、transcript 和队列清理/完成操作。
-2. `ScheduleData.pendingAdds` 动态追加请求、已触发 checkpoint 集合。
-3. `ItemPlacementManager.placed` 场景物品摆放状态。
-4. `KeywordManager` 已收集关键词及收集日期。
-5. `SpellManager` 已学习法术。
-6. `MedicalCaseManager` 的 HIS 提交、待结算收入支出和待处理医闹事件。
-7. `GlobalVariableManager` 当前值（现有全局变量定义编辑器不应替代运行时调试器）。
-8. `EndingManager._ended` 结局锁定状态。
-9. `TimeService` 的阶段累计分钟、睡眠历史和睡眠债细节。
-10. `FavorabilityManager.hadPositive` 的成就相关辅助状态；好感度数值虽可从 NPC 调试器修改，但该辅助集合没有独立可视化。
-11. `BgmManager` 的对话栈和结局 BGM 层（通常属于表现层，不建议优先开放）。
+## 5. 仍未提供独立调试器的状态
+
+以下状态仍没有独立入口，或仅以只读方式呈现在组合调试器中：
+
+1. `ScheduleData.fired`、`pendingAdds`、`lastAbsoluteMinute` 尚未在“日程与队列”中单独展示。
+2. `KeywordManager` 和 `SpellManager` 当前只读展示，尚未提供独立的运行时增删控件。
+3. `FavorabilityManager.hadPositive` 尚未单独展示，但已随 NPC 与对话调试器和 v13 存档覆盖。
+4. `BgmManager` 的对话栈和结局 BGM 层（通常属于表现层，不建议优先开放）。
 
 ## 6. 推荐的调试器分组
 

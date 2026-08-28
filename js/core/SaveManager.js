@@ -10,10 +10,13 @@ import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
 import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
+import { favorabilityManager } from "./FavorabilityManager.js";
+import { dialogueProgress } from "./DialogueProgress.js";
+import { endingManager } from "./EndingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v12 = v11 plus unified schedule instance payloads and checkpoints.
-const SAVE_FORMAT_VERSION = 12;
+// v13 = v12 plus all runtime snapshot owners that previously had a persistence gap.
+const SAVE_FORMAT_VERSION = 13;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];
@@ -36,7 +39,7 @@ function base64UrlDecode(str) {
 }
 
 /**
- * SaveManager packs the complete v12 game state into a version-prefixed JSON
+ * SaveManager packs the complete v13 game state into a version-prefixed JSON
  * payload, base64url-encodes it, and writes it to `location.search` so a save
  * is represented by the current URL. Loading reverses the process.
  */
@@ -123,6 +126,10 @@ class SaveManager {
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
       spells: spellManager.all(),
       scheduledAdds: scheduleData.snapshotScheduled(),
+      favorability: favorabilityManager.snapshot(),
+      itemPlacements: itemPlacementManager.snapshot(),
+      dialogueProgress: dialogueProgress.snapshot(),
+      ending: endingManager.snapshot(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
   }
@@ -152,21 +159,30 @@ class SaveManager {
     if (!Number.isInteger(payload.gameState.day) || payload.gameState.day < 1 || payload.gameState.day > MAX_GAME_DAYS) {
       throw new Error("Save belongs to an unsupported game day");
     }
-    globalVariableManager.restore(payload.globalVariables || []);
-    gameState.restore(payload.gameState);
-    timeService.restore(payload.timeService || {});
-    workQueue.restore(payload.workQueue);
-    socialQueue.restore(payload.socialQueue);
-    chatgtpQueue.restore(payload.chatgtpQueue || []);
-    realtimeQueue.restore(payload.realtimeQueue || []);
-    scheduleData.restoreScheduled(payload.scheduledAdds || []);
-    keywordManager.restoreCollected(payload.keywords || []);
-    itemManager.restoreInventory(payload.inventory || []);
-    spellManager.restore(payload.spells || []);
-    npcStateManager.restore(payload.npcState || {});
-    medicalCaseManager.restore(payload.medical || {});
-    scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
-    this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
+    endingManager.beginRestore();
+    try {
+      globalVariableManager.restore(payload.globalVariables || []);
+      gameState.restore(payload.gameState);
+      timeService.restore(payload.timeService || {});
+      workQueue.restore(payload.workQueue);
+      socialQueue.restore(payload.socialQueue);
+      chatgtpQueue.restore(payload.chatgtpQueue || []);
+      realtimeQueue.restore(payload.realtimeQueue || []);
+      scheduleData.restoreScheduled(payload.scheduledAdds || []);
+      keywordManager.restoreCollected(payload.keywords || []);
+      itemManager.restoreInventory(payload.inventory || []);
+      spellManager.restore(payload.spells || []);
+      npcStateManager.restore(payload.npcState || {});
+      medicalCaseManager.restore(payload.medical || {});
+      favorabilityManager.restore(payload.favorability || {});
+      itemPlacementManager.restore(payload.itemPlacements || []);
+      dialogueProgress.restore(payload.dialogueProgress || {});
+      endingManager.restore(payload.ending || {});
+      scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
+      this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
+    } finally {
+      endingManager.endRestore();
+    }
     return;
   }
 }

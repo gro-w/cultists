@@ -29,6 +29,7 @@ class EndingManager {
     this.defaultEndingId = null;
     this._loadPromise = null;
     this._ended = false;
+    this._restoring = false;
   }
 
   /**
@@ -59,7 +60,7 @@ class EndingManager {
   }
 
   _checkStatTriggers(snapshot) {
-    if (this._ended) return;
+    if (this._ended || this._restoring) return;
     for (const t of this.statTriggers) {
       const value = snapshot[t.stat];
       if (value == null) continue;
@@ -87,7 +88,7 @@ class EndingManager {
 
   /** Trigger an ending by id (no-op if the game has already ended, or the id is unknown). */
   trigger(endingId) {
-    if (this._ended) return;
+    if (this._ended || this._restoring) return;
     const def = this.defs.get(endingId);
     if (!def) {
       console.warn(`[EndingManager] Unknown ending id "${endingId}".`);
@@ -131,6 +132,19 @@ class EndingManager {
   get isEnded() {
     return this._ended;
   }
+
+  snapshot() {
+    return { ended: this._ended === true };
+  }
+
+  restore(snapshot = {}) {
+    this._ended = snapshot?.ended === true;
+    eventBus.emit("ending:restored", this.snapshot());
+  }
+
+  beginRestore() { this._restoring = true; }
+
+  endRestore() { this._restoring = false; }
 
   /** Subscribe to the ending being triggered; handler receives the ending def. */
   onEnding(handler) {

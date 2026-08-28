@@ -15,7 +15,7 @@ export function getStatValue(statId) {
   if (id === "actionBudget:phaseMinutes") return actionBudget.phaseMinutes;
   if (id === "actionBudget:dialogue") return actionBudget.used.dialogue;
   if (id === "actionBudget:inspect") return actionBudget.used.inspect;
-  if (id === "gameTime") return gameState.day * 1440 + gameState.clockMinutes;
+  if (id === "gameTime") return gameState.getGameTime();
   return undefined;
 }
 

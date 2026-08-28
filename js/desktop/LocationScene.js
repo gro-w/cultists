@@ -83,7 +83,8 @@ export default class LocationScene {
     // Re-render when items change (pick up / use)
     if (this._offItems) this._offItems();
     this._offItems = eventBus.on("items:changed", () => this._renderItems(loc));
-    eventBus.on("item-placements:changed", () => this._renderItems(loc));
+    if (this._offPlacements) this._offPlacements();
+    this._offPlacements = eventBus.on("item-placements:changed", () => this._renderItems(loc));
 
     // Swap background when sanity changes while scene is open
     if (this._offSan) this._offSan();
@@ -93,8 +94,9 @@ export default class LocationScene {
   hide() {
     this._container.classList.add("hidden");
     this._locationId = null;
-    if (this._offItems) { this._offItems(); this._offItems = null; }
-    if (this._offSan)   { this._offSan();   this._offSan   = null; }
+    if (this._offItems)      { this._offItems();      this._offItems      = null; }
+    if (this._offPlacements) { this._offPlacements(); this._offPlacements = null; }
+    if (this._offSan)        { this._offSan();        this._offSan        = null; }
   }
 
   // ── Item rendering ───────────────────────────────────────────────────────────

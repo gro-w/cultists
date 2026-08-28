@@ -8,6 +8,8 @@
           "n_mc.o56": {
             "speaker": "player",
             "text": "test1",
+            "x": 153,
+            "y": 165,
             "options": [
               {
                 "label": "test1",
@@ -21,11 +23,27 @@
           },
           "n_fe.4xu": {
             "speaker": "player",
-            "text": ""
+            "text": "",
+            "x": 1060,
+            "y": 308,
+            "options": [
+              {
+                "label": "",
+                "next": null
+              }
+            ]
           },
           "n_uh.lw6": {
             "speaker": "player",
-            "text": ""
+            "text": "",
+            "x": 747,
+            "y": 497,
+            "options": [
+              {
+                "label": "test3",
+                "next": "n_fe.4xu"
+              }
+            ]
           }
         }
       }

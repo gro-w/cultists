@@ -1,0 +1,148 @@
+import { dataLoader } from "./DataLoader.js";
+import { eventBus } from "./EventBus.js";
+
+const TYPES = new Set(["bool", "number", "string"]);
+const OPERATORS = new Set(["eq", "neq", "gt", "gte", "lt", "lte"]);
+
+function clone(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function variableId(value) {
+  const id = Number(value);
+  return Number.isInteger(id) && id >= 0 ? id : null;
+}
+
+/** Owns named, data-defined variables shared by dialogue and event systems. */
+class GlobalVariableManager {
+  constructor() {
+    this.definitions = [];
+    this.values = new Map();
+    this._initPromise = null;
+  }
+
+  async init() {
+    if (!this._initPromise) {
+      this._initPromise = dataLoader.loadJSON("global_variables.json").then((data) => {
+        this.replaceDefinitions(Array.isArray(data) ? data : Array.isArray(data?.variables) ? data.variables : [], { emit: false });
+      });
+    }
+    return this._initPromise;
+  }
+
+  definition(id) {
+    const normalized = variableId(id);
+    return normalized == null ? null : this.definitions.find((definition) => definition.id === normalized) || null;
+  }
+
+  get(id) {
+    const definition = this.definition(id);
+    return definition ? this.values.get(definition.id) : undefined;
+  }
+
+  _coerce(definition, value) {
+    if (definition.type === "bool") {
+      if (typeof value !== "boolean") throw new Error(`Global variable ${definition.id} must be bool`);
+      return value;
+    }
+    if (definition.type === "number") {
+      const number = Number(value);
+      if (!Number.isFinite(number) || number < 0 || number > 256) {
+        throw new Error(`Global variable ${definition.id} must be a number from 0 to 256`);
+      }
+      return number;
+    }
+    if (typeof value !== "string") throw new Error(`Global variable ${definition.id} must be string`);
+    return value;
+  }
+
+  set(id, value, { emit = true } = {}) {
+    const definition = this.definition(id);
+    if (!definition) throw new Error(`Unknown global variable: ${id}`);
+    const next = this._coerce(definition, value);
+    const previous = this.values.get(definition.id);
+    this.values.set(definition.id, next);
+    if (emit && previous !== next) eventBus.emit("global-variable:changed", { id: definition.id, name: definition.name, previous, value: next });
+    return next;
+  }
+
+  modify(id, change, options = {}) {
+    const definition = this.definition(id);
+    if (!definition || definition.type !== "number") throw new Error(`Only number variables can be modified: ${id}`);
+    return this.set(definition.id, this.get(definition.id) + Number(change), options);
+  }
+
+  replaceDefinitions(rawDefinitions, { emit = true } = {}) {
+    if (!Array.isArray(rawDefinitions)) throw new Error("Global variables must be an array");
+    const definitions = rawDefinitions.map((raw) => {
+      const id = variableId(raw?.id);
+      if (id == null) throw new Error("Global variable IDs must be integers from 0");
+      if (!raw.name || typeof raw.name !== "string") throw new Error(`Global variable ${id} needs a name`);
+      if (!TYPES.has(raw.type)) throw new Error(`Invalid global variable type for ${id}`);
+      const definition = { id, name: raw.name, type: raw.type };
+      definition.default = this._coerce(definition, raw.default ?? (raw.type === "bool" ? false : raw.type === "number" ? 0 : ""));
+      return definition;
+    });
+    if (new Set(definitions.map((definition) => definition.id)).size !== definitions.length) throw new Error("Global variable IDs must be unique");
+    definitions.sort((a, b) => a.id - b.id);
+    const oldValues = this.values;
+    this.definitions = definitions;
+    this.values = new Map(definitions.map((definition) => {
+      const old = oldValues.get(definition.id);
+      try { return [definition.id, old === undefined ? definition.default : this._coerce(definition, old)]; }
+      catch { return [definition.id, definition.default]; }
+    }));
+    if (emit) eventBus.emit("global-variables:changed", this.snapshot());
+  }
+
+  matches(condition) {
+    if (!condition) return true;
+    if (Array.isArray(condition)) return condition.every((item) => this.matches(item));
+    if (condition.globalVariables) return this.matches(condition.globalVariables);
+    if (condition.all) return this.matches(condition.all);
+    if (condition.any) return condition.any.some((item) => this.matches(item));
+    const id = condition.id ?? condition.variableId;
+    const actual = this.get(id);
+    if (actual === undefined) return false;
+    if (Object.prototype.hasOwnProperty.call(condition, "equals")) return actual === condition.equals;
+    if (Object.prototype.hasOwnProperty.call(condition, "notEquals")) return actual !== condition.notEquals;
+    const operator = condition.op || "eq";
+    if (!OPERATORS.has(operator)) return false;
+    const expected = condition.value;
+    if (operator === "eq") return actual === expected;
+    if (operator === "neq") return actual !== expected;
+    if (operator === "gt") return actual > expected;
+    if (operator === "gte") return actual >= expected;
+    if (operator === "lt") return actual < expected;
+    return actual <= expected;
+  }
+
+  applyEffects(effects = []) {
+    if (!Array.isArray(effects)) return;
+    effects.forEach((effect) => {
+      const id = effect?.id ?? effect?.variableId;
+      if (Object.prototype.hasOwnProperty.call(effect || {}, "value")) this.set(id, effect.value);
+      else if (Object.prototype.hasOwnProperty.call(effect || {}, "delta")) this.modify(id, effect.delta);
+    });
+  }
+
+  snapshot() {
+    return this.definitions.map((definition) => ({ id: definition.id, value: clone(this.values.get(definition.id)) }));
+  }
+
+  restore(entries = []) {
+    if (!Array.isArray(entries)) throw new Error("Invalid global variable state");
+    this.values = new Map(this.definitions.map((definition) => [definition.id, definition.default]));
+    entries.forEach((entry) => {
+      if (this.definition(entry?.id)) this.set(entry.id, entry.value, { emit: false });
+    });
+    eventBus.emit("global-variables:changed", this.snapshot());
+  }
+
+  all() {
+    return this.definitions.map((definition) => ({ ...definition, value: clone(this.values.get(definition.id)) }));
+  }
+}
+
+export const globalVariableManager = new GlobalVariableManager();
+export default GlobalVariableManager;

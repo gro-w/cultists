@@ -1,6 +1,7 @@
 import { dataLoader } from "./DataLoader.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 function clone(value) {
   return value == null ? value : JSON.parse(JSON.stringify(value));
@@ -52,7 +53,8 @@ class SpecialEventManager {
     const favorability = favorabilityManager.get(event.npcId);
     const san = npcStateManager.get(event.npcId);
     return inRange(favorability, event.favorability?.min, event.favorability?.max)
-      && inRange(san, event.san?.min, event.san?.max);
+      && inRange(san, event.san?.min, event.san?.max)
+      && globalVariableManager.matches(event.condition || event.globalVariableCondition);
   }
 
   eventFor(day, phase, actor) {

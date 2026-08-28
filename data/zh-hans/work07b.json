@@ -1,3 +1,2236 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "id": "patient_08_01_kidney_stone",
+      "type": "his",
+      "name": "赵明宇",
+      "age": 27,
+      "correctDiagnosisId": "kidney_stone",
+      "diagnosisOptionIds": [
+        "kidney_stone",
+        "nausea_vomiting",
+        "closed_foot_fracture"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵明宇",
+              "text": "医生您好，我叫赵明宇，今年27岁。最近主要是[[symptom_104]]，还伴有[[symptom_169]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵明宇",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_104]]，同时还有[[symptom_169]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵明宇",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:kidney_stone:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵明宇",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_169]]比较明显；这几天也注意到[[symptom_169]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_08_02_benign_prostatic_hyperplasia",
+      "type": "his",
+      "name": "何欣怡",
+      "age": 37,
+      "correctDiagnosisId": "benign_prostatic_hyperplasia",
+      "diagnosisOptionIds": [
+        "benign_prostatic_hyperplasia",
+        "lymphadenopathy",
+        "gingivitis"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "何欣怡",
+              "text": "医生您好，我叫何欣怡，今年37岁。最近主要是[[symptom_099]]，还伴有[[symptom_100]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "何欣怡",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_099]]，同时还有[[symptom_103]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "何欣怡",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:benign_prostatic_hyperplasia:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "何欣怡",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_100]]比较明显；这几天也注意到[[symptom_103]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_08_03_nausea_vomiting",
+      "type": "his",
+      "name": "许可欣",
+      "age": 21,
+      "correctDiagnosisId": "nausea_vomiting",
+      "diagnosisOptionIds": [
+        "nausea_vomiting",
+        "orthostatic_hypotension",
+        "plantar_fasciitis"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "许可欣",
+              "text": "医生您好，我叫许可欣，今年21岁。最近主要是[[symptom_003]]，还伴有[[symptom_004]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "许可欣",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_003]]，同时还有[[symptom_004]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "许可欣",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:nausea_vomiting:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "许可欣",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_004]]比较明显；这几天也注意到[[symptom_004]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_08_04_lymphadenopathy",
+      "type": "his",
+      "name": "宋文博",
+      "age": 34,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "closed_foot_fracture",
+        "hyperthyroidism"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋文博",
+              "text": "医生您好，我叫宋文博，今年34岁。最近主要是[[symptom_164]]，还伴有[[symptom_165]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋文博",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_164]]，同时还有[[symptom_166]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋文博",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:lymphadenopathy:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋文博",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_165]]比较明显；这几天也注意到[[symptom_166]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_08_05_orthostatic_hypotension",
+      "type": "his",
+      "name": "罗若琳",
+      "age": 60,
+      "correctDiagnosisId": "orthostatic_hypotension",
+      "diagnosisOptionIds": [
+        "orthostatic_hypotension",
+        "gingivitis",
+        "hypothyroidism"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "罗若琳",
+              "text": "医生您好，我叫罗若琳，今年60岁。最近主要是[[symptom_200]]，还伴有[[symptom_037]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "罗若琳",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_200]]，同时还有[[symptom_198]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "罗若琳",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:orthostatic_hypotension:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "罗若琳",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_037]]比较明显；这几天也注意到[[symptom_198]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_08_06_closed_foot_fracture",
+      "type": "his",
+      "name": "赵诗涵",
+      "age": 63,
+      "correctDiagnosisId": "closed_foot_fracture",
+      "diagnosisOptionIds": [
+        "closed_foot_fracture",
+        "plantar_fasciitis",
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵诗涵",
+              "text": "医生您好，我叫赵诗涵，今年63岁。最近主要是[[symptom_185]]，还伴有[[symptom_188]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵诗涵",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_185]]，同时还有[[symptom_189]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵诗涵",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:closed_foot_fracture:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "赵诗涵",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_188]]比较明显；这几天也注意到[[symptom_189]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_08_07_gingivitis",
+      "type": "his",
+      "name": "宋语嫣",
+      "age": 22,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "hyperthyroidism",
+        "iron_deficiency_anemia"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋语嫣",
+              "text": "医生您好，我叫宋语嫣，今年22岁。最近主要是[[symptom_015]]，还伴有[[symptom_066]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋语嫣",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_015]]，同时还有[[symptom_066]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋语嫣",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:gingivitis:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "宋语嫣",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_066]]比较明显；这几天也注意到[[symptom_066]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_extra_07_b_08",
+      "type": "his",
+      "name": "马思远",
+      "age": 21,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "hyperthyroidism",
+        "iron_deficiency_anemia"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "马思远",
+              "text": "医生您好，我叫马思远，今年22岁。最近主要是[[symptom_015]]，还伴有[[symptom_066]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "马思远",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_015]]，同时还有[[symptom_066]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "马思远",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:gingivitis:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "马思远",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_066]]比较明显；这几天也注意到[[symptom_066]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "patient_extra_07_b_09",
+      "type": "his",
+      "name": "沈欣怡",
+      "age": 23,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "hyperthyroidism",
+        "iron_deficiency_anemia"
+      ],
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 260
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "inputs": {
+              "speaker": "沈欣怡",
+              "text": "医生您好，我叫沈欣怡，今年22岁。最近主要是[[symptom_015]]，还伴有[[symptom_066]]，所以来医院看看。"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 260
+          },
+          "time_intro": {
+            "id": "time_intro",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 260
+          },
+          "main_choice": {
+            "id": "main_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "详细询问主诉和症状变化",
+                "next": "answer_symptom"
+              },
+              {
+                "label": "询问既往病史和用药情况",
+                "next": "answer_history"
+              },
+              {
+                "label": "询问伴随症状和危险信号",
+                "next": "answer_risk"
+              }
+            ],
+            "outputs": {},
+            "x": 760,
+            "y": 260
+          },
+          "answer_symptom": {
+            "id": "answer_symptom",
+            "type": "text",
+            "inputs": {
+              "speaker": "沈欣怡",
+              "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_015]]，同时还有[[symptom_066]]，活动或休息时都会感觉到。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 80
+          },
+          "time_symptom": {
+            "id": "time_symptom",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 80
+          },
+          "answer_history": {
+            "id": "answer_history",
+            "type": "text",
+            "inputs": {
+              "speaker": "沈欣怡",
+              "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:gingivitis:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 260
+          },
+          "time_history": {
+            "id": "time_history",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 260
+          },
+          "answer_risk": {
+            "id": "answer_risk",
+            "type": "text",
+            "inputs": {
+              "speaker": "沈欣怡",
+              "text": "目前没有昏厥或剧烈出血，只是[[symptom_066]]比较明显；这几天也注意到[[symptom_066]]，因此有些担心。"
+            },
+            "outputs": {},
+            "x": 1020,
+            "y": 440
+          },
+          "time_risk": {
+            "id": "time_risk",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1270,
+            "y": 440
+          },
+          "closing": {
+            "id": "closing",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
+            },
+            "outputs": {},
+            "x": 1510,
+            "y": 260
+          },
+          "time_closing": {
+            "id": "time_closing",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1760,
+            "y": 260
+          },
+          "scheduleEnd": {
+            "id": "scheduleEnd",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 2010,
+            "y": 260
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "answer_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "time_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_symptom",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_history",
+            "fromPort": "flowOut",
+            "toNodeId": "time_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_history",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "answer_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "time_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_risk",
+            "fromPort": "flowOut",
+            "toNodeId": "closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro",
+            "fromPort": "flowOut",
+            "toNodeId": "time_intro",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_intro",
+            "fromPort": "flowOut",
+            "toNodeId": "main_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option0",
+            "toNodeId": "answer_symptom",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option1",
+            "toNodeId": "answer_history",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "main_choice",
+            "fromPort": "option2",
+            "toNodeId": "answer_risk",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "closing",
+            "fromPort": "flowOut",
+            "toNodeId": "time_closing",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_closing",
+            "fromPort": "flowOut",
+            "toNodeId": "scheduleEnd",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    }
+  ]
 }

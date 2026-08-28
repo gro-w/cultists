@@ -87,6 +87,43 @@
 
 .his-patient-btn {
   text-align: left;
+  font-weight: bold;
+}
+
+.his-patient-btn.his-patient-submitted {
+  font-weight: normal;
+}
+
+.his-prescription-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.his-prescription-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.his-prescription-row .his-medicine-category,
+.his-prescription-row .his-medicine-select {
+  flex: 1;
+  min-width: 0;
+}
+
+.his-prescription-copy,
+.his-prescription-delete {
+  flex: 0 0 24px;
+  min-width: 24px;
+  padding: 1px 4px;
+}
+
+.his-prescription-delete:disabled {
+  color: var(--w95-gray-dark);
+  cursor: default;
+  text-shadow: 1px 1px var(--w95-white);
 }
 
 .his-schedule-note {

@@ -277,7 +277,7 @@ export class ScheduleRunner {
         this.instance.currentNodeId = next || null;
         this.onCheckpoint(this.instance);
         this._run(next);
-        if (this.appId === "his") eventBus.emit("his:dialogue_choice_selected", { instanceId: this.instance.instanceId, nodeId: node.id, optionIndex: index });
+        if (this.appId === "his-patient") eventBus.emit("his:dialogue_choice_selected", { instanceId: this.instance.instanceId, nodeId: node.id, optionIndex: index });
       });
       this.optionsEl.appendChild(button);
     });

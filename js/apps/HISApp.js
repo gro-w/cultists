@@ -237,7 +237,7 @@ export async function launchHISApp() {
       instance: patient.queueEntry,
       appendLine,
       optionsEl,
-      appId: "his",
+      appId: "his-patient",
       onCheckpoint: (instance) => {
         return workQueue.updateInstance(instance.instanceId, instance);
       },

@@ -57,9 +57,11 @@ class FavorabilityManager {
   async load() {
     if (!this._loadPromise) this._loadPromise = Promise.all([globalVariableManager.init(), dataLoader.loadJSON("npcs.json")]).then(([, data]) => {
       this.npcs = data.npcs || [];
-      this.npcs.slice(0, 20).forEach((npc, index) => {
-        this.indexById.set(npc.id, index);
-        const value = globalVariableManager.get(40 + index);
+      this.npcs.forEach((npc) => {
+        const numericId = Number(npc.numericid);
+        if (!Number.isInteger(numericId) || numericId < 0 || numericId >= 20) return;
+        this.indexById.set(npc.id, numericId);
+        const value = globalVariableManager.get(40 + numericId);
         this.values.set(npc.id, value);
       });
     });

@@ -60,7 +60,7 @@ function keywordCategory(keyword) {
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 const DEDICATED_EDITOR_TITLES = {
   "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
-  medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器", "npc-state": "NPC 状态规则编辑器",
+  medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器",
   "time-rules": "时间规则编辑器", calendar: "日历规则编辑器", achievements: "成就定义编辑器",
   skills: "技能定义编辑器", "monitor-scenes": "监控场景编辑器",
 };
@@ -416,13 +416,13 @@ export class DeveloperMode {
 
   async _meaningfulGlobalVariableIds() {
     const [skillsDoc, npcsDoc] = await Promise.all([this.loadDoc("skills.json"), this.loadDoc("npcs.json")]);
-    const skillCount = Math.min(20, Array.isArray(skillsDoc?.skills) ? skillsDoc.skills.filter((skill) => skill && typeof skill === "object" && skill.id).length : 0);
-    const npcCount = Math.min(20, Array.isArray(npcsDoc?.npcs) ? npcsDoc.npcs.filter((npc) => npc && typeof npc === "object" && npc.id).length : 0);
+    const skillIds = Array.isArray(skillsDoc?.skills) ? skillsDoc.skills.map((skill) => Number(skill?.numericid)).filter((id) => Number.isInteger(id) && id >= 0 && id < 20) : [];
+    const npcIds = Array.isArray(npcsDoc?.npcs) ? npcsDoc.npcs.map((npc) => Number(npc?.numericid)).filter((id) => Number.isInteger(id) && id >= 0 && id < 20) : [];
     const ids = new Set([0, 1, 2, 5]);
-    for (let index = 0; index < skillCount; index += 1) ids.add(20 + index);
-    for (let index = 0; index < npcCount; index += 1) {
-      ids.add(40 + index);
-      ids.add(60 + index);
+    skillIds.forEach((numericId) => ids.add(20 + numericId));
+    npcIds.forEach((numericId) => {
+      ids.add(40 + numericId);
+      ids.add(60 + numericId);
     }
     return ids;
   }
@@ -504,8 +504,8 @@ export class DeveloperMode {
 
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
-    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字和头像。NPC 好感度与 SAN 的初始值由 global_variables.json 中的系统预留公共变量定义。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
+    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-numericid type="number" min="0" max="19" step="1" value="${Number(npc.numericid) || 0}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、数值 ID、名字和头像。数值 ID 映射全局变量 40-59（好感度）及 60-79（SAN）。</p><table class="dev-table"><thead><tr><th>ID</th><th>数值 ID</th><th>名字</th><th>头像</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
   }
 
   async showGlobalVariables() {
@@ -778,7 +778,7 @@ export class DeveloperMode {
     if (action === "add-item") { itemManager.add(this.root.querySelector("[data-item-id]").value, Math.max(1, Number(this.root.querySelector("[data-item-count]").value) || 1)); return this.showInventory(); }
     if (action === "apply-npc-state") {
       const forceOffline = this.root.querySelector("[data-force-offline]")?.checked;
-      const offlineThreshold = Number(npcStateManager.config?.offlineThreshold) || 20;
+      const offlineThreshold = Number(globalVariableManager.get(4)) || 20;
       this.root.querySelectorAll("[data-npc-state-row]").forEach((row) => {
         const actorId = row.dataset.npcStateRow;
         const san = Math.max(0, Math.min(256, Number(row.querySelector("[data-npc-san]")?.value) || 0));
@@ -802,11 +802,13 @@ export class DeveloperMode {
     if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
     if (removeNpc) { const doc = await this.loadDoc("npcs.json"); doc.npcs.splice(Number(removeNpc[1]), 1); this.docs.set("npcs.json", doc); return this.showNpcs(); }
-    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂" }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
+    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, numericid: doc.npcs.length, name: "新 NPC", avatar: "🙂" }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
     if (action === "save-npcs" || action === "download-npcs" || action === "write-npcs") {
       const doc = await this.loadDoc("npcs.json"); const rows = Array.from(this.root.querySelectorAll("[data-npc-row]")); const ids = rows.map((row) => row.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
-      doc.npcs = rows.map((row) => ({ id: row.querySelector("[data-npc-id]").value.trim(), name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂" }));
+      const numericids = rows.map((row) => Number(row.querySelector("[data-npc-numericid]")?.value));
+      if (numericids.some((id) => !Number.isInteger(id) || id < 0 || id >= 20) || new Set(numericids).size !== numericids.length) { this.setStatus("NPC 保存失败：数值 ID 必须是 0-19 的不重复整数。", true); return; }
+      doc.npcs = rows.map((row, index) => ({ id: row.querySelector("[data-npc-id]").value.trim(), numericid: numericids[index], name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂" }));
       this.docs.set("npcs.json", doc);
       if (action === "download-npcs") { downloadJson("npcs.json", doc); this.setStatus("npcs.json 已下载。"); return; }
       if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }

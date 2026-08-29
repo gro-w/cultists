@@ -2,16 +2,19 @@
   "npcs": [
     {
       "id": "ajie",
+      "numericid": 0,
       "name": "阿杰",
       "avatar": "🐶"
     },
     {
       "id": "awei",
+      "numericid": 1,
       "name": "阿伟",
       "avatar": "🐱"
     },
     {
       "id": "binbin",
+      "numericid": 2,
       "name": "彬彬",
       "avatar": "🐼"
     }

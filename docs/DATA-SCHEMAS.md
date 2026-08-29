@@ -89,6 +89,10 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 - bool 必须使用 JSON 布尔值，字符串必须使用 JSON 字符串。
 - `default` 是读档缺少对应值时的回退值。
 
+### 技能与 NPC 数值 ID
+
+`skills.json` 的每个技能和 `npcs.json` 的每个 NPC 必须包含从 `0` 开始、范围为 `0..19` 且不重复的 `numericid`。该 ID 是稳定的数值映射，不随数组排序变化：技能 `numericid=n` 使用全局变量 `20+n`；NPC `numericid=n` 使用全局变量 `40+n` 保存好感度、使用 `60+n` 保存 SAN。全局变量 `3` 是 NPC 不稳定 SAN 阈值，`4` 是 NPC 下线 SAN 阈值；NPC 状态规则文件及其专用编辑器已移除。
+
 条件可写在对话节点、选项、日程条目、特殊事件、道具和结局中：
 
 ```json

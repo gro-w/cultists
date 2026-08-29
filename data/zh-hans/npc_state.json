@@ -1,7 +1,0 @@
-{
-  "distressedThreshold": 50,
-  "offlineThreshold": 20,
-  "offlineConsequence": {
-    "grantItems": [{ "itemId": "extra_workload", "count": 1 }]
-  }
-}

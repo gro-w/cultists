@@ -14,6 +14,8 @@ function reservedDefinition(id) {
   if (id === 0) return { id, name: "怀疑度", type: "number", default: 0 };
   if (id === 1) return { id, name: "主角SAN", type: "number", default: 100 };
   if (id === 2) return { id, name: "金钱", type: "decimal", default: 0 };
+  if (id === 3) return { id, name: "NPC不稳定SAN阈值", type: "number", default: 50 };
+  if (id === 4) return { id, name: "NPC下线SAN阈值", type: "number", default: 20 };
   if (id === 5) return { id, name: "ChatGTP SAN", type: "number", default: 80 };
   if (id >= 20 && id < 40) return { id, name: `主角技能${id - 20}点`, type: "number", default: 0 };
   if (id >= 40 && id < 60) return { id, name: `NPC${id - 40}好感度`, type: "number", default: 0 };

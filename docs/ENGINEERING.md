@@ -207,20 +207,20 @@ App 点击
 | `social_apps.json` | 宿舍电脑内容编辑器 | 吱乎、小绿书、企鹅群和 ChatGTP 每日内容 |
 | `keywords.json` | 关键词编辑器 | 稳定关键词 ID 和内容 |
 | `chatgtp_qa.json` | ChatGTP 问答编辑器 | 关键词组合问答 |
-| `npcs.json` | NPC 列表编辑器 | 稳定 NPC ID、名称、头像和初始值 |
+| `npcs.json` | NPC 列表编辑器 | 稳定 NPC ID、数值 ID、名称和头像 |
 | `global_variables.json` | 全局变量编辑器 | 变量定义；“当前值”列是运行时值操作，不是另一份数据文件 |
 | `item_placements.json` | 场景物品摆放编辑器 | 物品位置、区域、条件和拾取/放回提示 |
 | `diagnoses.json` | 诊断知识编辑器 | ICD 分类、诊断、症状和药品关系 |
 | `medicines.json` | 药品知识编辑器 | 药品、分类、价格和诊断关系 |
 | `medical_events.json` | 医疗事件编辑器 | 罚款、奖励和投诉/暴动对话 |
-| `npc_state.json` | NPC 状态规则编辑器 | 默认 SAN、阈值和离线后果配置；运行时状态另由 NPC与对话调试器操作 |
+
 | `time_rules.json` | 时间规则编辑器 | 阶段时长、睡眠恢复、睡眠债和熬夜 SAN 损失 |
 | `calendar.json` | 日历规则编辑器 | 总天数、休息日和夜班日 |
 | `achievements.json` | 成就定义编辑器 | 成就内容、分类、隐藏和触发条件 |
-| `skills.json` | 技能定义编辑器 | 技能 ID、名称和初始数值 |
+| `skills.json` | 技能定义编辑器 | 技能 ID、数值 ID、名称和类别 |
 | `monitor_scenes.json` | 监控场景编辑器 | 白天/夜间监控场景记录 |
 
-因此，当前没有专用编辑器的文件：**无**。上述 10 个文件均已增加独立的专用编辑器入口；其中 `npc_state.json` 仍要特别区分静态配置和运行时 NPC 状态。
+因此，当前没有专用编辑器的文件：**无**。上述数据文件均已增加独立的专用编辑器入口；NPC 的 SAN 阈值由全局变量 3/4 定义，运行时 NPC 状态仍由 NPC 与对话调试器操作。
 
 ## 8. 开发人员模式
 

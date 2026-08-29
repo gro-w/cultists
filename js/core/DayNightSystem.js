@@ -114,6 +114,22 @@ class DayNightSystem {
     return { ok: true, phase: gameState.phase };
   }
   // DEV-TOOLS:END
+
+  /**
+   * Skip today's work while in the dorm. Advances clock to 16:00,
+   * emits daynight:changed. Caller is responsible for raiseSuspicion().
+   * Returns { ok: false } if not applicable (rest day, already on-duty, etc.).
+   */
+  skipWork() {
+    const clock = this.currentClockMinutes();
+    if (gameState.duty !== "off-duty") return { ok: false, reason: "onDuty" };
+    if (this.isRestDay() || clock < 8 * 60 || clock >= 16 * 60) return { ok: false, reason: "notWorkHours" };
+    const previousPhase = gameState.phase;
+    this._setTime(gameState.day, 16 * 60);
+    gameState.setDuty("off-duty");
+    this._emitChanged(previousPhase);
+    return { ok: true };
+  }
 }
 
 export const dayNightSystem = new DayNightSystem();

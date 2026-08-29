@@ -14,6 +14,7 @@ class ItemPlacementManager {
   constructor() {
     this.placements = [];
     this.placed = new Map();
+    this._roommateHidden = new Set();
     this._loadPromise = null;
   }
 
@@ -39,6 +40,17 @@ class ItemPlacementManager {
     return this.placed.get(id) === true;
   }
 
+  /** Return true if the item was hidden by a roommate catching the player snooping. */
+  isHiddenByRoommate(id) {
+    return this._roommateHidden.has(id);
+  }
+
+  /** Hide an item permanently (roommate found the player investigating at night). */
+  hideByRoommate(id) {
+    this._roommateHidden.add(id);
+    eventBus.emit("item-placements:changed", this.snapshot());
+  }
+
   _clockMinutes() {
     const start = gameState.phase === "day" ? 8 * 60 : 16 * 60;
     return (start + (gameState.clockMinutes - start + 1440) % 1440) % 1440;
@@ -60,7 +72,12 @@ class ItemPlacementManager {
 
   isVisible(id) {
     const placement = this.get(id);
-    return Boolean(placement && this.isPlaced(id) && this._conditionMatches(placement.condition));
+    return Boolean(
+      placement &&
+      this.isPlaced(id) &&
+      !this._roommateHidden.has(id) &&
+      this._conditionMatches(placement.condition)
+    );
   }
 
   visibleFor(location) {
@@ -112,15 +129,22 @@ class ItemPlacementManager {
   }
 
   snapshot() {
-    return this.placements.map((placement) => ({ id: placement.id, placed: this.isPlaced(placement.id) }));
+    return {
+      placements: this.placements.map((placement) => ({ id: placement.id, placed: this.isPlaced(placement.id) })),
+      roommateHidden: [...this._roommateHidden],
+    };
   }
 
-  restore(entries = []) {
+  restore(data = {}) {
+    // Accept both old (array) and new (object) snapshot formats
+    const entries = Array.isArray(data) ? data : (data.placements || []);
+    const hiddenIds = Array.isArray(data.roommateHidden) ? data.roommateHidden : [];
     const values = new Map(entries.map((entry) => [entry.id, entry.placed === true]));
     this.placements.forEach((placement) => {
       this.placed.set(placement.id, placement.initiallyPlaced !== false);
       if (values.has(placement.id)) this.placed.set(placement.id, values.get(placement.id));
     });
+    this._roommateHidden = new Set(hiddenIds);
     eventBus.emit("item-placements:changed", this.snapshot());
   }
 }

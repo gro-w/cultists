@@ -70,56 +70,18 @@ export default class DormMode {
             <span class="dorm-wall-clock-label">GAME TIME</span><strong></strong>
           </div>
           <div class="dorm-fs-actions">
+            <button type="button" class="win95-btn bevel-out" data-action="player-menu">🧑 主角</button>
             <button type="button" class="win95-btn bevel-out" data-action="bed">🛏️ 睡觉</button>
             <button type="button" class="win95-btn bevel-out" data-action="clue">🧵 线索墙</button>
             <button type="button" class="win95-btn bevel-out" data-action="computer">🖥️ 电脑</button>
           </div>
         </div>
 
-        <div class="dorm-fs-scene">
-          <div class="dorm-bunk-unit" data-npc="player">
-            <div class="dorm-bunk-top" title="主角（点击查看状态）">
-              <img class="dorm-bunk-char" src="data/assets/char01_01_stage.png" alt="主角" />
-              <span class="dorm-bunk-bed-rail"></span>
-            </div>
-            <div class="dorm-bunk-bottom">
-              <div class="dorm-bunk-desk" id="desk-player_desk"></div>
-              <span class="dorm-bunk-label">主角</span>
-            </div>
-          </div>
-          <div class="dorm-bunk-unit" data-npc="ajie">
-            <div class="dorm-bunk-top" id="bed-ajie">
-              <span class="dorm-bunk-bed-rail"></span>
-            </div>
-            <div class="dorm-bunk-bottom">
-              <div class="dorm-bunk-desk" id="desk-ajie_desk"></div>
-              <span class="dorm-bunk-label">阿杰</span>
-            </div>
-          </div>
-          <div class="dorm-bunk-unit" data-npc="awei">
-            <div class="dorm-bunk-top" id="bed-awei">
-              <span class="dorm-bunk-bed-rail"></span>
-            </div>
-            <div class="dorm-bunk-bottom">
-              <div class="dorm-bunk-desk" id="desk-awei_desk"></div>
-              <span class="dorm-bunk-label">阿伟</span>
-            </div>
-          </div>
-          <div class="dorm-bunk-unit" data-npc="binbin">
-            <div class="dorm-bunk-top" id="bed-binbin">
-              <span class="dorm-bunk-bed-rail"></span>
-            </div>
-            <div class="dorm-bunk-bottom">
-              <div class="dorm-bunk-desk" id="desk-binbin_desk"></div>
-              <span class="dorm-bunk-label">彬彬</span>
-            </div>
-          </div>
-          <div class="dorm-fridge-col">
-            <div class="dorm-fridge" id="desk-fridge">
-              <div class="dorm-fridge-label">🧊 小冰柜</div>
-            </div>
-          </div>
+        <div class="dorm-scene-wrap">
+          <img class="dorm-scene-bg" alt="" />
+          <div class="dorm-scene-item-layer"></div>
         </div>
+        <div class="dorm-npc-strip"></div>
 
         <div class="dorm-interaction panel-inset">
           <p class="dorm-interaction-hint">点击铺位上的人物交互 · 点击主角查看状态与物品</p>
@@ -154,6 +116,10 @@ export default class DormMode {
     this.confirmPanel   = this.root.querySelector(".dorm-bed-confirm");
     this.confirmTitle   = this.root.querySelector(".dorm-bed-confirm-title");
     this.confirmMessage = this.root.querySelector(".dorm-bed-confirm-message");
+    this._bgEl          = this.root.querySelector(".dorm-scene-bg");
+    this._itemLayer     = this.root.querySelector(".dorm-scene-item-layer");
+    this._npcStrip      = this.root.querySelector(".dorm-npc-strip");
+
     this.confirmPanel.querySelector(".dorm-bed-confirm-cancel").addEventListener("click", () => {
       this.confirmPanel.classList.add("hidden");
     });
@@ -161,22 +127,23 @@ export default class DormMode {
     this.root.querySelector('[data-action="bed"]').addEventListener("click", () => this._bedAction());
     this.root.querySelector('[data-action="clue"]').addEventListener("click", () => this._showClueWall());
     this.root.querySelector('[data-action="computer"]').addEventListener("click", () => this._openComputer());
+    this.root.querySelector('[data-action="player-menu"]').addEventListener("click", () => this._showPlayerMenu());
 
     this.root.querySelectorAll(".dorm-comp-tab-btn[data-comptab]").forEach((btn) => {
       btn.addEventListener("click", () => this._switchCompTab(btn.dataset.comptab));
     });
     this.root.querySelector(".dorm-comp-close").addEventListener("click", () => this._closeComputer());
-
-    this.root.querySelector('[data-npc="player"] .dorm-bunk-top')
-      .addEventListener("click", () => this._showPlayerMenu());
   }
 
   // ── Background (sanity-aware) ────────────────────────────────────────────
   _updateDormBg() {
     const img = locationSystem.resolveBackground("dorm", gameState.mental ?? 100);
-    this.root.style.backgroundImage = img ? `url(${img})` : "";
-    this.root.style.backgroundSize  = img ? "cover" : "";
-    this.root.style.backgroundPosition = img ? "center" : "";
+    if (img) {
+      this._bgEl.src = img;
+      this._bgEl.hidden = false;
+    } else {
+      this._bgEl.hidden = true;
+    }
   }
 
   // ── Clock ───────────────────────────────────────────────────────────────────
@@ -192,10 +159,9 @@ export default class DormMode {
 
   // ── Scene render ────────────────────────────────────────────────────────────
   async _renderScene() {
-    if (!this.scenes) return;
     this._renderClock();
 
-    // ── NPC characters on their bunks ──────────────────────────────────────
+    // ── NPC buttons in the strip ───────────────────────────────────────────
     const listKey = gameState.phase === "day" ? "patients" : "contacts";
     this.entry = await scheduleData.load(gameState.day, gameState.phase);
     const actors = this.entry?.[listKey] || [];
@@ -212,119 +178,92 @@ export default class DormMode {
         dialogueKeywordIds(actor.dialogueTree), `宿舍-${actor.name}`))
     );
 
+    this._npcStrip.innerHTML = "";
     ["ajie", "awei", "binbin"].forEach((npcId) => {
-      const bedEl = this.root.querySelector(`#bed-${npcId}`);
-      if (!bedEl) return;
-      [...bedEl.querySelectorAll(".dorm-bunk-char, .dorm-npc-btn")].forEach((el) => el.remove());
-
       const actor = npcMap.get(npcId);
-      const imgSrc = roommateImage(npcId);
+      if (!actor) return;
       const offline = npcStateManager.isOffline(npcId);
-
-      if (imgSrc) {
-        const img = document.createElement("img");
-        img.className = `dorm-bunk-char${offline ? " offline" : ""}`;
-        img.src = imgSrc;
-        img.alt = actor?.name || npcId;
-        img.title = actor ? `${actor.name}${offline ? "（暂时离线）" : ""}` : npcId;
-        img.setAttribute("role", "button");
-        img.tabIndex = 0;
-        if (actor) {
-          const onClick = () => this._showDialogue(actor, keywordDefs);
-          img.addEventListener("click", onClick);
-          img.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); }
-          });
-        }
-        bedEl.insertBefore(img, bedEl.querySelector(".dorm-bunk-bed-rail"));
-      } else if (actor) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = `win95-btn bevel-out dorm-npc-btn${offline ? " offline" : ""}`;
-        btn.textContent = `${actor.avatar || "🙂"} ${actor.name}`;
-        btn.addEventListener("click", () => this._showDialogue(actor, keywordDefs));
-        bedEl.insertBefore(btn, bedEl.querySelector(".dorm-bunk-bed-rail"));
-      }
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `win95-btn bevel-out dorm-npc-strip-btn${offline ? " offline" : ""}`;
+      btn.textContent = `${actor.avatar || roommateImage(npcId) ? "" : "🙂"} ${actor.name}`;
+      btn.title = offline ? `${actor.name}（暂时离线）` : actor.name;
+      if (!offline) btn.addEventListener("click", () => this._showDialogue(actor, keywordDefs));
+      else btn.disabled = true;
+      this._npcStrip.appendChild(btn);
     });
 
-    // ── Items on desks / fridge ─────────────────────────────────────────────
-    this._renderItemPlacements();
+    // ── Items in the scene ─────────────────────────────────────────────────
+    const loc = locationSystem.get("dorm");
+    if (loc) this._renderSceneItems(loc);
   }
 
   /**
-   * Render items in each desk/fridge slot.
-   * Sources (merged, deduplicated by itemId):
-   *   1. ItemPlacementManager – condition-gated world placements (item_placements.json)
-   *   2. ItemManager.worldItemsBySubLocation – items whose `locations` field
-   *      contains "dorm/<subId>" (set via Item Editor)
-   *
-   * Sub-location id → DOM container mapping:
-   *   player_desk  → #desk-player_desk
-   *   ajie_desk    → #desk-ajie_desk
-   *   awei_desk    → #desk-awei_desk
-   *   binbin_desk  → #desk-binbin_desk
-   *   fridge       → #desk-fridge
+   * Render dorm items into the item layer.
+   * Three sources (same pattern as LocationScene):
+   *   1. ItemPlacementManager — condition-gated placements (item_placements.json)
+   *   2. items.json `locations` field entries for "dorm" or "dorm/<subId>"
+   *   3. loc.hotspots — dev-placed hotspot markers
    */
-  _renderItemPlacements() {
-    // Clear previous item buttons (keep .dorm-fridge-label)
-    this.root.querySelectorAll(".dorm-bunk-desk, .dorm-fridge").forEach((el) => {
-      [...el.querySelectorAll(".dorm-item-slot-btn")].forEach((b) => b.remove());
-    });
+  _renderSceneItems(loc) {
+    this._itemLayer.innerHTML = "";
+    const rendered = new Set();
 
-    const rendered = new Set(); // track itemId per sub-slot to avoid dupes
-
-    // ── Source 1: ItemPlacementManager (condition-gated) ────────────────────
+    // Source 1: condition-gated placements
     itemPlacementManager.visibleFor("dorm").forEach((placement) => {
-      const zone = placement.zone || "player_desk";
-      const container = this.root.querySelector(`#desk-${zone}`);
-      if (!container) return;
-
-      const slotKey = `${zone}:${placement.itemId}`;
-      rendered.add(slotKey);
-
+      const key = `placement:${placement.id}`;
+      if (rendered.has(key)) return;
+      rendered.add(key);
+      const def = itemManager.getDef(placement.itemId);
       const hotspot = placement.hotspot || {};
-      const btn = this._makeItemBtn(
-        hotspot.icon || "❔",
-        hotspot.label || itemManager.getDef(placement.itemId)?.name || placement.itemId,
-        () => this._inspectPlacedItem(placement.id)
-      );
-      container.appendChild(btn);
+      this._itemLayer.appendChild(this._makeItemBtn({
+        icon: hotspot.icon || def?.icon || "❔",
+        label: hotspot.label || def?.name || placement.itemId,
+        x: hotspot.x, y: hotspot.y,
+        onClick: () => this._inspectPlacedItem(placement.id),
+      }));
     });
 
-    // ── Source 2: items.json locations field ────────────────────────────────
-    const bySubLoc = itemManager.worldItemsBySubLocation("dorm");
-    bySubLoc.forEach((defs, subId) => {
-      // subId "." means top-level "dorm" — show in interaction panel hint only
-      if (subId === ".") return;
+    // Source 2: items.json locations field
+    const defs = itemManager.worldItemsAt("dorm");
+    defs.forEach((def) => {
+      if (def.layer === "below") return;
+      const key = `item:${def.id}`;
+      if (rendered.has(key)) return;
+      rendered.add(key);
+      this._itemLayer.appendChild(this._makeItemBtn({
+        icon: def.icon || "📦",
+        label: def.name || def.id,
+        x: def.sceneX, y: def.sceneY,
+        onClick: () => this._inspectWorldItem(def.id),
+      }));
+    });
 
-      const container = this.root.querySelector(`#desk-${subId}`);
-      if (!container) return;
-
-      defs.forEach((def) => {
-        const slotKey = `${subId}:${def.id}`;
-        if (rendered.has(slotKey)) return; // already shown via placement
-        rendered.add(slotKey);
-
-        // Determine layer: skip non-interactive (below) items
-        if (def.layer === "below") return;
-
-        const btn = this._makeItemBtn(
-          def.icon || "📦",
-          def.name || def.id,
-          () => this._inspectWorldItem(def.id)
-        );
-        container.appendChild(btn);
-      });
+    // Source 3: loc.hotspots (dev-placed)
+    (loc.hotspots || []).forEach((h) => {
+      if (!h.targetId) return;
+      const def = itemManager.getDef(h.targetId);
+      this._itemLayer.appendChild(this._makeItemBtn({
+        icon: h.icon || def?.icon || "👤",
+        label: h.label || def?.name || h.targetId,
+        x: h.x, y: h.y,
+        onClick: () => def ? this._inspectWorldItem(h.targetId) : this._message(`（${h.label || h.targetId}）`),
+      }));
     });
   }
 
-  _makeItemBtn(icon, label, onClick) {
+  _makeItemBtn({ icon, label, x, y, onClick }) {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "win95-btn bevel-out dorm-item-slot-btn";
+    btn.className = "win95-btn bevel-out loc-item-btn";
     btn.textContent = icon;
     btn.title = label;
     btn.setAttribute("aria-label", label);
+    if (x != null && y != null) {
+      btn.style.position = "absolute";
+      btn.style.left = `${x}px`;
+      btn.style.top = `${y}px`;
+    }
     btn.addEventListener("click", onClick);
     return btn;
   }
@@ -363,7 +302,8 @@ export default class DormMode {
         ? () => {
             itemManager.add(itemId, 1);
             this._message(`你拿起了${def.name}。`, "success");
-            this._renderItemPlacements();
+            const loc = locationSystem.get("dorm");
+            if (loc) this._renderSceneItems(loc);
           }
         : null,
     });

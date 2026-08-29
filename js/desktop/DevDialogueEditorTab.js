@@ -207,10 +207,16 @@ export class DevDialogueEditorTab {
     ] };
   }
   _embeddedHtml() {
-    return this._standardHtml().replace(
-      /<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/,
-      `<div class="dev-de-header"><strong>${this._e(this._embeddedScope.title || '内嵌日程表')}</strong><button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存内嵌日程</button></div>\n<div class="dev-de-main">`
-    );
+    // Embedded blueprints are mounted inside another editor. They keep the
+    // normal toolbar, canvas and right node editor, but must not expose the
+    // project-level schedule sidebar or its unrelated file controls.
+    const html = this._standardHtml();
+    return html
+      .replace(
+        /<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/,
+        `<div class="dev-de-header"><strong>${this._e(this._embeddedScope.title || '内嵌日程表')}</strong><button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存内嵌日程</button></div>\n<div class="dev-de-main">`
+      )
+      .replace(/  <!-- Sidebar -->[\s\S]*?  <!-- Canvas -->/, '  <!-- Canvas -->');
   }
   _standardHtml() {
     if (this._temporaryScope) {

@@ -249,7 +249,7 @@ export class DeveloperMode {
     if (this._locationEditorTab) { this._locationEditorTab.unmount(); this._locationEditorTab = null; }
     if (this._dormComputerTab) { this._dormComputerTab.unmount(); this._dormComputerTab = null; }
     if (this._structuredEditorTab) { this._structuredEditorTab.unmount(); this._structuredEditorTab = null; }
-    // item editor has no document-level listeners, no explicit unmount needed
+    if (this._itemEditorTab) this._itemEditorTab.unmount();
     this._itemEditorTab = null;
   }
 

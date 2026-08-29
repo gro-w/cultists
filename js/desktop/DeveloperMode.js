@@ -533,7 +533,6 @@ export class DeveloperMode {
 
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
-<<<<<<< HEAD
     const toCard = (npc, index) => {
       const portraits = (npc.portraits || []).map((p, pi) => `
         <div class="dev-portrait-row" data-portrait-row="${index}-${pi}">
@@ -595,10 +594,6 @@ export class DeveloperMode {
         reader.readAsDataURL(file);
       });
     });
-=======
-    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-numericid type="number" min="0" max="19" step="1" value="${Number(npc.numericid) || 0}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、数值 ID、名字和头像。数值 ID 映射全局变量 40-59（好感度）及 60-79（SAN）。</p><table class="dev-table"><thead><tr><th>ID</th><th>数值 ID</th><th>名字</th><th>头像</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
->>>>>>> origin/main
   }
 
   async showGlobalVariables() {
@@ -892,17 +887,12 @@ export class DeveloperMode {
     if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
     if (removeNpc) { const doc = await this.loadDoc("npcs.json"); doc.npcs.splice(Number(removeNpc[1]), 1); this.docs.set("npcs.json", doc); return this.showNpcs(); }
-<<<<<<< HEAD
     if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂", initialFavorability: 50, initialSan: 80, portraits: [] }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
-=======
-    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, numericid: doc.npcs.length, name: "新 NPC", avatar: "🙂" }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
->>>>>>> origin/main
     if (action === "save-npcs" || action === "download-npcs" || action === "write-npcs") {
       const doc = await this.loadDoc("npcs.json");
       const cards = Array.from(this.root.querySelectorAll("[data-npc-row]"));
       const ids = cards.map((c) => c.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
-<<<<<<< HEAD
       doc.npcs = cards.map((card, ci) => {
         const portraits = Array.from(card.querySelectorAll("[data-portrait-row]")).map((row) => {
           const sanMin = row.querySelector("[data-p-san-min]").value;
@@ -926,11 +916,6 @@ export class DeveloperMode {
           portraits,
         };
       });
-=======
-      const numericids = rows.map((row) => Number(row.querySelector("[data-npc-numericid]")?.value));
-      if (numericids.some((id) => !Number.isInteger(id) || id < 0 || id >= 20) || new Set(numericids).size !== numericids.length) { this.setStatus("NPC 保存失败：数值 ID 必须是 0-19 的不重复整数。", true); return; }
-      doc.npcs = rows.map((row, index) => ({ id: row.querySelector("[data-npc-id]").value.trim(), numericid: numericids[index], name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂" }));
->>>>>>> origin/main
       this.docs.set("npcs.json", doc);
       if (action === "download-npcs") { downloadJson("npcs.json", doc); this.setStatus("npcs.json 已下载。"); return; }
       if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }

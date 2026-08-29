@@ -75,7 +75,7 @@ export class DevDialogueEditorTab {
     this.gameSpells = [];
     this._inputModes = new Map();
     this._abort = null;           // AbortController for document listeners
-    this._workspaceSelections = { scheduleSocial: '', scheduleWork: '', publicSocial: 'socialpub', publicWork: 'workpub', special: '', ending: '' };
+    this._workspaceSelections = { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'realtimeinit' };
   }
 
   // ── utilities ─────────────────────────────────────────────────────────────
@@ -108,6 +108,7 @@ export class DevDialogueEditorTab {
     for (let d=1;d<=totalDays;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={displayName:'',entries:[]};
     schedules.socialpub = { displayName: '', entries: [] };
     schedules.workpub = { displayName: '', entries: [] };
+    schedules.realtimeinit = { displayName: '', entries: [] };
     return {version:2,totalDays,customVars:[],schedules,events:{},endings:{},eventFileDoc:{events:[]},endingFileDoc:{endings:[]}};
   }
 
@@ -313,20 +314,21 @@ export class DevDialogueEditorTab {
   }
 
   _workspaceTable(type, title, options, selected) {
-    const files = options.map(([id, label]) => `<button type="button" class="dev-schedule-file${id === selected ? ' active' : ''}" data-ws-select="${type}" data-ws-id="${this._e(id)}">${this._e(label)}</button>`).join('');
+    const files = `<select class="dev-schedule-file-select" data-ws-select="${type}">${options.map(([id, label]) => `<option value="${this._e(id)}"${id === selected ? ' selected' : ''}>${this._e(label)}</option>`).join('')}</select>`;
     return `<section class="dev-schedule-table"><h3>${title}</h3><div class="dev-schedule-file-list">${files || '<span class="dev-schedule-file-label">暂无文件</span>'}</div><div class="dev-schedule-actions"><button type="button" class="win95-btn dev-btn" data-ws-edit="${type}">✎ 编辑当前文件</button><button type="button" class="win95-btn dev-btn" data-ws-current="${type}">⬇ 从当前游戏读取</button><button type="button" class="win95-btn dev-btn" data-ws-file="${type}">📂 从文件读取</button><button type="button" class="win95-btn dev-btn" data-ws-export="${type}">📤 导出 JSON</button><button type="button" class="win95-btn dev-btn" data-ws-write="${type}">💽 写入磁盘</button></div></section>`;
   }
 
   _renderWorkspace() {
     const el = this._el('de-workspace-tables'); if (!el || !this.project) return;
     const schedules = Object.keys(this.project.schedules || {});
-    const groups = { scheduleSocial: schedules.filter(id => /^social\d{2}[ab]$/.test(id)), scheduleWork: schedules.filter(id => /^work\d{2}[ab]$/.test(id)), publicSocial: ['socialpub'], publicWork: ['workpub'], special: Object.keys(this.project.events || {}), ending: Object.keys(this.project.endings || {}) };
-    const titles = { scheduleSocial: '📄 Social 日程文件', scheduleWork: '📄 Work 日程文件', publicSocial: '🌐 公共 Social 日程表', publicWork: '🌐 公共 Work 日程表', special: '🎪 特殊事件日程表', ending: '🏁 结局日程表' };
-    this._workspaceSelections ||= { scheduleSocial: '', scheduleWork: '', publicSocial: 'socialpub', publicWork: 'workpub', special: '', ending: '' };
+    const groups = { scheduleSocial: schedules.filter(id => /^social\d{2}[ab]$/.test(id)), scheduleWork: schedules.filter(id => /^work\d{2}[ab]$/.test(id)), public: ['socialpub', 'workpub'], other: ['endings', 'special_events', 'realtimeinit'] };
+    const titles = { scheduleSocial: '📄 Social 日期日程表', scheduleWork: '📄 Work 日期日程表', public: '🌐 公共日程表', other: '🗂️ 其他日程表' };
+    this._workspaceSelections ||= { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'realtimeinit' };
     for (const type of ['scheduleSocial', 'scheduleWork']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || `${type === 'scheduleSocial' ? 'social' : 'work'}01a`;
-    for (const type of ['publicSocial', 'publicWork', 'special', 'ending']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || '';
-    el.innerHTML = Object.entries(groups).map(([type, list]) => this._workspaceTable(type, titles[type], list.map(id => [id, id]), this._workspaceSelections[type])).join('');
-    el.querySelectorAll('[data-ws-select]').forEach(node => node.addEventListener('click', () => { this._workspaceSelections[node.dataset.wsSelect] = node.dataset.wsId; this._renderWorkspace(); }));
+    for (const type of ['public', 'other']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || '';
+    const labels = { socialpub: 'Social（socialpub.json）', workpub: 'Work（workpub.json）', endings: '结局（endings.json）', special_events: '特殊事件（special_events.json）', realtimeinit: '初始 realtime（realtimeinit.json）' };
+    el.innerHTML = Object.entries(groups).map(([type, list]) => this._workspaceTable(type, titles[type], list.map(id => [id, labels[id] || `${id}.json`]), this._workspaceSelections[type])).join('');
+    el.querySelectorAll('[data-ws-select]').forEach(node => node.addEventListener('change', () => { this._workspaceSelections[node.dataset.wsSelect] = node.value; this._renderWorkspace(); }));
     el.querySelectorAll('[data-ws-edit]').forEach(node => node.addEventListener('click', () => this._openWorkspaceBlueprint(node.dataset.wsEdit)));
     el.querySelectorAll('[data-ws-current]').forEach(node => node.addEventListener('click', () => this._loadWorkspaceFile(node.dataset.wsCurrent)));
     el.querySelectorAll('[data-ws-file]').forEach(node => node.addEventListener('click', () => { const input = this._el('de-game-input'); input.dataset.wsType = node.dataset.wsFile; input.click(); }));
@@ -334,7 +336,12 @@ export class DevDialogueEditorTab {
     el.querySelectorAll('[data-ws-write]').forEach(node => node.addEventListener('click', () => this._writeWorkspaceEntry(node.dataset.wsWrite)));
   }
 
-  _workspaceContext(type) { const id = this._workspaceSelections[type]; if (!id) return null; return type === 'special' ? { type: 'event', id, entryIndex: 0 } : type === 'ending' ? { type: 'ending', id, entryIndex: 0 } : { type: 'schedule', id, entryIndex: 0 }; }
+  _workspaceContext(type) {
+    const id = this._workspaceSelections[type]; if (!id) return null;
+    if (type === 'other' && id === 'special_events') return { type: 'event', id: Object.keys(this.project.events || {})[0], entryIndex: 0 };
+    if (type === 'other' && id === 'endings') return { type: 'ending', id: Object.keys(this.project.endings || {})[0], entryIndex: 0 };
+    return { type: 'schedule', id, entryIndex: 0 };
+  }
   _openWorkspaceBlueprint(type) {
     const ctx = this._workspaceContext(type); if (!ctx) return this._st('当前文件暂无可编辑条目');
     if (ctx.type === 'schedule' && !this.project.schedules[ctx.id]) this.project.schedules[ctx.id] = { displayName: '', entries: [] };
@@ -343,7 +350,12 @@ export class DevDialogueEditorTab {
     win.el?.classList.add('dev-blueprint-window');
     host.innerHTML = child.html(); child.mount(host.querySelector('.dev-de-root')); win.el?.addEventListener('remove', () => child.unmount(), { once: true });
   }
-  _workspaceDoc(type) { const id = this._workspaceSelections[type]; if (type === 'special') return ['special_events.json', this._eventFileToGame()]; if (type === 'ending') return ['endings.json', this._endingFileToGame()]; return id ? [`${id}.json`, this._scheduleToGame(this.project.schedules[id])] : null; }
+  _workspaceDoc(type) {
+    const id = this._workspaceSelections[type];
+    if (type === 'other' && id === 'special_events') return ['special_events.json', this._eventFileToGame()];
+    if (type === 'other' && id === 'endings') return ['endings.json', this._endingFileToGame()];
+    return id ? [`${id}.json`, this._scheduleToGame(this.project.schedules[id] || { entries: [] })] : null;
+  }
   _exportWorkspaceEntry(type) { const doc = this._workspaceDoc(type); if (doc) { downloadJson(doc[0], doc[1]); this._st(`已导出 ${doc[0]}`); } }
   async _writeWorkspaceEntry(type) { const doc = this._workspaceDoc(type); if (doc) await this._dev.writeToDisk(doc[0], doc[1]); }
   async _loadWorkspaceFile(type) {
@@ -353,17 +365,19 @@ export class DevDialogueEditorTab {
   }
   _applyGameDocument(fileName, data, type = null) {
     const base = fileName.replace(/\.json$/i, '');
-    const kind = type || (fileName === 'special_events.json' ? 'special' : fileName === 'endings.json' ? 'ending' : base.startsWith('social') ? 'scheduleSocial' : 'scheduleWork');
-    if (kind === 'special' || fileName === 'special_events.json') {
+    const kind = type || (fileName === 'special_events.json' || fileName === 'endings.json' || base === 'realtimeinit' ? 'other' : base === 'socialpub' || base === 'workpub' ? 'public' : base.startsWith('social') ? 'scheduleSocial' : 'scheduleWork');
+    if (fileName === 'special_events.json') {
       if (!Array.isArray(data.events)) throw new Error('special_events.json 缺少 events 数组');
-      this.project.eventFileDoc = data; this.project.events = Object.fromEntries(data.events.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('special_events.json'); this._workspaceSelections.special = Object.keys(this.project.events)[0] || '';
-    } else if (kind === 'ending' || fileName === 'endings.json') {
+      this.project.eventFileDoc = data; this.project.events = Object.fromEntries(data.events.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('special_events.json'); this._workspaceSelections.other = 'special_events';
+    } else if (fileName === 'endings.json') {
       if (!Array.isArray(data.endings)) throw new Error('endings.json 缺少 endings 数组');
-      this.project.endingFileDoc = data; this.project.endings = Object.fromEntries(data.endings.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('endings.json'); this._workspaceSelections.ending = Object.keys(this.project.endings)[0] || '';
+      this.project.endingFileDoc = data; this.project.endings = Object.fromEntries(data.endings.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('endings.json'); this._workspaceSelections.other = 'endings';
     } else {
       if (!Array.isArray(data.entries)) throw new Error(`${fileName} 缺少 entries 数组`);
       this.project.schedules[base] = { ...data, entries: data.entries.map(entry => ({ ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree) })) };
       this.loadedScheduleFiles.add(base); this._workspaceSelections[kind] = base;
+      if (kind === 'other') this._workspaceSelections.other = base;
+      if (kind === 'public') this._workspaceSelections.public = base;
     }
   }
   _scopedDocument() {

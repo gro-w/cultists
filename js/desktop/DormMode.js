@@ -883,7 +883,10 @@ export default class DormMode {
       optionsEl: options,
       appId: "dorm",
       onCheckpoint: (next) => socialQueue.updateInstance(pending.instanceId, next),
-      onComplete: () => socialQueue.complete(pending.instanceId),
+      onComplete: () => {
+        socialQueue.complete(pending.instanceId);
+        eventBus.emit("dorm:interaction", { npcId });
+      },
     });
     runner.start();
   }
@@ -901,7 +904,11 @@ export default class DormMode {
     okButton.onclick = () => {
       this.confirmPanel.classList.add("hidden");
       if (inWork) this.launchWorkApp();
-      else dayNightSystem.toggle();
+      else {
+        eventBus.emit("dorm:about_to_sleep", { day: gameState.day });
+        const result = dayNightSystem.toggle();
+        if (result && result.ok !== false) eventBus.emit("dorm:sleep_completed", { day: gameState.day });
+      }
     };
     okButton.focus();
   }

@@ -14,10 +14,11 @@ import { favorabilityManager } from "./FavorabilityManager.js";
 
 import { cgManager } from "./CGManager.js";
 import { endingManager } from "./EndingManager.js";
+import { onboardingManager } from "./OnboardingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v16 = v15 without the obsolete standalone dialogue-progress state.
-const SAVE_FORMAT_VERSION = 16;
+// v17 adds per-save onboarding progress to the v16 payload.
+const SAVE_FORMAT_VERSION = 17;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -129,6 +130,7 @@ class SaveManager {
       itemPlacements: itemPlacementManager.snapshot(),
       ending: endingManager.snapshot(),
       cg: cgManager.snapshot(),
+      onboarding: onboardingManager.snapshot(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
   }
@@ -189,6 +191,7 @@ class SaveManager {
 
       endingManager.restore(payload.ending || {});
       cgManager.restore(payload.cg || {});
+      onboardingManager.restore(payload.onboarding || {});
       scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
       this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     } finally {

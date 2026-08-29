@@ -46,7 +46,7 @@ class WindowManager {
     this.layer.appendChild(win.el);
     this.focus(win.id);
 
-    eventBus.emit("window:opened", { id: win.id, title: win.title, icon: win.icon });
+    eventBus.emit("window:opened", { id: win.id, appId: options.appId, title: win.title, icon: win.icon });
     return win;
   }
 
@@ -56,7 +56,7 @@ class WindowManager {
       this._singleInstanceKeys.delete(options.appId);
     }
     if (options.onClose) options.onClose(win);
-    eventBus.emit("window:closed", { id: win.id });
+    eventBus.emit("window:closed", { id: win.id, appId: options.appId });
   }
 
   focus(id) {

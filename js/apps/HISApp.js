@@ -122,7 +122,12 @@ export async function launchHISApp() {
       const distressed = !offline && npcStateManager.isDistressed(npcId);
       btn.textContent = `${patient.name}（${patient.age}岁）${offline ? " 🚫" : distressed ? " ⚠️" : ""}`;
       if (medicalCaseManager.submissions.has(patient.id)) btn.classList.add("his-patient-submitted");
-      btn.addEventListener("click", () => renderDialogue(patient, keywordDefs));
+      btn.addEventListener("click", () => {
+        eventBus.emit("his:patient_selected", { patientId: patient.id });
+        const keywordAvailable = renderDialogue(patient, keywordDefs);
+        eventBus.emit("his:dialogue_seen", { patientId: patient.id });
+        if (keywordAvailable) eventBus.emit("his:keyword_available", { patientId: patient.id });
+      });
       patientListEl.appendChild(btn);
       });
 
@@ -131,6 +136,7 @@ export async function launchHISApp() {
   }
 
   function renderDialogue(patient, keywordDefs) {
+    let keywordAvailable = false;
     dialogueEl.innerHTML = `<h4>与 ${patient.name} 的对话</h4>`;
     const npcId = patient.npcId || patient.id;
     renderDiagnosis(patient);
@@ -155,6 +161,11 @@ export async function launchHISApp() {
     dialogueEl.appendChild(optionsEl);
 
     function appendLine(speaker, speakerLabel, text) {
+      const missedKeyword = [...linesEl.querySelectorAll(".keyword-highlight")]
+        .some((span) => !span.classList.contains("keyword-collected"));
+      if (missedKeyword) {
+        eventBus.emit("his:keyword_missed", { patientId: patient.id });
+      }
       const p = document.createElement("p");
       p.className = `dialogue-line speaker-${speaker}`;
       p.innerHTML = `<strong>${speakerLabel}:</strong> ${keywordManager.renderHighlightedText(
@@ -163,12 +174,16 @@ export async function launchHISApp() {
       )}`;
       linesEl.replaceChildren(p);
       keywordManager.bindHighlights(p, keywordDefs);
+      keywordAvailable = Boolean(p.querySelector(".keyword-highlight"));
+      if (keywordAvailable) {
+        eventBus.emit("his:keyword_available", { patientId: patient.id });
+      }
       dialogueEl.scrollTop = dialogueEl.scrollHeight;
     }
 
     if (!patient.queueEntry) {
       linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
-      return;
+      return keywordAvailable;
     }
     const runner = createScheduleRunner({
       definition: patient,
@@ -183,6 +198,7 @@ export async function launchHISApp() {
     });
 
     runner.start();
+    return keywordAvailable;
 
   }
 
@@ -238,7 +254,12 @@ export async function launchHISApp() {
         });
       currentRecord.diagnosis = "";
     });
-    diagnosisSelect.addEventListener("change", () => { currentRecord.diagnosis = diagnosisSelect.value; });
+    categorySelect.addEventListener("click", () => eventBus.emit("his:diagnosis_picker_opened", { patientId: patient.id }));
+    diagnosisSelect.addEventListener("click", () => eventBus.emit("his:diagnosis_picker_opened", { patientId: patient.id }));
+    diagnosisSelect.addEventListener("change", () => {
+      currentRecord.diagnosis = diagnosisSelect.value;
+      if (currentRecord.diagnosis) eventBus.emit("his:diagnosis_ready", { patientId: patient.id });
+    });
     diagnosisRow.appendChild(diagnosisSelectLabel);
     diagnosisRow.appendChild(diagnosisSelect);
     currentRecord.diagnosisSelect = diagnosisSelect;

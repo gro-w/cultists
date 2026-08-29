@@ -6,6 +6,7 @@ import { i18n } from "../core/I18n.js";
 import { launchChatGTPApp } from "./ChatGTPApp.js";
 import { spellManager } from "../core/SpellManager.js";
 
+
 const CATEGORY_LABELS = {
   symptom: "症状",
   item: "物品",

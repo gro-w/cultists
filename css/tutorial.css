@@ -1,0 +1,8 @@
+.tutorial-overlay { position: fixed; inset: 0; z-index: 3000; pointer-events: none; }
+.tutorial-overlay.hidden { display: none; }
+.tutorial-highlight { position: fixed; border: 3px solid #ffea00; box-shadow: 0 0 0 2px #000, 0 0 12px 3px rgba(255,234,0,.85); pointer-events: none; border-radius: 3px; }
+.tutorial-card { position: fixed; width: 308px; padding: 10px 12px; background: #ffffe1; color: #111; border: 2px outset #fff; box-shadow: 3px 3px 0 rgba(0,0,0,.45); pointer-events: auto; }
+.tutorial-card-centered { left: 50% !important; top: 50% !important; transform: translate(-50%, -50%); }
+.tutorial-title { display: block; color: #000080; margin-bottom: 5px; }
+.tutorial-text { margin: 0 0 10px; line-height: 1.5; }
+.tutorial-actions { display: flex; justify-content: flex-end; gap: 6px; }

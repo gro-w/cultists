@@ -414,6 +414,7 @@ export async function launchChatGTPApp(options = {}) {
         effect: sanCostPerQuery > 0 ? { npcSanChanges: [{ actorId: CHATGTP_ACTOR_ID, delta: -sanCostPerQuery }] } : {},
         timeMinutes: 20,
         onComplete: () => {
+          eventBus.emit("chatgtp:query_completed", { queryText });
           appendMessage("me", escapeHtml(queryText));
           appendMessage("npc", keywordManager.renderHighlightedText(
             npcStateManager.isOffline(CHATGTP_ACTOR_ID) ? offlineAnswer : answer.replace(/\n/g, "<br>"),

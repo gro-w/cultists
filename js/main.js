@@ -32,6 +32,8 @@ import MainMenu from "./desktop/MainMenu.js";
 import EndingScreen from "./desktop/EndingScreen.js";
 import DormMode from "./desktop/DormMode.js";
 import LocationScene from "./desktop/LocationScene.js";
+import TutorialOverlay from "./desktop/TutorialOverlay.js";
+import { onboardingManager } from "./core/OnboardingManager.js";
 import { launchHISApp } from "./apps/HISApp.js";
 import { launchSocialApp } from "./apps/SocialApp.js";
 import { launchChatGTPApp } from "./apps/ChatGTPApp.js";
@@ -135,6 +137,8 @@ function boot() {
   audioManager.mount();
   bgmManager.mount();
   cgManager.mount(); // subscribe to schedule:cg / schedule:end_cg events
+  onboardingManager.init();
+  const tutorialOverlay = new TutorialOverlay(document.getElementById("tutorial-overlay"));
 
   new Desktop(document.getElementById("desktop-icons"), APP_REGISTRY);
 
@@ -142,9 +146,6 @@ function boot() {
     tasksEl: document.getElementById("taskbar-tasks"),
     clockEl: document.getElementById("taskbar-clock"),
     indicatorEl: document.getElementById("daynight-indicator"),
-    // DEV-TOOLS:START
-    dataFileEl: document.getElementById("taskbar-data-file"),
-    // DEV-TOOLS:END
     startButtonEl: document.getElementById("start-button"),
     startMenuEl: document.getElementById("start-menu"),
     apps: APP_REGISTRY,
@@ -230,8 +231,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // DEV-TOOLS:END
       boot();
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
-        onNewGame: () => {
-          window.history.replaceState(null, "", window.location.pathname);
+   onNewGame: () => {
+     window.history.replaceState(null, "", window.location.pathname);
+     onboardingManager.startNewGame();
         },
         onLoadSaveFile: async (file) => {
           const ok = await saveManager.loadFromFile(file);

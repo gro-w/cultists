@@ -1,3 +1,1627 @@
 {
-  "entries": []
+  "displayName": "第5天社交·16:00",
+  "entries": [
+    {
+      "id": "social05b_ajie_goods_high",
+      "type": "other",
+      "npcId": "ajie",
+      "name": "阿杰",
+      "avatar": "🐶",
+      "displayName": "【谷子店】",
+      "condition": {
+        "globalVariables": {
+          "id": 40,
+          "op": "gte",
+          "value": 50
+        }
+      },
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "t0": {
+            "id": "t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "走，跟我去谷子店看看。"
+            },
+            "outputs": {}
+          },
+          "t1": {
+            "id": "t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "谷子店？那是什么地方？"
+            },
+            "outputs": {}
+          },
+          "t2": {
+            "id": "t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "买盲盒的地方。"
+            },
+            "outputs": {}
+          },
+          "time_0": {
+            "id": "time_0",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "t4": {
+            "id": "t4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你有要想抽到的角色吗？我可以帮你看看攻略。"
+            },
+            "outputs": {}
+          },
+          "t5": {
+            "id": "t5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你是照攻略学会走路的吧……"
+            },
+            "outputs": {}
+          },
+          "time_1": {
+            "id": "time_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "choice_0": {
+            "id": "choice_0",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "不然很亏啊，价格除以概率，远远超出物品的价值。",
+              "label1": "你愿意承担风险就行。"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "不然很亏啊，价格除以概率，远远超出物品的价值。",
+                "next": "choice_0_op0"
+              },
+              {
+                "label": "你愿意承担风险就行。",
+                "next": "choice_0_op1"
+              }
+            ]
+          },
+          "choice_0_join": {
+            "id": "choice_0_join",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "（场景继续）"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0": {
+            "id": "choice_0_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -10
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t0": {
+            "id": "choice_0_op0_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "这样才刺激嘛。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t1": {
+            "id": "choice_0_op0_t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "花钱得到想要的就是惊喜，得到不想要的不就是吃亏了吗？"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t2": {
+            "id": "choice_0_op0_t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你是对意外过敏吗？"
+            },
+            "outputs": {}
+          },
+          "choice_0_op1": {
+            "id": "choice_0_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "choice_0_op1_t0": {
+            "id": "choice_0_op1_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "我买的就是风险。"
+            },
+            "outputs": {}
+          },
+          "after_0": {
+            "id": "after_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "好诡异的店面，所有人都低着头不说话。"
+            },
+            "outputs": {}
+          },
+          "after_1": {
+            "id": "after_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "只需要挑选就可以了。"
+            },
+            "outputs": {}
+          },
+          "after_2": {
+            "id": "after_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "挑选这些肉色的片状物吗？"
+            },
+            "outputs": {}
+          },
+          "after_3": {
+            "id": "after_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "我推在墙上从左到右第三列，你看到了吗？怎么样，可爱吧？要不要入坑？"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 8639
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t0",
+            "fromPort": "flowOut",
+            "toNodeId": "t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t1",
+            "fromPort": "flowOut",
+            "toNodeId": "t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t2",
+            "fromPort": "flowOut",
+            "toNodeId": "time_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_0",
+            "fromPort": "flowOut",
+            "toNodeId": "t4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t4",
+            "fromPort": "flowOut",
+            "toNodeId": "t5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t5",
+            "fromPort": "flowOut",
+            "toNodeId": "time_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option0",
+            "toNodeId": "choice_0_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t2",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option1",
+            "toNodeId": "choice_0_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op1_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_join",
+            "fromPort": "flowOut",
+            "toNodeId": "after_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_0",
+            "fromPort": "flowOut",
+            "toNodeId": "after_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_1",
+            "fromPort": "flowOut",
+            "toNodeId": "after_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_2",
+            "fromPort": "flowOut",
+            "toNodeId": "after_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_3",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "social05b_ajie_goods_low",
+      "type": "other",
+      "npcId": "ajie",
+      "name": "阿杰",
+      "avatar": "🐶",
+      "displayName": "【谷子店】",
+      "condition": {
+        "globalVariables": {
+          "id": 40,
+          "op": "lt",
+          "value": 50
+        }
+      },
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "t0": {
+            "id": "t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你要跟我一起去逛逛吗？"
+            },
+            "outputs": {}
+          },
+          "t1": {
+            "id": "t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你要去哪？"
+            },
+            "outputs": {}
+          },
+          "t2": {
+            "id": "t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "或许去买两个手办。"
+            },
+            "outputs": {}
+          },
+          "time_0": {
+            "id": "time_0",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "t4": {
+            "id": "t4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "那是什么东西？好玩吗？"
+            },
+            "outputs": {}
+          },
+          "t5": {
+            "id": "t5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不是拿来玩的，是一种为了满足精神需要的小玩偶。"
+            },
+            "outputs": {}
+          },
+          "time_1": {
+            "id": "time_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "t7": {
+            "id": "t7",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "走吧，我们去看看。"
+            },
+            "outputs": {}
+          },
+          "choice_0": {
+            "id": "choice_0",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "手办有什么用？",
+              "label1": "那是什么东西？好玩吗？"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "手办有什么用？",
+                "next": "choice_0_op0"
+              },
+              {
+                "label": "那是什么东西？好玩吗？",
+                "next": "choice_0_op1"
+              }
+            ]
+          },
+          "choice_0_join": {
+            "id": "choice_0_join",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "（场景继续）"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0": {
+            "id": "choice_0_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -10
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t0": {
+            "id": "choice_0_op0_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没什么用，就是放在桌上。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t1": {
+            "id": "choice_0_op0_t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "那你买它干什么？"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t2": {
+            "id": "choice_0_op0_t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "放在桌上啊，就是这样。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op1": {
+            "id": "choice_0_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "choice_0_op1_t0": {
+            "id": "choice_0_op1_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不是拿来玩的，是一种为了满足精神需要的小玩偶。"
+            },
+            "outputs": {}
+          },
+          "after_0": {
+            "id": "after_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "好诡异的店面，所有人都低着头不说话。"
+            },
+            "outputs": {}
+          },
+          "after_1": {
+            "id": "after_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "只需要挑选就可以了。"
+            },
+            "outputs": {}
+          },
+          "after_2": {
+            "id": "after_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "挑选这些肉色的片状物吗？"
+            },
+            "outputs": {}
+          },
+          "after_3": {
+            "id": "after_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "这些就是谷子。"
+            },
+            "outputs": {}
+          },
+          "after_4": {
+            "id": "after_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "听起来像粮食的名字。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 8639
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t0",
+            "fromPort": "flowOut",
+            "toNodeId": "t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t1",
+            "fromPort": "flowOut",
+            "toNodeId": "t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t2",
+            "fromPort": "flowOut",
+            "toNodeId": "time_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_0",
+            "fromPort": "flowOut",
+            "toNodeId": "t4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t4",
+            "fromPort": "flowOut",
+            "toNodeId": "t5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t5",
+            "fromPort": "flowOut",
+            "toNodeId": "time_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_1",
+            "fromPort": "flowOut",
+            "toNodeId": "t7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t7",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option0",
+            "toNodeId": "choice_0_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t2",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option1",
+            "toNodeId": "choice_0_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op1_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_join",
+            "fromPort": "flowOut",
+            "toNodeId": "after_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_0",
+            "fromPort": "flowOut",
+            "toNodeId": "after_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_1",
+            "fromPort": "flowOut",
+            "toNodeId": "after_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_2",
+            "fromPort": "flowOut",
+            "toNodeId": "after_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_3",
+            "fromPort": "flowOut",
+            "toNodeId": "after_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_4",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "social05b_awei_record_high",
+      "type": "other",
+      "npcId": "awei",
+      "name": "阿伟",
+      "avatar": "👓",
+      "displayName": "【线下唱片店】",
+      "condition": {
+        "globalVariables": {
+          "id": 41,
+          "op": "gte",
+          "value": 50
+        }
+      },
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "t0": {
+            "id": "t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "陪我去一趟唱片店吧，我要顺路把耳机退了。"
+            },
+            "outputs": {}
+          },
+          "t1": {
+            "id": "t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "新耳机尾款要到期了，我要退掉顺路去一趟唱片店，一起去逛逛？"
+            },
+            "outputs": {}
+          },
+          "t2": {
+            "id": "t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你下定决心了？"
+            },
+            "outputs": {}
+          },
+          "time_0": {
+            "id": "time_0",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "t4": {
+            "id": "t4",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "没错。彬彬担心我是火锅与耳机不可得兼，其实我从来都没有真正拥有过耳机，手上的这个只是一个幻影罢了。"
+            },
+            "outputs": {}
+          },
+          "t5": {
+            "id": "t5",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "……什么意思？"
+            },
+            "outputs": {}
+          },
+          "time_1": {
+            "id": "time_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "t7": {
+            "id": "t7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "这副其实是厂商寄的样机。"
+            },
+            "outputs": {}
+          },
+          "choice_0": {
+            "id": "choice_0",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "还有机会跟厂商商量一下吗？",
+              "label1": "一开始不买不就好了？"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "还有机会跟厂商商量一下吗？",
+                "next": "choice_0_op0"
+              },
+              {
+                "label": "一开始不买不就好了？",
+                "next": "choice_0_op1"
+              }
+            ]
+          },
+          "choice_0_join": {
+            "id": "choice_0_join",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "（场景继续）"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0": {
+            "id": "choice_0_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t0": {
+            "id": "choice_0_op0_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "没必要，总有一天我会全款买下一个最好的耳机。现在还不是时候。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t1": {
+            "id": "choice_0_op0_t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "那什么时候是时候？"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t2": {
+            "id": "choice_0_op0_t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "就是到时候的时候。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op1": {
+            "id": "choice_0_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": -10
+            },
+            "outputs": {}
+          },
+          "choice_0_op1_t0": {
+            "id": "choice_0_op1_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "再来一百次还是会下单，这就是为什么要剁手吧。"
+            },
+            "outputs": {}
+          },
+          "after_0": {
+            "id": "after_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "这副其实是厂商寄的样机。"
+            },
+            "outputs": {}
+          },
+          "after_1": {
+            "id": "after_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "所以你根本就没有尾款要还？"
+            },
+            "outputs": {}
+          },
+          "after_2": {
+            "id": "after_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我自己买的是预售，昨天就退掉了。折腾半个月，白白扣了定金。"
+            },
+            "outputs": {}
+          },
+          "after_3": {
+            "id": "after_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "样机寄回去了，我们去唱片店看看吧，放松一下心情。"
+            },
+            "outputs": {}
+          },
+          "after_4": {
+            "id": "after_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你想买哪个？"
+            },
+            "outputs": {}
+          },
+          "after_5": {
+            "id": "after_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "哪个都买不起。"
+            },
+            "outputs": {}
+          },
+          "after_6": {
+            "id": "after_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "那你喜欢吗？"
+            },
+            "outputs": {}
+          },
+          "after_7": {
+            "id": "after_7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "装作不喜欢。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 8639
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t0",
+            "fromPort": "flowOut",
+            "toNodeId": "t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t1",
+            "fromPort": "flowOut",
+            "toNodeId": "t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t2",
+            "fromPort": "flowOut",
+            "toNodeId": "time_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_0",
+            "fromPort": "flowOut",
+            "toNodeId": "t4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t4",
+            "fromPort": "flowOut",
+            "toNodeId": "t5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t5",
+            "fromPort": "flowOut",
+            "toNodeId": "time_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_1",
+            "fromPort": "flowOut",
+            "toNodeId": "t7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t7",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option0",
+            "toNodeId": "choice_0_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t2",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option1",
+            "toNodeId": "choice_0_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op1_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_join",
+            "fromPort": "flowOut",
+            "toNodeId": "after_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_0",
+            "fromPort": "flowOut",
+            "toNodeId": "after_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_1",
+            "fromPort": "flowOut",
+            "toNodeId": "after_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_2",
+            "fromPort": "flowOut",
+            "toNodeId": "after_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_3",
+            "fromPort": "flowOut",
+            "toNodeId": "after_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_4",
+            "fromPort": "flowOut",
+            "toNodeId": "after_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_5",
+            "fromPort": "flowOut",
+            "toNodeId": "after_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_6",
+            "fromPort": "flowOut",
+            "toNodeId": "after_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_7",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "social05b_awei_record_low",
+      "type": "other",
+      "npcId": "awei",
+      "name": "阿伟",
+      "avatar": "👓",
+      "displayName": "【线下唱片店】",
+      "condition": {
+        "globalVariables": {
+          "id": 41,
+          "op": "lt",
+          "value": 50
+        }
+      },
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "t0": {
+            "id": "t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我要去唱片店，怎么，你也要来吗？"
+            },
+            "outputs": {}
+          },
+          "t1": {
+            "id": "t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "走，我也去逛逛。"
+            },
+            "outputs": {}
+          },
+          "t2": {
+            "id": "t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "顺路我要去把耳机退了。"
+            },
+            "outputs": {}
+          },
+          "time_0": {
+            "id": "time_0",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "t4": {
+            "id": "t4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "……你真狠得下心。"
+            },
+            "outputs": {}
+          },
+          "t5": {
+            "id": "t5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "其实这只是厂商的样机罢了。"
+            },
+            "outputs": {}
+          },
+          "time_1": {
+            "id": "time_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "t7": {
+            "id": "t7",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "所以你并没有买耳机？"
+            },
+            "outputs": {}
+          },
+          "t8": {
+            "id": "t8",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "嘘，别告诉别人。"
+            },
+            "outputs": {}
+          },
+          "time_2": {
+            "id": "time_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "choice_0": {
+            "id": "choice_0",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "这个耳机也并不怎么样，老有怪声音。",
+              "label1": "其实这只是厂商的样机罢了。"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "这个耳机也并不怎么样，老有怪声音。",
+                "next": "choice_0_op0"
+              },
+              {
+                "label": "其实这只是厂商的样机罢了。",
+                "next": "choice_0_op1"
+              }
+            ]
+          },
+          "choice_0_join": {
+            "id": "choice_0_join",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "（场景继续）"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0": {
+            "id": "choice_0_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": -10
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t0": {
+            "id": "choice_0_op0_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我听着好好的。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t1": {
+            "id": "choice_0_op0_t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你骗我？我差点借钱给你。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op0_t2": {
+            "id": "choice_0_op0_t2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "随你怎么想。"
+            },
+            "outputs": {}
+          },
+          "choice_0_op1": {
+            "id": "choice_0_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "choice_0_op1_t0": {
+            "id": "choice_0_op1_t0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "所以你并没有买耳机？"
+            },
+            "outputs": {}
+          },
+          "choice_0_op1_t1": {
+            "id": "choice_0_op1_t1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "嘘，别告诉别人。"
+            },
+            "outputs": {}
+          },
+          "after_0": {
+            "id": "after_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "那现在我们还去唱片店吗？你应该有钱买唱片了吧。"
+            },
+            "outputs": {}
+          },
+          "after_1": {
+            "id": "after_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "走啊，去看看。"
+            },
+            "outputs": {}
+          },
+          "after_2": {
+            "id": "after_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你想买哪个？"
+            },
+            "outputs": {}
+          },
+          "after_3": {
+            "id": "after_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "没看上的。"
+            },
+            "outputs": {}
+          },
+          "after_4": {
+            "id": "after_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "连唱片都不感兴趣了？"
+            },
+            "outputs": {}
+          },
+          "after_5": {
+            "id": "after_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "其实我在手机上听听《月之暗面》就足够开心了。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 8639
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t0",
+            "fromPort": "flowOut",
+            "toNodeId": "t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t1",
+            "fromPort": "flowOut",
+            "toNodeId": "t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t2",
+            "fromPort": "flowOut",
+            "toNodeId": "time_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_0",
+            "fromPort": "flowOut",
+            "toNodeId": "t4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t4",
+            "fromPort": "flowOut",
+            "toNodeId": "t5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t5",
+            "fromPort": "flowOut",
+            "toNodeId": "time_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_1",
+            "fromPort": "flowOut",
+            "toNodeId": "t7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t7",
+            "fromPort": "flowOut",
+            "toNodeId": "t8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "t8",
+            "fromPort": "flowOut",
+            "toNodeId": "time_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_2",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option0",
+            "toNodeId": "choice_0_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op0_t2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op0_t2",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0",
+            "fromPort": "option1",
+            "toNodeId": "choice_0_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op1_t0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1_t0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_op1_t1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_op1_t1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_0_join",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_0_join",
+            "fromPort": "flowOut",
+            "toNodeId": "after_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_0",
+            "fromPort": "flowOut",
+            "toNodeId": "after_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_1",
+            "fromPort": "flowOut",
+            "toNodeId": "after_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_2",
+            "fromPort": "flowOut",
+            "toNodeId": "after_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_3",
+            "fromPort": "flowOut",
+            "toNodeId": "after_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_4",
+            "fromPort": "flowOut",
+            "toNodeId": "after_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_5",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    }
+  ]
 }

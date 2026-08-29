@@ -938,6 +938,7 @@ export class DevDialogueEditorTab {
       ],
       condition: [['false', '否'], ['true', '是']],
       statId: [..._DE_NUMVARS.map(id => [id, id]), ...skillManager.all().map(item => [item.id, `${item.label} (${item.id})`])],
+      npcId: _DE_SPEAKERS.filter(item => item.id !== 'player').map(item => [item.id, item.label]),
       queue: [['work','Work'],['social','Social']],
       variableId: (globalVariableManager.definitions || []).map(item => [String(item.id), `${item.name} (${item.id})`]),
       itemId: (itemManager.defs ? Array.from(itemManager.defs.values()) : this.gameItems).map(item => [item.id, item.name || item.id]),

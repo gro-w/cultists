@@ -374,6 +374,126 @@
             "outputs": {},
             "x": 6020,
             "y": 360
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 290,
+            "y": 400
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 810,
+            "y": 400
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1350,
+            "y": 400
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 1870,
+            "y": 400
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 2690,
+            "y": 220
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 3250,
+            "y": 220
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 3810,
+            "y": 220
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 2970,
+            "y": 580
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 4370,
+            "y": 400
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 4930,
+            "y": 400
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 5770,
+            "y": 220
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 5770,
+            "y": 580
           }
         },
         "connections": [
@@ -385,6 +505,12 @@
           },
           {
             "fromNodeId": "invite",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
             "fromPort": "flowOut",
             "toNodeId": "ask_game",
             "toPort": "flowIn"
@@ -398,6 +524,12 @@
           {
             "fromNodeId": "game_name",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
+            "fromPort": "flowOut",
             "toNodeId": "player_guide",
             "toPort": "flowIn"
           },
@@ -410,6 +542,12 @@
           {
             "fromNodeId": "start_game",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
             "toNodeId": "ask_opponent",
             "toPort": "flowIn"
           },
@@ -421,6 +559,12 @@
           },
           {
             "fromNodeId": "protect",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
             "fromPort": "flowOut",
             "toNodeId": "ask_win",
             "toPort": "flowIn"
@@ -458,6 +602,12 @@
           {
             "fromNodeId": "trust",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
             "toNodeId": "trust_nervous",
             "toPort": "flowIn"
           },
@@ -469,6 +619,12 @@
           },
           {
             "fromNodeId": "trust_bless",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
             "fromPort": "flowOut",
             "toNodeId": "trust_lose",
             "toPort": "flowIn"
@@ -482,6 +638,12 @@
           {
             "fromNodeId": "trust_drink",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
+            "fromPort": "flowOut",
             "toNodeId": "death",
             "toPort": "flowIn"
           },
@@ -493,6 +655,12 @@
           },
           {
             "fromNodeId": "pay_reason",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
             "fromPort": "flowOut",
             "toNodeId": "pay_church",
             "toPort": "flowIn"
@@ -512,6 +680,12 @@
           {
             "fromNodeId": "second_personality",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
             "toNodeId": "revive",
             "toPort": "flowIn"
           },
@@ -523,6 +697,12 @@
           },
           {
             "fromNodeId": "push_tower",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
             "fromPort": "flowOut",
             "toNodeId": "second_choice",
             "toPort": "flowIn"
@@ -554,6 +734,12 @@
           {
             "fromNodeId": "excited_reply",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
+            "fromPort": "flowOut",
             "toNodeId": "excited_endline",
             "toPort": "flowIn"
           },
@@ -565,6 +751,12 @@
           },
           {
             "fromNodeId": "regret_reply",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
             "fromPort": "flowOut",
             "toNodeId": "regret_endline",
             "toPort": "flowIn"
@@ -824,6 +1016,126 @@
             "type": "scheduleEnd",
             "inputs": {},
             "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
           }
         },
         "connections": [
@@ -836,11 +1148,23 @@
           {
             "fromNodeId": "n1",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
             "toNodeId": "n2",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
             "fromPort": "flowOut",
             "toNodeId": "n3",
             "toPort": "flowIn"
@@ -854,6 +1178,12 @@
           {
             "fromNodeId": "n4",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
             "toNodeId": "n5",
             "toPort": "flowIn"
           },
@@ -865,6 +1195,12 @@
           },
           {
             "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
             "fromPort": "flowOut",
             "toNodeId": "n7",
             "toPort": "flowIn"
@@ -878,11 +1214,23 @@
           {
             "fromNodeId": "n8",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
             "toNodeId": "n9",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
             "fromPort": "flowOut",
             "toNodeId": "n10",
             "toPort": "flowIn"
@@ -895,6 +1243,12 @@
           },
           {
             "fromNodeId": "n11",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
             "fromPort": "flowOut",
             "toNodeId": "choice12",
             "toPort": "flowIn"
@@ -920,6 +1274,12 @@
           {
             "fromNodeId": "n14",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
             "toNodeId": "n15",
             "toPort": "flowIn"
           },
@@ -931,6 +1291,12 @@
           },
           {
             "fromNodeId": "n16",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
             "fromPort": "flowOut",
             "toNodeId": "n17",
             "toPort": "flowIn"
@@ -956,11 +1322,23 @@
           {
             "fromNodeId": "n19",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
+            "fromPort": "flowOut",
             "toNodeId": "n20",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n17",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
             "fromPort": "flowOut",
             "toNodeId": "n21",
             "toPort": "flowIn"
@@ -973,6 +1351,12 @@
           },
           {
             "fromNodeId": "n21",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
             "fromPort": "flowOut",
             "toNodeId": "n22",
             "toPort": "flowIn"

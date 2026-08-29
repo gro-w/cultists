@@ -38,7 +38,10 @@ class DataLoader {
     // (the dev panel calls clearCache(filename) before reloading).
     if (DataLoader._devServerOrigin) {
       const apiUrl = `${DataLoader._devServerOrigin}/api/file?f=${encodeURIComponent(filename)}`;
-      const response = await fetch(apiUrl);
+      // cache: "no-store" bypasses the browser HTTP cache so a re-read after
+      // writeJSONToDisk always returns the freshly written file, not a stale
+      // cached response.
+      const response = await fetch(apiUrl, { cache: "no-store" });
       if (!response.ok) {
         throw new Error(`[DataLoader] Dev-server failed to load ${filename}: ${response.status}`);
       }

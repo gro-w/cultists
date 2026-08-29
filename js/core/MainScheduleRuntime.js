@@ -1,9 +1,9 @@
 import { eventBus } from "./EventBus.js";
-import { realtimeQueue } from "./ScheduleQueue.js";
+import { mainQueue } from "./ScheduleQueue.js";
 import { createScheduleRunner } from "./ScheduleRunner.js";
 
-/** Execute only realtime entries explicitly owned by the realtime scheduler. */
-class RealtimeScheduleRuntime {
+/** Execute only main entries explicitly owned by the main scheduler. */
+class MainScheduleRuntime {
   constructor() {
     this._initPromise = null;
     this._unsubscribe = null;
@@ -14,10 +14,10 @@ class RealtimeScheduleRuntime {
     if (!this._initPromise) {
       this._initPromise = Promise.resolve().then(() => {
         this._unsubscribe = eventBus.on("schedule:appended", (payload) => {
-          if (payload?.queueId !== "realtime") return;
+          if (payload?.queueId !== "main") return;
           (payload.entries || []).filter((entry) => entry.autoRun).forEach((entry) => this.run(entry));
         });
-        realtimeQueue.getPending().filter((entry) => entry.autoRun).forEach((entry) => this.run(entry));
+        mainQueue.getPending().filter((entry) => entry.autoRun).forEach((entry) => this.run(entry));
       });
     }
     return this._initPromise;
@@ -31,18 +31,18 @@ class RealtimeScheduleRuntime {
       const runner = createScheduleRunner({
         definition: entry.payload || entry,
         instance: entry,
-        appId: "realtime",
-        onCheckpoint: (next) => realtimeQueue.updateInstance(entry.instanceId, next),
-        onComplete: () => { realtimeQueue.complete(entry.instanceId); finish(); },
+        appId: "main",
+        onCheckpoint: (next) => mainQueue.updateInstance(entry.instanceId, next),
+        onComplete: () => { mainQueue.complete(entry.instanceId); finish(); },
       });
       runner.start();
       if (entry.status === "resolved") finish();
     } catch (error) {
       finish();
-      console.error(`[RealtimeScheduleRuntime] Failed to execute ${entry.scheduleId}:`, error);
+      console.error(`[MainScheduleRuntime] Failed to execute ${entry.scheduleId}:`, error);
     }
   }
 }
 
-export const realtimeScheduleRuntime = new RealtimeScheduleRuntime();
-export default RealtimeScheduleRuntime;
+export const mainScheduleRuntime = new MainScheduleRuntime();
+export default MainScheduleRuntime;

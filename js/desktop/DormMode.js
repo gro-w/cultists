@@ -9,7 +9,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
-import { realtimeQueue } from "../core/ScheduleQueue.js";
+import { mainQueue } from "../core/ScheduleQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
@@ -787,7 +787,7 @@ export default class DormMode {
       lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
       return;
     }
-    const instance = realtimeQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
+    const instance = mainQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
     const runner = createScheduleRunner({
       definition: actor,
       instance,
@@ -799,8 +799,8 @@ export default class DormMode {
       },
       optionsEl: options,
       appId: "dorm",
-      onCheckpoint: (next) => realtimeQueue.updateInstance(instance.instanceId, next),
-      onComplete: () => realtimeQueue.complete(instance.instanceId),
+      onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
+      onComplete: () => mainQueue.complete(instance.instanceId),
     });
     runner.start();
   }

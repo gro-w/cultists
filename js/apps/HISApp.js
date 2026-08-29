@@ -12,7 +12,7 @@ import { dayNightSystem } from "../core/DayNightSystem.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 import { OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { workQueue } from "../core/ScheduleQueue.js";
-import { realtimeQueue } from "../core/ScheduleQueue.js";
+import { mainQueue } from "../core/ScheduleQueue.js";
 import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
 
 const dialogueKeywordIds = (tree) => {
@@ -338,7 +338,7 @@ export async function launchHISApp() {
         .map((select) => select.value)
         .filter(Boolean)
         .slice(0, 5);
-      const instance = realtimeQueue.append([{
+      const instance = mainQueue.append([{
         scheduleId: "medical:submit",
         status: "unresolved",
         transcript: [],

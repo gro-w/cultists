@@ -58,7 +58,7 @@ export default ExampleManager;
 | `DayNightSystem` | 上班/下班/睡眠、工作日/休息日、最终阶段 |
 | `TimeService` | 唯一普通游戏时间推进与阶段结算 owner；处理 20 分钟行动、物品/法术时间、睡眠日结 |
 | `ScheduleData` | 加载 `workXXa/b` 和 `socialXXa/b`，按时间追加队列 |
-| `ScheduleQueue` | 独立 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `realtimeQueue` |
+| `ScheduleQueue` | 独立 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `mainQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件/效果 |
 | `ItemPlacementManager` | 场景物品摆放、可见条件、拾取/放回 |
 | `GlobalVariableManager` | 全局变量定义、值、条件比较、效果、存档快照 |

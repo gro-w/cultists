@@ -1,6 +1,6 @@
 import { eventBus } from "./EventBus.js";
 import { createScheduleRunner } from "./ScheduleRunner.js";
-import { realtimeQueue } from "./ScheduleQueue.js";
+import { mainQueue } from "./ScheduleQueue.js";
 import { timeService } from "./TimeService.js";
 import { gameState } from "./GameState.js";
 import { itemManager } from "./ItemManager.js";
@@ -39,11 +39,11 @@ function applyEffect(effect = {}) {
   return result;
 }
 
-/** Execute item-owned schedules immediately in the non-blocking realtime queue. */
+/** Execute item-owned schedules immediately in the non-blocking main queue. */
 export function runItemSchedule(payload = {}) {
   const definition = definitionFor(payload);
   const instanceId = `${definition.id}:${++sequence}`;
-  const queue = payload.queueId === "chatgtp" ? chatgtpQueue : realtimeQueue;
+  const queue = payload.queueId === "chatgtp" ? chatgtpQueue : mainQueue;
   let instance = payload.instance || { instanceId, scheduleId: definition.id, status: "unresolved", transcript: [] };
   // A producer may pass a pre-created instance (for example a ChatGTP query),
   // but every runtime execution must still be represented in its queue. NPC

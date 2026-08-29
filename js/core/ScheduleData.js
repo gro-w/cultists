@@ -215,7 +215,7 @@ class ScheduleData {
     try {
       const prerequisite = Object.values(validation.blueprint.nodes).find((node) => node.type === "prerequisite");
       if (!prerequisite) return true;
-      return new ScheduleValueEvaluator(validation.blueprint).evaluateNode(prerequisite.id, "value") === true;
+      return new ScheduleValueEvaluator(validation.blueprint).readInput(prerequisite.id, "condition", false) === true;
     } catch (error) {
       console.warn("Skipped social prerequisite evaluation:", error);
       return false;
@@ -230,7 +230,7 @@ class ScheduleData {
         if (!node || instance.protectFromExpiry === true || instance.payload?.protectFromExpiry === true) continue;
         try {
           const evaluator = new ScheduleValueEvaluator(blueprint);
-          if (evaluator.evaluateNode(node.id, "value") !== true) continue;
+          if (evaluator.readInput(node.id, "expires", false) !== true) continue;
           const expiresAt = Number(evaluator.readInput(node.id, "expiresAt", NaN));
           if (Number.isFinite(expiresAt) && target > expiresAt) queue.expire(instance.instanceId);
         } catch (error) {

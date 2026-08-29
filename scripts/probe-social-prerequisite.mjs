@@ -1,5 +1,16 @@
 import { validateBlueprint, embedLegacyPrerequisite } from "../js/core/ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "../js/core/ScheduleValueEvaluator.js";
+import { getScheduleNodeDefinition, getScheduleNodePort } from "../js/core/ScheduleNodeRegistry.js";
+
+for (const type of ["prerequisite", "scheduleExpiry"]) {
+  const definition = getScheduleNodeDefinition(type);
+  if (definition.flowInputs?.length || definition.flowOutputs?.length || definition.valueOutputs?.length) {
+    throw new Error(`${type} unexpectedly exposes an output/input flow port`);
+  }
+  if (getScheduleNodePort(type, "value", "output") || getScheduleNodePort(type, "flowOut", "output")) {
+    throw new Error(`${type} unexpectedly exposes an output port`);
+  }
+}
 
 const blueprint = {
   startNodeId: "start",
@@ -19,7 +30,7 @@ const checked = validateBlueprint(blueprint);
 if (!checked.ok) throw new Error(checked.errors.join("; "));
 const result = (value) => new ScheduleValueEvaluator(checked.blueprint, {
   globalVariableManager: { get: () => value },
-}).evaluateNode("gate", "value");
+}).readInput("gate", "condition", false) === true;
 if (result(true) !== true || result(false) !== false || result(1) !== false) {
   throw new Error("prerequisite gate result is not strict boolean");
 }

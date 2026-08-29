@@ -15,10 +15,10 @@ const blueprint = {
 const checked = validateBlueprint(blueprint);
 if (!checked.ok) throw new Error(checked.errors.join("; "));
 const evaluator = new ScheduleValueEvaluator(checked.blueprint);
-if (evaluator.evaluateNode("expiry", "value") !== true || Number(evaluator.readInput("expiry", "expiresAt")) !== 100) throw new Error("expiry inputs failed");
+if (evaluator.readInput("expiry", "expires", false) !== true || Number(evaluator.readInput("expiry", "expiresAt")) !== 100) throw new Error("expiry inputs failed");
 const disabled = structuredClone(blueprint);
 disabled.nodes.expiry.inputs.expires = false;
-if (new ScheduleValueEvaluator(disabled).evaluateNode("expiry", "value") !== false) throw new Error("disabled expiry failed");
+if (new ScheduleValueEvaluator(disabled).readInput("expiry", "expires", false) !== false) throw new Error("disabled expiry failed");
 const duplicate = structuredClone(blueprint);
 duplicate.nodes.expiry2 = { id: "expiry2", type: "scheduleExpiry", inputs: { expires: true, expiresAt: 200 }, outputs: {} };
 if (validateBlueprint(duplicate).ok) throw new Error("duplicate expiry node accepted");

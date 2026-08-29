@@ -204,16 +204,16 @@
 | `getScheduleStatus` | 数值 | 读取日程实例状态 |
 | `getScheduleInstanceCount` | 数值 | 读取日程实例数量 |
 | `getGameTime` | 数值 | 读取当前游戏绝对分钟 |
-| `prerequisite` | 数值 | 必须存在且只能有一个的先决条件节点；输入为 `true` 才允许 Social 条目插入 |
-| `scheduleExpiry` | 数值 | 必须存在且只能有一个的日程过期节点；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
+| `prerequisite` | 控制 | 必须存在且只能有一个的先决条件节点；无输出引脚，仅接收 `condition`，输入为 `true` 才允许 Social 条目插入 |
+| `scheduleExpiry` | 控制 | 必须存在且只能有一个的日程过期节点；无输出引脚，仅接收 `expires` 和 `expiresAt`；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
 
 ### 4.12 Social 插入先决条件
 
-Social 日期日程表条目所在的完整蓝图可选添加一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点不得包含流程引脚，只能接收数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
+Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点没有任何输出引脚，也不得包含流程引脚，只能接收 `condition` 数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
 
 ### 4.13 日程过期
 
-完整蓝图必须包含且只能有一个 `scheduleExpiry` 节点。节点没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。新建模板默认将 `expires` 固定为 `false`；`expires` 不是严格的 `true` 时实例不会过期，启用后统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
+完整蓝图必须包含且只能有一个 `scheduleExpiry` 节点。节点没有任何输出引脚，也没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。新建模板默认将 `expires` 固定为 `false`；`expires` 不是严格的 `true` 时实例不会过期，启用后统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
 
 例如，读取“昨天是否与阿杰对话”的公共变量：
 

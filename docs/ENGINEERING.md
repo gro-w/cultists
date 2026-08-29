@@ -134,7 +134,7 @@ App 点击
 6. value edge 是反向求值依赖：执行输入端时，通过 `toNode/toPort` 找到上游 `fromNode/fromPort`。
 7. 节点坐标 `x/y` 属于编辑器元数据，但应随蓝图保存以保留布局。
 
-当前节点由 `ScheduleNodeRegistry.js` 注册：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前节点由 `ScheduleNodeRegistry.js` 注册：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`prerequisite`、`scheduleExpiry`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
 ### 常用节点
 
@@ -143,7 +143,7 @@ App 点击
 - `consumeTime`：`minutes` 必须是 20 的倍数，通过 `TimeService` 推进。
 - `branch`：根据 `condition` 选择 `true/false` 流程输出。
 - `setGlobal`：修改公共变量；变量 ID、类型和值必须符合 `global_variables.json`。
-- `insertSchedule`：通过 `ScheduleData` 动态插入日程，不能直接写 queue。
+- `insertSchedule`：通过 `ScheduleData` 动态插入日程，不能直接写 queue；可用 `respectPrerequisite` 忽略先决条件，或用 `protectFromExpiry` 保护实例免于过期。
 - `spellOperation`：学习法术；学习蓝图必须先连接 `consumeTime(240)`。
 - `scheduleEnd`：标记实例完成并发出 `schedule:resolved`、`schedule:completed`。
 

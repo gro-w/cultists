@@ -151,7 +151,10 @@ export class ScheduleRunner {
         return {};
       }
       case "insertSchedule": {
-        const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"));
+        const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"), {
+          respectPrerequisite: get("respectPrerequisite", true),
+          protectFromExpiry: get("protectFromExpiry", false),
+        });
         if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
         return {};
       }

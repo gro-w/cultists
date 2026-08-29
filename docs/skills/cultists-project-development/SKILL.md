@@ -179,7 +179,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 - 注册节点、端口和字段之外不要发明自定义运行语义；
 - 不要把新内容写成旧式 `dialogueTree`，除非任务明确是兼容迁移。
 
-常用节点：`flowStart`、`text`、`choice`、`branch`、`waitUntil`、`segmentBranch`、`consumeTime`、`setGlobal`、`statOperation`、`inventoryOperation`、`insertSchedule`、`showCg`、`showImage`、`spellOperation` 和 `scheduleEnd`。
+常用节点：`flowStart`、`text`、`choice`、`branch`、`waitUntil`、`segmentBranch`、`consumeTime`、`setGlobal`、`statOperation`、`inventoryOperation`、`insertSchedule`、`showCg`、`showImage`、`spellOperation`、`prerequisite`、`scheduleExpiry` 和 `scheduleEnd`。
 
 每行玩家可见对白都应是可达的 `text` 节点。选项后的好感度、怀疑度、物品和属性改变必须通过显式操作节点连接；不要把新效果藏进废弃的 `options[].effects` 或仅供编辑器显示的字段。
 

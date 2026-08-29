@@ -16,7 +16,7 @@ const definitions = {
   diceCheck: { label: "骰子检定", flowInputs: [flowIn()], flowOutputs: [flowOut("largeSuccess"), flowOut("success"), flowOut("failure"), flowOut("largeFailure")], valueInputs: [input("n", VALUE, "number")] },
   consumeTime: { label: "消耗时间", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("minutes", VALUE, "number")] },
   setGlobal: { label: "操作公共变量", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("variableId"), input("value"), input("delta", VALUE, "number")] },
-  insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string")] },
+  insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string"), input("respectPrerequisite", VALUE, "bool"), input("protectFromExpiry", VALUE, "bool")] },
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   endCg:  { label: "结束 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },

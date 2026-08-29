@@ -227,7 +227,7 @@ class ScheduleData {
       for (const instance of queue.getPending()) {
         const blueprint = instance.payload?.blueprint || instance.blueprint || instance.payload?.dialogueTree || instance.dialogueTree;
         const node = Object.values(blueprint?.nodes || {}).find((candidate) => candidate.type === "scheduleExpiry");
-        if (!node) continue;
+        if (!node || instance.protectFromExpiry === true || instance.payload?.protectFromExpiry === true) continue;
         try {
           const evaluator = new ScheduleValueEvaluator(blueprint);
           if (evaluator.evaluateNode(node.id, "value") !== true) continue;
@@ -246,11 +246,16 @@ class ScheduleData {
     ready.sort((a, b) => a.addTime - b.addTime);
     ready.forEach((request) => {
       const definition = this.scheduleById.get(request.scheduleId);
-      if (!definition || !this.matchesPrerequisites(definition.prerequisites || definition.condition)) return;
+      if (!definition) return;
+      if (request.respectPrerequisite !== false
+        && ((definition.blueprint || definition.dialogueTree || definition.insertPrerequisite)
+          && !this.matchesPrerequisite(definition.blueprint || definition.dialogueTree, definition.insertPrerequisite)
+          || !this.matchesPrerequisites(definition.prerequisites || definition.condition))) return;
       const day = Math.floor(request.addTime / 1440);
       const time = request.addTime % 1440;
       const entry = { ...definition, scheduleId: definition.id, receivedDay: day, receivedTime: time,
-        receivedPhase: time < 16 * 60 ? "day" : "night" };
+        receivedPhase: time < 16 * 60 ? "day" : "night",
+        ...(request.protectFromExpiry === true ? { protectFromExpiry: true } : {}) };
       delete entry.queueId;
       const targetQueueId = request.queueId || definition.queueId;
       if (targetQueueId === "main") entry.autoRun = true;
@@ -303,19 +308,28 @@ class ScheduleData {
       if (operation?.type === "addSchedule" || operation?.scheduleId) {
         const addTime = operation.addTime ?? (Number.isInteger(Number(operation.day)) && Number.isInteger(Number(operation.time))
           ? Number(operation.day) * 1440 + Number(operation.time) : undefined);
-        this.addSchedule(operation.scheduleId, addTime);
+        this.addSchedule(operation.scheduleId, addTime, operation.queueId || operation.queue, {
+          respectPrerequisite: operation.respectPrerequisite,
+          protectFromExpiry: operation.protectFromExpiry,
+        });
       }
     });
   }
 
-  addSchedule(scheduleId, addTime, queueId = undefined) {
+  addSchedule(scheduleId, addTime, queueId = undefined, options = {}) {
     const definition = this.scheduleById.get(scheduleId);
     if (!definition) return { ok: false, reason: "unknownSchedule" };
     const target = Number(addTime);
     const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
     if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
     if (queueId !== undefined && !["work", "social", "main"].includes(queueId)) return { ok: false, reason: "invalidQueue" };
-    const request = { scheduleId, addTime: target, ...(queueId ? { queueId } : {}) };
+    const request = {
+      scheduleId,
+      addTime: target,
+      ...(queueId ? { queueId } : {}),
+      respectPrerequisite: options.respectPrerequisite !== false,
+      protectFromExpiry: options.protectFromExpiry === true,
+    };
     this.pendingAdds.push(request);
     if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
     return { ok: true, request };

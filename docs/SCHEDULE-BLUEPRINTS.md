@@ -190,7 +190,7 @@
 | `diceCheck` | 流程 | 执行百分骰检定 |
 | `consumeTime` | 流程/状态 | 推进游戏时间 |
 | `setGlobal` | 流程/状态 | 设置公共变量 |
-| `insertSchedule` | 流程/状态 | 向日程队列插入日程 |
+| `insertSchedule` | 流程/状态 | 向日程队列插入日程；可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`） |
 | `showCg` | 流程/显示 | 发出显示 CG 事件 |
 | `endCg` | 流程/显示 | 结束当前 CG 显示 |
 | `showImage` | 流程/显示 | 发出显示图片事件 |
@@ -354,10 +354,9 @@ Social 日期日程表条目所在的完整蓝图可选添加一个 `prerequisit
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
-- 值输入：`scheduleId`（字符串）、`addTime`（数字）、`queue`（字符串）；
+- 值输入：`scheduleId`（字符串）、`addTime`（数字）、`queue`（字符串）、`respectPrerequisite`（布尔，默认 `true`）、`protectFromExpiry`（布尔，默认 `false`）；
 - 作用：调用 `ScheduleData.addSchedule()` 向指定队列追加日程；
-- 语义：插入失败会终止当前节点执行并报告原因。队列应使用项目支持的
-  日程队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
+- 语义：插入失败会终止当前节点执行并报告原因。`respectPrerequisite=false` 时忽略目标蓝图的先决条件并直接创建实例；`protectFromExpiry=true` 时实例不会被目标蓝图的 `scheduleExpiry` 节点过期。队列应使用项目支持的日程队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
 
 ### 4.11 `showCg`：显示 CG
 

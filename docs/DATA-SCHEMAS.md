@@ -59,7 +59,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 `addTime` 必须是非负、20 分钟的整数倍，使用与游戏时钟相同的绝对分钟坐标。执行操作时只创建计时器；计时器到期后才检查日程先决条件，并把日程加入其来源文件决定的 Work 或 Social 队列。`socialpub.json` / `workpub.json` 的条目不会随日期检查点自动追加。旧的 `addSchedule` 简写仍可读取，但新内容应使用 `operations`。
 
-`maininit.json` 和 `mainpub.json` 使用 `{ "entries": [] }` 顶层结构；其中每个条目的 `id` 是稳定日程 ID。`maininit.json` 的条目启动时以 `main` 队列实例加入，并由统一 `ScheduleRunner` 执行。`mainpub.json` 只注册主要公共日程定义；通过 `insertSchedule` 指定 `queue="main"` 插入的日程进入主要日程队列并由同一运行时执行。初始主要日程的条件等待应使用 `waitUntil`，不应在应用层另行订阅或轮询。
+`maininit.json` 和 `mainpub.json` 使用 `{ "entries": [] }` 顶层结构；其中每个条目的 `id` 是稳定日程 ID。`maininit.json` 的条目启动时以 `main` 队列实例加入，并由统一 `ScheduleRunner` 执行。`mainpub.json` 只注册主要公共日程定义；通过 `insertSchedule` 指定 `queue="main"` 插入的日程进入主要日程队列并由同一运行时执行。`insertSchedule` 还可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`）；前者为 `false` 时跳过蓝图先决条件，后者为 `true` 时在实例上记录免过期标记。初始主要日程的条件等待应使用 `waitUntil`，不应在应用层另行订阅或轮询。
 
 Social 日期日程条目所在的完整蓝图可选添加一个 `prerequisite` 节点。它是在到达该日期和时间时才求值的受限数值节点；其输入为严格 `true` 时，条目才会创建实例并加入 `socialQueue`。该节点禁止流程引脚，缺失、非法或求值失败均跳过条目。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
 

@@ -58,7 +58,7 @@ export default class LocationScene {
   // ── helpers ───────────────────────────────────────────────────────────────────
   _applySanityBg() {
     if (!this._locationId) return;
-    const san = gameState.mental ?? 100;
+    const san = gameState.sanity ?? 100;
     const img = locationSystem.resolveBackground(this._locationId, san);
     if (img) {
       this._bgEl.src = img;

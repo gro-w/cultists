@@ -465,7 +465,7 @@ export class DeveloperMode {
 
   showGlobalVariables() {
     const valueText = (variable, value) => variable.type === "string" ? value : String(value);
-    const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
+    const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
     this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
   }
 
@@ -475,10 +475,10 @@ export class DeveloperMode {
         if (raw !== "true" && raw !== "false") throw new Error(`变量 ${id} 的${field}必须是 true 或 false`);
         return raw === "true";
       }
-      if (type === "number") {
+      if (type === "number" || type === "decimal") {
         const value = Number(raw);
         if (!Number.isFinite(value) || value < 0 || value > 256) throw new Error(`变量 ${id} 的${field}必须是 0-256 的数字`);
-        return value;
+        return type === "decimal" ? Math.round((value + Number.EPSILON * Math.max(1, Math.abs(value))) * 100) / 100 : value;
       }
       return raw;
     };
@@ -702,7 +702,7 @@ export class DeveloperMode {
       try {
         this.root.querySelectorAll("[data-runtime-gv]").forEach((input) => {
           const type = input.dataset.runtimeGvType;
-          const value = type === "bool" ? input.value === "true" : type === "number" ? Number(input.value) : input.value;
+          const value = type === "bool" ? input.value === "true" : ["number", "decimal"].includes(type) ? Number(input.value) : input.value;
           globalVariableManager.set(Number(input.dataset.runtimeGv), value);
         });
         this.setStatus("全局变量运行时值已应用。");

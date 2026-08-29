@@ -69,15 +69,15 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 [
   { "id": 0, "name": "是否取得钥匙", "type": "bool", "default": false },
   { "id": 1, "name": "调查进度", "type": "number", "default": 0 },
-  { "id": 2, "name": "路线", "type": "string", "default": "" }
+  { "id": 2, "name": "金钱", "type": "decimal", "default": 0 }
 ]
 ```
 
 约束：
 
 - ID 是从 0 开始的非负整数，不能重复；定义会按 ID 排序。
-- `type` 只能是 `bool`、`number`、`string`。
-- `number` 的默认值和运行时值必须在 `0..256`。
+- `type` 只能是 `bool`、`number`、`decimal`、`string`。
+- `number` 和 `decimal` 的默认值、运行时值必须在 `0..256`；`decimal` 会四舍五入并保持小数点后 2 位精度。
 - bool 必须使用 JSON 布尔值，字符串必须使用 JSON 字符串。
 - `default` 是读档缺少对应值时的回退值。
 
@@ -92,7 +92,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
   "condition": {
     "globalVariables": [
       { "id": 1, "op": "gte", "value": 10 },
-      { "id": 2, "equals": "route_a" }
+      { "id": 2, "op": "gte", "value": 0.01 }
     ]
   }
 }
@@ -105,12 +105,12 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
   "globalVariables": [
     { "id": 0, "value": true },
     { "id": 1, "delta": 5 },
-    { "id": 2, "value": "route_a" }
+    { "id": 2, "value": 12.5 }
   ]
 }
 ```
 
-只有 number 支持 `delta`；其他类型使用 `value`。
+`number` 和 `decimal` 支持 `delta`；其他类型使用 `value`。`decimal` 的 `delta` 运算结果也会按小数点后 2 位精度归一化。
 
 ## 旧式 dialogueTree（仅兼容读取）
 

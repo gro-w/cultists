@@ -1,7 +1,7 @@
 import { dataLoader } from "./DataLoader.js";
 import { eventBus } from "./EventBus.js";
 
-const TYPES = new Set(["bool", "number", "string"]);
+const TYPES = new Set(["bool", "number", "decimal", "string"]);
 const OPERATORS = new Set(["eq", "neq", "gt", "gte", "lt", "lte"]);
 
 function clone(value) {
@@ -11,6 +11,10 @@ function clone(value) {
 function variableId(value) {
   const id = Number(value);
   return Number.isInteger(id) && id >= 0 ? id : null;
+}
+
+function roundDecimal(value) {
+  return Math.round((value + Number.EPSILON * Math.max(1, Math.abs(value))) * 100) / 100;
 }
 
 /** Owns named, data-defined variables shared by dialogue and event systems. */
@@ -45,11 +49,12 @@ class GlobalVariableManager {
       if (typeof value !== "boolean") throw new Error(`Global variable ${definition.id} must be bool`);
       return value;
     }
-    if (definition.type === "number") {
+    if (definition.type === "number" || definition.type === "decimal") {
       const number = Number(value);
       if (!Number.isFinite(number) || number < 0 || number > 256) {
         throw new Error(`Global variable ${definition.id} must be a number from 0 to 256`);
       }
+      if (definition.type === "decimal") return roundDecimal(number);
       return number;
     }
     if (typeof value !== "string") throw new Error(`Global variable ${definition.id} must be string`);
@@ -68,7 +73,7 @@ class GlobalVariableManager {
 
   modify(id, change, options = {}) {
     const definition = this.definition(id);
-    if (!definition || definition.type !== "number") throw new Error(`Only number variables can be modified: ${id}`);
+    if (!definition || !["number", "decimal"].includes(definition.type)) throw new Error(`Only numeric variables can be modified: ${id}`);
     return this.set(definition.id, this.get(definition.id) + Number(change), options);
   }
 
@@ -80,7 +85,7 @@ class GlobalVariableManager {
       if (!raw.name || typeof raw.name !== "string") throw new Error(`Global variable ${id} needs a name`);
       if (!TYPES.has(raw.type)) throw new Error(`Invalid global variable type for ${id}`);
       const definition = { id, name: raw.name, type: raw.type };
-      definition.default = this._coerce(definition, raw.default ?? (raw.type === "bool" ? false : raw.type === "number" ? 0 : ""));
+      definition.default = this._coerce(definition, raw.default ?? (raw.type === "bool" ? false : ["number", "decimal"].includes(raw.type) ? 0 : ""));
       return definition;
     });
     if (new Set(definitions.map((definition) => definition.id)).size !== definitions.length) throw new Error("Global variable IDs must be unique");
@@ -102,13 +107,25 @@ class GlobalVariableManager {
     if (condition.all) return this.matches(condition.all);
     if (condition.any) return condition.any.some((item) => this.matches(item));
     const id = condition.id ?? condition.variableId;
+    const definition = this.definition(id);
     const actual = this.get(id);
-    if (actual === undefined) return false;
-    if (Object.prototype.hasOwnProperty.call(condition, "equals")) return actual === condition.equals;
-    if (Object.prototype.hasOwnProperty.call(condition, "notEquals")) return actual !== condition.notEquals;
+    if (!definition || actual === undefined) return false;
+    const normalizeExpected = (value) => {
+      try { return ["number", "decimal"].includes(definition.type) ? this._coerce(definition, value) : value; }
+      catch { return undefined; }
+    };
+    if (Object.prototype.hasOwnProperty.call(condition, "equals")) {
+      const expected = normalizeExpected(condition.equals);
+      return expected !== undefined && actual === expected;
+    }
+    if (Object.prototype.hasOwnProperty.call(condition, "notEquals")) {
+      const expected = normalizeExpected(condition.notEquals);
+      return expected !== undefined && actual !== expected;
+    }
     const operator = condition.op || "eq";
     if (!OPERATORS.has(operator)) return false;
-    const expected = condition.value;
+    const expected = normalizeExpected(condition.value);
+    if (expected === undefined) return false;
     if (operator === "eq") return actual === expected;
     if (operator === "neq") return actual !== expected;
     if (operator === "gt") return actual > expected;

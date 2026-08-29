@@ -60,9 +60,9 @@
     .manifesto p strong { color: var(--blue); }
     .systems { align-self: start; border: 1.8mm solid var(--ink); padding: 0 9mm 3mm; background: rgba(223,223,223,.72); box-shadow: 3mm 3mm 0 var(--paper-light), 4mm 4mm 0 var(--ink); }
     .systems h2 { margin: 0 -9mm 4mm; padding: 4mm 6mm; color: var(--paper-light); background: var(--blue); font-family: "Sarasa Fixed SC", monospace; font-size: 8mm; letter-spacing: 0; }
-    .system-row { display: grid; grid-template-columns: 48mm 1fr; gap: 4mm; padding: 4.5mm 0; border-top: .7mm solid var(--line); font-size: 6.3mm; line-height: 1.25; }
+    .system-row { display: grid; grid-template-columns: 48mm 1fr; gap: 4mm; padding: 5mm 0; border-top: .7mm solid var(--line); font-size: 7mm; line-height: 1.18; }
     .system-row:first-of-type { border-top: 0; }
-    .system-row b { color: var(--pink); font: 900 6mm/1 "Sarasa Fixed SC", monospace; white-space: nowrap; }
+    .system-row b { color: var(--pink); font: 900 6.5mm/1 "Sarasa Fixed SC", monospace; white-space: nowrap; }
     .system-row span { font-weight: 700; white-space: nowrap; letter-spacing: -.04em; }
     .terminal { margin-top: 14mm; padding: 8mm 10mm; background: var(--ink); color: var(--acid); border: 1.8mm solid var(--ink); box-shadow: 5mm 5mm 0 var(--pink); font: 6mm/1.55 "Sarasa Fixed SC", monospace; }
     .terminal .muted { color: #aeb4dd; } .terminal .alert { color: #ff7082; }
@@ -81,9 +81,8 @@
     .footer { position: relative; display: flex; justify-content: space-between; align-items: end; gap: 14mm; margin-top: 12mm; padding-top: 7mm; border-top: 2.5mm solid var(--ink); }
     .footer .name { font: 900 10mm/.95 "Sarasa Fixed SC", monospace; color: var(--blue); letter-spacing: .02em; }
     .footer .name small { display: block; margin-top: 3mm; color: var(--ink); font: 900 5.5mm/1 "Sarasa Fixed SC", monospace; letter-spacing: .14em; }
-    .footer .pitch { max-width: 150mm; text-align: right; font-size: 7mm; line-height: 1.2; font-weight: 800; }
-    .co-design { margin-top: 5mm; color: var(--blue); text-align: left; font: 900 5mm/1.1 "Sarasa Fixed SC", monospace; white-space: nowrap; }
-    .co-design small { display: block; margin-top: 2mm; color: var(--ink); font-size: 3.2mm; letter-spacing: .02em; }
+    .co-design { margin-top: 0; margin-left: auto; color: var(--blue); text-align: right; align-self: end; font: 900 10mm/.95 "Sarasa Fixed SC", monospace; letter-spacing: .02em; white-space: nowrap; }
+    .co-design small { display: block; margin-top: 2mm; color: var(--ink); font-size: 5.5mm; letter-spacing: .14em; }
     @media screen and (max-width: 900px) { .poster { transform-origin: top left; transform: scale(calc(100vw / 2245)); margin: 0; } body { min-height: calc(841mm * 100vw / 2245); } }
     @media print { html, body { background: none; } .poster { margin: 0; } }
   </style>
@@ -92,10 +91,10 @@
   <main class="poster" aria-label="《完蛋，我被邪教徒包围了！》A1宣传海报">
     <figure class="blueprint-screenshot" aria-label="真实蓝图编辑器截图背景"><img src="data/assets/blueprint_editor_crop.png" alt="真实蓝图编辑器中的流程节点、连线与节点属性面板"></figure>
     <div class="stamp">开发中<small>IN DEVELOPMENT</small></div>
-    <div class="eyebrow">SURROUNDED BY CULTISTS &amp; CULTISTS ENGINE</div>
+    <div class="eyebrow">SURROUNDED BY CULTISTS &amp; CULTISTS ENGINE · 入会须知</div>
     <header class="title-block">
       <h1>完蛋，<br>我被邪教徒<br>包围了！</h1>
-      <p class="subtitle">SURROUNDED BY CULTISTS <b>&amp; Cultists Engine</b></p>
+      <p class="subtitle">加入我们，获得一间宿舍，以及一个不会结束的夜晚</p>
       <div class="hero-rule" aria-hidden="true"></div>
     </header>
     <section class="scene" aria-label="宿舍场景与三位室友">
@@ -107,23 +106,23 @@
     </section>
     <section class="copy-grid">
       <article class="manifesto">
-        <h2>这不是一个半成品 DEMO<br>这是邀你共创的<br><span class="engine-word">未完待续</span></h2>
-        <p>一个正在长大的<strong>游戏作品</strong>，也是一套可以继续开发、继续讲故事的<strong>游戏引擎</strong></p>
-        <div class="terminal"><span class="muted">C:\CULTISTS\ENGINE_DEV_MODE</span><br>&gt; 打开可视化开发人员模式<br>&gt; 编辑数据 / 调整状态 / 追踪队列<br>&gt; 拖拽蓝图，连接下一段故事<br><span class="alert">[BUILD] CONTENT IS NOT FINAL — JOIN THE BUILD</span></div>
+        <h2>你已经看见门了<br>现在，只差推开它<br><span class="engine-word">成为我们的一员</span></h2>
+        <p>白天接受教诲，夜晚回到宿舍<br>把你的选择、你的名字、你的结局，交给<strong>唯一正确的引擎</strong></p>
+        <div class="terminal"><span class="muted">C:\CULTISTS\RITUAL_INIT</span><br>&gt; 打开可视化开发人员模式<br>&gt; 修改教义 / 调整状态 / 追踪队列<br>&gt; 拖拽蓝图，连接下一场仪式<br><span class="alert">[BUILD] CONTENT IS NOT FINAL — JOIN THE BUILD</span></div>
       </article>
       <aside class="systems">
-        <h2>C:\CULTISTS\ENGINE_SYSTEMS</h2>
-        <div class="system-row"><b>01 / DATA</b><span>剧情、角色、道具、医学知识与结局，全部由数据驱动</span></div>
-        <div class="system-row"><b>02 / DEV</b><span>可视化开发人员模式：数据库、运行时调试器、多窗口并行编辑</span></div>
-        <div class="system-row"><b>03 / GRAPH</b><span>清晰的蓝图系统：节点、端口、连线与分支，让故事流程一眼可见</span></div>
-        <div class="system-row"><b>04 / RUNTIME</b><span>时间、日程、状态、队列与存档，共同组成可验证的运行系统</span></div>
-        <div class="system-row"><b>05 / STORY</b><span>医院、宿舍与夜聊只是第一章内容；引擎为更多故事预留入口</span></div>
+        <h2>C:\CULTISTS\DOCTRINE</h2>
+        <div class="system-row"><b>01 / DATA</b><span>把故事交给数据，让每个名字、道具与结局服从同一套教义</span></div>
+        <div class="system-row"><b>02 / DEV</b><span>打开开发人员模式，亲手修改世界，见证规则在你手中生效</span></div>
+        <div class="system-row"><b>03 / GRAPH</b><span>蓝图不是流程图，是仪式路线；节点、端口与分支都已为你安排</span></div>
+        <div class="system-row"><b>04 / RUNTIME</b><span>时间会向前，队列不会说谎；每一次运行都留下无法抹去的记录</span></div>
+        <div class="system-row"><b>05 / STORY</b><span>医院、宿舍与夜聊只是第一章内容；引擎正等待下一位传教者</span></div>
       </aside>
     </section>
     <section class="engine-strip" aria-label="游戏引擎与开发人员模式">
       <div>
-        <h2>这不只是一个 GAME DEMO</h2>
-        <p>它也是一个可继续生长的游戏引擎：从数据文件到运行时队列，从蓝图节点到调试器窗口，内容与系统都能被看见、编辑、验证、扩展</p>
+        <h2>加入 Cultists Engine</h2>
+        <p>这不是一件封存好的成品，而是一座仍在扩张的教堂：从数据文件到运行时队列，从蓝图节点到调试器窗口，所有戒律都能被看见、编辑、验证、扩展</p>
       </div>
       <div class="blueprint" aria-label="蓝图节点流程示意">
         <div class="flow-main"><span class="node">START</span><span class="arrow">→</span><span class="node">TEXT</span><span class="arrow">→</span><span class="node">CHOICE</span><span class="arrow">→</span><span class="node">END</span></div>
@@ -131,8 +130,8 @@
       </div>
     </section>
     <footer class="footer">
-      <div class="name">SURROUNDED BY CULTISTS &amp; CULTISTS ENGINE<small>完蛋，我被邪教徒包围了（&amp; Cultists 引擎）</small><div class="co-design">co-designed by Hermes<small>(the coding agent, not the luxury brand)</small></div></div>
-      <div class="pitch">原生 HTML / CSS / ES6<br>不是封闭的成品，而是可二次开发的开放系统<br><strong>下一段故事，由你接着写</strong></div>
+      <div class="name">SURROUNDED BY CULTISTS &amp; CULTISTS ENGINE<small>完蛋，我被邪教徒包围了（&amp; Cultists 引擎）</small></div>
+      <div class="co-design">co-designed by Hermes<small>(the coding agent, not the luxury brand)</small></div>
     </footer>
   </main>
 </body>

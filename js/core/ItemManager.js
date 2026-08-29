@@ -3,7 +3,7 @@ import { globalVariableManager } from "./GlobalVariableManager.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
-import { checkSkill } from "./DiceCheck.js";
+
 
 
 /**
@@ -15,25 +15,7 @@ import { checkSkill } from "./DiceCheck.js";
  *     id, name,
  *     consumable: boolean,   // removed from inventory after a successful use
  *     usable: boolean,       // whether "使用" is available at all
- *     inspectText: string,   // shown when the player "调查"s the item (used
- *                            // when `inspectCheck` is absent - a plain,
- *                            // always-the-same-result inspection)
- *     revealKeywordIds: string[],  // optional keyword ids (from data/keywords.json) unlocked on inspect
- *     inspectCheck: { skillId: string },  // optional - if set, every 调查
- *                            // re-rolls a CoC-style percentile check against
- *                            // that skill (see DiceCheck.js) instead of
- *                            // always returning `inspectText`, so repeated
- *                            // inspections of the same item can yield
- *                            // different results.
- *     inspectOutcomes: {     // required when inspectCheck is set; one entry
- *                            // per DiceCheck outcome name (criticalSuccess/
- *                            // success/failure/criticalFailure), each:
- *       [outcome]: {
- *         text: string,                    // shown instead of inspectText
- *         revealKeywordIds: string[],      // overrides the top-level list for this outcome
- *         statChanges: { energy, mental, physical, satiety }  // e.g. a criticalFailure spooking the player
- *       }
- *     },
+ *     schedules: { investigate, use, obtain, lose }, // item-owned blueprints
  *     useCondition: { requires: [{ itemId, count }] },  // optional
  *     useEffect: {
  *       remove: [{ itemId, count }],
@@ -143,64 +125,12 @@ class ItemManager {
       .filter((entry) => entry.def);
   }
 
-  /**
-   * Inspect an item: reveals any associated keywords and returns a result
-   * describing what the player saw. Every call counts as one「调查」
-   * action (broadcast via `item:inspected` for UI/history consumers).
-   *
-   * SAN-band variants: if `def.sanVariants` contains an entry matching the
-   * player's current SAN level, its `description` overrides `inspectText`
-   * and its `revealKeywordIds` are merged with the top-level list.
-   *
-   * Both `inspectText` / band `description` and `inspectOutcomes[].text`
-   * may contain `[[keywordId]]` inline markers. Those are NOT auto-collected
-   * on inspect — the player clicks the highlighted span to collect them.
-   * Keywords listed in `revealKeywordIds` (top-level or band) ARE
-   * auto-collected on every inspect.
-   *
-   * @returns {{ text: string, check: {roll:number, skillValue:number, outcome:string}|null, keywordDefs: object }}
-   */
   inspect(id) {
     const def = this.defs.get(id);
     if (!def) return null;
-
-    // Pick the SAN-band variant for the player's current mental value.
-    const bandKey = this._getSanBandKey(gameState.mental);
-    const band = def.sanVariants && def.sanVariants[bandKey];
-
-    // Resolve inspectEffect: per-band entry takes priority over top-level.
-    const resolvedEffect = (band && band.inspectEffect) || def.inspectEffect || null;
-
-    if (def.inspectCheck && def.inspectCheck.skillId) {
-      const check = checkSkill(def.inspectCheck.skillId);
-      const outcomes = def.inspectOutcomes || {};
-      const outcome =
-        outcomes[check.outcome] || outcomes.success || outcomes.failure || {};
-      const revealIds = [
-        ...(outcome.revealKeywordIds || def.revealKeywordIds || []),
-        ...((band && band.revealKeywordIds) || []),
-      ];
-      const baseText = outcome.text || def.inspectText || "（没有更多可以查看的信息。）";
-      const text = (band && band.description) || baseText;
-      const effect = {
-        ...(resolvedEffect || {}),
-        ...(outcome.statChanges ? { statChanges: { ...(resolvedEffect?.statChanges || {}), ...outcome.statChanges } } : {}),
-      };
-      this._emitItemSchedule(id, "inspect", { effect, timeMinutes: def.inspectTimeAdvance || 0 });
-      const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
-      revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
-      return { text, check, keywordDefs, effect: resolvedEffect };
-    }
-
-    const revealIds = [
-      ...(def.revealKeywordIds || []),
-      ...((band && band.revealKeywordIds) || []),
-    ];
-    const text = (band && band.description) || def.inspectText || "（没有更多可以查看的信息。）";
-    const keywordDefs = this._buildKeywordDefs(text, revealIds, def.name);
-    this._emitItemSchedule(id, "inspect", { effect: resolvedEffect, timeMinutes: def.inspectTimeAdvance || 0 });
-    revealIds.forEach((kid) => { const k = keywordDefs[kid]; if (k) keywordManager.collect(k); });
-    return { text, check: null, keywordDefs, effect: resolvedEffect };
+    let result = null;
+    this._emitItemSchedule(id, "investigate", { onInspection: (inspection) => { result = inspection; } });
+    return result;
   }
 
   /**

@@ -204,9 +204,7 @@
 .dev-schedule-table { padding:10px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
 .dev-schedule-table h3 { margin:0 0 9px; color:#000080; font-size:14px; }
 .dev-schedule-file-list { display:flex; flex-direction:column; gap:2px; max-height:220px; overflow:auto; border:2px inset #eee; background:#fff; padding:2px; }
-.dev-schedule-file { display:block; width:100%; padding:4px 6px; border:0; background:transparent; text-align:left; cursor:pointer; font:inherit; }
-.dev-schedule-file:hover { background:#d8e8ff; }
-.dev-schedule-file.active { background:#000080; color:#fff; }
+.dev-schedule-file-select { display:block; width:100%; min-height:24px; padding:2px 4px; font:inherit; }
 .dev-schedule-actions { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
 .dev-schedule-actions { border-top:1px solid #aaa; padding-top:7px; }
 .dev-schedule-actions .dev-btn { flex:1; min-width:125px; }

@@ -20,6 +20,7 @@ const _uid = () => `bgm_${Date.now().toString(36).slice(-6)}`;
 export class DevBgmEditorTab {
   constructor(devMode) {
     this._dev = devMode;
+    this._root = null;
     /** @type {{tracks: object[], defaultRules: object[], fallback: string}} */
     this._doc = null;
     this._previewingId = null;
@@ -32,15 +33,17 @@ export class DevBgmEditorTab {
     return `<div class="dev-bgm-root" id="bgm-root"></div>`;
   }
 
-  mount() {
+  mount(root = null) {
+    this._root = root || this._dev.root.querySelector(".dev-bgm-root");
     window._bgm = this;
+    this._root?.addEventListener("pointerdown", () => { window._bgm = this; });
     this._load().catch((err) => this._st(`加载 BGM 数据失败：${err.message}`, true));
   }
 
   unmount() {
     bgmManager.stopPreview();
     this._previewingId = null;
-    window._bgm = undefined;
+    if (window._bgm === this) window._bgm = null;
   }
 
   // ── data ───────────────────────────────────────────────────────────────────
@@ -58,6 +61,7 @@ export class DevBgmEditorTab {
     }
     bgmManager.replaceData(this._doc);
     this._render();
+    this._st("bgm.json 已读取。");
   }
 
   _save() {
@@ -69,7 +73,7 @@ export class DevBgmEditorTab {
   // ── rendering ──────────────────────────────────────────────────────────────
 
   _render() {
-    const root = document.getElementById("bgm-root");
+    const root = this._root;
     if (!root) return;
 
     const tracks = this._doc.tracks;
@@ -427,6 +431,7 @@ export class DevBgmEditorTab {
 
   async _writeToDisk() {
     try {
+      this._save();
       await writeJSONToDisk("bgm.json", this._doc);
       this._st("✅ bgm.json 已写入磁盘。");
     } catch (err) {

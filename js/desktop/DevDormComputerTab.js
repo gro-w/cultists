@@ -13,20 +13,24 @@ import { dataLoader, writeJSONToDisk } from "../core/DataLoader.js";
 export class DevDormComputerTab {
   constructor(devMode) {
     this._dev = devMode;
+    this._root = null;
     this._data = null;   // full social_apps.json object
     this._tab = "zhihu"; // active sub-tab: zhihu | xiaolvshu | qqgroup | chatgtp
     this._dirty = false;
   }
 
-  _el(id) { return document.getElementById(id); }
+  _el(id) { return this._root?.querySelector(`#${CSS.escape(id)}`) || null; }
   _e(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   _st(s) { this._dev.setStatus(s); }
 
-  mount() {
+  mount(root = null) {
+    this._root = root || this._dev.root.querySelector(".dev-dct-root");
+    if (!this._root) { this._st("电脑内容编辑器挂载失败：找不到编辑器根节点。", true); return; }
     window._dct = this;
-    this._loadData();
+    this._root?.addEventListener("pointerdown", () => { window._dct = this; });
+    this._loadData().catch((err) => this._st(`读取电脑内容失败：${err.message}`, true));
   }
-  unmount() { window._dct = null; }
+  unmount() { if (window._dct === this) window._dct = null; }
 
   html() {
     return `<div class="dev-dct-root">

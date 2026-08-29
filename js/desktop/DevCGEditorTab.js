@@ -19,6 +19,7 @@ const _uid = () => `cg_${Date.now().toString(36).slice(-6)}`;
 export class DevCGEditorTab {
   constructor(devMode) {
     this._dev = devMode;
+    this._root = null;
     /** @type {{ cgs: {id:string, label:string, imageData:string}[] }} */
     this._doc = null;
   }
@@ -29,13 +30,22 @@ export class DevCGEditorTab {
     return `<div class="dev-cg-root" id="cg-editor-root"></div>`;
   }
 
-  mount() {
+  mount(root = null) {
+    this._root = root || this._dev.root.querySelector(".dev-cg-root");
+    if (!this._root) {
+      this._st("CG 编辑器挂载失败：找不到编辑器根节点。", true);
+      return;
+    }
     window._cg = this;
-    this._load().catch((err) => this._st(`加载 CG 数据失败：${err.message}`, true));
+    this._root?.addEventListener("pointerdown", () => { window._cg = this; });
+    this._load().catch((err) => {
+      this._root.innerHTML = `<p class="dev-error">加载 CG 数据失败：${_esc(err.message)}</p>`;
+      this._st(`加载 CG 数据失败：${err.message}`, true);
+    });
   }
 
   unmount() {
-    window._cg = undefined;
+    if (window._cg === this) window._cg = null;
   }
 
   // ── data ───────────────────────────────────────────────────────────────────
@@ -48,6 +58,7 @@ export class DevCGEditorTab {
       this._doc = { cgs: [] };
     }
     this._render();
+    this._st("cg.json 已读取。");
   }
 
   _save() {
@@ -56,7 +67,7 @@ export class DevCGEditorTab {
   }
 
   _collectFromDom() {
-    const root = document.getElementById("cg-editor-root");
+    const root = this._root;
     if (!root) return;
     const ids = new Set();
     this._doc.cgs = Array.from(root.querySelectorAll("[data-cg-row]")).map((row) => {
@@ -76,7 +87,7 @@ export class DevCGEditorTab {
   // ── rendering ──────────────────────────────────────────────────────────────
 
   _render() {
-    const root = document.getElementById("cg-editor-root");
+    const root = this._root;
     if (!root) return;
 
     const rows = (this._doc?.cgs || []).map((cg, i) => `
@@ -202,7 +213,8 @@ export class DevCGEditorTab {
 
   async _doWrite() {
     if (!this._collectAndSave()) return;
-    await this._dev.writeToDisk("cg.json", this._doc);
+    try { await this._dev.writeToDisk("cg.json", this._doc); }
+    catch (err) { this._st(`写入磁盘失败：${err.message}`, true); }
   }
 
   _st(text, error = false) {

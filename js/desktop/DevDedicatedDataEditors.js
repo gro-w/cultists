@@ -10,16 +10,46 @@ const btn = (text, action, value = "") => `<button type="button" class="win95-bt
 const num = (label, key, value, extra = "") => input(label, key, value, "number", extra);
 
 class DedicatedEditor {
-  constructor(dev, file, title, description) { this.dev = dev; this.file = file; this.title = title; this.description = description; this.data = null; }
+  constructor(dev, file, title, description) { this.dev = dev; this.file = file; this.title = title; this.description = description; this.data = null; this._root = null; }
   html() { return `<div class="dev-ded-root"><header class="dev-ded-header"><strong>${esc(this.title)}</strong><span>${esc(this.description)}</span><div>${btn("重新读取", "reload")} ${btn("保存到内存", "save")} ${btn("下载文件", "download")} ${btn("写入磁盘", "write")}</div></header><div data-dd-content><p>加载中…</p></div></div>`; }
-  async mount() { try { this.data = clone(await dataLoader.loadJSON(this.file)); this.render(); this.status(`${this.file} 已读取。`); } catch (e) { this.status(`${this.file} 读取失败：${e.message}`, true); } }
+  async mount(root = null) {
+    this._root = root || this.dev.root.querySelector(".dev-ded-root");
+    if (!this._root) { this.status(`${this.file} 编辑器挂载失败：找不到编辑器根节点。`, true); return; }
+    if (this._boundRoot !== this._root) this._root.addEventListener("click", (event) => {
+      const target = event.target.closest("[data-dd-action]");
+      if (!target || !this._root.contains(target)) return;
+      const action = target.dataset.ddAction;
+      const value = target.dataset.ddValue;
+      const methods = {
+        reload: () => this.reload(), save: () => this.save(), download: () => this.download(), write: () => this.write(),
+        "add-placement": () => this.addPlacement(), "remove-placement": () => this.removePlacement(value),
+        "add-category": () => this.addCategory(), "remove-category": () => this.removeCategory(value),
+        "add-diagnosis": () => this.addDiagnosis(Number(value)), "remove-diagnosis": () => this.removeDiagnosis(value),
+        "add-tag": () => this.addTag(value), "remove-tag": () => this.removeTag(value),
+        "add-medicine": () => this.addMedicine(), "remove-medicine": () => this.removeMedicine(value),
+        "add-dialogue": () => this.addDialogue(value), "remove-dialogue": () => this.removeDialogue(value),
+        "add-day": () => this.addDay(value), "remove-day": () => this.removeDay(value),
+        "add-achievement": () => this.addAchievement(), "remove-achievement": () => this.removeAchievement(value),
+        "add-skill": () => this.addSkill(), "remove-skill": () => this.removeSkill(value),
+      };
+      const handler = methods[action];
+      if (handler) { event.preventDefault(); handler(); }
+    });
+    this._boundRoot = this._root;
+    try { this.data = clone(await dataLoader.loadJSON(this.file)); this.render(); this.status(`${this.file} 已读取。`); }
+    catch (e) {
+      const content = this._root.querySelector("[data-dd-content]");
+      if (content) content.innerHTML = `<p class="dev-error">${esc(this.file)} 读取失败：${esc(e.message)}</p>`;
+      this.status(`${this.file} 读取失败：${e.message}`, true);
+    }
+  }
   status(text, error = false) { this.dev.setStatus(text, error); }
-  root() { return this.dev.root.querySelector("[data-dd-content]"); }
-  value(key) { const e = this.dev.root.querySelector(`[data-dd-field="${CSS.escape(key)}"]`); if (!e) return ""; return e.type === "checkbox" ? e.checked : e.value; }
+  root() { return this._root?.querySelector("[data-dd-content]"); }
+  value(key) { const e = this._root?.querySelector(`[data-dd-field="${CSS.escape(key)}"]`); if (!e) return ""; return e.type === "checkbox" ? e.checked : e.value; }
   sync() {}
   save() { this.sync(); dataLoader.clearCache(this.file); this.status(`${this.file} 已保存到内存。`); }
   download() { this.sync(); this.dev.downloadFile(this.file, this.data); this.status(`${this.file} 已下载。`); }
-  async write() { this.sync(); await this.dev.writeToDisk(this.file, this.data); }
+  async write() { try { this.sync(); await this.dev.writeToDisk(this.file, this.data); } catch (e) { this.status(`${this.file} 写入失败：${e.message}`, true); } }
   async reload() { await this.mount(); }
 }
 

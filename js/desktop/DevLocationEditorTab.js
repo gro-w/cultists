@@ -19,6 +19,7 @@ import { locationSystem } from "../core/LocationSystem.js";
 export class DevLocationEditorTab {
   constructor(devMode) {
     this._dev = devMode;
+    this._root = null;
     /** @type {Array} locations.json */
     this._locations = [];
     /** @type {Array} item_placements.json full list */
@@ -40,7 +41,7 @@ export class DevLocationEditorTab {
   }
 
   // ── helpers ────────────────────────────────────────────────────────────────
-  _el(id) { return document.getElementById(id); }
+  _el(id) { return this._root?.querySelector(`#${CSS.escape(id)}`) || null; }
   _e(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   _imageSrc(value) {
     const path = typeof value === "string" ? value.trim() : "";
@@ -54,13 +55,16 @@ export class DevLocationEditorTab {
   }
 
   // ── lifecycle ──────────────────────────────────────────────────────────────
-  mount() {
+  mount(root = null) {
+    this._root = root || this._dev.root.querySelector(".dev-le-root");
+    if (!this._root) { this._st("位置编辑器挂载失败：找不到编辑器根节点。", true); return; }
     window._le = this;
-    this._loadData();
+    this._root?.addEventListener("pointerdown", () => { window._le = this; });
+    this._loadData().catch((err) => this._st(`读取位置数据失败：${err.message}`, true));
   }
 
   unmount() {
-    window._le = null;
+    if (window._le === this) window._le = null;
   }
 
   // ── HTML ───────────────────────────────────────────────────────────────────

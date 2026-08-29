@@ -1,6 +1,6 @@
 // DEV-TOOLS:START
 import { windowManager } from "../core/WindowManager.js";
-import { dataLoader, detectDevServer, writeJSONToDisk } from "../core/DataLoader.js";
+import DataLoader, { dataLoader, detectDevServer, writeJSONToDisk } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { saveManager } from "../core/SaveManager.js";
@@ -219,7 +219,11 @@ export class DeveloperMode {
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
     const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
-    if (methods[action]) { editor._unmountEditorTabs(); editor[methods[action]](); return; }
+    if (methods[action]) {
+      editor._unmountEditorTabs();
+      Promise.resolve(editor[methods[action]]()).catch((error) => editor.setStatus(`加载失败：${error.message}`, true));
+      return;
+    }
     const structured = action.match(/^tab-structured-(.+)$/);
     if (structured) return editor.showStructuredEditor(structured[1]);
   }
@@ -248,6 +252,8 @@ export class DeveloperMode {
     this._setPanelKind(kind);
     panel.innerHTML = html;
     this.bindPanel();
+    const status = this.root.querySelector("[data-dev-status]");
+    if (status?.textContent === "正在加载…") this.setStatus("已加载。");
 
   }
 
@@ -287,7 +293,7 @@ export class DeveloperMode {
     this._bgmEditorTab = new DevBgmEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._bgmEditorTab.html();
     this.bindPanel();
-    this._bgmEditorTab.mount();
+    this._bgmEditorTab.mount(this.root.querySelector(".dev-bgm-root"));
   }
 
   showLocationEditor() {
@@ -296,7 +302,7 @@ export class DeveloperMode {
     this._locationEditorTab = new DevLocationEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._locationEditorTab.html();
     this.bindPanel();
-    this._locationEditorTab.mount();
+    this._locationEditorTab.mount(this.root.querySelector(".dev-le-root"));
   }
 
   showDormComputerEditor() {
@@ -305,7 +311,7 @@ export class DeveloperMode {
     this._dormComputerTab = new DevDormComputerTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dormComputerTab.html();
     this.bindPanel();
-    this._dormComputerTab.mount();
+    this._dormComputerTab.mount(this.root.querySelector(".dev-dct-root"));
   }
 
   showCGEditor() {
@@ -314,7 +320,7 @@ export class DeveloperMode {
     this._cgEditorTab = new DevCGEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._cgEditorTab.html();
     this.bindPanel();
-    this._cgEditorTab.mount();
+    this._cgEditorTab.mount(this.root.querySelector(".dev-cg-root"));
   }
 
   showStructuredEditor(key) {
@@ -325,7 +331,7 @@ export class DeveloperMode {
     this._structuredEditorTab = new EditorClass(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._structuredEditorTab.html();
     this.bindPanel();
-    this._structuredEditorTab.mount();
+    this._structuredEditorTab.mount(this.root.querySelector(".dev-ded-root"));
   }
 
   showState() {

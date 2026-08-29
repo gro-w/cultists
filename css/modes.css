@@ -680,13 +680,25 @@
   background: rgba(90, 70, 150, 0.95);
   transform: scale(1.1);
 }
-/* When item-layer button has no absolute pos, float naturally */
-.loc-scene-item-layer:not(:has([style*="position: absolute"])) {
+/* Buttons placed directly in the layer (have x/y) are absolutely positioned */
+.loc-scene-item-layer > .loc-item-btn {
+  position: absolute;
+}
+/* Unpositioned items go into a flex bar at the bottom of the scene */
+.loc-item-float-bar {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 8px;
-  padding: 48px 12px 8px;
+  gap: 6px;
+  pointer-events: none;
+  align-items: flex-end;
+}
+.loc-item-float-bar .loc-item-btn {
+  position: relative;
+  pointer-events: all;
 }
 
 .loc-scene-interaction {

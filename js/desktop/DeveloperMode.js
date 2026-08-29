@@ -33,6 +33,12 @@ const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&"
 const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, scheduleData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
 
 const QA_PAGE_SIZE = 50;
+let developerModeInstanceId = 0;
+const GLOBAL_VARIABLE_VISIBILITY = {
+  reserved: "不看系统预留公共变量",
+  meaningful: "不看没有意义的系统公共变量",
+  all: "不隐藏系统公共变量",
+};
 const SCHEDULE_CATEGORIES = { calendar: "日历日程", public: "公共日程", special: "特殊事件日程", ending: "结局日程", embedded: "物品与法术内嵌日程" };
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",
@@ -98,7 +104,7 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "all"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
     const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "dialogueProgress:changed", "dialogueProgress:restored", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset"];
     events.push("npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored");
@@ -383,15 +389,16 @@ export class DeveloperMode {
     this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });
   }
 
-  showWorld() {
+  async showWorld() {
     this._activeRuntimeMethod = "showWorld";
+    const meaningfulIds = await this._meaningfulGlobalVariableIds();
     const placements = itemPlacementManager.all().map((placement) => `<tr><td>${esc(placement.id)}</td><td>${esc(placement.itemId)}</td><td>${itemPlacementManager.isPlaced(placement.id) ? "已放置" : "已取走"}</td><td>${itemPlacementManager.isVisible(placement.id) ? "可见" : "不可见"}</td><td>${button(itemPlacementManager.isPlaced(placement.id) ? "取走" : "放回", `toggle-placement-${placement.id}`)}</td></tr>`).join("");
-    const variables = globalVariableManager.all().map((variable) => {
+    const variables = globalVariableManager.all().filter((variable) => this._showGlobalVariable(variable, meaningfulIds)).map((variable) => {
       const reserved = globalVariableManager.isReserved(variable.id);
-      const disabled = reserved ? " disabled" : "";
-      return `<tr><td>${variable.id}</td><td>${esc(variable.name)}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"${disabled}></td></tr>`;
+      return `<tr><td>${variable.id}</td><td>${esc(variable.name)}${reserved ? "（系统预留）" : ""}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"></td></tr>`;
     }).join("");
-    this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和全局变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>全局变量当前值</h3><table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用全局变量", "apply-runtime-variables")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和全局变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>全局变量当前值</h3>${this._globalVariableVisibilityControls()}<table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>当前值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用全局变量", "apply-runtime-variables")}</div></section>`);
+    this._bindGlobalVariableVisibility("showWorld");
   }
 
   showMedicalEnding() {
@@ -405,6 +412,40 @@ export class DeveloperMode {
   async loadDoc(fileName) {
     if (!this.docs.has(fileName)) this.docs.set(fileName, clone(await dataLoader.loadJSON(fileName)));
     return this.docs.get(fileName);
+  }
+
+  async _meaningfulGlobalVariableIds() {
+    const [skillsDoc, npcsDoc] = await Promise.all([this.loadDoc("skills.json"), this.loadDoc("npcs.json")]);
+    const skillCount = Math.min(20, Array.isArray(skillsDoc?.skills) ? skillsDoc.skills.filter((skill) => skill && typeof skill === "object" && skill.id).length : 0);
+    const npcCount = Math.min(20, Array.isArray(npcsDoc?.npcs) ? npcsDoc.npcs.filter((npc) => npc && typeof npc === "object" && npc.id).length : 0);
+    const ids = new Set([0, 1, 2, 5]);
+    for (let index = 0; index < skillCount; index += 1) ids.add(20 + index);
+    for (let index = 0; index < npcCount; index += 1) {
+      ids.add(40 + index);
+      ids.add(60 + index);
+    }
+    return ids;
+  }
+
+  _showGlobalVariable(variable, meaningfulIds) {
+    if (!globalVariableManager.isReserved(variable.id)) return true;
+    if (this._globalVariableVisibility === "reserved") return false;
+    if (this._globalVariableVisibility === "meaningful") return meaningfulIds.has(variable.id);
+    return true;
+  }
+
+  _globalVariableVisibilityControls() {
+    return `<fieldset class="dev-radio-group"><legend>系统预留公共变量显示</legend>${Object.entries(GLOBAL_VARIABLE_VISIBILITY).map(([value, label]) => `<label><input type="radio" name="${this._globalVariableRadioName}" data-global-variable-visibility="${value}" ${this._globalVariableVisibility === value ? "checked" : ""}>${label}</label>`).join("")}</fieldset>`;
+  }
+
+  _bindGlobalVariableVisibility(renderMethod) {
+    this.root.querySelectorAll("[data-global-variable-visibility]").forEach((input) => {
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        this._globalVariableVisibility = input.dataset.globalVariableVisibility;
+        this[renderMethod]();
+      });
+    });
   }
 
 
@@ -467,15 +508,18 @@ export class DeveloperMode {
     this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。日程蓝图使用“操作公共变量”节点，通过固定公共变量 ID 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
   }
 
-  showGlobalVariables() {
+  async showGlobalVariables() {
+    const meaningfulIds = await this._meaningfulGlobalVariableIds();
     const valueText = (variable, value) => variable.type === "string" ? value : String(value);
-    const rows = globalVariableManager.all().map((variable, index) => {
+    const rows = globalVariableManager.all().filter((variable) => this._showGlobalVariable(variable, meaningfulIds)).map((variable) => {
       const reserved = globalVariableManager.isReserved(variable.id);
-      const lock = reserved ? " disabled" : "";
-      const action = reserved ? "系统预留" : button("删除", `remove-global-variable-${index}`);
-      return `<tr data-global-variable-row="${index}" data-global-variable-reserved="${reserved}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"${lock}></td><td><input data-gv-name value="${esc(variable.name)}"${lock}></td><td><select data-gv-type${lock}><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"${lock}></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"${lock}></td><td>${action}</td></tr>`;
+      const definitionLock = reserved ? " disabled" : "";
+      const valueLock = reserved ? " disabled" : "";
+      const action = reserved ? "系统预留" : button("删除", `remove-global-variable-${variable.id}`);
+      return `<tr data-global-variable-row="${variable.id}" data-global-variable-reserved="${reserved}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"${definitionLock}></td><td><input data-gv-name value="${esc(variable.name)}"${definitionLock}></td><td><select data-gv-type${definitionLock}><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"${valueLock}></td><td>${action}</td></tr>`;
     }).join("");
-    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。ID 0-99 为系统预留变量，不可删除或修改；引擎使用这些固定 ID 读写技能点、好感度、SAN 和金钱。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
+    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>系统预留变量的 ID、名称和类型固定不可编辑；默认值可以编辑。当前值仅在调试器中编辑。ID 0-99 为系统预留变量，引擎使用这些固定 ID 读写技能点、好感度、SAN 和金钱。</p>${this._globalVariableVisibilityControls()}<table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
+    this._bindGlobalVariableVisibility("showGlobalVariables");
   }
 
   _readGlobalVariableRows() {
@@ -491,7 +535,7 @@ export class DeveloperMode {
       }
       return raw;
     };
-    return Array.from(this.root.querySelectorAll("[data-global-variable-row]"), (row) => {
+    const visibleRows = Array.from(this.root.querySelectorAll("[data-global-variable-row]"), (row) => {
       const id = Number(row.querySelector("[data-gv-id]").value);
       const type = row.querySelector("[data-gv-type]").value;
       return {
@@ -502,6 +546,8 @@ export class DeveloperMode {
         value: parse(row.querySelector("[data-gv-value]").value, type, id, "当前值"),
       };
     });
+    const byId = new Map(visibleRows.map((variable) => [variable.id, variable]));
+    return globalVariableManager.all().map((variable) => byId.get(variable.id) || variable);
   }
 
 
@@ -566,7 +612,13 @@ export class DeveloperMode {
     if (removeGlobalVariable) {
       const doc = await this.loadDoc("global_variables.json");
       const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
-      variables.splice(Number(removeGlobalVariable[1]), 1);
+      const id = Number(removeGlobalVariable[1]);
+      const index = variables.findIndex((variable) => Number(variable?.id) === id);
+      if (index < 0 || globalVariableManager.isReserved(id)) {
+        this.setStatus("系统预留公共变量不可删除，或变量不存在。", true);
+        return;
+      }
+      variables.splice(index, 1);
       this.docs.set("global_variables.json", variables);
       globalVariableManager.replaceDefinitions(variables);
       return this.showGlobalVariables();

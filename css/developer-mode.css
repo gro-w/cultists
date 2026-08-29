@@ -1,5 +1,7 @@
 /* DEV-TOOLS:START */
 .developer-mode-root { height: 100%; overflow: auto; padding: 8px; background: #c0c0c0; color: #111; font: 13px Arial, sans-serif; box-sizing: border-box; }
+.dev-radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; padding: 4px 8px; }
+.dev-radio-group label { white-space: nowrap; }
 .dev-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 8px; border-bottom: 1px solid #808080; }
 .dev-app-heading { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; padding: 4px 6px; color: #000080; background: #c7d9f7; border: 1px solid #6f86ad; }
 .dev-app-heading strong { font-size: 16px; }

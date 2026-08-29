@@ -119,7 +119,7 @@ class GlobalVariableManager {
       const actual = definitions.find((definition) => definition.id === id);
       const expected = reservedDefinition(id);
       if (!actual) throw new Error(`Reserved global variable ${id} cannot be deleted`);
-      if (actual.name !== expected.name || actual.type !== expected.type || actual.default !== expected.default) {
+      if (actual.name !== expected.name || actual.type !== expected.type) {
         throw new Error(`Reserved global variable ${id} cannot be modified`);
       }
     }

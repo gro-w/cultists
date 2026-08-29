@@ -68,9 +68,7 @@ class OnboardingManager {
     this._unsubs.push(this.bus.on("his:dialogue_choice_available", () => {
       if (this.hasMilestone("first_nausea_collected") && this.hasMilestone("notebook_opened")) this.requestHint("his:dialogue_choice_available");
     }));
-    this._unsubs.push(this.bus.on("window:opened", ({ appId }) => {
-      if (appId === "notebook" && this.hasMilestone("first_nausea_collected")) this.requestHint("his:dialogue_choice_available");
-    }));
+
     this._unsubs.push(this.bus.on("his:keyword_missed", () => this.requestHint("his:keyword_missed")));
     this._unsubs.push(this.bus.on("daynight:changed", ({ location, phaseChanged }) => {
       if (location === "dorm") this.markMilestone("dorm_seen");

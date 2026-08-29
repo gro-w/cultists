@@ -126,7 +126,8 @@ export class ScheduleRunner {
         if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
         return {};
       }
-      case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "0")), instanceId: this.instance.instanceId }); return {};
+      case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
+      case "endCg":  eventBus.emit("schedule:end_cg", { instanceId: this.instance.instanceId }); return {};
       case "inventoryOperation": {
         const itemId = String(get("itemId", ""));
         const count = Number(get("count", 0));

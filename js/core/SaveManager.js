@@ -12,11 +12,12 @@ import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "./ScheduleQ
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { dialogueProgress } from "./DialogueProgress.js";
+import { cgManager } from "./CGManager.js";
 import { endingManager } from "./EndingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v14 = v13 plus sanity refactor (mental→sanity, dropped energy/physical/satiety/recoverableMentalLoss, added roommateSuspicion).
-const SAVE_FORMAT_VERSION = 14;
+// v15 = v14 plus CGManager snapshot (activeCgId).
+const SAVE_FORMAT_VERSION = 15;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];
@@ -130,6 +131,7 @@ class SaveManager {
       itemPlacements: itemPlacementManager.snapshot(),
       dialogueProgress: dialogueProgress.snapshot(),
       ending: endingManager.snapshot(),
+      cg: cgManager.snapshot(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
   }
@@ -180,6 +182,7 @@ class SaveManager {
       itemPlacementManager.restore(payload.itemPlacements || []);
       dialogueProgress.restore(payload.dialogueProgress || {});
       endingManager.restore(payload.ending || {});
+      cgManager.restore(payload.cg || {});
       scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
       this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     } finally {

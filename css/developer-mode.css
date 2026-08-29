@@ -269,5 +269,17 @@
 .dev-de-onshow-bgm { display:flex; align-items:center; gap:4px; margin-top:3px; font-size:11px; }
 .dev-de-onshow-bgm select { min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; }
 .dev-de-onshow-bgm-indicator { font-size:10px; color:#006600; margin-left:2px; }
+
+/* ── CG editor ── */
+.dev-cg-root { display:flex; flex-direction:column; gap:0; }
+.dev-cg-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:6px 0 8px; border-bottom:1px solid #808080; margin-bottom:8px; }
+.dev-cg-card { background:#fff; border:1px solid #808080; border-radius:2px; padding:8px; margin-bottom:8px; }
+.dev-cg-card-header { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.dev-cg-card-header b { flex:1; font-size:12px; }
+.dev-cg-fields { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:6px; font-size:12px; }
+.dev-cg-upload-label { cursor:pointer; color:#000080; text-decoration:underline; font-size:12px; }
+.dev-cg-preview { min-height:40px; display:flex; align-items:center; }
+.dev-cg-thumb { max-height:120px; max-width:100%; object-fit:contain; border:1px solid #aaa; cursor:zoom-in; }
+.dev-cg-no-img { color:#aaa; font-size:11px; font-style:italic; }
 /* DEV-TOOLS:END */
 

@@ -162,13 +162,25 @@ class ScheduleData {
       if (this.fired.has(key)) continue;
       this.fired.add(key);
       const sourceEntries = this.slots.get(key) || [];
-      const entries = sourceEntries.filter((entry) => this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)).map((entry) => ({
-        ...entry,
-        scheduleId: entry.scheduleId || entry.id,
-        receivedDay: day,
-        receivedTime: time,
-        receivedPhase: time === 8 * 60 ? "day" : "night",
-      }));
+      const entries = sourceEntries
+        .filter((entry) => {
+          if (!this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)) return false;
+          // special and ending schedules are one-shot: skip if already queued (any status).
+          const cat = this.scheduleCatalog.get(entry.scheduleId || entry.id)?.category;
+          if (cat === "special" || cat === "ending") {
+            const sid = entry.scheduleId || entry.id;
+            const q = queueId === "work" ? workQueue : socialQueue;
+            if (q.countBySchedule(sid) > 0) return false;
+          }
+          return true;
+        })
+        .map((entry) => ({
+          ...entry,
+          scheduleId: entry.scheduleId || entry.id,
+          receivedDay: day,
+          receivedTime: time,
+          receivedPhase: time === 8 * 60 ? "day" : "night",
+        }));
       if (queueId === "work") workQueue.append(entries);
       else socialQueue.append(entries);
     }

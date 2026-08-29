@@ -26,6 +26,7 @@ import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
 import { DevLocationEditorTab } from "./DevLocationEditorTab.js";
 import { DevDormComputerTab } from "./DevDormComputerTab.js";
+import { DevCGEditorTab } from "./DevCGEditorTab.js";
 import { DEDICATED_EDITOR_CLASSES } from "./DevDedicatedDataEditors.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -59,7 +60,7 @@ const DEDICATED_EDITOR_TITLES = {
   skills: "技能定义编辑器", "monitor-scenes": "监控场景编辑器",
 };
 const DEV_EDITOR_ICONS = {
-  "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
+  "tab-cg-editor": "🖼️", "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
   "tab-item-editor": "📦", "tab-dialogue-editor": "📅", "tab-bgm-editor": "🎵", "tab-location-editor": "📍",
   "tab-dorm-computer": "💻", "tab-state": "🕒", "tab-npc-state": "👤", "tab-inventory": "🎒",
   "tab-schedules": "📋", "tab-world": "🌐", "tab-medical-ending": "⚕️",
@@ -98,7 +99,7 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
     const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "dialogueProgress:changed", "dialogueProgress:restored", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset"];
     events.push("npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored");
@@ -121,7 +122,7 @@ export class DeveloperMode {
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
       ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["全局变量定义", "🔢", "tab-global-variables"],
-      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
+      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
     const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC与对话", "👤", "tab-npc-state"], ["日程与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
@@ -211,7 +212,7 @@ export class DeveloperMode {
     const editor = new DeveloperMode(root, win, false);
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
-    const methods = { "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
+    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
     if (methods[action]) { editor._unmountEditorTabs(); editor[methods[action]](); return; }
     const structured = action.match(/^tab-structured-(.+)$/);
     if (structured) return editor.showStructuredEditor(structured[1]);
@@ -250,6 +251,7 @@ export class DeveloperMode {
     if (this._bgmEditorTab) { this._bgmEditorTab.unmount(); this._bgmEditorTab = null; }
     if (this._locationEditorTab) { this._locationEditorTab.unmount(); this._locationEditorTab = null; }
     if (this._dormComputerTab) { this._dormComputerTab.unmount(); this._dormComputerTab = null; }
+    if (this._cgEditorTab) { this._cgEditorTab.unmount(); this._cgEditorTab = null; }
     if (this._structuredEditorTab) { this._structuredEditorTab.unmount(); this._structuredEditorTab = null; }
     // item editor has no document-level listeners, no explicit unmount needed
     this._itemEditorTab = null;
@@ -298,6 +300,15 @@ export class DeveloperMode {
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dormComputerTab.html();
     this.bindPanel();
     this._dormComputerTab.mount();
+  }
+
+  showCGEditor() {
+    this._unmountEditorTabs();
+    this._setPanelKind("data");
+    this._cgEditorTab = new DevCGEditorTab(this);
+    this.root.querySelector("[data-dev-panel]").innerHTML = this._cgEditorTab.html();
+    this.bindPanel();
+    this._cgEditorTab.mount();
   }
 
   showStructuredEditor(key) {

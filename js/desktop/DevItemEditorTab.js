@@ -577,7 +577,7 @@ export class DevItemEditorTab {
   }
 
   importJSON() { this._el('ie-file-input')?.click(); }
-  async _loadCurrentGame() {
+  async _loadCurrentGame(initialItemId = null) {
     try {
       const data = await dataLoader.loadJSON('items.json');
       if (!Array.isArray(data.items)) throw new Error('items.json 缺少 items 数组');

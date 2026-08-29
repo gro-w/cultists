@@ -154,7 +154,9 @@ export default class DormMode {
 
   _renderClock() {
     const minutes = this._clockMinutes();
-    this.clock.textContent = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+    const hh = String(Math.floor(minutes / 60)).padStart(2, "0");
+    const mm = String(minutes % 60).padStart(2, "0");
+    this.clock.textContent = `Day ${gameState.day}  ${hh}:${mm}`;
   }
 
   // ── Scene render ────────────────────────────────────────────────────────────

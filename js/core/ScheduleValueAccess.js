@@ -5,7 +5,7 @@ import { npcStateManager } from "./NpcStateManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { timeService } from "./TimeService.js";
 
-const GAME_STATS = new Set(["energy", "mental", "physical", "satiety", "recoverableMentalLoss"]);
+const GAME_STATS = new Set(["sanity", "mental", "roommateSuspicion"]);
 
 export function getStatValue(statId) {
   const id = String(statId ?? "");

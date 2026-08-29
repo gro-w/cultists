@@ -43,7 +43,7 @@ const _DE_BUILTIN_VARS = [
   { id:'ate_potion',   label:'是否吃秘药',        type:'bool' },
   { id:'cast_spell',   label:'施放法术',          type:'bool' },
 ];
-const _DE_NUMVARS = ['energy','mental','physical','satiety','recoverableMentalLoss'];
+const _DE_NUMVARS = ['sanity','roommateSuspicion'];
 const _DE_NODE_LABELS = Object.fromEntries(SCHEDULE_NODE_TYPES.map(type => [type, getScheduleNodeDefinition(type).label]));
 
 export class DevDialogueEditorTab {

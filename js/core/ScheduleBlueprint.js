@@ -32,13 +32,13 @@ export function validateBlueprint(raw) {
   const errors = [];
   const entries = nodeEntries(blueprint.nodes);
   const prerequisites = entries.filter(([, node]) => node.type === "prerequisite");
-  if (prerequisites.length > 1) errors.push(`蓝图最多只能有一个先决条件节点，当前为 ${prerequisites.length} 个`);
+  if (prerequisites.length !== 1) errors.push(`蓝图必须有且只有一个先决条件节点，当前为 ${prerequisites.length} 个`);
   prerequisites.forEach(([id, node]) => {
     const definition = getScheduleNodeDefinition(node.type);
     if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`先决条件节点不能有流程引脚：${id}`);
   });
   const expiries = entries.filter(([, node]) => node.type === "scheduleExpiry");
-  if (expiries.length > 1) errors.push(`蓝图最多只能有一个日程过期节点，当前为 ${expiries.length} 个`);
+  if (expiries.length !== 1) errors.push(`蓝图必须有且只有一个日程过期节点，当前为 ${expiries.length} 个`);
   expiries.forEach(([id, node]) => {
     const definition = getScheduleNodeDefinition(node.type);
     if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`日程过期节点不能有流程引脚：${id}`);
@@ -180,7 +180,11 @@ export function migrateDialogueTree(tree) {
 }
 
 export function createEmptyBlueprint() {
-  return { nodes: { start: { id: "start", type: "flowStart", x: 80, y: 80, inputs: {}, outputs: {} } }, connections: [], startNodeId: "start" };
+  return { nodes: {
+    start: { id: "start", type: "flowStart", x: 80, y: 80, inputs: {}, outputs: {} },
+    __prerequisite__: { id: "__prerequisite__", type: "prerequisite", x: 80, y: 240, inputs: { condition: true }, outputs: {} },
+    __schedule_expiry__: { id: "__schedule_expiry__", type: "scheduleExpiry", x: 80, y: 360, inputs: { expires: false, expiresAt: 0 }, outputs: {} },
+  }, connections: [], startNodeId: "start" };
 }
 
 export default normalizeBlueprint;

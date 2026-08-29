@@ -32,6 +32,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -85,6 +106,27 @@
               "keywordIds": [
                 "old_key_clue"
               ]
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -142,6 +184,27 @@
               "outputs": {},
               "x": 0,
               "y": 0
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -253,6 +316,27 @@
                 "variableId": 20
               },
               "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -360,6 +444,27 @@
               "keywordIds": [
                 "mystery_note"
               ]
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -411,6 +516,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -468,6 +594,27 @@
               "outputs": {},
               "x": 0,
               "y": 0
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -525,6 +672,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -582,6 +750,27 @@
               "outputs": {},
               "x": 0,
               "y": 0
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -693,6 +882,27 @@
                 "variableId": 21
               },
               "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -796,6 +1006,27 @@
               "outputs": {},
               "x": 0,
               "y": 0
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -847,6 +1078,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -881,8 +1133,29 @@
         "sanMax": 50
       },
       "isBook": true,
-      "sanVariants": { "30-50": { "name": "《尸食教典仪》" }, "15-30": { "name": "《尸食教典仪》" }, "0-15": { "name": "《尸食教典仪》" } },
-      "spells": [{ "name": "致病术", "description": "对己危险，对敌致命的法术——不到必要时刻请别施放。", "learnTimeMinutes": 240, "castSanCost": 10, "effect": { "type": "disease", "selfEnding": "自杀结局" } }],
+      "sanVariants": {
+        "30-50": {
+          "name": "《尸食教典仪》"
+        },
+        "15-30": {
+          "name": "《尸食教典仪》"
+        },
+        "0-15": {
+          "name": "《尸食教典仪》"
+        }
+      },
+      "spells": [
+        {
+          "name": "致病术",
+          "description": "对己危险，对敌致命的法术——不到必要时刻请别施放。",
+          "learnTimeMinutes": 240,
+          "castSanCost": 10,
+          "effect": {
+            "type": "disease",
+            "selfEnding": "自杀结局"
+          }
+        }
+      ],
       "bookContents": [
         "今天全没月光，我知道不妙。早上小心出门，赵贵翁的眼色便怪：似乎怕我，似乎想害我。还有七八个人，交头接耳的议论我，又怕我看见。一路上的人，都是如此。其中最凶的一个人，张着嘴，对我笑了一笑；我便从头直冷到脚跟，晓得他们布置，都已妥当了。",
         "凡事总须研究，才会明白。古来时常吃人，我也还记得，可是不甚清楚。我翻开历史一查，这历史没有年代，歪歪斜斜的每叶上都写着“仁义道德”几个字。我横竖睡不著，仔细看了半夜，才从字缝里看出字来，满本都写着两个字是“吃人”！\n\n书上写着这许多字，佃户说了这许多话、却都笑吟吟的睁着怪眼睛看我。\n\n我也是人，他们想要吃我了！",
@@ -1103,6 +1376,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -1294,6 +1588,27 @@
               "outputs": {},
               "x": 420,
               "y": 80
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -1322,8 +1637,30 @@
         "sanMax": 50
       },
       "isBook": true,
-      "sanVariants": { "30-50": { "name": "《拉莱耶文本》" }, "15-30": { "name": "《拉莱耶文本》" }, "0-15": { "name": "《拉莱耶文本》" } },
-      "spells": [{ "name": "接触克苏鲁", "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！", "learnTimeMinutes": 240, "castSanCost": 0, "effect": { "type": "cthulhu_contact", "wakeSanity": 0, "sleepEvent": "长眠的克苏鲁候汝入梦" } }],
+      "sanVariants": {
+        "30-50": {
+          "name": "《拉莱耶文本》"
+        },
+        "15-30": {
+          "name": "《拉莱耶文本》"
+        },
+        "0-15": {
+          "name": "《拉莱耶文本》"
+        }
+      },
+      "spells": [
+        {
+          "name": "接触克苏鲁",
+          "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！",
+          "learnTimeMinutes": 240,
+          "castSanCost": 0,
+          "effect": {
+            "type": "cthulhu_contact",
+            "wakeSanity": 0,
+            "sleepEvent": "长眠的克苏鲁候汝入梦"
+          }
+        }
+      ],
       "bookContents": [
         "绿",
         "水",
@@ -1509,6 +1846,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -1676,6 +2034,27 @@
               "outputs": {},
               "x": 420,
               "y": 80
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -1816,6 +2195,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -2044,6 +2444,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -2162,8 +2583,29 @@
         "sanMax": 50
       },
       "isBook": true,
-      "sanVariants": { "30-50": { "name": "《死灵之书中的克苏鲁》" }, "15-30": { "name": "《死灵之书中的克苏鲁》" }, "0-15": { "name": "《死灵之书中的克苏鲁》" } },
-      "spells": [{ "name": "旧印开光术", "description": "可以赋予失落的上古者之印记更强的力量，用于抵御深潜者的侵袭。", "learnTimeMinutes": 240, "castSanCost": 5, "effect": { "type": "seal_activation", "chaseEnding": "异常结局" } }],
+      "sanVariants": {
+        "30-50": {
+          "name": "《死灵之书中的克苏鲁》"
+        },
+        "15-30": {
+          "name": "《死灵之书中的克苏鲁》"
+        },
+        "0-15": {
+          "name": "《死灵之书中的克苏鲁》"
+        }
+      },
+      "spells": [
+        {
+          "name": "旧印开光术",
+          "description": "可以赋予失落的上古者之印记更强的力量，用于抵御深潜者的侵袭。",
+          "learnTimeMinutes": 240,
+          "castSanCost": 5,
+          "effect": {
+            "type": "seal_activation",
+            "chaseEnding": "异常结局"
+          }
+        }
+      ],
       "bookContents": [
         "牛奶很好吃，特别是加上几滴白兰地。但是母牛却巴不得赶快让它淌出去。肿胀的乳头是很不舒服的。",
         "有些人的生活只是社会有机体的一部分，他们只能生活在这个有机体内，也只能依靠它而生活，这种人总是给人以虚幻的感觉；思特里克兰德夫妇正是这样的人。他们有如体内的细胞，是身体所决不能缺少的，但是只要他们健康存在一天，就被吞没在一个重大的整体里。",
@@ -2287,6 +2729,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -2412,6 +2875,27 @@
               "outputs": {},
               "x": 420,
               "y": 80
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -2549,6 +3033,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -2779,6 +3284,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -3007,6 +3533,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -3125,8 +3672,31 @@
         "sanMax": 50
       },
       "isBook": true,
-      "sanVariants": { "30-50": { "name": "《水神克塔亚特》" }, "15-30": { "name": "《水神克塔亚特》" }, "0-15": { "name": "《水神克塔亚特》" } },
-      "spells": [{ "name": "接触深潜者", "description": "Ia! Dagon! Iii! Hydra!", "learnTimeMinutes": 240, "castSanCost": 10, "effect": { "type": "deep_ones_contact", "event": "与海之子对话", "ending": "蹈海", "sanThreshold": 30 } }],
+      "sanVariants": {
+        "30-50": {
+          "name": "《水神克塔亚特》"
+        },
+        "15-30": {
+          "name": "《水神克塔亚特》"
+        },
+        "0-15": {
+          "name": "《水神克塔亚特》"
+        }
+      },
+      "spells": [
+        {
+          "name": "接触深潜者",
+          "description": "Ia! Dagon! Iii! Hydra!",
+          "learnTimeMinutes": 240,
+          "castSanCost": 10,
+          "effect": {
+            "type": "deep_ones_contact",
+            "event": "与海之子对话",
+            "ending": "蹈海",
+            "sanThreshold": 30
+          }
+        }
+      ],
       "bookContents": [
         "这是我第一次听说印斯茅斯——这个阴霾笼罩的地方。",
         "这件装饰的前端很高，有着一个宽大却不太规则的古怪轮廓，就像是特地为了一个几乎呈奇特椭圆形的头部而设计的。它的材质似乎以黄金为主，但是却散发着一种颜色稍浅的奇异光泽，似乎暗示着制作者向这些黄金中掺入了部分同样华丽、而且几乎无法鉴别的金属，将它们熔炼成了某些古怪的合金……所有的图案都在隐喻着某些时空之中的遥远隐秘与无法想象的深渊，而那种浮雕反映出来的、有关水的单调意象也一同变得近乎凶险与不祥起来。在这些浮雕中有着许多传说般的怪物——它们诡诞凶恶得令人厌恶，表现出一种半鱼类半巨蛙的模样——让人产生了一种徘徊不去、令人不快、仿佛记忆般的感觉，无法摆脱；就好象它们从人类躯体深处那些记忆功能依旧非常原始、极其接近先祖的某些细胞与组织中唤起了部分图像。有几次，我不由得幻想着这些亵渎神明的鱼蛙怪物所具备的轮廓里充溢着不洁的精华，完美地象征了那种未知陌生、非人类所能想象的邪恶。",
@@ -3261,6 +3831,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -3386,6 +3977,27 @@
               "outputs": {},
               "x": 420,
               "y": 80
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -3414,8 +4026,29 @@
         "sanMax": 50
       },
       "isBook": true,
-      "sanVariants": { "30-50": { "name": "《死灵之书》" }, "15-30": { "name": "《死灵之书》" }, "0-15": { "name": "《死灵之书》" } },
-      "spells": [{ "name": "支配术", "description": "可以让他人在一段时间内服从自己的命令。", "learnTimeMinutes": 240, "castSanCost": 5, "effect": { "type": "domination", "chaseEnding": "异常结局" } }],
+      "sanVariants": {
+        "30-50": {
+          "name": "《死灵之书》"
+        },
+        "15-30": {
+          "name": "《死灵之书》"
+        },
+        "0-15": {
+          "name": "《死灵之书》"
+        }
+      },
+      "spells": [
+        {
+          "name": "支配术",
+          "description": "可以让他人在一段时间内服从自己的命令。",
+          "learnTimeMinutes": 240,
+          "castSanCost": 5,
+          "effect": {
+            "type": "domination",
+            "chaseEnding": "异常结局"
+          }
+        }
+      ],
       "bookContents": [
         "“那永恒沉眠的并非亡者，而在诡异的万古中连死亡也会死去。”",
         "“Cthulhu noster qui es in maribus : sanctificetur nomen tuum; adveniat regnum tuum; fiat voluntas tua, sicut in R’lyeh, et in Y’ha-nthlei. ”（我们在海中的克苏鲁，愿你的名受显扬，愿你的国来临，愿你的旨意奉行在拉莱耶，如同在伊哈斯雷。）",
@@ -3536,6 +4169,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -3661,6 +4315,27 @@
               "outputs": {},
               "x": 420,
               "y": 80
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -3798,6 +4473,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -4026,6 +4722,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -4342,6 +5059,27 @@
                 "gameEvent": "game:study_night",
                 "gameEventPayload": {}
               }
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -4616,6 +5354,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -4843,6 +5602,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -5061,6 +5841,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -5283,6 +6084,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -5510,6 +6332,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -5727,6 +6570,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -5849,6 +6713,27 @@
               "onShow": {
                 "ending": "abnormal_end"
               }
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -5974,6 +6859,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -6189,6 +7095,27 @@
               },
               "outputs": {},
               "keywordIds": []
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [
@@ -6326,6 +7253,27 @@
               "keywordIds": [
                 "roommate_necklace_clue"
               ]
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 240
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {},
+              "x": 80,
+              "y": 360
             }
           },
           "connections": [

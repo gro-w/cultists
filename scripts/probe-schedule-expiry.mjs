@@ -7,6 +7,7 @@ const blueprint = {
   nodes: {
     start: { id: "start", type: "flowStart", inputs: {}, outputs: {} },
     end: { id: "end", type: "scheduleEnd", inputs: {}, outputs: {} },
+    prerequisite: { id: "prerequisite", type: "prerequisite", inputs: { condition: true }, outputs: {} },
     expiry: { id: "expiry", type: "scheduleExpiry", inputs: { expires: true, expiresAt: 100 }, outputs: {} },
   },
   connections: [{ fromNodeId: "start", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" }],

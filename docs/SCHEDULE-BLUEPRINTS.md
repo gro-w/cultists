@@ -204,8 +204,8 @@
 | `getScheduleStatus` | 数值 | 读取日程实例状态 |
 | `getScheduleInstanceCount` | 数值 | 读取日程实例数量 |
 | `getGameTime` | 数值 | 读取当前游戏绝对分钟 |
-| `prerequisite` | 数值 | 可选的唯一先决条件节点；输入为 `true` 才允许 Social 条目插入 |
-| `scheduleExpiry` | 数值 | 可选的唯一日程过期节点；`expires=true` 且当前时间超过 `expiresAt` 时强制解决实例 |
+| `prerequisite` | 数值 | 必须存在且只能有一个的先决条件节点；输入为 `true` 才允许 Social 条目插入 |
+| `scheduleExpiry` | 数值 | 必须存在且只能有一个的日程过期节点；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
 
 ### 4.12 Social 插入先决条件
 
@@ -213,7 +213,7 @@ Social 日期日程表条目所在的完整蓝图可选添加一个 `prerequisit
 
 ### 4.13 日程过期
 
-完整蓝图可选包含最多一个 `scheduleExpiry` 节点。节点没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。不存在该节点，或 `expires` 不是严格的 `true`，实例都不会过期；启用后，统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
+完整蓝图必须包含且只能有一个 `scheduleExpiry` 节点。节点没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。新建模板默认将 `expires` 固定为 `false`；`expires` 不是严格的 `true` 时实例不会过期，启用后统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
 
 例如，读取“昨天是否与阿杰对话”的公共变量：
 

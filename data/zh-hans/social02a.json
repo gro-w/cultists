@@ -239,6 +239,17 @@
             "outputs": {},
             "x": 80,
             "y": 260
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": false,
+              "expiresAt": 0
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
           }
         },
         "connections": [
@@ -630,6 +641,17 @@
             "outputs": {},
             "x": 80,
             "y": 260
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": false,
+              "expiresAt": 0
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
           }
         },
         "connections": [

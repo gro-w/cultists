@@ -6,7 +6,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { skillManager } from "../core/SkillManager.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition, getScheduleNodePort } from "../core/ScheduleNodeRegistry.js";
-import { validateBlueprint, embedLegacyPrerequisite } from "../core/ScheduleBlueprint.js";
+import { validateBlueprint, embedLegacyPrerequisite, createEmptyBlueprint } from "../core/ScheduleBlueprint.js";
 import { windowManager } from "../core/WindowManager.js";
 
 /**
@@ -105,7 +105,17 @@ export class DevDialogueEditorTab {
     return {id:this._uid('n'),type:'text',inputs:{speaker:'player',text:''},outputs:{},x,y};
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
-  _emptyCtx() { return {nodes:{},connections:[],startNodeId:null}; }
+  _emptyCtx() { return createEmptyBlueprint(); }
+  _ensureControlNodes(blueprint) {
+    const nodes = blueprint?.nodes || {};
+    if (!Object.values(nodes).some(node => node.type === 'prerequisite')) {
+      nodes.__prerequisite__ = { id: '__prerequisite__', type: 'prerequisite', inputs: { condition: true }, outputs: {}, x: 80, y: 240 };
+    }
+    if (!Object.values(nodes).some(node => node.type === 'scheduleExpiry')) {
+      nodes.__schedule_expiry__ = { id: '__schedule_expiry__', type: 'scheduleExpiry', inputs: { expires: false, expiresAt: 0 }, outputs: {}, x: 80, y: 360 };
+    }
+    return blueprint;
+  }
   _emptyProject(totalDays = MAX_GAME_DAYS) {
     totalDays = Math.min(MAX_GAME_DAYS, Math.max(1, Number(totalDays) || MAX_GAME_DAYS));
     const schedules={};
@@ -134,9 +144,9 @@ export class DevDialogueEditorTab {
       const flowStartId = '__start';
       nodes[flowStartId] = { id: flowStartId, type: 'flowStart', inputs: {}, outputs: {}, x: 40, y: 40 };
       if (startNodeId && nodes[startNodeId]) connections.unshift({ fromNodeId: flowStartId, fromPort: 'flowOut', toNodeId: startNodeId, toPort: 'flowIn' });
-      return { nodes, connections, startNodeId: flowStartId };
+      return this._ensureControlNodes({ nodes, connections, startNodeId: flowStartId });
     }
-    return { nodes, connections, startNodeId };
+    return this._ensureControlNodes({ nodes, connections, startNodeId });
   }
 
   _migrateProject(project) {
@@ -212,6 +222,8 @@ export class DevDialogueEditorTab {
       start: { id: "start", type: "flowStart", inputs: {}, outputs: {}, x: 80, y: 80 },
       text: { id: "text", type: "text", inputs: { speaker: "narrator", text: "" }, outputs: {}, x: 320, y: 80 },
       end: { id: "end", type: "scheduleEnd", inputs: {}, outputs: {}, x: 560, y: 80 },
+      __prerequisite__: { id: "__prerequisite__", type: "prerequisite", inputs: { condition: true }, outputs: {}, x: 80, y: 240 },
+      __schedule_expiry__: { id: "__schedule_expiry__", type: "scheduleExpiry", inputs: { expires: false, expiresAt: 0 }, outputs: {}, x: 80, y: 360 },
     }, connections: [
       { fromNodeId: "start", fromPort: "flowOut", toNodeId: "text", toPort: "flowIn" },
       { fromNodeId: "text", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
@@ -1584,9 +1596,9 @@ export class DevDialogueEditorTab {
       const flowStartId = '__start';
       nodes[flowStartId] = { id: flowStartId, type: 'flowStart', inputs: {}, outputs: {}, x: 40, y: 40 };
       if (startNodeId && nodes[startNodeId]) connections.unshift({ fromNodeId: flowStartId, fromPort: 'flowOut', toNodeId: startNodeId, toPort: 'flowIn' });
-      return { nodes, connections, startNodeId: flowStartId };
+      return this._ensureControlNodes({ nodes, connections, startNodeId: flowStartId });
     }
-    return { nodes, connections, startNodeId };
+    return this._ensureControlNodes({ nodes, connections, startNodeId });
   }
 
   // ── variables modal ───────────────────────────────────────────────────────

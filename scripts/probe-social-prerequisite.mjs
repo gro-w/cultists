@@ -6,6 +6,7 @@ const blueprint = {
   nodes: {
     start: { id: "start", type: "flowStart", inputs: {}, outputs: {} },
     end: { id: "end", type: "scheduleEnd", inputs: {}, outputs: {} },
+    expiry: { id: "expiry", type: "scheduleExpiry", inputs: { expires: false, expiresAt: 0 }, outputs: {} },
     publicVariable: { id: "publicVariable", type: "getGlobal", inputs: { variableId: 100 }, outputs: {} },
     gate: { id: "gate", type: "prerequisite", inputs: {}, outputs: {} },
   },

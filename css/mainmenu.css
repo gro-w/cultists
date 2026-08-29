@@ -240,12 +240,16 @@
 .ending-gal-avatar { font-size:clamp(70px, 12vw, 180px); opacity:.9; filter:drop-shadow(0 0 12px #000); }
 
 .ending-screen-panel {
-  z-index: 1;
-  max-width: 520px;
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 3vh;
+  transform: translateX(-50%);
+  width: min(1100px, 92vw);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
 }
 
 .ending-screen-icon {
@@ -254,6 +258,7 @@
 }
 
 .ending-screen-title {
+  display: none;
   margin: 0;
   font-size: 22px;
   letter-spacing: 2px;
@@ -269,31 +274,38 @@
 }
 
 .ending-schedule-status {
+  position: absolute;
+  bottom: calc(100% + 8px);
   color: #9cffb8;
   font-size: 11px;
   opacity: 0.8;
 }
 
 .ending-schedule-log {
-  width: min(760px, 90vw);
-  max-height: 48vh;
-  overflow-y: auto;
+  width: 100%;
+  min-height: 88px;
+  max-height: 24vh;
+  overflow: hidden;
   text-align: left;
-  border: 1px solid rgba(77, 255, 136, 0.35);
-  padding: 10px 14px;
+  border: 2px solid rgba(210, 240, 255, 0.78);
+  border-radius: 4px;
+  background: rgba(7, 14, 28, 0.88);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.8), 0 0 18px rgba(0, 0, 0, 0.8);
+  padding: 16px 24px;
   box-sizing: border-box;
 }
 
 .ending-dialogue-line {
-  margin: 0 0 8px;
-  font-size: 13px;
-  line-height: 1.7;
-  color: #baffc9;
+  margin: 0;
+  min-height: 1.8em;
+  font-size: clamp(15px, 1.5vw, 22px);
+  line-height: 1.8;
+  color: #fff;
 }
 
 .ending-dialogue-line strong {
-  color: #4dff88;
-  margin-right: 6px;
+  color: #aee6ff;
+  margin-right: 10px;
 }
 
 .ending-schedule-options {

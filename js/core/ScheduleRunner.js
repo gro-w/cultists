@@ -266,6 +266,12 @@ export class ScheduleRunner {
         ? this.evaluator.evaluateNode(labelConnection.fromNodeId, labelConnection.fromPort)
         : (option.label || option.text || "");
       button.textContent = String(label);
+      if (this.appId === "his-patient") {
+        button.classList.add("dialogue-choice-option");
+        if (/既往史/.test(button.textContent) && /用药/.test(button.textContent)) {
+          button.dataset.onboardingChoice = "history-medication";
+        }
+      }
       button.addEventListener("click", () => {
         if (this.readOnly) return;
         this._record({ type: "choice", index, label: button.textContent });

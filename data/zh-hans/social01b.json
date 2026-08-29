@@ -11,79 +11,978 @@
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
-          "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {}, "x": 40, "y": 360 },
-          "invite": { "id": "invite", "type": "text", "inputs": { "speaker": "阿杰", "text": "我正好要做测试手游的视频，要不要来跟我一起玩？" }, "outputs": {}, "x": 260, "y": 360 },
-          "ask_game": { "id": "ask_game", "type": "text", "inputs": { "speaker": "player", "text": "什么手游？" }, "outputs": {}, "x": 520, "y": 360 },
-          "game_name": { "id": "game_name", "type": "text", "inputs": { "speaker": "阿杰", "text": "《皇者荣耀》，你玩过没？" }, "outputs": {}, "x": 780, "y": 360 },
-          "player_guide": { "id": "player_guide", "type": "text", "inputs": { "speaker": "player", "text": "看过攻略，就是推塔游戏呗。应该不难。" }, "outputs": {}, "x": 1040, "y": 360 },
-          "start_game": { "id": "start_game", "type": "text", "inputs": { "speaker": "阿杰", "text": "先打。" }, "outputs": {}, "x": 1320, "y": 360 },
-          "ask_opponent": { "id": "ask_opponent", "type": "text", "inputs": { "speaker": "player", "text": "要是匹配上很厉害的对手怎么办？" }, "outputs": {}, "x": 1580, "y": 360 },
-          "protect": { "id": "protect", "type": "text", "inputs": { "speaker": "阿杰", "text": "有我带你。况且你现在是新手保护期，不会遇到皇者的。" }, "outputs": {}, "x": 1840, "y": 360 },
-          "ask_win": { "id": "ask_win", "type": "text", "inputs": { "speaker": "player", "text": "你能保证会赢吗？要不我还是再去看看攻略？" }, "outputs": {}, "x": 2100, "y": 360 },
-          "first_choice": { "id": "first_choice", "type": "choice", "inputs": { "branchCount": 2 }, "options": [
-            { "label": "那我相信你。", "next": "first_favor_plus" },
-            { "label": "要不咱也充点钱。", "next": "first_favor_minus" }
-          ], "outputs": {}, "x": 2380, "y": 360 },
-          "trust": { "id": "trust", "type": "text", "inputs": { "speaker": "阿杰", "text": "这就对了，你先签个到，一会听我指挥。" }, "outputs": {}, "x": 2660, "y": 180 },
-          "trust_nervous": { "id": "trust_nervous", "type": "text", "inputs": { "speaker": "player", "text": "我还是紧张，一定要赢啊。" }, "outputs": {}, "x": 2940, "y": 180 },
-          "trust_bless": { "id": "trust_bless", "type": "text", "inputs": { "speaker": "阿杰", "text": "你在向我祷告吗？行，我保佑你赢。" }, "outputs": {}, "x": 3220, "y": 180 },
-          "trust_lose": { "id": "trust_lose", "type": "text", "inputs": { "speaker": "player", "text": "输了呢？" }, "outputs": {}, "x": 3500, "y": 180 },
-          "trust_drink": { "id": "trust_drink", "type": "text", "inputs": { "speaker": "阿杰", "text": "请你喝8喜。" }, "outputs": {}, "x": 3780, "y": 180 },
-          "first_favor_plus": { "id": "first_favor_plus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": 5 }, "outputs": {}, "x": 2660, "y": 360 },
-          "first_favor_minus": { "id": "first_favor_minus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": -5 }, "outputs": {}, "x": 2660, "y": 700 },
-          "pay_reply": { "id": "pay_reply", "type": "text", "inputs": { "speaker": "阿杰", "text": "你充吧，我不想充。" }, "outputs": {}, "x": 2660, "y": 540 },
-          "pay_reason": { "id": "pay_reason", "type": "text", "inputs": { "speaker": "player", "text": "到处都是rmb玩家，我攻略也没背过，还是充点好了。" }, "outputs": {}, "x": 2940, "y": 540 },
-          "pay_church": { "id": "pay_church", "type": "text", "inputs": { "speaker": "阿杰", "text": "所有人都这么想，充点钱就容易了，段位高了，心愿达成了——这么说手游跟教堂有什么区别？都是门口放个箱子收钱。" }, "outputs": {}, "x": 3220, "y": 540 },
-          "death": { "id": "death", "type": "text", "inputs": { "speaker": "player", "text": "我好像快死了，怎么办？" }, "outputs": {}, "x": 4060, "y": 360 },
-          "second_personality": { "id": "second_personality", "type": "text", "inputs": { "speaker": "阿杰", "text": "没事，死了又不是终点。有些时候，死了还能激发出英雄的第二人格——就像我们一样，有时候得“死”一次才能活出真我。" }, "outputs": {}, "x": 4340, "y": 360 },
-          "revive": { "id": "revive", "type": "text", "inputs": { "speaker": "player", "text": "我又复活了。" }, "outputs": {}, "x": 4620, "y": 360 },
-          "push_tower": { "id": "push_tower", "type": "text", "inputs": { "speaker": "阿杰", "text": "快去推塔，我们快赢了。" }, "outputs": {}, "x": 4900, "y": 360 },
-          "second_choice": { "id": "second_choice", "type": "choice", "inputs": { "branchCount": 2 }, "options": [
-            { "label": "呼，没想到这么快就结束了，好刺激。", "next": "second_favor_plus" },
-            { "label": "要是有攻略刚才我肯定不会死。死掉的感觉太糟糕了，哪怕是在游戏里。", "next": "second_favor_minus" }
-          ], "outputs": {}, "x": 5180, "y": 360 },
-          "excited_reply": { "id": "excited_reply", "type": "text", "inputs": { "speaker": "阿杰", "text": "怎么样，攻略可带不来这种感觉。" }, "outputs": {}, "x": 5460, "y": 180 },
-          "excited_endline": { "id": "excited_endline", "type": "text", "inputs": { "speaker": "player", "text": "……确实。" }, "outputs": {}, "x": 5740, "y": 180 },
-          "regret_reply": { "id": "regret_reply", "type": "text", "inputs": { "speaker": "阿杰", "text": "没办法，有人当主力，有人就得当炮灰。刚才对面那个辅助，为保射手死了那么多次，遇上我还是得输。" }, "outputs": {}, "x": 5460, "y": 540 },
-          "regret_endline": { "id": "regret_endline", "type": "text", "inputs": { "speaker": "player", "text": "……确实。" }, "outputs": {}, "x": 5740, "y": 540 },
-          "second_favor_plus": { "id": "second_favor_plus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": 5 }, "outputs": {}, "x": 5460, "y": 360 },
-          "second_favor_minus": { "id": "second_favor_minus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": -5 }, "outputs": {}, "x": 5460, "y": 700 },
-          "end": { "id": "end", "type": "scheduleEnd", "inputs": {}, "outputs": {}, "x": 6020, "y": 360 }
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 40,
+            "y": 360
+          },
+          "invite": {
+            "id": "invite",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "我正好要做测试手游的视频，要不要来跟我一起玩？"
+            },
+            "outputs": {},
+            "x": 260,
+            "y": 360
+          },
+          "ask_game": {
+            "id": "ask_game",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "什么手游？"
+            },
+            "outputs": {},
+            "x": 520,
+            "y": 360
+          },
+          "game_name": {
+            "id": "game_name",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "《皇者荣耀》，你玩过没？"
+            },
+            "outputs": {},
+            "x": 780,
+            "y": 360
+          },
+          "player_guide": {
+            "id": "player_guide",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "看过攻略，就是推塔游戏呗。应该不难。"
+            },
+            "outputs": {},
+            "x": 1040,
+            "y": 360
+          },
+          "start_game": {
+            "id": "start_game",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "先打。"
+            },
+            "outputs": {},
+            "x": 1320,
+            "y": 360
+          },
+          "ask_opponent": {
+            "id": "ask_opponent",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "要是匹配上很厉害的对手怎么办？"
+            },
+            "outputs": {},
+            "x": 1580,
+            "y": 360
+          },
+          "protect": {
+            "id": "protect",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "有我带你。况且你现在是新手保护期，不会遇到皇者的。"
+            },
+            "outputs": {},
+            "x": 1840,
+            "y": 360
+          },
+          "ask_win": {
+            "id": "ask_win",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你能保证会赢吗？要不我还是再去看看攻略？"
+            },
+            "outputs": {},
+            "x": 2100,
+            "y": 360
+          },
+          "first_choice": {
+            "id": "first_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2
+            },
+            "options": [
+              {
+                "label": "那我相信你。",
+                "next": "first_favor_plus"
+              },
+              {
+                "label": "要不咱也充点钱。",
+                "next": "first_favor_minus"
+              }
+            ],
+            "outputs": {},
+            "x": 2380,
+            "y": 360
+          },
+          "trust": {
+            "id": "trust",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "这就对了，你先签个到，一会听我指挥。"
+            },
+            "outputs": {},
+            "x": 2660,
+            "y": 180
+          },
+          "trust_nervous": {
+            "id": "trust_nervous",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我还是紧张，一定要赢啊。"
+            },
+            "outputs": {},
+            "x": 2940,
+            "y": 180
+          },
+          "trust_bless": {
+            "id": "trust_bless",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你在向我祷告吗？行，我保佑你赢。"
+            },
+            "outputs": {},
+            "x": 3220,
+            "y": 180
+          },
+          "trust_lose": {
+            "id": "trust_lose",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "输了呢？"
+            },
+            "outputs": {},
+            "x": 3500,
+            "y": 180
+          },
+          "trust_drink": {
+            "id": "trust_drink",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "请你喝8喜。"
+            },
+            "outputs": {},
+            "x": 3780,
+            "y": 180
+          },
+          "first_favor_plus": {
+            "id": "first_favor_plus",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {},
+            "x": 2660,
+            "y": 360
+          },
+          "first_favor_minus": {
+            "id": "first_favor_minus",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -5
+            },
+            "outputs": {},
+            "x": 2660,
+            "y": 700
+          },
+          "pay_reply": {
+            "id": "pay_reply",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你充吧，我不想充。"
+            },
+            "outputs": {},
+            "x": 2660,
+            "y": 540
+          },
+          "pay_reason": {
+            "id": "pay_reason",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "到处都是rmb玩家，我攻略也没背过，还是充点好了。"
+            },
+            "outputs": {},
+            "x": 2940,
+            "y": 540
+          },
+          "pay_church": {
+            "id": "pay_church",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "所有人都这么想，充点钱就容易了，段位高了，心愿达成了——这么说手游跟教堂有什么区别？都是门口放个箱子收钱。"
+            },
+            "outputs": {},
+            "x": 3220,
+            "y": 540
+          },
+          "death": {
+            "id": "death",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我好像快死了，怎么办？"
+            },
+            "outputs": {},
+            "x": 4060,
+            "y": 360
+          },
+          "second_personality": {
+            "id": "second_personality",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没事，死了又不是终点。有些时候，死了还能激发出英雄的第二人格——就像我们一样，有时候得“死”一次才能活出真我。"
+            },
+            "outputs": {},
+            "x": 4340,
+            "y": 360
+          },
+          "revive": {
+            "id": "revive",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我又复活了。"
+            },
+            "outputs": {},
+            "x": 4620,
+            "y": 360
+          },
+          "push_tower": {
+            "id": "push_tower",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "快去推塔，我们快赢了。"
+            },
+            "outputs": {},
+            "x": 4900,
+            "y": 360
+          },
+          "second_choice": {
+            "id": "second_choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2
+            },
+            "options": [
+              {
+                "label": "呼，没想到这么快就结束了，好刺激。",
+                "next": "second_favor_plus"
+              },
+              {
+                "label": "要是有攻略刚才我肯定不会死。死掉的感觉太糟糕了，哪怕是在游戏里。",
+                "next": "second_favor_minus"
+              }
+            ],
+            "outputs": {},
+            "x": 5180,
+            "y": 360
+          },
+          "excited_reply": {
+            "id": "excited_reply",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "怎么样，攻略可带不来这种感觉。"
+            },
+            "outputs": {},
+            "x": 5460,
+            "y": 180
+          },
+          "excited_endline": {
+            "id": "excited_endline",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……确实。"
+            },
+            "outputs": {},
+            "x": 5740,
+            "y": 180
+          },
+          "regret_reply": {
+            "id": "regret_reply",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没办法，有人当主力，有人就得当炮灰。刚才对面那个辅助，为保射手死了那么多次，遇上我还是得输。"
+            },
+            "outputs": {},
+            "x": 5460,
+            "y": 540
+          },
+          "regret_endline": {
+            "id": "regret_endline",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……确实。"
+            },
+            "outputs": {},
+            "x": 5740,
+            "y": 540
+          },
+          "second_favor_plus": {
+            "id": "second_favor_plus",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {},
+            "x": 5460,
+            "y": 360
+          },
+          "second_favor_minus": {
+            "id": "second_favor_minus",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -5
+            },
+            "outputs": {},
+            "x": 5460,
+            "y": 700
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 6020,
+            "y": 360
+          }
         },
         "connections": [
-          { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "invite", "toPort": "flowIn" },
-          { "fromNodeId": "invite", "fromPort": "flowOut", "toNodeId": "ask_game", "toPort": "flowIn" },
-          { "fromNodeId": "ask_game", "fromPort": "flowOut", "toNodeId": "game_name", "toPort": "flowIn" },
-          { "fromNodeId": "game_name", "fromPort": "flowOut", "toNodeId": "player_guide", "toPort": "flowIn" },
-          { "fromNodeId": "player_guide", "fromPort": "flowOut", "toNodeId": "start_game", "toPort": "flowIn" },
-          { "fromNodeId": "start_game", "fromPort": "flowOut", "toNodeId": "ask_opponent", "toPort": "flowIn" },
-          { "fromNodeId": "ask_opponent", "fromPort": "flowOut", "toNodeId": "protect", "toPort": "flowIn" },
-          { "fromNodeId": "protect", "fromPort": "flowOut", "toNodeId": "ask_win", "toPort": "flowIn" },
-          { "fromNodeId": "ask_win", "fromPort": "flowOut", "toNodeId": "first_choice", "toPort": "flowIn" },
-          { "fromNodeId": "first_choice", "fromPort": "option0", "toNodeId": "first_favor_plus", "toPort": "flowIn" },
-          { "fromNodeId": "first_choice", "fromPort": "option1", "toNodeId": "first_favor_minus", "toPort": "flowIn" },
-          { "fromNodeId": "first_favor_plus", "fromPort": "flowOut", "toNodeId": "trust", "toPort": "flowIn" },
-          { "fromNodeId": "first_favor_minus", "fromPort": "flowOut", "toNodeId": "pay_reply", "toPort": "flowIn" },
-          { "fromNodeId": "trust", "fromPort": "flowOut", "toNodeId": "trust_nervous", "toPort": "flowIn" },
-          { "fromNodeId": "trust_nervous", "fromPort": "flowOut", "toNodeId": "trust_bless", "toPort": "flowIn" },
-          { "fromNodeId": "trust_bless", "fromPort": "flowOut", "toNodeId": "trust_lose", "toPort": "flowIn" },
-          { "fromNodeId": "trust_lose", "fromPort": "flowOut", "toNodeId": "trust_drink", "toPort": "flowIn" },
-          { "fromNodeId": "trust_drink", "fromPort": "flowOut", "toNodeId": "death", "toPort": "flowIn" },
-          { "fromNodeId": "pay_reply", "fromPort": "flowOut", "toNodeId": "pay_reason", "toPort": "flowIn" },
-          { "fromNodeId": "pay_reason", "fromPort": "flowOut", "toNodeId": "pay_church", "toPort": "flowIn" },
-          { "fromNodeId": "pay_church", "fromPort": "flowOut", "toNodeId": "death", "toPort": "flowIn" },
-          { "fromNodeId": "death", "fromPort": "flowOut", "toNodeId": "second_personality", "toPort": "flowIn" },
-          { "fromNodeId": "second_personality", "fromPort": "flowOut", "toNodeId": "revive", "toPort": "flowIn" },
-          { "fromNodeId": "revive", "fromPort": "flowOut", "toNodeId": "push_tower", "toPort": "flowIn" },
-          { "fromNodeId": "push_tower", "fromPort": "flowOut", "toNodeId": "second_choice", "toPort": "flowIn" },
-          { "fromNodeId": "second_choice", "fromPort": "option0", "toNodeId": "second_favor_plus", "toPort": "flowIn" },
-          { "fromNodeId": "second_choice", "fromPort": "option1", "toNodeId": "second_favor_minus", "toPort": "flowIn" },
-          { "fromNodeId": "second_favor_plus", "fromPort": "flowOut", "toNodeId": "excited_reply", "toPort": "flowIn" },
-          { "fromNodeId": "second_favor_minus", "fromPort": "flowOut", "toNodeId": "regret_reply", "toPort": "flowIn" },
-          { "fromNodeId": "excited_reply", "fromPort": "flowOut", "toNodeId": "excited_endline", "toPort": "flowIn" },
-          { "fromNodeId": "excited_endline", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" },
-          { "fromNodeId": "regret_reply", "fromPort": "flowOut", "toNodeId": "regret_endline", "toPort": "flowIn" },
-          { "fromNodeId": "regret_endline", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "invite",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "invite",
+            "fromPort": "flowOut",
+            "toNodeId": "ask_game",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "ask_game",
+            "fromPort": "flowOut",
+            "toNodeId": "game_name",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_name",
+            "fromPort": "flowOut",
+            "toNodeId": "player_guide",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "player_guide",
+            "fromPort": "flowOut",
+            "toNodeId": "start_game",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start_game",
+            "fromPort": "flowOut",
+            "toNodeId": "ask_opponent",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "ask_opponent",
+            "fromPort": "flowOut",
+            "toNodeId": "protect",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "protect",
+            "fromPort": "flowOut",
+            "toNodeId": "ask_win",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "ask_win",
+            "fromPort": "flowOut",
+            "toNodeId": "first_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "first_choice",
+            "fromPort": "option0",
+            "toNodeId": "first_favor_plus",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "first_choice",
+            "fromPort": "option1",
+            "toNodeId": "first_favor_minus",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "first_favor_plus",
+            "fromPort": "flowOut",
+            "toNodeId": "trust",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "first_favor_minus",
+            "fromPort": "flowOut",
+            "toNodeId": "pay_reply",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "trust",
+            "fromPort": "flowOut",
+            "toNodeId": "trust_nervous",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "trust_nervous",
+            "fromPort": "flowOut",
+            "toNodeId": "trust_bless",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "trust_bless",
+            "fromPort": "flowOut",
+            "toNodeId": "trust_lose",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "trust_lose",
+            "fromPort": "flowOut",
+            "toNodeId": "trust_drink",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "trust_drink",
+            "fromPort": "flowOut",
+            "toNodeId": "death",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "pay_reply",
+            "fromPort": "flowOut",
+            "toNodeId": "pay_reason",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "pay_reason",
+            "fromPort": "flowOut",
+            "toNodeId": "pay_church",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "pay_church",
+            "fromPort": "flowOut",
+            "toNodeId": "death",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "death",
+            "fromPort": "flowOut",
+            "toNodeId": "second_personality",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "second_personality",
+            "fromPort": "flowOut",
+            "toNodeId": "revive",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "revive",
+            "fromPort": "flowOut",
+            "toNodeId": "push_tower",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "push_tower",
+            "fromPort": "flowOut",
+            "toNodeId": "second_choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "second_choice",
+            "fromPort": "option0",
+            "toNodeId": "second_favor_plus",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "second_choice",
+            "fromPort": "option1",
+            "toNodeId": "second_favor_minus",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "second_favor_plus",
+            "fromPort": "flowOut",
+            "toNodeId": "excited_reply",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "second_favor_minus",
+            "fromPort": "flowOut",
+            "toNodeId": "regret_reply",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "excited_reply",
+            "fromPort": "flowOut",
+            "toNodeId": "excited_endline",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "excited_endline",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "regret_reply",
+            "fromPort": "flowOut",
+            "toNodeId": "regret_endline",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "regret_endline",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "social01b_awei_headphones",
+      "type": "other",
+      "npcId": "awei",
+      "name": "阿伟",
+      "avatar": "🐱",
+      "displayName": "测评耳机",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "n1": {
+            "id": "n1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "新买的耳机终于到了，来，给你试听一下。"
+            },
+            "outputs": {}
+          },
+          "n2": {
+            "id": "n2",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这是你新买的？看起来很贵啊，你不才买了个黑椒唱片机吗？"
+            },
+            "outputs": {}
+          },
+          "n3": {
+            "id": "n3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "是啊，不错吧，在购物车里放了好久终于等到降价了。"
+            },
+            "outputs": {}
+          },
+          "n4": {
+            "id": "n4",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你全款买的？"
+            },
+            "outputs": {}
+          },
+          "n5": {
+            "id": "n5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "……还没付尾款。到底听不听？赶紧的。"
+            },
+            "outputs": {}
+          },
+          "n6": {
+            "id": "n6",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "音质很……好，声场比较强，有空间感，高音甜中音稳低音沉……"
+            },
+            "outputs": {}
+          },
+          "n7": {
+            "id": "n7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "你有没有听到什么奇怪的声音？"
+            },
+            "outputs": {}
+          },
+          "n8": {
+            "id": "n8",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "什么？"
+            },
+            "outputs": {}
+          },
+          "n9": {
+            "id": "n9",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "这里，我放大点，你仔细听。"
+            },
+            "outputs": {}
+          },
+          "n10": {
+            "id": "n10",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "什么也没听出来啊。"
+            },
+            "outputs": {}
+          },
+          "n11": {
+            "id": "n11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "难道是我幻听了？我总觉得这里有点底噪，但只有我听到第37秒会有。"
+            },
+            "outputs": {}
+          },
+          "choice12": {
+            "id": "choice12",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "是什么声音？",
+              "label1": "要不你换首歌试试？"
+            },
+            "options": [
+              {
+                "label": "是什么声音？"
+              },
+              {
+                "label": "要不你换首歌试试？"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice12_op0": {
+            "id": "choice12_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "n13": {
+            "id": "n13",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "一种……好像谁在说话。"
+            },
+            "outputs": {}
+          },
+          "n14": {
+            "id": "n14",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "是不是这首歌里本来就有的？"
+            },
+            "outputs": {}
+          },
+          "n15": {
+            "id": "n15",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我对《月之暗面》比对《外科学》还熟悉，怎么会搞错？"
+            },
+            "outputs": {}
+          },
+          "n16": {
+            "id": "n16",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "肯定是你听错了，你是不是背着大家在偷偷复习医师资格证考试压力太大？"
+            },
+            "outputs": {}
+          },
+          "n17": {
+            "id": "n17",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "说你自己呢吧……"
+            },
+            "outputs": {}
+          },
+          "choice12_op1": {
+            "id": "choice12_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "n18": {
+            "id": "n18",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "就是为了听《月之暗面》我才买的这个耳机。"
+            },
+            "outputs": {}
+          },
+          "n19": {
+            "id": "n19",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "真的没听出来。"
+            },
+            "outputs": {}
+          },
+          "n20": {
+            "id": "n20",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "或许是这段时间太累了，我休息休息就好了。"
+            },
+            "outputs": {}
+          },
+          "n21": {
+            "id": "n21",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "幻听要去看医生的。"
+            },
+            "outputs": {}
+          },
+          "n22": {
+            "id": "n22",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "这不用你告诉我。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "n1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n1",
+            "fromPort": "flowOut",
+            "toNodeId": "n2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "n3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n3",
+            "fromPort": "flowOut",
+            "toNodeId": "n4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n4",
+            "fromPort": "flowOut",
+            "toNodeId": "n5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n5",
+            "fromPort": "flowOut",
+            "toNodeId": "n6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "n7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n7",
+            "fromPort": "flowOut",
+            "toNodeId": "n8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n8",
+            "fromPort": "flowOut",
+            "toNodeId": "n9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "n10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n10",
+            "fromPort": "flowOut",
+            "toNodeId": "n11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n11",
+            "fromPort": "flowOut",
+            "toNodeId": "choice12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice12",
+            "fromPort": "option0",
+            "toNodeId": "choice12_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice12_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "n13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n13",
+            "fromPort": "flowOut",
+            "toNodeId": "n14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n14",
+            "fromPort": "flowOut",
+            "toNodeId": "n15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n15",
+            "fromPort": "flowOut",
+            "toNodeId": "n16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n16",
+            "fromPort": "flowOut",
+            "toNodeId": "n17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice12",
+            "fromPort": "option1",
+            "toNodeId": "choice12_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice12_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "n18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n18",
+            "fromPort": "flowOut",
+            "toNodeId": "n19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n19",
+            "fromPort": "flowOut",
+            "toNodeId": "n20",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n17",
+            "fromPort": "flowOut",
+            "toNodeId": "n21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n20",
+            "fromPort": "flowOut",
+            "toNodeId": "n21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n21",
+            "fromPort": "flowOut",
+            "toNodeId": "n22",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n22",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
         ]
       }
     }

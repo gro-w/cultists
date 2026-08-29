@@ -65,7 +65,7 @@ docs/                      架构、数据 schema 和协作指南
 | --- | --- |
 | `GameState` / `DayNightSystem` | 玩家状态、游戏时钟、上下班、睡眠和日结 |
 | `TimeService` | 唯一普通游戏时间推进与阶段结算 owner |
-| `ScheduleData` / `ScheduleQueue` / `ScheduleRunner` | 按时间加载内容，维护 work/social/chatgtp/main 队列并执行统一日程 |
+| `ScheduleData` / `ScheduleQueue` / `ScheduleRunner` | 按时间加载内容，维护 work/social/main 队列并执行统一日程 |
 | `ItemManager` / `ItemPlacementManager` | 背包、物品调查、物品使用和场景物品 |
 | `GlobalVariableManager` | bool、0–256 number/decimal、string 全局变量的条件和效果；ID 0–99 系统预留 |
 | `SpellManager` | 已学习法术和 SAN 消耗的施放 |
@@ -78,7 +78,7 @@ docs/                      架构、数据 schema 和协作指南
 
 ## 统一日程架构
 
-所有会改变游戏时间或产生可持久化游戏副作用的玩家操作都必须先进入日程系统。普通对话由对应的 work/social 队列执行；ChatGTP 查询进入 `chatgtpQueue`；物品调查/使用、HIS 诊断提交、法术施放、法术学习和 NPC 离线进入非阻塞 `mainQueue`（ChatGTP 使用其专用队列）。
+所有会改变游戏时间或产生可持久化游戏副作用的玩家操作都必须先进入日程系统。普通对话由对应的 work/social 队列执行；ChatGTP 查询与物品调查/使用、HIS 诊断提交、法术施放、法术学习和 NPC 离线统一进入非阻塞 `mainQueue`。
 
 一个操作的时间消耗、状态副作用和完成标记必须由同一个日程实例完成。法术学习蓝图严格先执行 `consumeTime(240)`，再执行 `spellOperation`；NPC 离线由阈值变化创建 main 实例，在实例中执行离线状态与配置后果。应用层只负责创建实例和显示结果，不能直接调用 `TimeService.advanceBy()`、直接修改法术/医疗/NPC 状态来模拟日程。
 

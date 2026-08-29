@@ -8,15 +8,15 @@ import { npcStateManager } from "./NpcStateManager.js";
 import { spellManager } from "./SpellManager.js";
 import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
-import { workQueue, socialQueue, chatgtpQueue, mainQueue } from "./ScheduleQueue.js";
+import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { dialogueProgress } from "./DialogueProgress.js";
 import { endingManager } from "./EndingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v14 = v13 plus the renamed main schedule queue payload.
-const SAVE_FORMAT_VERSION = 14;
+// v15 = v14 without the removed dedicated query queue payload.
+const SAVE_FORMAT_VERSION = 15;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -116,7 +116,6 @@ class SaveManager {
       timeService: timeService.snapshot(),
       workQueue: workQueue.snapshot(),
       socialQueue: socialQueue.snapshot(),
-      chatgtpQueue: chatgtpQueue.snapshot(),
       mainQueue: mainQueue.snapshot(),
       keywords: keywordManager.all().map((kw) => ({ id: kw.id, collectedDay: kw.collectedDay })),
       inventory: itemManager.all(),
@@ -153,7 +152,7 @@ class SaveManager {
     if (version !== SAVE_FORMAT_VERSION) throw new Error("Unsupported save version");
     const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)
-      || !Array.isArray(payload.chatgtpQueue || []) || !Array.isArray(payload.mainQueue || [])
+      || !Array.isArray(payload.mainQueue || [])
       || !payload.favorability || !Array.isArray(payload.itemPlacements)
       || !payload.dialogueProgress || typeof payload.ending !== "object") {
       throw new Error("Invalid save data");
@@ -172,7 +171,6 @@ class SaveManager {
       timeService.restore(payload.timeService || {});
       workQueue.restore(payload.workQueue);
       socialQueue.restore(payload.socialQueue);
-      chatgtpQueue.restore(payload.chatgtpQueue || []);
       mainQueue.restore(payload.mainQueue || []);
       scheduleData.restoreScheduled(payload.scheduledAdds || []);
       keywordManager.restoreCollected(payload.keywords || []);

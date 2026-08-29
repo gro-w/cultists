@@ -93,7 +93,7 @@ class LocationSystem {
     return loc.backgroundImages[loc.backgroundImages.length - 1]?.image || "";
   }
 
-  /** Update a location definition in memory (dev editor). */
+  /** Update a location definition in memory. */
   update(locationDef) {
     const idx = this.locations.findIndex((l) => l.id === locationDef.id);
     if (idx >= 0) this.locations[idx] = locationDef;

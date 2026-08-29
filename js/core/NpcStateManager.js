@@ -107,6 +107,7 @@ class NpcStateManager {
     globalVariableManager.set(globalId, next);
   }
 
+  // DEV-TOOLS:START
   /** Set an actor's SAN directly for developer tools and deterministic probes. */
   setSan(actorId, value, { offline = false } = {}) {
     if (!actorId) return;
@@ -118,6 +119,7 @@ class NpcStateManager {
     else this.offlineActors.delete(actorId);
     eventBus.emit("npcState:changed", { actorId, san: next, offline: this.offlineActors.has(actorId), developer: true });
   }
+  // DEV-TOOLS:END
 
   _goOffline(actorId) {
     this.pendingOfflineActors.add(actorId);

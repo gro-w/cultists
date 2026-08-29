@@ -9,7 +9,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
-import { mainQueue } from "../core/ScheduleQueue.js";
+import { socialQueue } from "../core/ScheduleQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
@@ -723,7 +723,8 @@ export default class DormMode {
   // ── NPC dialogue ────────────────────────────────────────────────────────────
   _showDialogue(actor, keywordDefs) {
     this.interaction.innerHTML = `<h3>与 ${actor.name} 交互</h3>`;
-    if (npcStateManager.isOffline(actor.id)) {
+    const npcId = actor.npcId || actor.payload?.npcId || actor.id;
+    if (npcStateManager.isOffline(npcId)) {
       this.interaction.innerHTML += "<p>（对方已经离线，无法交互。）</p>";
       return;
     }
@@ -735,14 +736,21 @@ export default class DormMode {
     const options = document.createElement("div");
     options.className = "dialogue-options";
     this.interaction.append(lines, options);
-    if (!actor.blueprint) {
+    const pending = socialQueue.getPending().find((item) =>
+      (item.payload?.npcId || item.payload?.id) === npcId
+    );
+    if (!pending) {
+      lines.innerHTML = "<p class=\"dialogue-end\">（没有新的对话内容了。）</p>";
+      return;
+    }
+    const definition = pending.payload || actor;
+    if (!definition.blueprint) {
       lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
       return;
     }
-    const instance = mainQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
     const runner = createScheduleRunner({
-      definition: actor,
-      instance,
+      definition,
+      instance: pending,
       appendLine: (speaker, label, text) => {
         const line = document.createElement("p");
         line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, keywordDefs)}`;
@@ -751,8 +759,8 @@ export default class DormMode {
       },
       optionsEl: options,
       appId: "dorm",
-      onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
-      onComplete: () => mainQueue.complete(instance.instanceId),
+      onCheckpoint: (next) => socialQueue.updateInstance(pending.instanceId, next),
+      onComplete: () => socialQueue.complete(pending.instanceId),
     });
     runner.start();
   }

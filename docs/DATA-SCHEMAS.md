@@ -61,7 +61,9 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 `maininit.json` 和 `mainpub.json` 使用 `{ "entries": [] }` 顶层结构；其中每个条目的 `id` 是稳定日程 ID。`maininit.json` 的条目启动时以 `main` 队列实例加入，并由统一 `ScheduleRunner` 执行。`mainpub.json` 只注册主要公共日程定义；通过 `insertSchedule` 指定 `queue="main"` 插入的日程进入主要日程队列并由同一运行时执行。初始主要日程的条件等待应使用 `waitUntil`，不应在应用层另行订阅或轮询。
 
-## 全局变量
+Social 日期日程条目可选 `insertPrerequisite` 字段。它是到达该日期和时间时才求值的受限数值蓝图；只有唯一 `returnValue` 节点返回严格的 `true` 时，条目才会创建实例并加入 `socialQueue`。蓝图禁止流程节点和流程引脚，只允许数值节点（如 `getGlobal`、`arithmetic`）及一个 `returnValue` 节点；缺失、非法或求值失败均跳过该条目。旧条目未提供此字段时保持无条件插入。
+
+## 公共变量
 
 开发人员模式中，系统预留公共变量（`id=0..99`）的 ID、名称和类型不可编辑且不可删除，但默认值可以编辑；运行时当前值在调试器中编辑。公共变量编辑器和调试器均提供三个互斥显示选项：不看系统预留公共变量、不看没有意义的系统公共变量、不隐藏系统公共变量，默认选中第二项。第二项保留 `0、1、2、5`，以及按实际技能数量和 NPC 数量分配的 `20..39`、`40..59`、`60..79` 变量，并隐藏其他未分配的预留变量。
 
@@ -91,7 +93,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 ### 技能与 NPC 数值 ID
 
-`skills.json` 的每个技能和 `npcs.json` 的每个 NPC 必须包含从 `0` 开始、范围为 `0..19` 且不重复的 `numericid`。该 ID 是稳定的数值映射，不随数组排序变化：技能 `numericid=n` 使用全局变量 `20+n`；NPC `numericid=n` 使用全局变量 `40+n` 保存好感度、使用 `60+n` 保存 SAN。全局变量 `3` 是 NPC 不稳定 SAN 阈值，`4` 是 NPC 下线 SAN 阈值；NPC 状态规则文件及其专用编辑器已移除。
+`skills.json` 的每个技能和 `npcs.json` 的每个 NPC 必须包含从 `0` 开始、范围为 `0..19` 且不重复的 `numericid`。该 ID 是稳定的数值映射，不随数组排序变化：技能 `numericid=n` 使用公共变量 `20+n`；NPC `numericid=n` 使用公共变量 `40+n` 保存好感度、使用 `60+n` 保存 SAN。公共变量 `3` 是 NPC 不稳定 SAN 阈值，`4` 是 NPC 下线 SAN 阈值；NPC 状态规则文件及其专用编辑器已移除。
 
 条件可写在对话节点、选项、日程条目、特殊事件、道具和结局中：
 
@@ -172,7 +174,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 - `usable`、`consumable`
 - `useCondition.requires`：物品数量条件
 - `useCondition.sanMin` / `sanMax`：SAN 条件
-- `useCondition.globalVariables`：全局变量条件
+- `useCondition.globalVariables`：公共变量条件
 - `schedules.investigate` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图。使用和调查效果都使用通用的 `statOperation`、`inventoryOperation`、`setGlobal` 等操作节点表达，结局可放在结束节点的 `onShow.ending`，时间推进使用后继的 `consumeTime` 节点；按技能检定时，将 `getGlobal` 的 `value` 连接到 `diceCheck.n`。调查文本使用普通 `text` 节点，图片使用 `showImage`，调查文本可带 `inspection` 元数据以生成调查回调。`segmentBranch` 接收 `value`、`branchCount=n` 和降序的 `boundary0..boundaryN` 共 `n+2` 个数值输入，另有 `flowIn`，输出 `segment0..segmentN-1` 共 `n` 个流程分支；第 i 段满足 `boundary[i+1] < value ≤ boundary[i]`。
 - realtime 操作使用运行时 effect：ChatGTP 可使用 `npcSanChanges`，HIS 使用 `medicalSubmission`，NPC 离线使用 `npcOffline`；这些 effect 与同一实例的时间推进一起执行。
 - `isBook`、`spells`：可学习法术的书籍
@@ -181,7 +183,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 ## 场景物品摆放
 
-`item_placements.json` 将场景摆放状态与背包分开管理。每项可配置位置、关联 `itemId`、初始摆放状态和按日期、phase、location、室友睡眠状态、全局变量决定的可见条件。拾取和放回会分别更新摆放状态与背包。
+`item_placements.json` 将场景摆放状态与背包分开管理。每项可配置位置、关联 `itemId`、初始摆放状态和按日期、phase、location、室友睡眠状态、公共变量决定的可见条件。拾取和放回会分别更新摆放状态与背包。
 
 ## 法术
 
@@ -204,7 +206,7 @@ ChatGTP 查询、HIS 诊断提交和 NPC 离线均使用带 `instanceId` 的 rea
 ## 结局、特殊事件和成就
 
 - `endings.json`：结局定义、属性阈值、最终阶段条件和默认结局。
-- `special_events.json`：按 NPC、phase、日期、好感度、SAN 和全局变量覆盖日程角色。
+- `special_events.json`：按 NPC、phase、日期、好感度、SAN 和公共变量覆盖日程角色。
 - `achievements.json`：监听游戏事件、技能检定、好感度、SAN、阅读文本等条件。
 
 修改稳定 ID 时必须搜索所有日程、对话、特殊事件、关键词、问答、存档索引和开发工具引用。

@@ -8,6 +8,8 @@ import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
+import { validatePrerequisiteBlueprint } from "./ScheduleBlueprint.js";
+import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
 
 const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
@@ -172,6 +174,7 @@ class ScheduleData {
       const sourceEntries = this.slots.get(key) || [];
       const entries = sourceEntries
         .filter((entry) => {
+          if (queueId === "social" && entry.insertPrerequisite && !this.matchesInsertPrerequisite(entry.insertPrerequisite)) return false;
           if (!this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)) return false;
           // special and ending schedules are one-shot: skip if already queued (any status).
           const cat = this.scheduleCatalog.get(entry.scheduleId || entry.id)?.category;
@@ -191,6 +194,26 @@ class ScheduleData {
         }));
       if (queueId === "work") workQueue.append(entries);
       else socialQueue.append(entries);
+    }
+    // The flag is consumed by the next day's 08:00 social slot. Clear it only
+    // after that slot has been evaluated, so it means "spoke yesterday".
+    if (time === 8 * 60) {
+      for (const id of [100, 101]) if (globalVariableManager.definition(id)) globalVariableManager.set(id, false);
+    }
+  }
+
+  matchesInsertPrerequisite(raw) {
+    const validation = validatePrerequisiteBlueprint(raw);
+    if (!validation.ok) {
+      console.warn("Skipped invalid social insert prerequisite:", validation.errors);
+      return false;
+    }
+    try {
+      const returnNode = Object.values(validation.blueprint.nodes).find((node) => node.type === "returnValue");
+      return new ScheduleValueEvaluator(validation.blueprint).evaluateNode(returnNode.id, "value") === true;
+    } catch (error) {
+      console.warn("Skipped social insert prerequisite evaluation:", error);
+      return false;
     }
   }
 

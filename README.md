@@ -5,7 +5,7 @@
 ## 特性
 
 - 原生 HTML/CSS/ES6 modules，无框架、无 bundler、无 `package.json`。
-- JSON 驱动的日程、对话、关键词、物品、医疗、结局、成就和全局变量。
+- JSON 驱动的日程、对话、关键词、物品、医疗、结局、成就和公共变量。
 - 工作/宿舍双模式，独立的工作、社交、ChatGTP 与主要日程队列。
 - 确定性的游戏时钟：普通行动默认推进 20 分钟，跨日和睡眠在明确边界处理。
 - 物品调查、SAN 变体、技能检定、条件摆放和使用效果。
@@ -67,11 +67,11 @@ docs/                      架构、数据 schema 和协作指南
 | `TimeService` | 唯一普通游戏时间推进与阶段结算 owner |
 | `ScheduleData` / `ScheduleQueue` / `ScheduleRunner` | 按时间加载内容，维护 work/social/main 队列并执行统一日程 |
 | `ItemManager` / `ItemPlacementManager` | 背包、物品调查、物品使用和场景物品 |
-| `GlobalVariableManager` | bool、0–256 number/decimal、string 全局变量的条件和效果；ID 0–99 系统预留 |
+| `GlobalVariableManager` | bool、0–256 number/decimal、string 公共变量的条件和效果；ID 0–99 系统预留 |
 | `SpellManager` | 已学习法术和 SAN 消耗的施放 |
 | `DialogueRunner` / `DialogueEffects` | 共享对话树、条件和显示时副作用 |
 | `KeywordManager` / `NotebookApp` | 关键词收集、来源、查询和法术笔记本 |
-| `SaveManager` | v16 文件存档、全局变量、法术、CG 和窗口布局恢复 |
+| `SaveManager` | v16 文件存档、公共变量、法术、CG 和窗口布局恢复 |
 | `DeveloperMode` / `dev-server.js` | 开发调试、数据编辑和本地写盘 |
 
 模块间优先通过 `EventBus` 通信；内容相关逻辑应放入 JSON，而不是硬编码在应用中。
@@ -87,7 +87,7 @@ docs/                      架构、数据 schema 和协作指南
 ## 内容制作入口
 
 - 日程：`work01a.json`/`work01b.json`、`social01a.json`/`social01b.json`，直至第 7 天。
-- 全局变量：`global_variables.json`，顶层为数组，ID 唯一且从 0 开始。
+- 公共变量：`global_variables.json`，顶层为数组，ID 唯一且从 0 开始。
 - 物品：`items.json`，支持调查、SAN 变体、技能检定、使用条件、状态效果和书籍法术。
 - 场景物品：`item_placements.json`。
 - 对话、关键词、ChatGTP、NPC、特殊事件、结局、成就和医疗数据见对应 JSON。

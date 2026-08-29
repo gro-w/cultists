@@ -127,7 +127,7 @@ export class DeveloperMode {
     const icon = (label, iconText, action, kind) => `<div class="dev-app-icon ${kind === "data" ? "dev-app-icon-data" : kind === "runtime" ? "dev-app-icon-runtime" : "dev-app-icon-mature"}" data-dev-dblclick="open-editor" data-editor-action="${action}" data-editor-title="${label}" data-editor-kind="${kind}" tabindex="0"><span class="dev-app-icon-glyph">${iconText}</span><span>${label}</span></div>`;
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
-      ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["全局变量定义", "🔢", "tab-global-variables"],
+      ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["公共变量定义", "🔢", "tab-global-variables"],
       ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
@@ -418,7 +418,7 @@ export class DeveloperMode {
       const reserved = globalVariableManager.isReserved(variable.id);
       return `<tr><td>${variable.id}</td><td>${esc(variable.name)}${reserved ? "（系统预留）" : ""}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"></td></tr>`;
     }).join("");
-    this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和全局变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>全局变量当前值</h3>${this._globalVariableVisibilityControls()}<table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>当前值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用全局变量", "apply-runtime-variables")}</div></section>`);
+    this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和公共变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>公共变量当前值</h3>${this._globalVariableVisibilityControls()}<table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>当前值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用公共变量", "apply-runtime-variables")}</div></section>`);
     this._bindGlobalVariableVisibility("showWorld");
   }
 
@@ -613,7 +613,7 @@ export class DeveloperMode {
       const action = reserved ? "系统预留" : button("删除", `remove-global-variable-${variable.id}`);
       return `<tr data-global-variable-row="${variable.id}" data-global-variable-reserved="${reserved}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"${definitionLock}></td><td><input data-gv-name value="${esc(variable.name)}"${definitionLock}></td><td><select data-gv-type${definitionLock}><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"${valueLock}></td><td>${action}</td></tr>`;
     }).join("");
-    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>系统预留变量的 ID、名称和类型固定不可编辑；默认值可以编辑。当前值仅在调试器中编辑。ID 0-99 为系统预留变量，引擎使用这些固定 ID 读写技能点、好感度、SAN 和金钱。</p>${this._globalVariableVisibilityControls()}<table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
+    this.panel(`<section class="dev-section"><h3>公共变量编辑器</h3><p>系统预留变量的 ID、名称和类型固定不可编辑；默认值可以编辑。当前值仅在调试器中编辑。ID 0-99 为系统预留变量，引擎使用这些固定 ID 读写技能点、好感度、SAN 和金钱。</p>${this._globalVariableVisibilityControls()}<table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无公共变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
     this._bindGlobalVariableVisibility("showGlobalVariables");
   }
 
@@ -729,7 +729,7 @@ export class DeveloperMode {
         this.setStatus("global_variables.json 已保存到内存。");
         return this.showGlobalVariables();
       } catch (err) {
-        this.setStatus(`全局变量保存失败：${err.message}`, true);
+        this.setStatus(`公共变量保存失败：${err.message}`, true);
         return;
       }
     }
@@ -854,9 +854,9 @@ export class DeveloperMode {
           const value = type === "bool" ? input.value === "true" : ["number", "decimal"].includes(type) ? Number(input.value) : input.value;
           globalVariableManager.set(Number(input.dataset.runtimeGv), value);
         });
-        this.setStatus("全局变量运行时值已应用。");
+        this.setStatus("公共变量运行时值已应用。");
       } catch (error) {
-        this.setStatus(`全局变量应用失败：${error.message}`, true);
+        this.setStatus(`公共变量应用失败：${error.message}`, true);
       }
       return this.showWorld();
     }

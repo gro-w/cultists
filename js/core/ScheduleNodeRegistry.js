@@ -28,6 +28,7 @@ const definitions = {
   spellEffect: { label: "法术后续效果", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("spellId", VALUE, "string"), input("target", VALUE, "string"), input("eventId", VALUE, "string"), input("choiceId", VALUE, "string")] },
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
+  returnValue: { label: "返回值", valueInputs: [input("condition", VALUE, "bool")], valueOutputs: [{ name: "value", kind: VALUE, type: "bool" }] },
   getInventory: { label: "背包取值", valueInputs: [input("itemId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
 
   getScheduleStatus: { label: "日程状态", valueInputs: [input("instanceId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },

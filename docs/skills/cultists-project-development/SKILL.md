@@ -30,7 +30,7 @@ metadata:
 ## Non-negotiable behavior
 
 1. 修改前先读取 `AGENTS.md`、相关文档、目标模块、数据 schema、调用点和事件订阅；不要凭文件名猜接口。
-2. 先追踪权威 owner，再修改调用方。时间由 `TimeService`，全局变量由 `GlobalVariableManager`，队列由 `ScheduleQueue`，日程执行由 `ScheduleRunner`，存档由 `SaveManager` 负责。
+2. 先追踪权威 owner，再修改调用方。时间由 `TimeService`，公共变量由 `GlobalVariableManager`，队列由 `ScheduleQueue`，日程执行由 `ScheduleRunner`，存档由 `SaveManager` 负责。
 3. 不要为了让一个调用“能跑”而新增第二套状态、时间、存档或副作用路径。
 4. 内容放数据，通用行为放代码；不要把角色名、对白、关键词、物品效果或剧情条件硬编码到应用 UI。
 5. 修改已有文件使用 `patch`；创建完整的新文件使用 `write_file`。保持 LF 换行，只触碰任务范围。
@@ -54,7 +54,7 @@ metadata:
 项目入口是 `index.html`。主要代码区域包括：
 
 - `js/main.js`：启动、桌面、任务栏、应用 launcher 和宿舍模式协调；
-- `js/core/`：状态、时间、队列、日程、数据加载、存档、全局变量、NPC 和事件基础设施；
+- `js/core/`：状态、时间、队列、日程、数据加载、存档、公共变量、NPC 和事件基础设施；
 - `js/apps/`：Social、HIS、ChatGTP 等应用层；
 - `js/desktop/`：宿舍、开发工具、桌面窗口和调试器；
 - `data/<lang>/`：语言相关的剧情、角色、日程、关键词、物品、结局和规则；
@@ -141,7 +141,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 - `maininit.json`、`mainpub.json`：主流程初始化和公共定义；
 - `keywords.json`、`chatgtp_qa.json`：关键词和问答；
 - `items.json`、`item_placements.json`：物品、物品蓝图和场景摆放；
-- `global_variables.json`：全局变量定义和固定默认值；
+- `global_variables.json`：公共变量定义和固定默认值；
 - `time_rules.json`：时间、睡眠和 SAN 结算参数；
 - `endings.json`、`special_events.json`、`achievements.json`：结局、特殊事件和成就。
 
@@ -149,7 +149,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 
 ### Global variables
 
-全局变量定义顶层是数组，ID 唯一、非负整数；类型是 `bool`、`number`、`decimal` 或 `string`。数值范围和 decimal 精度以 `GlobalVariableManager` 与 schema 为准。
+公共变量定义顶层是数组，ID 唯一、非负整数；类型是 `bool`、`number`、`decimal` 或 `string`。数值范围和 decimal 精度以 `GlobalVariableManager` 与 schema 为准。
 
 系统预留变量包括主角 SAN、金钱、ChatGTP SAN、技能点、NPC 好感度和 NPC SAN 的固定 ID 范围。其初始值唯一来自 `global_variables.json` 的 `default`；不要让 roster、构造函数或启动代码再次覆盖这些默认值。变量效果使用 `value`；只有 number/decimal 才使用 `delta`。
 

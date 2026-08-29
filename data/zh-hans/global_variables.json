@@ -598,5 +598,17 @@
     "name": "预留变量99",
     "type": "number",
     "default": 0
+  },
+  {
+    "id": 100,
+    "name": "昨天是否与阿杰对话",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 101,
+    "name": "昨天是否与阿伟对话",
+    "type": "bool",
+    "default": false
   }
 ]

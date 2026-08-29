@@ -86,6 +86,47 @@ export function validateBlueprint(raw) {
   return { ok: errors.length === 0, errors, blueprint };
 }
 
+const PREREQUISITE_NODE_TYPES = new Set([
+  "arithmetic", "getGlobal", "getInventory", "getScheduleStatus",
+  "getScheduleInstanceCount", "getGameTime", "returnValue",
+]);
+
+export function validatePrerequisiteBlueprint(raw) {
+  const blueprint = normalizeBlueprint(raw);
+  const errors = [];
+  const entries = nodeEntries(blueprint.nodes);
+  const returns = entries.filter(([, node]) => node.type === "returnValue");
+  if (returns.length !== 1) errors.push(`先决条件必须有且仅有一个返回值节点，当前为 ${returns.length} 个`);
+  if (!entries.length) errors.push("先决条件蓝图不能为空");
+  for (const [id, node] of entries) {
+    const definition = getScheduleNodeDefinition(node.type);
+    if (!PREREQUISITE_NODE_TYPES.has(node.type)) errors.push(`先决条件节点 ${id} 类型不允许：${node.type}`);
+    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`先决条件蓝图不能包含流程引脚：${id}`);
+    if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
+  }
+  if (returns[0]) {
+    const returnNode = returns[0][1];
+    const connection = blueprint.connections.find((item) => item.toNodeId === returnNode.id && item.toPort === "condition");
+    const source = connection && blueprint.nodes[connection.fromNodeId];
+    if (connection && (!source || !getScheduleNodePort(source.type, connection.fromPort, "output", source))) errors.push("返回值节点的输入连接无效");
+    if (!connection && !Object.prototype.hasOwnProperty.call(returnNode.inputs || {}, "condition")) errors.push("返回值节点必须接收一个条件值");
+  }
+  blueprint.connections.forEach((connection, index) => {
+    const from = blueprint.nodes[connection.fromNodeId];
+    const to = blueprint.nodes[connection.toNodeId];
+    if (!from || !to) { errors.push(`先决条件连接 ${index} 引用了不存在的节点`); return; }
+    const sourcePort = getScheduleNodePort(from.type, connection.fromPort, "output", from);
+    const targetPort = getScheduleNodePort(to.type, connection.toPort, "input", to);
+    if (!sourcePort || sourcePort.kind !== "value" || !targetPort || targetPort.kind !== "value") errors.push(`先决条件连接 ${index} 必须是数值连接`);
+    else if (targetPort.type !== "any" && sourcePort.type !== "any" && targetPort.type !== sourcePort.type) errors.push(`先决条件连接 ${index} 的数值类型不匹配`);
+  });
+  return { ok: errors.length === 0, errors, blueprint };
+}
+
+export function createEmptyPrerequisiteBlueprint() {
+  return { nodes: { return: { id: "return", type: "returnValue", inputs: { condition: false }, outputs: {}, x: 420, y: 120 } }, connections: [] };
+}
+
 export function migrateDialogueTree(tree) {
   const source = clone(tree) || {};
   const nodes = { start: { id: "start", type: "flowStart", inputs: {}, outputs: {} } };

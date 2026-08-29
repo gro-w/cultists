@@ -134,17 +134,8 @@
 .dev-de-sidebar { width:160px; min-width:140px; flex-shrink:0; border-right:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; }
 .dev-de-sidebar-tools { display:flex; flex-direction:column; gap:3px; padding:4px; border-bottom:1px solid #808080; }
 .dev-de-sidebar-tools .dev-btn { width:100%; }
-.dev-de-phase-tabs { display:flex; border-bottom:1px solid #808080; }
-.dev-de-ptab { flex:1; padding:4px; text-align:center; cursor:pointer; font-size:12px; font-weight:600; background:#c0c0c0; border-bottom:2px solid transparent; }
-.dev-de-ptab.active { background:#fff; border-bottom-color:#000080; color:#000080; }
-.dev-de-ptab:hover { background:#d8e8ff; }
 .dev-de-sb-sec { padding:4px; }
 .dev-de-sb-title { font-size:11px; font-weight:700; color:#000080; padding:4px 2px 2px; display:flex; align-items:center; justify-content:space-between; }
-.dev-de-sb-add { border:1px outset #ccc; background:#c0c0c0; cursor:pointer; padding:0 6px; font-size:13px; line-height:18px; }
-.dev-de-sb-add:hover { background:#a0c0ff; }
-.dev-de-sb-day { padding:4px 8px; font-size:12px; cursor:pointer; border-bottom:1px solid #e0e0e0; }
-.dev-de-sb-day:hover { background:#d8e8ff; }
-.dev-de-sb-day.active { background:#000080; color:#fff; }
 .dev-de-sb-item { padding:4px 8px; font-size:12px; cursor:pointer; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:space-between; }
 .dev-de-sb-item:hover { background:#d8e8ff; }
 .dev-de-sb-item.active { background:#000080; color:#fff; }
@@ -212,9 +203,11 @@
 .dev-schedule-tables { flex:1; min-height:0; overflow:auto; display:grid; grid-template-columns:repeat(2,minmax(320px,1fr)); gap:10px; padding:10px 2px; background:#f0f0f8; }
 .dev-schedule-table { padding:10px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
 .dev-schedule-table h3 { margin:0 0 9px; color:#000080; font-size:14px; }
-.dev-schedule-picker, .dev-schedule-new, .dev-schedule-actions { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
-.dev-schedule-picker select { flex:1; min-width:150px; min-height:25px; border:2px inset #eee; }
-.dev-schedule-new input { flex:1; min-width:150px; min-height:21px; border:2px inset #eee; padding:2px 4px; }
+.dev-schedule-file-list { display:flex; flex-direction:column; gap:2px; max-height:220px; overflow:auto; border:2px inset #eee; background:#fff; padding:2px; }
+.dev-schedule-file { display:block; width:100%; padding:4px 6px; border:0; background:transparent; text-align:left; cursor:pointer; font:inherit; }
+.dev-schedule-file:hover { background:#d8e8ff; }
+.dev-schedule-file.active { background:#000080; color:#fff; }
+.dev-schedule-actions { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
 .dev-schedule-actions { border-top:1px solid #aaa; padding-top:7px; }
 .dev-schedule-actions .dev-btn { flex:1; min-width:125px; }
 @media (max-width:720px) { .dev-schedule-tables { grid-template-columns:1fr; } .dev-schedule-help { display:none; } }

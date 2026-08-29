@@ -40,6 +40,8 @@ export class ScheduleRunner {
     this.onItemInspection = onItemInspection;
     this.appId = appId;
     this.readOnly = readOnly || this.instance.status === "resolved";
+    this._waitUntilUnsubscribers = [];
+    this._waitUntilEvaluating = false;
     this.evaluator = new ScheduleValueEvaluator(this.blueprint, {
       scheduleStatus: (instanceId) => this._scheduleStatus(instanceId),
       scheduleInstanceCount: (scheduleId) => this._scheduleInstanceCount(scheduleId),
@@ -76,6 +78,12 @@ export class ScheduleRunner {
       }
       const result = this._execute(node);
       if (result?.waitChoice) { this._showChoice(node); return; }
+      if (result?.waitUntil) {
+        this.instance.waitingNodeId = node.id;
+        this._subscribeWaitUntil(node.id);
+        this.onCheckpoint(this.instance);
+        return;
+      }
       if (result?.wait) {
         const next = result.next || nextFlow(this.blueprint, node);
         this.instance.executedNodeIds.push(node.id);
@@ -117,6 +125,12 @@ export class ScheduleRunner {
         return { wait: true };
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
+      case "waitUntil": {
+        if (!Boolean(get("condition", false))) return { waitUntil: true };
+        this.instance.waitingNodeId = null;
+        this._clearWaitUntil();
+        return {};
+      }
       case "diceCheck": {
         const n = Math.max(1, Math.min(100, Number(get("n", 0))));
         if (!Number.isFinite(n)) throw new Error("Dice check target must be a number");
@@ -258,12 +272,37 @@ export class ScheduleRunner {
 
   _resolve() {
     if (this.instance.status === "resolved") return;
+    this._clearWaitUntil();
+    this.instance.waitingNodeId = null;
     this.instance.status = "resolved";
     this.instance.currentNodeId = null;
     this.onCheckpoint(this.instance);
     this.onComplete(this.instance);
     eventBus.emit("schedule:resolved", { appId: this.appId, instance: this.instance });
     eventBus.emit("schedule:completed", { appId: this.appId, instance: this.instance });
+  }
+
+  _subscribeWaitUntil(nodeId) {
+    if (this._waitUntilUnsubscribers.length) return;
+    const events = [
+      "gamestate:changed", "global-variable:changed", "global-variables:changed",
+      "items:changed", "npcState:changed", "favorability:changed", "time:changed",
+      "daynight:changed", "schedule:changed", "schedule:appended", "spells:changed",
+    ];
+    const retry = () => {
+      if (this._waitUntilEvaluating || this.instance.status === "resolved") return;
+      this._waitUntilEvaluating = true;
+      try {
+        if (this.blueprint.nodes?.[nodeId]) this._run(nodeId);
+      } finally {
+        this._waitUntilEvaluating = false;
+      }
+    };
+    this._waitUntilUnsubscribers = events.map((event) => eventBus.on(event, retry));
+  }
+
+  _clearWaitUntil() {
+    this._waitUntilUnsubscribers.splice(0).forEach((unsubscribe) => unsubscribe());
   }
 
   _scheduleStatus(instanceId) {

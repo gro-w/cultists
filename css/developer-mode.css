@@ -177,8 +177,7 @@
 .dev-de-node-options { padding:2px 6px; border-top:1px solid #ddd; background:#fafafa; }
 .dev-de-node-opt { position:relative; display:flex; align-items:center; min-height:18px; padding-right:13px; color:#555; font-size:10px; white-space:nowrap; }
 .dev-de-node-opt > span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; }
-.dev-de-option-pin { position:absolute; right:-9px; display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border:1px solid #000080; border-radius:50%; background:#d8d8ff; color:#000080; font-size:9px; font-weight:bold; cursor:crosshair; user-select:none; z-index:2; }
-.dev-de-option-pin:hover { background:#ffcc66; border-color:#cc6600; color:#000; }
+
 .dev-de-node-ft { padding:2px 6px 4px; display:flex; gap:4px; flex-wrap:wrap; }
 .dev-de-nbadge { background:#e8e8ff; border:1px solid #9999cc; border-radius:3px; font-size:10px; padding:1px 4px; color:#333; }
 .dev-de-port-layer { position:absolute; inset:0; pointer-events:none; }
@@ -196,7 +195,6 @@
 .dev-de-input-mode, .dev-de-input-source, .dev-de-input-value { min-width:0; flex:1; min-height:21px; border:2px inset #eee; font-size:11px; }
 .dev-de-input-ref { color:#075; font-size:10px; }
 .dev-de-port-summary { margin-top:5px; color:#555; font-size:11px; }
-.dev-de-connection-editor { border-top:1px solid #808080; }
 .dev-de-output-row { display:flex; align-items:center; gap:4px; margin:3px 0; font-size:11px; }
 .dev-de-output-row label { width:65px; overflow:hidden; text-overflow:ellipsis; color:#a00000; }
 .dev-de-output-row select { flex:1; min-width:0; min-height:21px; border:2px inset #eee; font-size:11px; }
@@ -228,14 +226,7 @@
 .dev-de-context-settings strong { display:block; margin-bottom:8px; color:#000080; }
 .dev-de-context-settings label { display:flex; flex-direction:column; gap:3px; margin:6px 0; font-size:11px; }
 .dev-de-context-settings input { min-height:23px; border:2px inset #eee; padding:2px 4px; box-sizing:border-box; }
-.dev-de-ed-sec { padding:4px 6px; }
 .dev-de-ed-label { font-size:11px; font-weight:700; color:#333; margin-bottom:3px; }
-.dev-de-spk-btn { margin:1px; padding:2px 7px; font-size:11px; min-height:22px; }
-.dev-de-spk-btn.active { outline:2px solid currentColor; }
-.dev-de-wnum { width:52px; min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; text-align:center; }
-.dev-de-opt-row { margin-bottom:6px; padding:4px 6px; background:#e8e8e8; border:1px solid #ccc; }
-.dev-de-opt-label { flex:1; min-height:23px; border:2px inset #eee; padding:2px 4px; font-size:12px; min-width:0; }
-.dev-de-opt-next { min-height:23px; border:2px inset #eee; padding:2px; font-size:11px; min-width:80px; }
 
 /* ── BGM editor (DevBgmEditorTab) ── */
 .dev-bgm-root { height:100%; overflow:auto; padding:0; }
@@ -268,9 +259,6 @@
 .dev-bgm-wnum { width:52px; min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; text-align:center; }
 .dev-bgm-fb-row { margin-top:6px; font-size:12px; }
 
-/* onShow BGM row inside dialogue node editor */
-.dev-de-onshow-bgm { display:flex; align-items:center; gap:4px; margin-top:3px; font-size:11px; }
-.dev-de-onshow-bgm select { min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; }
-.dev-de-onshow-bgm-indicator { font-size:10px; color:#006600; margin-left:2px; }
+
 /* DEV-TOOLS:END */
 

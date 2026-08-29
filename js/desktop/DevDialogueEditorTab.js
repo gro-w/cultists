@@ -3,10 +3,10 @@ import { dataLoader } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { globalVariableManager } from "../core/GlobalVariableManager.js";
 import { itemManager } from "../core/ItemManager.js";
+import { skillManager } from "../core/SkillManager.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition, getScheduleNodePort } from "../core/ScheduleNodeRegistry.js";
 import { validateBlueprint } from "../core/ScheduleBlueprint.js";
-import { bgmManager } from "../core/BgmManager.js";
 import { windowManager } from "../core/WindowManager.js";
 
 /**
@@ -303,93 +303,15 @@ export class DevDialogueEditorTab {
     <div id="de-editor-body" style="flex:1;overflow-y:auto;padding:6px">
       <div id="de-editor-empty" style="padding:10px;color:#555;font-size:12px"><div id="de-context-settings"></div><div style="margin-top:12px;text-align:center">选择节点后在此编辑节点；当前日程属性可直接在上方编辑。</div></div>
       <div id="de-editor-form" style="display:none">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">节点种类</div>
-          <select id="de-ed-type" style="width:100%;min-height:23px;border:2px inset #eee" onchange="_de._saveNodeType(this.value)">
-            ${SCHEDULE_NODE_TYPES.map(type=>`<option value="${type}">${this._e(_DE_NODE_LABELS[type])} (${type})</option>`).join('')}
-          </select>
-          <div class="dev-de-ed-label" style="margin-top:4px">节点输入</div>
+        <div>
+          <div class="dev-de-ed-label" id="de-ed-type-label">节点</div>
+          <div class="dev-de-ed-label" style="margin-top:4px">数值输入</div>
           <div id="de-ed-inputs"></div>
-          <div id="de-ed-outputs" class="dev-de-port-summary"></div>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">发言角色</div>
-          <div style="display:flex;gap:3px;flex-wrap:wrap" id="de-spk-btns">
-            ${_DE_SPEAKERS.map(s=>`<button type="button" class="win95-btn dev-btn dev-de-spk-btn" data-spk="${s.id}" onclick="_de._setSpeaker('${s.id}')">${s.label}</button>`).join('')}
-          </div>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">对话文本</div>
-          <textarea class="dev-textarea" id="de-ed-text" style="width:100%;height:80px;resize:vertical" placeholder="输入对话内容…" oninput="_de._saveNodeText()"></textarea>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">亮起关键词 ID（逗号分隔）</div>
-          <input style="width:100%;min-height:23px;border:2px inset #eee;padding:2px 4px" id="de-ed-keywords" placeholder="keyword_id1, keyword_id2" oninput="_de._saveNodeKeywords()">
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">选项分支</div>
-          <div id="de-opt-list"></div>
-          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addOption()">＋ 添加选项</button>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">直接跳转（无选项时）</div>
-          <div style="display:flex;gap:4px">
-            <select id="de-ed-next" style="flex:1;min-height:23px;border:2px inset #eee;padding:2px" onchange="_de._saveNodeNext()">
-              <option value="">(结束)</option>
-            </select>
-            <button type="button" class="win95-btn dev-btn" onclick="_de._addNodeAndLink()">＋新节点</button>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">onShow 效果</div>
-          <div id="de-onshow-effects">
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>好感：阿杰</span><input class="dev-de-wnum" id="de-os-aje" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>阿伟</span><input class="dev-de-wnum" id="de-os-awei" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>彬彬</span><input class="dev-de-wnum" id="de-os-binbin" type="number" placeholder="0" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>理智值</span><input class="dev-de-wnum" id="de-os-sanity" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>怀疑度</span><input class="dev-de-wnum" id="de-os-suspicion" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span title="sanity=0解锁">清晰值</span><input class="dev-de-wnum" id="de-os-clarity" type="number" placeholder="0" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>给予物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-grant" placeholder="item_id" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>移除物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-remove" placeholder="item_id" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-              <span>触发结局</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-ending" placeholder="ending_id" oninput="_de._saveOnShow()">
-            </div>
-            <div class="dev-de-onshow-bgm">
-              <span>🎵 BGM 动作</span>
-              <select id="de-os-bgm-action" onchange="_de._saveOnShow()">
-                <option value="">(不改变)</option>
-                <option value="play">play — 播放指定 BGM</option>
-                <option value="stop">stop — 停止（静音）</option>
-                <option value="restore">restore — 恢复上层 BGM</option>
-              </select>
-              <select id="de-os-bgm-id" onchange="_de._saveOnShow()">
-                <option value="">(选择曲目)</option>
-              </select>
-              <span class="dev-de-onshow-bgm-indicator" id="de-os-bgm-warn" style="display:none">⚠️ BGM ID 无效</span>
-            </div>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">进入条件</div>
-          <div id="de-entry-conds"></div>
-          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addEntryCond()">＋ 添加条件</button>
-        <div class="dev-de-ed-sec dev-de-connection-editor">
-          <div class="dev-de-ed-label">流程输出（选择下家）</div>
+          <div class="dev-de-ed-label" style="margin-top:8px">流程输出（选择下家）</div>
           <div id="de-flow-outputs"></div>
-          <div class="dev-de-ed-help">流程输出只能连接到流程输入；每个输出最多一个下家。</div>
         </div>
+
+
       </div>
     </div>
   </div>
@@ -1041,77 +963,15 @@ export class DevDialogueEditorTab {
 
   // ── node editor ──────────────────────────────────────────────────────────
   _loadNodeEditor() {
-    const data = this._ctxData(); if (!data||!this.selectedNodeId) return;
+    const data = this._ctxData(); if (!data || !this.selectedNodeId) return;
     const node = data.nodes[this.selectedNodeId]; if (!node) return;
-    const ef=this._el('de-editor-empty'), ff=this._el('de-editor-form');
-    if (ef) ef.style.display='none'; if (ff) ff.style.display='';
-    const typeEl=this._el('de-ed-type'); if(typeEl) typeEl.value=node.type||'text';
+    const empty = this._el('de-editor-empty'), form = this._el('de-editor-form');
+    if (empty) empty.style.display = 'none';
+    if (form) form.style.display = '';
+    const typeLabel = this._el('de-ed-type-label');
+    if (typeLabel) typeLabel.textContent = `${_DE_NODE_LABELS[node.type] || node.type || '节点'}（${node.type || 'unknown'}）`;
     this._renderNodeInputs(node, data);
-    // speaker buttons
-    this._el('de-spk-btns')?.querySelectorAll('.dev-de-spk-btn').forEach(b=>{
-      b.classList.toggle('active', b.dataset.spk===node.speaker);
-      b.style.borderColor = b.dataset.spk===node.speaker ? this._spk(node.speaker).color : '';
-    });
-    const txt=this._el('de-ed-text'); if(txt) txt.value=node.text||'';
-    const kw=this._el('de-ed-keywords'); if(kw) kw.value=(node.keywordIds||[]).join(', ');
-    // next dropdown
-    this._rebuildNextDropdown('de-ed-next', node.next, data);
-    // options
-    this._renderOptList(node, data);
-    // onShow
-    const os=node.onShow||{};
-    const set=(id,v)=>{ const e=this._el(id); if(e) e.value=v||''; };
-    set('de-os-aje',     os.aje_favor);
-    set('de-os-awei',    os.awei_favor);
-    set('de-os-binbin',  os.binbin_favor);
-    set('de-os-sanity',  os.sanity);
-    set('de-os-suspicion',os.suspicion);
-    set('de-os-clarity', os.clarity);
-    set('de-os-grant',   (os.grantItems||[]).join(', '));
-    set('de-os-remove',  (os.removeItems||[]).join(', '));
-    set('de-os-ending',  os.ending);
-    // BGM selects: populate track options, then restore saved values
-    const bgmActionSel = this._el('de-os-bgm-action');
-    const bgmIdSel     = this._el('de-os-bgm-id');
-    const bgmWarn      = this._el('de-os-bgm-warn');
-    if (bgmIdSel) {
-      bgmIdSel.innerHTML = '<option value="">(选择曲目)</option>' +
-        bgmManager.allTracks().map(t =>
-          `<option value="${this._e(t.id)}">${this._e(t.name || t.id)}</option>`
-        ).join('');
-    }
-    const bgm = os.bgm || {};
-    if (bgmActionSel) bgmActionSel.value = bgm.action || '';
-    if (bgmIdSel)     bgmIdSel.value     = bgm.bgmId  || '';
-    // show id selector only when action === 'play'
-    if (bgmIdSel)  bgmIdSel.style.display  = (bgm.action === 'play') ? '' : 'none';
-    // warn when bgmId is set but the track no longer exists
-    const idInvalid = bgm.action === 'play' && bgm.bgmId && !bgmManager.tracks.has(bgm.bgmId);
-    if (bgmWarn) bgmWarn.style.display = idInvalid ? '' : 'none';
-    // Show/hide bgmId select live when action changes
-    if (bgmActionSel) bgmActionSel.onchange = () => {
-      if (bgmIdSel) bgmIdSel.style.display = (bgmActionSel.value === 'play') ? '' : 'none';
-      _de._saveOnShow();
-    };
-    // entry conditions
-    this._renderEntryConds(node);
-    const flowOutputs = this._el('de-flow-outputs');
-    if (flowOutputs) this._renderFlowOutputs(node, data);
-  }
-
-  _saveNodeType(type) {
-    const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
-    if(!node || !getScheduleNodeDefinition(type)) return;
-    node.type=type;
-    ['speaker','text','keywordIds','options','branches','onShow','entryConds','condition','globalVariableCondition','next'].forEach(field => delete node[field]);
-    node.inputs={...(node.inputs||{})};
-    if(type==='flowStart') node.inputs={};
-    data.connections=(data.connections||[]).filter(connection => {
-      const from=getScheduleNodePort(data.nodes[connection.fromNodeId]?.type,connection.fromPort,'output',data.nodes[connection.fromNodeId]);
-      const to=getScheduleNodePort(data.nodes[connection.toNodeId]?.type,connection.toPort,'input',data.nodes[connection.toNodeId]);
-      return from && to && from.kind===to.kind && (from.kind==='flow' || from.type==='any' || to.type==='any' || from.type===to.type);
-    });
-    this._saveLS(); this._renderCanvas(); this._loadNodeEditor();
+    this._renderFlowOutputs(node, data);
   }
 
   _valueOutputRefs(data) {
@@ -1126,7 +986,8 @@ export class DevDialogueEditorTab {
         ['and','与'], ['or','或'], ['xor','异或'],
         ['>','大于'], ['<','小于'], ['=','等于'], ['not','非'],
       ],
-      statId: _DE_NUMVARS.map(id => [id, id]),
+      condition: [['false', '否'], ['true', '是']],
+      statId: [..._DE_NUMVARS.map(id => [id, id]), ...skillManager.all().map(item => [item.id, `${item.label} (${item.id})`])],
       queue: [['work','Work'],['social','Social']],
       variableId: (globalVariableManager.definitions || []).map(item => [String(item.id), `${item.name} (${item.id})`]),
       itemId: (itemManager.defs ? Array.from(itemManager.defs.values()) : this.gameItems).map(item => [item.id, item.name || item.id]),
@@ -1139,7 +1000,7 @@ export class DevDialogueEditorTab {
   _constantControl(port, value) {
     const choices = this._constantChoices(port);
     if (choices) return `<select class="dev-de-input-value" onchange="_de._saveInputValue('${this._e(port.name)}',this.value)"><option value="">选择常量</option>${choices.map(([id,label]) => `<option value="${this._e(id)}"${String(value)===String(id)?' selected':''}>${this._e(label)}</option>`).join('')}</select>`;
-    if (port.name === 'text' || port.name === 'condition') return `<textarea class="dev-de-input-value dev-de-input-text" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">${this._e(value ?? '')}</textarea>`;
+    if (port.name === 'text') return `<textarea class="dev-de-input-value dev-de-input-text" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">${this._e(value ?? '')}</textarea>`;
     return `<input class="dev-de-input-value" type="${port.type==='number'?'number':'text'}" value="${this._e(value ?? '')}" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">`;
   }
 
@@ -1182,7 +1043,7 @@ export class DevDialogueEditorTab {
       const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
       for (let index = 1; index <= count; index += 1) valueInputs.push({ name: `boundary${index}`, kind: 'value', type: 'number' });
     }
-    const html=[...(def.flowInputs || []).map(port => `<div class="dev-de-input-row"><span>${this._e(port.name)}</span><em>流程输入引脚</em></div>`), ...valueInputs.map(port => {
+    const html=valueInputs.map(port => {
       const connection=connections.find(item=>item.toNodeId===node.id && item.toPort===port.name);
       const modeKey=`${node.id}:${port.name}`;
       const pinMode=this._inputModes.get(modeKey) ?? Boolean(connection);
@@ -1193,14 +1054,9 @@ export class DevDialogueEditorTab {
         const source=getScheduleNodePort(data.nodes[ref.nodeId]?.type,ref.port,'output',data.nodes[ref.nodeId]);
         return source && (port.type==='any' || source.type==='any' || source.type===port.type) ? `<option value="${this._e(`${ref.nodeId}::${ref.port}`)}" ${connection && connection.fromNodeId===ref.nodeId && connection.fromPort===ref.port ? 'selected' : ''}>${this._e(ref.label)}</option>` : '';
       }).join('');
-      return `<div class="dev-de-input-row"><label>${this._e(port.name)}</label><select class="dev-de-input-mode" onchange="_de._setInputMode('${this._e(port.name)}',this.value)"><option value="constant" ${pinMode?'':'selected'}>输入常量</option><option value="pin" ${pinMode?'selected':''}>来自上游数值引脚</option></select>${pinMode ? `<select class="dev-de-input-source" onchange="_de._setInputSource('${this._e(port.name)}',this.value)"><option value="">选择上游输出</option>${refOptions}</select>` : this._constantControl(port,value)}</div>`;
-    })].join('');
+      return `<div class="dev-de-input-row"><label>${this._e(port.name)}</label><select class="dev-de-input-mode" onchange="_de._setInputMode('${this._e(port.name)}',this.value)"><option value="constant" ${pinMode?'':'selected'}>固定值</option><option value="pin" ${pinMode?'selected':''}>来自上游数值引脚</option></select>${pinMode ? `<select class="dev-de-input-source" onchange="_de._setInputSource('${this._e(port.name)}',this.value)"><option value="">选择上游输出</option>${refOptions}</select>` : this._constantControl(port,value)}</div>`;
+    }).join('');
     el.innerHTML=html || '<div class="dev-de-no-ports">此节点没有输入</div>';
-    const outputEl=this._el('de-ed-outputs');
-    if(outputEl) {
-      const outputs=this._portsFor(node,'output');
-      outputEl.innerHTML=outputs.length ? `输出引脚：${outputs.map(port=>`<span class="dev-de-port-chip ${port.kind}">${this._e(port.name)}</span>`).join('')}` : '无输出引脚';
-    }
     this._renderFlowOutputs(node,data);
   }
 
@@ -1208,7 +1064,8 @@ export class DevDialogueEditorTab {
     const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
     const port=node && getScheduleNodePort(node.type,name,'input',node);
     if(!node || !port || port.kind!=='value') return;
-    node.inputs={...(node.inputs||{}),[name]:port.type==='number' && value!=='' ? Number(value) : value};
+    const parsedValue = port.type === 'number' && value !== '' ? Number(value) : port.type === 'bool' ? value === 'true' : value;
+    node.inputs={...(node.inputs||{}),[name]:parsedValue};
     if (node.type === 'choice' && name === 'branchCount') this._syncChoiceOptions(node);
     if (node.type === 'segmentBranch' && name === 'branchCount') this._syncSegmentPorts(node);
     if (node.type === 'choice') {
@@ -1268,151 +1125,6 @@ export class DevDialogueEditorTab {
     data.connections=(data.connections||[]).filter(item=>!(item.toNodeId===node.id && item.toPort===name));
     data.connections.push({fromNodeId,fromPort,toNodeId:node.id,toPort:name});
     this._saveLS(); this._renderNodeInputs(node,data); this._renderCanvas();
-  }
-
-  _rebuildNextDropdown(dropId, currentVal, data) {
-    const sel=this._el(dropId); if(!sel) return;
-    const nodeIds=Object.keys(data.nodes||{});
-    sel.innerHTML=`<option value="">(结束)</option>`+nodeIds.map(id=>
-      `<option value="${this._e(id)}"${id===currentVal?' selected':''}>${this._e(id)}</option>`
-    ).join('');
-  }
-
-  _setSpeaker(spkId) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.speaker=spkId; this._saveLS(); this._loadNodeEditor(); this._renderCanvas();
-  }
-
-  _saveNodeText() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.text=this._el('de-ed-text')?.value||''; this._saveLS();
-    // update canvas card text without full re-render
-    const body=document.querySelector(`#de-node-${this.selectedNodeId} .dev-de-node-body`);
-    if(body) body.textContent=(node.text||'').slice(0,60);
-  }
-
-  _saveNodeKeywords() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    const raw=this._el('de-ed-keywords')?.value||'';
-    node.keywordIds=raw.split(',').map(s=>s.trim()).filter(Boolean); this._saveLS();
-  }
-
-  _saveNodeNext() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.next=this._el('de-ed-next')?.value||null; this._saveLS(); this._drawArrows(data);
-  }
-
-  _saveOnShow() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    const num=id=>{ const v=parseFloat(this._el(id)?.value); return isNaN(v)?null:v; };
-    const str=id=>this._el(id)?.value.trim()||null;
-    const os={};
-    const naje=num('de-os-aje');   if(naje)  os.aje_favor=naje;
-    const nawei=num('de-os-awei'); if(nawei) os.awei_favor=nawei;
-    const nbin=num('de-os-binbin');if(nbin)  os.binbin_favor=nbin;
-    const nsan=num('de-os-sanity');if(nsan)  os.sanity=nsan;
-    const nsus=num('de-os-suspicion');if(nsus) os.suspicion=nsus;
-    const ncl=num('de-os-clarity');if(ncl)   os.clarity=ncl;
-    const grant=str('de-os-grant'); if(grant) os.grantItems=grant.split(',').map(s=>s.trim()).filter(Boolean);
-    const rem=str('de-os-remove');  if(rem)   os.removeItems=rem.split(',').map(s=>s.trim()).filter(Boolean);
-    const end=str('de-os-ending');  if(end)   os.ending=end;
-    // BGM
-    const bgmAction=str('de-os-bgm-action');
-    const bgmId=str('de-os-bgm-id');
-    if(bgmAction) { os.bgm={ action:bgmAction }; if(bgmAction==='play' && bgmId) os.bgm.bgmId=bgmId; }
-    node.onShow=os; this._saveLS();
-  }
-
-  // ── options ───────────────────────────────────────────────────────────────
-  _renderOptList(node, data) {
-    const el=this._el('de-opt-list'); if(!el) return;
-    if (!node.options?.length) { el.innerHTML='<div style="color:#aaa;font-size:12px;padding:4px 0">无分支选项</div>'; return; }
-    el.innerHTML=node.options.map((opt,i)=>{
-      const nextOpts=Object.keys(data.nodes||{}).map(id=>`<option value="${this._e(id)}"${id===opt.next?' selected':''}>${this._e(id)}</option>`).join('');
-      const eff=opt.effects||{};
-      return `<div class="dev-de-opt-row">
-        <div style="display:flex;gap:4px;align-items:center">
-          <span style="font-size:11px;color:#666;min-width:12px">${i+1}.</span>
-          <input class="dev-de-opt-label" placeholder="选项文本…" value="${this._e(opt.label||'')}" oninput="_de._saveOptLabel(${i},this.value)">
-          <select class="dev-de-opt-next" onchange="_de._saveOptNext(${i},this.value)"><option value="">(结束)</option>${nextOpts}</select>
-          <button type="button" class="win95-btn dev-btn" onclick="_de._startConnect(null,${i})" title="连线">🔗</button>
-          <button type="button" class="win95-btn dev-btn" onclick="_de._deleteOption(${i})">✕</button>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;padding:3px 0 0 16px;font-size:11px">
-          <label>好感阿杰<input class="dev-de-wnum" type="number" value="${eff.aje_favor||''}" placeholder="0" oninput="_de._saveOptEff(${i},'aje_favor',this.value)"></label>
-          <label>阿伟<input class="dev-de-wnum" type="number" value="${eff.awei_favor||''}" placeholder="0" oninput="_de._saveOptEff(${i},'awei_favor',this.value)"></label>
-          <label>彬彬<input class="dev-de-wnum" type="number" value="${eff.binbin_favor||''}" placeholder="0" oninput="_de._saveOptEff(${i},'binbin_favor',this.value)"></label>
-          <label>理智<input class="dev-de-wnum" type="number" value="${eff.sanity||''}" placeholder="0" oninput="_de._saveOptEff(${i},'sanity',this.value)"></label>
-          <label>怀疑<input class="dev-de-wnum" type="number" value="${eff.suspicion||''}" placeholder="0" oninput="_de._saveOptEff(${i},'suspicion',this.value)"></label>
-          <label>清晰<input class="dev-de-wnum" type="number" value="${eff.clarity||''}" placeholder="0" oninput="_de._saveOptEff(${i},'clarity',this.value)"></label>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  _saveOptLabel(i, val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.options[i]) return;
-    node.options[i].label=val; this._saveLS();
-  }
-  _saveOptNext(i, val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.options[i]) return;
-    node.options[i].next=val||null; this._saveLS(); this._drawArrows(data);
-  }
-  _saveOptEff(i, field, val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.options[i]) return;
-    if (!node.options[i].effects) node.options[i].effects={};
-    const n=parseFloat(val); node.options[i].effects[field]=isNaN(n)?val:n; this._saveLS();
-  }
-  _addOption() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    if (!node.options) node.options=[];
-    node.options.push(this._emptyOpt()); this._saveLS(); this._renderOptList(node, data);
-  }
-  _deleteOption(i) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.options.splice(i,1); this._saveLS(); this._renderOptList(node,data); this._drawArrows(data);
-  }
-
-  // ── entry conditions ──────────────────────────────────────────────────────
-  _renderEntryConds(node) {
-    const el=this._el('de-entry-conds'); if(!el) return;
-    const vars=this._allVars();
-    el.innerHTML=(node.entryConds||[]).map((c,i)=>{
-      const varOpts=vars.map(v=>`<option value="${this._e(v.id)}"${v.id===c.var?' selected':''}>${this._e(v.label)}</option>`).join('');
-      const opOpts=_DE_COND_OPS.map(op=>`<option${op===c.op?' selected':''}>${op}</option>`).join('');
-      return `<div style="display:flex;gap:3px;margin-bottom:3px;font-size:11px">
-        <select style="flex:2;min-height:21px;border:1px inset #eee" onchange="_de._saveCond(${i},'var',this.value)">${varOpts}</select>
-        <select style="flex:0 0 56px;min-height:21px;border:1px inset #eee" onchange="_de._saveCond(${i},'op',this.value)">${opOpts}</select>
-        <input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px" value="${this._e(c.value||'')}" oninput="_de._saveCond(${i},'value',this.value)">
-        <button type="button" class="win95-btn dev-btn" onclick="_de._deleteCond(${i})">✕</button>
-      </div>`;
-    }).join('')||'<div style="color:#aaa;font-size:12px">无条件（始终显示）</div>';
-  }
-  _addEntryCond() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    if (!node.entryConds) node.entryConds=[];
-    node.entryConds.push({var:'sanity',op:'>=',value:'0'}); this._saveLS(); this._renderEntryConds(node);
-  }
-  _saveCond(i,field,val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.entryConds[i]) return;
-    node.entryConds[i][field]=val; this._saveLS();
-  }
-  _deleteCond(i) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.entryConds.splice(i,1); this._saveLS(); this._renderEntryConds(node);
   }
 
   // ── connect mode ─────────────────────────────────────────────────────────

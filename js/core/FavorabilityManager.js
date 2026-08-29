@@ -25,8 +25,8 @@ const FAV_MIN = 0;
  * (AchievementManager) and any UI subscriptions listen to that event.
  *
  * Wiring into dialogue:
- *   dialogue node's `onShow.favorabilityChange: { npcId: "ajie", delta: 5 }`
- *   is applied by `DialogueEffects.applyDialogueOnShow()`.
+ *   schedule blueprint's `favorabilityOperation` node with `npcId` and `delta`
+ *   is applied by the `ScheduleRunner`.
  *
  * Save / restore:
  *   `snapshot()` / `restore()` are called by SaveManager so favourability

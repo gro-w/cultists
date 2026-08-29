@@ -174,7 +174,7 @@
 
 ## 3. 节点类型总览
 
-当前注册了 23 种节点：
+当前注册了 24 种节点：
 
 | 类型 | 类别 | 作用 |
 | --- | --- | --- |
@@ -193,6 +193,7 @@
 | `segmentBranch` | 流程 | 按数值区间选择分支 |
 | `inventoryOperation` | 流程/状态 | 增减背包物品 |
 | `statOperation` | 流程/状态 | 操作主角或其他可写数值 |
+| `favorabilityOperation` | 流程/状态 | 操作指定 NPC 的好感度 |
 | `spellOperation` | 流程/状态 | 调整已学习法术状态 |
 | `arithmetic` | 数值 | 执行运算并输出值 |
 | `getGlobal` | 数值 | 读取全局变量 |
@@ -252,9 +253,9 @@
 - 动态值输入：`label0` … `labelN-1`（字符串）；
 - 兼容字段：`options` 或 `branches` 数组；
 - 作用：显示玩家选项并进入所选分支；
-- 语义：选项可有 `label`、`next`、`condition`、`effects`。条件不满足的选项
-  不显示，但仍保留其原始分支索引；选中后应用一次选项效果，再解析对应的
-  `optionN` 流程连接。
+- 语义：选项可有 `label`、`next`、`condition`。条件不满足的选项不显示，但仍
+  保留其原始分支索引；选中后解析对应的 `optionN` 流程连接。分支副作用必须
+  连接专用操作节点（例如 `favorabilityOperation`），不得使用旧的 `effects` 字段。
 
 ```json
 {
@@ -262,11 +263,14 @@
   "type": "choice",
   "inputs": { "branchCount": 2, "label0": "接受", "label1": "拒绝" },
   "options": [
-    { "id": "yes", "label": "接受", "effects": { "favorabilityChange": 1 } },
+    { "id": "yes", "label": "接受", "next": "favorability_up" },
     { "id": "no", "label": "拒绝" }
   ]
 }
 ```
+
+需要改变好感度时，`favorability_up` 应是一个 `favorabilityOperation` 节点，
+通过流程连接位于选项分支之后。
 
 ### 4.5 `branch`：逻辑分支
 
@@ -395,7 +399,7 @@ segment2: 0 < value <= 30
 - 作用：通过统一数值访问层修改一个可写数值；
 - 常见 `statId`：`energy`、`mental`、`physical`、`satiety`、
   `recoverableMentalLoss`；
-- 其他支持形式：`npcSan:<npcId>`、`favorability:<npcId>`；
+- NPC 好感度应使用专用的 `favorabilityOperation` 节点，不要通过 `statId` 拼接访问；
 - 只读/读取专用：`timeService:phaseMinutes` 不能被修改；
 - 语义：调用 `modifyStatValue()`，非法数值或未知 ID 会抛出错误。
 
@@ -410,7 +414,26 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 4.18 `spellOperation`：调整法术状态
+### 4.15 `favorabilityOperation`：操作好感度
+
+- 输入：`flowIn`（流程）；
+- 输出：`flowOut`（流程）；
+- 值输入：`npcId`（字符串）、`delta`（数字）；
+- 作用：通过 `FavorabilityManager` 修改指定 NPC 的好感度；
+- 语义：好感度变化会按管理器规则限制范围，并发布 `favorability:changed` 事件。
+
+例如，选择分支的 `option0` 可以连接到此节点，再由此节点连接后续文本：
+
+```json
+{
+  "id": "favorabilityUp",
+  "type": "favorabilityOperation",
+  "inputs": { "npcId": "ajie", "delta": 5 },
+  "outputs": {}
+}
+```
+
+### 4.16 `spellOperation`：调整法术状态
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；

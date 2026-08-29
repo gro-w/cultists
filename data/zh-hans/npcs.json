@@ -3,23 +3,17 @@
     {
       "id": "ajie",
       "name": "阿杰",
-      "avatar": "🐶",
-      "initialFavorability": 60,
-      "initialSan": 80
+      "avatar": "🐶"
     },
     {
       "id": "awei",
       "name": "阿伟",
-      "avatar": "🐱",
-      "initialFavorability": 50,
-      "initialSan": 80
+      "avatar": "🐱"
     },
     {
       "id": "binbin",
       "name": "彬彬",
-      "avatar": "🐼",
-      "initialFavorability": 40,
-      "initialSan": 80
+      "avatar": "🐼"
     }
   ]
 }

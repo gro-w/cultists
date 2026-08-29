@@ -1,5 +1,4 @@
 {
-  "defaultSan": 80,
   "distressedThreshold": 50,
   "offlineThreshold": 20,
   "offlineConsequence": {

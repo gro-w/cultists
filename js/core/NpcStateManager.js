@@ -25,7 +25,7 @@ function clamp(value) {
 class NpcStateManager {
   constructor() {
     this.config = null;
-    /** @type {Map<string, number>} actorId -> SAN (0-100) */
+    /** @type {Map<string, number>} actorId -> SAN (0-256) */
     this.san = new Map();
     /** @type {Set<string>} actorIds that have gone offline */
     this.offlineActors = new Set();
@@ -52,25 +52,16 @@ class NpcStateManager {
       ]).then(([, data, npcDoc]) => {
         this.config = data;
         this.npcs = npcDoc.npcs || [];
-        globalVariableManager.set(5, this._defaultSan(), { emit: false });
-        this.san.set("chatgtp", this._defaultSan());
+        this.san.set("chatgtp", globalVariableManager.get(5));
         this.npcs.slice(0, 20).forEach((npc, index) => {
           this.indexById.set(npc.id, index);
-          if (!this.san.has(npc.id)) {
-            const initialSan = Number(npc.initialSan);
-            const value = Math.max(0, Math.min(256, Number.isFinite(initialSan) ? initialSan : this._defaultSan()));
-            this.san.set(npc.id, value);
-            globalVariableManager.set(60 + index, value, { emit: false });
-          }
+          this.san.set(npc.id, globalVariableManager.get(60 + index));
         });
       });
     }
     return this._loadPromise;
   }
 
-  _defaultSan() {
-    return (this.config && Number(this.config.defaultSan)) || 80;
-  }
 
   _distressedThreshold() {
     return (this.config && Number(this.config.distressedThreshold)) || 50;
@@ -80,14 +71,12 @@ class NpcStateManager {
     return (this.config && Number(this.config.offlineThreshold)) || 20;
   }
 
-  /** Current SAN (0-100) for an actor id; unseen actors start at the configured default. */
+  /** Current SAN (0-256) for an actor id; unknown actors use a compatibility fallback. */
   get(actorId) {
     const globalId = this._globalIdForActor(actorId);
     if (globalId !== null && globalVariableManager.get(globalId) !== undefined) return globalVariableManager.get(globalId);
     if (!this.san.has(actorId)) {
-      const npc = this.npcs.find((entry) => entry.id === actorId);
-      const initialSan = Number(npc?.initialSan);
-      this.san.set(actorId, Math.max(0, Math.min(256, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
+      this.san.set(actorId, 0);
     }
     return this.san.get(actorId);
   }

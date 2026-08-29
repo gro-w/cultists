@@ -11,8 +11,9 @@ function clamp(value) {
  * inspecting an item). Skill defs + starting values are data-driven via
  * `data/skills.json`.
  *
- * Skills are initialized from definitions and their current values are part of
- * the global-variable snapshot, so SaveManager persists them through IDs 20-39.
+ * Skill definitions provide identity and labels only. Initial/current values
+ * come from GlobalVariableManager IDs 20-39, which are loaded from
+ * global_variables.json and persisted by SaveManager.
  */
 class SkillManager {
   constructor() {
@@ -31,9 +32,8 @@ class SkillManager {
         (data.skills || []).slice(0, 20).forEach((s, index) => {
           if (!s || !s.id) return;
           this.indexById.set(s.id, index);
-          const value = clamp(s.value);
+          const value = clamp(globalVariableManager.get(20 + index));
           this.values.set(s.id, value);
-          globalVariableManager.set(20 + index, value, { emit: false });
           this.labels.set(s.id, s.label || s.id);
         });
       });
@@ -41,7 +41,7 @@ class SkillManager {
     return this._loadPromise;
   }
 
-  /** Current value (0-100) for a skill id. Unknown ids default to 50. */
+  /** Current value (0-256) for a skill id. Unknown ids default to 50. */
   get(id) {
     const index = this.indexById.get(id);
     return index === undefined ? 50 : globalVariableManager.get(20 + index);

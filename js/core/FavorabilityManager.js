@@ -8,12 +8,6 @@ import { globalVariableManager } from "./GlobalVariableManager.js";
  */
 export const NPC_IDS = ["ajie", "awei", "binbin"];
 
-/**
- * Initial favourability values from the game design (day1 Twee passage):
- *   阿杰好感度：60 / 阿伟好感度：50 / 彬彬好感度：40
- */
-const INITIAL_VALUES = { ajie: 60, awei: 50, binbin: 40 };
-
 const FAV_MAX = 256;
 const FAV_MIN = 0;
 
@@ -36,7 +30,7 @@ const FAV_MIN = 0;
 class FavorabilityManager {
   constructor() {
     /** @type {Map<string, number>} npcId -> 0-256 value */
-    this.values = new Map(Object.entries(INITIAL_VALUES));
+    this.values = new Map();
     /**
      * Set of npcIds that have had at least one positive delta this playthrough.
      * Used by the "雨露均沾" achievement (allHadPositive check).
@@ -65,10 +59,8 @@ class FavorabilityManager {
       this.npcs = data.npcs || [];
       this.npcs.slice(0, 20).forEach((npc, index) => {
         this.indexById.set(npc.id, index);
-        const initialFavorability = Number(npc.initialFavorability);
-        const value = Number.isFinite(initialFavorability) ? Math.max(FAV_MIN, Math.min(FAV_MAX, initialFavorability)) : (this.values.get(npc.id) || 0);
+        const value = globalVariableManager.get(40 + index);
         this.values.set(npc.id, value);
-        globalVariableManager.set(40 + index, value, { emit: false });
       });
     });
     return this._loadPromise;

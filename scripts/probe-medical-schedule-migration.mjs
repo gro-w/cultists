@@ -21,7 +21,9 @@ assert.ok(!runner.includes('case "medicalIncident"'), "medical settlement runtim
 assert.ok(medicalManager.includes('globalVariableManager.modify(2, moneyDelta)'), "medical money must use global variable 2");
 assert.ok(!medicalManager.includes("this.income +="), "medical manager must not own money balance");
 assert.ok(!medicalManager.includes("medical_events.json"), "medical manager must not load legacy event data");
-assert.ok(scheduleData.includes("向愤怒的患者解释"), "complaint choice label missing");
+assert.equal(complaint.blueprint.nodes.explain.inputs.label0, "向愤怒的患者解释", "complaint choice label missing");
+assert.equal(riot.blueprint.nodes.explain.inputs.label0, "向愤怒的家属解释", "riot choice label missing");
+assert.ok(!scheduleData.includes("explain.options[0]"), "medical enqueue must not use legacy choice options");
 assert.ok(scheduleData.includes("medical_riot_work"), "riot schedule selection missing");
 assert.ok(hisApp.includes("renderMedicalIncident"), "medical incidents must use the HIS choice UI");
 const { blueprint } = complaint;

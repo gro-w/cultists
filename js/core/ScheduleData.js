@@ -216,8 +216,6 @@ class ScheduleData {
     entry.receivedTime = submission.dueTime ?? (type === "riot" ? 16 * 60 : 8 * 60);
     entry.receivedPhase = entry.receivedTime >= 16 * 60 ? "night" : "day";
     entry.scheduleId = `${template.id}:${submission.patientId}`;
-    entry.blueprint.nodes.explain.inputs.label0 = type === "riot" ? "向愤怒的家属解释" : "向愤怒的患者解释";
-    entry.blueprint.nodes.explain.options[0].label = entry.blueprint.nodes.explain.inputs.label0;
     workQueue.append([entry]);
     return { ok: true, scheduleId: entry.scheduleId };
   }

@@ -7,7 +7,7 @@ import { eventBus } from "../core/EventBus.js";
 
 import { scheduleData } from "../core/ScheduleData.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
-import { npcStateManager } from "../core/NpcStateManager.js";
+
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 import { OUTCOME_LABELS } from "../core/DiceCheck.js";
@@ -118,10 +118,7 @@ export async function launchHISApp() {
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out his-patient-btn";
       btn.dataset.patientId = patient.id;
-      const npcId = patient.npcId || patient.id;
-      const offline = npcStateManager.isOffline(npcId);
-      const distressed = !offline && npcStateManager.isDistressed(npcId);
-      btn.textContent = `${patient.name}（${patient.age}岁）${offline ? " 🚫" : distressed ? " ⚠️" : ""}`;
+      btn.textContent = `${patient.name}（${patient.age}岁）`;
       if (medicalCaseManager.submissions.has(patient.id)) btn.classList.add("his-patient-submitted");
       btn.addEventListener("click", () => {
         eventBus.emit("his:patient_selected", { patientId: patient.id });
@@ -187,21 +184,7 @@ export async function launchHISApp() {
   function renderDialogue(patient, keywordDefs) {
     let keywordAvailable = false;
     dialogueEl.innerHTML = `<h4>与 ${patient.name} 的对话</h4>`;
-    const npcId = patient.npcId || patient.id;
     renderDiagnosis(patient);
-
-    if (npcStateManager.isOffline(npcId) && patient.queueStatus !== "resolved") {
-      dialogueEl.innerHTML +=
-        '<p class="dialogue-end">（该患者情绪崩溃，已请假离开，暂时无法继续问诊。）</p>';
-      return;
-    }
-    if (npcStateManager.isDistressed(npcId)) {
-      const warn = document.createElement("p");
-      warn.className = "his-schedule-note npc-distress-warning";
-      warn.textContent = "⚠️ 该患者情绪明显不稳定，言语间透着焦躲和不耐烦。";
-      dialogueEl.appendChild(warn);
-    }
-
     const linesEl = document.createElement("div");
     linesEl.className = "dialogue-lines";
     const optionsEl = document.createElement("div");

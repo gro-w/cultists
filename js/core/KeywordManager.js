@@ -72,12 +72,19 @@ class KeywordManager {
     return this.definitions.get(id);
   }
 
-  /** Return the fixed content of a keyword entity. SAN never mutates it. */
+  /**
+   * Return the display content for a keyword.
+   * If the definition has a `contentLowSan` field and the player's current
+   * SAN is below 50, that distorted text is returned instead of the normal
+   * `content` — so low-SAN protagonists see a twisted version of clue names.
+   */
   displayContent(keywordOrId) {
     const definition = typeof keywordOrId === "string"
       ? this.definitions.get(keywordOrId)
       : keywordOrId;
     if (!definition) return typeof keywordOrId === "string" ? keywordOrId : "";
+    const san = gameState.mental ?? 100;
+    if (definition.contentLowSan && san < 50) return definition.contentLowSan;
     return definition.content || definition.label || definition.id;
   }
 

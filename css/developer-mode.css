@@ -105,11 +105,12 @@
 .dev-ie-item-row:hover { background:#d8e8ff; }
 .dev-ie-item-row.active { background:#000080; color:#fff; }
 .dev-ie-item-row.active div { color:#fff !important; }
-.dev-ie-editor { flex:1; overflow-y:auto; min-width:0; }
+.dev-ie-editor { flex:1; overflow-y:auto; min-width:0; width:0; }
+.dev-ie-sec { min-width:0; max-width:100%; box-sizing:border-box; }
 .dev-ie-sec { margin:6px 8px; padding:8px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
 .dev-ie-sec h3 { margin:0 0 8px; font-size:13px; }
-.dev-ie-investigate-editor { height:620px; min-height:420px; border:1px solid #808080; background:#c0c0c0; overflow:hidden; }
-.dev-ie-investigate-editor > .dev-de-root { height:100%; min-height:0; }
+.dev-ie-investigate-editor, .dev-ie-item-schedule-editor { width:100%; max-width:100%; min-width:0; height:620px; min-height:420px; border:1px solid #808080; background:#c0c0c0; overflow:hidden; box-sizing:border-box; }
+.dev-ie-investigate-editor > .dev-de-root, .dev-ie-item-schedule-editor > .dev-de-root { width:100%; max-width:100%; min-width:0; height:100%; min-height:0; }
 .dev-ie-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:4px; }
 .dev-ie-field { display:flex; flex-direction:column; gap:3px; flex:1; min-width:120px; font-size:12px; }
 .dev-ie-field label { font-size:11px; color:#444; font-weight:600; }
@@ -127,7 +128,7 @@
 .dev-blueprint-window .win95-window-body { overflow:hidden; padding:2px; }
 .dev-blueprint-window .dev-de-root { height:100%; min-height:0; }
 .dev-de-header { display:flex; flex-wrap:wrap; gap:4px; padding:4px 0 6px; border-bottom:1px solid #808080; }
-.dev-de-main { display:flex; flex:1; min-height:0; overflow:hidden; }
+.dev-de-main { display:flex; flex:1; min-height:0; min-width:0; width:100%; overflow:hidden; }
 
 /* sidebar */
 .dev-de-sidebar { width:160px; min-width:140px; flex-shrink:0; border-right:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; }

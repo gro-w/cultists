@@ -33,6 +33,8 @@ export class DevItemEditorTab {
     this.root = null;
     this._investigateEditor = null;
     this._investigateEditorHost = null;
+    this._useEditor = null;
+    this._useEditorHost = null;
   }
 
   // ── helpers ──────────────────────────────────────────────────────────────
@@ -61,7 +63,6 @@ export class DevItemEditorTab {
       useCondition:{sanMin:0,sanMax:0},
       schedules:{},
       sanVariants:v,
-      useEffect:{timeAdvance:0,gameEvent:'',ending:'',mental:0,physical:0,satiety:0,energy:0,successMsg:'',failMsg:''},
       bookContents:[], spells:[],
     };
   }
@@ -148,28 +149,14 @@ export class DevItemEditorTab {
       <div class="dev-section dev-ie-sec"><h3>🔎 调查日程</h3><p style="font-size:11px;color:#888">直接编辑当前物品的 investigate 内嵌日程；保存蓝图后会写回物品草稿。</p>
         <div id="ie-investigate-editor" class="dev-ie-investigate-editor"></div>
       </div>
-      <div class="dev-section dev-ie-sec" id="ie-sec-use" style="display:none"><h3>⚡ 使用效果</h3>
-
-        <div class="dev-ie-row">
-          <div class="dev-ie-field"><label>推进时间（分钟）</label><input type="number" id="f-useTimeAdv" value="0" style="width:90px"></div>
-          <div class="dev-ie-field"><label>触发游戏事件</label><input type="text" id="f-useGameEvent" placeholder="game:study"></div>
-          <div class="dev-ie-field"><label>触发结局</label><input type="text" id="f-useEnding"></div>
-        </div>
+      <div class="dev-section dev-ie-sec" id="ie-sec-use" style="display:none"><h3>⚡ 使用日程</h3>
+        <p style="font-size:11px;color:#888">直接编辑当前物品的 use 内嵌日程；保存蓝图后会写回物品草稿。</p>
         <div class="dev-ie-row">
           <div class="dev-ie-field" style="flex:0"><label>SAN 最低（0=不限）</label><input type="number" id="f-sanMin" value="0" min="0" max="100" style="width:70px" oninput="_ie._setDirty()"></div>
           <div class="dev-ie-field" style="flex:0"><label>SAN 最高（0=不限）</label><input type="number" id="f-sanMax" value="0" min="0" max="100" style="width:70px" oninput="_ie._setDirty()"></div>
           <div style="flex:1;padding-top:18px;font-size:11px;color:#888">书籍填 1/50 表示仅 0&lt;SAN≤50 时可用</div>
         </div>
-        <div class="dev-ie-row">
-          <div class="dev-ie-field"><label>SAN 变化</label><input type="number" id="f-statMental" value="0" style="width:90px"></div>
-          <div class="dev-ie-field"><label>体力</label><input type="number" id="f-statPhysical" value="0" style="width:90px"></div>
-          <div class="dev-ie-field"><label>饱食度</label><input type="number" id="f-statSatiety" value="0" style="width:90px"></div>
-          <div class="dev-ie-field"><label>精力</label><input type="number" id="f-statEnergy" value="0" style="width:90px"></div>
-        </div>
-        <div class="dev-ie-row">
-          <div class="dev-ie-field"><label>成功提示</label><input type="text" id="f-successMsg"></div>
-          <div class="dev-ie-field"><label>失败提示</label><input type="text" id="f-failMsg"></div>
-        </div>
+        <div id="ie-use-editor" class="dev-ie-item-schedule-editor"></div>
       </div>
       <div class="dev-section dev-ie-sec" id="ie-sec-book" style="display:none"><h3>📖 书籍内容</h3>
         <div id="ie-book-entries"></div>
@@ -295,22 +282,27 @@ export class DevItemEditorTab {
 
   _unmountInvestigateEditor() {
     if (this._investigateEditor) this._investigateEditor.unmount();
+    if (this._useEditor) this._useEditor.unmount();
     this._investigateEditor = null;
     this._investigateEditorHost = null;
+    this._useEditor = null;
+    this._useEditorHost = null;
   }
 
-  _mountInvestigateEditor(item) {
-    const host = this._el('ie-investigate-editor');
-    if (!host || !item) { this._unmountInvestigateEditor(); return; }
-    if (this._investigateEditorHost === item && this._investigateEditor) return;
-    this._unmountInvestigateEditor();
+  _mountItemScheduleEditor(item, action) {
+    const host = this._el(action === 'investigate' ? 'ie-investigate-editor' : 'ie-use-editor');
+    const editorKey = action === 'investigate' ? '_investigateEditor' : '_useEditor';
+    const hostKey = action === 'investigate' ? '_investigateEditorHost' : '_useEditorHost';
+    if (!host || !item) return;
+    if (this[hostKey] === item && this[editorKey]) return;
+    if (this[editorKey]) this[editorKey].unmount();
     item.schedules ||= {};
-    item.schedules.investigate ||= this._defaultInvestigateSchedule();
+    item.schedules[action] ||= this._defaultSchedule();
     const project = {
       version: 2, totalDays: 1, customVars: [],
-      schedules: { embedded: { displayName: 'investigate', entries: [{
-        id: 'investigate', name: 'investigate',
-        dialogueTree: JSON.parse(JSON.stringify(item.schedules.investigate)),
+      schedules: { embedded: { displayName: action, entries: [{
+        id: action, name: action,
+        dialogueTree: JSON.parse(JSON.stringify(item.schedules[action])),
       }] } },
       events: {}, endings: {}, eventFileDoc: { events: [] }, endingFileDoc: { endings: [] },
     };
@@ -319,9 +311,9 @@ export class DevItemEditorTab {
       project,
       initialCtx: { type: 'schedule', id: 'embedded', entryIndex: 0 },
       embeddedScope: {
-        title: `${item.defaultName || item.id} · investigate`,
+        title: `${item.defaultName || item.id} · ${action}`,
         onSave: (blueprint) => {
-          item.schedules.investigate = JSON.parse(JSON.stringify(blueprint));
+          item.schedules[action] = JSON.parse(JSON.stringify(blueprint));
           this.dirty = true;
           this._persist();
         },
@@ -330,9 +322,12 @@ export class DevItemEditorTab {
     host.replaceChildren();
     host.append(document.createRange().createContextualFragment(editor.html()));
     editor.mount(host.querySelector('.dev-de-root'));
-    this._investigateEditor = editor;
-    this._investigateEditorHost = item;
+    this[editorKey] = editor;
+    this[hostKey] = item;
   }
+
+  _mountInvestigateEditor(item) { this._mountItemScheduleEditor(item, 'investigate'); }
+  _mountUseEditor(item) { this._mountItemScheduleEditor(item, 'use'); }
 
   unmount() {
     this._unmountInvestigateEditor();
@@ -363,15 +358,11 @@ export class DevItemEditorTab {
     this._el('f-inspectTimeAdv').value=it.inspectTimeAdvance||0;
     this._el('f-sanMin').value=(it.useCondition&&it.useCondition.sanMin)||0;
     this._el('f-sanMax').value=(it.useCondition&&it.useCondition.sanMax)||0;
-    const ue=it.useEffect;
-    this._el('f-useTimeAdv').value=ue.timeAdvance; this._el('f-useGameEvent').value=ue.gameEvent;
-    this._el('f-useEnding').value=ue.ending; this._el('f-statMental').value=ue.mental;
-    this._el('f-statPhysical').value=ue.physical; this._el('f-statSatiety').value=ue.satiety;
-    this._el('f-statEnergy').value=ue.energy; this._el('f-successMsg').value=ue.successMsg;
-    this._el('f-failMsg').value=ue.failMsg;
+
     this._renderLocTags(); this._renderKwTags(); this._renderFlags();
     this._renderSanTabs(); this._renderSanPanel(); this._renderBookEntries(); this._renderSpells();
     this._mountInvestigateEditor(it);
+    this._mountUseEditor(it);
     const sm=this._el('ie-save-msg'); if(sm) sm.textContent='';
   }
 
@@ -578,10 +569,8 @@ export class DevItemEditorTab {
     it.usable=this._vc('f-usable'); it.consumable=this._vc('f-consumable'); it.isBook=this._vc('f-isBook');
     it.inspectTimeAdvance=this._vi('f-inspectTimeAdv');
     it.useCondition={sanMin:this._vi('f-sanMin'),sanMax:this._vi('f-sanMax')};
-    it.useEffect={timeAdvance:this._vi('f-useTimeAdv'),gameEvent:this._v('f-useGameEvent'),
-      ending:this._v('f-useEnding'),mental:this._vi('f-statMental'),physical:this._vi('f-statPhysical'),
-      satiety:this._vi('f-statSatiety'),energy:this._vi('f-statEnergy'),
-      successMsg:this._v('f-successMsg'),failMsg:this._v('f-failMsg')};
+    it.schedules ||= {};
+    it.schedules.use ||= this._defaultSchedule();
     this.currentId=it.id; this.dirty=false; this._persist();
     if(!silent){const sm=this._el('ie-save-msg');if(sm){sm.textContent='✓ 已保存';setTimeout(()=>{sm.textContent='';},2000);}}
     this._renderList();
@@ -656,7 +645,7 @@ export class DevItemEditorTab {
   // ── format converters ─────────────────────────────────────────────────────
   _toGame(it) {
     // Spread rawGame first so unmanaged fields (inspectCheck, inspectOutcomes,
-    // useEffect.add/remove, …) survive the round-trip unchanged.
+    // Legacy use-effect fields are intentionally omitted; effects now live in schedules.use.
     const out = it._rawGame ? {...it._rawGame} : {};
     // Overwrite every managed field unconditionally, and delete it when cleared.
     out.id=it.id; out.name=it.defaultName; out.consumable=it.consumable;
@@ -682,23 +671,12 @@ export class DevItemEditorTab {
     if(it.bookContents&&it.bookContents.length) out.bookContents=it.bookContents; else delete out.bookContents;
     if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>{ const spell={...s,name:s.name,description:s.description||'',learnTimeMinutes:Number(s.learnTimeMinutes||240),castSanCost:Number(s.castSanCost||5)}; return spell; }); else delete out.spells;
     if(it.schedules && Object.keys(it.schedules).length) out.schedules=JSON.parse(JSON.stringify(it.schedules)); else delete out.schedules;
-    const ue=it.useEffect;
-    if(it.usable){
-      // Merge into rawGame's useEffect so add/remove arrays are preserved.
-      out.useEffect={...(out.useEffect||{})};
-      if(ue.ending) out.useEffect.ending=ue.ending; else delete out.useEffect.ending;
-      if(ue.gameEvent) out.useEffect.gameEvent=ue.gameEvent; else delete out.useEffect.gameEvent;
-      if(ue.timeAdvance) out.useEffect.timeAdvance=ue.timeAdvance; else delete out.useEffect.timeAdvance;
-      const sc={};if(ue.mental)sc.mental=ue.mental;if(ue.physical)sc.physical=ue.physical;if(ue.satiety)sc.satiety=ue.satiety;if(ue.energy)sc.energy=ue.energy;
-      if(Object.keys(sc).length) out.useEffect.statChanges=sc; else delete out.useEffect.statChanges;
-      if(ue.successMsg) out.successMessage=ue.successMsg; else delete out.successMessage;
-      if(ue.failMsg) out.failMessage=ue.failMsg; else delete out.failMessage;
-    }
+    delete out.useEffect; delete out.successMessage; delete out.failMessage;
     return out;
   }
   _fromGame(g) {
     const it=this._emptyItem();
-    it._rawGame=g; // preserve unknown fields (inspectCheck, inspectOutcomes, useEffect.add/remove …) for lossless round-trip
+    it._rawGame=g; // preserve unknown fields (for lossless round-trip)
     it.id=g.id||it.id; it.defaultName=g.name||''; it.consumable=!!g.consumable;
     it.usable=!!g.usable; it.pickable=!!g.pickable; it.worldCount=g.worldCount||1;
     it.locations=g.locations||[]; it.inspectText=g.inspectText||'';
@@ -712,7 +690,7 @@ export class DevItemEditorTab {
     const readIE=src=>({gameEvent:src.gameEvent||'',mental:(src.statChanges&&src.statChanges.mental)||0,ending:src.ending||''});
     if(g.sanVariants){_IE_BANDS.forEach(b=>{const src=g.sanVariants[b.key];const dst=it.sanVariants[b.key];if(src){if(src.name!==undefined)dst.name=src.name;if(src.description!==undefined)dst.description=src.description;const image=src.image??src.imagePath??src.imageUrl;if(image!==undefined)dst.image=String(image);if(src.revealKeywordIds)dst.revealKeywordIds=[...src.revealKeywordIds];if(src.inspectEffect)dst.inspEffect=readIE(src.inspectEffect);else if(topIE)dst.inspEffect=readIE(topIE);}else if(topIE){dst.inspEffect=readIE(topIE);}});}
     else if(topIE){_IE_BANDS.forEach(b=>{it.sanVariants[b.key].inspEffect=readIE(topIE);});}
-    if(g.useEffect){it.useEffect.ending=g.useEffect.ending||'';it.useEffect.gameEvent=g.useEffect.gameEvent||'';it.useEffect.timeAdvance=g.useEffect.timeAdvance||0;const sc=g.useEffect.statChanges||{};it.useEffect.mental=sc.mental||0;it.useEffect.physical=sc.physical||0;it.useEffect.satiety=sc.satiety||0;it.useEffect.energy=sc.energy||0;it.useEffect.successMsg=g.successMessage||'';it.useEffect.failMsg=g.failMessage||'';}
+
     return it;
   }
 }

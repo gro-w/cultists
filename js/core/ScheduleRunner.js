@@ -10,6 +10,7 @@ import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
 import { checkSkill } from "./DiceCheck.js";
 import { keywordManager } from "./KeywordManager.js";
+import { endingManager } from "./EndingManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -169,8 +170,12 @@ export class ScheduleRunner {
       }
       case "itemEffect": {
         const effect = node.effect || {};
+        (effect.remove || []).forEach((entry) => itemManager.remove(entry.itemId, entry.count || 1));
+        (effect.add || []).forEach((entry) => itemManager.add(entry.itemId, entry.count || 1));
         Object.entries(effect.statChanges || {}).forEach(([statId, delta]) => modifyStatValue(statId, delta));
+        globalVariableManager.applyEffects(effect.globalVariables || effect.globalVariableChanges);
         if (effect.gameEvent) eventBus.emit(effect.gameEvent, effect.gameEventPayload || {});
+        if (effect.ending) endingManager.trigger(effect.ending);
         return {};
       }
       case "inventoryOperation": {

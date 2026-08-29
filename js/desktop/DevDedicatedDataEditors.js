@@ -61,9 +61,9 @@ export class MedicalEventsEditor extends DedicatedEditor {
 }
 
 export class NpcStateRulesEditor extends DedicatedEditor {
-  constructor(dev) { super(dev, "npc_state.json", "NPC 状态规则编辑器", "编辑默认 SAN、阈值和离线后果"); }
-  render() { const c = this.data.offlineConsequence || {}; this.root().innerHTML = `<div class="dev-ded-grid">${num("默认 SAN", "defaultSan", this.data.defaultSan, "min=0 max=100")}${num("不稳定阈值", "distressedThreshold", this.data.distressedThreshold, "min=0 max=100")}${num("离线阈值", "offlineThreshold", this.data.offlineThreshold, "min=0 max=100")}</div><section class="dev-ded-card"><h3>离线后果</h3>${num("SAN 变化", "offline.sanChange", c.sanChange ?? 0)}${input("游戏事件", "offline.gameEvent", c.gameEvent || "")}${checkbox("触发对话离线", "offline.dialogueOffline", c.dialogueOffline)}</section>`; }
-  sync() { this.data.defaultSan = Number(this.value("defaultSan")); this.data.distressedThreshold = Number(this.value("distressedThreshold")); this.data.offlineThreshold = Number(this.value("offlineThreshold")); this.data.offlineConsequence = { ...(this.data.offlineConsequence || {}), sanChange: Number(this.value("offline.sanChange")) || 0, gameEvent: this.value("offline.gameEvent"), dialogueOffline: this.value("offline.dialogueOffline") }; }
+  constructor(dev) { super(dev, "npc_state.json", "NPC 状态规则编辑器", "编辑 SAN 阈值和离线后果"); }
+  render() { const c = this.data.offlineConsequence || {}; this.root().innerHTML = `<div class="dev-ded-grid">${num("不稳定阈值", "distressedThreshold", this.data.distressedThreshold, "min=0 max=256")}${num("离线阈值", "offlineThreshold", this.data.offlineThreshold, "min=0 max=256")}</div><section class="dev-ded-card"><h3>离线后果</h3>${num("SAN 变化", "offline.sanChange", c.sanChange ?? 0)}${input("游戏事件", "offline.gameEvent", c.gameEvent || "")}${checkbox("触发对话离线", "offline.dialogueOffline", c.dialogueOffline)}</section>`; }
+  sync() { this.data.distressedThreshold = Number(this.value("distressedThreshold")); this.data.offlineThreshold = Number(this.value("offlineThreshold")); this.data.offlineConsequence = { ...(this.data.offlineConsequence || {}), sanChange: Number(this.value("offline.sanChange")) || 0, gameEvent: this.value("offline.gameEvent"), dialogueOffline: this.value("offline.dialogueOffline") }; }
 }
 
 export class TimeRulesEditor extends DedicatedEditor {

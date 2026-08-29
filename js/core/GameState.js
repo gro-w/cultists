@@ -26,7 +26,7 @@ class GameState {
     this.duty = "on-duty"; // "on-duty" | "off-duty"
     this.location = "work"; // compatibility alias for the current duty mode
     this.energy = 100;
-    this._mental = 100;
+    this._mental = 0;
     this.physical = 100;
     this.satiety = 70;
     this.recoverableMentalLoss = 0;

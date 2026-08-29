@@ -56,6 +56,14 @@ class ScheduleData {
       }));
     }
     await Promise.all(requests);
+    const realtimeInit = await dataLoader.loadJSON("realtimeinit.json");
+    const realtimeEntries = Array.isArray(realtimeInit.entries) ? realtimeInit.entries.map((entry) => ({
+      ...entry,
+      queueId: "realtime",
+      autoRun: true,
+    })) : [];
+    this._indexExternalEntries(realtimeEntries, "realtime", "realtime-init", "realtimeinit");
+    realtimeQueue.append(realtimeEntries);
     const [specialEvents, endings] = await Promise.all([
       specialEventManager.load(),
       dataLoader.loadJSON("endings.json"),
@@ -186,7 +194,9 @@ class ScheduleData {
       const entry = { ...definition, scheduleId: definition.id, receivedDay: day, receivedTime: time,
         receivedPhase: time < 16 * 60 ? "day" : "night" };
       delete entry.queueId;
-      this.queue(request.queueId || definition.queueId).append([entry]);
+      const targetQueueId = request.queueId || definition.queueId;
+      if (targetQueueId === "realtime") entry.autoRun = true;
+      this.queue(targetQueueId).append([entry]);
       this._applyScheduleOperations(entry);
     });
   }

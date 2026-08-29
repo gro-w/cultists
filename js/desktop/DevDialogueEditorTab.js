@@ -641,6 +641,7 @@ export class DevDialogueEditorTab {
       const div=document.createElement('div');
       div.className=`dev-de-node${isSel?' selected':''}${isStart?' start':''}`;
       div.id=`de-node-${node.id}`;
+      div.dataset.nodeId=node.id;
       div.style.cssText=`left:${node.x||60}px;top:${node.y||60}px`;
       const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
       const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
@@ -684,15 +685,44 @@ export class DevDialogueEditorTab {
         if (e.target.closest('.dev-de-port-pin') || e.target.closest('button')) return;
         if (this._connectMode) { this._finishConnect(node.id); return; }
         e.stopPropagation();
+        const additive = e.ctrlKey || e.metaKey;
+        if (additive) {
+          if (!this.selectedNodeIds.size && this.selectedNodeId) this.selectedNodeIds.add(this.selectedNodeId);
+          if (this.selectedNodeIds.has(node.id)) this.selectedNodeIds.delete(node.id);
+          else this.selectedNodeIds.add(node.id);
+          this.selectedNodeId = this.selectedNodeIds.size === 1 ? [...this.selectedNodeIds][0] : null;
+          this.root?.querySelectorAll('.dev-de-node').forEach(item => item.classList.toggle('selected', this.selectedNodeIds.has(item.dataset.nodeId)));
+          if (this.selectedNodeId) this._loadNodeEditor();
+          else {
+            const empty=this._el('de-editor-empty'), form=this._el('de-editor-form');
+            if(empty) empty.style.display=''; if(form) form.style.display='none';
+          }
+          return;
+        }
+        if (!this.selectedNodeIds.has(node.id)) this.selectedNodeIds = new Set([node.id]);
         this.selectedNodeId=node.id;
-        this.selectedNodeIds = new Set([node.id]);
+        this.root?.querySelectorAll('.dev-de-node').forEach(item => item.classList.toggle('selected', this.selectedNodeIds.has(item.dataset.nodeId)));
         this._loadNodeEditor();
-        div.classList.add('selected');
-        const sx=e.clientX, sy=e.clientY, ox=node.x||60, oy=node.y||60;
+        const sx=e.clientX, sy=e.clientY;
+        const dragIds = [...this.selectedNodeIds];
+        const origins = new Map(dragIds.map(id => {
+          const selected = data.nodes[id];
+          return [id, { x: selected?.x ?? 60, y: selected?.y ?? 60 }];
+        }));
         let moved=false;
-        const onMove=mv=>{ moved=true; node.x=Math.max(0,ox+(mv.clientX-sx)/this.canvasZoom); node.y=Math.max(0,oy+(mv.clientY-sy)/this.canvasZoom); div.style.left=node.x+'px'; div.style.top=node.y+'px'; this._drawArrows(data); };
+        const onMove=mv=>{
+          moved=true;
+          const dx=(mv.clientX-sx)/this.canvasZoom, dy=(mv.clientY-sy)/this.canvasZoom;
+          dragIds.forEach(id=>{
+            const selected=data.nodes[id], origin=origins.get(id), selectedEl=this.root?.querySelector(`#de-node-${CSS.escape(id)}`);
+            if (!selected || !origin) return;
+            selected.x=Math.max(0, origin.x+dx); selected.y=Math.max(0, origin.y+dy);
+            if (selectedEl) { selectedEl.style.left=selected.x+'px'; selectedEl.style.top=selected.y+'px'; }
+          });
+          this._drawArrows(data);
+        };
         const onUp=()=>{ document.removeEventListener('pointermove',onMove); document.removeEventListener('pointerup',onUp); this._dragState=null; if(moved) this._saveLS(); };
-        this._dragState={nodeId:node.id};
+        this._dragState={nodeIds:dragIds};
         document.addEventListener('pointermove',onMove);
         document.addEventListener('pointerup',onUp, { once: true });
       });
@@ -771,6 +801,7 @@ export class DevDialogueEditorTab {
     e.preventDefault();
     e.stopPropagation();
     const start = this._canvasPoint(e);
+    const additive = e.ctrlKey || e.metaKey;
     const box = document.createElement('div');
     box.className = 'dev-de-selection-box';
     content.appendChild(box);
@@ -788,11 +819,14 @@ export class DevDialogueEditorTab {
       const left = Math.min(start.x, point.x), right = Math.max(start.x, point.x);
       const top = Math.min(start.y, point.y), bottom = Math.max(start.y, point.y);
       const data = this._ctxData();
-      this.selectedNodeIds = new Set(Object.values(data?.nodes || {}).filter(node => {
+      const hitIds = new Set(Object.values(data?.nodes || {}).filter(node => {
         const el = document.getElementById(`de-node-${node.id}`);
         const x = node.x ?? 60, y = node.y ?? 60, w = el?.offsetWidth || 200, h = el?.offsetHeight || 120;
         return x < right && x + w > left && y < bottom && y + h > top;
       }).map(node => node.id));
+      this.selectedNodeIds = additive
+        ? new Set([...this.selectedNodeIds].filter(id => !hitIds.has(id)).concat([...hitIds].filter(id => !this.selectedNodeIds.has(id))))
+        : hitIds;
       this.selectedNodeId = this.selectedNodeIds.size === 1 ? [...this.selectedNodeIds][0] : null;
       box.remove(); this._boxSelect = null;
       this._suppressCanvasClick = true;

@@ -195,7 +195,7 @@
       "phase": "day",
       "sanMin": null,
       "sanMax": null,
-      "bgmId": "bgm_dnpotl",
+      "bgmId": "bgm_550ca9",
       "priority": 1
     },
     {
@@ -205,17 +205,17 @@
       "phase": "night",
       "sanMin": 70,
       "sanMax": null,
-      "bgmId": "bgm_dnpxxh",
+      "bgmId": "bgm_33f0a9",
       "priority": 2
     },
     {
       "id": "bgm_dnrzx1",
       "dayMin": null,
       "dayMax": null,
-      "phase": "night",
+      "phase": null,
       "sanMin": 50,
       "sanMax": 70,
-      "bgmId": "bgm_dnpotl",
+      "bgmId": "bgm_19a32b",
       "priority": 3
     },
     {
@@ -225,7 +225,7 @@
       "phase": null,
       "sanMin": 30,
       "sanMax": 50,
-      "bgmId": "bgm_dnpotl",
+      "bgmId": "bgm_802575",
       "priority": 4
     },
     {
@@ -245,7 +245,7 @@
       "phase": null,
       "sanMin": null,
       "sanMax": 15,
-      "bgmId": "bgm_dnpotl",
+      "bgmId": "bgm_956b14",
       "priority": 6
     }
   ],

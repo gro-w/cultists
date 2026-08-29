@@ -280,6 +280,51 @@
   background: #1a1530;
 }
 
+/* ── New scene-wrap: background image + item layer ───────────────────────── */
+.dorm-scene-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #0a0812;
+}
+
+.dorm-scene-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.dorm-scene-item-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dorm-scene-item-layer .loc-item-btn {
+  pointer-events: auto;
+}
+
+/* NPC quick-action strip below the scene */
+.dorm-npc-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #211c38;
+  border-top: 2px solid #51486d;
+  flex-shrink: 0;
+}
+
+.dorm-npc-strip-btn {
+  font-size: 12px;
+}
+
+.dorm-npc-strip-btn.offline {
+  opacity: 0.5;
+}
+
 /* ── Bunk unit (one bed + one desk per person) ───────────────────────────── */
 .dorm-bunk-unit {
   flex: 1;

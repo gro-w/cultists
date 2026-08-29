@@ -163,7 +163,8 @@ class SaveManager {
     const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)
       || !Array.isArray(payload.mainQueue || [])
-      || !payload.favorability || !Array.isArray(payload.itemPlacements)
+      || !payload.favorability || !payload.itemPlacements || typeof payload.itemPlacements !== "object" || Array.isArray(payload.itemPlacements)
+      || !Array.isArray(payload.itemPlacements.placements) || !Array.isArray(payload.itemPlacements.roommateHidden)
       || typeof payload.ending !== "object") {
       throw new Error("Invalid save data");
     }

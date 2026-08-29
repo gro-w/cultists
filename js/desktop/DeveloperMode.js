@@ -19,13 +19,14 @@ import { endingManager } from "../core/EndingManager.js";
 import { spellManager } from "../core/SpellManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { achievementManager } from "../core/AchievementManager.js";
-import { workQueue, socialQueue, chatgtpQueue, mainQueue } from "../core/ScheduleQueue.js";
+import { workQueue, socialQueue, mainQueue } from "../core/ScheduleQueue.js";
 import { normalizeBlueprint } from "../core/ScheduleBlueprint.js";
 import { DevItemEditorTab } from "./DevItemEditorTab.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
 import { DevLocationEditorTab } from "./DevLocationEditorTab.js";
 import { DevDormComputerTab } from "./DevDormComputerTab.js";
+import { DevCGEditorTab } from "./DevCGEditorTab.js";
 import { DEDICATED_EDITOR_CLASSES } from "./DevDedicatedDataEditors.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -65,7 +66,7 @@ const DEDICATED_EDITOR_TITLES = {
   skills: "技能定义编辑器",
 };
 const DEV_EDITOR_ICONS = {
-  "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
+  "tab-cg-editor": "🖼️", "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
   "tab-item-editor": "📦", "tab-dialogue-editor": "📅", "tab-bgm-editor": "🎵", "tab-location-editor": "📍",
   "tab-dorm-computer": "💻", "tab-state": "🕒", "tab-npc-state": "👤", "tab-inventory": "🎒",
   "tab-schedules": "📋", "tab-world": "🌐", "tab-medical-ending": "⚕️",
@@ -104,7 +105,7 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
     const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "dialogueProgress:changed", "dialogueProgress:restored", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset"];
     events.push("npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored");
@@ -127,7 +128,7 @@ export class DeveloperMode {
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
       ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["全局变量定义", "🔢", "tab-global-variables"],
-      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
+      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
     const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC与对话", "👤", "tab-npc-state"], ["日程与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
@@ -217,7 +218,7 @@ export class DeveloperMode {
     const editor = new DeveloperMode(root, win, false);
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
-    const methods = { "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
+    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
     if (methods[action]) { editor._unmountEditorTabs(); editor[methods[action]](); return; }
     const structured = action.match(/^tab-structured-(.+)$/);
     if (structured) return editor.showStructuredEditor(structured[1]);
@@ -256,6 +257,7 @@ export class DeveloperMode {
     if (this._bgmEditorTab) { this._bgmEditorTab.unmount(); this._bgmEditorTab = null; }
     if (this._locationEditorTab) { this._locationEditorTab.unmount(); this._locationEditorTab = null; }
     if (this._dormComputerTab) { this._dormComputerTab.unmount(); this._dormComputerTab = null; }
+    if (this._cgEditorTab) { this._cgEditorTab.unmount(); this._cgEditorTab = null; }
     if (this._structuredEditorTab) { this._structuredEditorTab.unmount(); this._structuredEditorTab = null; }
     if (this._itemEditorTab) this._itemEditorTab.unmount();
     this._itemEditorTab = null;
@@ -304,6 +306,15 @@ export class DeveloperMode {
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dormComputerTab.html();
     this.bindPanel();
     this._dormComputerTab.mount();
+  }
+
+  showCGEditor() {
+    this._unmountEditorTabs();
+    this._setPanelKind("data");
+    this._cgEditorTab = new DevCGEditorTab(this);
+    this.root.querySelector("[data-dev-panel]").innerHTML = this._cgEditorTab.html();
+    this.bindPanel();
+    this._cgEditorTab.mount();
   }
 
   showStructuredEditor(key) {
@@ -365,11 +376,12 @@ export class DeveloperMode {
       const def = itemManager.getDef(id);
       return `<option value="${id}">${def.name || id} (${id})</option>`;
     }).join("");
-    const stats = ["energy", "mental", "physical", "satiety"].map((id) => `<label>${id} <input data-player-stat="${id}" type="number" min="0" max="255" value="${gameState[id]}"></label>`).join("");
-    const recoverable = `<label>recoverableMentalLoss <input data-player-stat="recoverableMentalLoss" type="number" min="0" value="${gameState.recoverableMentalLoss}"></label>`;
+    const stats = ["sanity", "roommateSuspicion"].map((id) =>
+      `<label>${id === "sanity" ? "理智 (sanity)" : "室友怀疑度 (roommateSuspicion)"} <input data-player-stat="${id}" type="number" min="0" max="100" value="${gameState[id]}"></label>`
+    ).join("");
     const learned = spellManager.all().map((spell) => `<li>${esc(spell.name || spell.id)} <code>${esc(spell.id)}</code></li>`).join("") || "<li>尚未学习法术</li>";
     const keywords = keywordManager.all().filter((keyword) => keyword.collectedDay != null).map((keyword) => `<li>${esc(keyword.content || keyword.id)} <code>${esc(keyword.id)}</code>（第 ${keyword.collectedDay} 日）</li>`).join("") || "<li>尚未收集关键词</li>";
-    this.panel(`<section class="dev-section"><h3>玩家与资源</h3><p>玩家属性通过 GameState 修改；库存、法术和关键词使用各自的运行时管理器。</p><div>${stats} ${recoverable} ${button("应用玩家属性", "apply-player-stats")}</div></section><section class="dev-section"><h3>物品背包</h3>
+    this.panel(`<section class="dev-section"><h3>玩家与资源</h3><p>玩家属性通过 GameState 修改；库存、法术和关键词使用各自的运行时管理器。</p><div>${stats} ${button("应用玩家属性", "apply-player-stats")}</div></section><section class="dev-section"><h3>物品背包</h3>
       <div class="dev-inventory-add"><select data-item-id>${defs}</select><input data-item-count type="number" min="1" value="1">${button("增加", "add-item")}</div>
       <table class="dev-table"><thead><tr><th>物品</th><th>ID</th><th>数量</th><th>操作</th></tr></thead><tbody>
       ${itemManager.all().map(({ id, count, def }) => `<tr><td><button type="button" class="win95-btn dev-btn" data-open-item="${esc(id)}">${esc(def.name || id)}</button></td><td><code>${esc(id)}</code></td><td>${count}</td><td>${button("−1", `remove-item-${id}`)} ${button("清空", `clear-item-${id}`)}</td></tr>`).join("") || "<tr><td colspan=4>背包为空</td></tr>"}
@@ -383,11 +395,11 @@ export class DeveloperMode {
     const catalog = scheduleData.catalog(category);
     const categoryOptions = Object.entries(SCHEDULE_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
     const scheduleOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
-    const queueOptions = [["", "默认（按日程定义；临时日程默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"], ["chatgtp", "chatgtp"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
-    const queues = [["main", mainQueue], ["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue]];
+    const queueOptions = [["", "默认（按日程定义；临时日程默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
+    const queues = [["main", mainQueue], ["work", workQueue], ["social", socialQueue]];
     const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-schedule="${esc(entry.scheduleId)}">${esc(entry.scheduleId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
     const scheduled = scheduleData.snapshotScheduled();
-    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示主要、工作、社交和 ChatGTP 四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 main 主要队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
+    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示主要、工作和社交三个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 main 主要队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
     this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });
   }
 
@@ -453,8 +465,23 @@ export class DeveloperMode {
 
   async showKeywords() {
     const doc = await this.loadDoc("keywords.json");
-    const rows = (doc.keywords || []).map((k, i) => `<tr data-keyword-row="${i}"><td><input data-k-id value="${esc(k.id)}"></td><td><input data-k-content value="${esc(k.content || k.label || "")}"></td><td>${button("删除", `remove-keyword-${i}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3><p>关键词只保存稳定 ID 和显示内容。疾病关键词的介绍、药物和秘药资料请在 ChatGTP 编辑器中修改。</p><table class="dev-table dev-keyword-table"><thead><tr><th>ID</th><th>内容</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div></section>`, "data");
+    const rows = (doc.keywords || []).map((k, i) => `<tr data-keyword-row="${i}">
+      <td><input data-k-id value="${esc(k.id)}" style="width:160px"></td>
+      <td><input data-k-content value="${esc(k.content || k.label || "")}" style="width:140px"></td>
+      <td><input data-k-content-low-san value="${esc(k.contentLowSan || "")}" placeholder="（SAN&lt;50 显示）" style="width:160px"></td>
+      <td><input data-k-related-ids value="${esc((k.relatedIds || []).join(","))}" placeholder="ID,ID,… 逗号分隔" style="width:180px"></td>
+      <td>${button("删除", `remove-keyword-${i}`)}</td>
+    </tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3>
+      <p>关键词只保存稳定 ID 和显示内容。<br>
+      <strong>低理智名称</strong>（contentLowSan）：SAN &lt; 50 时玩家看到的扭曲版文本。<br>
+      <strong>关联词</strong>（relatedIds）：笔记本和线索墙连线用，逗号分隔关键词 ID。</p>
+      <table class="dev-table dev-keyword-table">
+        <thead><tr><th>ID</th><th>正常名称</th><th>低理智名称</th><th>关联词 ID</th><th>操作</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div>
+    </section>`, "data");
   }
 
   _syncQaPage() {
@@ -506,8 +533,67 @@ export class DeveloperMode {
 
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
-    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-numericid type="number" min="0" max="19" step="1" value="${Number(npc.numericid) || 0}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、数值 ID、名字和头像。数值 ID 映射全局变量 40-59（好感度）及 60-79（SAN）。</p><table class="dev-table"><thead><tr><th>ID</th><th>数值 ID</th><th>名字</th><th>头像</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
+    const toCard = (npc, index) => {
+      const portraits = (npc.portraits || []).map((p, pi) => `
+        <div class="dev-portrait-row" data-portrait-row="${index}-${pi}">
+          <span style="font-size:11px;color:#aaa">变体 ${pi + 1}</span>
+          <label style="font-size:11px">SAN≥ <input data-p-san-min type="number" min="0" max="100" value="${p.sanMin ?? ""}" placeholder="—" style="width:42px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">SAN≤ <input data-p-san-max type="number" min="0" max="100" value="${p.sanMax ?? ""}" placeholder="—" style="width:42px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">高度% <input data-p-height type="number" min="10" max="100" value="${p.height ?? 66}" style="width:42px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">X偏移 <input data-p-offset-x type="number" value="${p.offsetX ?? 0}" style="width:48px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">Y偏移 <input data-p-offset-y type="number" value="${p.offsetY ?? 0}" style="width:48px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          ${p.imageData
+            ? `<img src="${esc(p.imageData)}" alt="立绘预览" style="height:60px;object-fit:contain;border:1px solid #555;vertical-align:middle;margin:0 4px">`
+            : `<span style="font-size:11px;color:#888">（未上传）</span>`}
+          <label style="font-size:11px;cursor:pointer;background:#3a3050;color:#e0d8f0;padding:2px 6px;border:2px outset #6a58a0">
+            📁 上传
+            <input type="file" accept="image/*" data-portrait-upload="${index}-${pi}" style="display:none">
+          </label>
+          <button type="button" class="win95-btn dev-btn" data-action="remove-portrait-${index}-${pi}" style="font-size:11px">✕</button>
+        </div>`).join("");
+      return `<div class="dev-ded-card" data-npc-row="${index}" style="margin-bottom:10px">
+        <div class="dev-ded-card-title">
+          <b>${esc(npc.name || "(未命名)")} <code style="font-size:11px">${esc(npc.id)}</code></b>
+          ${button("删除 NPC", `remove-npc-${index}`)}
+        </div>
+        <div class="dev-ie-row" style="flex-wrap:wrap;gap:6px;margin-bottom:6px">
+          <div class="dev-ie-field"><label>ID</label><input data-npc-id value="${esc(npc.id)}" style="width:110px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+          <div class="dev-ie-field"><label>名字</label><input data-npc-name value="${esc(npc.name)}" style="width:80px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+          <div class="dev-ie-field"><label>头像</label><input data-npc-avatar value="${esc(npc.avatar || "🙂")}" style="width:44px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px;text-align:center"></div>
+          <div class="dev-ie-field"><label>初始好感</label><input data-npc-favor type="number" min="0" max="100" value="${Number(npc.initialFavorability) || 0}" style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+          <div class="dev-ie-field"><label>初始 SAN</label><input data-npc-san type="number" min="0" max="100" value="${Number(npc.initialSan) || 0}" style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+        </div>
+        <div style="margin-bottom:4px">
+          <strong style="font-size:12px">立绘变体</strong>
+          <span style="font-size:11px;color:#aaa">（点击上传图片；对话时自动根据 SAN 值选择匹配变体；点击立绘可关闭）</span>
+          <button type="button" class="win95-btn dev-btn" style="font-size:11px;margin-left:6px" data-action="add-portrait-${index}">＋ 添加变体</button>
+        </div>
+        ${portraits || '<p style="font-size:11px;color:#aaa;margin:0 0 4px">暂无立绘。点击「添加变体」上传。</p>'}
+      </div>`;
+    };
+    this.panel(`<section class="dev-section"><h3>NPC 列表</h3>
+      <p style="font-size:12px;color:#aaa">维护稳定 NPC ID、名字、头像、好感度、初始 SAN 和立绘。每个 NPC 可添加多张立绘变体，对话时按理智值自动选择。</p>
+      <div id="dev-npc-cards">${(doc.npcs || []).map(toCard).join("")}</div>
+      <div style="margin-top:8px">${button("新增 NPC", "add-npc")} ${button("保存到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div>
+    </section>`, "data");
+
+    // Bind file upload inputs
+    this.root.querySelectorAll("[data-portrait-upload]").forEach((input) => {
+      input.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const [npcIdx, portIdx] = input.dataset.portraitUpload.split("-").map(Number);
+          const d = this.docs.get("npcs.json");
+          if (!d?.npcs?.[npcIdx]?.portraits?.[portIdx]) return;
+          d.npcs[npcIdx].portraits[portIdx].imageData = reader.result;
+          this.docs.set("npcs.json", d);
+          this.showNpcs();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
   }
 
   async showGlobalVariables() {
@@ -688,16 +774,13 @@ export class DeveloperMode {
 
     if (action === "apply-player-stats") {
       const changes = {};
-      ["energy", "mental", "physical", "satiety"].forEach((id) => {
+      ["sanity", "roommateSuspicion"].forEach((id) => {
         const input = this.root.querySelector(`[data-player-stat="${id}"]`);
         if (!input) return;
-        const max = id === "satiety" ? 255 : 100;
-        const value = Math.max(0, Math.min(max, Number(input.value) || 0));
+        const value = Math.max(0, Math.min(100, Number(input.value) || 0));
         changes[id] = value - gameState[id];
       });
       gameState.modify(changes);
-      const recoveryInput = this.root.querySelector('[data-player-stat="recoverableMentalLoss"]');
-      if (recoveryInput) gameState.restore({ ...gameState.snapshot(), recoverableMentalLoss: Math.max(0, Number(recoveryInput.value) || 0) });
       this.setStatus("玩家属性已应用。");
       return this.showInventory();
     }
@@ -712,19 +795,19 @@ export class DeveloperMode {
       const queueId = this.root.querySelector("[data-schedule-queue]")?.value || undefined;
       return this.openTemporaryScheduleEditor(queueId);
     }
-    const queueAction = action.match(/^(resolve|reopen)-queue-(main|work|social|chatgtp)-(.+)$/);
+    const queueAction = action.match(/^(resolve|reopen)-queue-(main|work|social)-(.+)$/);
     if (queueAction) {
-      const queues = { main: mainQueue, work: workQueue, social: socialQueue, chatgtp: chatgtpQueue };
+      const queues = { main: mainQueue, work: workQueue, social: socialQueue };
       const queue = queues[queueAction[2]];
       const ok = queue.updateInstance(queueAction[3], { status: queueAction[1] === "resolve" ? "resolved" : "unresolved" });
       this.setStatus(ok ? "日程实例状态已更新。" : "未找到日程实例。", !ok);
       return this.showSchedules();
     }
-    const jumpAction = action.match(/^jump-queue-(main|work|social|chatgtp)-(.+)$/);
+    const jumpAction = action.match(/^jump-queue-(main|work|social)-(.+)$/);
     if (jumpAction) {
       const queueId = jumpAction[1];
       const instanceId = jumpAction[2];
-      const queue = { main: mainQueue, work: workQueue, social: socialQueue, chatgtp: chatgtpQueue }[queueId];
+      const queue = { main: mainQueue, work: workQueue, social: socialQueue }[queueId];
       const select = Array.from(this.root.querySelectorAll("[data-schedule-jump]"))
         .find((element) => element.dataset.scheduleJump === instanceId);
       const entry = queue.getInstance(instanceId);
@@ -804,17 +887,53 @@ export class DeveloperMode {
     if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
     if (removeNpc) { const doc = await this.loadDoc("npcs.json"); doc.npcs.splice(Number(removeNpc[1]), 1); this.docs.set("npcs.json", doc); return this.showNpcs(); }
-    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, numericid: doc.npcs.length, name: "新 NPC", avatar: "🙂" }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
+    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂", initialFavorability: 50, initialSan: 80, portraits: [] }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
     if (action === "save-npcs" || action === "download-npcs" || action === "write-npcs") {
-      const doc = await this.loadDoc("npcs.json"); const rows = Array.from(this.root.querySelectorAll("[data-npc-row]")); const ids = rows.map((row) => row.querySelector("[data-npc-id]").value.trim());
+      const doc = await this.loadDoc("npcs.json");
+      const cards = Array.from(this.root.querySelectorAll("[data-npc-row]"));
+      const ids = cards.map((c) => c.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
-      const numericids = rows.map((row) => Number(row.querySelector("[data-npc-numericid]")?.value));
-      if (numericids.some((id) => !Number.isInteger(id) || id < 0 || id >= 20) || new Set(numericids).size !== numericids.length) { this.setStatus("NPC 保存失败：数值 ID 必须是 0-19 的不重复整数。", true); return; }
-      doc.npcs = rows.map((row, index) => ({ id: row.querySelector("[data-npc-id]").value.trim(), numericid: numericids[index], name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂" }));
+      doc.npcs = cards.map((card, ci) => {
+        const portraits = Array.from(card.querySelectorAll("[data-portrait-row]")).map((row) => {
+          const sanMin = row.querySelector("[data-p-san-min]").value;
+          const sanMax = row.querySelector("[data-p-san-max]").value;
+          const existing = doc.npcs?.[ci]?.portraits?.find?.((_, pi) => String(pi) === row.dataset.portraitRow?.split("-")[1]) ?? {};
+          return {
+            sanMin: sanMin === "" ? null : Number(sanMin),
+            sanMax: sanMax === "" ? null : Number(sanMax),
+            height: Number(row.querySelector("[data-p-height]").value) || 66,
+            offsetX: Number(row.querySelector("[data-p-offset-x]").value) || 0,
+            offsetY: Number(row.querySelector("[data-p-offset-y]").value) || 0,
+            imageData: existing.imageData || "",
+          };
+        });
+        return {
+          id: card.querySelector("[data-npc-id]").value.trim(),
+          name: card.querySelector("[data-npc-name]").value,
+          avatar: card.querySelector("[data-npc-avatar]").value || "🙂",
+          initialFavorability: Math.max(0, Math.min(100, Number(card.querySelector("[data-npc-favor]").value) || 0)),
+          initialSan: Math.max(0, Math.min(100, Number(card.querySelector("[data-npc-san]").value) || 0)),
+          portraits,
+        };
+      });
       this.docs.set("npcs.json", doc);
       if (action === "download-npcs") { downloadJson("npcs.json", doc); this.setStatus("npcs.json 已下载。"); return; }
       if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }
       this.setStatus("npcs.json 已保存到内存。"); return;
+    }
+    const addPortrait = action.match(/^add-portrait-(\d+)$/);
+    if (addPortrait) {
+      const doc = await this.loadDoc("npcs.json");
+      const npc = doc.npcs?.[Number(addPortrait[1])];
+      if (npc) { if (!npc.portraits) npc.portraits = []; npc.portraits.push({ sanMin: null, sanMax: null, height: 66, offsetX: 0, offsetY: 0, imageData: "" }); this.docs.set("npcs.json", doc); }
+      return this.showNpcs();
+    }
+    const removePortrait = action.match(/^remove-portrait-(\d+)-(\d+)$/);
+    if (removePortrait) {
+      const doc = await this.loadDoc("npcs.json");
+      doc.npcs?.[Number(removePortrait[1])]?.portraits?.splice(Number(removePortrait[2]), 1);
+      this.docs.set("npcs.json", doc);
+      return this.showNpcs();
     }
     if (action === "add-qa-entry") { this._syncQaPage(); if (!this.qaDraft) this.qaDraft = []; this.qaDraft.push({ keywords: [], answer: "", corruptedAnswer: "", corruptedSameAsNormal: true }); this.qaPage = Math.ceil(this.qaDraft.length / QA_PAGE_SIZE); return this.showChatgtp(); }
     if (action === "save-qa" || action === "download-qa" || action === "write-qa") {
@@ -839,7 +958,15 @@ export class DeveloperMode {
       const ids = rows.map((row) => row.querySelector("[data-k-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("关键词保存失败：ID 不能为空且不能重复。", true); return; }
       doc.keywords = rows.map((row) => {
-        return { id: row.querySelector("[data-k-id]").value.trim(), content: row.querySelector("[data-k-content]").value };
+        const id = row.querySelector("[data-k-id]").value.trim();
+        const content = row.querySelector("[data-k-content]").value;
+        const contentLowSan = row.querySelector("[data-k-content-low-san]").value.trim();
+        const relatedRaw = row.querySelector("[data-k-related-ids]").value.trim();
+        const relatedIds = relatedRaw ? relatedRaw.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
+        const kw = { id, content };
+        if (contentLowSan) kw.contentLowSan = contentLowSan;
+        if (relatedIds?.length) kw.relatedIds = relatedIds;
+        return kw;
       });
       this.docs.set("keywords.json", doc);
       if (action === "download-keywords") { downloadJson("keywords.json", doc); this.setStatus("keywords.json 已下载。"); return; }

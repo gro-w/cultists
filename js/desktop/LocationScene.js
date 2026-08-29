@@ -4,6 +4,7 @@ import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { eventBus } from "../core/EventBus.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
 import { gameState } from "../core/GameState.js";
+import { cgManager } from "../core/CGManager.js";
 
 /**
  * LocationScene — full-screen location overlay for non-dorm locations:
@@ -22,6 +23,9 @@ export default class LocationScene {
     this._container = container;
     this._locationId = null;
     this._offItems = null;
+    this._offPlacements = null;
+    this._offSan = null;
+    this._offCG = [];
     this._build();
   }
 
@@ -54,7 +58,7 @@ export default class LocationScene {
   // ── helpers ───────────────────────────────────────────────────────────────────
   _applySanityBg() {
     if (!this._locationId) return;
-    const san = gameState.mental ?? 100;
+    const san = gameState.sanity ?? 100;
     const img = locationSystem.resolveBackground(this._locationId, san);
     if (img) {
       this._bgEl.src = img;
@@ -89,6 +93,19 @@ export default class LocationScene {
     // Swap background when sanity changes while scene is open
     if (this._offSan) this._offSan();
     this._offSan = eventBus.on("game:sanity_changed", () => this._applySanityBg());
+
+    // CG overlay — suppress item layer while a CG is active
+    this._offCG.forEach((off) => off());
+    this._offCG = [
+      eventBus.on("cg:show", () => this._itemLayer.classList.add("cg-active-layer")),
+      eventBus.on("cg:end",  () => this._itemLayer.classList.remove("cg-active-layer")),
+    ];
+    // Sync with current CG state (scene opened mid-CG)
+    if (cgManager.isActive) {
+      this._itemLayer.classList.add("cg-active-layer");
+    } else {
+      this._itemLayer.classList.remove("cg-active-layer");
+    }
   }
 
   hide() {
@@ -97,11 +114,29 @@ export default class LocationScene {
     if (this._offItems)      { this._offItems();      this._offItems      = null; }
     if (this._offPlacements) { this._offPlacements(); this._offPlacements = null; }
     if (this._offSan)        { this._offSan();        this._offSan        = null; }
+    this._offCG.forEach((off) => off());
+    this._offCG = [];
+    this._itemLayer.classList.remove("cg-active-layer");
   }
 
   // ── Item rendering ───────────────────────────────────────────────────────────
   _renderItems(loc) {
     this._itemLayer.innerHTML = "";
+
+    // Items with explicit x/y get position:absolute directly in the layer.
+    // Items without coordinates go into a flex bar at the bottom so they
+    // don't all pile up at (0,0).
+    const floatBar = document.createElement("div");
+    floatBar.className = "loc-item-float-bar";
+    this._itemLayer.appendChild(floatBar);
+
+    const place = (btn) => {
+      if (btn.dataset.positioned) {
+        this._itemLayer.appendChild(btn);
+      } else {
+        floatBar.appendChild(btn);
+      }
+    };
 
     const layer = loc.layer || "above";
 
@@ -110,43 +145,39 @@ export default class LocationScene {
       if (placement.layer === "below") return;
       const def = itemManager.getDef(placement.itemId);
       const hotspot = placement.hotspot || {};
-      const btn = this._makeItemBtn({
+      place(this._makeItemBtn({
         icon: hotspot.icon || "❔",
         label: hotspot.label || def?.name || placement.itemId,
         x: hotspot.x, y: hotspot.y,
         onClick: () => this._inspectPlacement(placement.id),
-      });
-      this._itemLayer.appendChild(btn);
+      }));
     });
 
     // ── Source 2: items.json locations field ────────────────────────────────
-    const defs = itemManager.worldItemsAt(loc.id);
-    defs.forEach((def) => {
+    itemManager.worldItemsAt(loc.id).forEach((def) => {
       if ((def.layer || layer) === "below") return;
-      const btn = this._makeItemBtn({
+      place(this._makeItemBtn({
         icon: def.icon || "📦",
         label: def.name || def.id,
         x: def.sceneX, y: def.sceneY,
         onClick: () => this._inspectWorldItem(def.id),
-      });
-      this._itemLayer.appendChild(btn);
+      }));
     });
 
     // ── Source 3: loc.hotspots (dev-placed character/item markers) ───────────
     (loc.hotspots || []).forEach((h) => {
       if (!h.targetId) return;
       const def = itemManager.getDef(h.targetId);
-      const btn = this._makeItemBtn({
+      place(this._makeItemBtn({
         icon: h.icon || def?.icon || "👤",
         label: h.label || def?.name || h.targetId,
         x: h.x, y: h.y,
         onClick: () => def ? this._inspectWorldItem(h.targetId) : this._message(`（${h.label || h.targetId}）`),
-      });
-      this._itemLayer.appendChild(btn);
+      }));
     });
   }
 
-  /** Make a positioned item button. If x/y absent, floats naturally. */
+  /** Make a positioned item button. If x/y absent, floats in the float bar. */
   _makeItemBtn({ icon, label, x, y, onClick }) {
     const btn = document.createElement("button");
     btn.type = "button";
@@ -155,9 +186,9 @@ export default class LocationScene {
     btn.title = label;
     btn.setAttribute("aria-label", label);
     if (x != null && y != null) {
-      btn.style.position = "absolute";
       btn.style.left = `${x}px`;
       btn.style.top = `${y}px`;
+      btn.dataset.positioned = "1"; // tells _renderItems to append directly to layer
     }
     btn.addEventListener("click", onClick);
     return btn;

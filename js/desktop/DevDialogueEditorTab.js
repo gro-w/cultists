@@ -43,7 +43,7 @@ const _DE_BUILTIN_VARS = [
   { id:'ate_potion',   label:'是否吃秘药',        type:'bool' },
   { id:'cast_spell',   label:'施放法术',          type:'bool' },
 ];
-const _DE_NUMVARS = ['energy','mental','physical','satiety','recoverableMentalLoss'];
+const _DE_NUMVARS = ['sanity','roommateSuspicion'];
 const _DE_NODE_LABELS = Object.fromEntries(SCHEDULE_NODE_TYPES.map(type => [type, getScheduleNodeDefinition(type).label]));
 
 export class DevDialogueEditorTab {
@@ -488,7 +488,10 @@ export class DevDialogueEditorTab {
      }
    } else if (this.currentCtx.type === 'ending') { entry.displayName = String(value ?? ''); entry.title = entry.displayName; }
    else { entry.displayName = String(value ?? ''); entry.name = entry.displayName; }
-   this._saveLS(); this._renderScopedSidebar(); this._renderCanvas(); this._renderContextSettings();
+   this._saveLS(); this._renderScopedSidebar(); this._renderCanvas();
+   // Do NOT call _renderContextSettings() for displayName changes — it would
+   // rebuild the input DOM and steal focus after every keystroke.
+   if (field === 'id') this._renderContextSettings();
  }
 
  _addScheduleEntry() {

@@ -91,12 +91,9 @@ export async function launchStatusApp() {
     panels.stats.innerHTML = `
       <h4>主角状态</h4>
       <p>第 ${s.day} 天 · ${dayNightSystem.isDaylight() ? "☀ 白天" : "🌙 夜晚"} · ${s.location === "dorm" ? "宿舍" : "工作中"} · ${clock}</p>
-      ${bar("精力", s.energy)}
-      ${bar("精神", s.mental)}
-      ${bar("体力", s.physical)}
-      ${bar("饱腹", s.satiety)}
+      ${bar("理智", s.sanity)}
+      <p class="action-budget-row">室友怀疑度：${s.roommateSuspicion} / 100</p>
       <p class="action-budget-row">时间：${Math.floor(phaseMinutes / 60)} 小时 ${phaseMinutes % 60} 分 / ${phaseLimit / 60} 小时${phaseMinutes > phaseLimit ? "（已进入加班/熬夜）" : ""}</p>
-      <p class="action-budget-hint">可恢复精神损失：${s.recoverableMentalLoss}</p>
       <p class="income-row">当前收入：${medicalCaseManager.income} 元</p>
 
       <h4>技能</h4>

@@ -296,6 +296,40 @@
   display: block;
 }
 
+/* Portrait layer — sits above background, below item layer */
+.dorm-portrait-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: all;
+  z-index: 5;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.dorm-portrait-layer.hidden {
+  display: none;
+}
+
+.dorm-portrait-img {
+  /* height is set inline as a % of the scene */
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom;
+  display: block;
+  position: relative;
+  /* offsetX and offsetY applied via inline style */
+  filter: drop-shadow(2px 0 8px rgba(0,0,0,0.7));
+  transition: opacity 0.2s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dorm-portrait-img:hover {
+  opacity: 0.92;
+}
+
 .dorm-scene-item-layer {
   position: absolute;
   inset: 0;
@@ -680,13 +714,25 @@
   background: rgba(90, 70, 150, 0.95);
   transform: scale(1.1);
 }
-/* When item-layer button has no absolute pos, float naturally */
-.loc-scene-item-layer:not(:has([style*="position: absolute"])) {
+/* Buttons placed directly in the layer (have x/y) are absolutely positioned */
+.loc-scene-item-layer > .loc-item-btn {
+  position: absolute;
+}
+/* Unpositioned items go into a flex bar at the bottom of the scene */
+.loc-item-float-bar {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 8px;
-  padding: 48px 12px 8px;
+  gap: 6px;
+  pointer-events: none;
+  align-items: flex-end;
+}
+.loc-item-float-bar .loc-item-btn {
+  position: relative;
+  pointer-events: all;
 }
 
 .loc-scene-interaction {
@@ -705,11 +751,6 @@
 .loc-scene-interaction p { margin: 4px 0; }
 .loc-scene-hint { color: #888; font-size: 12px; }
 
-/* ── Location editor (dev) ──────────────────────────────────────────────── */
-.dev-le-root { display: flex; flex-direction: column; height: 100%; }
-.dev-le-toolbar { padding: 6px 8px; flex-shrink: 0; }
-.dev-le-main { display: flex; flex: 1; min-height: 0; overflow: hidden; }
-
 /* ── ChatGTP daily banner (dorm computer) ───────────────────────────────── */
 .chatgtp-daily-banner {
   display: flex;
@@ -726,3 +767,43 @@
 }
 .chatgtp-daily-label { flex: 1; }
 .chatgtp-daily-btn { font-size: 11px; }
+
+/* ── CG overlay — fullscreen background image above scene layers ─────────── */
+/* sits above dorm-mode (2000) and location-scene (2100), below windows (2200) */
+.cg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2150;
+  pointer-events: none;  /* dialogue/options receive events through it */
+  background: transparent;
+  display: flex;
+  align-items: stretch;
+}
+.cg-overlay.hidden { display: none; }
+
+.cg-overlay-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* CG background inside dorm scene-wrap (lower z-index, behind item layer) */
+.dorm-cg-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  z-index: 2;           /* above scene-bg (implicit 0), below portrait (5) */
+}
+.dorm-cg-bg.hidden { display: none; }
+
+/* Item layer suppression during CG — no interaction, almost invisible */
+.cg-active-layer {
+  pointer-events: none !important;
+  opacity: 0.1 !important;
+}

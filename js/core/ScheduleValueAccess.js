@@ -6,7 +6,7 @@ import { favorabilityManager } from "./FavorabilityManager.js";
 import { timeService } from "./TimeService.js";
 import { skillManager } from "./SkillManager.js";
 
-const GAME_STATS = new Set(["energy", "mental", "physical", "satiety", "recoverableMentalLoss"]);
+const GAME_STATS = new Set(["sanity", "mental", "roommateSuspicion"]);
 
 export function getStatValue(statId) {
   const id = String(statId ?? "");

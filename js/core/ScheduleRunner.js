@@ -154,7 +154,8 @@ export class ScheduleRunner {
         if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
         return {};
       }
-      case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "0")), instanceId: this.instance.instanceId }); return {};
+      case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
+      case "endCg":  eventBus.emit("schedule:end_cg", { instanceId: this.instance.instanceId }); return {};
       case "showImage": {
         const image = String(get("image", ""));
         this.instance.inspectionImage = image || null;
@@ -312,13 +313,13 @@ export class ScheduleRunner {
   }
 
   _scheduleStatus(instanceId) {
-    const queues = ["work", "social", "chatgtp", "main"];
+    const queues = ["work", "social", "main"];
     const status = queues.map((id) => scheduleData.queue(id).statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
     return STATUS[status] ?? STATUS.nonexistent;
   }
 
   _scheduleInstanceCount(scheduleId) {
-    return ["work", "social", "chatgtp", "main"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
+    return ["work", "social", "main"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
   }
 }
 

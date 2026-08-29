@@ -18,9 +18,9 @@ const definitions = {
   setGlobal: { label: "操作公共变量", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("variableId"), input("value"), input("delta", VALUE, "number")] },
   insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string")] },
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
+  endCg:  { label: "结束 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },
   segmentBranch: { label: "分段分支", flowInputs: [flowIn()], flowOutputs: [flowOut("segment0")], valueInputs: [input("value", VALUE, "number"), input("branchCount", VALUE, "number"), input("boundary0", VALUE, "number")] },
-
   inventoryOperation: { label: "操作背包", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("itemId", VALUE, "string"), input("count", VALUE, "number")] },
   statOperation: { label: "操作主角数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
   spellOperation: { label: "调整法术状态", flowInputs: [flowIn()], flowOutputs: [flowOut()] },

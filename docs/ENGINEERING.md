@@ -33,7 +33,7 @@ index.html
 | `TimeService` | 普通时间推进、跨午夜、08:00 结算、睡眠恢复和时间事件 |
 | `DayNightSystem` | 上下班、睡觉、阻塞检查和模式转换入口 |
 | `ScheduleData` | 读取日程文件、维护动态插入、按时间追加实例 |
-| `ScheduleQueue` | 保存 `work`、`social`、`chatgtp`、`main` 实例及状态 |
+| `ScheduleQueue` | 保存 `work`、`social`、`main` 实例及状态 |
 | `ScheduleBlueprint` | 蓝图规范化、端口校验、可达性检查和旧树迁移 |
 | `ScheduleNodeRegistry` | 节点类型、流程/数值端口和动态 choice 端口定义 |
 | `ScheduleRunner` | 按流程节点执行蓝图、暂停等待 UI、记录 transcript |
@@ -76,7 +76,6 @@ App 点击
 
 - `workQueue`：工作日程和 HIS 对话。
 - `socialQueue`：Social 对话。
-- `chatgtpQueue`：ChatGTP 查询，单当前实例。
 - `mainQueue`：物品、法术、诊断、NPC 离线等非阻塞实例。
 
 `ScheduleQueue.append()` 可接受单对象或数组，并返回带 canonical `instanceId` 的实例。实例核心字段：

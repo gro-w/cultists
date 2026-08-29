@@ -9,11 +9,13 @@ import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
-import { mainQueue } from "../core/ScheduleQueue.js";
+import { socialQueue } from "../core/ScheduleQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
+import { checkSkill, OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { locationSystem } from "../core/LocationSystem.js";
+import { cgManager } from "../core/CGManager.js";
 
 const roommateImage = (npcId) => ({
   ajie: "data/assets/char_ajie_01.png",
@@ -30,16 +32,21 @@ const dialogueKeywordIds = (tree) => {
 
 /** Full-screen off-duty dorm: NPC interaction, desk/fridge items, bed, computer. */
 export default class DormMode {
-  constructor(root, { workShell, launchWorkApp }) {
+  constructor(root, { workShell, launchWorkApp, showLocation = null }) {
     this.root = root;
     this.workShell = workShell;
     this.launchWorkApp = launchWorkApp;
+    this._showLocation = showLocation; // (locationId) => void
+    this._npcsData = null;
     this.entry = null;
     this._transitioning = false;
     this._computerOpen = false;
     this._compTabInit = {};
     this._transitionTimer = null;
     this._dormSanOff = null;
+    this._npcsData = null;
+    this._cgOverlay = null;     // global #cg-overlay element
+    this._cgOff = [];           // EventBus unsub functions
     /** Map<appId, gameDay> — which day the player already browsed each app */
     this._viewedApps = new Map();
     this._build();
@@ -49,10 +56,20 @@ export default class DormMode {
   }
 
   async init() {
+    this._npcsData = await dataLoader.loadJSON("npcs.json").catch(() => ({ npcs: [] }));
     await locationSystem.load();
     this._updateDormBg();
     if (this._dormSanOff) this._dormSanOff();
     this._dormSanOff = eventBus.on("game:sanity_changed", () => this._updateDormBg());
+    // Wire CG overlay (the global #cg-overlay element handles both dorm and location views)
+    this._cgOverlay = document.getElementById("cg-overlay");
+    this._cgOff.forEach((off) => off());
+    this._cgOff = [
+      eventBus.on("cg:show", ({ imageData }) => this._onCGShow(imageData)),
+      eventBus.on("cg:end",  ()              => this._onCGEnd()),
+    ];
+    // Restore CG state if game was saved mid-CG
+    if (cgManager.isActive) this._onCGShow(cgManager.getDef(cgManager.activeCgId)?.imageData || "");
     await this._renderScene();
     this._syncVisibility(false);
   }
@@ -72,12 +89,16 @@ export default class DormMode {
             <button type="button" class="win95-btn bevel-out" data-action="bed">🛏️ 睡觉</button>
             <button type="button" class="win95-btn bevel-out" data-action="clue">🧵 线索墙</button>
             <button type="button" class="win95-btn bevel-out" data-action="computer">🖥️ 电脑</button>
+            <button type="button" class="win95-btn bevel-out" data-action="go-restaurant">🍲 火锅店</button>
+            <button type="button" class="win95-btn bevel-out" data-action="go-seaside">🌊 海边</button>
           </div>
         </div>
 
         <div class="dorm-scene-wrap">
           <img class="dorm-scene-bg" alt="" />
+          <img class="dorm-cg-bg hidden" alt="CG" />
           <div class="dorm-scene-item-layer"></div>
+          <div class="dorm-portrait-layer hidden"></div>
         </div>
         <div class="dorm-npc-strip"></div>
 
@@ -115,8 +136,10 @@ export default class DormMode {
     this.confirmTitle   = this.root.querySelector(".dorm-bed-confirm-title");
     this.confirmMessage = this.root.querySelector(".dorm-bed-confirm-message");
     this._bgEl          = this.root.querySelector(".dorm-scene-bg");
+    this._cgBgEl        = this.root.querySelector(".dorm-cg-bg");
     this._itemLayer     = this.root.querySelector(".dorm-scene-item-layer");
     this._npcStrip      = this.root.querySelector(".dorm-npc-strip");
+    this._portraitLayer = this.root.querySelector(".dorm-portrait-layer");
 
     this.confirmPanel.querySelector(".dorm-bed-confirm-cancel").addEventListener("click", () => {
       this.confirmPanel.classList.add("hidden");
@@ -126,6 +149,14 @@ export default class DormMode {
     this.root.querySelector('[data-action="clue"]').addEventListener("click", () => this._showClueWall());
     this.root.querySelector('[data-action="computer"]').addEventListener("click", () => this._openComputer());
     this.root.querySelector('[data-action="player-menu"]').addEventListener("click", () => this._showPlayerMenu());
+    this.root.querySelector('[data-action="go-restaurant"]').addEventListener("click", () => {
+      if (this._showLocation) this._showLocation("restaurant");
+      else this._message("（前往火锅店的通道尚未连接。）");
+    });
+    this.root.querySelector('[data-action="go-seaside"]').addEventListener("click", () => {
+      if (this._showLocation) this._showLocation("seaside");
+      else this._message("（前往海边的通道尚未连接。）");
+    });
 
     this.root.querySelectorAll(".dorm-comp-tab-btn[data-comptab]").forEach((btn) => {
       btn.addEventListener("click", () => this._switchCompTab(btn.dataset.comptab));
@@ -152,7 +183,9 @@ export default class DormMode {
 
   _renderClock() {
     const minutes = this._clockMinutes();
-    this.clock.textContent = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+    const hh = String(Math.floor(minutes / 60)).padStart(2, "0");
+    const mm = String(minutes % 60).padStart(2, "0");
+    this.clock.textContent = `Day ${gameState.day}  ${hh}:${mm}`;
   }
 
   // ── Scene render ────────────────────────────────────────────────────────────
@@ -268,14 +301,41 @@ export default class DormMode {
 
   // ── Item interaction ────────────────────────────────────────────────────────
 
-  /** Inspect a world-placed item (item_placements.json, has take/put-back). */
+  /** Inspect a world-placed item (item_placements.json, has take/put-back).
+   * At night, if the placement is on a roommate's desk, a stealth check
+   * (observation skill) is performed first. Failure: suspicion +20, item hidden. */
   _inspectPlacedItem(placementId) {
     const inspected = itemPlacementManager.inspect(placementId);
     if (!inspected.ok) {
       this._message(inspected.message);
       return;
     }
-    const def = itemManager.getDef(inspected.placement.itemId);
+
+    // Night stealth check for desk items
+    const placement = inspected.placement;
+    const isNight = dayNightSystem.areRoommatesSleeping();
+    const isDeskItem = typeof placement.zone === "string" && placement.zone.includes("desk");
+    if (isNight && isDeskItem) {
+      const check = checkSkill("observation");
+      const outcomeLabel = OUTCOME_LABELS[check.outcome] ?? check.outcome;
+      const passed = check.outcome === "criticalSuccess" || check.outcome === "success";
+      if (!passed) {
+        // Caught — hide item and raise suspicion
+        itemPlacementManager.hideByRoommate(placementId);
+        gameState.raiseSuspicion(20);
+        this._renderScene();
+        const npcName = placement.zone.split("_")[0]; // e.g. "ajie" from "ajie_desk"
+        const name = this._npcsData?.npcs?.find?.((n) => n.id === npcName)?.name || "室友";
+        this._message(
+          `潜行检定 ${outcomeLabel}（掷出 ${check.roll} / 需 ≤ ${check.skillValue}）——${name}醒来发现了你！室友怀疑度 +20，物品被${name}收起。`,
+        );
+        return;
+      }
+      // Success — note the roll and proceed
+      this.interaction.innerHTML = `<p style="color:#81c784;font-size:12px">潜行检定 ${outcomeLabel}（掷出 ${check.roll}）</p>`;
+    }
+
+    const def = itemManager.getDef(placement.itemId);
     this._showItemInteraction(def, inspected.result, {
       canTake: def?.pickable !== false,
       onTake: () => {
@@ -398,9 +458,66 @@ export default class DormMode {
     }
   }
 
-  _renderChatGTP(panel) {
-    launchChatGTPApp({ container: { replaceChildren: (el) => panel.appendChild(el) } })
+  async _renderChatGTP(panel) {
+    // Launch ChatGTP first so .chatgtp-history is in the DOM before the
+    // daily banner's "查看" button tries to append messages into it.
+    await launchChatGTPApp({ container: { replaceChildren: (el) => panel.appendChild(el) } })
       .catch((err) => { panel.insertAdjacentHTML("beforeend", `<p>ChatGTP 无法打开：${err.message}</p>`); });
+
+    // Daily preset Q&A banner — one exchange per click, limited to the
+    // number of exchanges available for today.
+    try {
+      const data = await dataLoader.loadJSON("social_apps.json");
+      const daily = data.chatgtpDaily || [];
+      const day   = gameState.day;
+      // Match by day field; fall back to sequential index (day-1) if no exact match
+      const entry = daily.find((e) => e.day === day)
+        ?? (day <= daily.length ? daily[day - 1] : null);
+      const exchanges = entry?.exchanges || [];
+
+      if (exchanges.length === 0) return;
+
+      const viewKey = `chatgtp_daily_${day}`;
+      // Persist viewed count in _viewedApps map (survives tab switches this session)
+      const getIdx = () => this._viewedApps.get(viewKey) ?? 0;
+
+      const banner = document.createElement("div");
+      banner.className = "chatgtp-daily-banner";
+
+      const refreshBanner = () => {
+        const idx = getIdx();
+        if (idx >= exchanges.length) {
+          banner.innerHTML = `<span class="chatgtp-daily-label">📬 今日预设对话：已全部查看（共 ${exchanges.length} 条）。</span>`;
+          return;
+        }
+        banner.innerHTML = `
+          <span class="chatgtp-daily-label">📬 今日消息 (${idx + 1}/${exchanges.length})</span>
+          <button type="button" class="win95-btn bevel-out chatgtp-daily-btn">查看</button>`;
+        banner.querySelector(".chatgtp-daily-btn").addEventListener("click", () => {
+          const currentIdx = getIdx();
+          if (currentIdx >= exchanges.length) { refreshBanner(); return; }
+          const exchange = exchanges[currentIdx];
+          const histEl = panel.querySelector(".chatgtp-history");
+          if (histEl) {
+            const q = document.createElement("div");
+            q.className = "chat-bubble bubble-me";
+            q.textContent = exchange.q;
+            const a = document.createElement("div");
+            a.className = "chat-bubble bubble-npc";
+            a.textContent = exchange.a;
+            histEl.appendChild(q);
+            histEl.appendChild(a);
+            histEl.scrollTop = histEl.scrollHeight;
+          }
+          this._viewedApps.set(viewKey, currentIdx + 1);
+          refreshBanner();
+        });
+      };
+
+      refreshBanner();
+      // Insert banner before the ChatGTP root so it appears at the top
+      panel.insertBefore(banner, panel.firstChild);
+    } catch (_) { /* daily section optional */ }
   }
 
   async _renderSocialMedia(panel) {
@@ -639,7 +756,9 @@ export default class DormMode {
   _showPlayerMenu() {
     const state = gameState.snapshot();
     const items = itemManager.all();
-    this.interaction.innerHTML = `<h3>主角菜单</h3><p>第 ${state.day} 天 · ${dayNightSystem.isDaylight() ? "白天" : "夜晚"} · ${this.clock.textContent}</p><p>精神 ${state.mental} · 体力 ${state.physical} · 精力 ${state.energy} · 饱腹 ${state.satiety}</p>`;
+    this.interaction.innerHTML = `<h3>主角菜单</h3>
+      <p>第 ${state.day} 天 · ${dayNightSystem.isDaylight() ? "☀ 白天" : "🌙 夜晚"} · ${this.clock.textContent}</p>
+      <p>理智 ${state.sanity} · 室友怀疑度 ${state.roommateSuspicion}</p>`;
     const itemTitle = document.createElement("h4");
     itemTitle.textContent = "物品";
     this.interaction.appendChild(itemTitle);
@@ -651,6 +770,25 @@ export default class DormMode {
     });
     if (!items.length) list.innerHTML = "<li>（空）</li>";
     this.interaction.appendChild(list);
+
+    // Skip-work button (visible during work hours while in dorm)
+    const clock = gameState.clockMinutes;
+    const isWorkHours = !dayNightSystem.isRestDay() && clock >= 8 * 60 && clock < 16 * 60;
+    const isOffDuty = gameState.duty === "off-duty";
+    if (isWorkHours && isOffDuty) {
+      const skipBtn = document.createElement("button");
+      skipBtn.className = "win95-btn bevel-out";
+      skipBtn.textContent = "跳过上班（怀疑度 +10）";
+      skipBtn.addEventListener("click", () => {
+        const result = dayNightSystem.skipWork();
+        if (result.ok) {
+          gameState.raiseSuspicion(10);
+          this._message("你在宿舍度过了工作时间。室友怀疑度上升了。", "");
+        }
+      });
+      this.interaction.appendChild(skipBtn);
+    }
+
     const save = document.createElement("button");
     save.className = "win95-btn bevel-out";
     save.textContent = "保存游戏";
@@ -662,9 +800,54 @@ export default class DormMode {
   }
 
   // ── NPC dialogue ────────────────────────────────────────────────────────────
+  /**
+   * Resolve the correct portrait image for an NPC at the current sanity level.
+   * npcs.json schema: npc.portraits = [{ sanMin, sanMax, imageData, offsetX, offsetY, height }]
+   * Falls back to null if no portrait matches or no portraits defined.
+   */
+  _resolvePortrait(npcId) {
+    const npc = this._npcsData?.npcs?.find?.((n) => n.id === npcId);
+    if (!npc?.portraits?.length) return null;
+    const san = gameState.sanity ?? 100;
+    const match = npc.portraits.find((p) => {
+      const okMin = p.sanMin == null || san >= p.sanMin;
+      const okMax = p.sanMax == null || san <= p.sanMax;
+      return okMin && okMax && p.imageData;
+    });
+    if (!match) return null;
+    return {
+      imageData: match.imageData,
+      offsetX: match.offsetX ?? npc.portraitOffsetX ?? 0,
+      offsetY: match.offsetY ?? npc.portraitOffsetY ?? 0,
+      height: match.height ?? npc.portraitHeight ?? 66, // % of scene height
+    };
+  }
+
+  _showPortrait(npcId) {
+    if (!this._portraitLayer) return;
+    const portrait = this._resolvePortrait(npcId);
+    if (!portrait) { this._hidePortrait(); return; }
+    this._portraitLayer.innerHTML = `<img
+      class="dorm-portrait-img"
+      src="${portrait.imageData}"
+      alt=""
+      style="height:${portrait.height}%;left:${portrait.offsetX}px;bottom:${portrait.offsetY}px"
+      draggable="false">`;
+    this._portraitLayer.classList.remove("hidden");
+    this._portraitLayer.onclick = () => this._hidePortrait();
+  }
+
+  _hidePortrait() {
+    if (!this._portraitLayer) return;
+    this._portraitLayer.classList.add("hidden");
+    this._portraitLayer.innerHTML = "";
+  }
+
   _showDialogue(actor, keywordDefs) {
+    this._showPortrait(actor.id ?? actor.npcId);
     this.interaction.innerHTML = `<h3>与 ${actor.name} 交互</h3>`;
-    if (npcStateManager.isOffline(actor.id)) {
+    const npcId = actor.npcId || actor.payload?.npcId || actor.id;
+    if (npcStateManager.isOffline(npcId)) {
       this.interaction.innerHTML += "<p>（对方已经离线，无法交互。）</p>";
       return;
     }
@@ -676,14 +859,21 @@ export default class DormMode {
     const options = document.createElement("div");
     options.className = "dialogue-options";
     this.interaction.append(lines, options);
-    if (!actor.blueprint) {
+    const pending = socialQueue.getPending().find((item) =>
+      (item.payload?.npcId || item.payload?.id) === npcId
+    );
+    if (!pending) {
+      lines.innerHTML = "<p class=\"dialogue-end\">（没有新的对话内容了。）</p>";
+      return;
+    }
+    const definition = pending.payload || actor;
+    if (!definition.blueprint) {
       lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
       return;
     }
-    const instance = mainQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
     const runner = createScheduleRunner({
-      definition: actor,
-      instance,
+      definition,
+      instance: pending,
       appendLine: (speaker, label, text) => {
         const line = document.createElement("p");
         line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, keywordDefs)}`;
@@ -692,8 +882,8 @@ export default class DormMode {
       },
       optionsEl: options,
       appId: "dorm",
-      onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
-      onComplete: () => mainQueue.complete(instance.instanceId),
+      onCheckpoint: (next) => socialQueue.updateInstance(pending.instanceId, next),
+      onComplete: () => socialQueue.complete(pending.instanceId),
     });
     runner.start();
   }
@@ -735,6 +925,50 @@ export default class DormMode {
     this.root.classList.toggle("hidden", !showDorm);
     this.workShell.classList.toggle("work-mode-active", !showDorm);
     this._renderClock();
+  }
+
+  // ── CG overlay ──────────────────────────────────────────────────────────────
+
+  /**
+   * Show a CG background inside the dorm scene-wrap.
+   * - The `.dorm-cg-bg` image replaces the normal dorm background visually
+   *   (it sits between scene-bg and item-layer in the z-stack).
+   * - The item layer gets `pointer-events:none` + opacity 0.15 so items are
+   *   visually suppressed and not clickable.
+   * - The #cg-overlay element (fixed, full-screen, z-index 2050) is also shown
+   *   so LocationScene and any other surface get the same CG background.
+   */
+  _onCGShow(imageData) {
+    if (this._cgBgEl) {
+      this._cgBgEl.src = imageData || "";
+      this._cgBgEl.classList.toggle("hidden", !imageData);
+    }
+    // Suppress item layer interaction
+    if (this._itemLayer) {
+      this._itemLayer.classList.add("cg-active-layer");
+    }
+    // Show global overlay (covers LocationScene too)
+    if (this._cgOverlay) {
+      const img = this._cgOverlay.querySelector("img") || document.createElement("img");
+      img.alt = "CG";
+      img.className = "cg-overlay-img";
+      img.src = imageData || "";
+      if (!this._cgOverlay.contains(img)) this._cgOverlay.appendChild(img);
+      this._cgOverlay.classList.remove("hidden");
+    }
+  }
+
+  _onCGEnd() {
+    if (this._cgBgEl) {
+      this._cgBgEl.src = "";
+      this._cgBgEl.classList.add("hidden");
+    }
+    if (this._itemLayer) {
+      this._itemLayer.classList.remove("cg-active-layer");
+    }
+    if (this._cgOverlay) {
+      this._cgOverlay.classList.add("hidden");
+    }
   }
 
   _transition(showDorm) {

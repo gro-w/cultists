@@ -3,26 +3,40 @@ import { dataLoader, writeJSONToDisk } from "../core/DataLoader.js";
 import { locationSystem } from "../core/LocationSystem.js";
 
 /**
- * DevLocationEditorTab — edit location definitions (backgroundImage, layer,
- * sub-locations and their zone rectangles) inside DeveloperMode.
+ * DevLocationEditorTab — edit location definitions AND item placements.
  *
- * Zone rect editor: draws the background image on a canvas and lets the
- * developer drag to define/reposition each sub-location zone. Zones are
- * saved as { x, y, width, height } in locations.json.
+ * Canvas modes:
+ *   zone      – drag to define sub-location zone rectangles
+ *   hotspot   – click/drag to place scene hotspots (loc.hotspots[])
+ *   placement – select a placement from the list, click canvas to set x/y
+ *
+ * Item placements are loaded from / saved to `item_placements.json`.
+ * Only placements whose `location` field matches the currently-selected
+ * location ID are shown here.
  *
  * Inline onclick= handlers reference window._le (set to `this` on mount).
  */
 export class DevLocationEditorTab {
   constructor(devMode) {
     this._dev = devMode;
-    /** @type {Array} */
+    /** @type {Array} locations.json */
     this._locations = [];
+    /** @type {Array} item_placements.json full list */
+    this._allPlacements = [];
     this._currentId = null;
     this._dirty = false;
-    // Zone drag state
+    this._placementsDirty = false;
+    // canvas drag state
     this._dragging = false;
     this._dragSubId = null;
     this._dragStart = null;
+    this._dragHotspot = null;
+    this._dragPlacement = null;
+    // placement canvas selection
+    this._activePlacementId = null;
+    // cached bg image for canvas redraws
+    this._bgImage = null;
+    this._bgImageSrc = null;
   }
 
   // ── helpers ────────────────────────────────────────────────────────────────
@@ -34,6 +48,10 @@ export class DevLocationEditorTab {
     try { return new URL(path, document.baseURI).href; } catch (_) { return path; }
   }
   _st(s) { this._dev.setStatus(s); }
+  /** Placements belonging to the current location */
+  _locPlacements() {
+    return this._allPlacements.filter((p) => p.location === this._currentId);
+  }
 
   // ── lifecycle ──────────────────────────────────────────────────────────────
   mount() {
@@ -65,6 +83,7 @@ export class DevLocationEditorTab {
   <section id="le-editor" class="dev-ie-editor">
     <div id="le-editor-empty" style="color:#aaa;padding:40px;text-align:center">← 选择位置或点击 ＋ 新建</div>
     <div id="le-editor-form" style="display:none;padding:10px;overflow:auto">
+
       <div class="dev-section dev-ie-sec"><h3>📍 基本信息</h3>
         <div class="dev-ie-row">
           <div class="dev-ie-field"><label>位置 ID</label><input type="text" id="le-f-id" oninput="_le._setDirty()"></div>
@@ -85,7 +104,6 @@ export class DevLocationEditorTab {
             <tbody id="le-bg-list"></tbody>
           </table>
           <button type="button" class="win95-btn dev-btn" style="margin-top:6px" onclick="_le._addBgBand()">＋ 添加背景图</button>
-
         </div>
       </div>
 
@@ -104,14 +122,20 @@ export class DevLocationEditorTab {
           <select id="le-canvas-mode" onchange="_le._onCanvasModeChange()" style="min-height:22px;border:2px inset #eee;padding:1px 4px;font-size:12px">
             <option value="zone">子位置区域（拖拽绘制）</option>
             <option value="hotspot">物品/立绘位置（点击定位）</option>
+            <option value="placement">物品摆放（点击定位）</option>
           </select>
           <span id="le-zone-sub-wrap" style="display:flex;gap:4px;align-items:center">
             <label style="font-size:12px">编辑子位置：</label>
             <select id="le-zone-sub-select" onchange="_le._onZoneSubChange()" style="min-height:22px;border:2px inset #eee;padding:1px 4px;font-size:12px"></select>
           </span>
+          <span id="le-placement-pick-wrap" style="display:none;gap:4px;align-items:center">
+            <label style="font-size:12px">选中摆放项：</label>
+            <select id="le-placement-pick" onchange="_le._onActivePlacementChange()" style="min-height:22px;border:2px inset #eee;padding:1px 4px;font-size:12px"></select>
+          </span>
         </div>
         <canvas id="le-zone-canvas" style="border:2px inset #ccc;cursor:crosshair;max-width:100%;background:#111"></canvas>
         <p id="le-zone-hint" style="font-size:11px;color:#888;margin-top:4px"></p>
+
         <div id="le-hotspot-section" style="display:none;margin-top:8px">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
             <strong style="font-size:12px">Hotspot 列表</strong>
@@ -123,6 +147,17 @@ export class DevLocationEditorTab {
             <tbody id="le-hotspot-tbody"></tbody>
           </table>
         </div>
+      </div>
+
+      <!-- ─── Item Placements ─────────────────────────────────────────────── -->
+      <div class="dev-section dev-ie-sec" id="le-placements-section">
+        <h3>📦 物品摆放（item_placements.json）</h3>
+        <p style="font-size:11px;color:#888;margin:0 0 6px">
+          仅显示 <code>location</code> = 当前位置 ID 的条目。
+          切换到「物品摆放」画布模式后，选中某项并点击画布即可设置屏幕坐标。
+        </p>
+        <button type="button" class="win95-btn dev-btn" style="margin-bottom:6px" onclick="_le._addPlacement()">＋ 添加摆放项</button>
+        <div id="le-placements-list"></div>
       </div>
 
       <div style="display:flex;gap:8px;padding:8px 0 4px">
@@ -139,11 +174,19 @@ export class DevLocationEditorTab {
   // ── data loading ────────────────────────────────────────────────────────────
   async _loadData() {
     try {
-      const data = await dataLoader.loadJSON("locations.json");
-      this._locations = JSON.parse(JSON.stringify(data.locations || []));
+      const [locData, placData] = await Promise.all([
+        dataLoader.loadJSON("locations.json"),
+        dataLoader.loadJSON("item_placements.json"),
+      ]);
+      this._locations = JSON.parse(JSON.stringify(locData.locations || []));
+      this._allPlacements = JSON.parse(JSON.stringify(placData.placements || []));
       this._currentId = null;
+      this._dirty = false;
+      this._placementsDirty = false;
+      this._bgImage = null;
+      this._bgImageSrc = null;
       this._renderList();
-      this._st(`已读取 locations.json：${this._locations.length} 个位置`);
+      this._st(`已读取：${this._locations.length} 个位置，${this._allPlacements.length} 条摆放`);
     } catch (err) {
       this._st(`读取失败：${err.message}`);
     }
@@ -168,6 +211,9 @@ export class DevLocationEditorTab {
     if (this._currentId && this._dirty) this._saveLocation(true);
     this._currentId = id;
     this._dirty = false;
+    this._bgImage = null;
+    this._bgImageSrc = null;
+    this._activePlacementId = null;
     this._loadForm();
     this._renderList();
   }
@@ -198,19 +244,44 @@ export class DevLocationEditorTab {
     this._renderBgList();
     this._renderSubTable();
     this._updateZoneSection();
+    this._renderPlacementsList();
   }
 
   _setDirty() { this._dirty = true; }
+  _setPlacementsDirty() { this._placementsDirty = true; }
 
-  // ── canvas mode switch ───────────────────────────────────────────────────────
+  // ── canvas mode ─────────────────────────────────────────────────────────────
   _onCanvasModeChange() {
     const mode = this._el("le-canvas-mode")?.value ?? "zone";
-    const zoneWrap    = this._el("le-zone-sub-wrap");
-    const hotspotSec  = this._el("le-hotspot-section");
-    if (zoneWrap)   zoneWrap.style.display   = mode === "zone"    ? "" : "none";
-    if (hotspotSec) hotspotSec.style.display = mode === "hotspot" ? "" : "none";
+    const zoneWrap     = this._el("le-zone-sub-wrap");
+    const hotspotSec   = this._el("le-hotspot-section");
+    const placPickWrap = this._el("le-placement-pick-wrap");
+    if (zoneWrap)     zoneWrap.style.display     = mode === "zone"      ? "" : "none";
+    if (hotspotSec)   hotspotSec.style.display   = mode === "hotspot"   ? "" : "none";
+    if (placPickWrap) placPickWrap.style.display  = mode === "placement" ? "flex" : "none";
+    if (mode === "hotspot")   this._renderHotspotTable();
+    if (mode === "placement") this._refreshPlacementPicker();
     this._redrawZoneCanvas();
-    if (mode === "hotspot") this._renderHotspotTable();
+    this._updateHint();
+  }
+
+  _updateHint() {
+    const hint = this._el("le-zone-hint");
+    if (!hint) return;
+    const mode = this._el("le-canvas-mode")?.value ?? "zone";
+    if (mode === "zone") {
+      const sel = this._el("le-zone-sub-select");
+      hint.textContent = sel?.value
+        ? `拖动鼠标在背景图上为「${sel.options[sel.selectedIndex]?.text}」绘制区域矩形。`
+        : "请先选择子位置。";
+    } else if (mode === "hotspot") {
+      hint.textContent = "点击画布空白处添加标记；拖动已有标记调整位置。";
+    } else if (mode === "placement") {
+      const sel = this._el("le-placement-pick");
+      hint.textContent = sel?.value
+        ? `点击画布为「${sel.options[sel.selectedIndex]?.text}」设置摆放坐标；拖动已有摆放项移动它。`
+        : "请先添加摆放项，或从下拉框选择一项。";
+    }
   }
 
   // ── hotspot editing ──────────────────────────────────────────────────────────
@@ -268,6 +339,184 @@ export class DevLocationEditorTab {
     this._redrawZoneCanvas();
   }
 
+  // ── item placements editing ──────────────────────────────────────────────────
+  _renderPlacementsList() {
+    const container = this._el("le-placements-list");
+    if (!container) return;
+    const placements = this._locPlacements();
+    if (placements.length === 0) {
+      container.innerHTML = '<p style="color:#aaa;font-size:12px">此位置暂无摆放项。</p>';
+      this._refreshPlacementPicker();
+      return;
+    }
+    container.innerHTML = placements.map((p) => {
+      const pi = this._allPlacements.indexOf(p);
+      const hx = p.hotspot?.x ?? "";
+      const hy = p.hotspot?.y ?? "";
+      return `
+<article class="dev-ded-card" style="margin-bottom:8px">
+  <div class="dev-ded-card-title">
+    <b>${this._e(p.id || "(未命名)")}</b>
+    <button type="button" class="win95-btn dev-btn" onclick="_le._removePlacement(${pi})">− 删除</button>
+  </div>
+  <div class="dev-ie-row" style="flex-wrap:wrap;gap:6px">
+    <div class="dev-ie-field" style="min-width:120px">
+      <label style="font-size:11px">摆放 ID</label>
+      <input type="text" value="${this._e(p.id)}" style="width:140px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementField(${pi},'id',this.value)">
+    </div>
+    <div class="dev-ie-field" style="min-width:120px">
+      <label style="font-size:11px">物品 ID</label>
+      <input type="text" value="${this._e(p.itemId)}" style="width:140px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementField(${pi},'itemId',this.value)">
+    </div>
+    <div class="dev-ie-field" style="min-width:80px">
+      <label style="font-size:11px">区域 ID</label>
+      <input type="text" value="${this._e(p.zone || "")}" style="width:100px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementField(${pi},'zone',this.value)">
+    </div>
+    <div class="dev-ie-field" style="min-width:50px">
+      <label style="font-size:11px">图标</label>
+      <input type="text" value="${this._e(p.hotspot?.icon ?? "")}" style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px;text-align:center"
+        onchange="_le._setPlacementHotspot(${pi},'icon',this.value)">
+    </div>
+    <div class="dev-ie-field" style="min-width:100px">
+      <label style="font-size:11px">标签</label>
+      <input type="text" value="${this._e(p.hotspot?.label ?? "")}" style="width:120px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementHotspot(${pi},'label',this.value)">
+    </div>
+    <div class="dev-ie-field" style="min-width:58px">
+      <label style="font-size:11px">X 坐标</label>
+      <input type="number" value="${hx}" placeholder="—" style="width:64px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementHotspot(${pi},'x',this.value===''?null:Number(this.value))">
+    </div>
+    <div class="dev-ie-field" style="min-width:58px">
+      <label style="font-size:11px">Y 坐标</label>
+      <input type="number" value="${hy}" placeholder="—" style="width:64px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementHotspot(${pi},'y',this.value===''?null:Number(this.value))">
+    </div>
+  </div>
+  <div class="dev-ie-row" style="flex-wrap:wrap;gap:6px;margin-top:4px">
+    <div class="dev-ie-field" style="min-width:200px;flex:1">
+      <label style="font-size:11px">拾取提示</label>
+      <input type="text" value="${this._e(p.takeMessage ?? "")}" style="width:100%;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementField(${pi},'takeMessage',this.value)">
+    </div>
+    <div class="dev-ie-field" style="min-width:200px;flex:1">
+      <label style="font-size:11px">放回提示</label>
+      <input type="text" value="${this._e(p.returnMessage ?? "")}" style="width:100%;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+        onchange="_le._setPlacementField(${pi},'returnMessage',this.value)">
+    </div>
+    <div class="dev-ie-field" style="min-width:160px">
+      <label style="font-size:11px">
+        <input type="checkbox" ${p.condition?.roommatesSleeping ? "checked" : ""}
+          onchange="_le._setPlacementCondition(${pi},'roommatesSleeping',this.checked)">
+        仅室友睡觉时可见
+      </label>
+    </div>
+  </div>
+  <div style="margin-top:4px">
+    <button type="button" class="win95-btn dev-btn" style="font-size:11px"
+      onclick="_le._selectPlacementOnCanvas('${this._e(p.id)}')">🎯 在画布上定位此项</button>
+  </div>
+</article>`;
+    }).join("");
+    this._refreshPlacementPicker();
+  }
+
+  _refreshPlacementPicker() {
+    const sel = this._el("le-placement-pick");
+    if (!sel) return;
+    const placements = this._locPlacements();
+    sel.innerHTML = placements.length === 0
+      ? `<option value="">（暂无摆放项）</option>`
+      : placements.map((p) =>
+          `<option value="${this._e(p.id)}"${p.id === this._activePlacementId ? " selected" : ""}>${this._e(p.id)}</option>`
+        ).join("");
+    if (!this._activePlacementId && placements.length > 0) {
+      this._activePlacementId = placements[0].id;
+      sel.value = this._activePlacementId;
+    }
+    this._updateHint();
+    this._redrawZoneCanvas();
+  }
+
+  _onActivePlacementChange() {
+    const sel = this._el("le-placement-pick");
+    this._activePlacementId = sel?.value || null;
+    this._updateHint();
+    this._redrawZoneCanvas();
+  }
+
+  /** Switch to placement canvas mode and highlight the given placement */
+  _selectPlacementOnCanvas(placementId) {
+    this._activePlacementId = placementId;
+    const modeEl = this._el("le-canvas-mode");
+    if (modeEl) modeEl.value = "placement";
+    this._onCanvasModeChange();
+    const sel = this._el("le-placement-pick");
+    if (sel) sel.value = placementId;
+    this._updateHint();
+    this._redrawZoneCanvas();
+    const canvas = this._el("le-zone-canvas");
+    if (canvas) canvas.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  _addPlacement() {
+    const newP = {
+      id: `placement_${this._currentId}_${Date.now().toString(36)}`,
+      itemId: "",
+      location: this._currentId,
+      zone: "",
+      condition: {},
+      hotspot: { icon: "📦", label: "", x: null, y: null },
+      takeMessage: "",
+      returnMessage: "",
+    };
+    this._allPlacements.push(newP);
+    this._placementsDirty = true;
+    this._activePlacementId = newP.id;
+    this._renderPlacementsList();
+    this._redrawZoneCanvas();
+  }
+
+  _removePlacement(pi) {
+    const removing = this._allPlacements[pi];
+    this._allPlacements.splice(pi, 1);
+    this._placementsDirty = true;
+    if (removing && removing.id === this._activePlacementId) {
+      const remaining = this._locPlacements();
+      this._activePlacementId = remaining.length > 0 ? remaining[0].id : null;
+    }
+    this._renderPlacementsList();
+    this._redrawZoneCanvas();
+  }
+
+  _setPlacementField(pi, field, val) {
+    if (!this._allPlacements[pi]) return;
+    this._allPlacements[pi][field] = val;
+    this._placementsDirty = true;
+    if (field === "id") {
+      this._activePlacementId = val;
+      this._refreshPlacementPicker();
+    }
+  }
+
+  _setPlacementHotspot(pi, field, val) {
+    if (!this._allPlacements[pi]) return;
+    if (!this._allPlacements[pi].hotspot) this._allPlacements[pi].hotspot = {};
+    this._allPlacements[pi].hotspot[field] = val;
+    this._placementsDirty = true;
+    this._redrawZoneCanvas();
+  }
+
+  _setPlacementCondition(pi, field, val) {
+    if (!this._allPlacements[pi]) return;
+    if (!this._allPlacements[pi].condition) this._allPlacements[pi].condition = {};
+    this._allPlacements[pi].condition[field] = val;
+    this._placementsDirty = true;
+  }
+
   // ── background image band list ───────────────────────────────────────────────
   _renderBgList() {
     const tbody = this._el("le-bg-list");
@@ -287,7 +536,7 @@ export class DevLocationEditorTab {
           ${this._imageSrc(band.image)
             ? `<img id="le-bg-img-${i}" src="${this._e(this._imageSrc(band.image))}" style="width:80px;height:45px;object-fit:cover;border:1px solid #555;vertical-align:middle" alt="图片预览" onerror="this.alt='图片加载失败'">`
             : `<span style="color:#aaa;font-size:11px">（空）</span>`}
-          <input type="text" value="${this._e(band.image || "")}" placeholder="data/assets/location_dorm_xxx.jpg"
+          <input type="text" value="${this._e(band.image || "")}" placeholder="data/assets/location_xxx.jpg"
             style="width:220px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
             oninput="_le._setBgBandField(${i},'image',this.value)">
         </td>
@@ -304,13 +553,15 @@ export class DevLocationEditorTab {
     this._renderBgList();
   }
 
-
   _setBgBandField(i, field, val) {
     const loc = this._locations.find((l) => l.id === this._currentId);
     if (!loc?.backgroundImages?.[i]) return;
     loc.backgroundImages[i][field] = field === "image" ? val.trim() : (val === "" ? null : Number(val));
     this._dirty = true;
     if (field === "image") {
+      // Reset cached bg so canvas reloads it
+      this._bgImage = null;
+      this._bgImageSrc = null;
       const preview = this._el(`le-bg-img-${i}`);
       if (preview) {
         preview.src = this._imageSrc(loc.backgroundImages[i].image);
@@ -324,6 +575,8 @@ export class DevLocationEditorTab {
     if (!loc?.backgroundImages) return;
     loc.backgroundImages.splice(i, 1);
     this._dirty = true;
+    this._bgImage = null;
+    this._bgImageSrc = null;
     this._renderBgList();
     this._redrawZoneCanvas();
   }
@@ -393,14 +646,13 @@ export class DevLocationEditorTab {
     const loc = this._locations.find((l) => l.id === this._currentId);
     const section = this._el("le-zone-section");
     if (!section) return;
-    const hasSubs = (loc?.subLocations?.length || 0) > 0;
-    section.style.display = hasSubs ? "" : "none";
-    if (!hasSubs) return;
+    // Always show canvas (needed for hotspot/placement modes even without subs)
+    section.style.display = "";
 
     const sel = this._el("le-zone-sub-select");
     if (sel) {
       const prev = sel.value;
-      sel.innerHTML = (loc.subLocations || []).map((sub) =>
+      sel.innerHTML = (loc?.subLocations || []).map((sub) =>
         `<option value="${this._e(sub.id)}">${this._e(sub.name || sub.id)}</option>`
       ).join("");
       if (prev && [...sel.options].some((o) => o.value === prev)) sel.value = prev;
@@ -409,7 +661,7 @@ export class DevLocationEditorTab {
     this._bindCanvasDrag();
   }
 
-  _onZoneSubChange() { this._redrawZoneCanvas(); }
+  _onZoneSubChange() { this._redrawZoneCanvas(); this._updateHint(); }
 
   _redrawZoneCanvas() {
     const canvas = this._el("le-zone-canvas");
@@ -422,30 +674,32 @@ export class DevLocationEditorTab {
     canvas.width = CANVAS_W;
     canvas.height = CANVAS_H;
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
 
-    // Draw background
     const draw = () => {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
-      const mode = this._el("le-canvas-mode")?.value ?? "zone";
+      if (this._bgImage) ctx.drawImage(this._bgImage, 0, 0, CANVAS_W, CANVAS_H);
 
-      // Draw sub-location zones (zone mode)
+      const mode = this._el("le-canvas-mode")?.value ?? "zone";
       const sel = this._el("le-zone-sub-select");
       const selectedSubId = sel?.value;
+
+      // Sub-location zones (always drawn, dimmed in non-zone modes)
       (loc.subLocations || []).forEach((sub) => {
         const zone = sub.zone || { x: 0, y: 0, width: 100, height: 60 };
-        const isSelected = sub.id === selectedSubId;
-        ctx.strokeStyle = isSelected ? "#ff5722" : "#4caf50";
+        const isSelected = sub.id === selectedSubId && mode === "zone";
+        ctx.strokeStyle = isSelected ? "#ff5722" : "rgba(76,175,80,0.5)";
         ctx.lineWidth = isSelected ? 2 : 1;
         ctx.strokeRect(zone.x, zone.y, zone.width, zone.height);
-        ctx.fillStyle = isSelected ? "rgba(255,87,34,0.15)" : "rgba(76,175,80,0.1)";
+        ctx.fillStyle = isSelected ? "rgba(255,87,34,0.15)" : "rgba(76,175,80,0.05)";
         ctx.fillRect(zone.x, zone.y, zone.width, zone.height);
-        ctx.fillStyle = isSelected ? "#ff5722" : "#4caf50";
-        ctx.font = "11px sans-serif";
-        ctx.fillText(sub.name || sub.id, zone.x + 3, zone.y + 13);
+        if (mode === "zone") {
+          ctx.fillStyle = isSelected ? "#ff5722" : "rgba(76,175,80,0.8)";
+          ctx.font = "11px sans-serif";
+          ctx.fillText(sub.name || sub.id, zone.x + 3, zone.y + 13);
+        }
       });
 
-      // Draw hotspots (hotspot mode)
+      // Hotspots
       if (mode === "hotspot") {
         (loc.hotspots || []).forEach((h) => {
           const x = h.x ?? 0, y = h.y ?? 0;
@@ -457,7 +711,7 @@ export class DevLocationEditorTab {
           ctx.lineWidth = 2;
           ctx.stroke();
           ctx.fillStyle = "#333";
-          ctx.font = "12px sans-serif";
+          ctx.font = "14px sans-serif";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.fillText(h.icon || "❔", x, y);
@@ -468,30 +722,58 @@ export class DevLocationEditorTab {
           ctx.fillText(h.label || h.targetId || "", x + 13, y + 4);
         });
       }
+
+      // Placements
+      if (mode === "placement") {
+        this._locPlacements().forEach((p) => {
+          const x = p.hotspot?.x, y = p.hotspot?.y;
+          if (x == null || y == null) return;
+          const isActive = p.id === this._activePlacementId;
+          ctx.beginPath();
+          ctx.arc(x, y, isActive ? 13 : 9, 0, Math.PI * 2);
+          ctx.fillStyle = isActive ? "rgba(33,150,243,0.85)" : "rgba(33,150,243,0.45)";
+          ctx.fill();
+          ctx.strokeStyle = isActive ? "#0d47a1" : "#1565c0";
+          ctx.lineWidth = isActive ? 2.5 : 1.5;
+          ctx.stroke();
+          ctx.font = "13px sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#fff";
+          ctx.fillText(p.hotspot?.icon || "📦", x, y);
+          ctx.textAlign = "left";
+          ctx.textBaseline = "alphabetic";
+          ctx.fillStyle = isActive ? "#e3f2fd" : "#90caf9";
+          ctx.font = "10px sans-serif";
+          ctx.fillText(p.hotspot?.label || p.id, x + 15, y + 4);
+        });
+      }
     };
 
-    if (loc.backgroundImages?.length > 0 && loc.backgroundImages[0].image) {
-      const img = new Image();
-      img.onload = () => { ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H); draw(); };
-      img.onerror = () => draw();
-      img.src = this._imageSrc(loc.backgroundImages[0].image);
-    } else if (loc.backgroundImage) {
-      // legacy fallback
-      const img = new Image();
-      img.onload = () => { ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H); draw(); };
-      img.onerror = () => draw();
-      img.src = this._imageSrc(loc.backgroundImage);
+    // Resolve bg image src
+    const bgSrc = (loc.backgroundImages?.length > 0 && loc.backgroundImages[0].image)
+      ? this._imageSrc(loc.backgroundImages[0].image)
+      : (loc.backgroundImage ? this._imageSrc(loc.backgroundImage) : null);
+
+    if (bgSrc) {
+      // Re-use cached image if same URL
+      if (this._bgImage && this._bgImageSrc === bgSrc) {
+        draw();
+      } else {
+        const img = new Image();
+        img.onload = () => { this._bgImage = img; this._bgImageSrc = bgSrc; draw(); };
+        img.onerror = () => { this._bgImage = null; this._bgImageSrc = null; draw(); };
+        img.src = bgSrc;
+      }
     } else {
+      this._bgImage = null;
+      this._bgImageSrc = null;
       ctx.fillStyle = "#1a1a2e";
       ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
       draw();
     }
 
-    const hint = this._el("le-zone-hint");
-    if (hint) {
-      const sel = this._el("le-zone-sub-select");
-      hint.textContent = sel?.value ? `拖动鼠标在背景图上为「${sel.options[sel.selectedIndex]?.text}」绘制区域矩形。` : "";
-    }
+    this._updateHint();
   }
 
   _bindCanvasDrag() {
@@ -508,13 +790,12 @@ export class DevLocationEditorTab {
 
     canvas.addEventListener("mousedown", (ev) => {
       const mode = this._el("le-canvas-mode")?.value ?? "zone";
+      const pt = toCanvas(ev);
+      const loc = this._locations.find((l) => l.id === this._currentId);
+      if (!loc) return;
+
       if (mode === "hotspot") {
-        // Click to place hotspot at cursor
-        const pt = toCanvas(ev);
-        const loc = this._locations.find((l) => l.id === this._currentId);
-        if (!loc) return;
         if (!loc.hotspots) loc.hotspots = [];
-        // Check if near existing hotspot (move it)
         const existing = loc.hotspots.find((h) => Math.hypot((h.x ?? 0) - pt.x, (h.y ?? 0) - pt.y) < 14);
         if (existing) {
           this._dragHotspot = existing;
@@ -527,50 +808,95 @@ export class DevLocationEditorTab {
         ev.preventDefault();
         return;
       }
+
+      if (mode === "placement") {
+        const placements = this._locPlacements();
+        // Try to grab an existing placed item
+        const existing = placements.find((p) =>
+          p.hotspot?.x != null && p.hotspot?.y != null &&
+          Math.hypot(p.hotspot.x - pt.x, p.hotspot.y - pt.y) < 16
+        );
+        if (existing) {
+          this._dragPlacement = existing;
+          this._activePlacementId = existing.id;
+          this._dragging = true;
+          const sel = this._el("le-placement-pick");
+          if (sel) sel.value = existing.id;
+          this._updateHint();
+        } else {
+          // Place the active placement at click position
+          const active = placements.find((p) => p.id === this._activePlacementId);
+          if (active) {
+            if (!active.hotspot) active.hotspot = {};
+            active.hotspot.x = Math.round(pt.x);
+            active.hotspot.y = Math.round(pt.y);
+            this._placementsDirty = true;
+            this._renderPlacementsList();
+            this._redrawZoneCanvas();
+          }
+        }
+        ev.preventDefault();
+        return;
+      }
+
+      // zone mode
       const sel = this._el("le-zone-sub-select");
       if (!sel?.value) return;
       this._dragSubId = sel.value;
-      this._dragStart = toCanvas(ev);
+      this._dragStart = pt;
       this._dragging = true;
       ev.preventDefault();
     });
 
     canvas.addEventListener("mousemove", (ev) => {
-      if (this._dragHotspot && this._dragging) {
-        const cur = toCanvas(ev);
-        this._dragHotspot.x = Math.round(cur.x);
-        this._dragHotspot.y = Math.round(cur.y);
+      if (!this._dragging) return;
+      const mode = this._el("le-canvas-mode")?.value ?? "zone";
+      const pt = toCanvas(ev);
+
+      if (mode === "hotspot" && this._dragHotspot) {
+        this._dragHotspot.x = Math.round(pt.x);
+        this._dragHotspot.y = Math.round(pt.y);
         this._dirty = true;
         this._redrawZoneCanvas();
         return;
       }
-      if (!this._dragging || !this._dragStart) return;
-      const mode = this._el("le-canvas-mode")?.value ?? "zone";
-      if (mode === "hotspot") return;
-      const cur = toCanvas(ev);
+
+      if (mode === "placement" && this._dragPlacement) {
+        if (!this._dragPlacement.hotspot) this._dragPlacement.hotspot = {};
+        this._dragPlacement.hotspot.x = Math.round(pt.x);
+        this._dragPlacement.hotspot.y = Math.round(pt.y);
+        this._placementsDirty = true;
+        this._redrawZoneCanvas();
+        return;
+      }
+
+      if (!this._dragStart) return;
       const loc = this._locations.find((l) => l.id === this._currentId);
       const sub = (loc?.subLocations || []).find((s) => s.id === this._dragSubId);
       if (!sub) return;
-      const x = Math.min(this._dragStart.x, cur.x);
-      const y = Math.min(this._dragStart.y, cur.y);
-      const w = Math.abs(cur.x - this._dragStart.x);
-      const h = Math.abs(cur.y - this._dragStart.y);
+      const x = Math.min(this._dragStart.x, pt.x);
+      const y = Math.min(this._dragStart.y, pt.y);
+      const w = Math.abs(pt.x - this._dragStart.x);
+      const h = Math.abs(pt.y - this._dragStart.y);
       sub.zone = { x: Math.round(x), y: Math.round(y), width: Math.round(w), height: Math.round(h) };
       this._dirty = true;
       this._redrawZoneCanvas();
     });
 
     const stopDrag = () => {
-      if (this._dragging) {
-        this._dragging = false;
-        if (this._dragHotspot) {
-          this._dragHotspot = null;
-          this._renderHotspotTable();
-        } else {
-          this._renderSubTable(); // refresh coordinate inputs
-        }
-        this._dragStart = null;
+      if (!this._dragging) return;
+      this._dragging = false;
+      if (this._dragHotspot) {
+        this._dragHotspot = null;
+        this._renderHotspotTable();
+      } else if (this._dragPlacement) {
+        this._dragPlacement = null;
+        this._renderPlacementsList();
+      } else {
+        this._renderSubTable();
       }
+      this._dragStart = null;
+      this._dragSubId = null;
     };
     canvas.addEventListener("mouseup", stopDrag);
     canvas.addEventListener("mouseleave", stopDrag);
@@ -586,7 +912,6 @@ export class DevLocationEditorTab {
     loc.layer = this._el("le-f-layer")?.value || "above";
     this._currentId = newId;
     this._dirty = false;
-    // Update LocationSystem in memory
     locationSystem.update({ ...loc });
     if (!silent) {
       const msg = this._el("le-save-msg");
@@ -603,26 +928,39 @@ export class DevLocationEditorTab {
     const empty = this._el("le-editor-empty");
     const form  = this._el("le-editor-form");
     if (empty) empty.style.display = "";
-    if (form) form.style.display = "none";
+    if (form)  form.style.display = "none";
     this._renderList();
   }
 
   // ── export / write ───────────────────────────────────────────────────────────
   exportJSON() {
     if (this._currentId && this._dirty) this._saveLocation(true);
-    const blob = new Blob([JSON.stringify({ locations: this._locations }, null, 2) + "\n"], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "locations.json";
-    a.click();
-    URL.revokeObjectURL(a.href);
-    this._st("locations.json 已下载");
+    const dl = (name, data) => {
+      const blob = new Blob([JSON.stringify(data, null, 2) + "\n"], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+    dl("locations.json", { locations: this._locations });
+    dl("item_placements.json", { placements: this._allPlacements });
+    this._st("locations.json 和 item_placements.json 已下载");
   }
 
   async writeToDisk() {
     if (this._currentId && this._dirty) this._saveLocation(true);
-    const ok = await this._dev.writeToDisk("locations.json", { locations: this._locations });
-    if (ok) this._st("locations.json 已写入磁盘");
+    try {
+      await Promise.all([
+        writeJSONToDisk("locations.json", { locations: this._locations }),
+        writeJSONToDisk("item_placements.json", { placements: this._allPlacements }),
+      ]);
+      this._dirty = false;
+      this._placementsDirty = false;
+      this._st("✓ locations.json 和 item_placements.json 已写入磁盘");
+    } catch (err) {
+      this._st(`写入失败：${err.message}`);
+    }
   }
 }
 // DEV-TOOLS:END

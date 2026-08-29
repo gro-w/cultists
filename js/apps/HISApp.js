@@ -142,12 +142,18 @@ export async function launchHISApp() {
         const btn = document.createElement("button");
         btn.className = "win95-btn bevel-out his-patient-btn his-medical-incident-btn";
         btn.textContent = incident.incidentType === "riot" ? "⚠️ 愤怒的家属（医闹）" : "⚠️ 愤怒的患者（投诉）";
-        btn.addEventListener("click", () => renderMedicalIncident(incident));
+        btn.addEventListener("click", () => renderMedicalIncident(incident.instanceId));
         patientListEl.appendChild(btn);
       });
   }
 
-  function renderMedicalIncident(incident) {
+  function renderMedicalIncident(instanceId) {
+    const incident = workQueue.getInstance(instanceId);
+    if (!incident || incident.status === "resolved") {
+      renderCurrentEntry();
+      return;
+    }
+    const incidentInstanceId = incident.instanceId;
     dialogueEl.innerHTML = `<h4>${incident.incidentType === "riot" ? "医闹" : "投诉"}</h4>`;
     diagnosisEl.innerHTML = "<h4>诊断</h4>";
     prescriptionEl.innerHTML = "<h4>处方</h4>";
@@ -168,9 +174,9 @@ export async function launchHISApp() {
       appendLine,
       optionsEl,
       appId: "his",
-      onCheckpoint: (instance) => workQueue.updateInstance(instance.instanceId, instance),
+      onCheckpoint: (instance) => workQueue.updateInstance(incidentInstanceId, instance),
       onComplete: (instance) => {
-        workQueue.complete(instance.instanceId);
+        workQueue.complete(incidentInstanceId);
         renderCurrentEntry();
       },
     }).start();

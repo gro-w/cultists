@@ -658,12 +658,11 @@ export class DeveloperMode {
     const structuredTab = action.match(/^tab-structured-(.+)$/);
     if (structuredTab) return this.showStructuredEditor(structuredTab[1]);
     const dedicatedAction = {
-      "add-node": "addNode", "remove-node": "removeNode", "add-option": "addOption", "remove-option": "removeOption",
       "add-placement": "addPlacement", "remove-placement": "removePlacement", "add-category": "addCategory", "remove-category": "removeCategory",
       "add-diagnosis": "addDiagnosis", "remove-diagnosis": "removeDiagnosis", "add-tag": "addTag", "remove-tag": "removeTag",
       "add-medicine": "addMedicine", "remove-medicine": "removeMedicine", "add-dialogue": "addDialogue", "remove-dialogue": "removeDialogue",
       "add-day": "addDay", "remove-day": "removeDay", "add-achievement": "addAchievement", "remove-achievement": "removeAchievement",
-      "add-skill": "addSkill", "remove-skill": "removeSkill", "add-scene": "addScene", "remove-scene": "removeScene",
+      "add-skill": "addSkill", "remove-skill": "removeSkill",
     }[action];
     if (dedicatedAction && this._structuredEditorTab?.[dedicatedAction]) {
       const value = source?.dataset.ddValue || "";

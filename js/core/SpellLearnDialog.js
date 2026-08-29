@@ -1,7 +1,7 @@
 import { windowManager } from "./WindowManager.js";
 import { eventBus } from "./EventBus.js";
 import { spellManager } from "./SpellManager.js";
-import { realtimeQueue } from "./ScheduleQueue.js";
+import { mainQueue } from "./ScheduleQueue.js";
 import { createScheduleRunner } from "./ScheduleRunner.js";
 
 /**
@@ -10,7 +10,7 @@ import { createScheduleRunner } from "./ScheduleRunner.js";
  *
  * Opens a Win95-style window listing the spells in that book. For each spell
  * the player can click "学习" to learn it; learning a spell:
- *   1. Creates a realtime schedule instance.
+ *   1. Creates a main schedule instance.
  *   2. Consumes 240 minutes.
  *   3. Executes a spellOperation node that changes learned-spell state.
  *
@@ -77,7 +77,7 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             sourceBookName: bookName,
             spellIndex: idx,
           };
-          const instance = realtimeQueue.append([{
+          const instance = mainQueue.append([{
             scheduleId: `spell-learn:${spell.id}`,
             status: "unresolved",
             transcript: [],
@@ -102,8 +102,8 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             },
             instance,
             appId: "spell-learn",
-            onCheckpoint: (next) => realtimeQueue.updateInstance(instance.instanceId, next),
-            onComplete: () => realtimeQueue.complete(instance.instanceId),
+            onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
+            onComplete: () => mainQueue.complete(instance.instanceId),
           });
           runner.start();
           rebuildList();

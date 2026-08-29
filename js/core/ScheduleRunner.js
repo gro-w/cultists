@@ -8,6 +8,7 @@ import { modifyStatValue } from "./ScheduleValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
+import { keywordManager } from "./KeywordManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -25,7 +26,7 @@ function nextFlow(blueprint, node, port = "flowOut") {
 }
 
 export class ScheduleRunner {
-  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
+  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, onItemInspection = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
     this.definition = definition || {};
     this.instance = instance || { status: "unresolved", transcript: [] };
     if (this.instance.status === "pending" || this.instance.status === "completed") this.instance.status = this.instance.status === "completed" ? "resolved" : "unresolved";
@@ -36,8 +37,11 @@ export class ScheduleRunner {
     this.optionsEl = optionsEl;
     this.onComplete = onComplete;
     this.onCheckpoint = onCheckpoint;
+    this.onItemInspection = onItemInspection;
     this.appId = appId;
     this.readOnly = readOnly || this.instance.status === "resolved";
+    this._waitUntilUnsubscribers = [];
+    this._waitUntilEvaluating = false;
     this.evaluator = new ScheduleValueEvaluator(this.blueprint, {
       scheduleStatus: (instanceId) => this._scheduleStatus(instanceId),
       scheduleInstanceCount: (scheduleId) => this._scheduleInstanceCount(scheduleId),
@@ -74,6 +78,12 @@ export class ScheduleRunner {
       }
       const result = this._execute(node);
       if (result?.waitChoice) { this._showChoice(node); return; }
+      if (result?.waitUntil) {
+        this.instance.waitingNodeId = node.id;
+        this._subscribeWaitUntil(node.id);
+        this.onCheckpoint(this.instance);
+        return;
+      }
       if (result?.wait) {
         const next = result.next || nextFlow(this.blueprint, node);
         this.instance.executedNodeIds.push(node.id);
@@ -98,29 +108,47 @@ export class ScheduleRunner {
 
   _execute(node) {
     const get = (name, fallback) => inputValue(this.blueprint, node, name, this.evaluator, fallback);
+    if (node.onShow && node.type !== "statOperation") {
+      applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
+    }
     switch (node.type) {
       case "flowStart": return {};
       case "scheduleEnd": this._resolve(); return { stop: true };
       case "text": {
         const speaker = get("speaker", node.speaker || "npc");
         const text = String(get("text", node.text || ""));
-        if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
         this._record({ type: "text", speaker, text });
         this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
+        if (this.definition.action === "investigate" && Array.isArray(node.keywordIds)) {
+          this._emitInspection(node, text);
+        }
         return { wait: true };
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
+      case "waitUntil": {
+        if (!Boolean(get("condition", false))) return { waitUntil: true };
+        this.instance.waitingNodeId = null;
+        this._clearWaitUntil();
+        return {};
+      }
       case "diceCheck": {
         const n = Math.max(1, Math.min(100, Number(get("n", 0))));
         if (!Number.isFinite(n)) throw new Error("Dice check target must be a number");
         const roll = Math.floor(this.random() * 100) + 1;
-        const port = roll === 100 || (n < 50 && roll >= 96)
+        const outcome = roll === 100 || (n < 50 && roll >= 96)
           ? "largeFailure"
           : roll <= n / 5 ? "largeSuccess" : roll <= n ? "success" : "failure";
-        return { next: nextFlow(this.blueprint, node, port) };
+        this.instance.lastDiceCheck = { roll, target: n, outcome };
+        return { next: nextFlow(this.blueprint, node, outcome) };
       }
       case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
-      case "setGlobal": globalVariableManager.set(get("variableId"), get("value")); return {};
+      case "setGlobal": {
+        const id = get("variableId");
+        const delta = get("delta", undefined);
+        if (delta !== undefined) globalVariableManager.modify(id, delta);
+        else globalVariableManager.set(id, get("value"));
+        return {};
+      }
       case "insertSchedule": {
         const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"));
         if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
@@ -128,6 +156,24 @@ export class ScheduleRunner {
       }
       case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
       case "endCg":  eventBus.emit("schedule:end_cg", { instanceId: this.instance.instanceId }); return {};
+      case "showImage": {
+        const image = String(get("image", ""));
+        this.instance.inspectionImage = image || null;
+        if (image) eventBus.emit("schedule:image", { image, itemId: this.definition.itemId, instanceId: this.instance.instanceId });
+        return {};
+      }
+      case "segmentBranch": {
+        const value = Number(get("value", 0));
+        const count = Math.max(1, Math.min(32, Math.floor(Number(get("branchCount", 1)))));
+        if (!Number.isFinite(value) || !Number.isFinite(count)) throw new Error("Segment branch value and count must be numbers");
+        const boundaries = Array.from({ length: count + 1 }, (_, index) => Number(get(`boundary${index}`, 0)));
+        if (boundaries.some((boundary) => !Number.isFinite(boundary)) || boundaries.some((boundary, index) => index && boundaries[index - 1] < boundary)) {
+          throw new Error("Segment branch boundaries must be finite and descending");
+        }
+        const index = boundaries.findIndex((upper, boundaryIndex) => value <= upper && value > boundaries[boundaryIndex + 1]);
+        const selected = index < 0 ? (value <= boundaries[count] ? count - 1 : 0) : index;
+        return { next: nextFlow(this.blueprint, node, `segment${selected}`) };
+      }
       case "inventoryOperation": {
         const itemId = String(get("itemId", ""));
         const count = Number(get("count", 0));
@@ -137,7 +183,11 @@ export class ScheduleRunner {
         else itemManager.remove(itemId, itemManager.count(itemId));
         return {};
       }
-      case "statOperation": modifyStatValue(get("statId", ""), get("delta", 0)); return {};
+      case "statOperation": {
+        modifyStatValue(get("statId", ""), get("delta", 0));
+        if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
+        return {};
+      }
       case "spellOperation": {
         const learned = spellManager.learn(node.spell || node.inputs?.spell);
         if (!learned && node.requireNew !== false) throw new Error("Spell is already known or invalid");
@@ -146,6 +196,20 @@ export class ScheduleRunner {
       default: throw new Error(`Unsupported flow node: ${node.type}`);
     }
   }
+
+  _emitInspection(node, text) {
+    const itemId = String(this.definition.itemId || "");
+    const ids = Array.isArray(node.keywordIds) ? node.keywordIds : [];
+    const inlineIds = [...text.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]/g)].map((match) => match[1]);
+    const allIds = [...new Set([...ids, ...inlineIds])];
+    const keywordDefs = keywordManager.definitionsWithSource(allIds, `物品-${this.definition.name || itemId}`);
+    allIds.filter((id) => ids.includes(id)).forEach((id) => { if (keywordDefs[id]) keywordManager.collect(keywordDefs[id]); });
+    const result = { text, check: this.instance.lastDiceCheck || null, keywordDefs, effect: null, image: this.instance.inspectionImage || null };
+    this.instance.inspectionResult = result;
+    this.onItemInspection(result);
+    eventBus.emit("item:inspection-result", { itemId, result, instanceId: this.instance.instanceId });
+  }
+
 
   _showChoice(node) {
     if (!this.optionsEl) throw new Error("Choice node requires an options container");
@@ -215,6 +279,8 @@ export class ScheduleRunner {
 
   _resolve() {
     if (this.instance.status === "resolved") return;
+    this._clearWaitUntil();
+    this.instance.waitingNodeId = null;
     this.instance.status = "resolved";
     this.instance.currentNodeId = null;
     this.onCheckpoint(this.instance);
@@ -223,14 +289,37 @@ export class ScheduleRunner {
     eventBus.emit("schedule:completed", { appId: this.appId, instance: this.instance });
   }
 
+  _subscribeWaitUntil(nodeId) {
+    if (this._waitUntilUnsubscribers.length) return;
+    const events = [
+      "gamestate:changed", "global-variable:changed", "global-variables:changed",
+      "items:changed", "npcState:changed", "favorability:changed", "time:changed",
+      "daynight:changed", "schedule:changed", "schedule:appended", "spells:changed",
+    ];
+    const retry = () => {
+      if (this._waitUntilEvaluating || this.instance.status === "resolved") return;
+      this._waitUntilEvaluating = true;
+      try {
+        if (this.blueprint.nodes?.[nodeId]) this._run(nodeId);
+      } finally {
+        this._waitUntilEvaluating = false;
+      }
+    };
+    this._waitUntilUnsubscribers = events.map((event) => eventBus.on(event, retry));
+  }
+
+  _clearWaitUntil() {
+    this._waitUntilUnsubscribers.splice(0).forEach((unsubscribe) => unsubscribe());
+  }
+
   _scheduleStatus(instanceId) {
-    const queues = ["work", "social", "chatgtp", "realtime"];
+    const queues = ["work", "social", "main"];
     const status = queues.map((id) => scheduleData.queue(id).statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
     return STATUS[status] ?? STATUS.nonexistent;
   }
 
   _scheduleInstanceCount(scheduleId) {
-    return ["work", "social", "chatgtp", "realtime"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
+    return ["work", "social", "main"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
   }
 }
 

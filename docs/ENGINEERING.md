@@ -33,7 +33,7 @@ index.html
 | `TimeService` | 普通时间推进、跨午夜、08:00 结算、睡眠恢复和时间事件 |
 | `DayNightSystem` | 上下班、睡觉、阻塞检查和模式转换入口 |
 | `ScheduleData` | 读取日程文件、维护动态插入、按时间追加实例 |
-| `ScheduleQueue` | 保存 `work`、`social`、`chatgtp`、`realtime` 实例及状态 |
+| `ScheduleQueue` | 保存 `work`、`social`、`main` 实例及状态 |
 | `ScheduleBlueprint` | 蓝图规范化、端口校验、可达性检查和旧树迁移 |
 | `ScheduleNodeRegistry` | 节点类型、流程/数值端口和动态 choice 端口定义 |
 | `ScheduleRunner` | 按流程节点执行蓝图、暂停等待 UI、记录 transcript |
@@ -76,8 +76,7 @@ App 点击
 
 - `workQueue`：工作日程和 HIS 对话。
 - `socialQueue`：Social 对话。
-- `chatgtpQueue`：ChatGTP 查询，单当前实例。
-- `realtimeQueue`：物品、法术、诊断、NPC 离线等非阻塞实例。
+- `mainQueue`：物品、法术、诊断、NPC 离线等非阻塞实例。
 
 `ScheduleQueue.append()` 可接受单对象或数组，并返回带 canonical `instanceId` 的实例。实例核心字段：
 
@@ -135,7 +134,7 @@ App 点击
 6. value edge 是反向求值依赖：执行输入端时，通过 `toNode/toPort` 找到上游 `fromNode/fromPort`。
 7. 节点坐标 `x/y` 属于编辑器元数据，但应随蓝图保存以保留布局。
 
-当前节点由 `ScheduleNodeRegistry.js` 注册：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前节点由 `ScheduleNodeRegistry.js` 注册：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
 ### 常用节点
 
@@ -163,7 +162,7 @@ App 点击
 
 `ScheduleRunner` 每遇到 `text` 节点就暂停；有 UI 容器时等待明确的继续动作，遇到 `choice` 时等待选项。无 UI 容器的 headless realtime 日程必须自动继续，不能因为没有按钮而死锁。
 
-`transcript` 是持久化历史；当前画面是单独的 active dialogue container。Social、HIS、Monitor、Dorm、ChatGTP 的 renderer 应替换当前内容，而不是追加成聊天记录。读档/只读回放时可以遍历 transcript，但不能重新执行节点副作用。
+`transcript` 是持久化历史；当前画面是单独的 active dialogue container。Social、HIS、Dorm、ChatGTP 的 renderer 应替换当前内容，而不是追加成聊天记录。读档/只读回放时可以遍历 transcript，但不能重新执行节点副作用。
 
 关键词只使用文本标记：`[[keyword_id]]`。角色显示名不是持久化 ID；NPC 引用使用 `npcId`。
 
@@ -182,17 +181,17 @@ App 点击
 - `items.json`：物品、调查、使用效果和书籍法术。
 - `item_placements.json`：场景物品摆放。
 - `diagnoses.json`、`medicines.json`：医疗知识图谱。
-- `global_variables.json`：顶层数组，ID 唯一，类型为 bool/number/string。
+- `global_variables.json`：顶层数组，ID 唯一，类型为 bool/number/decimal/string；decimal 为精确到小数点后 2 位的实数。
 - `special_events.json`、`endings.json`、`achievements.json`：特殊事件、结局和成就。
 - `social_apps.json`：宿舍电脑中的社交网站、群聊和 ChatGTP 每日内容。
 - `bgm.json`、`locations.json`：BGM 资源/规则和位置、子位置、热点定义。
-- `time_rules.json`、`calendar.json`、`skills.json`、`monitor_scenes.json`：时间规则、日历、技能和宿舍监控场景。
+- `time_rules.json`、`calendar.json`、`skills.json`：时间规则、日历和技能。
 
 生成内容时先读取 schema 和同类条目，再写入目标文件；保持原有条目、LF 换行和稳定 ID。新增角色、关键词、物品或诊断后，搜索日程、特殊事件、结局、存档索引和编辑器中的全部引用。
 
 ### 7.1 数据文件与开发人员模式编辑器映射
 
-下面的清单按当前 `data/zh-hans/` 实际存在的 51 个 JSON 文件逐项列出。每个文件都有对应的专用入口；日程、物品等专用编辑器使用自己的表单和校验，不提供无上下文的通用 JSON 编辑器。
+下面的清单按当前 `data/zh-hans/` 实际存在的 50 个 JSON 文件逐项列出。每个文件都有对应的专用入口；日程、物品等专用编辑器使用自己的表单和校验，不提供无上下文的通用 JSON 编辑器。
 
 | 数据文件 | 专用编辑器/入口 | 说明 |
 | --- | --- | --- |
@@ -207,25 +206,22 @@ App 点击
 | `social_apps.json` | 宿舍电脑内容编辑器 | 吱乎、小绿书、企鹅群和 ChatGTP 每日内容 |
 | `keywords.json` | 关键词编辑器 | 稳定关键词 ID 和内容 |
 | `chatgtp_qa.json` | ChatGTP 问答编辑器 | 关键词组合问答 |
-| `npcs.json` | NPC 列表编辑器 | 稳定 NPC ID、名称、头像和初始值 |
+| `npcs.json` | NPC 列表编辑器 | 稳定 NPC ID、数值 ID、名称和头像 |
 | `global_variables.json` | 全局变量编辑器 | 变量定义；“当前值”列是运行时值操作，不是另一份数据文件 |
-| `chatgtp_dialog.json` | ChatGTP 对话编辑器 | ChatGTP 对话蓝图及稳定 ID |
 | `item_placements.json` | 场景物品摆放编辑器 | 物品位置、区域、条件和拾取/放回提示 |
 | `diagnoses.json` | 诊断知识编辑器 | ICD 分类、诊断、症状和药品关系 |
 | `medicines.json` | 药品知识编辑器 | 药品、分类、价格和诊断关系 |
 | `medical_events.json` | 医疗事件编辑器 | 罚款、奖励和投诉/暴动对话 |
-| `npc_state.json` | NPC 状态规则编辑器 | 默认 SAN、阈值和离线后果配置；运行时状态另由 NPC与对话调试器操作 |
+
 | `time_rules.json` | 时间规则编辑器 | 阶段时长、睡眠恢复、睡眠债和熬夜 SAN 损失 |
 | `calendar.json` | 日历规则编辑器 | 总天数、休息日和夜班日 |
 | `achievements.json` | 成就定义编辑器 | 成就内容、分类、隐藏和触发条件 |
-| `skills.json` | 技能定义编辑器 | 技能 ID、名称和初始数值 |
-| `monitor_scenes.json` | 监控场景编辑器 | 白天/夜间监控场景记录 |
-
-因此，当前没有专用编辑器的文件：**无**。上述 11 个文件均已增加独立的专用编辑器入口；其中 `npc_state.json` 仍要特别区分静态配置和运行时 NPC 状态。
+| `skills.json` | 技能定义编辑器 | 技能 ID、数值 ID、名称和类别 |
+因此，当前没有专用编辑器的文件：**无**。上述数据文件均已增加独立的专用编辑器入口；NPC 的 SAN 阈值由全局变量 3/4 定义，运行时 NPC 状态仍由 NPC 与对话调试器操作。
 
 ## 8. 开发人员模式
 
-开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 的成熟编辑器（关键词、ChatGTP 问答、NPC 列表、全局变量定义、日程、BGM、位置、电脑内容）使用中性图标，其余 11 个专用数据编辑器使用蓝色图标表示尚未完全开发；调试器包含时间与读档（含成就调试器）、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
+开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 的成熟编辑器（关键词、ChatGTP 问答、NPC 列表、全局变量定义、日程、BGM、位置、电脑内容）使用中性图标，其余 9 个专用数据编辑器使用蓝色图标表示尚未完全开发；调试器包含时间与读档（含成就调试器）、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
 
 旧的“对话分支树”“患者分支树”“Work 事件队列”“Social 事件队列”已删除；不要恢复这些旧入口。对话/患者内容统一通过“日程编辑器”按源文件和 entry 编辑对象式蓝图。运行时 queue 仅用于执行与保存，不是编辑器的内容来源。
 

@@ -567,7 +567,7 @@
 /* ChatGTP inside computer */
 .dorm-computer-panel .chatgtp-history { background: #f0eef8; color: #111; }
 .dorm-computer-panel .chatgtp-keywords { background: #f5f3fc; color: #111; }
-.dorm-computer-panel .chatgtp-dialogue-layout { background: #f0eef8; color: #111; }
+
 .dorm-computer-panel .bubble-npc { background: #e8f0fe; border-color: #aac; color: #111; }
 .dorm-computer-panel .bubble-me { background: #d4edda; border-color: #8bc; color: #111; }
 .dorm-computer-panel .chatgtp-san-indicator { color: #444; }
@@ -750,11 +750,6 @@
 .loc-scene-interaction button { margin: 3px; }
 .loc-scene-interaction p { margin: 4px 0; }
 .loc-scene-hint { color: #888; font-size: 12px; }
-
-/* ── Location editor (dev) ──────────────────────────────────────────────── */
-.dev-le-root { display: flex; flex-direction: column; height: 100%; }
-.dev-le-toolbar { padding: 6px 8px; flex-shrink: 0; }
-.dev-le-main { display: flex; flex: 1; min-height: 0; overflow: hidden; }
 
 /* ── ChatGTP daily banner (dorm computer) ───────────────────────────────── */
 .chatgtp-daily-banner {

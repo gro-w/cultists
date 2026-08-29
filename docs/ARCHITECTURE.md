@@ -25,13 +25,13 @@
 | `DayNightSystem` | 上班、下班、睡眠、工作日/休息日和最终阶段切换 |
 | `TimeService` | 唯一普通游戏时间推进、跨日和阶段结算 |
 | `ScheduleData` | 加载 work/social 日程，并按时间点追加批次 |
-| `ScheduleQueue` | 独立的 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `realtimeQueue` |
+| `ScheduleQueue` | 独立的 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件和使用效果 |
 | `ItemPlacementManager` | 场景中的条件物品摆放、拾取和放回 |
-| `GlobalVariableManager` | 数据定义的 bool/number/string 全局变量、条件和效果 |
+| `GlobalVariableManager` | 数据定义的 bool/number/decimal/string 全局变量、条件和效果 |
 | `SpellManager` | 已学习法术、法术施放和法术状态事件 |
 | `KeywordManager` | 关键词注册、收集、来源和笔记本数据 |
-| `ScheduleRunner` | HIS/Social/Monitor 对话及所有对象式日程蓝图执行器 |
+| `ScheduleRunner` | HIS/Social 对话及所有对象式日程蓝图执行器 |
 | `DialogueEffects` | 对话显示时的物品、NPC、好感度、结局、变量和游戏事件效果 |
 | `EndingManager` | 事件、对话、物品、属性阈值和最终阶段结局 |
 | `SaveManager` | v13 存档编码/恢复、窗口布局、队列实例和所有持久状态 |
@@ -55,12 +55,12 @@
 
 | 操作 | 队列 | 执行顺序 |
 | --- | --- | --- |
-| HIS/Social/Monitor 对话 | `workQueue` / `socialQueue` / `realtimeQueue` | `ScheduleRunner` 执行蓝图节点、对话效果和 `consumeTime` |
-| ChatGTP 关键词查询 | `chatgtpQueue` | 扣 NPC SAN、推进 20 分钟、提交回答 |
-| 物品调查/使用、法术施放 | `realtimeQueue` | `ItemScheduleRuntime` 执行效果、时间和完成事件 |
-| HIS 诊断提交 | `realtimeQueue` | 提交医疗记录、推进 20 分钟、完成实例 |
-| 法术学习 | `realtimeQueue` | `consumeTime(240)` 后执行 `spellOperation` |
-| NPC 离线 | `realtimeQueue` | 执行离线状态转换和 `offlineConsequence` |
+| HIS/Social 对话 | `workQueue` / `socialQueue` / `mainQueue` | `ScheduleRunner` 执行蓝图节点、对话效果和 `consumeTime` |
+| ChatGTP 关键词查询 | `mainQueue` | 扣 NPC SAN、推进 20 分钟、提交回答 |
+| 物品调查/使用、法术施放 | `mainQueue` | `ItemScheduleRuntime` 执行效果、时间和完成事件 |
+| HIS 诊断提交 | `mainQueue` | 提交医疗记录、推进 20 分钟、完成实例 |
+| 法术学习 | `mainQueue` | `consumeTime(240)` 后执行 `spellOperation` |
+| NPC 离线 | `mainQueue` | 执行离线状态转换和 `offlineConsequence` |
 
 `TimeService` 是唯一的普通时间推进 owner。睡眠、醒来、下班、跨日、日结和最终结局是显式系统边界；其中医疗到期只在 `TimeService` 的醒来路径调用 `MedicalCaseManager.processDue()`，医疗管理器不得再通过 `daynight:changed` 自行执行该逻辑。EventBus listener 若改变状态或消耗时间，必须视为执行器审计，不能当作被动通知。
 

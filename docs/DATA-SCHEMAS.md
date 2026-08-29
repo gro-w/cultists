@@ -12,14 +12,16 @@
 
 ## 日程文件
 
-当前使用两条独立队列，每天两个时间点，并有不自动追加的公共日程：
+当前使用工作、社交、ChatGTP 和主要等独立队列。工作/社交日程每天两个时间点追加，公共日程不会自动追加；`maininit.json` 中的日程则在游戏启动时一次性加入主要日程队列：
 
 ```text
 work01a.json ... work07a.json   # 工作日/白班批次，08:00 追加
 work01b.json ... work07b.json   # 工作/夜班批次，16:00 追加
 social01a.json ... social07a.json
 social01b.json ... social07b.json
-workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
+workpub.json / socialpub.json     # 工作/社交公共日程文件，可由编辑器编辑
+mainpub.json                      # 主要公共日程文件，通过 insertSchedule 插入 mainQueue
+maininit.json                     # 游戏启动时加入 mainQueue 的初始日程
 ```
 
 游戏流程只有第 1 至第 7 天。日历配置和运行时都会将天数上限限制为 7；第 7 天最终阶段结束后进入结局，不会推进到第 8 天。包含第 8 天及以后状态的旧存档会被拒绝加载，不会静默截断玩家进度。
@@ -57,25 +59,39 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 
 `addTime` 必须是非负、20 分钟的整数倍，使用与游戏时钟相同的绝对分钟坐标。执行操作时只创建计时器；计时器到期后才检查日程先决条件，并把日程加入其来源文件决定的 Work 或 Social 队列。`socialpub.json` / `workpub.json` 的条目不会随日期检查点自动追加。旧的 `addSchedule` 简写仍可读取，但新内容应使用 `operations`。
 
+`maininit.json` 和 `mainpub.json` 使用 `{ "entries": [] }` 顶层结构；其中每个条目的 `id` 是稳定日程 ID。`maininit.json` 的条目启动时以 `main` 队列实例加入，并由统一 `ScheduleRunner` 执行。`mainpub.json` 只注册主要公共日程定义；通过 `insertSchedule` 指定 `queue="main"` 插入的日程进入主要日程队列并由同一运行时执行。初始主要日程的条件等待应使用 `waitUntil`，不应在应用层另行订阅或轮询。
+
 ## 全局变量
+
+开发人员模式中，系统预留公共变量（`id=0..99`）的 ID、名称和类型不可编辑且不可删除，但默认值可以编辑；运行时当前值在调试器中编辑。公共变量编辑器和调试器均提供三个互斥显示选项：不看系统预留公共变量、不看没有意义的系统公共变量、不隐藏系统公共变量，默认选中第二项。第二项保留 `0、1、2、5`，以及按实际技能数量和 NPC 数量分配的 `20..39`、`40..59`、`60..79` 变量，并隐藏其他未分配的预留变量。
 
 文件：`global_variables.json`。顶层必须是数组，每项包含：
 
 ```json
 [
-  { "id": 0, "name": "是否取得钥匙", "type": "bool", "default": false },
-  { "id": 1, "name": "调查进度", "type": "number", "default": 0 },
-  { "id": 2, "name": "路线", "type": "string", "default": "" }
+  { "id": 0, "name": "怀疑度", "type": "number", "default": 0 },
+  { "id": 1, "name": "主角SAN", "type": "number", "default": 100 },
+  { "id": 2, "name": "金钱", "type": "decimal", "default": 0 },
+  { "id": 5, "name": "ChatGTP SAN", "type": "number", "default": 80 },
+  { "id": 20, "name": "主角技能0点", "type": "number", "default": 0 },
+  { "id": 40, "name": "NPC0好感度", "type": "number", "default": 0 },
+  { "id": 60, "name": "NPC0 SAN", "type": "number", "default": 0 }
 ]
 ```
+
+实际语言数据还必须包含全部 `id=0..99` 的系统预留定义；上例只展示关键 ID。系统预留变量的初始值唯一来自本文件的 `default`，技能定义、NPC 定义和 NPC 状态配置不得另行提供或覆盖这些变量的初始值。
 
 约束：
 
 - ID 是从 0 开始的非负整数，不能重复；定义会按 ID 排序。
-- `type` 只能是 `bool`、`number`、`string`。
-- `number` 的默认值和运行时值必须在 `0..256`。
+- `type` 只能是 `bool`、`number`、`decimal`、`string`。
+- `number` 和 `decimal` 的默认值、运行时值必须在 `0..256`；`decimal` 会四舍五入并保持小数点后 2 位精度。
 - bool 必须使用 JSON 布尔值，字符串必须使用 JSON 字符串。
 - `default` 是读档缺少对应值时的回退值。
+
+### 技能与 NPC 数值 ID
+
+`skills.json` 的每个技能和 `npcs.json` 的每个 NPC 必须包含从 `0` 开始、范围为 `0..19` 且不重复的 `numericid`。该 ID 是稳定的数值映射，不随数组排序变化：技能 `numericid=n` 使用全局变量 `20+n`；NPC `numericid=n` 使用全局变量 `40+n` 保存好感度、使用 `60+n` 保存 SAN。全局变量 `3` 是 NPC 不稳定 SAN 阈值，`4` 是 NPC 下线 SAN 阈值；NPC 状态规则文件及其专用编辑器已移除。
 
 条件可写在对话节点、选项、日程条目、特殊事件、道具和结局中：
 
@@ -88,7 +104,7 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
   "condition": {
     "globalVariables": [
       { "id": 1, "op": "gte", "value": 10 },
-      { "id": 2, "equals": "route_a" }
+      { "id": 2, "op": "gte", "value": 0.01 }
     ]
   }
 }
@@ -101,16 +117,16 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
   "globalVariables": [
     { "id": 0, "value": true },
     { "id": 1, "delta": 5 },
-    { "id": 2, "value": "route_a" }
+    { "id": 2, "value": 12.5 }
   ]
 }
 ```
 
-只有 number 支持 `delta`；其他类型使用 `value`。
+`number` 和 `decimal` 支持 `delta`；其他类型使用 `value`。`decimal` 的 `delta` 运算结果也会按小数点后 2 位精度归一化。
 
 ## 旧式 dialogueTree（仅兼容读取）
 
-历史数据中的 `dialogueTree` 仍可由 `ScheduleBlueprint.migrateDialogueTree()` 转换，但新内容不得再使用它。HIS、Social 和 Monitor 的正式运行入口都是对象式日程蓝图和共用的 `ScheduleRunner`：
+历史数据中的 `dialogueTree` 仍可由 `ScheduleBlueprint.migrateDialogueTree()` 转换，但新内容不得再使用它。HIS 和 Social 的正式运行入口都是对象式日程蓝图和共用的 `ScheduleRunner`：
 
 ```json
 {
@@ -124,7 +140,6 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
         { "label": "继续", "next": "next_node", "condition": { "id": 1, "op": "gte", "value": 1 } }
       ],
       "onShow": {
-        "favorabilityChange": { "npcId": "ajie", "delta": 5 },
         "globalVariables": [{ "id": 1, "delta": 1 }]
       }
     }
@@ -136,11 +151,11 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 
 ## 日程蓝图
 
-新日程可以使用对象式蓝图：`nodes` 是节点 ID 到节点对象的映射，`connections` 保存类型化引脚连接，`startNodeId` 指向唯一的 `flowStart` 节点。流程引脚只能连接流程引脚，数值引脚只能连接数值引脚；一个节点不能同时拥有流程输出和数值输出。旧 `dialogueTree` 会在运行时兼容迁移。
+新日程可以使用对象式蓝图：`nodes` 是节点 ID 到节点对象的映射，`connections` 保存类型化引脚连接，`startNodeId` 指向唯一的 `flowStart` 节点。流程引脚只能连接流程引脚，数值引脚只能连接数值引脚；一个节点不能同时拥有流程输出和数值输出。旧 `dialogueTree` 会在运行时兼容迁移。完整的节点端口、运行时语义和蓝图语法见 [`SCHEDULE-BLUEPRINTS.md`](./SCHEDULE-BLUEPRINTS.md)。
 
-当前注册的 18 种节点包括：`flowStart`、`text`、`choice`、`branch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前注册的节点包括：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`waitUntil`、`diceCheck`、`segmentBranch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
-`consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。输入必须是非负整数且为 20 分钟的倍数；执行时通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点。数值输入可以连接运算或取值节点。
+`consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。它按输入值通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点；20 分钟是普通行动的约定单位，蓝图运行器本身不把 `minutes` 强制限制为 20 的倍数。数值输入可以连接运算或取值节点。完整节点语法见 [`SCHEDULE-BLUEPRINTS.md`](./SCHEDULE-BLUEPRINTS.md)。
 
 ### 时间规则文件
 
@@ -154,20 +169,15 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 
 文件：`items.json`，顶层为 `items` 和可选的 `startingInventory`。常用字段：
 
-- `usable`、`consumable`、`inspectText`、`revealKeywordIds`
-- `inspectCheck`、`inspectOutcomes`
-- `sanVariants`：按主角 SAN 选择描述和关键词
-- `inspectTimeAdvance`：调查覆盖时间，默认行动时间为 20 分钟
+- `usable`、`consumable`
 - `useCondition.requires`：物品数量条件
 - `useCondition.sanMin` / `sanMax`：SAN 条件
 - `useCondition.globalVariables`：全局变量条件
-- `useEffect.remove` / `add` / `statChanges` / `npcSanChanges` / `npcOffline` / `timeAdvance` / `ending`
+- `schedules.investigate` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图。使用和调查效果都使用通用的 `statOperation`、`inventoryOperation`、`setGlobal` 等操作节点表达，结局可放在结束节点的 `onShow.ending`，时间推进使用后继的 `consumeTime` 节点；按技能检定时，将 `getGlobal` 的 `value` 连接到 `diceCheck.n`。调查文本使用普通 `text` 节点，图片使用 `showImage`，调查文本可带 `inspection` 元数据以生成调查回调。`segmentBranch` 接收 `value`、`branchCount=n` 和降序的 `boundary0..boundaryN` 共 `n+2` 个数值输入，另有 `flowIn`，输出 `segment0..segmentN-1` 共 `n` 个流程分支；第 i 段满足 `boundary[i+1] < value ≤ boundary[i]`。
 - realtime 操作使用运行时 effect：ChatGTP 可使用 `npcSanChanges`，HIS 使用 `medicalSubmission`，NPC 离线使用 `npcOffline`；这些 effect 与同一实例的时间推进一起执行。
-- `useEffect.globalVariables`：使用成功后的变量效果
-- `schedules.inspect` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图
 - `isBook`、`spells`：可学习法术的书籍
 
-物品调查文本中的关键词标记会传给 `KeywordManager`；显式 `revealKeywordIds` 会自动收集，文本标记则由玩家点击收集。
+调查蓝图普通 `text` 节点的 `inspection.revealKeywordIds` 会传给 `KeywordManager` 并自动收集；文本中的 `[[keyword_id]]` 标记仍由玩家点击收集。
 
 ## 场景物品摆放
 

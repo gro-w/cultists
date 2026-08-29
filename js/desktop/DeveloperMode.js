@@ -12,14 +12,14 @@ import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { favorabilityManager } from "../core/FavorabilityManager.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
-import { globalVariableManager } from "../core/GlobalVariableManager.js";
+import { globalVariableManager, RESERVED_GLOBAL_VARIABLE_MAX_ID } from "../core/GlobalVariableManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 import { endingManager } from "../core/EndingManager.js";
 import { spellManager } from "../core/SpellManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { achievementManager } from "../core/AchievementManager.js";
-import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "../core/ScheduleQueue.js";
+import { workQueue, socialQueue, mainQueue } from "../core/ScheduleQueue.js";
 import { normalizeBlueprint } from "../core/ScheduleBlueprint.js";
 import { DevItemEditorTab } from "./DevItemEditorTab.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
@@ -34,6 +34,12 @@ const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&"
 const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, scheduleData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
 
 const QA_PAGE_SIZE = 50;
+let developerModeInstanceId = 0;
+const GLOBAL_VARIABLE_VISIBILITY = {
+  reserved: "不看系统预留公共变量",
+  meaningful: "不看没有意义的系统公共变量",
+  all: "不隐藏系统公共变量",
+};
 const SCHEDULE_CATEGORIES = { calendar: "日历日程", public: "公共日程", special: "特殊事件日程", ending: "结局日程", embedded: "物品与法术内嵌日程" };
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",
@@ -54,10 +60,10 @@ function keywordCategory(keyword) {
 }
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 const DEDICATED_EDITOR_TITLES = {
-  "chatgtp-dialog": "ChatGTP 对话编辑器", "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
-  medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器", "npc-state": "NPC 状态规则编辑器",
+  "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
+  medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器",
   "time-rules": "时间规则编辑器", calendar: "日历规则编辑器", achievements: "成就定义编辑器",
-  skills: "技能定义编辑器", "monitor-scenes": "监控场景编辑器",
+  skills: "技能定义编辑器",
 };
 const DEV_EDITOR_ICONS = {
   "tab-cg-editor": "🖼️", "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
@@ -99,7 +105,7 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
     const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "dialogueProgress:changed", "dialogueProgress:restored", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset"];
     events.push("npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored");
@@ -253,7 +259,7 @@ export class DeveloperMode {
     if (this._dormComputerTab) { this._dormComputerTab.unmount(); this._dormComputerTab = null; }
     if (this._cgEditorTab) { this._cgEditorTab.unmount(); this._cgEditorTab = null; }
     if (this._structuredEditorTab) { this._structuredEditorTab.unmount(); this._structuredEditorTab = null; }
-    // item editor has no document-level listeners, no explicit unmount needed
+    if (this._itemEditorTab) this._itemEditorTab.unmount();
     this._itemEditorTab = null;
   }
 
@@ -351,7 +357,7 @@ export class DeveloperMode {
   showNpcState() {
     this._activeRuntimeMethod = "showNpcState";
     const actors = [{ id: "chatgtp", name: "ChatGTP", favorability: null }, ...npcStateManager.npcs.map((npc) => ({ id: npc.id, name: npc.name, favorability: favorabilityManager.get(npc.id) }))];
-    const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="100" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="100" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
+    const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="256" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="256" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
     const hisProgress = dialogueProgress.get("his");
     const socialProgress = dialogueProgress.get("social");
     const chatgtpProgress = dialogueProgress.get("chatgtp");
@@ -389,19 +395,24 @@ export class DeveloperMode {
     const catalog = scheduleData.catalog(category);
     const categoryOptions = Object.entries(SCHEDULE_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
     const scheduleOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
-    const queueOptions = [["", "默认（按日程定义；临时日程默认 social）"], ["work", "work"], ["social", "social"], ["chatgtp", "chatgtp"], ["realtime", "realtime"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
-    const queues = [["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue], ["realtime", realtimeQueue]];
+    const queueOptions = [["", "默认（按日程定义；临时日程默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
+    const queues = [["main", mainQueue], ["work", workQueue], ["social", socialQueue]];
     const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-schedule="${esc(entry.scheduleId)}">${esc(entry.scheduleId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
     const scheduled = scheduleData.snapshotScheduled();
-    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 social 队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
+    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示主要、工作和社交三个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 main 主要队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
     this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });
   }
 
-  showWorld() {
+  async showWorld() {
     this._activeRuntimeMethod = "showWorld";
+    const meaningfulIds = await this._meaningfulGlobalVariableIds();
     const placements = itemPlacementManager.all().map((placement) => `<tr><td>${esc(placement.id)}</td><td>${esc(placement.itemId)}</td><td>${itemPlacementManager.isPlaced(placement.id) ? "已放置" : "已取走"}</td><td>${itemPlacementManager.isVisible(placement.id) ? "可见" : "不可见"}</td><td>${button(itemPlacementManager.isPlaced(placement.id) ? "取走" : "放回", `toggle-placement-${placement.id}`)}</td></tr>`).join("");
-    const variables = globalVariableManager.all().map((variable) => `<tr><td>${variable.id}</td><td>${esc(variable.name)}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"></td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和全局变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>全局变量当前值</h3><table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用全局变量", "apply-runtime-variables")}</div></section>`);
+    const variables = globalVariableManager.all().filter((variable) => this._showGlobalVariable(variable, meaningfulIds)).map((variable) => {
+      const reserved = globalVariableManager.isReserved(variable.id);
+      return `<tr><td>${variable.id}</td><td>${esc(variable.name)}${reserved ? "（系统预留）" : ""}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"></td></tr>`;
+    }).join("");
+    this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和全局变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>全局变量当前值</h3>${this._globalVariableVisibilityControls()}<table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>当前值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用全局变量", "apply-runtime-variables")}</div></section>`);
+    this._bindGlobalVariableVisibility("showWorld");
   }
 
   showMedicalEnding() {
@@ -415,6 +426,40 @@ export class DeveloperMode {
   async loadDoc(fileName) {
     if (!this.docs.has(fileName)) this.docs.set(fileName, clone(await dataLoader.loadJSON(fileName)));
     return this.docs.get(fileName);
+  }
+
+  async _meaningfulGlobalVariableIds() {
+    const [skillsDoc, npcsDoc] = await Promise.all([this.loadDoc("skills.json"), this.loadDoc("npcs.json")]);
+    const skillIds = Array.isArray(skillsDoc?.skills) ? skillsDoc.skills.map((skill) => Number(skill?.numericid)).filter((id) => Number.isInteger(id) && id >= 0 && id < 20) : [];
+    const npcIds = Array.isArray(npcsDoc?.npcs) ? npcsDoc.npcs.map((npc) => Number(npc?.numericid)).filter((id) => Number.isInteger(id) && id >= 0 && id < 20) : [];
+    const ids = new Set([0, 1, 2, 5]);
+    skillIds.forEach((numericId) => ids.add(20 + numericId));
+    npcIds.forEach((numericId) => {
+      ids.add(40 + numericId);
+      ids.add(60 + numericId);
+    });
+    return ids;
+  }
+
+  _showGlobalVariable(variable, meaningfulIds) {
+    if (!globalVariableManager.isReserved(variable.id)) return true;
+    if (this._globalVariableVisibility === "reserved") return false;
+    if (this._globalVariableVisibility === "meaningful") return meaningfulIds.has(variable.id);
+    return true;
+  }
+
+  _globalVariableVisibilityControls() {
+    return `<fieldset class="dev-radio-group"><legend>系统预留公共变量显示</legend>${Object.entries(GLOBAL_VARIABLE_VISIBILITY).map(([value, label]) => `<label><input type="radio" name="${this._globalVariableRadioName}" data-global-variable-visibility="${value}" ${this._globalVariableVisibility === value ? "checked" : ""}>${label}</label>`).join("")}</fieldset>`;
+  }
+
+  _bindGlobalVariableVisibility(renderMethod) {
+    this.root.querySelectorAll("[data-global-variable-visibility]").forEach((input) => {
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        this._globalVariableVisibility = input.dataset.globalVariableVisibility;
+        this[renderMethod]();
+      });
+    });
   }
 
 
@@ -488,6 +533,7 @@ export class DeveloperMode {
 
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
+<<<<<<< HEAD
     const toCard = (npc, index) => {
       const portraits = (npc.portraits || []).map((p, pi) => `
         <div class="dev-portrait-row" data-portrait-row="${index}-${pi}">
@@ -549,12 +595,24 @@ export class DeveloperMode {
         reader.readAsDataURL(file);
       });
     });
+=======
+    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-numericid type="number" min="0" max="19" step="1" value="${Number(npc.numericid) || 0}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、数值 ID、名字和头像。数值 ID 映射全局变量 40-59（好感度）及 60-79（SAN）。</p><table class="dev-table"><thead><tr><th>ID</th><th>数值 ID</th><th>名字</th><th>头像</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
+>>>>>>> origin/main
   }
 
-  showGlobalVariables() {
+  async showGlobalVariables() {
+    const meaningfulIds = await this._meaningfulGlobalVariableIds();
     const valueText = (variable, value) => variable.type === "string" ? value : String(value);
-    const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
+    const rows = globalVariableManager.all().filter((variable) => this._showGlobalVariable(variable, meaningfulIds)).map((variable) => {
+      const reserved = globalVariableManager.isReserved(variable.id);
+      const definitionLock = reserved ? " disabled" : "";
+      const valueLock = reserved ? " disabled" : "";
+      const action = reserved ? "系统预留" : button("删除", `remove-global-variable-${variable.id}`);
+      return `<tr data-global-variable-row="${variable.id}" data-global-variable-reserved="${reserved}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"${definitionLock}></td><td><input data-gv-name value="${esc(variable.name)}"${definitionLock}></td><td><select data-gv-type${definitionLock}><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"${valueLock}></td><td>${action}</td></tr>`;
+    }).join("");
+    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>系统预留变量的 ID、名称和类型固定不可编辑；默认值可以编辑。当前值仅在调试器中编辑。ID 0-99 为系统预留变量，引擎使用这些固定 ID 读写技能点、好感度、SAN 和金钱。</p>${this._globalVariableVisibilityControls()}<table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
+    this._bindGlobalVariableVisibility("showGlobalVariables");
   }
 
   _readGlobalVariableRows() {
@@ -563,14 +621,14 @@ export class DeveloperMode {
         if (raw !== "true" && raw !== "false") throw new Error(`变量 ${id} 的${field}必须是 true 或 false`);
         return raw === "true";
       }
-      if (type === "number") {
+      if (type === "number" || type === "decimal") {
         const value = Number(raw);
         if (!Number.isFinite(value) || value < 0 || value > 256) throw new Error(`变量 ${id} 的${field}必须是 0-256 的数字`);
-        return value;
+        return type === "decimal" ? Math.round((value + Number.EPSILON * Math.max(1, Math.abs(value))) * 100) / 100 : value;
       }
       return raw;
     };
-    return Array.from(this.root.querySelectorAll("[data-global-variable-row]"), (row) => {
+    const visibleRows = Array.from(this.root.querySelectorAll("[data-global-variable-row]"), (row) => {
       const id = Number(row.querySelector("[data-gv-id]").value);
       const type = row.querySelector("[data-gv-type]").value;
       return {
@@ -581,6 +639,8 @@ export class DeveloperMode {
         value: parse(row.querySelector("[data-gv-value]").value, type, id, "当前值"),
       };
     });
+    const byId = new Map(visibleRows.map((variable) => [variable.id, variable]));
+    return globalVariableManager.all().map((variable) => byId.get(variable.id) || variable);
   }
 
 
@@ -633,7 +693,7 @@ export class DeveloperMode {
       return this.showChatgtp();
     }
     if (action === "add-global-variable") {
-      const nextId = globalVariableManager.all().reduce((max, variable) => Math.max(max, variable.id), -1) + 1;
+      const nextId = Math.max(RESERVED_GLOBAL_VARIABLE_MAX_ID + 1, globalVariableManager.all().reduce((max, variable) => Math.max(max, variable.id), -1) + 1);
       const doc = await this.loadDoc("global_variables.json");
       const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
       variables.push({ id: nextId, name: `变量${nextId}`, type: "bool", default: false });
@@ -645,7 +705,13 @@ export class DeveloperMode {
     if (removeGlobalVariable) {
       const doc = await this.loadDoc("global_variables.json");
       const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
-      variables.splice(Number(removeGlobalVariable[1]), 1);
+      const id = Number(removeGlobalVariable[1]);
+      const index = variables.findIndex((variable) => Number(variable?.id) === id);
+      if (index < 0 || globalVariableManager.isReserved(id)) {
+        this.setStatus("系统预留公共变量不可删除，或变量不存在。", true);
+        return;
+      }
+      variables.splice(index, 1);
       this.docs.set("global_variables.json", variables);
       globalVariableManager.replaceDefinitions(variables);
       return this.showGlobalVariables();
@@ -734,19 +800,19 @@ export class DeveloperMode {
       const queueId = this.root.querySelector("[data-schedule-queue]")?.value || undefined;
       return this.openTemporaryScheduleEditor(queueId);
     }
-    const queueAction = action.match(/^(resolve|reopen)-queue-(work|social|chatgtp|realtime)-(.+)$/);
+    const queueAction = action.match(/^(resolve|reopen)-queue-(main|work|social)-(.+)$/);
     if (queueAction) {
-      const queues = { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue };
+      const queues = { main: mainQueue, work: workQueue, social: socialQueue };
       const queue = queues[queueAction[2]];
       const ok = queue.updateInstance(queueAction[3], { status: queueAction[1] === "resolve" ? "resolved" : "unresolved" });
       this.setStatus(ok ? "日程实例状态已更新。" : "未找到日程实例。", !ok);
       return this.showSchedules();
     }
-    const jumpAction = action.match(/^jump-queue-(work|social|chatgtp|realtime)-(.+)$/);
+    const jumpAction = action.match(/^jump-queue-(main|work|social)-(.+)$/);
     if (jumpAction) {
       const queueId = jumpAction[1];
       const instanceId = jumpAction[2];
-      const queue = { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue }[queueId];
+      const queue = { main: mainQueue, work: workQueue, social: socialQueue }[queueId];
       const select = Array.from(this.root.querySelectorAll("[data-schedule-jump]"))
         .find((element) => element.dataset.scheduleJump === instanceId);
       const entry = queue.getInstance(instanceId);
@@ -787,7 +853,7 @@ export class DeveloperMode {
       try {
         this.root.querySelectorAll("[data-runtime-gv]").forEach((input) => {
           const type = input.dataset.runtimeGvType;
-          const value = type === "bool" ? input.value === "true" : type === "number" ? Number(input.value) : input.value;
+          const value = type === "bool" ? input.value === "true" : ["number", "decimal"].includes(type) ? Number(input.value) : input.value;
           globalVariableManager.set(Number(input.dataset.runtimeGv), value);
         });
         this.setStatus("全局变量运行时值已应用。");
@@ -802,13 +868,13 @@ export class DeveloperMode {
     if (action === "add-item") { itemManager.add(this.root.querySelector("[data-item-id]").value, Math.max(1, Number(this.root.querySelector("[data-item-count]").value) || 1)); return this.showInventory(); }
     if (action === "apply-npc-state") {
       const forceOffline = this.root.querySelector("[data-force-offline]")?.checked;
-      const offlineThreshold = Number(npcStateManager.config?.offlineThreshold) || 20;
+      const offlineThreshold = Number(globalVariableManager.get(4) ?? 20);
       this.root.querySelectorAll("[data-npc-state-row]").forEach((row) => {
         const actorId = row.dataset.npcStateRow;
-        const san = Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-san]")?.value) || 0));
+        const san = Math.max(0, Math.min(256, Number(row.querySelector("[data-npc-san]")?.value) || 0));
         npcStateManager.setSan(actorId, san, { offline: forceOffline && san <= offlineThreshold });
         const favorInput = row.querySelector("[data-npc-favor]");
-        if (favorInput) favorabilityManager.modify(actorId, Math.max(0, Math.min(100, Number(favorInput.value) || 0)) - favorabilityManager.get(actorId));
+        if (favorInput) favorabilityManager.modify(actorId, Math.max(0, Math.min(256, Number(favorInput.value) || 0)) - favorabilityManager.get(actorId));
       });
       this.setStatus("NPC与对话状态已应用。");
       return this.showNpcState();
@@ -826,12 +892,17 @@ export class DeveloperMode {
     if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
     if (removeNpc) { const doc = await this.loadDoc("npcs.json"); doc.npcs.splice(Number(removeNpc[1]), 1); this.docs.set("npcs.json", doc); return this.showNpcs(); }
+<<<<<<< HEAD
     if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂", initialFavorability: 50, initialSan: 80, portraits: [] }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
+=======
+    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, numericid: doc.npcs.length, name: "新 NPC", avatar: "🙂" }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
+>>>>>>> origin/main
     if (action === "save-npcs" || action === "download-npcs" || action === "write-npcs") {
       const doc = await this.loadDoc("npcs.json");
       const cards = Array.from(this.root.querySelectorAll("[data-npc-row]"));
       const ids = cards.map((c) => c.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
+<<<<<<< HEAD
       doc.npcs = cards.map((card, ci) => {
         const portraits = Array.from(card.querySelectorAll("[data-portrait-row]")).map((row) => {
           const sanMin = row.querySelector("[data-p-san-min]").value;
@@ -855,6 +926,11 @@ export class DeveloperMode {
           portraits,
         };
       });
+=======
+      const numericids = rows.map((row) => Number(row.querySelector("[data-npc-numericid]")?.value));
+      if (numericids.some((id) => !Number.isInteger(id) || id < 0 || id >= 20) || new Set(numericids).size !== numericids.length) { this.setStatus("NPC 保存失败：数值 ID 必须是 0-19 的不重复整数。", true); return; }
+      doc.npcs = rows.map((row, index) => ({ id: row.querySelector("[data-npc-id]").value.trim(), numericid: numericids[index], name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂" }));
+>>>>>>> origin/main
       this.docs.set("npcs.json", doc);
       if (action === "download-npcs") { downloadJson("npcs.json", doc); this.setStatus("npcs.json 已下载。"); return; }
       if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }

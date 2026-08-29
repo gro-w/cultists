@@ -1,7 +1,7 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
-import { itemManager } from "./ItemManager.js";
+
 import { globalVariableManager } from "./GlobalVariableManager.js";
 
 /**
@@ -9,8 +9,7 @@ import { globalVariableManager } from "./GlobalVariableManager.js";
  * driven entirely by `data/endings.json`:
  *   - event-based: dialogue nodes call `endingManager.trigger(id)` directly
  *     via their `onShow.ending` field (see DialogueEffects.js).
- *   - item-based: ItemManager emits `item:used` after a successful use();
- *     if the item's `useEffect.ending` is set, that ending triggers.
+ *   - item-based: item schedule operation nodes can call `trigger(id)` through `onShow`.
  *   - stat-threshold-based: checked on every `gamestate:changed` event
  *     against the configured `statTriggers` (e.g. satiety > 150).
  *   - time-based: `resolveFinalEnding()` is called by DayNightSystem once
@@ -48,12 +47,7 @@ class EndingManager {
         this.defaultEndingId = data.defaultEndingId || null;
 
         eventBus.on("gamestate:changed", (snapshot) => this._checkStatTriggers(snapshot));
-        eventBus.on("item:used", ({ id, result }) => {
-          if (!result || !result.ok) return;
-          const def = itemManager.getDef(id);
-          const endingId = def && def.useEffect && def.useEffect.ending;
-          if (endingId) this.trigger(endingId);
-        });
+
       });
     }
     return this._loadPromise;

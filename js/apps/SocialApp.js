@@ -24,7 +24,7 @@ const dialogueKeywordIds = (tree) => {
  * current in-game day/phase (data-driven via `data/dayXXa.json` /
  * `data/dayXXb.json`, resolved through ScheduleData).
  *
- * Dialogue tree walking is shared with HISApp/MonitorApp via the schedule
+ * Dialogue tree walking is shared with HISApp via the schedule
  * runner. A contact whose own SAN
  * (NpcStateManager) has dropped to "offline" goes silent for the rest of
  * the game.

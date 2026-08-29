@@ -1199,6 +1199,7 @@ export class DevDialogueEditorTab {
     const nodeType = type || this._el('de-new-node-type-1')?.value || 'text';
     if (!nodeType || !getScheduleNodeDefinition(nodeType)) { this._st('已取消或节点种类无效'); return; }
     if (!this._prerequisiteScope && nodeType === 'prerequisite' && Object.values(data.nodes || {}).some(node => node.type === 'prerequisite')) { this._st('当前蓝图最多只能有一个先决条件节点'); return; }
+    if (!this._prerequisiteScope && nodeType === 'scheduleExpiry' && Object.values(data.nodes || {}).some(node => node.type === 'scheduleExpiry')) { this._st('当前蓝图最多只能有一个日程过期节点'); return; }
     if (this._prerequisiteScope && !['arithmetic', 'getGlobal', 'getInventory', 'getScheduleStatus', 'getScheduleInstanceCount', 'getGameTime', 'returnValue'].includes(nodeType)) { this._st('先决条件蓝图只能添加数值节点或一个返回值节点'); return; }
     if (this._prerequisiteScope && nodeType === 'returnValue' && Object.values(data.nodes).some(node => node.type === 'returnValue')) { this._st('先决条件蓝图只能有一个返回值节点'); return; }
     const node = this._emptyNode(80 + Object.keys(data.nodes).length * 20, 80 + Object.keys(data.nodes).length * 20);

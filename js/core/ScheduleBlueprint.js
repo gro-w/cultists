@@ -37,6 +37,12 @@ export function validateBlueprint(raw) {
     const definition = getScheduleNodeDefinition(node.type);
     if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`先决条件节点不能有流程引脚：${id}`);
   });
+  const expiries = entries.filter(([, node]) => node.type === "scheduleExpiry");
+  if (expiries.length > 1) errors.push(`蓝图最多只能有一个日程过期节点，当前为 ${expiries.length} 个`);
+  expiries.forEach(([id, node]) => {
+    const definition = getScheduleNodeDefinition(node.type);
+    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`日程过期节点不能有流程引脚：${id}`);
+  });
   const starts = entries.filter(([, node]) => node.type === "flowStart");
   if (starts.length !== 1) errors.push(`流程起始节点必须恰好有一个，当前为 ${starts.length} 个`);
   if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push("缺少有效的流程起始节点");

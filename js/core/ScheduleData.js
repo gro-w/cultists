@@ -134,6 +134,7 @@ class ScheduleData {
       }
     }
     this.lastAbsoluteMinute = target;
+    this._expireInstances(target);
   }
 
   advanceTo(day, clockMinutes) {
@@ -144,6 +145,7 @@ class ScheduleData {
     }
     this._appendThrough(target);
     this._appendScheduledThrough(target);
+    this._expireInstances(target);
     this.lastAbsoluteMinute = target;
   }
 
@@ -217,6 +219,24 @@ class ScheduleData {
     } catch (error) {
       console.warn("Skipped social prerequisite evaluation:", error);
       return false;
+    }
+  }
+
+  _expireInstances(target) {
+    for (const queue of [workQueue, socialQueue, mainQueue]) {
+      for (const instance of queue.getPending()) {
+        const blueprint = instance.payload?.blueprint || instance.blueprint || instance.payload?.dialogueTree || instance.dialogueTree;
+        const node = Object.values(blueprint?.nodes || {}).find((candidate) => candidate.type === "scheduleExpiry");
+        if (!node) continue;
+        try {
+          const evaluator = new ScheduleValueEvaluator(blueprint);
+          if (evaluator.evaluateNode(node.id, "value") !== true) continue;
+          const expiresAt = Number(evaluator.readInput(node.id, "expiresAt", NaN));
+          if (Number.isFinite(expiresAt) && target > expiresAt) queue.expire(instance.instanceId);
+        } catch (error) {
+          console.warn("Skipped schedule expiration evaluation:", error);
+        }
+      }
     }
   }
 

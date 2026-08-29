@@ -29,6 +29,7 @@ const definitions = {
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   prerequisite: { label: "先决条件", valueInputs: [input("condition", VALUE, "bool")], valueOutputs: [{ name: "value", kind: VALUE, type: "bool" }] },
+  scheduleExpiry: { label: "日程过期", valueInputs: [input("expires", VALUE, "bool"), input("expiresAt", VALUE, "number")], valueOutputs: [{ name: "value", kind: VALUE, type: "bool" }] },
   getInventory: { label: "背包取值", valueInputs: [input("itemId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
 
   getScheduleStatus: { label: "日程状态", valueInputs: [input("instanceId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },

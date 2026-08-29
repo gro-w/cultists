@@ -48,6 +48,15 @@ class ScheduleQueue {
     return true;
   }
 
+  expire(instanceId) {
+    const entry = this.entries.find((item) => item.instanceId === instanceId);
+    if (!entry || entry.status !== "unresolved") return false;
+    entry.status = "resolved";
+    entry.resolutionReason = "expired";
+    eventBus.emit("schedule:changed", { queueId: this.queueId, entry, expired: true });
+    return true;
+  }
+
   updateInstance(instanceId, patch = {}) {
     const entry = this.entries.find((item) => item.instanceId === instanceId);
     if (!entry) return false;

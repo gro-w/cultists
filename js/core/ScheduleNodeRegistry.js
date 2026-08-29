@@ -19,9 +19,7 @@ const definitions = {
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },
   segmentBranch: { label: "分段分支", flowInputs: [flowIn()], flowOutputs: [flowOut("segment0")], valueInputs: [input("value", VALUE, "number"), input("branchCount", VALUE, "number"), input("boundary0", VALUE, "number")] },
-  skillCheck: { label: "技能检定", flowInputs: [flowIn()], flowOutputs: [flowOut("criticalSuccess"), flowOut("success"), flowOut("failure"), flowOut("criticalFailure")], valueInputs: [input("skillId", VALUE, "string")] },
-  itemInspect: { label: "调查结果", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("text", VALUE, "string"), input("itemId", VALUE, "string")] },
-  itemEffect: { label: "调查效果", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
+
   inventoryOperation: { label: "操作背包", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("itemId", VALUE, "string"), input("count", VALUE, "number")] },
   statOperation: { label: "操作主角数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
   spellOperation: { label: "调整法术状态", flowInputs: [flowIn()], flowOutputs: [flowOut()] },

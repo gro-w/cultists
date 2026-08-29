@@ -9,7 +9,7 @@ import { globalVariableManager } from "./GlobalVariableManager.js";
  * driven entirely by `data/endings.json`:
  *   - event-based: dialogue nodes call `endingManager.trigger(id)` directly
  *     via their `onShow.ending` field (see DialogueEffects.js).
- *   - item-based: item `itemEffect` schedule nodes call `trigger(id)` directly.
+ *   - item-based: item schedule operation nodes can call `trigger(id)` through `onShow`.
  *   - stat-threshold-based: checked on every `gamestate:changed` event
  *     against the configured `statTriggers` (e.g. satiety > 150).
  *   - time-based: `resolveFinalEnding()` is called by DayNightSystem once

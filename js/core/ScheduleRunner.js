@@ -8,9 +8,7 @@ import { modifyStatValue } from "./ScheduleValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
-import { checkSkill } from "./DiceCheck.js";
 import { keywordManager } from "./KeywordManager.js";
-import { endingManager } from "./EndingManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -102,15 +100,20 @@ export class ScheduleRunner {
 
   _execute(node) {
     const get = (name, fallback) => inputValue(this.blueprint, node, name, this.evaluator, fallback);
+    if (node.onShow && node.type !== "statOperation") {
+      applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
+    }
     switch (node.type) {
       case "flowStart": return {};
       case "scheduleEnd": this._resolve(); return { stop: true };
       case "text": {
         const speaker = get("speaker", node.speaker || "npc");
         const text = String(get("text", node.text || ""));
-        if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
         this._record({ type: "text", speaker, text });
         this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
+        if (this.definition.action === "investigate" && Array.isArray(node.keywordIds)) {
+          this._emitInspection(node, text);
+        }
         return { wait: true };
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
@@ -118,10 +121,11 @@ export class ScheduleRunner {
         const n = Math.max(1, Math.min(100, Number(get("n", 0))));
         if (!Number.isFinite(n)) throw new Error("Dice check target must be a number");
         const roll = Math.floor(this.random() * 100) + 1;
-        const port = roll === 100 || (n < 50 && roll >= 96)
+        const outcome = roll === 100 || (n < 50 && roll >= 96)
           ? "largeFailure"
           : roll <= n / 5 ? "largeSuccess" : roll <= n ? "success" : "failure";
-        return { next: nextFlow(this.blueprint, node, port) };
+        this.instance.lastDiceCheck = { roll, target: n, outcome };
+        return { next: nextFlow(this.blueprint, node, outcome) };
       }
       case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
       case "setGlobal": globalVariableManager.set(get("variableId"), get("value")); return {};
@@ -149,35 +153,6 @@ export class ScheduleRunner {
         const selected = index < 0 ? (value <= boundaries[count] ? count - 1 : 0) : index;
         return { next: nextFlow(this.blueprint, node, `segment${selected}`) };
       }
-      case "skillCheck": {
-        const check = checkSkill(String(get("skillId", "")));
-        this.instance.inspectionCheck = check;
-        return { next: nextFlow(this.blueprint, node, check.outcome) };
-      }
-      case "itemInspect": {
-        const text = String(get("text", ""));
-        const itemId = String(get("itemId", this.definition.itemId || ""));
-        const ids = Array.isArray(node.revealKeywordIds) ? node.revealKeywordIds : [];
-        const inlineIds = [...text.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)].map((match) => match[1]);
-        const allIds = [...new Set([...ids, ...inlineIds])];
-        const keywordDefs = keywordManager.definitionsWithSource(allIds, `物品-${this.definition.name || itemId}`);
-        allIds.filter((id) => ids.includes(id)).forEach((id) => { if (keywordDefs[id]) keywordManager.collect(keywordDefs[id]); });
-        const result = { text, check: this.instance.inspectionCheck || null, keywordDefs, effect: node.effect || null, image: this.instance.inspectionImage || null };
-        this.instance.inspectionResult = result;
-        this.onItemInspection(result);
-        eventBus.emit("item:inspection-result", { itemId, result, instanceId: this.instance.instanceId });
-        return {};
-      }
-      case "itemEffect": {
-        const effect = node.effect || {};
-        (effect.remove || []).forEach((entry) => itemManager.remove(entry.itemId, entry.count || 1));
-        (effect.add || []).forEach((entry) => itemManager.add(entry.itemId, entry.count || 1));
-        Object.entries(effect.statChanges || {}).forEach(([statId, delta]) => modifyStatValue(statId, delta));
-        globalVariableManager.applyEffects(effect.globalVariables || effect.globalVariableChanges);
-        if (effect.gameEvent) eventBus.emit(effect.gameEvent, effect.gameEventPayload || {});
-        if (effect.ending) endingManager.trigger(effect.ending);
-        return {};
-      }
       case "inventoryOperation": {
         const itemId = String(get("itemId", ""));
         const count = Number(get("count", 0));
@@ -187,7 +162,11 @@ export class ScheduleRunner {
         else itemManager.remove(itemId, itemManager.count(itemId));
         return {};
       }
-      case "statOperation": modifyStatValue(get("statId", ""), get("delta", 0)); return {};
+      case "statOperation": {
+        modifyStatValue(get("statId", ""), get("delta", 0));
+        if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
+        return {};
+      }
       case "spellOperation": {
         const learned = spellManager.learn(node.spell || node.inputs?.spell);
         if (!learned && node.requireNew !== false) throw new Error("Spell is already known or invalid");
@@ -196,6 +175,20 @@ export class ScheduleRunner {
       default: throw new Error(`Unsupported flow node: ${node.type}`);
     }
   }
+
+  _emitInspection(node, text) {
+    const itemId = String(this.definition.itemId || "");
+    const ids = Array.isArray(node.keywordIds) ? node.keywordIds : [];
+    const inlineIds = [...text.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]/g)].map((match) => match[1]);
+    const allIds = [...new Set([...ids, ...inlineIds])];
+    const keywordDefs = keywordManager.definitionsWithSource(allIds, `物品-${this.definition.name || itemId}`);
+    allIds.filter((id) => ids.includes(id)).forEach((id) => { if (keywordDefs[id]) keywordManager.collect(keywordDefs[id]); });
+    const result = { text, check: this.instance.lastDiceCheck || null, keywordDefs, effect: null, image: this.instance.inspectionImage || null };
+    this.instance.inspectionResult = result;
+    this.onItemInspection(result);
+    eventBus.emit("item:inspection-result", { itemId, result, instanceId: this.instance.instanceId });
+  }
+
 
   _showChoice(node) {
     if (!this.optionsEl) throw new Error("Choice node requires an options container");

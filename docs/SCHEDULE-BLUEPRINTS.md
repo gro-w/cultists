@@ -76,8 +76,8 @@
 - `outputs` 是编辑器/数据兼容字段，实际流程连接写在顶层
   `connections` 中；
 - `x`、`y` 是编辑器坐标，不参与游戏语义；零坐标必须保留；
-- 节点可额外保存类型专属字段，例如 `text`、`effect`、`options`、
-  `onShow`，但运行时只读取该节点类型定义的字段。
+- 节点可额外保存类型专属字段，例如 `text`、`options`、`onShow`、
+  `keywordIds` 或 `spell`，但运行时只读取该节点类型定义的字段。
 
 ### 2.3 `connections`
 
@@ -174,7 +174,7 @@
 
 ## 3. 节点类型总览
 
-当前注册了 25 种节点：
+当前注册了 22 种节点：
 
 | 类型 | 类别 | 作用 |
 | --- | --- | --- |
@@ -190,9 +190,6 @@
 | `showCg` | 流程/显示 | 发出显示 CG 事件 |
 | `showImage` | 流程/显示 | 发出显示图片事件 |
 | `segmentBranch` | 流程 | 按数值区间选择分支 |
-| `skillCheck` | 流程 | 执行技能检定 |
-| `itemInspect` | 流程/物品 | 生成物品调查结果 |
-| `itemEffect` | 流程/物品 | 应用调查等复合物品效果 |
 | `inventoryOperation` | 流程/状态 | 增减背包物品 |
 | `statOperation` | 流程/状态 | 操作主角或其他可写数值 |
 | `spellOperation` | 流程/状态 | 调整已学习法术状态 |
@@ -229,7 +226,8 @@
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
 - 值输入：`speaker`、`text`；
-- 常用兼容字段：`speaker`、`text`、`onShow`、`keywordIds`；
+- 常用字段：`speaker`、`text`、`onShow`、`keywordIds`；物品调查蓝图可在结果
+  文本节点上使用 `keywordIds`，由运行器统一收集关键词并回调调查结果；
 - 作用：显示一行文字；
 - 语义：记录文本到日程实例 transcript，调用界面回调，然后等待玩家继续。
   没有界面选项容器的实时/无头调用会自动继续。
@@ -288,6 +286,10 @@
   - `roll <= n`：`success`；
   - `roll === 100`，或目标值小于 50 且 `roll >= 96`：`largeFailure`；
   - 其他情况：`failure`。
+
+技能检定不再是独立节点。需要按技能值检定时，使用
+`getProtagonistStat` 读取技能数值，并将其 `value` 输出连接到本节点的
+`n` 输入；这样技能检定和其他任意数值检定共用完全相同的骰子规则。
 
 ### 4.7 `consumeTime`：消耗时间
 
@@ -364,40 +366,7 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 4.13 `skillCheck`：技能检定
-
-- 输入：`flowIn`（流程）；
-- 输出：`criticalSuccess`、`success`、`failure`、`criticalFailure`（流程）；
-- 值输入：`skillId`（字符串）；
-- 作用：使用共享技能检定逻辑检查指定技能；
-- 语义：检定结果保存在实例的 `inspectionCheck` 中，并按结果端口继续。
-
-### 4.14 `itemInspect`：调查结果
-
-- 输入：`flowIn`（流程）；
-- 输出：`flowOut`（流程）；
-- 值输入：`text`（字符串）、`itemId`（字符串）；
-- 常用字段：`revealKeywordIds`；
-- 作用：生成物品调查结果；
-- 语义：收集显式揭示的关键词，解析文本中的 `[[keyword_id]]` 标记，保存
-  检定结果和图片，并通过物品调查回调/事件交给界面显示。调查效果应放在
-  后续的 `itemEffect` 节点中，时间应放在公共的 `consumeTime` 节点中。
-
-### 4.15 `itemEffect`：调查效果
-
-- 输入：`flowIn`（流程）；
-- 输出：`flowOut`（流程）；
-- 作用：应用一个复合效果对象；
-- 常用字段：`effect.remove`、`effect.add`、`effect.statChanges`、
-  `effect.globalVariables`、`effect.globalVariableChanges`、
-  `effect.gameEvent`、`effect.gameEventPayload`、`effect.ending`；
-- 语义：依次处理背包增删、数值变化、全局变量、游戏事件和结局。
-
-`itemEffect` 主要用于调查结果的复合副作用。使用物品蓝图中的简单效果应
-优先使用下文的 `inventoryOperation`、`statOperation`、`setGlobal` 等通用
-操作节点，避免把可视化动作隐藏在一个复合对象中。
-
-### 4.16 `inventoryOperation`：操作背包
+### 4.13 `inventoryOperation`：操作背包
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -406,7 +375,7 @@ segment2: 0 < value <= 30
 - 语义：正数增加，负数移除对应数量，零表示移除该物品的全部持有数量。
   每次增删仍通过 `ItemManager` 的公开方法执行，因此会发布物品变化事件。
 
-### 4.17 `statOperation`：操作主角数值
+### 4.14 `statOperation`：操作主角数值
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -476,9 +445,9 @@ segment2: 0 < value <= 30
 - 输出：`value`（任意类型）；
 - 值输入：`statId`；
 - 作用：读取主角或共享数值；
-- 支持的读取 ID：`energy`、`mental`、`physical`、`satiety`、
+-  支持的读取 ID：`energy`、`mental`、`physical`、`satiety`、
   `recoverableMentalLoss`、`npcSan:<npcId>`、`favorability:<npcId>`、
-  `timeService:phaseMinutes`、`gameTime`。
+  `timeService:phaseMinutes`、`gameTime`，以及 `skills.json` 中定义的技能 ID。
 
 读取节点与分段节点的标准连接如下：
 
@@ -541,15 +510,15 @@ flowStart
 ```text
 flowStart
   → getProtagonistStat
-  → segmentBranch / skillCheck
+  → segmentBranch / diceCheck（技能检定先用 getProtagonistStat 读取技能值）
   → showImage（可选）
-  → itemInspect
-  → itemEffect（可选）
+  → text（调查文本，可选 inspection 元数据）
+  → statOperation / inventoryOperation / setGlobal（可选）
   → consumeTime
   → scheduleEnd
 ```
 
-数值读取节点与 `segmentBranch.value` 之间必须是正式的 value 连接，不能只
+数值读取节点与 `segmentBranch.value` 或 `diceCheck.n` 之间必须是正式的 value 连接，不能只
 把一个看似相同的对象写入无连接的输入。
 
 ### 6.4 法术学习

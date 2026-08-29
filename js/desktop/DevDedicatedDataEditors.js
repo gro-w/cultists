@@ -23,6 +23,19 @@ class DedicatedEditor {
   async reload() { await this.mount(); }
 }
 
+export class ChatgtpDialogEditor extends DedicatedEditor {
+  constructor(dev) { super(dev, "chatgtp_dialog.json", "ChatGTP 对话编辑器", "按节点编辑对话、选项和技能检定"); }
+  render() {
+    const bp = this.data.blueprint || (this.data.blueprint = { startNodeId: "", nodes: {}, connections: [] });
+    const nodes = Object.values(bp.nodes || {});
+    this.root().innerHTML = `<div class="dev-ded-toolbar">${input("入口节点 ID", "startNodeId", bp.startNodeId)} ${btn("＋ 添加节点", "add-node")}</div><div class="dev-ded-list">${nodes.map((n, i) => `<article class="dev-ded-card"><div class="dev-ded-card-title"><b>节点 ${i + 1}</b>${btn("− 删除", "remove-node", n.id)}</div><div class="dev-ded-grid">${input("节点 ID", `node.${n.id}.id`, n.id)} ${select("节点类型", `node.${n.id}.type`, n.type || "text", [["text", "对话文本"], ["choice", "选择"], ["scheduleEnd", "结束"]])} ${input("说话者", `node.${n.id}.speaker`, n.speaker || "npc")} ${input("后继节点 ID", `node.${n.id}.next`, n.next || "")}</div>${input("对话文本", `node.${n.id}.text`, n.text || "")}<div class="dev-ded-subtitle">选项</div><div data-dd-options="${esc(n.id)}">${(n.options || []).map((o, j) => `<div class="dev-ded-inline">${input("选项文字", `node.${n.id}.option.${j}.label`, o.label || "")} ${input("目标节点 ID", `node.${n.id}.option.${j}.next`, o.next || "")} ${btn("−", "remove-option", `${n.id}:${j}`)}</div>`).join("")}</div>${btn("＋ 添加选项", "add-option", n.id)}</article>`).join("") || "<p>暂无节点，点击“添加节点”。</p>"}</div>`;
+  }
+  sync() { const bp = this.data.blueprint; bp.startNodeId = this.value("startNodeId").trim(); Object.values(bp.nodes || {}).forEach((n) => { const old = n.id; n.id = this.value(`node.${old}.id`).trim() || old; n.type = this.value(`node.${old}.type`); n.speaker = this.value(`node.${old}.speaker`); n.text = this.value(`node.${old}.text`); n.next = this.value(`node.${old}.next`).trim() || undefined; if (!n.next) delete n.next; (n.options || []).forEach((o, i) => { o.label = this.value(`node.${old}.option.${i}.label`); o.next = this.value(`node.${old}.option.${i}.next`).trim(); }); }); }
+  addNode() { const id = `node_${Object.keys(this.data.blueprint.nodes || {}).length + 1}`; this.data.blueprint.nodes[id] = { id, type: "text", speaker: "npc", text: "", options: [] }; this.render(); }
+  removeNode(id) { delete this.data.blueprint.nodes[id]; this.render(); }
+  addOption(id) { this.data.blueprint.nodes[id].options ||= []; this.data.blueprint.nodes[id].options.push({ label: "", next: "" }); this.render(); }
+  removeOption(value) { const [id, index] = value.split(":"); this.data.blueprint.nodes[id].options.splice(Number(index), 1); this.render(); }
+}
 
 export class ItemPlacementsEditor extends DedicatedEditor {
   constructor(dev) { super(dev, "item_placements.json", "场景物品摆放编辑器", "编辑物品、地点、条件和场景热点"); }
@@ -60,6 +73,12 @@ export class MedicalEventsEditor extends DedicatedEditor {
   removeDialogue(v) { const [k, i] = v.split(":"); this.data[k].splice(i, 1); this.render(); }
 }
 
+export class NpcStateRulesEditor extends DedicatedEditor {
+  constructor(dev) { super(dev, "npc_state.json", "NPC 状态规则编辑器", "编辑默认 SAN、阈值和离线后果"); }
+  render() { const c = this.data.offlineConsequence || {}; this.root().innerHTML = `<div class="dev-ded-grid">${num("默认 SAN", "defaultSan", this.data.defaultSan, "min=0 max=100")}${num("不稳定阈值", "distressedThreshold", this.data.distressedThreshold, "min=0 max=100")}${num("离线阈值", "offlineThreshold", this.data.offlineThreshold, "min=0 max=100")}</div><section class="dev-ded-card"><h3>离线后果</h3>${num("SAN 变化", "offline.sanChange", c.sanChange ?? 0)}${input("游戏事件", "offline.gameEvent", c.gameEvent || "")}${checkbox("触发对话离线", "offline.dialogueOffline", c.dialogueOffline)}</section>`; }
+  sync() { this.data.defaultSan = Number(this.value("defaultSan")); this.data.distressedThreshold = Number(this.value("distressedThreshold")); this.data.offlineThreshold = Number(this.value("offlineThreshold")); this.data.offlineConsequence = { ...(this.data.offlineConsequence || {}), sanChange: Number(this.value("offline.sanChange")) || 0, gameEvent: this.value("offline.gameEvent"), dialogueOffline: this.value("offline.dialogueOffline") }; }
+}
+
 export class TimeRulesEditor extends DedicatedEditor {
   constructor(dev) { super(dev, "time_rules.json", "时间规则编辑器", "编辑阶段时长、睡眠恢复和熬夜规则"); }
   render() { this.root().innerHTML = `<section class="dev-ded-card"><h3>阶段时长</h3>${num("白天分钟", "day.workMinutes", this.data.day?.workMinutes, "min=0 step=20")}${num("夜间分钟", "night.nightMinutes", this.data.night?.nightMinutes, "min=0 step=20")}</section><section class="dev-ded-card"><h3>睡眠与 SAN</h3>${num("完整睡眠分钟", "fullSleepMinutes", this.data.fullSleepMinutes, "min=0 step=20")}${num("不足睡眠分钟", "insufficientSleepMinutes", this.data.insufficientSleepMinutes, "min=0 step=20")}${num("每睡眠小时 SAN 恢复", "sanRecoveryPerSleepHour", this.data.sanRecoveryPerSleepHour, "min=0")}${num("三日睡眠债 SAN 损失", "threeDaySleepDebtSanLoss", this.data.threeDaySleepDebtSanLoss, "min=0")}${num("每次熬夜行动 SAN 损失", "sanLossPerLateNightAction", this.data.sanLossPerLateNightAction, "min=0")}</section>`; }
@@ -83,22 +102,44 @@ export class AchievementsEditor extends DedicatedEditor {
 }
 
 export class SkillsEditor extends DedicatedEditor {
-  constructor(dev) { super(dev, "skills.json", "技能定义编辑器", "编辑技能 ID、数值 ID 和名称"); }
-  render() { const list = this.data.skills || (this.data.skills = []); this.root().innerHTML = `<div class="dev-ded-toolbar">${btn("＋ 添加技能", "add-skill")}</div>${list.map((s, i) => `<article class="dev-ded-card"><div class="dev-ded-card-title"><b>${esc(s.label || s.name || s.id || "未命名技能")}</b>${btn("− 删除", "remove-skill", i)}</div><div class="dev-ded-grid">${input("技能 ID", `s.${i}.id`, s.id)} ${num("数值 ID", `s.${i}.numericid`, s.numericid ?? i, "min=0 max=19 step=1")} ${input("名称", `s.${i}.label`, s.label ?? s.name ?? "")}</div></article>`).join("")}`; }
-  sync() { (this.data.skills || []).forEach((s, i) => { s.id = this.value(`s.${i}.id`); s.numericid = Number(this.value(`s.${i}.numericid`)); s.label = this.value(`s.${i}.label`); }); }
-  addSkill() { this.data.skills.push({ id: `skill_${this.data.skills.length + 1}`, numericid: this.data.skills.length, label: "新技能" }); this.render(); }
-  removeSkill(i) { this.data.skills.splice(Number(i), 1); this.render(); }
+  constructor(dev) { super(dev, "skills.json", "技能定义编辑器", "编辑技能 ID、显示名称和初始值（0–100）"); }
+  render() {
+    const list = this.data.skills || (this.data.skills = []);
+    this.root().innerHTML = `<div class="dev-ded-toolbar">${btn("＋ 添加技能", "add-skill")}</div>`
+      + list.map((s, i) => `<article class="dev-ded-card"><div class="dev-ded-card-title"><b>${esc(s.label || s.id || "未命名技能")}</b>${btn("− 删除", "remove-skill", i)}</div><div class="dev-ded-grid">${input("技能 ID", `s.${i}.id`, s.id)}${input("显示名称 (label)", `s.${i}.label`, s.label || "")}${num("初始值", `s.${i}.value`, s.value ?? 50, "min=0 max=100")}</div></article>`).join("");
+  }
+  sync() {
+    (this.data.skills || []).forEach((s, i) => {
+      s.id    = this.value(`s.${i}.id`);
+      s.label = this.value(`s.${i}.label`);
+      s.value = Number(this.value(`s.${i}.value`)) || 0;
+      // Remove stale legacy fields if present
+      delete s.name; delete s.category; delete s.initialValue; delete s.default;
+    });
+  }
+  addSkill()      { this.data.skills.push({ id: `skill_${this.data.skills.length + 1}`, label: "新技能", value: 50 }); this.render(); }
+  removeSkill(i)  { this.data.skills.splice(Number(i), 1); this.render(); }
+}
+
+export class MonitorScenesEditor extends DedicatedEditor {
+  constructor(dev) { super(dev, "monitor_scenes.json", "监控场景编辑器", "编辑白天/夜间画面、场景名称和可见条件"); }
+  render() { const section = (phase) => { const d = this.data[phase] || (this.data[phase] = {}); return `<section class="dev-ded-card"><h3>${phase === "day" ? "白天" : "夜间"}场景</h3>${input("背景图片", `${phase}.background`, d.backgroundImage || d.background || "")}${input("场景名称", `${phase}.name`, d.name || "")}${input("默认说明", `${phase}.description`, d.description || "")}${checkbox("启用监控画面", `${phase}.enabled`, d.enabled !== false)}<div class="dev-ded-subtitle">场景记录</div>${(d.scenes || []).map((s, i) => `<div class="dev-ded-inline">${input("记录", `${phase}.scene.${i}`, typeof s === "string" ? s : s.name || s.description || "")}${btn("−", "remove-scene", `${phase}:${i}`)}</div>`).join("")}${btn("＋ 添加记录", "add-scene", phase)}</section>`; }; this.root().innerHTML = section("day") + section("night"); }
+  sync() { ["day", "night"].forEach((phase) => { const d = this.data[phase]; if ("backgroundImage" in d) d.backgroundImage = this.value(`${phase}.background`); else d.background = this.value(`${phase}.background`); d.name = this.value(`${phase}.name`); d.description = this.value(`${phase}.description`); d.enabled = this.value(`${phase}.enabled`); d.scenes = (d.scenes || []).map((_, i) => this.value(`${phase}.scene.${i}`)); }); }
+  addScene(p) { this.data[p].scenes ||= []; this.data[p].scenes.push(""); this.render(); }
+  removeScene(v) { const [p, i] = v.split(":"); this.data[p].scenes.splice(i, 1); this.render(); }
 }
 
 export const DEDICATED_EDITOR_CLASSES = {
+  "chatgtp-dialog": ChatgtpDialogEditor,
   "item-placements": ItemPlacementsEditor,
   diagnoses: DiagnosesEditor,
   medicines: MedicinesEditor,
   "medical-events": MedicalEventsEditor,
-
+  "npc-state": NpcStateRulesEditor,
   "time-rules": TimeRulesEditor,
   calendar: CalendarEditor,
   achievements: AchievementsEditor,
   skills: SkillsEditor,
+  "monitor-scenes": MonitorScenesEditor,
 };
 // DEV-TOOLS:END

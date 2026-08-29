@@ -247,9 +247,14 @@ class AchievementManager {
       this._checkEventTriggers("ending:triggered", { id: def.id, ...def });
     });
 
+    // DEV-TOOLS:START
     on("developer:opened", () => {
       this._checkEventTriggers("developer:opened", {});
     });
+    on("developer:force_end_work", (payload) => {
+      this._checkEventTriggers("developer:force_end_work", payload);
+    });
+    // DEV-TOOLS:END
 
     // ── Favorability ──────────────────────────────────────────────────────
 

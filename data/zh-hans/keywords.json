@@ -22,7 +22,13 @@
     },
     {
       "id": "mystery_note",
-      "content": "神秘纸条"
+      "content": "神秘纸条",
+      "contentLowSan": "血迹斑斑的诅咒字符",
+      "relatedIds": [
+        "roommate_necklace_clue",
+        "strange_liquid",
+        "basement_secret"
+      ]
     },
     {
       "id": "sore_throat",
@@ -46,7 +52,13 @@
     },
     {
       "id": "night_shift_rumor",
-      "content": "夜班传闻"
+      "content": "夜班传闻",
+      "contentLowSan": "夜班的尖叫与活人献祭",
+      "relatedIds": [
+        "night_shift_injury",
+        "basement_secret",
+        "night_shift_rumor_detail"
+      ]
     },
     {
       "id": "energy_drink",
@@ -54,7 +66,13 @@
     },
     {
       "id": "old_key_clue",
-      "content": "旧钥匙"
+      "content": "旧钥匙",
+      "contentLowSan": "通往祭坛的钥匙印记",
+      "relatedIds": [
+        "basement_secret",
+        "mystery_note",
+        "duty_room_secret"
+      ]
     },
     {
       "id": "night_shift_rumor_detail",
@@ -74,7 +92,13 @@
     },
     {
       "id": "strange_liquid",
-      "content": "不明液体"
+      "content": "不明液体",
+      "contentLowSan": "献祭用的暗红血液",
+      "relatedIds": [
+        "roommate_necklace_clue",
+        "night_shift_rumor",
+        "basement_secret"
+      ]
     },
     {
       "id": "flu_suspect",
@@ -90,7 +114,13 @@
     },
     {
       "id": "roommate_necklace_clue",
-      "content": "项链上的奇怪符号"
+      "content": "项链上的奇怪符号",
+      "contentLowSan": "邪神召唤符文——而非装饰",
+      "relatedIds": [
+        "mystery_note",
+        "strange_liquid",
+        "basement_secret"
+      ]
     },
     {
       "id": "disease:acute_bronchitis:low",

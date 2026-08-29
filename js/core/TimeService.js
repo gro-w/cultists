@@ -165,7 +165,7 @@ class TimeService {
     let sleepDebtSanLoss = 0;
     if (this.insufficientSleepStreak >= 3) {
       sleepDebtSanLoss = this.config?.threeDaySleepDebtSanLoss || 0;
-      if (sleepDebtSanLoss) gameState.modify({ mental: -sleepDebtSanLoss });
+      if (sleepDebtSanLoss) gameState.modify({ sanity: -sleepDebtSanLoss });
       this.insufficientSleepStreak = 0;
     }
     const medical = medicalCaseManager.settleDay(day - 1);

@@ -4,19 +4,28 @@
       "id": "ajie",
       "numericid": 0,
       "name": "阿杰",
-      "avatar": "🐶"
+      "avatar": "🐶",
+      "initialFavorability": 60,
+      "initialSan": 80,
+      "portraits": []
     },
     {
       "id": "awei",
       "numericid": 1,
       "name": "阿伟",
-      "avatar": "🐱"
+      "avatar": "🐱",
+      "initialFavorability": 50,
+      "initialSan": 80,
+      "portraits": []
     },
     {
       "id": "binbin",
       "numericid": 2,
       "name": "彬彬",
-      "avatar": "🐼"
+      "avatar": "🐼",
+      "initialFavorability": 40,
+      "initialSan": 80,
+      "portraits": []
     }
   ]
 }

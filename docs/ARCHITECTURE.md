@@ -25,7 +25,7 @@
 | `DayNightSystem` | 上班、下班、睡眠、工作日/休息日和最终阶段切换 |
 | `TimeService` | 唯一普通游戏时间推进、跨日和阶段结算 |
 | `ScheduleData` | 加载 work/social 日程，并按时间点追加批次 |
-| `ScheduleQueue` | 独立的 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `mainQueue` |
+| `ScheduleQueue` | 独立的 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件和使用效果 |
 | `ItemPlacementManager` | 场景中的条件物品摆放、拾取和放回 |
 | `GlobalVariableManager` | 数据定义的 bool/number/decimal/string 全局变量、条件和效果 |
@@ -56,7 +56,7 @@
 | 操作 | 队列 | 执行顺序 |
 | --- | --- | --- |
 | HIS/Social 对话 | `workQueue` / `socialQueue` / `mainQueue` | `ScheduleRunner` 执行蓝图节点、对话效果和 `consumeTime` |
-| ChatGTP 关键词查询 | `chatgtpQueue` | 扣 NPC SAN、推进 20 分钟、提交回答 |
+| ChatGTP 关键词查询 | `mainQueue` | 扣 NPC SAN、推进 20 分钟、提交回答 |
 | 物品调查/使用、法术施放 | `mainQueue` | `ItemScheduleRuntime` 执行效果、时间和完成事件 |
 | HIS 诊断提交 | `mainQueue` | 提交医疗记录、推进 20 分钟、完成实例 |
 | 法术学习 | `mainQueue` | `consumeTime(240)` 后执行 `spellOperation` |

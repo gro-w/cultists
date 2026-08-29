@@ -1,7 +1,5 @@
 /* DEV-TOOLS:START */
 .developer-mode-root { height: 100%; overflow: auto; padding: 8px; background: #c0c0c0; color: #111; font: 13px Arial, sans-serif; box-sizing: border-box; }
-.dev-radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; padding: 4px 8px; }
-.dev-radio-group label { white-space: nowrap; }
 .dev-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 8px; border-bottom: 1px solid #808080; }
 .dev-app-heading { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; padding: 4px 6px; color: #000080; background: #c7d9f7; border: 1px solid #6f86ad; }
 .dev-app-heading strong { font-size: 16px; }
@@ -107,12 +105,9 @@
 .dev-ie-item-row:hover { background:#d8e8ff; }
 .dev-ie-item-row.active { background:#000080; color:#fff; }
 .dev-ie-item-row.active div { color:#fff !important; }
-.dev-ie-editor { flex:1; overflow-y:auto; min-width:0; width:0; }
-.dev-ie-sec { min-width:0; max-width:100%; box-sizing:border-box; }
+.dev-ie-editor { flex:1; overflow-y:auto; min-width:0; }
 .dev-ie-sec { margin:6px 8px; padding:8px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
 .dev-ie-sec h3 { margin:0 0 8px; font-size:13px; }
-.dev-ie-investigate-editor, .dev-ie-item-schedule-editor { width:100%; max-width:100%; min-width:0; height:620px; min-height:420px; border:1px solid #808080; background:#c0c0c0; overflow:hidden; box-sizing:border-box; }
-.dev-ie-investigate-editor > .dev-de-root, .dev-ie-item-schedule-editor > .dev-de-root { width:100%; max-width:100%; min-width:0; height:100%; min-height:0; }
 .dev-ie-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:4px; }
 .dev-ie-field { display:flex; flex-direction:column; gap:3px; flex:1; min-width:120px; font-size:12px; }
 .dev-ie-field label { font-size:11px; color:#444; font-weight:600; }
@@ -130,14 +125,23 @@
 .dev-blueprint-window .win95-window-body { overflow:hidden; padding:2px; }
 .dev-blueprint-window .dev-de-root { height:100%; min-height:0; }
 .dev-de-header { display:flex; flex-wrap:wrap; gap:4px; padding:4px 0 6px; border-bottom:1px solid #808080; }
-.dev-de-main { display:flex; flex:1; min-height:0; min-width:0; width:100%; overflow:hidden; }
+.dev-de-main { display:flex; flex:1; min-height:0; overflow:hidden; }
 
 /* sidebar */
 .dev-de-sidebar { width:160px; min-width:140px; flex-shrink:0; border-right:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; }
 .dev-de-sidebar-tools { display:flex; flex-direction:column; gap:3px; padding:4px; border-bottom:1px solid #808080; }
 .dev-de-sidebar-tools .dev-btn { width:100%; }
+.dev-de-phase-tabs { display:flex; border-bottom:1px solid #808080; }
+.dev-de-ptab { flex:1; padding:4px; text-align:center; cursor:pointer; font-size:12px; font-weight:600; background:#c0c0c0; border-bottom:2px solid transparent; }
+.dev-de-ptab.active { background:#fff; border-bottom-color:#000080; color:#000080; }
+.dev-de-ptab:hover { background:#d8e8ff; }
 .dev-de-sb-sec { padding:4px; }
 .dev-de-sb-title { font-size:11px; font-weight:700; color:#000080; padding:4px 2px 2px; display:flex; align-items:center; justify-content:space-between; }
+.dev-de-sb-add { border:1px outset #ccc; background:#c0c0c0; cursor:pointer; padding:0 6px; font-size:13px; line-height:18px; }
+.dev-de-sb-add:hover { background:#a0c0ff; }
+.dev-de-sb-day { padding:4px 8px; font-size:12px; cursor:pointer; border-bottom:1px solid #e0e0e0; }
+.dev-de-sb-day:hover { background:#d8e8ff; }
+.dev-de-sb-day.active { background:#000080; color:#fff; }
 .dev-de-sb-item { padding:4px 8px; font-size:12px; cursor:pointer; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:space-between; }
 .dev-de-sb-item:hover { background:#d8e8ff; }
 .dev-de-sb-item.active { background:#000080; color:#fff; }
@@ -170,7 +174,8 @@
 .dev-de-node-options { padding:2px 6px; border-top:1px solid #ddd; background:#fafafa; }
 .dev-de-node-opt { position:relative; display:flex; align-items:center; min-height:18px; padding-right:13px; color:#555; font-size:10px; white-space:nowrap; }
 .dev-de-node-opt > span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; }
-
+.dev-de-option-pin { position:absolute; right:-9px; display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border:1px solid #000080; border-radius:50%; background:#d8d8ff; color:#000080; font-size:9px; font-weight:bold; cursor:crosshair; user-select:none; z-index:2; }
+.dev-de-option-pin:hover { background:#ffcc66; border-color:#cc6600; color:#000; }
 .dev-de-node-ft { padding:2px 6px 4px; display:flex; gap:4px; flex-wrap:wrap; }
 .dev-de-nbadge { background:#e8e8ff; border:1px solid #9999cc; border-radius:3px; font-size:10px; padding:1px 4px; color:#333; }
 .dev-de-port-layer { position:absolute; inset:0; pointer-events:none; }
@@ -188,6 +193,7 @@
 .dev-de-input-mode, .dev-de-input-source, .dev-de-input-value { min-width:0; flex:1; min-height:21px; border:2px inset #eee; font-size:11px; }
 .dev-de-input-ref { color:#075; font-size:10px; }
 .dev-de-port-summary { margin-top:5px; color:#555; font-size:11px; }
+.dev-de-connection-editor { border-top:1px solid #808080; }
 .dev-de-output-row { display:flex; align-items:center; gap:4px; margin:3px 0; font-size:11px; }
 .dev-de-output-row label { width:65px; overflow:hidden; text-overflow:ellipsis; color:#a00000; }
 .dev-de-output-row select { flex:1; min-width:0; min-height:21px; border:2px inset #eee; font-size:11px; }
@@ -205,9 +211,9 @@
 .dev-schedule-tables { flex:1; min-height:0; overflow:auto; display:grid; grid-template-columns:repeat(2,minmax(320px,1fr)); gap:10px; padding:10px 2px; background:#f0f0f8; }
 .dev-schedule-table { padding:10px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
 .dev-schedule-table h3 { margin:0 0 9px; color:#000080; font-size:14px; }
-.dev-schedule-file-list { display:flex; flex-direction:column; gap:2px; max-height:220px; overflow:auto; border:2px inset #eee; background:#fff; padding:2px; }
-.dev-schedule-file-select { display:block; width:100%; min-height:24px; padding:2px 4px; font:inherit; }
-.dev-schedule-actions { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
+.dev-schedule-picker, .dev-schedule-new, .dev-schedule-actions { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
+.dev-schedule-picker select { flex:1; min-width:150px; min-height:25px; border:2px inset #eee; }
+.dev-schedule-new input { flex:1; min-width:150px; min-height:21px; border:2px inset #eee; padding:2px 4px; }
 .dev-schedule-actions { border-top:1px solid #aaa; padding-top:7px; }
 .dev-schedule-actions .dev-btn { flex:1; min-width:125px; }
 @media (max-width:720px) { .dev-schedule-tables { grid-template-columns:1fr; } .dev-schedule-help { display:none; } }
@@ -219,7 +225,14 @@
 .dev-de-context-settings strong { display:block; margin-bottom:8px; color:#000080; }
 .dev-de-context-settings label { display:flex; flex-direction:column; gap:3px; margin:6px 0; font-size:11px; }
 .dev-de-context-settings input { min-height:23px; border:2px inset #eee; padding:2px 4px; box-sizing:border-box; }
+.dev-de-ed-sec { padding:4px 6px; }
 .dev-de-ed-label { font-size:11px; font-weight:700; color:#333; margin-bottom:3px; }
+.dev-de-spk-btn { margin:1px; padding:2px 7px; font-size:11px; min-height:22px; }
+.dev-de-spk-btn.active { outline:2px solid currentColor; }
+.dev-de-wnum { width:52px; min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; text-align:center; }
+.dev-de-opt-row { margin-bottom:6px; padding:4px 6px; background:#e8e8e8; border:1px solid #ccc; }
+.dev-de-opt-label { flex:1; min-height:23px; border:2px inset #eee; padding:2px 4px; font-size:12px; min-width:0; }
+.dev-de-opt-next { min-height:23px; border:2px inset #eee; padding:2px; font-size:11px; min-width:80px; }
 
 /* ── BGM editor (DevBgmEditorTab) ── */
 .dev-bgm-root { height:100%; overflow:auto; padding:0; }
@@ -252,6 +265,21 @@
 .dev-bgm-wnum { width:52px; min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; text-align:center; }
 .dev-bgm-fb-row { margin-top:6px; font-size:12px; }
 
+/* onShow BGM row inside dialogue node editor */
+.dev-de-onshow-bgm { display:flex; align-items:center; gap:4px; margin-top:3px; font-size:11px; }
+.dev-de-onshow-bgm select { min-height:21px; border:1px inset #eee; padding:1px 3px; font-size:11px; }
+.dev-de-onshow-bgm-indicator { font-size:10px; color:#006600; margin-left:2px; }
 
+/* ── CG editor ── */
+.dev-cg-root { display:flex; flex-direction:column; gap:0; }
+.dev-cg-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:6px 0 8px; border-bottom:1px solid #808080; margin-bottom:8px; }
+.dev-cg-card { background:#fff; border:1px solid #808080; border-radius:2px; padding:8px; margin-bottom:8px; }
+.dev-cg-card-header { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.dev-cg-card-header b { flex:1; font-size:12px; }
+.dev-cg-fields { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:6px; font-size:12px; }
+.dev-cg-upload-label { cursor:pointer; color:#000080; text-decoration:underline; font-size:12px; }
+.dev-cg-preview { min-height:40px; display:flex; align-items:center; }
+.dev-cg-thumb { max-height:120px; max-width:100%; object-fit:contain; border:1px solid #aaa; cursor:zoom-in; }
+.dev-cg-no-img { color:#aaa; font-size:11px; font-style:italic; }
 /* DEV-TOOLS:END */
 

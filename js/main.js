@@ -23,6 +23,7 @@ import { mainScheduleRuntime } from "./core/MainScheduleRuntime.js";
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import { locationSystem } from "./core/LocationSystem.js";
+import { cgManager } from "./core/CGManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -44,8 +45,23 @@ import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
 import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
 // DEV-TOOLS:END
 
+let phaseToggleLaunch = () => handlePhaseToggle();
+let phaseToggleLabel = () => gameState.location === "work"
+  ? i18n.t("apps.phaseToggleWork", "下班")
+  : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
+    ? "去上班"
+    : "去睡觉";
 // DEV-TOOLS:START
-const developerModeEnabled = isDeveloperModeSearch();
+let developerModeEnabled = false;
+developerModeEnabled = isDeveloperModeSearch();
+phaseToggleLabel = () => gameState.location === "work"
+  ? "强制下班"
+  : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
+    ? "去上班"
+    : "去睡觉";
+phaseToggleLaunch = () => developerModeEnabled && gameState.location === "work"
+  ? dayNightSystem.forceEndWork()
+  : handlePhaseToggle();
 // DEV-TOOLS:END
 
 /**
@@ -116,14 +132,9 @@ const APP_REGISTRY = [
   { id: "seaside",    label: "海边",   icon: "🌊", launch: () => locationScene?.show("seaside") },
   {
     id: "phase-toggle",
-    label: () =>
-      gameState.location === "work"
-        ? i18n.t("apps.phaseToggleWork", "下班")
-        : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
-          ? "去上班"
-          : "去睡觉",
+    label: () => phaseToggleLabel(),
     icon: () => gameState.location === "work" ? "🚪" : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60 ? "🚶" : "🛏️",
-    launch: () => handlePhaseToggle(),
+    launch: () => phaseToggleLaunch(),
   },
 ];
 
@@ -133,6 +144,7 @@ function boot({ welcomeBack }) {
   windowManager.mount(windowLayer);
   audioManager.mount();
   bgmManager.mount();
+  cgManager.mount(); // subscribe to schedule:cg / schedule:end_cg events
 
   new Desktop(document.getElementById("desktop-icons"), APP_REGISTRY);
 
@@ -156,6 +168,7 @@ function boot({ welcomeBack }) {
     launchWorkApp: () => {
       if (gameState.location === "dorm") dayNightSystem.toggle();
     },
+    showLocation: (id) => locationScene?.show(id),
   });
   dormMode.init().catch((err) => console.error("[Cultists] Failed to initialize dorm mode:", err));
 
@@ -221,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     globalVariableManager.init(),
     bgmManager.load(),
     locationSystem.load(),
+    cgManager.load(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

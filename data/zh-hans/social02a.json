@@ -1,8 +1,8 @@
 {
-  "displayName": "第3-4天社交·已对话",
+  "displayName": "第2天社交·闲聊池",
   "entries": [
     {
-      "id": "social02a_ajie_chat",
+      "id": "social01a_ajie_chat",
       "type": "other",
       "npcId": "ajie",
       "name": "阿杰",
@@ -15,94 +15,105 @@
             "id": "start",
             "type": "flowStart",
             "inputs": {},
-            "outputs": {}
+            "outputs": {},
+            "x": 40,
+            "y": 220
           },
-          "n1": {
-            "id": "n1",
+          "greeting": {
+            "id": "greeting",
             "type": "text",
             "inputs": {
               "speaker": "阿杰",
-              "text": "回来了？今天怎么样？"
+              "text": "回来了？工作累吗？"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 260,
+            "y": 220
           },
-          "n2": {
-            "id": "n2",
+          "reply_tired": {
+            "id": "reply_tired",
             "type": "text",
             "inputs": {
               "speaker": "player",
-              "text": "还行，接诊了几个病人……就那样。你呢？"
+              "text": "挺累的。"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 520,
+            "y": 220
           },
-          "n3": {
-            "id": "n3",
+          "comfort": {
+            "id": "comfort",
             "type": "text",
             "inputs": {
               "speaker": "阿杰",
-              "text": "我也还行。不过我买到了很好吃的酸奶，黏黏的，你要不要来一罐？"
+              "text": "累就对了，舒服是留给死人的……哦不，留给神的。"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 780,
+            "y": 220
           },
-          "choice4": {
-            "id": "choice4",
-            "type": "choice",
-            "inputs": {
-              "branchCount": 2,
-              "label0": "好啊，给我一罐吧。",
-              "label1": "听起来有点恶心……还是算了。"
-            },
-            "options": [
-              {
-                "label": "好啊，给我一罐吧。"
-              },
-              {
-                "label": "听起来有点恶心……还是算了。"
-              }
-            ],
-            "outputs": {}
-          },
-          "choice4_op0": {
-            "id": "choice4_op0",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 0,
-              "delta": 0
-            },
-            "outputs": {}
-          },
-          "choice4_op1": {
-            "id": "choice4_op1",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 40,
-              "delta": 0
-            },
-            "outputs": {}
-          },
-          "n5": {
-            "id": "n5",
-            "type": "text",
-            "inputs": {
-              "speaker": "阿杰",
-              "text": "今晚还打《第二十四人格》吗？"
-            },
-            "outputs": {}
-          },
-          "n6": {
-            "id": "n6",
+          "question": {
+            "id": "question",
             "type": "text",
             "inputs": {
               "speaker": "player",
-              "text": "我觉得我还是不该喜欢打什么游戏，会影响我刷题的。"
+              "text": "什么意思？"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 1080,
+            "y": 220
+          },
+          "deflect": {
+            "id": "deflect",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没什么。最近阿伟买了新耳机，他估计又要吃土了。"
+            },
+            "outputs": {},
+            "x": 1360,
+            "y": 220
+          },
+          "reply_record": {
+            "id": "reply_record",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "他不才还完那张限量唱片的尾款吗？"
+            },
+            "outputs": {},
+            "x": 1640,
+            "y": 220
+          },
+          "gossip": {
+            "id": "gossip",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "对啊。你看他黑眼圈那么重，估计是没忍住买了，买完又后悔。你要不要借他点钱？"
+            },
+            "outputs": {},
+            "x": 1920,
+            "y": 220
+          },
+          "reply_maybe": {
+            "id": "reply_maybe",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……我有机会问问他。"
+            },
+            "outputs": {},
+            "x": 2200,
+            "y": 220
           },
           "end": {
             "id": "end",
             "type": "scheduleEnd",
             "inputs": {},
-            "outputs": {}
+            "outputs": {},
+            "x": 2480,
+            "y": 220
           },
           "consume_time_20_1": {
             "id": "consume_time_20_1",
@@ -111,8 +122,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 30,
-            "y": 40
+            "x": 290,
+            "y": 260
           },
           "consume_time_20_2": {
             "id": "consume_time_20_2",
@@ -121,8 +132,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
-            "y": 40
+            "x": 320,
+            "y": 260
           },
           "consume_time_20_3": {
             "id": "consume_time_20_3",
@@ -131,8 +142,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 90,
-            "y": 40
+            "x": 550,
+            "y": 260
           },
           "consume_time_20_4": {
             "id": "consume_time_20_4",
@@ -141,8 +152,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 30,
-            "y": 40
+            "x": 810,
+            "y": 260
           },
           "consume_time_20_5": {
             "id": "consume_time_20_5",
@@ -151,8 +162,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
-            "y": 40
+            "x": 840,
+            "y": 260
           },
           "consume_time_20_6": {
             "id": "consume_time_20_6",
@@ -161,8 +172,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 30,
-            "y": 40
+            "x": 1110,
+            "y": 260
           },
           "consume_time_20_7": {
             "id": "consume_time_20_7",
@@ -171,8 +182,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
-            "y": 40
+            "x": 1390,
+            "y": 260
           },
           "consume_time_20_8": {
             "id": "consume_time_20_8",
@@ -181,8 +192,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 90,
-            "y": 40
+            "x": 1420,
+            "y": 260
           },
           "consume_time_20_9": {
             "id": "consume_time_20_9",
@@ -191,8 +202,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 30,
-            "y": 40
+            "x": 1670,
+            "y": 260
           },
           "consume_time_20_10": {
             "id": "consume_time_20_10",
@@ -201,8 +212,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
-            "y": 40
+            "x": 1950,
+            "y": 260
           },
           "consume_time_20_11": {
             "id": "consume_time_20_11",
@@ -211,8 +222,8 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 30,
-            "y": 40
+            "x": 1980,
+            "y": 260
           },
           "consume_time_20_12": {
             "id": "consume_time_20_12",
@@ -221,46 +232,48 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
-            "y": 40
-          },
-          "read_yesterday": {
-            "id": "read_yesterday",
-            "type": "getGlobal",
-            "inputs": {
-              "variableId": 100
-            },
-            "outputs": {}
+            "x": 2230,
+            "y": 260
           },
           "__prerequisite__": {
             "id": "__prerequisite__",
             "type": "prerequisite",
-            "inputs": {},
+            "inputs": {
+              "condition": false
+            },
             "outputs": {},
             "x": 80,
-            "y": 260
+            "y": 240
           },
           "__schedule_expiry__": {
             "id": "__schedule_expiry__",
             "type": "scheduleExpiry",
             "inputs": {
-              "expires": false,
-              "expiresAt": 0
+              "expires": true,
+              "expiresAt": 3840
             },
             "outputs": {},
             "x": 80,
             "y": 360
+          },
+          "__social_gate_global_100": {
+            "id": "__social_gate_global_100",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 100
+            },
+            "outputs": {}
           }
         },
         "connections": [
           {
             "fromNodeId": "start",
             "fromPort": "flowOut",
-            "toNodeId": "n1",
+            "toNodeId": "greeting",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "n1",
+            "fromNodeId": "greeting",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_1",
             "toPort": "flowIn"
@@ -274,17 +287,23 @@
           {
             "fromNodeId": "consume_time_20_2",
             "fromPort": "flowOut",
+            "toNodeId": "reply_tired",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "reply_tired",
+            "fromPort": "flowOut",
             "toNodeId": "consume_time_20_3",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "consume_time_20_3",
             "fromPort": "flowOut",
-            "toNodeId": "n2",
+            "toNodeId": "comfort",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "n2",
+            "fromNodeId": "comfort",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_4",
             "toPort": "flowIn"
@@ -298,17 +317,23 @@
           {
             "fromNodeId": "consume_time_20_5",
             "fromPort": "flowOut",
-            "toNodeId": "n3",
+            "toNodeId": "question",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "n3",
+            "fromNodeId": "question",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_6",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "consume_time_20_6",
+            "fromPort": "flowOut",
+            "toNodeId": "deflect",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "deflect",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_7",
             "toPort": "flowIn"
@@ -322,41 +347,23 @@
           {
             "fromNodeId": "consume_time_20_8",
             "fromPort": "flowOut",
-            "toNodeId": "choice4",
+            "toNodeId": "reply_record",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice4",
-            "fromPort": "option0",
-            "toNodeId": "choice4_op0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice4",
-            "fromPort": "option1",
-            "toNodeId": "choice4_op1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice4_op0",
-            "fromPort": "flowOut",
-            "toNodeId": "n5",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice4_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "n5",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "n5",
+            "fromNodeId": "reply_record",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_9",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
+            "toNodeId": "gossip",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "gossip",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_10",
             "toPort": "flowIn"
@@ -376,17 +383,17 @@
           {
             "fromNodeId": "consume_time_20_12",
             "fromPort": "flowOut",
-            "toNodeId": "n6",
+            "toNodeId": "reply_maybe",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "n6",
+            "fromNodeId": "reply_maybe",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "read_yesterday",
+            "fromNodeId": "__social_gate_global_100",
             "fromPort": "value",
             "toNodeId": "__prerequisite__",
             "toPort": "condition"
@@ -395,7 +402,7 @@
       }
     },
     {
-      "id": "social02a_awei_chat",
+      "id": "social01a_awei_chat",
       "type": "other",
       "npcId": "awei",
       "name": "阿伟",
@@ -414,8 +421,8 @@
             "id": "n1",
             "type": "text",
             "inputs": {
-              "speaker": "player",
-              "text": "今天你也不准备吃饭吗？"
+              "speaker": "阿伟",
+              "text": "你晚饭吃什么？"
             },
             "outputs": {}
           },
@@ -423,8 +430,8 @@
             "id": "n2",
             "type": "text",
             "inputs": {
-              "speaker": "阿伟",
-              "text": "等我打个电话……*能不能再宽限两天？我没想赖着不还。……*唉，后天就要还尾款了。"
+              "speaker": "player",
+              "text": "没想好呢。"
             },
             "outputs": {}
           },
@@ -432,8 +439,8 @@
             "id": "n3",
             "type": "text",
             "inputs": {
-              "speaker": "player",
-              "text": "现在你还差多少钱？"
+              "speaker": "阿伟",
+              "text": "我去食堂看看有没有剩饭。"
             },
             "outputs": {}
           },
@@ -441,53 +448,44 @@
             "id": "n4",
             "type": "text",
             "inputs": {
-              "speaker": "阿伟",
-              "text": "别提了。"
+              "speaker": "player",
+              "text": "……剩饭也要花钱吧。"
             },
             "outputs": {}
           },
-          "choice5": {
-            "id": "choice5",
+          "n5": {
+            "id": "n5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "能省则省了。话说，你觉不觉得屋里越来越潮了？"
+            },
+            "outputs": {}
+          },
+          "choice6": {
+            "id": "choice6",
             "type": "choice",
             "inputs": {
               "branchCount": 2,
-              "label0": "加油吧。",
-              "label1": "你不是明天就要还了吗？"
+              "label0": "不清楚，好像有点。",
+              "label1": "我没觉得啊。"
             },
             "options": [
               {
-                "label": "加油吧。"
+                "label": "不清楚，好像有点。"
               },
               {
-                "label": "你不是明天就要还了吗？"
+                "label": "我没觉得啊。"
               }
             ],
             "outputs": {}
           },
-          "choice5_op0": {
-            "id": "choice5_op0",
+          "choice6_op0": {
+            "id": "choice6_op0",
             "type": "setGlobal",
             "inputs": {
-              "variableId": 40,
+              "variableId": 41,
               "delta": 5
-            },
-            "outputs": {}
-          },
-          "choice5_op1": {
-            "id": "choice5_op1",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 0,
-              "delta": 5
-            },
-            "outputs": {}
-          },
-          "n6": {
-            "id": "n6",
-            "type": "text",
-            "inputs": {
-              "speaker": "阿伟",
-              "text": "怎么会，你别吓唬我。"
             },
             "outputs": {}
           },
@@ -495,8 +493,26 @@
             "id": "n7",
             "type": "text",
             "inputs": {
-              "speaker": "player",
-              "text": "明明昨天你说是后天来着……"
+              "speaker": "阿伟",
+              "text": "看来不止我一个人这么觉得。"
+            },
+            "outputs": {}
+          },
+          "choice6_op1": {
+            "id": "choice6_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "n8": {
+            "id": "n8",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "难道这也是我的错觉？我真该多睡点了……"
             },
             "outputs": {}
           },
@@ -583,7 +599,7 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
+            "x": 30,
             "y": 40
           },
           "consume_time_20_9": {
@@ -593,7 +609,7 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 30,
+            "x": 60,
             "y": 40
           },
           "consume_time_20_10": {
@@ -603,7 +619,7 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
+            "x": 30,
             "y": 40
           },
           "consume_time_20_11": {
@@ -613,7 +629,7 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 30,
+            "x": 60,
             "y": 40
           },
           "consume_time_20_12": {
@@ -623,35 +639,46 @@
               "minutes": 20
             },
             "outputs": {},
-            "x": 60,
+            "x": 30,
             "y": 40
-          },
-          "read_yesterday": {
-            "id": "read_yesterday",
-            "type": "getGlobal",
-            "inputs": {
-              "variableId": 101
-            },
-            "outputs": {}
           },
           "__prerequisite__": {
             "id": "__prerequisite__",
             "type": "prerequisite",
-            "inputs": {},
+            "inputs": {
+              "condition": false
+            },
             "outputs": {},
             "x": 80,
-            "y": 260
+            "y": 240
           },
           "__schedule_expiry__": {
             "id": "__schedule_expiry__",
             "type": "scheduleExpiry",
             "inputs": {
-              "expires": false,
-              "expiresAt": 0
+              "expires": true,
+              "expiresAt": 3840
             },
             "outputs": {},
             "x": 80,
             "y": 360
+          },
+          "choice6_op1_suspicion": {
+            "id": "choice6_op1_suspicion",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 0,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "__social_gate_global_101": {
+            "id": "__social_gate_global_101",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 101
+            },
+            "outputs": {}
           }
         },
         "connections": [
@@ -724,35 +751,17 @@
           {
             "fromNodeId": "consume_time_20_7",
             "fromPort": "flowOut",
+            "toNodeId": "n5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n5",
+            "fromPort": "flowOut",
             "toNodeId": "consume_time_20_8",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "consume_time_20_8",
-            "fromPort": "flowOut",
-            "toNodeId": "choice5",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice5",
-            "fromPort": "option0",
-            "toNodeId": "choice5_op0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice5",
-            "fromPort": "option1",
-            "toNodeId": "choice5_op1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice5_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "n6",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "n6",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_9",
             "toPort": "flowIn"
@@ -760,13 +769,37 @@
           {
             "fromNodeId": "consume_time_20_9",
             "fromPort": "flowOut",
-            "toNodeId": "consume_time_20_10",
+            "toNodeId": "choice6",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice5_op0",
+            "fromNodeId": "choice6",
+            "fromPort": "option0",
+            "toNodeId": "choice6_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice6",
+            "fromPort": "option1",
+            "toNodeId": "choice6_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
+            "fromPort": "flowOut",
+            "toNodeId": "n8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n8",
             "fromPort": "flowOut",
             "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice6_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
             "toPort": "flowIn"
           },
           {
@@ -778,12 +811,6 @@
           {
             "fromNodeId": "consume_time_20_11",
             "fromPort": "flowOut",
-            "toNodeId": "consume_time_20_12",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "consume_time_20_12",
-            "fromPort": "flowOut",
             "toNodeId": "n7",
             "toPort": "flowIn"
           },
@@ -794,10 +821,34 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "read_yesterday",
+            "fromNodeId": "choice6_op1_suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice6_op1_suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "choice6_op1_suspicion",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "__social_gate_global_101",
             "fromPort": "value",
             "toNodeId": "__prerequisite__",
             "toPort": "condition"
+          },
+          {
+            "fromNodeId": "choice6_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice6_op1_suspicion",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice6_op1_suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "choice6_op1_suspicion",
+            "toPort": "flowIn"
           }
         ]
       }

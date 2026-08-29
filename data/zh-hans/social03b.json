@@ -1,3 +1,2891 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "id": "social02b_ajie_24_personality_high",
+      "type": "other",
+      "npcId": "ajie",
+      "name": "阿杰",
+      "avatar": "🐶",
+      "displayName": "《第二十四人格》",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "n1": {
+            "id": "n1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "来开黑，今天玩《第二十四人格》。"
+            },
+            "outputs": {}
+          },
+          "n2": {
+            "id": "n2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "我在做一个测评手游的视频，今天测《第二十四人格》这个手游，我想听听你的意见。"
+            },
+            "outputs": {}
+          },
+          "n3": {
+            "id": "n3",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "第二十四人格？"
+            },
+            "outputs": {}
+          },
+          "n4": {
+            "id": "n4",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "前23个我都收集好了，就差第24个。"
+            },
+            "outputs": {}
+          },
+          "n5": {
+            "id": "n5",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "第24个是什么？"
+            },
+            "outputs": {}
+          },
+          "n6": {
+            "id": "n6",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不，不重要。你可以去游戏里抽奖，有一个叫“三重馈赠”的栏目，点开就送卡。这活动名字听起来像发誓似的。"
+            },
+            "outputs": {}
+          },
+          "n7": {
+            "id": "n7",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "等我查查攻略……"
+            },
+            "outputs": {}
+          },
+          "n8": {
+            "id": "n8",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "别查。"
+            },
+            "outputs": {}
+          },
+          "n9": {
+            "id": "n9",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "那我看看评分。"
+            },
+            "outputs": {}
+          },
+          "n10": {
+            "id": "n10",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "别人的观点会腐蚀你的脑子。"
+            },
+            "outputs": {}
+          },
+          "choice11": {
+            "id": "choice11",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "是么？那我不看了。",
+              "label1": "他人的观点是智慧的结晶。"
+            },
+            "options": [
+              {
+                "label": "是么？那我不看了。"
+              },
+              {
+                "label": "他人的观点是智慧的结晶。"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice11_op0": {
+            "id": "choice11_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "n12": {
+            "id": "n12",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "其实这也是我的观点。"
+            },
+            "outputs": {}
+          },
+          "n13": {
+            "id": "n13",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "什么意思？"
+            },
+            "outputs": {}
+          },
+          "n14": {
+            "id": "n14",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没什么意思，快抽卡。"
+            },
+            "outputs": {}
+          },
+          "choice11_op1": {
+            "id": "choice11_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "n15": {
+            "id": "n15",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "长满结晶的大脑么，很难下嘴啊……"
+            },
+            "outputs": {}
+          },
+          "n16": {
+            "id": "n16",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你说我吗？"
+            },
+            "outputs": {}
+          },
+          "n17": {
+            "id": "n17",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "哈哈，开玩笑的。"
+            },
+            "outputs": {}
+          },
+          "n18": {
+            "id": "n18",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "诶，我进大厅了。"
+            },
+            "outputs": {}
+          },
+          "n19": {
+            "id": "n19",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "我也在这儿。"
+            },
+            "outputs": {}
+          },
+          "n20": {
+            "id": "n20",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这里怎么有两个人？其中一个是我，另一个不认识。"
+            },
+            "outputs": {}
+          },
+          "n21": {
+            "id": "n21",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不就该是两个人吗？我和你。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "choice_final_25": {
+            "id": "choice_final_25",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "是吗？好像也对。",
+              "label1": "不对啊，我，你……我进来之前这个我和你就在大厅里了。"
+            },
+            "options": [
+              {
+                "label": "是吗？好像也对。"
+              },
+              {
+                "label": "不对啊，我，你……我进来之前这个我和你就在大厅里了。"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice_final_25_op0": {
+            "id": "choice_final_25_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "choice_final_25_0_0": {
+            "id": "choice_final_25_0_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "想什么呢？恍恍惚惚的。"
+            },
+            "outputs": {}
+          },
+          "choice_final_25_0_1": {
+            "id": "choice_final_25_0_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "总觉得哪里怪怪的……"
+            },
+            "outputs": {}
+          },
+          "choice_final_25_0_2": {
+            "id": "choice_final_25_0_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "神经太敏感了吧，总是想赢想赢的。"
+            },
+            "outputs": {}
+          },
+          "choice_final_25_op1": {
+            "id": "choice_final_25_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 0,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "choice_final_25_1_0": {
+            "id": "choice_final_25_1_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "说什么呢你？"
+            },
+            "outputs": {}
+          },
+          "choice_final_25_1_1": {
+            "id": "choice_final_25_1_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "有两个我？另一个我是谁？还是说你在搞我？"
+            },
+            "outputs": {}
+          },
+          "choice_final_25_1_2": {
+            "id": "choice_final_25_1_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "哈哈，被你发现了。"
+            },
+            "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": false
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 240
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 5760
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
+          },
+          "__social_gate_global_40": {
+            "id": "__social_gate_global_40",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 40
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "n1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
+            "toNodeId": "n2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "n3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n3",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
+            "fromPort": "flowOut",
+            "toNodeId": "n4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n4",
+            "fromPort": "flowOut",
+            "toNodeId": "n5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n5",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
+            "toNodeId": "n6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "n7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n7",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
+            "fromPort": "flowOut",
+            "toNodeId": "n8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n8",
+            "fromPort": "flowOut",
+            "toNodeId": "n9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
+            "toNodeId": "n10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n10",
+            "fromPort": "flowOut",
+            "toNodeId": "choice11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice11",
+            "fromPort": "option0",
+            "toNodeId": "choice11_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice11_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "n12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n12",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
+            "fromPort": "flowOut",
+            "toNodeId": "n13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n13",
+            "fromPort": "flowOut",
+            "toNodeId": "n14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice11",
+            "fromPort": "option1",
+            "toNodeId": "choice11_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice11_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "n15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n15",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
+            "fromPort": "flowOut",
+            "toNodeId": "n16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n16",
+            "fromPort": "flowOut",
+            "toNodeId": "n17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n14",
+            "fromPort": "flowOut",
+            "toNodeId": "n18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n17",
+            "fromPort": "flowOut",
+            "toNodeId": "n18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n18",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
+            "toNodeId": "n19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n19",
+            "fromPort": "flowOut",
+            "toNodeId": "n20",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n20",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
+            "toNodeId": "n21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n21",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25",
+            "fromPort": "option0",
+            "toNodeId": "choice_final_25_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25_0_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_0_0",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25_0_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25",
+            "fromPort": "option1",
+            "toNodeId": "choice_final_25_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25_1_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_1_0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25_1_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_1_1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25_1_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_1_2",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_0_1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25_0_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_0_2",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "__social_gate_global_40",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
+          }
+        ]
+      },
+      "condition": {
+        "globalVariables": [
+          {
+            "id": 40,
+            "op": "gte",
+            "value": 50
+          }
+        ]
+      }
+    },
+    {
+      "id": "social02b_ajie_24_personality_low",
+      "type": "other",
+      "npcId": "ajie",
+      "name": "阿杰",
+      "avatar": "🐶",
+      "displayName": "《第二十四人格》",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "n1": {
+            "id": "n1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "要不要帮我测评个游戏？"
+            },
+            "outputs": {}
+          },
+          "n2": {
+            "id": "n2",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "可以啊，什么游戏？"
+            },
+            "outputs": {}
+          },
+          "n3": {
+            "id": "n3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "《第二十四人格》。"
+            },
+            "outputs": {}
+          },
+          "n4": {
+            "id": "n4",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "怎么测？"
+            },
+            "outputs": {}
+          },
+          "n5": {
+            "id": "n5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "什么都不要看，直接玩，玩完告诉我感想。"
+            },
+            "outputs": {}
+          },
+          "n6": {
+            "id": "n6",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "评分都不能看吗……"
+            },
+            "outputs": {}
+          },
+          "n7": {
+            "id": "n7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不能看。进去抽个卡，“三重馈赠”。 这活动名字听起来像发誓似的。"
+            },
+            "outputs": {}
+          },
+          "choice8": {
+            "id": "choice8",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "好吧，那我不看了。",
+              "label1": "他人的观点是智慧的结晶。"
+            },
+            "options": [
+              {
+                "label": "好吧，那我不看了。"
+              },
+              {
+                "label": "他人的观点是智慧的结晶。"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice8_op0": {
+            "id": "choice8_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "n9": {
+            "id": "n9",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "其实这也是我的观点。"
+            },
+            "outputs": {}
+          },
+          "n10": {
+            "id": "n10",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "什么意思？"
+            },
+            "outputs": {}
+          },
+          "n11": {
+            "id": "n11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没什么意思，快抽卡。"
+            },
+            "outputs": {}
+          },
+          "choice8_op1": {
+            "id": "choice8_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "n12": {
+            "id": "n12",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "长满结晶的大脑么，很难下嘴啊……"
+            },
+            "outputs": {}
+          },
+          "n13": {
+            "id": "n13",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你说我吗？"
+            },
+            "outputs": {}
+          },
+          "n14": {
+            "id": "n14",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "说的火锅，刚才我联想到了上次咱们去火锅店吃的猪脑。"
+            },
+            "outputs": {}
+          },
+          "n15": {
+            "id": "n15",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "没抽到我想要的，要不还是氪一下。"
+            },
+            "outputs": {}
+          },
+          "n16": {
+            "id": "n16",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "充钱就像上供，只能得到保底作为神的恩赐，无法买到你心爱的那张卡……我是说游戏之神。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "choice_final_20": {
+            "id": "choice_final_20",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "是不是我不够虔诚？",
+              "label1": "能赢我怎么样都行。"
+            },
+            "options": [
+              {
+                "label": "是不是我不够虔诚？"
+              },
+              {
+                "label": "能赢我怎么样都行。"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice_final_20_op0": {
+            "id": "choice_final_20_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "choice_final_20_0_0": {
+            "id": "choice_final_20_0_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "神不在乎。"
+            },
+            "outputs": {}
+          },
+          "choice_final_20_op1": {
+            "id": "choice_final_20_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "choice_final_20_1_0": {
+            "id": "choice_final_20_1_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "那你就做好准备为游戏之神奉献全部吧。"
+            },
+            "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": false
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 240
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 5760
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
+          },
+          "__social_gate_global_40": {
+            "id": "__social_gate_global_40",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 40
+            },
+            "outputs": {}
+          },
+          "__social_gate_compare": {
+            "id": "__social_gate_compare",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "not"
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "n1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
+            "toNodeId": "n2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
+            "fromPort": "flowOut",
+            "toNodeId": "n3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n3",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
+            "toNodeId": "n4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n4",
+            "fromPort": "flowOut",
+            "toNodeId": "n5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n5",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
+            "fromPort": "flowOut",
+            "toNodeId": "n6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
+            "toNodeId": "n7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n7",
+            "fromPort": "flowOut",
+            "toNodeId": "choice8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice8",
+            "fromPort": "option0",
+            "toNodeId": "choice8_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice8_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "n9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
+            "fromPort": "flowOut",
+            "toNodeId": "n10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n10",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
+            "fromPort": "flowOut",
+            "toNodeId": "n11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice8",
+            "fromPort": "option1",
+            "toNodeId": "choice8_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice8_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "n12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n12",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
+            "toNodeId": "n13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n13",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
+            "toNodeId": "n14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n11",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
+            "fromPort": "flowOut",
+            "toNodeId": "n15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n14",
+            "fromPort": "flowOut",
+            "toNodeId": "n15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n15",
+            "fromPort": "flowOut",
+            "toNodeId": "n16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n16",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_20",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20",
+            "fromPort": "option0",
+            "toNodeId": "choice_final_20_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20",
+            "fromPort": "option1",
+            "toNodeId": "choice_final_20_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_20_1_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20_1_0",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_20_0_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20_0_0",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "__social_gate_global_40",
+            "fromPort": "value",
+            "toNodeId": "__social_gate_compare",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__social_gate_compare",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
+          }
+        ]
+      },
+      "condition": {
+        "globalVariables": [
+          {
+            "id": 40,
+            "op": "lt",
+            "value": 50
+          }
+        ]
+      }
+    },
+    {
+      "id": "social02b_awei_tail_high",
+      "type": "other",
+      "npcId": "awei",
+      "name": "阿伟",
+      "avatar": "🐱",
+      "displayName": "尾款风云",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "n1": {
+            "id": "n1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我需要你帮我下决心……"
+            },
+            "outputs": {}
+          },
+          "n2": {
+            "id": "n2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我买了个新耳机，你知道我，这个耳机我喜欢很久了。正好这次打折，我咬咬牙就买了，千金难买心头好。"
+            },
+            "outputs": {}
+          },
+          "n3": {
+            "id": "n3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "后天就要到尾款期限了。"
+            },
+            "outputs": {}
+          },
+          "n4": {
+            "id": "n4",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你想留它吗？"
+            },
+            "outputs": {}
+          },
+          "n5": {
+            "id": "n5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "有些事情是由不得我的。全都由不得我。想让事情按我想的那样发展只是一种幻觉罢了。"
+            },
+            "outputs": {}
+          },
+          "n6": {
+            "id": "n6",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "还差多少钱？"
+            },
+            "outputs": {}
+          },
+          "n7": {
+            "id": "n7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "还差五千。"
+            },
+            "outputs": {}
+          },
+          "n8": {
+            "id": "n8",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这么多？我只有一千八，可以借给你。"
+            },
+            "outputs": {}
+          },
+          "n9": {
+            "id": "n9",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "虽然还是不够……不过谢谢你。"
+            },
+            "outputs": {}
+          },
+          "choice10": {
+            "id": "choice10",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "你可以再去问问别人。",
+              "label1": "你不会不还吧，为了听《月之暗面》你烧了不少钱了。"
+            },
+            "options": [
+              {
+                "label": "你可以再去问问别人。"
+              },
+              {
+                "label": "你不会不还吧，为了听《月之暗面》你烧了不少钱了。"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice10_op0": {
+            "id": "choice10_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "n11": {
+            "id": "n11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "你知道阿杰的，从来不会借钱给别人。至于彬彬……"
+            },
+            "outputs": {}
+          },
+          "n12": {
+            "id": "n12",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "怎么了？"
+            },
+            "outputs": {}
+          },
+          "n13": {
+            "id": "n13",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "说不好，或许是我的错觉。"
+            },
+            "outputs": {}
+          },
+          "n14": {
+            "id": "n14",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你最近总疑神疑鬼的，《月之暗面》到底给你带来了什么……"
+            },
+            "outputs": {}
+          },
+          "choice10_op1": {
+            "id": "choice10_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "n15": {
+            "id": "n15",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "说到这儿，我还是总能从这首歌里听到那段声音……它越来越清晰了。"
+            },
+            "outputs": {}
+          },
+          "n16": {
+            "id": "n16",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "你要不要听听？"
+            },
+            "outputs": {}
+          },
+          "n17": {
+            "id": "n17",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好，我听听看。"
+            },
+            "outputs": {}
+          },
+          "n18": {
+            "id": "n18",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "*一段有些模糊的白噪音*"
+            },
+            "outputs": {}
+          },
+          "n19": {
+            "id": "n19",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "说的是什么？"
+            },
+            "outputs": {}
+          },
+          "n20": {
+            "id": "n20",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "好像是怎么给自己开刀做手术的内容。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "choice_final_24": {
+            "id": "choice_final_24",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "不会是过几天“医师资格考试”泄题了吧。",
+              "label1": "你刷题刷魔怔了。"
+            },
+            "options": [
+              {
+                "label": "不会是过几天“医师资格考试”泄题了吧。"
+              },
+              {
+                "label": "你刷题刷魔怔了。"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice_final_24_op0": {
+            "id": "choice_final_24_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "choice_final_24_0_0": {
+            "id": "choice_final_24_0_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "一点都不好笑。"
+            },
+            "outputs": {}
+          },
+          "choice_final_24_op1": {
+            "id": "choice_final_24_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 40,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "choice_final_24_1_0": {
+            "id": "choice_final_24_1_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "魔怔人是你吧，我从来不刷题。"
+            },
+            "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": false
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 240
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 5760
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
+          },
+          "__social_gate_global_41": {
+            "id": "__social_gate_global_41",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 41
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "n1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
+            "toNodeId": "n2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
+            "fromPort": "flowOut",
+            "toNodeId": "n3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n3",
+            "fromPort": "flowOut",
+            "toNodeId": "n4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n4",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
+            "toNodeId": "n5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n5",
+            "fromPort": "flowOut",
+            "toNodeId": "n6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
+            "fromPort": "flowOut",
+            "toNodeId": "n7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n7",
+            "fromPort": "flowOut",
+            "toNodeId": "n8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n8",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
+            "toNodeId": "n9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
+            "fromPort": "flowOut",
+            "toNodeId": "choice10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10",
+            "fromPort": "option0",
+            "toNodeId": "choice10_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "n11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n11",
+            "fromPort": "flowOut",
+            "toNodeId": "n12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n12",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
+            "fromPort": "flowOut",
+            "toNodeId": "n13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n13",
+            "fromPort": "flowOut",
+            "toNodeId": "n14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10",
+            "fromPort": "option1",
+            "toNodeId": "choice10_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "n15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n14",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
+            "toNodeId": "n16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n15",
+            "fromPort": "flowOut",
+            "toNodeId": "n16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n16",
+            "fromPort": "flowOut",
+            "toNodeId": "n17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n17",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
+            "toNodeId": "n18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n18",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
+            "fromPort": "flowOut",
+            "toNodeId": "n19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n19",
+            "fromPort": "flowOut",
+            "toNodeId": "n20",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n20",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_24",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_24",
+            "fromPort": "option0",
+            "toNodeId": "choice_final_24_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_24_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_24_0_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_24",
+            "fromPort": "option1",
+            "toNodeId": "choice_final_24_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_24_0_0",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_24_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_24_1_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_24_1_0",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "__social_gate_global_41",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
+          }
+        ]
+      },
+      "condition": {
+        "globalVariables": [
+          {
+            "id": 41,
+            "op": "gte",
+            "value": 50
+          }
+        ]
+      }
+    },
+    {
+      "id": "social02b_awei_tail_low",
+      "type": "other",
+      "npcId": "awei",
+      "name": "阿伟",
+      "avatar": "🐱",
+      "displayName": "尾款风云",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "n1": {
+            "id": "n1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我想跟你商量个事。"
+            },
+            "outputs": {}
+          },
+          "n2": {
+            "id": "n2",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "什么事？关于耳机吗？"
+            },
+            "outputs": {}
+          },
+          "n3": {
+            "id": "n3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我在想要不要退了。"
+            },
+            "outputs": {}
+          },
+          "n4": {
+            "id": "n4",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "怎么了，是尾款还是那段声音？"
+            },
+            "outputs": {}
+          },
+          "n5": {
+            "id": "n5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "尾款……"
+            },
+            "outputs": {}
+          },
+          "n6": {
+            "id": "n6",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "还差多少？"
+            },
+            "outputs": {}
+          },
+          "n7": {
+            "id": "n7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "一些。"
+            },
+            "outputs": {}
+          },
+          "n8": {
+            "id": "n8",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我借你点钱也还不起吗？"
+            },
+            "outputs": {}
+          },
+          "n9": {
+            "id": "n9",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "肯定还得起，不过是最近手头紧一点。"
+            },
+            "outputs": {}
+          },
+          "choice10": {
+            "id": "choice10",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "你要不再去问问别人。",
+              "label1": "你不会不还吧，为了听《月之暗面》你烧了不少钱了。"
+            },
+            "options": [
+              {
+                "label": "你要不再去问问别人。"
+              },
+              {
+                "label": "你不会不还吧，为了听《月之暗面》你烧了不少钱了。"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice10_op0": {
+            "id": "choice10_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "n11": {
+            "id": "n11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我都问了。"
+            },
+            "outputs": {}
+          },
+          "n12": {
+            "id": "n12",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "怎么了？不肯借？"
+            },
+            "outputs": {}
+          },
+          "n13": {
+            "id": "n13",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "当然愿意借我，我什么人缘。"
+            },
+            "outputs": {}
+          },
+          "n14": {
+            "id": "n14",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你从前都不借钱的，《月之暗面》到底给你带来了什么……"
+            },
+            "outputs": {}
+          },
+          "choice10_op1": {
+            "id": "choice10_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "n15": {
+            "id": "n15",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "说到这儿，我还是总能从这首歌里听到那段声音……它越来越清晰了。"
+            },
+            "outputs": {}
+          },
+          "n16": {
+            "id": "n16",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "你要不要听听？"
+            },
+            "outputs": {}
+          },
+          "n17": {
+            "id": "n17",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好，我听听看。"
+            },
+            "outputs": {}
+          },
+          "n18": {
+            "id": "n18",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "*一段有些模糊的白噪音*"
+            },
+            "outputs": {}
+          },
+          "n19": {
+            "id": "n19",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "说的是什么？"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "choice_final_23": {
+            "id": "choice_final_23",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "你说来听听。",
+              "label1": "当然不，你不是在开玩笑吗？"
+            },
+            "options": [
+              {
+                "label": "你说来听听。"
+              },
+              {
+                "label": "当然不，你不是在开玩笑吗？"
+              }
+            ],
+            "outputs": {}
+          },
+          "choice_final_23_op0": {
+            "id": "choice_final_23_op0",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": 5
+            },
+            "outputs": {}
+          },
+          "choice_final_23_0_0": {
+            "id": "choice_final_23_0_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "一些……开刀做手术的东西。"
+            },
+            "outputs": {}
+          },
+          "choice_final_23_0_1": {
+            "id": "choice_final_23_0_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你是不是压力太大把两个音频搞混了？"
+            },
+            "outputs": {}
+          },
+          "choice_final_23_op1": {
+            "id": "choice_final_23_op1",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 41,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "choice_final_23_1_0": {
+            "id": "choice_final_23_1_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "真好笑。"
+            },
+            "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": false
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 240
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 5760
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
+          },
+          "choice_final_23_op0_suspicion": {
+            "id": "choice_final_23_op0_suspicion",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 0,
+              "delta": -5
+            },
+            "outputs": {}
+          },
+          "__social_gate_global_41": {
+            "id": "__social_gate_global_41",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 41
+            },
+            "outputs": {}
+          },
+          "__social_gate_compare": {
+            "id": "__social_gate_compare",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "not"
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "n1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
+            "toNodeId": "n2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
+            "fromPort": "flowOut",
+            "toNodeId": "n3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n3",
+            "fromPort": "flowOut",
+            "toNodeId": "n4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n4",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
+            "toNodeId": "n5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n5",
+            "fromPort": "flowOut",
+            "toNodeId": "n6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
+            "fromPort": "flowOut",
+            "toNodeId": "n7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n7",
+            "fromPort": "flowOut",
+            "toNodeId": "n8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n8",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
+            "toNodeId": "n9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
+            "fromPort": "flowOut",
+            "toNodeId": "choice10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10",
+            "fromPort": "option0",
+            "toNodeId": "choice10_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "n11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n11",
+            "fromPort": "flowOut",
+            "toNodeId": "n12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n12",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
+            "fromPort": "flowOut",
+            "toNodeId": "n13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n13",
+            "fromPort": "flowOut",
+            "toNodeId": "n14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10",
+            "fromPort": "option1",
+            "toNodeId": "choice10_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice10_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "n15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n14",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
+            "toNodeId": "n16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n15",
+            "fromPort": "flowOut",
+            "toNodeId": "n16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n16",
+            "fromPort": "flowOut",
+            "toNodeId": "n17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n17",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
+            "toNodeId": "n18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n18",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
+            "fromPort": "flowOut",
+            "toNodeId": "n19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "n19",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_23",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23",
+            "fromPort": "option0",
+            "toNodeId": "choice_final_23_op0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23_0_0",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_23_0_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23",
+            "fromPort": "option1",
+            "toNodeId": "choice_final_23_op1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23_0_1",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_23_1_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23_1_0",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23_op0_suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_23_0_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23_op0_suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_23_op0_suspicion",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "__social_gate_global_41",
+            "fromPort": "value",
+            "toNodeId": "__social_gate_compare",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__social_gate_compare",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "choice_final_23_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_23_op0_suspicion",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_23_op0_suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_23_op0_suspicion",
+            "toPort": "flowIn"
+          }
+        ]
+      },
+      "condition": {
+        "globalVariables": [
+          {
+            "id": 41,
+            "op": "lt",
+            "value": 50
+          }
+        ]
+      }
+    }
+  ],
+  "displayName": "第3天社交·主线"
 }

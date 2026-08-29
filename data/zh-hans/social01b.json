@@ -509,8 +509,8 @@
             "id": "__schedule_expiry__",
             "type": "scheduleExpiry",
             "inputs": {
-              "expires": false,
-              "expiresAt": 0
+              "expires": true,
+              "expiresAt": 2880
             },
             "outputs": {},
             "x": 80,
@@ -928,7 +928,7 @@
             "id": "choice12_op0",
             "type": "setGlobal",
             "inputs": {
-              "variableId": 40,
+              "variableId": 41,
               "delta": 5
             },
             "outputs": {}
@@ -982,7 +982,7 @@
             "id": "choice12_op1",
             "type": "setGlobal",
             "inputs": {
-              "variableId": 40,
+              "variableId": 41,
               "delta": -5
             },
             "outputs": {}
@@ -1172,8 +1172,8 @@
             "id": "__schedule_expiry__",
             "type": "scheduleExpiry",
             "inputs": {
-              "expires": false,
-              "expiresAt": 0
+              "expires": true,
+              "expiresAt": 2880
             },
             "outputs": {},
             "x": 80,

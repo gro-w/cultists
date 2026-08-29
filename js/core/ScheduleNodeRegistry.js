@@ -23,7 +23,7 @@ const definitions = {
   itemInspect: { label: "调查结果", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("text", VALUE, "string"), input("itemId", VALUE, "string")] },
   itemEffect: { label: "调查效果", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   inventoryOperation: { label: "操作背包", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("itemId", VALUE, "string"), input("count", VALUE, "number")] },
-  statOperation: { label: "操作数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
+  statOperation: { label: "操作主角数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
   spellOperation: { label: "调整法术状态", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },

@@ -1,5 +1,5 @@
 {
-  "displayName": "第1天社交·阿杰（未对话）",
+  "displayName": "第1天社交·16:00",
   "entries": [
     {
       "id": "social01b_ajie_honor_of_kings",
@@ -494,6 +494,71 @@
             "outputs": {},
             "x": 5770,
             "y": 580
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 240
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 2880
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -746,7 +811,7 @@
           {
             "fromNodeId": "excited_endline",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -763,6 +828,36 @@
           },
           {
             "fromNodeId": "regret_endline",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_guard",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
@@ -907,7 +1002,7 @@
             "id": "choice12_op0",
             "type": "setGlobal",
             "inputs": {
-              "variableId": 40,
+              "variableId": 41,
               "delta": 5
             },
             "outputs": {}
@@ -961,7 +1056,7 @@
             "id": "choice12_op1",
             "type": "setGlobal",
             "inputs": {
-              "variableId": 40,
+              "variableId": 41,
               "delta": -5
             },
             "outputs": {}
@@ -1136,6 +1231,71 @@
             "outputs": {},
             "x": 30,
             "y": 40
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 240
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 2880
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 360
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -1363,6 +1523,36 @@
           },
           {
             "fromNodeId": "n22",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_guard",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"

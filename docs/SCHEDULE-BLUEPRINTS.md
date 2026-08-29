@@ -145,7 +145,8 @@
 
 ### 2.5 动态端口
 
-`choice` 和 `segmentBranch` 的端口数量由节点的 `inputs.branchCount` 决定。
+`choice` 和 `segmentBranch` 的端口数量由节点的 `inputs.branchCount` 决定；
+`randomBranch` 的流程输出数量由节点的 `inputs.n` 决定。
 动态端口不是任意字符串：数量改变时必须同步删除越界端口、越界连接以及
 越界的兼容数据。
 
@@ -177,7 +178,7 @@
 
 ## 3. 节点类型总览
 
-当前注册了 23 种节点：
+当前注册了 29 种节点：
 
 | 类型 | 类别 | 作用 |
 | --- | --- | --- |
@@ -185,12 +186,14 @@
 | `scheduleEnd` | 流程 | 结束日程 |
 | `text` | 流程/显示 | 显示一行文字并等待继续 |
 | `choice` | 流程/交互 | 显示选项并按选择分支 |
+| `randomBranch` | 流程 | 按 `n` 随机选择一个流程分支 |
 | `branch` | 流程 | 按布尔条件分支 |
 | `waitUntil` | 流程 | 条件为真前阻塞，变为真后继续 |
 | `diceCheck` | 流程 | 执行百分骰检定 |
 | `consumeTime` | 流程/状态 | 推进游戏时间 |
-| `setGlobal` | 流程/状态 | 设置全局变量 |
-| `insertSchedule` | 流程/状态 | 向日程队列插入日程 |
+| `setGlobal` | 流程/状态 | 设置公共变量 |
+| `ending` | 流程/效果 | 触发指定结局 |
+| `insertSchedule` | 流程/状态 | 向日程队列插入日程；可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`） |
 | `showCg` | 流程/显示 | 发出显示 CG 事件 |
 | `endCg` | 流程/显示 | 结束当前 CG 显示 |
 | `showImage` | 流程/显示 | 发出显示图片事件 |
@@ -199,11 +202,35 @@
 | `statOperation` | 流程/状态 | 操作仍未迁移的主角资源数值（如体力/饱腹度） |
 | `spellOperation` | 流程/状态 | 调整已学习法术状态 |
 | `arithmetic` | 数值 | 执行运算并输出值 |
-| `getGlobal` | 数值 | 读取全局变量 |
+| `getGlobal` | 数值 | 读取公共变量 |
 | `getInventory` | 数值 | 读取背包数量 |
 | `getScheduleStatus` | 数值 | 读取日程实例状态 |
 | `getScheduleInstanceCount` | 数值 | 读取日程实例数量 |
-| `getGameTime` | 数值 | 读取当前绝对游戏时间 |
+| `getGameTime` | 数值 | 读取当前游戏绝对分钟 |
+| `prerequisite` | 控制 | 必须存在且只能有一个的先决条件节点；无输出引脚，仅接收 `condition`，输入为 `true` 才允许 Social 条目插入 |
+| `scheduleExpiry` | 控制 | 必须存在且只能有一个的日程过期节点；无输出引脚，仅接收 `expires` 和 `expiresAt`；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
+
+### 4.12 Social 插入先决条件
+
+Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点没有任何输出引脚，也不得包含流程引脚，只能接收 `condition` 数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
+
+### 4.13 日程过期
+
+完整蓝图必须包含且只能有一个 `scheduleExpiry` 节点。节点没有任何输出引脚，也没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。新建模板默认将 `expires` 固定为 `false`；`expires` 不是严格的 `true` 时实例不会过期，启用后统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
+
+例如，读取“昨天是否与阿杰对话”的公共变量：
+
+```json
+{
+  "blueprint": {
+    "nodes": {
+      "read_yesterday": { "id": "read_yesterday", "type": "getGlobal", "inputs": { "variableId": 100 } },
+      "prerequisite": { "id": "prerequisite", "type": "prerequisite", "inputs": {} }
+    },
+    "connections": [{ "fromNodeId": "read_yesterday", "fromPort": "value", "toNodeId": "prerequisite", "toPort": "condition" }]
+  }
+}
+```
 
 下文中的 `flowIn`、`flowOut` 是流程端口；其他端口若标为“值”则是数值
 输入或输出。
@@ -274,7 +301,21 @@
 需要改变好感度时，`favorability_up` 应是一个 `setGlobal` 节点，
 通过流程连接位于选项分支之后。
 
-### 4.5 `branch`：逻辑分支
+### 4.5 `randomBranch`：随机分支
+
+- 输入：`flowIn`（流程）；
+- 值输入：`n`（数字）；
+- 输出：动态的 `flowOut0` … `flowOutN-1`（流程）；
+- `n` 必须是 1–32 的安全整数；
+- 运行器使用注入的随机源均匀选择一个输出，并记录本次选择的 `count` 与
+  `index` 到实例的 `lastRandomBranch`；
+- 节点没有任何数值输出，不能作为数值来源；
+- 每个输出都必须连接到后继流程，后继路径最终必须到达 `scheduleEnd`。
+
+例如 `n=3` 时，节点必须提供并连接 `flowOut0`、`flowOut1`、`flowOut2`。
+编辑器修改 `n` 时会移除超出新数量的输出连线。
+
+### 4.6 `branch`：逻辑分支
 
 - 输入：`flowIn`（流程）；
 - 输出：`false`、`true`（流程）；
@@ -282,7 +323,7 @@
 - 作用：按条件选择两个流程出口；
 - 语义：真值进入 `true`，假值进入 `false`。
 
-### 4.6 `waitUntil`：阻塞直到
+### 4.7 `waitUntil`：阻塞直到
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -290,7 +331,7 @@
 - 作用：在条件满足前暂停当前日程实例；
 - 语义：条件为 `false` 时保留当前节点并阻塞，不执行下游节点；当输入值
   变为 `true` 时结束阻塞，节点只完成一次并沿 `flowOut` 继续。条件来自
-  全局变量、主角数值、背包、日程状态等会发出状态变化事件的值时，运行器
+  公共变量、主角数值、背包、日程状态等会发出状态变化事件的值时，运行器
   会在相关状态变化后重新求值。该节点不消耗游戏时间。
 
 ### 4.7 `diceCheck`：骰子检定
@@ -323,17 +364,16 @@
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
 - 值输入：`variableId`、`value` 或 `delta`；
-- 作用：调用 `GlobalVariableManager.set()` 设置全局变量，或调用 `modify()` 应用数字增量；
-- 语义：值的类型和变量 ID 必须符合全局变量定义。
+- 作用：调用 `GlobalVariableManager.set()` 设置公共变量，或调用 `modify()` 应用数字增量；
+- 语义：值的类型和变量 ID 必须符合公共变量定义。
 
 ### 4.10 `insertSchedule`：插入日程
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
-- 值输入：`scheduleId`（字符串）、`addTime`（数字）、`queue`（字符串）；
+- 值输入：`scheduleId`（字符串）、`addTime`（数字）、`queue`（字符串）、`respectPrerequisite`（布尔，默认 `true`）、`protectFromExpiry`（布尔，默认 `false`）；
 - 作用：调用 `ScheduleData.addSchedule()` 向指定队列追加日程；
-- 语义：插入失败会终止当前节点执行并报告原因。队列应使用项目支持的
-  日程队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
+- 语义：插入失败会终止当前节点执行并报告原因。`respectPrerequisite=false` 时忽略目标蓝图的先决条件并直接创建实例；`protectFromExpiry=true` 时实例不会被目标蓝图的 `scheduleExpiry` 节点过期。队列应使用项目支持的日程队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
 
 ### 4.11 `showCg`：显示 CG
 
@@ -527,16 +567,16 @@ segment2: 0 < value <= 30
 
 ## 6. 条件、效果和常用组合
 
-### 6.1 全局变量条件
+### 6.1 公共变量条件
 
-条件由全局变量管理器解释，支持单条件、`all`、`any` 和比较操作
+条件由公共变量管理器解释，支持单条件、`all`、`any` 和比较操作
 `eq`、`neq`、`gt`、`gte`、`lt`、`lte`。条件失败不会执行节点后续副作用，当前
 日程直接解决。
 
 ### 6.2 使用物品
 
 使用物品先由 `ItemManager` 检查物品存在、`usable`、数量条件、SAN 条件和
-全局变量条件；检查成功后只触发 `schedules.use`。蓝图自身负责成功后的操作：
+公共变量条件；检查成功后只触发 `schedules.use`。蓝图自身负责成功后的操作：
 
 ```text
 flowStart

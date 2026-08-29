@@ -94,7 +94,7 @@ export async function launchStatusApp() {
       ${bar("理智", s.sanity)}
       <p class="action-budget-row">室友怀疑度：${s.roommateSuspicion} / 100</p>
       <p class="action-budget-row">时间：${Math.floor(phaseMinutes / 60)} 小时 ${phaseMinutes % 60} 分 / ${phaseLimit / 60} 小时${phaseMinutes > phaseLimit ? "（已进入加班/熬夜）" : ""}</p>
-      <p class="income-row">当前收入：${medicalCaseManager.income} 元</p>
+      <p class="income-row">当前收入：${medicalCaseManager.money()} 元</p>
 
       <h4>技能</h4>
       ${skillManager

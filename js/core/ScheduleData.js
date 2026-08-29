@@ -8,6 +8,8 @@ import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
+import { validateBlueprint, embedLegacyPrerequisite } from "./ScheduleBlueprint.js";
+import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
 
 const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
@@ -132,6 +134,7 @@ class ScheduleData {
       }
     }
     this.lastAbsoluteMinute = target;
+    this._expireInstances(target);
   }
 
   advanceTo(day, clockMinutes) {
@@ -142,6 +145,7 @@ class ScheduleData {
     }
     this._appendThrough(target);
     this._appendScheduledThrough(target);
+    this._expireInstances(target);
     this.lastAbsoluteMinute = target;
   }
 
@@ -172,6 +176,7 @@ class ScheduleData {
       const sourceEntries = this.slots.get(key) || [];
       const entries = sourceEntries
         .filter((entry) => {
+          if (queueId === "social" && !this.matchesPrerequisite(entry.blueprint || entry.dialogueTree, entry.insertPrerequisite)) return false;
           if (!this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)) return false;
           // special and ending schedules are one-shot: skip if already queued (any status).
           const cat = this.scheduleCatalog.get(entry.scheduleId || entry.id)?.category;
@@ -192,6 +197,63 @@ class ScheduleData {
       if (queueId === "work") workQueue.append(entries);
       else socialQueue.append(entries);
     }
+    // The flag is consumed by the next day's 08:00 social slot. Clear it only
+    // after that slot has been evaluated, so it means "spoke yesterday".
+    if (time === 8 * 60) {
+      for (const id of [100, 101]) if (globalVariableManager.definition(id)) globalVariableManager.set(id, false);
+    }
+  }
+
+  enqueueMedicalIncident({ submission, type }) {
+    const scheduleId = type === "riot" ? "medical_riot_work" : "medical_complaint_work";
+    const template = this.publicEntries.get("work")?.find((entry) => entry.id === scheduleId);
+    if (!template) return { ok: false, reason: "missingMedicalIncidentTemplate" };
+    const entry = JSON.parse(JSON.stringify(template));
+    entry.kind = "medicalIncident";
+    entry.incidentType = type;
+    entry.submission = submission;
+    entry.receivedDay = submission.dueDay;
+    entry.receivedTime = submission.dueTime ?? (type === "riot" ? 16 * 60 : 8 * 60);
+    entry.receivedPhase = entry.receivedTime >= 16 * 60 ? "night" : "day";
+    entry.scheduleId = `${template.id}:${submission.patientId}`;
+    workQueue.append([entry]);
+    return { ok: true, scheduleId: entry.scheduleId };
+  }
+
+  matchesPrerequisite(rawBlueprint, legacyPrerequisite = null) {
+    if (!rawBlueprint && !legacyPrerequisite) return true;
+    const blueprint = embedLegacyPrerequisite(rawBlueprint || {}, legacyPrerequisite);
+    const validation = validateBlueprint(blueprint);
+    if (!validation.ok) {
+      console.warn("Skipped invalid social prerequisite:", validation.errors);
+      return false;
+    }
+    try {
+      const prerequisite = Object.values(validation.blueprint.nodes).find((node) => node.type === "prerequisite");
+      if (!prerequisite) return true;
+      return new ScheduleValueEvaluator(validation.blueprint).readInput(prerequisite.id, "condition", false) === true;
+    } catch (error) {
+      console.warn("Skipped social prerequisite evaluation:", error);
+      return false;
+    }
+  }
+
+  _expireInstances(target) {
+    for (const queue of [workQueue, socialQueue, mainQueue]) {
+      for (const instance of queue.getPending()) {
+        const blueprint = instance.payload?.blueprint || instance.blueprint || instance.payload?.dialogueTree || instance.dialogueTree;
+        const node = Object.values(blueprint?.nodes || {}).find((candidate) => candidate.type === "scheduleExpiry");
+        if (!node || instance.protectFromExpiry === true || instance.payload?.protectFromExpiry === true) continue;
+        try {
+          const evaluator = new ScheduleValueEvaluator(blueprint);
+          if (evaluator.readInput(node.id, "expires", false) !== true) continue;
+          const expiresAt = Number(evaluator.readInput(node.id, "expiresAt", NaN));
+          if (Number.isFinite(expiresAt) && target > expiresAt) queue.expire(instance.instanceId);
+        } catch (error) {
+          console.warn("Skipped schedule expiration evaluation:", error);
+        }
+      }
+    }
   }
 
   _appendScheduledThrough(target) {
@@ -200,11 +262,16 @@ class ScheduleData {
     ready.sort((a, b) => a.addTime - b.addTime);
     ready.forEach((request) => {
       const definition = this.scheduleById.get(request.scheduleId);
-      if (!definition || !this.matchesPrerequisites(definition.prerequisites || definition.condition)) return;
+      if (!definition) return;
+      if (request.respectPrerequisite !== false
+        && ((definition.blueprint || definition.dialogueTree || definition.insertPrerequisite)
+          && !this.matchesPrerequisite(definition.blueprint || definition.dialogueTree, definition.insertPrerequisite)
+          || !this.matchesPrerequisites(definition.prerequisites || definition.condition))) return;
       const day = Math.floor(request.addTime / 1440);
       const time = request.addTime % 1440;
       const entry = { ...definition, scheduleId: definition.id, receivedDay: day, receivedTime: time,
-        receivedPhase: time < 16 * 60 ? "day" : "night" };
+        receivedPhase: time < 16 * 60 ? "day" : "night",
+        ...(request.protectFromExpiry === true ? { protectFromExpiry: true } : {}) };
       delete entry.queueId;
       const targetQueueId = request.queueId || definition.queueId;
       if (targetQueueId === "main") entry.autoRun = true;
@@ -257,19 +324,28 @@ class ScheduleData {
       if (operation?.type === "addSchedule" || operation?.scheduleId) {
         const addTime = operation.addTime ?? (Number.isInteger(Number(operation.day)) && Number.isInteger(Number(operation.time))
           ? Number(operation.day) * 1440 + Number(operation.time) : undefined);
-        this.addSchedule(operation.scheduleId, addTime);
+        this.addSchedule(operation.scheduleId, addTime, operation.queueId || operation.queue, {
+          respectPrerequisite: operation.respectPrerequisite,
+          protectFromExpiry: operation.protectFromExpiry,
+        });
       }
     });
   }
 
-  addSchedule(scheduleId, addTime, queueId = undefined) {
+  addSchedule(scheduleId, addTime, queueId = undefined, options = {}) {
     const definition = this.scheduleById.get(scheduleId);
     if (!definition) return { ok: false, reason: "unknownSchedule" };
     const target = Number(addTime);
     const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
     if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
     if (queueId !== undefined && !["work", "social", "main"].includes(queueId)) return { ok: false, reason: "invalidQueue" };
-    const request = { scheduleId, addTime: target, ...(queueId ? { queueId } : {}) };
+    const request = {
+      scheduleId,
+      addTime: target,
+      ...(queueId ? { queueId } : {}),
+      respectPrerequisite: options.respectPrerequisite !== false,
+      protectFromExpiry: options.protectFromExpiry === true,
+    };
     this.pendingAdds.push(request);
     if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
     return { ok: true, request };

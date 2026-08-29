@@ -6,7 +6,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { skillManager } from "../core/SkillManager.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition, getScheduleNodePort } from "../core/ScheduleNodeRegistry.js";
-import { validateBlueprint } from "../core/ScheduleBlueprint.js";
+import { validateBlueprint, embedLegacyPrerequisite, createEmptyBlueprint } from "../core/ScheduleBlueprint.js";
 import { windowManager } from "../core/WindowManager.js";
 
 /**
@@ -54,6 +54,7 @@ export class DevDialogueEditorTab {
     this._initialCtx = options.initialCtx || null;
     this._fileScope = options.fileScope || null;
     this._embeddedScope = options.embeddedScope || null;
+    this._prerequisiteScope = options.prerequisiteScope || null;
     this._temporaryScope = options.temporaryScope || null;
     this.root = null;
     this.project = null;
@@ -91,7 +92,10 @@ export class DevDialogueEditorTab {
     if (type==='schedule') {
       const schedule = this.project.schedules?.[id];
       const entry = schedule?.entries?.[this.currentCtx.entryIndex];
-      return entry?.dialogueTree || null;
+      if (this._prerequisiteScope) return entry?.insertPrerequisite || null;
+      const blueprint = embedLegacyPrerequisite(entry?.blueprint || entry?.dialogueTree || null, entry?.insertPrerequisite);
+      if (entry && blueprint) { entry.blueprint = blueprint; delete entry.insertPrerequisite; }
+      return blueprint;
     }
     if (type==='event')  return this.project.events[id];
     if (type==='ending') return this.project.endings[id];
@@ -101,7 +105,17 @@ export class DevDialogueEditorTab {
     return {id:this._uid('n'),type:'text',inputs:{speaker:'player',text:''},outputs:{},x,y};
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
-  _emptyCtx() { return {nodes:{},connections:[],startNodeId:null}; }
+  _emptyCtx() { return createEmptyBlueprint(); }
+  _ensureControlNodes(blueprint) {
+    const nodes = blueprint?.nodes || {};
+    if (!Object.values(nodes).some(node => node.type === 'prerequisite')) {
+      nodes.__prerequisite__ = { id: '__prerequisite__', type: 'prerequisite', inputs: { condition: true }, outputs: {}, x: 80, y: 240 };
+    }
+    if (!Object.values(nodes).some(node => node.type === 'scheduleExpiry')) {
+      nodes.__schedule_expiry__ = { id: '__schedule_expiry__', type: 'scheduleExpiry', inputs: { expires: false, expiresAt: 0 }, outputs: {}, x: 80, y: 360 };
+    }
+    return blueprint;
+  }
   _emptyProject(totalDays = MAX_GAME_DAYS) {
     totalDays = Math.min(MAX_GAME_DAYS, Math.max(1, Number(totalDays) || MAX_GAME_DAYS));
     const schedules={};
@@ -130,9 +144,9 @@ export class DevDialogueEditorTab {
       const flowStartId = '__start';
       nodes[flowStartId] = { id: flowStartId, type: 'flowStart', inputs: {}, outputs: {}, x: 40, y: 40 };
       if (startNodeId && nodes[startNodeId]) connections.unshift({ fromNodeId: flowStartId, fromPort: 'flowOut', toNodeId: startNodeId, toPort: 'flowIn' });
-      return { nodes, connections, startNodeId: flowStartId };
+      return this._ensureControlNodes({ nodes, connections, startNodeId: flowStartId });
     }
-    return { nodes, connections, startNodeId };
+    return this._ensureControlNodes({ nodes, connections, startNodeId });
   }
 
   _migrateProject(project) {
@@ -153,6 +167,11 @@ export class DevDialogueEditorTab {
     window._de = this;
     this.root?.addEventListener('pointerdown', () => { window._de = this; });
     this.project = this._sharedProject || this._emptyProject();
+    if (this._prerequisiteScope) {
+      const id = "__prerequisite__";
+      this.project.schedules[id] = { displayName: "社交插入先决条件", entries: [{ id: "prerequisite_entry", type: "other", name: "插入先决条件", insertPrerequisite: this._prerequisiteScope.blueprint || createEmptyPrerequisiteBlueprint() }] };
+      this.currentCtx = { type: "schedule", id, entryIndex: 0 };
+    }
     if (this._temporaryScope) {
       const id = "__temporary_schedule__";
       this.project.schedules[id] = { displayName: "临时日程", entries: [{ id: "temporary_entry", type: "other", name: "临时日程", dialogueTree: this._temporaryScope.blueprint || this._temporaryBlueprint() }] };
@@ -160,7 +179,7 @@ export class DevDialogueEditorTab {
     }
     this.loadedScheduleFiles = new Set(this._sharedProject ? Object.keys(this.project.schedules || {}) : []);
     this.loadedMetaFiles = new Set(this._sharedProject ? ['special_events.json', 'endings.json'] : []);
-    if (this._sharedProject || this._temporaryScope) {
+    if (this._sharedProject || this._temporaryScope || this._prerequisiteScope) {
       if (this._initialCtx) this.currentCtx = this._initialCtx;
       this._renderCanvas();
       if (this.currentCtx) this._selectCtx(this.currentCtx.type, this.currentCtx.id, this.currentCtx.entryIndex || 0);
@@ -203,6 +222,8 @@ export class DevDialogueEditorTab {
       start: { id: "start", type: "flowStart", inputs: {}, outputs: {}, x: 80, y: 80 },
       text: { id: "text", type: "text", inputs: { speaker: "narrator", text: "" }, outputs: {}, x: 320, y: 80 },
       end: { id: "end", type: "scheduleEnd", inputs: {}, outputs: {}, x: 560, y: 80 },
+      __prerequisite__: { id: "__prerequisite__", type: "prerequisite", inputs: { condition: true }, outputs: {}, x: 80, y: 240 },
+      __schedule_expiry__: { id: "__schedule_expiry__", type: "scheduleExpiry", inputs: { expires: false, expiresAt: 0 }, outputs: {}, x: 80, y: 360 },
     }, connections: [
       { fromNodeId: "start", fromPort: "flowOut", toNodeId: "text", toPort: "flowIn" },
       { fromNodeId: "text", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
@@ -221,6 +242,11 @@ export class DevDialogueEditorTab {
       .replace(/  <!-- Sidebar -->[\s\S]*?  <!-- Canvas -->/, '  <!-- Canvas -->');
   }
   _standardHtml() {
+    if (this._prerequisiteScope) {
+      return this._standardHtmlBase()
+        .replace(/<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/, `<div class="dev-de-header"><strong>社交插入先决条件编辑器</strong><button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存先决条件</button></div>\n<div class="dev-de-main">`)
+        .replace(/  <!-- Sidebar -->[\s\S]*?  <!-- Canvas -->/, '  <!-- Canvas -->');
+    }
     if (this._temporaryScope) {
       return this._standardHtmlBase().replace(
         /<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/,
@@ -231,11 +257,12 @@ export class DevDialogueEditorTab {
   }
   _standardHtmlBase() {
     if (this._workspace) return this._workspaceHtml();
+    const nodeTypes = this._prerequisiteScope ? ['arithmetic', 'getGlobal', 'getInventory', 'getScheduleStatus', 'getScheduleInstanceCount', 'getGameTime', 'returnValue'] : SCHEDULE_NODE_TYPES;
     const nodeShortcut = (index) => `<label class="dev-de-node-type-label">节点类型
         <select id="de-new-node-type-${index}" class="dev-de-node-type">
-          ${SCHEDULE_NODE_TYPES.map(type=>`<option value="${type}">${this._e(_DE_NODE_LABELS[type])} (${type})</option>`).join('')}
+          ${nodeTypes.map(type=>`<option value="${type}">${this._e(_DE_NODE_LABELS[type])} (${type})</option>`).join('')}
         </select>
-      </label><button type="button" class="win95-btn dev-btn" onclick="_de.addNode(document.getElementById('de-new-node-type-${index}').value)">＋ 新增日程节点</button>`;
+      </label><button type="button" class="win95-btn dev-btn" onclick="_de.addNode(document.getElementById('de-new-node-type-${index}').value)">＋ ${this._prerequisiteScope ? '新增先决条件节点' : '新增日程节点'}</button>`;
     const nodeShortcuts = [1, 2, 3].map(nodeShortcut).join('');
     return `<div class="dev-de-root">
 <div class="dev-de-header">
@@ -280,7 +307,7 @@ export class DevDialogueEditorTab {
   </div>
   <!-- Editor panel -->
   <div class="dev-de-editor">
-    <div class="dev-de-editor-title">日程节点编辑器</div>
+    <div class="dev-de-editor-title">${this._prerequisiteScope ? '社交插入先决条件编辑器' : '日程节点编辑器'}</div>
     <div id="de-editor-body" style="flex:1;overflow-y:auto;padding:6px">
       <div id="de-editor-empty" style="padding:10px;color:#555;font-size:12px"><div id="de-context-settings"></div><div style="margin-top:12px;text-align:center">选择节点后在此编辑节点；当前日程属性可直接在上方编辑。</div></div>
       <div id="de-editor-form" style="display:none">
@@ -288,8 +315,7 @@ export class DevDialogueEditorTab {
           <div class="dev-de-ed-label" id="de-ed-type-label">节点</div>
           <div class="dev-de-ed-label" style="margin-top:4px">数值输入</div>
           <div id="de-ed-inputs"></div>
-          <div class="dev-de-ed-label" style="margin-top:8px">流程输出（选择下家）</div>
-          <div id="de-flow-outputs"></div>
+          ${this._prerequisiteScope ? '' : '<div class="dev-de-ed-label" style="margin-top:8px">流程输出（选择下家）</div><div id="de-flow-outputs"></div>'}
         </div>
 
 
@@ -481,7 +507,8 @@ export class DevDialogueEditorTab {
    const priorityField = this.currentCtx.type === 'ending'
      ? `<label>结局优先级<input data-de-ending-priority type="number" step="1" value="${Number.isFinite(Number(entry.priority)) ? Number(entry.priority) : 0}"></label>`
      : '';
-   el.innerHTML = `<div class="dev-de-context-settings"><strong>当前日程属性</strong><label>日程 ID<input data-de-schedule-id value="${this._e(entry.id || '')}"></label><label>显示名称<input data-de-schedule-display-name value="${this._e(displayName)}"></label>${priorityField}<div class="dev-de-input-help">这里只修改当前日程条目的 ID 和显示名称${this.currentCtx.type === 'ending' ? '，以及结局优先级（数值越大越优先；同优先级先触发者胜出）' : ''}，不修改日程表文件名。</div></div>`;
+   const prerequisiteHelp = this.currentCtx.type === 'schedule' && this.currentCtx.id.startsWith('social') ? '；先决条件请在当前蓝图中最多添加一个“先决条件”节点' : '';
+   el.innerHTML = `<div class="dev-de-context-settings"><strong>当前日程属性</strong><label>日程 ID<input data-de-schedule-id value="${this._e(entry.id || '')}"></label><label>显示名称<input data-de-schedule-display-name value="${this._e(displayName)}"></label>${priorityField}<div class="dev-de-input-help">这里只修改当前日程条目的 ID 和显示名称${this.currentCtx.type === 'ending' ? '，以及结局优先级（数值越大越优先；同优先级先触发者胜出）' : ''}${prerequisiteHelp}，不修改日程表文件名。</div></div>`;
    el.querySelector('[data-de-schedule-id]')?.addEventListener('change', event => this._saveScheduleMeta('id', event.target.value));
    el.querySelector('[data-de-schedule-display-name]')?.addEventListener('input', event => this._saveScheduleMeta('displayName', event.target.value));
    el.querySelector('[data-de-ending-priority]')?.addEventListener('change', event => this._saveScheduleMeta('priority', event.target.value));
@@ -537,6 +564,19 @@ export class DevDialogueEditorTab {
  this._saveLS();
  if (!schedule.entries.length) this._selectSchedule(this.currentCtx.id, 0);
  else this._selectSchedule(this.currentCtx.id, Math.min(this.currentCtx.entryIndex, schedule.entries.length - 1));
+ }
+
+ _openPrerequisiteEditor() {
+   const entry = this._currentEntry();
+   if (!entry || !this.currentCtx?.id?.startsWith('social')) return;
+   const host = document.createElement('div');
+   const child = new DevDialogueEditorTab(this._dev, { workspace: false, prerequisiteScope: {
+     blueprint: entry.insertPrerequisite || createEmptyPrerequisiteBlueprint(),
+     onSave: (blueprint) => { entry.insertPrerequisite = blueprint; this._saveLS(); this._renderContextSettings(); },
+   } });
+   const win = windowManager.createWindow({ title: `插入先决条件 · ${entry.id}`, icon: '🧩', width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
+   win.el?.classList.add('dev-blueprint-window');
+   host.innerHTML = child.html(); child.mount(host.querySelector('.dev-de-root'));
  }
 
   _cloneBlueprintValue(value) {
@@ -645,6 +685,10 @@ export class DevDialogueEditorTab {
     }
     if (node.type === 'choice' && direction === 'input') {
       for (let index = 0; index < choiceCount; index += 1) ports.push({ name: `label${index}`, kind: 'value', type: 'string' });
+    }
+    if (node.type === 'randomBranch' && direction === 'output') {
+      const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.n)) ? Number(node.inputs.n) : 0));
+      for (let index = 0; index < count; index += 1) ports.push({ name: `flowOut${index}`, kind: 'flow', type: null });
     }
     if (node.type === 'segmentBranch') {
       const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
@@ -892,6 +936,10 @@ export class DevDialogueEditorTab {
   _pasteSelectedNodes() {
     const data = this._ctxData(), clip = this._blueprintClipboard;
     if (!data || !clip?.nodes?.length) { this._st('剪贴板中没有蓝图节点'); return; }
+    if (this._prerequisiteScope) {
+      const allowed = new Set(['arithmetic', 'getGlobal', 'getInventory', 'getScheduleStatus', 'getScheduleInstanceCount', 'getGameTime']);
+      if (clip.nodes.some(node => !allowed.has(node.type))) { this._st('先决条件蓝图不能粘贴流程节点或第二个返回值节点'); return; }
+    }
     const idMap = new Map();
     const reservedIds = new Set(Object.keys(data.nodes || {}));
     clip.nodes.forEach(node => {
@@ -1040,6 +1088,7 @@ export class DevDialogueEditorTab {
     node.inputs={...(node.inputs||{}),[name]:parsedValue};
     if (node.type === 'choice' && name === 'branchCount') this._syncChoiceOptions(node);
     if (node.type === 'segmentBranch' && name === 'branchCount') this._syncSegmentPorts(node);
+    if (node.type === 'randomBranch' && name === 'n') this._syncRandomBranchPorts(node);
     if (node.type === 'choice') {
       const labelIndex = /^label(\d+)$/.exec(name)?.[1];
       if (labelIndex != null) {
@@ -1075,6 +1124,14 @@ export class DevDialogueEditorTab {
       const removedOutput = connection.fromNodeId === node.id && connection.fromPort?.startsWith('segment') && Number(connection.fromPort.slice(7)) >= count;
       const removedInput = connection.toNodeId === node.id && connection.toPort?.startsWith('boundary') && Number(connection.toPort.slice(8)) > count;
       return !removedOutput && !removedInput;
+    });
+  }
+
+  _syncRandomBranchPorts(node) {
+    const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.n)) ? Number(node.inputs.n) : 0));
+    const data = this._ctxData();
+    if (data) data.connections = (data.connections || []).filter((connection) => {
+      return !(connection.fromNodeId === node.id && /^flowOut\d+$/.test(connection.fromPort || '') && Number(connection.fromPort.slice(7)) >= count);
     });
   }
 
@@ -1166,8 +1223,13 @@ export class DevDialogueEditorTab {
     const data = this._ctxData(); if (!data) { this._st('请先从左侧选择天数或事件'); return; }
     const nodeType = type || this._el('de-new-node-type-1')?.value || 'text';
     if (!nodeType || !getScheduleNodeDefinition(nodeType)) { this._st('已取消或节点种类无效'); return; }
+    if (!this._prerequisiteScope && nodeType === 'prerequisite' && Object.values(data.nodes || {}).some(node => node.type === 'prerequisite')) { this._st('当前蓝图最多只能有一个先决条件节点'); return; }
+    if (!this._prerequisiteScope && nodeType === 'scheduleExpiry' && Object.values(data.nodes || {}).some(node => node.type === 'scheduleExpiry')) { this._st('当前蓝图最多只能有一个日程过期节点'); return; }
+    if (this._prerequisiteScope && !['arithmetic', 'getGlobal', 'getInventory', 'getScheduleStatus', 'getScheduleInstanceCount', 'getGameTime', 'returnValue'].includes(nodeType)) { this._st('先决条件蓝图只能添加数值节点或一个返回值节点'); return; }
+    if (this._prerequisiteScope && nodeType === 'returnValue' && Object.values(data.nodes).some(node => node.type === 'returnValue')) { this._st('先决条件蓝图只能有一个返回值节点'); return; }
     const node = this._emptyNode(80 + Object.keys(data.nodes).length * 20, 80 + Object.keys(data.nodes).length * 20);
     node.type=nodeType;
+    if (nodeType === 'randomBranch') node.inputs = { n: 1 };
     data.nodes[node.id] = node;
     if (!data.startNodeId) data.startNodeId = node.id;
     this._saveLS(); this._renderCanvas(); this._selectNode(node.id);
@@ -1332,6 +1394,13 @@ export class DevDialogueEditorTab {
   }
 
   async _saveProject() {
+    if (this._prerequisiteScope) {
+      const result = validatePrerequisiteBlueprint(this._ctxData());
+      if (!result.ok) { alert(`先决条件校验失败：\n${result.errors.join('\n')}`); return; }
+      await this._prerequisiteScope.onSave(result.blueprint);
+      this._st('先决条件已保存到当前日程条目');
+      return;
+    }
     const errors=this._validateTypedBlueprints();
     if(errors.length){ alert(`蓝图校验失败：\n${errors.slice(0,8).join('\n')}`); return; }
     if (this._temporaryScope?.onSave) {
@@ -1352,7 +1421,7 @@ export class DevDialogueEditorTab {
       if(!result.ok) result.errors.forEach(error=>errors.push(`${label}: ${error}`));
     };
     Object.entries(this.project?.schedules||{}).forEach(([file,schedule])=>
-      (schedule.entries||[]).forEach((entry,index)=>visit(entry.dialogueTree,`${file} 条目 ${index+1}`)));
+      (schedule.entries||[]).forEach((entry,index)=>visit(entry.blueprint || entry.dialogueTree,`${file} 条目 ${index+1}`)));
     Object.entries(this.project?.events||{}).forEach(([id,ctx])=>visit(ctx,`事件 ${id}`));
     Object.entries(this.project?.endings||{}).forEach(([id,ctx])=>visit(ctx,`结局 ${id}`));
     return errors;
@@ -1541,9 +1610,9 @@ export class DevDialogueEditorTab {
       const flowStartId = '__start';
       nodes[flowStartId] = { id: flowStartId, type: 'flowStart', inputs: {}, outputs: {}, x: 40, y: 40 };
       if (startNodeId && nodes[startNodeId]) connections.unshift({ fromNodeId: flowStartId, fromPort: 'flowOut', toNodeId: startNodeId, toPort: 'flowIn' });
-      return { nodes, connections, startNodeId: flowStartId };
+      return this._ensureControlNodes({ nodes, connections, startNodeId: flowStartId });
     }
-    return { nodes, connections, startNodeId };
+    return this._ensureControlNodes({ nodes, connections, startNodeId });
   }
 
   // ── variables modal ───────────────────────────────────────────────────────

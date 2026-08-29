@@ -84,12 +84,12 @@ export async function launchSocialApp() {
       }
       const npcId = contact.npcId || contact.id;
       const offline = npcStateManager.isOffline(npcId);
-      const unavailable = !dayNightSystem.areRoommatesAvailable();
+      const sleeping = dayNightSystem.areRoommatesSleeping();
       const distressed = !offline && npcStateManager.isDistressed(npcId);
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out social-contact-btn";
-      btn.textContent = `${contact.name}${contact.queueStatus === "resolved" ? " ✓" : ""}${offline ? " 🚫" : unavailable ? " 💤" : distressed ? " ⚠️" : ""}`;
-      btn.disabled = (offline || unavailable) && contact.queueStatus !== "resolved";
+      btn.textContent = `${contact.name}${contact.queueStatus === "resolved" ? " ✓" : ""}${offline ? " 🚫" : sleeping ? " 💤" : distressed ? " ⚠️" : ""}`;
+      btn.disabled = (offline || sleeping) && contact.queueStatus !== "resolved";
       btn.addEventListener("click", () => renderChat(contact, keywordDefs));
       contactListEl.appendChild(btn);
     });
@@ -106,8 +106,8 @@ export async function launchSocialApp() {
       chatEl.innerHTML += '<p class="dialogue-end">（对方已经很久没有上线了，消息始终没有回音。）</p>';
       return;
     }
-    if (!dayNightSystem.areRoommatesAvailable() && contact.queueStatus !== "resolved") {
-      chatEl.innerHTML += `<p class="dialogue-end">（${dayNightSystem.areRoommatesSleeping() ? "对方正在睡觉" : "对方正在上班"}，暂时无法聊天。）</p>`;
+    if (dayNightSystem.areRoommatesSleeping() && contact.queueStatus !== "resolved") {
+      chatEl.innerHTML += '<p class="dialogue-end">（对方正在睡觉，暂时无法聊天。）</p>';
       return;
     }
     if (npcStateManager.isDistressed(npcId)) {

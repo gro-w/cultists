@@ -9,7 +9,7 @@
 `js/main.js` 是组成根，负责：
 
 1. 从 `SettingsManager` 读取语言并配置 `DataLoader`。
-2. 并行预加载 i18n、物品、日程、结局、存档索引、技能、时间规则、NPC、成就、医疗和全局变量。
+2. 并行预加载 i18n、物品、日程、结局、存档索引、技能、时间规则、NPC、成就、医疗和公共变量。
 3. 注册 `APP_REGISTRY`，由 `Desktop` 和 `Taskbar` 共同渲染桌面图标、开始菜单和任务栏。
 4. 挂载 `WindowManager`、`DormMode`、通知、结局界面和成就提示。
 5. 启动时显示主菜单；存档通过文件下载/选择载入；严格为 `?dev` 时启用开发人员模式。
@@ -28,7 +28,7 @@
 | `ScheduleQueue` | 独立的 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件和使用效果 |
 | `ItemPlacementManager` | 场景中的条件物品摆放、拾取和放回 |
-| `GlobalVariableManager` | 数据定义的 bool/number/decimal/string 全局变量、条件和效果 |
+| `GlobalVariableManager` | 数据定义的 bool/number/decimal/string 公共变量、条件和效果 |
 | `SpellManager` | 已学习法术、法术施放和法术状态事件 |
 | `KeywordManager` | 关键词注册、收集、来源和笔记本数据 |
 | `ScheduleRunner` | HIS/Social 对话及所有对象式日程蓝图执行器 |

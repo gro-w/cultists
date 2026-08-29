@@ -25,11 +25,7 @@ export class ScheduleValueEvaluator {
     const definition = getScheduleNodeDefinition(node.type);
     if (!definition?.valueOutputs?.some((output) => output.name === port)) throw new Error(`Node ${nodeId} has no value output ${port}`);
     this.stack.add(key);
-    const read = (name, fallback = undefined) => {
-      const connection = (this.blueprint.connections || []).find((item) => item.toNodeId === nodeId && item.toPort === name);
-      if (connection) return this.evaluateNode(connection.fromNodeId, connection.fromPort);
-      return valueOf(node.inputs?.[name], (sourceId, sourcePort) => this.evaluateNode(sourceId, sourcePort));
-    };
+    const read = (name, fallback = undefined) => this.readInput(nodeId, name, fallback);
     let result;
     switch (node.type) {
       case "arithmetic": result = this._arithmetic(read("operator", "+"), read("left", 0), read("right", 0)); break;
@@ -43,6 +39,14 @@ export class ScheduleValueEvaluator {
     this.stack.delete(key);
     this.cache.set(key, result);
     return result;
+  }
+
+  readInput(nodeId, name, fallback = undefined) {
+    const node = this.blueprint.nodes?.[nodeId];
+    const connection = (this.blueprint.connections || []).find((item) => item.toNodeId === nodeId && item.toPort === name);
+    if (connection) return this.evaluateNode(connection.fromNodeId, connection.fromPort);
+    if (Object.prototype.hasOwnProperty.call(node?.inputs || {}, name)) return valueOf(node.inputs[name], (sourceId, sourcePort) => this.evaluateNode(sourceId, sourcePort));
+    return fallback;
   }
 
   _arithmetic(operator, left, right) {

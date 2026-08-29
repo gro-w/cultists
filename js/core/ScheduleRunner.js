@@ -10,6 +10,7 @@ import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
 import { spellEffectManager } from "./SpellEffectManager.js";
 import { keywordManager } from "./KeywordManager.js";
+import { endingManager } from "./EndingManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -119,6 +120,7 @@ export class ScheduleRunner {
         const speaker = get("speaker", node.speaker || "npc");
         const text = String(get("text", node.text || ""));
         this._record({ type: "text", speaker, text });
+        if (this.definition.kind === "medicalIncident") this.instance.lastScheduleText = text;
         this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
         if (this.definition.action === "investigate" && Array.isArray(node.keywordIds)) {
           this._emitInspection(node, text);
@@ -126,6 +128,13 @@ export class ScheduleRunner {
         return { wait: true };
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
+      case "randomBranch": {
+        const n = Number(get("n", 0));
+        if (!Number.isSafeInteger(n) || n < 1 || n > 32) throw new Error("Random branch count n must be an integer from 1 to 32");
+        const index = Math.min(n - 1, Math.floor(this.random() * n));
+        this.instance.lastRandomBranch = { count: n, index };
+        return { next: nextFlow(this.blueprint, node, `flowOut${index}`) };
+      }
       case "waitUntil": {
         if (!Boolean(get("condition", false))) return { waitUntil: true };
         this.instance.waitingNodeId = null;
@@ -139,9 +148,10 @@ export class ScheduleRunner {
         const outcome = roll === 100 || (n < 50 && roll >= 96)
           ? "largeFailure"
           : roll <= n / 5 ? "largeSuccess" : roll <= n ? "success" : "failure";
-        this.instance.lastDiceCheck = { roll, target: n, outcome };
+        this.instance.lastDiceCheck = { roll, target: n, skillValue: n, outcome };
         return { next: nextFlow(this.blueprint, node, outcome) };
       }
+      case "ending": endingManager.trigger(String(get("endingId", ""))); return {};
       case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
       case "setGlobal": {
         const id = get("variableId");
@@ -151,7 +161,10 @@ export class ScheduleRunner {
         return {};
       }
       case "insertSchedule": {
-        const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"));
+        const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"), {
+          respectPrerequisite: get("respectPrerequisite", true),
+          protectFromExpiry: get("protectFromExpiry", false),
+        });
         if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
         return {};
       }

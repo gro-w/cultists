@@ -134,7 +134,7 @@ App 点击
 6. value edge 是反向求值依赖：执行输入端时，通过 `toNode/toPort` 找到上游 `fromNode/fromPort`。
 7. 节点坐标 `x/y` 属于编辑器元数据，但应随蓝图保存以保留布局。
 
-当前节点由 `ScheduleNodeRegistry.js` 注册：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前节点由 `ScheduleNodeRegistry.js` 注册：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`prerequisite`、`scheduleExpiry`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
 ### 常用节点
 
@@ -143,7 +143,7 @@ App 点击
 - `consumeTime`：`minutes` 必须是 20 的倍数，通过 `TimeService` 推进。
 - `branch`：根据 `condition` 选择 `true/false` 流程输出。
 - `setGlobal`：修改公共变量；变量 ID、类型和值必须符合 `global_variables.json`。
-- `insertSchedule`：通过 `ScheduleData` 动态插入日程，不能直接写 queue。
+- `insertSchedule`：通过 `ScheduleData` 动态插入日程，不能直接写 queue；可用 `respectPrerequisite` 忽略先决条件，或用 `protectFromExpiry` 保护实例免于过期。
 - `spellOperation`：学习法术；学习蓝图必须先连接 `consumeTime(240)`。
 - `scheduleEnd`：标记实例完成并发出 `schedule:resolved`、`schedule:completed`。
 
@@ -208,21 +208,20 @@ App 点击
 | `keywords.json` | 关键词编辑器 | 稳定关键词 ID 和内容 |
 | `chatgtp_qa.json` | ChatGTP 问答编辑器 | 关键词组合问答 |
 | `npcs.json` | NPC 列表编辑器 | 稳定 NPC ID、数值 ID、名称和头像 |
-| `global_variables.json` | 全局变量编辑器 | 变量定义；“当前值”列是运行时值操作，不是另一份数据文件 |
+| `global_variables.json` | 公共变量编辑器 | 变量定义；“当前值”列是运行时值操作，不是另一份数据文件 |
 | `item_placements.json` | 场景物品摆放编辑器 | 物品位置、区域、条件和拾取/放回提示 |
 | `diagnoses.json` | 诊断知识编辑器 | ICD 分类、诊断、症状和药品关系 |
 | `medicines.json` | 药品知识编辑器 | 药品、分类、价格和诊断关系 |
-| `medical_events.json` | 医疗事件编辑器 | 罚款、奖励和投诉/暴动对话 |
 
 | `time_rules.json` | 时间规则编辑器 | 阶段时长、睡眠恢复、睡眠债和熬夜 SAN 损失 |
 | `calendar.json` | 日历规则编辑器 | 总天数、休息日和夜班日 |
 | `achievements.json` | 成就定义编辑器 | 成就内容、分类、隐藏和触发条件 |
 | `skills.json` | 技能定义编辑器 | 技能 ID、数值 ID、名称和类别 |
-因此，当前没有专用编辑器的文件：**无**。上述数据文件均已增加独立的专用编辑器入口；NPC 的 SAN 阈值由全局变量 3/4 定义，运行时 NPC 状态仍由 NPC 与对话调试器操作。
+因此，当前没有专用编辑器的文件：**无**。上述数据文件均已增加独立的专用编辑器入口；NPC 的 SAN 阈值由公共变量 3/4 定义，运行时 NPC 状态仍由 NPC 与对话调试器操作。
 
 ## 8. 开发人员模式
 
-开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 提供关键词、ChatGTP 问答、NPC、全局变量、日程、BGM、位置、CG、电脑内容以及其他专用数据编辑器；调试器包含时间与读档、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
+开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 提供关键词、ChatGTP 问答、NPC、公共变量、日程、BGM、位置、CG、电脑内容以及其他专用数据编辑器；调试器包含时间与读档、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
 
 旧的“对话分支树”“患者分支树”“Work 事件队列”“Social 事件队列”已删除；不要恢复这些旧入口。对话/患者内容统一通过“日程编辑器”按源文件和 entry 编辑对象式蓝图。运行时 queue 仅用于执行与保存，不是编辑器的内容来源。
 
@@ -235,7 +234,7 @@ App 点击
 
 ## 9. 存档和版本
 
-`SaveManager` 当前格式为 v16。它保存游戏状态、TimeService、工作/社交/主要三个队列、关键词、背包、医疗、NPC 状态、好感度、场景物品、结局锁定、全局变量、窗口布局、法术、动态日程插入和 CG 状态。对话进度与状态由日程实例负责，不再单独保存。存档以二进制文件下载和选择载入；索引表由已加载数据建立。
+`SaveManager` 当前格式为 v16。它保存游戏状态、TimeService、工作/社交/主要三个队列、关键词、背包、医疗、NPC 状态、好感度、场景物品、结局锁定、公共变量、窗口布局、法术、动态日程插入和 CG 状态。对话进度与状态由日程实例负责，不再单独保存。存档以二进制文件下载和选择载入；索引表由已加载数据建立。
 
 改变 payload、字段含义、编码或索引表时必须评估版本，并显式拒绝不支持版本；不能静默把旧数据当新格式。新增可恢复窗口要同时更新 `WINDOW_APP_IDS` 和 launcher 注册。恢复顺序要先加载 canonical data，再恢复状态和队列，最后刷新窗口。
 
@@ -245,7 +244,7 @@ App 点击
 2. 搜索目标 symbol 的定义、调用点、事件订阅和保存字段。
 3. 确定状态 owner、事件语义、时间成本和失败路径。
 4. 先扩展 JSON schema/数据，再接入 runtime；不要在 App 中硬编码剧情。
-5. 对蓝图调用 `validateBlueprint()`，对全局变量、ID、引用和边界做确定性探针。
+5. 对蓝图调用 `validateBlueprint()`，对公共变量、ID、引用和边界做确定性探针。
 6. 修改 JS 后执行 `node --check`；修改 JSON 后用 Python `json.load()` 全量校验。
 7. 执行 `git diff --check`，检查 LF 和无凭据泄露。
 8. 执行 `node publish.js`，确认发布目录不含开发代码，再检查 `publish/js/main.js`。

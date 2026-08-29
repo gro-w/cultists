@@ -19,7 +19,7 @@
 | NPC 好感度 | `FavorabilityManager` | `values`、`hadPositive` | NPC与对话 |
 
 | HIS/医疗流程 | `MedicalCaseManager` | `submissions`、`income`、`pendingIncome`、`pendingExpenses`、`settledDays`、`pendingIncidents` | 医疗与结局 |
-| 全局变量当前值 | `GlobalVariableManager` | 每个定义 ID 对应的当前 `value` | 世界与场景 |
+| 公共变量当前值 | `GlobalVariableManager` | 每个定义 ID 对应的当前 `value` | 世界与场景 |
 | 结局锁定状态 | `EndingManager` | `_ended` | 医疗与结局 |
 | 成就跨周目状态 | `AchievementManager` | 成就解锁、时间、进度、已读状态、`_sanEverLow`、`_readNodeIds` | 无；故意使用 localStorage 跨周目保存 |
 | BGM 播放层 | `BgmManager` | 当前轨道、对话 BGM 栈、结局 BGM、淡出/待播放状态 | 无；主要为临时表现状态 |
@@ -39,7 +39,7 @@
 8. **`inventory`**：物品 `id`、`count`，以及当前实现中附带的 `def` 静态定义对象。
 9. **`medical`**：`income`、`pendingIncome`、`pendingExpenses`、`settledDays`、`submissions`、`pendingIncidents`。
 10. **`npcState`**：NPC SAN 映射、已离线 NPC、待离线 NPC。
-11. **`globalVariables`**：每个全局变量的 `id` 与当前 `value`。
+11. **`globalVariables`**：每个公共变量的 `id` 与当前 `value`。
 12. **`windows`**：打开窗口的 `appId`、`x`、`y`。
 13. **`spells`**：已学习法术完整对象数组。
 14. **`scheduledAdds`**：动态日程的 `scheduleId`、`addTime`、可选 `queueId`。
@@ -105,7 +105,7 @@
 
 ### 日程与队列、世界与场景、医疗与结局
 
-三个新增入口分别覆盖三个队列及实例状态、场景物品/全局变量当前值，以及 HIS 医疗账目/提交和结局锁定状态。
+三个新增入口分别覆盖三个队列及实例状态、场景物品/公共变量当前值，以及 HIS 医疗账目/提交和结局锁定状态。
 
 ## 5. 仍未提供独立调试器的状态
 
@@ -162,7 +162,7 @@
 
 - `ItemPlacementManager.placed`。
 - 当前地点/场景可见物品。
-- 全局变量当前值。
+- 公共变量当前值。
 - 日历派生的休息日/夜班日只读信息。
 
 ### F. 医疗与结局

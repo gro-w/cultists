@@ -11,12 +11,15 @@ const definitions = {
   scheduleEnd: { label: "日程结束", flowInputs: [flowIn()] },
   text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string")] },
   choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("branchCount", VALUE, "number")] },
+  randomBranch: { label: "随机分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("n", VALUE, "number")] },
   branch: { label: "逻辑分支", flowInputs: [flowIn()], flowOutputs: [flowOut("false"), flowOut("true")], valueInputs: [input("condition")] },
   waitUntil: { label: "阻塞直到", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("condition", VALUE, "bool")] },
   diceCheck: { label: "骰子检定", flowInputs: [flowIn()], flowOutputs: [flowOut("largeSuccess"), flowOut("success"), flowOut("failure"), flowOut("largeFailure")], valueInputs: [input("n", VALUE, "number")] },
+
   consumeTime: { label: "消耗时间", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("minutes", VALUE, "number")] },
   setGlobal: { label: "操作公共变量", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("variableId"), input("value"), input("delta", VALUE, "number")] },
-  insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string")] },
+  ending: { label: "触发结局", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("endingId", VALUE, "string")] },
+  insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string"), input("respectPrerequisite", VALUE, "bool"), input("protectFromExpiry", VALUE, "bool")] },
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   endCg:  { label: "结束 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },
@@ -28,6 +31,8 @@ const definitions = {
   spellEffect: { label: "法术后续效果", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("spellId", VALUE, "string"), input("target", VALUE, "string"), input("eventId", VALUE, "string"), input("choiceId", VALUE, "string")] },
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
+  prerequisite: { label: "先决条件", valueInputs: [input("condition", VALUE, "bool")] },
+  scheduleExpiry: { label: "日程过期", valueInputs: [input("expires", VALUE, "bool"), input("expiresAt", VALUE, "number")] },
   getInventory: { label: "背包取值", valueInputs: [input("itemId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
 
   getScheduleStatus: { label: "日程状态", valueInputs: [input("instanceId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
@@ -55,6 +60,13 @@ export function getScheduleNodePort(type, portName, direction, node = null) {
       if (match[1] === "boundary" && direction === "input" && index <= count) return { name: portName, kind: VALUE, type: "number" };
       return null;
     }
+  }
+  if (type === "randomBranch" && /^flowOut\d+$/.test(portName)) {
+    const index = Number(portName.slice("flowOut".length));
+    const count = node && Number.isInteger(Number(node.inputs?.n))
+      ? Math.max(0, Math.min(32, Number(node.inputs.n)))
+      : index + 1;
+    return index >= 0 && index < count ? { name: portName, kind: FLOW, type: null } : null;
   }
   if (type === "choice" && /^(option|label)\d+$/.test(portName)) {
     const index = Number(portName.replace(/\D/g, ''));

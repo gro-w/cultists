@@ -1,4 +1,5 @@
 import { eventBus } from "./EventBus.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 const globalSequenceBySchedule = new Map();
 const VALID_STATUSES = new Set(["unresolved", "resolved"]);
@@ -39,7 +40,20 @@ class ScheduleQueue {
     const entry = this.entries.find((item) => item.instanceId === instanceId);
     if (!entry) return false;
     entry.status = "resolved";
+    if (this.queueId === "social") {
+      const variableId = { ajie: 100, awei: 101 }[entry.payload?.npcId || entry.npcId];
+      if (variableId !== undefined && globalVariableManager.definition(variableId)) globalVariableManager.set(variableId, true);
+    }
     eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
+    return true;
+  }
+
+  expire(instanceId) {
+    const entry = this.entries.find((item) => item.instanceId === instanceId);
+    if (!entry || entry.status !== "unresolved") return false;
+    entry.status = "resolved";
+    entry.resolutionReason = "expired";
+    eventBus.emit("schedule:changed", { queueId: this.queueId, entry, expired: true });
     return true;
   }
 

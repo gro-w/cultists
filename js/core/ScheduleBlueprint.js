@@ -31,6 +31,18 @@ export function validateBlueprint(raw) {
   const blueprint = normalizeBlueprint(raw);
   const errors = [];
   const entries = nodeEntries(blueprint.nodes);
+  const prerequisites = entries.filter(([, node]) => node.type === "prerequisite");
+  if (prerequisites.length !== 1) errors.push(`蓝图必须有且只有一个先决条件节点，当前为 ${prerequisites.length} 个`);
+  prerequisites.forEach(([id, node]) => {
+    const definition = getScheduleNodeDefinition(node.type);
+    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`先决条件节点不能有流程引脚：${id}`);
+  });
+  const expiries = entries.filter(([, node]) => node.type === "scheduleExpiry");
+  if (expiries.length !== 1) errors.push(`蓝图必须有且只有一个日程过期节点，当前为 ${expiries.length} 个`);
+  expiries.forEach(([id, node]) => {
+    const definition = getScheduleNodeDefinition(node.type);
+    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`日程过期节点不能有流程引脚：${id}`);
+  });
   const starts = entries.filter(([, node]) => node.type === "flowStart");
   if (starts.length !== 1) errors.push(`流程起始节点必须恰好有一个，当前为 ${starts.length} 个`);
   if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push("缺少有效的流程起始节点");
@@ -44,6 +56,13 @@ export function validateBlueprint(raw) {
     const hasValueOutput = Boolean(getScheduleNodeDefinition(node.type)?.valueOutputs?.length);
     if (hasFlowOutput && hasValueOutput) errors.push(`节点 ${id} 不能同时拥有流程输出和数值输出`);
     if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
+    if (node.type === "randomBranch" && Object.prototype.hasOwnProperty.call(node.inputs || {}, "n")) {
+      const count = node.inputs.n;
+      if (!Number.isSafeInteger(count) || count < 1 || count > 32) errors.push(`随机分支 ${id} 的 n 必须是 1–32 的整数`);
+      else for (let index = 0; index < count; index += 1) {
+        if (!blueprint.connections.some((connection) => connection.fromNodeId === id && connection.fromPort === `flowOut${index}`)) errors.push(`随机分支 ${id} 的 flowOut${index} 未连接`);
+      }
+    }
   }
 
   const reachable = new Set();
@@ -86,6 +105,64 @@ export function validateBlueprint(raw) {
   return { ok: errors.length === 0, errors, blueprint };
 }
 
+export function embedLegacyPrerequisite(rawBlueprint, legacyPrerequisite) {
+  const blueprint = normalizeBlueprint(rawBlueprint);
+  if (!legacyPrerequisite || Object.values(blueprint.nodes).some((node) => node.type === "prerequisite")) return blueprint;
+  const old = normalizeBlueprint(legacyPrerequisite);
+  const oldReturn = Object.values(old.nodes).find((node) => node.type === "returnValue");
+  if (!oldReturn) return blueprint;
+  Object.entries(old.nodes).forEach(([id, node]) => {
+    if (id !== oldReturn.id && !blueprint.nodes[id]) blueprint.nodes[id] = clone(node);
+  });
+  const nodeId = "__prerequisite__";
+  blueprint.nodes[nodeId] = { id: nodeId, type: "prerequisite", inputs: {}, outputs: {}, x: oldReturn.x ?? 80, y: oldReturn.y ?? 260 };
+  const incoming = old.connections.find((connection) => connection.toNodeId === oldReturn.id && connection.toPort === "condition");
+  if (incoming && blueprint.nodes[incoming.fromNodeId]) blueprint.connections.push({ ...incoming, toNodeId: nodeId });
+  else if (Object.prototype.hasOwnProperty.call(oldReturn.inputs || {}, "condition")) blueprint.nodes[nodeId].inputs.condition = oldReturn.inputs.condition;
+  return blueprint;
+}
+
+const PREREQUISITE_NODE_TYPES = new Set([
+  "arithmetic", "getGlobal", "getInventory", "getScheduleStatus",
+  "getScheduleInstanceCount", "getGameTime", "returnValue",
+]);
+
+export function validatePrerequisiteBlueprint(raw) {
+  const blueprint = normalizeBlueprint(raw);
+  const errors = [];
+  const entries = nodeEntries(blueprint.nodes);
+  const returns = entries.filter(([, node]) => node.type === "returnValue");
+  if (returns.length !== 1) errors.push(`先决条件必须有且仅有一个返回值节点，当前为 ${returns.length} 个`);
+  if (!entries.length) errors.push("先决条件蓝图不能为空");
+  for (const [id, node] of entries) {
+    const definition = getScheduleNodeDefinition(node.type);
+    if (!PREREQUISITE_NODE_TYPES.has(node.type)) errors.push(`先决条件节点 ${id} 类型不允许：${node.type}`);
+    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`先决条件蓝图不能包含流程引脚：${id}`);
+    if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
+  }
+  if (returns[0]) {
+    const returnNode = returns[0][1];
+    const connection = blueprint.connections.find((item) => item.toNodeId === returnNode.id && item.toPort === "condition");
+    const source = connection && blueprint.nodes[connection.fromNodeId];
+    if (connection && (!source || !getScheduleNodePort(source.type, connection.fromPort, "output", source))) errors.push("返回值节点的输入连接无效");
+    if (!connection && !Object.prototype.hasOwnProperty.call(returnNode.inputs || {}, "condition")) errors.push("返回值节点必须接收一个条件值");
+  }
+  blueprint.connections.forEach((connection, index) => {
+    const from = blueprint.nodes[connection.fromNodeId];
+    const to = blueprint.nodes[connection.toNodeId];
+    if (!from || !to) { errors.push(`先决条件连接 ${index} 引用了不存在的节点`); return; }
+    const sourcePort = getScheduleNodePort(from.type, connection.fromPort, "output", from);
+    const targetPort = getScheduleNodePort(to.type, connection.toPort, "input", to);
+    if (!sourcePort || sourcePort.kind !== "value" || !targetPort || targetPort.kind !== "value") errors.push(`先决条件连接 ${index} 必须是数值连接`);
+    else if (targetPort.type !== "any" && sourcePort.type !== "any" && targetPort.type !== sourcePort.type) errors.push(`先决条件连接 ${index} 的数值类型不匹配`);
+  });
+  return { ok: errors.length === 0, errors, blueprint };
+}
+
+export function createEmptyPrerequisiteBlueprint() {
+  return { nodes: { return: { id: "return", type: "returnValue", inputs: { condition: false }, outputs: {}, x: 420, y: 120 } }, connections: [] };
+}
+
 export function migrateDialogueTree(tree) {
   const source = clone(tree) || {};
   const nodes = { start: { id: "start", type: "flowStart", inputs: {}, outputs: {} } };
@@ -110,7 +187,11 @@ export function migrateDialogueTree(tree) {
 }
 
 export function createEmptyBlueprint() {
-  return { nodes: { start: { id: "start", type: "flowStart", x: 80, y: 80, inputs: {}, outputs: {} } }, connections: [], startNodeId: "start" };
+  return { nodes: {
+    start: { id: "start", type: "flowStart", x: 80, y: 80, inputs: {}, outputs: {} },
+    __prerequisite__: { id: "__prerequisite__", type: "prerequisite", x: 80, y: 240, inputs: { condition: true }, outputs: {} },
+    __schedule_expiry__: { id: "__schedule_expiry__", type: "scheduleExpiry", x: 80, y: 360, inputs: { expires: false, expiresAt: 0 }, outputs: {} },
+  }, connections: [], startNodeId: "start" };
 }
 
 export default normalizeBlueprint;

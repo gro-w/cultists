@@ -598,5 +598,71 @@
     "name": "预留变量99",
     "type": "number",
     "default": 0
+  },
+  {
+    "id": 100,
+    "name": "昨天是否与阿杰对话",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 101,
+    "name": "昨天是否与阿伟对话",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 104,
+    "name": "第1天选择宿舍活动",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 105,
+    "name": "第2天选择宿舍活动",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 106,
+    "name": "第3天选择宿舍活动",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 107,
+    "name": "第4天选择宿舍活动",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 109,
+    "name": "第1天刷题",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 110,
+    "name": "第2天刷题",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 111,
+    "name": "第3天刷题",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 112,
+    "name": "第4天刷题",
+    "type": "bool",
+    "default": false
+  },
+  {
+    "id": 113,
+    "name": "第1天未刷题",
+    "type": "bool",
+    "default": true
   }
 ]

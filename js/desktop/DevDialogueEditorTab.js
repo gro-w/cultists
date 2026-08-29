@@ -686,6 +686,10 @@ export class DevDialogueEditorTab {
     if (node.type === 'choice' && direction === 'input') {
       for (let index = 0; index < choiceCount; index += 1) ports.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
+    if (node.type === 'randomBranch' && direction === 'output') {
+      const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.n)) ? Number(node.inputs.n) : 0));
+      for (let index = 0; index < count; index += 1) ports.push({ name: `flowOut${index}`, kind: 'flow', type: null });
+    }
     if (node.type === 'segmentBranch') {
       const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
       if (direction === 'output') return [{ name: 'segment0', kind: 'flow', type: null }, ...Array.from({ length: count - 1 }, (_, index) => ({ name: `segment${index + 1}`, kind: 'flow', type: null }))];
@@ -1084,6 +1088,7 @@ export class DevDialogueEditorTab {
     node.inputs={...(node.inputs||{}),[name]:parsedValue};
     if (node.type === 'choice' && name === 'branchCount') this._syncChoiceOptions(node);
     if (node.type === 'segmentBranch' && name === 'branchCount') this._syncSegmentPorts(node);
+    if (node.type === 'randomBranch' && name === 'n') this._syncRandomBranchPorts(node);
     if (node.type === 'choice') {
       const labelIndex = /^label(\d+)$/.exec(name)?.[1];
       if (labelIndex != null) {
@@ -1119,6 +1124,14 @@ export class DevDialogueEditorTab {
       const removedOutput = connection.fromNodeId === node.id && connection.fromPort?.startsWith('segment') && Number(connection.fromPort.slice(7)) >= count;
       const removedInput = connection.toNodeId === node.id && connection.toPort?.startsWith('boundary') && Number(connection.toPort.slice(8)) > count;
       return !removedOutput && !removedInput;
+    });
+  }
+
+  _syncRandomBranchPorts(node) {
+    const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.n)) ? Number(node.inputs.n) : 0));
+    const data = this._ctxData();
+    if (data) data.connections = (data.connections || []).filter((connection) => {
+      return !(connection.fromNodeId === node.id && /^flowOut\d+$/.test(connection.fromPort || '') && Number(connection.fromPort.slice(7)) >= count);
     });
   }
 
@@ -1216,6 +1229,7 @@ export class DevDialogueEditorTab {
     if (this._prerequisiteScope && nodeType === 'returnValue' && Object.values(data.nodes).some(node => node.type === 'returnValue')) { this._st('先决条件蓝图只能有一个返回值节点'); return; }
     const node = this._emptyNode(80 + Object.keys(data.nodes).length * 20, 80 + Object.keys(data.nodes).length * 20);
     node.type=nodeType;
+    if (nodeType === 'randomBranch') node.inputs = { n: 1 };
     data.nodes[node.id] = node;
     if (!data.startNodeId) data.startNodeId = node.id;
     this._saveLS(); this._renderCanvas(); this._selectNode(node.id);

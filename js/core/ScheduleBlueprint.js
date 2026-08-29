@@ -56,6 +56,13 @@ export function validateBlueprint(raw) {
     const hasValueOutput = Boolean(getScheduleNodeDefinition(node.type)?.valueOutputs?.length);
     if (hasFlowOutput && hasValueOutput) errors.push(`节点 ${id} 不能同时拥有流程输出和数值输出`);
     if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
+    if (node.type === "randomBranch" && Object.prototype.hasOwnProperty.call(node.inputs || {}, "n")) {
+      const count = node.inputs.n;
+      if (!Number.isSafeInteger(count) || count < 1 || count > 32) errors.push(`随机分支 ${id} 的 n 必须是 1–32 的整数`);
+      else for (let index = 0; index < count; index += 1) {
+        if (!blueprint.connections.some((connection) => connection.fromNodeId === id && connection.fromPort === `flowOut${index}`)) errors.push(`随机分支 ${id} 的 flowOut${index} 未连接`);
+      }
+    }
   }
 
   const reachable = new Set();

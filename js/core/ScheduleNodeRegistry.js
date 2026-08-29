@@ -11,6 +11,7 @@ const definitions = {
   scheduleEnd: { label: "日程结束", flowInputs: [flowIn()] },
   text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string")] },
   choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("branchCount", VALUE, "number")] },
+  randomBranch: { label: "随机分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("n", VALUE, "number")] },
   branch: { label: "逻辑分支", flowInputs: [flowIn()], flowOutputs: [flowOut("false"), flowOut("true")], valueInputs: [input("condition")] },
   waitUntil: { label: "阻塞直到", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("condition", VALUE, "bool")] },
   diceCheck: { label: "骰子检定", flowInputs: [flowIn()], flowOutputs: [flowOut("largeSuccess"), flowOut("success"), flowOut("failure"), flowOut("largeFailure")], valueInputs: [input("n", VALUE, "number")] },
@@ -57,6 +58,13 @@ export function getScheduleNodePort(type, portName, direction, node = null) {
       if (match[1] === "boundary" && direction === "input" && index <= count) return { name: portName, kind: VALUE, type: "number" };
       return null;
     }
+  }
+  if (type === "randomBranch" && /^flowOut\d+$/.test(portName)) {
+    const index = Number(portName.slice("flowOut".length));
+    const count = node && Number.isInteger(Number(node.inputs?.n))
+      ? Math.max(0, Math.min(32, Number(node.inputs.n)))
+      : index + 1;
+    return index >= 0 && index < count ? { name: portName, kind: FLOW, type: null } : null;
   }
   if (type === "choice" && /^(option|label)\d+$/.test(portName)) {
     const index = Number(portName.replace(/\D/g, ''));

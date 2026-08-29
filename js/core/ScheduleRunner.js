@@ -126,6 +126,13 @@ export class ScheduleRunner {
         return { wait: true };
       }
       case "branch": return { next: nextFlow(this.blueprint, node, get("condition", 0) ? "true" : "false") };
+      case "randomBranch": {
+        const n = Number(get("n", 0));
+        if (!Number.isSafeInteger(n) || n < 1 || n > 32) throw new Error("Random branch count n must be an integer from 1 to 32");
+        const index = Math.min(n - 1, Math.floor(this.random() * n));
+        this.instance.lastRandomBranch = { count: n, index };
+        return { next: nextFlow(this.blueprint, node, `flowOut${index}`) };
+      }
       case "waitUntil": {
         if (!Boolean(get("condition", false))) return { waitUntil: true };
         this.instance.waitingNodeId = null;

@@ -69,6 +69,7 @@ export function runItemSchedule(payload = {}) {
     appId: "item",
     appendLine: () => {},
     onCheckpoint: (next) => queue.updateInstance(instance.instanceId, next),
+    onItemInspection: (result) => payload.context?.onInspection?.(result),
     onComplete: (next) => {
       queue.complete(instance.instanceId);
       payload.context?.onComplete?.(next);

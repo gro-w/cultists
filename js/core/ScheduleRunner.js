@@ -8,6 +8,8 @@ import { modifyStatValue } from "./ScheduleValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
+import { checkSkill } from "./DiceCheck.js";
+import { keywordManager } from "./KeywordManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -25,7 +27,7 @@ function nextFlow(blueprint, node, port = "flowOut") {
 }
 
 export class ScheduleRunner {
-  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
+  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, onItemInspection = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
     this.definition = definition || {};
     this.instance = instance || { status: "unresolved", transcript: [] };
     if (this.instance.status === "pending" || this.instance.status === "completed") this.instance.status = this.instance.status === "completed" ? "resolved" : "unresolved";
@@ -36,6 +38,7 @@ export class ScheduleRunner {
     this.optionsEl = optionsEl;
     this.onComplete = onComplete;
     this.onCheckpoint = onCheckpoint;
+    this.onItemInspection = onItemInspection;
     this.appId = appId;
     this.readOnly = readOnly || this.instance.status === "resolved";
     this.evaluator = new ScheduleValueEvaluator(this.blueprint, {
@@ -127,6 +130,42 @@ export class ScheduleRunner {
         return {};
       }
       case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "0")), instanceId: this.instance.instanceId }); return {};
+      case "showImage": {
+        const image = String(get("image", ""));
+        this.instance.inspectionImage = image || null;
+        if (image) eventBus.emit("schedule:image", { image, itemId: this.definition.itemId, instanceId: this.instance.instanceId });
+        return {};
+      }
+      case "sanBand": {
+        const mental = Number(get("mental", 0));
+        const port = mental === 0 ? "=0" : mental > 90 ? ">90" : mental > 70 ? "70-90" : mental > 50 ? "50-70" : mental > 30 ? "30-50" : mental > 15 ? "15-30" : "0-15";
+        return { next: nextFlow(this.blueprint, node, port) };
+      }
+      case "skillCheck": {
+        const check = checkSkill(String(get("skillId", "")));
+        this.instance.inspectionCheck = check;
+        return { next: nextFlow(this.blueprint, node, check.outcome) };
+      }
+      case "itemInspect": {
+        const text = String(get("text", ""));
+        const itemId = String(get("itemId", this.definition.itemId || ""));
+        const ids = Array.isArray(node.revealKeywordIds) ? node.revealKeywordIds : [];
+        const inlineIds = [...text.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)].map((match) => match[1]);
+        const allIds = [...new Set([...ids, ...inlineIds])];
+        const keywordDefs = keywordManager.definitionsWithSource(allIds, `物品-${this.definition.name || itemId}`);
+        allIds.filter((id) => ids.includes(id)).forEach((id) => { if (keywordDefs[id]) keywordManager.collect(keywordDefs[id]); });
+        const result = { text, check: this.instance.inspectionCheck || null, keywordDefs, effect: node.effect || null, image: this.instance.inspectionImage || null };
+        this.instance.inspectionResult = result;
+        this.onItemInspection(result);
+        eventBus.emit("item:inspection-result", { itemId, result, instanceId: this.instance.instanceId });
+        return {};
+      }
+      case "itemEffect": {
+        const effect = node.effect || {};
+        Object.entries(effect.statChanges || {}).forEach(([statId, delta]) => modifyStatValue(statId, delta));
+        if (effect.gameEvent) eventBus.emit(effect.gameEvent, effect.gameEventPayload || {});
+        return {};
+      }
       case "inventoryOperation": {
         const itemId = String(get("itemId", ""));
         const count = Number(get("count", 0));

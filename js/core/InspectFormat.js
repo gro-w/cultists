@@ -35,6 +35,14 @@ export function renderInspectResult(result, container) {
 
   container.innerHTML = "";
 
+  if (result.image) {
+    const image = document.createElement("img");
+    image.className = "item-image-preview";
+    image.src = result.image;
+    image.alt = "调查对象外观";
+    container.appendChild(image);
+  }
+
   // Main text paragraph — may contain [[kwId]] markers
   const textEl = document.createElement("p");
   textEl.className = "inspect-text";

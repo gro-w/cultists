@@ -136,10 +136,17 @@ export class ScheduleRunner {
         if (image) eventBus.emit("schedule:image", { image, itemId: this.definition.itemId, instanceId: this.instance.instanceId });
         return {};
       }
-      case "sanBand": {
-        const mental = Number(get("mental", 0));
-        const port = mental === 0 ? "=0" : mental > 90 ? ">90" : mental > 70 ? "70-90" : mental > 50 ? "50-70" : mental > 30 ? "30-50" : mental > 15 ? "15-30" : "0-15";
-        return { next: nextFlow(this.blueprint, node, port) };
+      case "segmentBranch": {
+        const value = Number(get("value", 0));
+        const count = Math.max(1, Math.min(32, Math.floor(Number(get("branchCount", 1)))));
+        if (!Number.isFinite(value) || !Number.isFinite(count)) throw new Error("Segment branch value and count must be numbers");
+        const boundaries = Array.from({ length: count + 1 }, (_, index) => Number(get(`boundary${index}`, 0)));
+        if (boundaries.some((boundary) => !Number.isFinite(boundary)) || boundaries.some((boundary, index) => index && boundaries[index - 1] < boundary)) {
+          throw new Error("Segment branch boundaries must be finite and descending");
+        }
+        const index = boundaries.findIndex((upper, boundaryIndex) => value <= upper && value > boundaries[boundaryIndex + 1]);
+        const selected = index < 0 ? (value <= boundaries[count] ? count - 1 : 0) : index;
+        return { next: nextFlow(this.blueprint, node, `segment${selected}`) };
       }
       case "skillCheck": {
         const check = checkSkill(String(get("skillId", "")));

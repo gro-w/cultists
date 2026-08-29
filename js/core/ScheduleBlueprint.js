@@ -40,7 +40,7 @@ export function validateBlueprint(raw) {
 
   for (const [id, node] of entries) {
     if (!getScheduleNodeDefinition(node.type)) errors.push(`节点 ${id} 使用未知类型 ${node.type}`);
-    const hasFlowOutput = Boolean(getScheduleNodeDefinition(node.type)?.flowOutputs?.length);
+    const hasFlowOutput = Boolean(getScheduleNodeDefinition(node.type)?.flowOutputs?.length || node.type === "segmentBranch");
     const hasValueOutput = Boolean(getScheduleNodeDefinition(node.type)?.valueOutputs?.length);
     if (hasFlowOutput && hasValueOutput) errors.push(`节点 ${id} 不能同时拥有流程输出和数值输出`);
     if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
@@ -62,8 +62,8 @@ export function validateBlueprint(raw) {
     for (const option of node?.options || []) if (option.next && blueprint.nodes[option.next]) pending.push(option.next);
   }
   entries.forEach(([id, node]) => {
-    if (isFlowNode(node.type) && !reachable.has(id)) errors.push(`流程节点 ${id} 不可从流程起始到达`);
-    if (isFlowNode(node.type) && node.type !== "scheduleEnd") {
+    if ((isFlowNode(node.type) || node.type === "segmentBranch") && !reachable.has(id)) errors.push(`流程节点 ${id} 不可从流程起始到达`);
+    if ((isFlowNode(node.type) || node.type === "segmentBranch") && node.type !== "scheduleEnd") {
       const hasNext = blueprint.connections.some((connection) => connection.fromNodeId === id && portKind(getScheduleNodePort(node.type, connection.fromPort, "output", node)) === "flow")
         || Boolean(node.next)
         || (node.type === "choice" && (node.options || []).some((option) => option.next));

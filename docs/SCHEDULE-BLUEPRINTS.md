@@ -10,9 +10,12 @@
 ## 1. 蓝图是什么
 
 蓝图是一个有向图，由流程节点、数值节点和两种类型的连接组成。普通日程
-文件的一个条目通常把蓝图放在 `dialogueTree` 字段；物品等宿主对象则把蓝图
+文件的一个条目通常把蓝图放在 `blueprint` 字段；物品等宿主对象则把蓝图
 放在 `schedules.investigate`、`schedules.use`、`schedules.obtain` 或
 `schedules.lose` 中。
+
+历史数据中的 `dialogueTree` 仅在兼容迁移边界读取；新日程条目必须使用
+`blueprint`。
 
 最小蓝图如下：
 
@@ -174,7 +177,7 @@
 
 ## 3. 节点类型总览
 
-当前注册了 24 种节点：
+当前注册了 23 种节点：
 
 | 类型 | 类别 | 作用 |
 | --- | --- | --- |
@@ -189,6 +192,7 @@
 | `setGlobal` | 流程/状态 | 设置全局变量 |
 | `insertSchedule` | 流程/状态 | 向日程队列插入日程 |
 | `showCg` | 流程/显示 | 发出显示 CG 事件 |
+| `endCg` | 流程/显示 | 结束当前 CG 显示 |
 | `showImage` | 流程/显示 | 发出显示图片事件 |
 | `segmentBranch` | 流程 | 按数值区间选择分支 |
 | `inventoryOperation` | 流程/状态 | 增减背包物品 |
@@ -314,7 +318,7 @@
 - 语义：只允许通过此节点表达蓝图内的时间推进。普通行动的默认单位是
   20 分钟；具体蓝图可以使用其他明确的分钟数，例如法术学习的 240 分钟。
 
-### 4.8 `setGlobal`：操作公共变量
+### 4.9 `setGlobal`：操作公共变量
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -322,7 +326,7 @@
 - 作用：调用 `GlobalVariableManager.set()` 设置全局变量，或调用 `modify()` 应用数字增量；
 - 语义：值的类型和变量 ID 必须符合全局变量定义。
 
-### 4.9 `insertSchedule`：插入日程
+### 4.10 `insertSchedule`：插入日程
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -331,7 +335,7 @@
 - 语义：插入失败会终止当前节点执行并报告原因。队列应使用项目支持的
   日程队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
 
-### 4.10 `showCg`：显示 CG
+### 4.11 `showCg`：显示 CG
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -339,7 +343,14 @@
 - 作用：发出 `schedule:cg` 事件；
 - 语义：事件携带 `cgId` 和当前日程实例 ID；实际图片/界面由订阅者处理。
 
-### 4.11 `showImage`：显示图片
+### 4.12 `endCg`：结束 CG
+
+- 输入：`flowIn`（流程）；
+- 输出：`flowOut`（流程）；
+- 作用：发出 `schedule:end_cg`，由 CG 管理器结束当前 CG 并转发 `cg:end` 事件；
+- 语义：不推进游戏时间。
+
+### 4.13 `showImage`：显示图片
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -347,7 +358,7 @@
 - 作用：发出 `schedule:image` 事件并保存当前调查图片；
 - 语义：图片应是资源路径字符串，不是 Base64。空字符串表示清除本次图片。
 
-### 4.12 `segmentBranch`：分段分支
+### 4.14 `segmentBranch`：分段分支
 
 这是通用数值分段节点，不绑定 SAN、技能或某件物品。
 
@@ -380,7 +391,7 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 4.13 `inventoryOperation`：操作背包
+### 4.15 `inventoryOperation`：操作背包
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -389,7 +400,7 @@ segment2: 0 < value <= 30
 - 语义：正数增加，负数移除对应数量，零表示移除该物品的全部持有数量。
   每次增删仍通过 `ItemManager` 的公开方法执行，因此会发布物品变化事件。
 
-### 4.14 `statOperation`：操作主角数值
+### 4.16 `statOperation`：操作主角数值
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -412,7 +423,7 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 4.15 `setGlobal`：操作公共变量
+### 4.17 `setGlobal`：操作公共变量
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -433,7 +444,7 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 4.16 `spellOperation`：调整法术状态
+### 4.18 `spellOperation`：调整法术状态
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
@@ -505,7 +516,7 @@ segment2: 0 < value <= 30
 
 - 输出：`value`（数字）；
 - 值输入：`scheduleId`（字符串）；
-- 作用：统计四个队列中该日程 ID 的实例数量。
+- 作用：统计三个队列中该日程 ID 的实例数量。
 
 ### 5.7 `getGameTime`：当前游戏时间
 

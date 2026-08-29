@@ -67,7 +67,7 @@ export default ExampleManager;
 | `DialogueRunner` | HIS/Social 共用对话树执行 |
 | `DialogueEffects` | 对话节点 onShow 的共享副作用 |
 | `EndingManager` | 事件、对话、道具、属性和最终阶段结局 |
-| `SaveManager` | v11 存档和窗口布局恢复 |
+| `SaveManager` | v15 URL 存档、全局变量、法术、CG 和窗口布局恢复 |
 
 ## 状态机不变量
 
@@ -108,7 +108,7 @@ CSS/HTML 使用相应注释形式。开发入口必须严格判断 `?dev`，不�
 
 ## 存档规则
 
-当前 `SaveManager` 格式为 v11，保存游戏状态、双队列、医疗、关键词、背包、全局变量、法术和窗口布局。改变 payload 或编码布局时要评估是否提升版本；旧版本不应静默迁移。新增可恢复窗口时，将 appId 追加到 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
+当前 `SaveManager` 格式为 v15，保存游戏状态、TimeService、工作/社交/主要三个队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、对话进度、结局、全局变量、法术、动态日程、CG 和窗口布局。改变 payload 或编码布局时要评估是否提升版本；旧版本不应静默迁移。新增可恢复窗口时，将 appId 追加到 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
 
 ## 修改、验证和发布
 

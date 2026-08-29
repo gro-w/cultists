@@ -42,7 +42,7 @@ http://127.0.0.1:8000/?dev
 - 非工作时间睡觉会在次日 `08:00` 结算并醒来；跨过午夜时日期立即增加。
 - 白昼判断为 `[06:00, 18:00)`，与工作 phase 独立。
 - 当前工作批次未完成时不能下班；当前夜班批次未完成时不能睡觉。
-- 当前日历为 30 天；休息日是第 5、10、15、20、25、30 天；夜班值班日是第 7、11、14、18、22、27、28 天。
+- 当前可玩日历为 7 天；休息日是第 5 天；夜班值班日是第 7 天。日历界面会额外显示第 8–31 天的未解锁占位。
 
 ## 项目结构
 
@@ -71,7 +71,7 @@ docs/                      架构、数据 schema 和协作指南
 | `SpellManager` | 已学习法术和 SAN 消耗的施放 |
 | `DialogueRunner` / `DialogueEffects` | 共享对话树、条件和显示时副作用 |
 | `KeywordManager` / `NotebookApp` | 关键词收集、来源、查询和法术笔记本 |
-| `SaveManager` | v11 存档、全局变量、法术和窗口布局恢复 |
+| `SaveManager` | v15 URL 存档、全局变量、法术、CG 和窗口布局恢复 |
 | `DeveloperMode` / `dev-server.js` | 开发调试、数据编辑和本地写盘 |
 
 模块间优先通过 `EventBus` 通信；内容相关逻辑应放入 JSON，而不是硬编码在应用中。
@@ -86,7 +86,7 @@ docs/                      架构、数据 schema 和协作指南
 
 ## 内容制作入口
 
-- 日程：`work01a.json`/`work01b.json`、`social01a.json`/`social01b.json`，直至第 30 天。
+- 日程：`work01a.json`/`work01b.json`、`social01a.json`/`social01b.json`，直至第 7 天。
 - 全局变量：`global_variables.json`，顶层为数组，ID 唯一且从 0 开始。
 - 物品：`items.json`，支持调查、SAN 变体、技能检定、使用条件、状态效果和书籍法术。
 - 场景物品：`item_placements.json`。

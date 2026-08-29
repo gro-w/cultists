@@ -28,13 +28,13 @@
 
 ## 2. 当前 URL 存档实际保存的运行时变量
 
-`SaveManager` 当前格式为 v13，`_encode()` 保存以下域：
+`SaveManager` 当前格式为 v15，`_encode()` 保存以下域：
 
 1. **`gameState`**：`day`、`clockMinutes`、`phase`、`duty`、`location`、`energy`、`mental`、`physical`、`satiety`、`recoverableMentalLoss`。
 2. **`timeService`**：`phaseMinutes`、最近三次 `sleepHistory`、`insufficientSleepStreak`。
 3. **`workQueue`**：完整实例数组及 transcript。
 4. **`socialQueue`**：完整实例数组及 transcript。
-5. **`mainQueue`**：完整实例数组及 transcript。
+6. **`mainQueue`**：完整实例数组及 transcript。
 7. **`keywords`**：已收集关键词的 `id`、`collectedDay`。
 8. **`inventory`**：物品 `id`、`count`，以及当前实现中附带的 `def` 静态定义对象。
 9. **`medical`**：`income`、`pendingIncome`、`pendingExpenses`、`settledDays`、`submissions`、`pendingIncidents`。
@@ -47,12 +47,13 @@
 16. **`itemPlacements`**：场景物品的 `placed` 状态。
 17. **`dialogueProgress`**：HIS/Social/ChatGTP 的当前 actor/node。
 18. **`ending`**：结局是否已经锁定。
+19. **`cg`**：当前 CG 的 `activeCgId`。
 
 以上所有字段均为重要运行时状态。当前解码路径逐项恢复这些字段；不应把窗口布局、静态定义副本或实例 transcript 当成可忽略的临时数据。
 
 ## 3. 已修复的存档缺口与仍需后续决策的状态
 
-审计发现并已在 v13 修复的缺口：
+历史审计发现的存档缺口已在 v13–v15 期间补齐：
 
 - `FavorabilityManager`：好感度 `values` 与 `hadPositive`，保存键为 `favorability`。
 - `ItemPlacementManager`：场景物品 `placed` 映射，保存键为 `itemPlacements`。
@@ -61,7 +62,7 @@
 
 这些状态均由各自 owner 的 `snapshot/restore()` 负责，SaveManager 只负责编排保存和恢复顺序。
 
-`EndingManager._ended` 已由 v13 的 `ending.ended` 保存并恢复；开发调试器提供重置和触发操作，仍遵循 EndingManager 的首个结局规则。
+`EndingManager._ended` 由当前 `ending.ended` 保存并恢复；CG 当前状态由 `cg.activeCgId` 保存并恢复。开发调试器提供重置和触发操作，仍遵循 EndingManager 的首个结局规则。
 
 成就状态和设置不是 URL 游戏存档：
 
@@ -106,7 +107,7 @@
 
 ### 日程与队列、世界与场景、医疗与结局
 
-三个新增入口分别覆盖四条队列及实例状态、场景物品/全局变量当前值，以及 HIS 医疗账目/提交和结局锁定状态。
+三个新增入口分别覆盖三个队列及实例状态、场景物品/全局变量当前值，以及 HIS 医疗账目/提交和结局锁定状态。
 
 ## 5. 仍未提供独立调试器的状态
 
@@ -114,7 +115,7 @@
 
 1. `ScheduleData.fired`、`pendingAdds`、`lastAbsoluteMinute` 尚未在“日程与队列”中单独展示。
 2. `KeywordManager` 和 `SpellManager` 当前只读展示，尚未提供独立的运行时增删控件。
-3. `FavorabilityManager.hadPositive` 尚未单独展示，但已随 NPC 与对话调试器和 v13 存档覆盖。
+3. `FavorabilityManager.hadPositive` 尚未单独展示，但已随 NPC 与对话调试器和当前 v15 存档覆盖。
 4. `BgmManager` 的对话栈和结局 BGM 层（通常属于表现层，不建议优先开放）。
 
 ## 6. 推荐的调试器分组
@@ -182,10 +183,12 @@
 - 窗口实例与 z 顺序。
 - DataLoader 缓存和开发服务器连接状态。
 
-## 7. 建议的实现优先级
+## 7. 当前后续工作建议
 
-1. 先完成“时间与读档”现有界面的名称、图标和功能裁剪。
-2. 为存档缺口建立 v12 round-trip 探针，确认好感度、场景物品和对话位置是否应持久化。
-3. 优先新增“日程与队列”只读调试器，因为它最容易暴露阻塞、重复执行和恢复问题。
-4. 再将全局变量当前值从数据库定义编辑器中明确拆到“世界与场景”运行时调试器。
-5. 最后补充医疗/结局调试器和表现层只读诊断。
+存档缺口和基础调试器分组已经完成；后续工作不应再按旧的 v12 存档计划执行。当前仍适合优先处理的项目是：
+
+1. 在“日程与队列”中补充 `ScheduleData.fired`、`pendingAdds` 和
+   `lastAbsoluteMinute` 的只读观察（如调试需求仍然存在）。
+2. 为关键 owner 补充确定性的 save round-trip 和队列恢复探针，特别是
+   CG 状态、动态日程与对话 checkpoint。
+3. 视表现层调试需求增加 BGM 栈、窗口 z 顺序和 DataLoader 缓存的只读诊断。

@@ -50,8 +50,8 @@ metadata:
 6. **搭建线性与分支流程。**
    在 `blueprint.nodes` 中建立唯一 `flowStart`、若干 `text`、一个或多个 `choice`、对应的 `consumeTime` 和至少一个 `scheduleEnd`。患者先自我介绍并说出主诉；每个选择方向都让患者补充不同信息，如疼痛特点、诱因、既往病史、用药、伴随症状或危险信号；最终由玩家结束问诊。完成标准：每个流程节点从 `startNodeId` 可达，所有选择分支都有目标，所有路径最终到达 `scheduleEnd`。
 
-7. **为每次对话推进添加时间节点。**
-   每个 `text` 节点的流程输出后都连接到 `consumeTime`，再连接到下一个 `text`、`choice` 或结束流程。`consumeTime.inputs.minutes` 必须是非负整数且为 20 的倍数；默认使用 20。完成标准：没有文本节点直接跳到下一个对话节点，也没有非 20 分钟倍数的时间消耗。
+7. **在对白流程中分布时间节点。**
+   按前段共同对白、选项分支后的对白、中段和后段对白分布 `consumeTime`，不要把时间集中在开头或结尾，也不要强制每个 `text` 节点后都插入。`consumeTime.inputs.minutes` 必须是非负整数且为 20 的倍数，普通对话通常使用 20。完成标准：每条可达路径的时间成本和节点位置符合任务目标，最后一句对白后不会直接接时间节点再结束。
 
 8. **写入并保留布局信息。**
    用 `patch` 修改已有目标 JSON；若目标是新文件才使用 `write_file`。为节点保留整数 `x` / `y`，连接使用 `fromNodeId`、`fromPort`、`toNodeId`、`toPort`。不要把旧式 `dialogueTree` 和对象式 `blueprint` 混用在同一新条目中。完成标准：文件只包含本次目标日程的必要改动，并保持 LF 换行。

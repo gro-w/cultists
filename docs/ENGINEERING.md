@@ -39,7 +39,7 @@ index.html
 | `ScheduleRunner` | 按流程节点执行蓝图、暂停等待 UI、记录 transcript |
 | `ItemScheduleRuntime` | 物品和其他非阻塞操作的日程运行时 |
 | `DialogueEffects` | 对话节点/选项显示时的共享副作用 |
-| `SaveManager` | v13 URL 存档、索引、队列实例、窗口和持久状态恢复 |
+| `SaveManager` | v15 URL 存档、索引、队列实例、窗口和持久状态恢复 |
 | `DataLoader` | 语言目录 JSON 加载、缓存和开发服务器读写桥接 |
 
 新增系统前先确定 owner、输入数据、输出事件、快照字段和恢复顺序；不要把状态放在 App 的局部变量中。
@@ -72,7 +72,7 @@ App 点击
 
 ## 4. 日程队列与实例
 
-四个运行时队列：
+三个运行时队列：
 
 - `workQueue`：工作日程和 HIS 对话。
 - `socialQueue`：Social 对话。
@@ -191,16 +191,17 @@ App 点击
 
 ### 7.1 数据文件与开发人员模式编辑器映射
 
-下面的清单按当前 `data/zh-hans/` 实际存在的 50 个 JSON 文件逐项列出。每个文件都有对应的专用入口；日程、物品等专用编辑器使用自己的表单和校验，不提供无上下文的通用 JSON 编辑器。
+下面的清单按当前 `data/zh-hans/` 实际存在的 51 个 JSON 文件逐项列出。每个文件都有对应的专用入口；日程、物品等专用编辑器使用自己的表单和校验，不提供无上下文的通用 JSON 编辑器。
 
 | 数据文件 | 专用编辑器/入口 | 说明 |
 | --- | --- | --- |
 | `work01a.json`、`work01b.json`、`work02a.json`、`work02b.json`、`work03a.json`、`work03b.json`、`work04a.json`、`work04b.json`、`work05a.json`、`work05b.json`、`work06a.json`、`work06b.json`、`work07a.json`、`work07b.json` | 日程编辑器 | 工作/患者日程及对象式蓝图 |
 | `social01a.json`、`social01b.json`、`social02a.json`、`social02b.json`、`social03a.json`、`social03b.json`、`social04a.json`、`social04b.json`、`social05a.json`、`social05b.json`、`social06a.json`、`social06b.json`、`social07a.json`、`social07b.json` | 日程编辑器 | 社交日程及对象式蓝图 |
-| `workpub.json`、`socialpub.json` | 日程编辑器 | 公共 Work/Social 日程 |
+| `workpub.json`、`socialpub.json`、`mainpub.json` | 日程编辑器 | 公共 Work/Social/Main 日程 |
 | `special_events.json` | 日程编辑器 | 特殊事件上下文 |
 | `endings.json` | 日程编辑器 | 结局上下文 |
 | `items.json` | 物品和法术编辑器 | 物品、调查、使用效果、书籍和法术 |
+| `cg.json` | CG 编辑器 | CG 图片资源和预览 |
 | `locations.json` | 位置编辑器 | 位置、背景图、子位置和热点 |
 | `bgm.json` | BGM 编辑器 | 曲目、默认规则、回退策略 |
 | `social_apps.json` | 宿舍电脑内容编辑器 | 吱乎、小绿书、企鹅群和 ChatGTP 每日内容 |
@@ -221,7 +222,7 @@ App 点击
 
 ## 8. 开发人员模式
 
-开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 的成熟编辑器（关键词、ChatGTP 问答、NPC 列表、全局变量定义、日程、BGM、位置、电脑内容）使用中性图标，其余 9 个专用数据编辑器使用蓝色图标表示尚未完全开发；调试器包含时间与读档（含成就调试器）、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
+开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 提供关键词、ChatGTP 问答、NPC、全局变量、日程、BGM、位置、CG、电脑内容以及其他专用数据编辑器；调试器包含时间与读档、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
 
 旧的“对话分支树”“患者分支树”“Work 事件队列”“Social 事件队列”已删除；不要恢复这些旧入口。对话/患者内容统一通过“日程编辑器”按源文件和 entry 编辑对象式蓝图。运行时 queue 仅用于执行与保存，不是编辑器的内容来源。
 
@@ -234,7 +235,7 @@ App 点击
 
 ## 9. 存档和版本
 
-`SaveManager` 当前格式为 v13。它保存游戏状态、TimeService、四条队列、关键词、背包、医疗、NPC 状态、好感度、场景物品、对话进度、结局锁定、全局变量、窗口布局、法术和动态日程插入。存档是 URL query 中的 base64url 文本；索引表由已加载数据建立。
+`SaveManager` 当前格式为 v15。它保存游戏状态、TimeService、工作/社交/主要三个队列、关键词、背包、医疗、NPC 状态、好感度、场景物品、对话进度、结局锁定、全局变量、窗口布局、法术、动态日程插入和 CG 状态。存档是 URL query 中的 base64url 文本；索引表由已加载数据建立。
 
 改变 payload、字段含义、编码或索引表时必须评估版本，并显式拒绝不支持版本；不能静默把旧数据当新格式。新增可恢复窗口要同时更新 `WINDOW_APP_IDS` 和 launcher 注册。恢复顺序要先加载 canonical data，再恢复状态和队列，最后刷新窗口。
 

@@ -15,6 +15,7 @@ import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
 import { checkSkill, OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { locationSystem } from "../core/LocationSystem.js";
+import { cgManager } from "../core/CGManager.js";
 
 const roommateImage = (npcId) => ({
   ajie: "data/assets/char_ajie_01.png",
@@ -44,6 +45,8 @@ export default class DormMode {
     this._transitionTimer = null;
     this._dormSanOff = null;
     this._npcsData = null;
+    this._cgOverlay = null;     // global #cg-overlay element
+    this._cgOff = [];           // EventBus unsub functions
     /** Map<appId, gameDay> — which day the player already browsed each app */
     this._viewedApps = new Map();
     this._build();
@@ -59,6 +62,15 @@ export default class DormMode {
     this._updateDormBg();
     if (this._dormSanOff) this._dormSanOff();
     this._dormSanOff = eventBus.on("game:sanity_changed", () => this._updateDormBg());
+    // Wire CG overlay (the global #cg-overlay element handles both dorm and location views)
+    this._cgOverlay = document.getElementById("cg-overlay");
+    this._cgOff.forEach((off) => off());
+    this._cgOff = [
+      eventBus.on("cg:show", ({ imageData }) => this._onCGShow(imageData)),
+      eventBus.on("cg:end",  ()              => this._onCGEnd()),
+    ];
+    // Restore CG state if game was saved mid-CG
+    if (cgManager.isActive) this._onCGShow(cgManager.getDef(cgManager.activeCgId)?.imageData || "");
     await this._renderScene();
     this._syncVisibility(false);
   }
@@ -85,6 +97,7 @@ export default class DormMode {
 
         <div class="dorm-scene-wrap">
           <img class="dorm-scene-bg" alt="" />
+          <img class="dorm-cg-bg hidden" alt="CG" />
           <div class="dorm-scene-item-layer"></div>
           <div class="dorm-portrait-layer hidden"></div>
         </div>
@@ -124,6 +137,7 @@ export default class DormMode {
     this.confirmTitle   = this.root.querySelector(".dorm-bed-confirm-title");
     this.confirmMessage = this.root.querySelector(".dorm-bed-confirm-message");
     this._bgEl          = this.root.querySelector(".dorm-scene-bg");
+    this._cgBgEl        = this.root.querySelector(".dorm-cg-bg");
     this._itemLayer     = this.root.querySelector(".dorm-scene-item-layer");
     this._npcStrip      = this.root.querySelector(".dorm-npc-strip");
     this._portraitLayer = this.root.querySelector(".dorm-portrait-layer");
@@ -904,6 +918,50 @@ export default class DormMode {
     this.root.classList.toggle("hidden", !showDorm);
     this.workShell.classList.toggle("work-mode-active", !showDorm);
     this._renderClock();
+  }
+
+  // ── CG overlay ──────────────────────────────────────────────────────────────
+
+  /**
+   * Show a CG background inside the dorm scene-wrap.
+   * - The `.dorm-cg-bg` image replaces the normal dorm background visually
+   *   (it sits between scene-bg and item-layer in the z-stack).
+   * - The item layer gets `pointer-events:none` + opacity 0.15 so items are
+   *   visually suppressed and not clickable.
+   * - The #cg-overlay element (fixed, full-screen, z-index 2050) is also shown
+   *   so LocationScene and any other surface get the same CG background.
+   */
+  _onCGShow(imageData) {
+    if (this._cgBgEl) {
+      this._cgBgEl.src = imageData || "";
+      this._cgBgEl.classList.toggle("hidden", !imageData);
+    }
+    // Suppress item layer interaction
+    if (this._itemLayer) {
+      this._itemLayer.classList.add("cg-active-layer");
+    }
+    // Show global overlay (covers LocationScene too)
+    if (this._cgOverlay) {
+      const img = this._cgOverlay.querySelector("img") || document.createElement("img");
+      img.alt = "CG";
+      img.className = "cg-overlay-img";
+      img.src = imageData || "";
+      if (!this._cgOverlay.contains(img)) this._cgOverlay.appendChild(img);
+      this._cgOverlay.classList.remove("hidden");
+    }
+  }
+
+  _onCGEnd() {
+    if (this._cgBgEl) {
+      this._cgBgEl.src = "";
+      this._cgBgEl.classList.add("hidden");
+    }
+    if (this._itemLayer) {
+      this._itemLayer.classList.remove("cg-active-layer");
+    }
+    if (this._cgOverlay) {
+      this._cgOverlay.classList.add("hidden");
+    }
   }
 
   _transition(showDorm) {

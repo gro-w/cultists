@@ -4,6 +4,7 @@ import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { eventBus } from "../core/EventBus.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
 import { gameState } from "../core/GameState.js";
+import { cgManager } from "../core/CGManager.js";
 
 /**
  * LocationScene — full-screen location overlay for non-dorm locations:
@@ -22,6 +23,9 @@ export default class LocationScene {
     this._container = container;
     this._locationId = null;
     this._offItems = null;
+    this._offPlacements = null;
+    this._offSan = null;
+    this._offCG = [];
     this._build();
   }
 
@@ -89,6 +93,19 @@ export default class LocationScene {
     // Swap background when sanity changes while scene is open
     if (this._offSan) this._offSan();
     this._offSan = eventBus.on("game:sanity_changed", () => this._applySanityBg());
+
+    // CG overlay — suppress item layer while a CG is active
+    this._offCG.forEach((off) => off());
+    this._offCG = [
+      eventBus.on("cg:show", () => this._itemLayer.classList.add("cg-active-layer")),
+      eventBus.on("cg:end",  () => this._itemLayer.classList.remove("cg-active-layer")),
+    ];
+    // Sync with current CG state (scene opened mid-CG)
+    if (cgManager.isActive) {
+      this._itemLayer.classList.add("cg-active-layer");
+    } else {
+      this._itemLayer.classList.remove("cg-active-layer");
+    }
   }
 
   hide() {
@@ -97,6 +114,9 @@ export default class LocationScene {
     if (this._offItems)      { this._offItems();      this._offItems      = null; }
     if (this._offPlacements) { this._offPlacements(); this._offPlacements = null; }
     if (this._offSan)        { this._offSan();        this._offSan        = null; }
+    this._offCG.forEach((off) => off());
+    this._offCG = [];
+    this._itemLayer.classList.remove("cg-active-layer");
   }
 
   // ── Item rendering ───────────────────────────────────────────────────────────

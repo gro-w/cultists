@@ -22,6 +22,7 @@ import "./core/ItemScheduleRuntime.js"; // side-effect: executes item-owned sche
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import { locationSystem } from "./core/LocationSystem.js";
+import { cgManager } from "./core/CGManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -134,6 +135,7 @@ function boot({ welcomeBack }) {
   windowManager.mount(windowLayer);
   audioManager.mount();
   bgmManager.mount();
+  cgManager.mount(); // subscribe to schedule:cg / schedule:end_cg events
 
   new Desktop(document.getElementById("desktop-icons"), APP_REGISTRY);
 
@@ -218,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     globalVariableManager.init(),
     bgmManager.load(),
     locationSystem.load(),
+    cgManager.load(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

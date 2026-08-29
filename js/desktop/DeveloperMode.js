@@ -477,8 +477,67 @@ export class DeveloperMode {
 
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
-    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td><input data-npc-favor type="number" min="0" max="100" value="${Number(npc.initialFavorability) || 0}"></td><td><input data-npc-san type="number" min="0" max="100" value="${Number(npc.initialSan) || 0}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。主角对话节点可通过 <code>onShow.favorabilityChange</code> 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
+    const toCard = (npc, index) => {
+      const portraits = (npc.portraits || []).map((p, pi) => `
+        <div class="dev-portrait-row" data-portrait-row="${index}-${pi}">
+          <span style="font-size:11px;color:#aaa">变体 ${pi + 1}</span>
+          <label style="font-size:11px">SAN≥ <input data-p-san-min type="number" min="0" max="100" value="${p.sanMin ?? ""}" placeholder="—" style="width:42px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">SAN≤ <input data-p-san-max type="number" min="0" max="100" value="${p.sanMax ?? ""}" placeholder="—" style="width:42px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">高度% <input data-p-height type="number" min="10" max="100" value="${p.height ?? 66}" style="width:42px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">X偏移 <input data-p-offset-x type="number" value="${p.offsetX ?? 0}" style="width:48px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          <label style="font-size:11px">Y偏移 <input data-p-offset-y type="number" value="${p.offsetY ?? 0}" style="width:48px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          ${p.imageData
+            ? `<img src="${esc(p.imageData)}" alt="立绘预览" style="height:60px;object-fit:contain;border:1px solid #555;vertical-align:middle;margin:0 4px">`
+            : `<span style="font-size:11px;color:#888">（未上传）</span>`}
+          <label style="font-size:11px;cursor:pointer;background:#3a3050;color:#e0d8f0;padding:2px 6px;border:2px outset #6a58a0">
+            📁 上传
+            <input type="file" accept="image/*" data-portrait-upload="${index}-${pi}" style="display:none">
+          </label>
+          <button type="button" class="win95-btn dev-btn" data-action="remove-portrait-${index}-${pi}" style="font-size:11px">✕</button>
+        </div>`).join("");
+      return `<div class="dev-ded-card" data-npc-row="${index}" style="margin-bottom:10px">
+        <div class="dev-ded-card-title">
+          <b>${esc(npc.name || "(未命名)")} <code style="font-size:11px">${esc(npc.id)}</code></b>
+          ${button("删除 NPC", `remove-npc-${index}`)}
+        </div>
+        <div class="dev-ie-row" style="flex-wrap:wrap;gap:6px;margin-bottom:6px">
+          <div class="dev-ie-field"><label>ID</label><input data-npc-id value="${esc(npc.id)}" style="width:110px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+          <div class="dev-ie-field"><label>名字</label><input data-npc-name value="${esc(npc.name)}" style="width:80px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+          <div class="dev-ie-field"><label>头像</label><input data-npc-avatar value="${esc(npc.avatar || "🙂")}" style="width:44px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px;text-align:center"></div>
+          <div class="dev-ie-field"><label>初始好感</label><input data-npc-favor type="number" min="0" max="100" value="${Number(npc.initialFavorability) || 0}" style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+          <div class="dev-ie-field"><label>初始 SAN</label><input data-npc-san type="number" min="0" max="100" value="${Number(npc.initialSan) || 0}" style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"></div>
+        </div>
+        <div style="margin-bottom:4px">
+          <strong style="font-size:12px">立绘变体</strong>
+          <span style="font-size:11px;color:#aaa">（点击上传图片；对话时自动根据 SAN 值选择匹配变体；点击立绘可关闭）</span>
+          <button type="button" class="win95-btn dev-btn" style="font-size:11px;margin-left:6px" data-action="add-portrait-${index}">＋ 添加变体</button>
+        </div>
+        ${portraits || '<p style="font-size:11px;color:#aaa;margin:0 0 4px">暂无立绘。点击「添加变体」上传。</p>'}
+      </div>`;
+    };
+    this.panel(`<section class="dev-section"><h3>NPC 列表</h3>
+      <p style="font-size:12px;color:#aaa">维护稳定 NPC ID、名字、头像、好感度、初始 SAN 和立绘。每个 NPC 可添加多张立绘变体，对话时按理智值自动选择。</p>
+      <div id="dev-npc-cards">${(doc.npcs || []).map(toCard).join("")}</div>
+      <div style="margin-top:8px">${button("新增 NPC", "add-npc")} ${button("保存到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div>
+    </section>`, "data");
+
+    // Bind file upload inputs
+    this.root.querySelectorAll("[data-portrait-upload]").forEach((input) => {
+      input.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const [npcIdx, portIdx] = input.dataset.portraitUpload.split("-").map(Number);
+          const d = this.docs.get("npcs.json");
+          if (!d?.npcs?.[npcIdx]?.portraits?.[portIdx]) return;
+          d.npcs[npcIdx].portraits[portIdx].imageData = reader.result;
+          this.docs.set("npcs.json", d);
+          this.showNpcs();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
   }
 
   showGlobalVariables() {
@@ -756,15 +815,53 @@ export class DeveloperMode {
     if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }
     const removeNpc = action.match(/^remove-npc-(\d+)$/);
     if (removeNpc) { const doc = await this.loadDoc("npcs.json"); doc.npcs.splice(Number(removeNpc[1]), 1); this.docs.set("npcs.json", doc); return this.showNpcs(); }
-    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂", initialFavorability: 50, initialSan: 80 }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
+    if (action === "add-npc") { const doc = await this.loadDoc("npcs.json"); doc.npcs = doc.npcs || []; doc.npcs.push({ id: `new_npc_${doc.npcs.length + 1}`, name: "新 NPC", avatar: "🙂", initialFavorability: 50, initialSan: 80, portraits: [] }); this.docs.set("npcs.json", doc); return this.showNpcs(); }
     if (action === "save-npcs" || action === "download-npcs" || action === "write-npcs") {
-      const doc = await this.loadDoc("npcs.json"); const rows = Array.from(this.root.querySelectorAll("[data-npc-row]")); const ids = rows.map((row) => row.querySelector("[data-npc-id]").value.trim());
+      const doc = await this.loadDoc("npcs.json");
+      const cards = Array.from(this.root.querySelectorAll("[data-npc-row]"));
+      const ids = cards.map((c) => c.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
-      doc.npcs = rows.map((row) => ({ id: row.querySelector("[data-npc-id]").value.trim(), name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂", initialFavorability: Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-favor]").value) || 0)), initialSan: Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-san]").value) || 0)) }));
+      doc.npcs = cards.map((card, ci) => {
+        const portraits = Array.from(card.querySelectorAll("[data-portrait-row]")).map((row) => {
+          const sanMin = row.querySelector("[data-p-san-min]").value;
+          const sanMax = row.querySelector("[data-p-san-max]").value;
+          const existing = doc.npcs?.[ci]?.portraits?.find?.((_, pi) => String(pi) === row.dataset.portraitRow?.split("-")[1]) ?? {};
+          return {
+            sanMin: sanMin === "" ? null : Number(sanMin),
+            sanMax: sanMax === "" ? null : Number(sanMax),
+            height: Number(row.querySelector("[data-p-height]").value) || 66,
+            offsetX: Number(row.querySelector("[data-p-offset-x]").value) || 0,
+            offsetY: Number(row.querySelector("[data-p-offset-y]").value) || 0,
+            imageData: existing.imageData || "",
+          };
+        });
+        return {
+          id: card.querySelector("[data-npc-id]").value.trim(),
+          name: card.querySelector("[data-npc-name]").value,
+          avatar: card.querySelector("[data-npc-avatar]").value || "🙂",
+          initialFavorability: Math.max(0, Math.min(100, Number(card.querySelector("[data-npc-favor]").value) || 0)),
+          initialSan: Math.max(0, Math.min(100, Number(card.querySelector("[data-npc-san]").value) || 0)),
+          portraits,
+        };
+      });
       this.docs.set("npcs.json", doc);
       if (action === "download-npcs") { downloadJson("npcs.json", doc); this.setStatus("npcs.json 已下载。"); return; }
       if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }
       this.setStatus("npcs.json 已保存到内存。"); return;
+    }
+    const addPortrait = action.match(/^add-portrait-(\d+)$/);
+    if (addPortrait) {
+      const doc = await this.loadDoc("npcs.json");
+      const npc = doc.npcs?.[Number(addPortrait[1])];
+      if (npc) { if (!npc.portraits) npc.portraits = []; npc.portraits.push({ sanMin: null, sanMax: null, height: 66, offsetX: 0, offsetY: 0, imageData: "" }); this.docs.set("npcs.json", doc); }
+      return this.showNpcs();
+    }
+    const removePortrait = action.match(/^remove-portrait-(\d+)-(\d+)$/);
+    if (removePortrait) {
+      const doc = await this.loadDoc("npcs.json");
+      doc.npcs?.[Number(removePortrait[1])]?.portraits?.splice(Number(removePortrait[2]), 1);
+      this.docs.set("npcs.json", doc);
+      return this.showNpcs();
     }
     if (action === "add-qa-entry") { this._syncQaPage(); if (!this.qaDraft) this.qaDraft = []; this.qaDraft.push({ keywords: [], answer: "", corruptedAnswer: "", corruptedSameAsNormal: true }); this.qaPage = Math.ceil(this.qaDraft.length / QA_PAGE_SIZE); return this.showChatgtp(); }
     if (action === "save-qa" || action === "download-qa" || action === "write-qa") {

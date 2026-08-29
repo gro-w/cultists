@@ -86,6 +86,7 @@ export default class DormMode {
         <div class="dorm-scene-wrap">
           <img class="dorm-scene-bg" alt="" />
           <div class="dorm-scene-item-layer"></div>
+          <div class="dorm-portrait-layer hidden"></div>
         </div>
         <div class="dorm-npc-strip"></div>
 
@@ -125,6 +126,7 @@ export default class DormMode {
     this._bgEl          = this.root.querySelector(".dorm-scene-bg");
     this._itemLayer     = this.root.querySelector(".dorm-scene-item-layer");
     this._npcStrip      = this.root.querySelector(".dorm-npc-strip");
+    this._portraitLayer = this.root.querySelector(".dorm-portrait-layer");
 
     this.confirmPanel.querySelector(".dorm-bed-confirm-cancel").addEventListener("click", () => {
       this.confirmPanel.classList.add("hidden");
@@ -785,7 +787,51 @@ export default class DormMode {
   }
 
   // ── NPC dialogue ────────────────────────────────────────────────────────────
+  /**
+   * Resolve the correct portrait image for an NPC at the current sanity level.
+   * npcs.json schema: npc.portraits = [{ sanMin, sanMax, imageData, offsetX, offsetY, height }]
+   * Falls back to null if no portrait matches or no portraits defined.
+   */
+  _resolvePortrait(npcId) {
+    const npc = this._npcsData?.npcs?.find?.((n) => n.id === npcId);
+    if (!npc?.portraits?.length) return null;
+    const san = gameState.sanity ?? 100;
+    const match = npc.portraits.find((p) => {
+      const okMin = p.sanMin == null || san >= p.sanMin;
+      const okMax = p.sanMax == null || san <= p.sanMax;
+      return okMin && okMax && p.imageData;
+    });
+    if (!match) return null;
+    return {
+      imageData: match.imageData,
+      offsetX: match.offsetX ?? npc.portraitOffsetX ?? 0,
+      offsetY: match.offsetY ?? npc.portraitOffsetY ?? 0,
+      height: match.height ?? npc.portraitHeight ?? 66, // % of scene height
+    };
+  }
+
+  _showPortrait(npcId) {
+    if (!this._portraitLayer) return;
+    const portrait = this._resolvePortrait(npcId);
+    if (!portrait) { this._hidePortrait(); return; }
+    this._portraitLayer.innerHTML = `<img
+      class="dorm-portrait-img"
+      src="${portrait.imageData}"
+      alt=""
+      style="height:${portrait.height}%;left:${portrait.offsetX}px;bottom:${portrait.offsetY}px"
+      draggable="false">`;
+    this._portraitLayer.classList.remove("hidden");
+    this._portraitLayer.onclick = () => this._hidePortrait();
+  }
+
+  _hidePortrait() {
+    if (!this._portraitLayer) return;
+    this._portraitLayer.classList.add("hidden");
+    this._portraitLayer.innerHTML = "";
+  }
+
   _showDialogue(actor, keywordDefs) {
+    this._showPortrait(actor.id ?? actor.npcId);
     this.interaction.innerHTML = `<h3>与 ${actor.name} 交互</h3>`;
     if (npcStateManager.isOffline(actor.id)) {
       this.interaction.innerHTML += "<p>（对方已经离线，无法交互。）</p>";

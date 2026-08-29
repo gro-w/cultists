@@ -29,8 +29,8 @@
           "trust_bless": { "id": "trust_bless", "type": "text", "inputs": { "speaker": "阿杰", "text": "你在向我祷告吗？行，我保佑你赢。" }, "outputs": {}, "x": 3220, "y": 180 },
           "trust_lose": { "id": "trust_lose", "type": "text", "inputs": { "speaker": "player", "text": "输了呢？" }, "outputs": {}, "x": 3500, "y": 180 },
           "trust_drink": { "id": "trust_drink", "type": "text", "inputs": { "speaker": "阿杰", "text": "请你喝8喜。" }, "outputs": {}, "x": 3780, "y": 180 },
-          "first_favor_plus": { "id": "first_favor_plus", "type": "favorabilityOperation", "inputs": { "npcId": "ajie", "delta": 5 }, "outputs": {}, "x": 2660, "y": 360 },
-          "first_favor_minus": { "id": "first_favor_minus", "type": "favorabilityOperation", "inputs": { "npcId": "ajie", "delta": -5 }, "outputs": {}, "x": 2660, "y": 700 },
+          "first_favor_plus": { "id": "first_favor_plus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": 5 }, "outputs": {}, "x": 2660, "y": 360 },
+          "first_favor_minus": { "id": "first_favor_minus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": -5 }, "outputs": {}, "x": 2660, "y": 700 },
           "pay_reply": { "id": "pay_reply", "type": "text", "inputs": { "speaker": "阿杰", "text": "你充吧，我不想充。" }, "outputs": {}, "x": 2660, "y": 540 },
           "pay_reason": { "id": "pay_reason", "type": "text", "inputs": { "speaker": "player", "text": "到处都是rmb玩家，我攻略也没背过，还是充点好了。" }, "outputs": {}, "x": 2940, "y": 540 },
           "pay_church": { "id": "pay_church", "type": "text", "inputs": { "speaker": "阿杰", "text": "所有人都这么想，充点钱就容易了，段位高了，心愿达成了——这么说手游跟教堂有什么区别？都是门口放个箱子收钱。" }, "outputs": {}, "x": 3220, "y": 540 },
@@ -46,8 +46,8 @@
           "excited_endline": { "id": "excited_endline", "type": "text", "inputs": { "speaker": "player", "text": "……确实。" }, "outputs": {}, "x": 5740, "y": 180 },
           "regret_reply": { "id": "regret_reply", "type": "text", "inputs": { "speaker": "阿杰", "text": "没办法，有人当主力，有人就得当炮灰。刚才对面那个辅助，为保射手死了那么多次，遇上我还是得输。" }, "outputs": {}, "x": 5460, "y": 540 },
           "regret_endline": { "id": "regret_endline", "type": "text", "inputs": { "speaker": "player", "text": "……确实。" }, "outputs": {}, "x": 5740, "y": 540 },
-          "second_favor_plus": { "id": "second_favor_plus", "type": "favorabilityOperation", "inputs": { "npcId": "ajie", "delta": 5 }, "outputs": {}, "x": 5460, "y": 360 },
-          "second_favor_minus": { "id": "second_favor_minus", "type": "favorabilityOperation", "inputs": { "npcId": "ajie", "delta": -5 }, "outputs": {}, "x": 5460, "y": 700 },
+          "second_favor_plus": { "id": "second_favor_plus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": 5 }, "outputs": {}, "x": 5460, "y": 360 },
+          "second_favor_minus": { "id": "second_favor_minus", "type": "setGlobal", "inputs": { "variableId": 40, "delta": -5 }, "outputs": {}, "x": 5460, "y": 700 },
           "end": { "id": "end", "type": "scheduleEnd", "inputs": {}, "outputs": {}, "x": 6020, "y": 360 }
         },
         "connections": [

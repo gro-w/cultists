@@ -1,5 +1,5 @@
 import { getScheduleNodeDefinition } from "./ScheduleNodeRegistry.js";
-import { getScheduleValueContext, getStatValue } from "./ScheduleValueAccess.js";
+import { getScheduleValueContext } from "./ScheduleValueAccess.js";
 
 function valueOf(input, evaluate) {
   if (input && typeof input === "object" && input.nodeId) return evaluate(input.nodeId, input.port || "value");
@@ -35,7 +35,6 @@ export class ScheduleValueEvaluator {
       case "arithmetic": result = this._arithmetic(read("operator", "+"), read("left", 0), read("right", 0)); break;
       case "getGlobal": result = this.context.globalVariableManager.get(read("variableId")); break;
       case "getInventory": result = this.context.itemManager.count(read("itemId")); break;
-      case "getProtagonistStat": result = getStatValue(read("statId")); break;
       case "getScheduleStatus": result = this.context.scheduleStatus ? this.context.scheduleStatus(read("instanceId")) : 0; break;
       case "getScheduleInstanceCount": result = this.context.scheduleInstanceCount ? this.context.scheduleInstanceCount(read("scheduleId")) : 0; break;
       case "getGameTime": result = this.context.gameState.day * 1440 + this.context.gameState.clockMinutes; break;

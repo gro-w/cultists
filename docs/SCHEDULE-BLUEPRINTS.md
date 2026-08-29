@@ -192,13 +192,11 @@
 | `showImage` | 流程/显示 | 发出显示图片事件 |
 | `segmentBranch` | 流程 | 按数值区间选择分支 |
 | `inventoryOperation` | 流程/状态 | 增减背包物品 |
-| `statOperation` | 流程/状态 | 操作主角或其他可写数值 |
-| `favorabilityOperation` | 流程/状态 | 操作指定 NPC 的好感度 |
+| `statOperation` | 流程/状态 | 操作仍未迁移的主角资源数值（如体力/饱腹度） |
 | `spellOperation` | 流程/状态 | 调整已学习法术状态 |
 | `arithmetic` | 数值 | 执行运算并输出值 |
 | `getGlobal` | 数值 | 读取全局变量 |
 | `getInventory` | 数值 | 读取背包数量 |
-| `getProtagonistStat` | 数值 | 读取主角/游戏数值 |
 | `getScheduleStatus` | 数值 | 读取日程实例状态 |
 | `getScheduleInstanceCount` | 数值 | 读取日程实例数量 |
 | `getGameTime` | 数值 | 读取当前绝对游戏时间 |
@@ -255,7 +253,7 @@
 - 作用：显示玩家选项并进入所选分支；
 - 语义：选项可有 `label`、`next`、`condition`。条件不满足的选项不显示，但仍
   保留其原始分支索引；选中后解析对应的 `optionN` 流程连接。分支副作用必须
-  连接专用操作节点（例如 `favorabilityOperation`），不得使用旧的 `effects` 字段。
+  连接专用操作节点（例如 `setGlobal`），不得使用旧的 `effects` 字段。
 
 ```json
 {
@@ -269,7 +267,7 @@
 }
 ```
 
-需要改变好感度时，`favorability_up` 应是一个 `favorabilityOperation` 节点，
+需要改变好感度时，`favorability_up` 应是一个 `setGlobal` 节点，
 通过流程连接位于选项分支之后。
 
 ### 4.5 `branch`：逻辑分支
@@ -304,7 +302,7 @@
   - 其他情况：`failure`。
 
 技能检定不再是独立节点。需要按技能值检定时，使用
-`getProtagonistStat` 读取技能数值，并将其 `value` 输出连接到本节点的
+`getGlobal` 读取技能数值，并将其 `value` 输出连接到本节点的
 `n` 输入；这样技能检定和其他任意数值检定共用完全相同的骰子规则。
 
 ### 4.8 `consumeTime`：消耗时间
@@ -320,8 +318,8 @@
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
-- 值输入：`variableId`、`value`；
-- 作用：调用 `GlobalVariableManager.set()` 设置全局变量；
+- 值输入：`variableId`、`value` 或 `delta`；
+- 作用：调用 `GlobalVariableManager.set()` 设置全局变量，或调用 `modify()` 应用数字增量；
 - 语义：值的类型和变量 ID 必须符合全局变量定义。
 
 ### 4.9 `insertSchedule`：插入日程
@@ -399,7 +397,7 @@ segment2: 0 < value <= 30
 - 作用：通过统一数值访问层修改一个可写数值；
 - 常见 `statId`：`energy`、`mental`、`physical`、`satiety`、
   `recoverableMentalLoss`；
-- NPC 好感度应使用专用的 `favorabilityOperation` 节点，不要通过 `statId` 拼接访问；
+- NPC 好感度应使用专用的 `setGlobal` 节点，不要通过 `statId` 拼接访问；
 - 只读/读取专用：`timeService:phaseMinutes` 不能被修改；
 - 语义：调用 `modifyStatValue()`，非法数值或未知 ID 会抛出错误。
 
@@ -414,21 +412,23 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 4.15 `favorabilityOperation`：操作好感度
+### 4.15 `setGlobal`：操作公共变量
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
-- 值输入：`npcId`（字符串）、`delta`（数字）；
-- 作用：通过 `FavorabilityManager` 修改指定 NPC 的好感度；
-- 语义：好感度变化会按管理器规则限制范围，并发布 `favorability:changed` 事件。
+- 值输入：`variableId`、`value` 或 `delta`；
+- 作用：通过 `GlobalVariableManager` 设置公共变量，或按 `delta` 修改数字变量；
+- 语义：变量 ID 和输入类型必须符合公共变量定义。系统预留变量使用固定 ID，
+  包括主角 SAN `1`、金钱 `2`、ChatGTP SAN `5`、技能点 `20-39`、
+  NPC 好感度 `40-59` 和 NPC SAN `60-79`。
 
-例如，选择分支的 `option0` 可以连接到此节点，再由此节点连接后续文本：
+例如，阿杰好感度变化 5 点使用 `variableId=40`：
 
 ```json
 {
   "id": "favorabilityUp",
-  "type": "favorabilityOperation",
-  "inputs": { "npcId": "ajie", "delta": 5 },
+  "type": "setGlobal",
+  "inputs": { "variableId": 40, "delta": 5 },
   "outputs": {}
 }
 ```
@@ -475,14 +475,13 @@ segment2: 0 < value <= 30
 - 值输入：`itemId`（字符串）；
 - 作用：读取玩家持有的物品数量。
 
-### 5.4 `getProtagonistStat`：主角数值取值
+### 5.4 `getGlobal`：公共变量取值
 
 - 输出：`value`（任意类型）；
-- 值输入：`statId`；
-- 作用：读取主角或共享数值；
--  支持的读取 ID：`energy`、`mental`、`physical`、`satiety`、
-  `recoverableMentalLoss`、`npcSan:<npcId>`、`favorability:<npcId>`、
-  `timeService:phaseMinutes`、`gameTime`，以及 `skills.json` 中定义的技能 ID。
+- 值输入：`variableId`；
+- 作用：读取 `GlobalVariableManager` 中的变量值；
+- 系统预留变量 ID：主角 SAN `1`、金钱 `2`、ChatGTP SAN `5`、技能点 `20-39`、
+  NPC 好感度 `40-59`、NPC SAN `60-79`。
 
 读取节点与分段节点的标准连接如下：
 
@@ -544,8 +543,8 @@ flowStart
 
 ```text
 flowStart
-  → getProtagonistStat
-  → segmentBranch / diceCheck（技能检定先用 getProtagonistStat 读取技能值）
+  → getGlobal（variableId=20+n，读取技能点）
+  → segmentBranch / diceCheck（技能检定使用 getGlobal 的 value）
   → showImage（可选）
   → text（调查文本，可选 inspection 元数据）
   → statOperation / inventoryOperation / setGlobal（可选）
@@ -597,7 +596,7 @@ segment2 ─┘
 
 常见错误包括：
 
-- 把 `getProtagonistStat.value` 写在输入对象里，却没有正式连接到目标输入；
+- 调查蓝图的 `getGlobal.value` 必须通过正式 value 连接到目标输入；
 - 把流程输出连接到数值输入，或把数值输出连接到流程输入；
 - 修改 `branchCount` 后仍保留越界的 `optionN`、`segmentN` 或边界连接；
 - 只连接到一个分支出口，导致其他流程节点不可达；

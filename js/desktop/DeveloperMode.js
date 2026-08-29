@@ -12,7 +12,7 @@ import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { favorabilityManager } from "../core/FavorabilityManager.js";
 import { dialogueProgress } from "../core/DialogueProgress.js";
-import { globalVariableManager } from "../core/GlobalVariableManager.js";
+import { globalVariableManager, RESERVED_GLOBAL_VARIABLE_MAX_ID } from "../core/GlobalVariableManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 import { endingManager } from "../core/EndingManager.js";
@@ -338,7 +338,7 @@ export class DeveloperMode {
   showNpcState() {
     this._activeRuntimeMethod = "showNpcState";
     const actors = [{ id: "chatgtp", name: "ChatGTP", favorability: null }, ...npcStateManager.npcs.map((npc) => ({ id: npc.id, name: npc.name, favorability: favorabilityManager.get(npc.id) }))];
-    const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="100" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="100" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
+    const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="256" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="256" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
     const hisProgress = dialogueProgress.get("his");
     const socialProgress = dialogueProgress.get("social");
     const chatgtpProgress = dialogueProgress.get("chatgtp");
@@ -386,7 +386,11 @@ export class DeveloperMode {
   showWorld() {
     this._activeRuntimeMethod = "showWorld";
     const placements = itemPlacementManager.all().map((placement) => `<tr><td>${esc(placement.id)}</td><td>${esc(placement.itemId)}</td><td>${itemPlacementManager.isPlaced(placement.id) ? "已放置" : "已取走"}</td><td>${itemPlacementManager.isVisible(placement.id) ? "可见" : "不可见"}</td><td>${button(itemPlacementManager.isPlaced(placement.id) ? "取走" : "放回", `toggle-placement-${placement.id}`)}</td></tr>`).join("");
-    const variables = globalVariableManager.all().map((variable) => `<tr><td>${variable.id}</td><td>${esc(variable.name)}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"></td></tr>`).join("");
+    const variables = globalVariableManager.all().map((variable) => {
+      const reserved = globalVariableManager.isReserved(variable.id);
+      const disabled = reserved ? " disabled" : "";
+      return `<tr><td>${variable.id}</td><td>${esc(variable.name)}</td><td><input data-runtime-gv="${variable.id}" data-runtime-gv-type="${variable.type}" value="${esc(String(variable.value))}"${disabled}></td></tr>`;
+    }).join("");
     this.panel(`<section class="dev-section"><h3>世界与场景</h3><p>场景物品和全局变量均通过各自状态所有者 API 修改。</p><table class="dev-table"><thead><tr><th>摆放 ID</th><th>物品</th><th>位置状态</th><th>当前可见</th><th>操作</th></tr></thead><tbody>${placements || "<tr><td colspan=5>暂无摆放</td></tr>"}</tbody></table></section><section class="dev-section"><h3>全局变量当前值</h3><table class="dev-table"><thead><tr><th>ID</th><th>名称</th><th>值</th></tr></thead><tbody>${variables || "<tr><td colspan=3>暂无变量</td></tr>"}</tbody></table><div>${button("应用全局变量", "apply-runtime-variables")}</div></section>`);
   }
 
@@ -459,14 +463,19 @@ export class DeveloperMode {
 
   async showNpcs() {
     const doc = await this.loadDoc("npcs.json");
-    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td><input data-npc-favor type="number" min="0" max="100" value="${Number(npc.initialFavorability) || 0}"></td><td><input data-npc-san type="number" min="0" max="100" value="${Number(npc.initialSan) || 0}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。日程蓝图使用“操作好感度”节点改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
+    const rows = (doc.npcs || []).map((npc, index) => `<tr data-npc-row="${index}"><td><input data-npc-id value="${esc(npc.id)}"></td><td><input data-npc-name value="${esc(npc.name)}"></td><td><input data-npc-avatar value="${esc(npc.avatar || "🙂")}"></td><td><input data-npc-favor type="number" min="0" max="256" value="${Number(npc.initialFavorability) || 0}"></td><td><input data-npc-san type="number" min="0" max="256" value="${Number(npc.initialSan) || 0}"></td><td>${button("删除", `remove-npc-${index}`)}</td></tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>NPC 列表</h3><p>维护特殊事件使用的稳定 NPC ID、名字、头像、初始好感度和初始 SAN。日程蓝图使用“操作公共变量”节点，通过固定公共变量 ID 改变好感度。</p><table class="dev-table"><thead><tr><th>ID</th><th>名字</th><th>头像</th><th>初始好感度</th><th>初始 SAN</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增 NPC", "add-npc")} ${button("保存 NPC 到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div></section>`, "data");
   }
 
   showGlobalVariables() {
     const valueText = (variable, value) => variable.type === "string" ? value : String(value);
-    const rows = globalVariableManager.all().map((variable, index) => `<tr data-global-variable-row="${index}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"></td><td><input data-gv-name value="${esc(variable.name)}"></td><td><select data-gv-type><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"></td><td>${button("删除", `remove-global-variable-${index}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
+    const rows = globalVariableManager.all().map((variable, index) => {
+      const reserved = globalVariableManager.isReserved(variable.id);
+      const lock = reserved ? " disabled" : "";
+      const action = reserved ? "系统预留" : button("删除", `remove-global-variable-${index}`);
+      return `<tr data-global-variable-row="${index}" data-global-variable-reserved="${reserved}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"${lock}></td><td><input data-gv-name value="${esc(variable.name)}"${lock}></td><td><select data-gv-type${lock}><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"${lock}></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"${lock}></td><td>${action}</td></tr>`;
+    }).join("");
+    this.panel(`<section class="dev-section"><h3>全局变量编辑器</h3><p>全局变量由 ID、名称和类型定义。ID 0-99 为系统预留变量，不可删除或修改；引擎使用这些固定 ID 读写技能点、好感度、SAN 和金钱。对话节点/选项可使用 <code>condition: { id, op, value }</code>，节点副作用可使用 <code>onShow.globalVariables: [{ id, value }]。</code> 修改只存在于当前页面；请下载 JSON 保存到项目。</p><table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无全局变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
   }
 
   _readGlobalVariableRows() {
@@ -545,7 +554,7 @@ export class DeveloperMode {
       return this.showChatgtp();
     }
     if (action === "add-global-variable") {
-      const nextId = globalVariableManager.all().reduce((max, variable) => Math.max(max, variable.id), -1) + 1;
+      const nextId = Math.max(RESERVED_GLOBAL_VARIABLE_MAX_ID + 1, globalVariableManager.all().reduce((max, variable) => Math.max(max, variable.id), -1) + 1);
       const doc = await this.loadDoc("global_variables.json");
       const variables = Array.isArray(doc) ? doc : Array.isArray(doc.variables) ? doc.variables : [];
       variables.push({ id: nextId, name: `变量${nextId}`, type: "bool", default: false });
@@ -720,10 +729,10 @@ export class DeveloperMode {
       const offlineThreshold = Number(npcStateManager.config?.offlineThreshold) || 20;
       this.root.querySelectorAll("[data-npc-state-row]").forEach((row) => {
         const actorId = row.dataset.npcStateRow;
-        const san = Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-san]")?.value) || 0));
+        const san = Math.max(0, Math.min(256, Number(row.querySelector("[data-npc-san]")?.value) || 0));
         npcStateManager.setSan(actorId, san, { offline: forceOffline && san <= offlineThreshold });
         const favorInput = row.querySelector("[data-npc-favor]");
-        if (favorInput) favorabilityManager.modify(actorId, Math.max(0, Math.min(100, Number(favorInput.value) || 0)) - favorabilityManager.get(actorId));
+        if (favorInput) favorabilityManager.modify(actorId, Math.max(0, Math.min(256, Number(favorInput.value) || 0)) - favorabilityManager.get(actorId));
       });
       this.setStatus("NPC与对话状态已应用。");
       return this.showNpcState();
@@ -745,7 +754,7 @@ export class DeveloperMode {
     if (action === "save-npcs" || action === "download-npcs" || action === "write-npcs") {
       const doc = await this.loadDoc("npcs.json"); const rows = Array.from(this.root.querySelectorAll("[data-npc-row]")); const ids = rows.map((row) => row.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
-      doc.npcs = rows.map((row) => ({ id: row.querySelector("[data-npc-id]").value.trim(), name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂", initialFavorability: Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-favor]").value) || 0)), initialSan: Math.max(0, Math.min(100, Number(row.querySelector("[data-npc-san]").value) || 0)) }));
+      doc.npcs = rows.map((row) => ({ id: row.querySelector("[data-npc-id]").value.trim(), name: row.querySelector("[data-npc-name]").value, avatar: row.querySelector("[data-npc-avatar]").value || "🙂", initialFavorability: Math.max(0, Math.min(256, Number(row.querySelector("[data-npc-favor]").value) || 0)), initialSan: Math.max(0, Math.min(256, Number(row.querySelector("[data-npc-san]").value) || 0)) }));
       this.docs.set("npcs.json", doc);
       if (action === "download-npcs") { downloadJson("npcs.json", doc); this.setStatus("npcs.json 已下载。"); return; }
       if (action === "write-npcs") { await this.writeToDisk("npcs.json", doc); return; }

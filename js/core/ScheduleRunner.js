@@ -9,7 +9,6 @@ import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
 import { keywordManager } from "./KeywordManager.js";
-import { favorabilityManager } from "./FavorabilityManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -143,7 +142,13 @@ export class ScheduleRunner {
         return { next: nextFlow(this.blueprint, node, outcome) };
       }
       case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
-      case "setGlobal": globalVariableManager.set(get("variableId"), get("value")); return {};
+      case "setGlobal": {
+        const id = get("variableId");
+        const delta = get("delta", undefined);
+        if (delta !== undefined) globalVariableManager.modify(id, delta);
+        else globalVariableManager.set(id, get("value"));
+        return {};
+      }
       case "insertSchedule": {
         const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"));
         if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
@@ -180,13 +185,6 @@ export class ScheduleRunner {
       case "statOperation": {
         modifyStatValue(get("statId", ""), get("delta", 0));
         if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
-        return {};
-      }
-      case "favorabilityOperation": {
-        const npcId = String(get("npcId", ""));
-        const delta = Number(get("delta", 0));
-        if (!npcId || !Number.isFinite(delta)) throw new Error("Invalid favorability operation");
-        favorabilityManager.modify(npcId, delta);
         return {};
       }
       case "spellOperation": {

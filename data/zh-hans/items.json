@@ -241,19 +241,19 @@
             },
             "criticalFailure:effect": {
               "id": "criticalFailure:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": -3
               },
               "outputs": {}
             },
             "check:skill": {
               "id": "check:skill",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "observation"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 20
+                     },
               "outputs": {}
             }
           },
@@ -693,10 +693,10 @@
             },
             "check:skill": {
               "id": "check:skill",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "medicine"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 21
+                     },
               "outputs": {}
             }
           },
@@ -929,10 +929,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:image": {
@@ -998,9 +998,9 @@
             },
             "band2:effect": {
               "id": "band2:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": -5
               },
               "outputs": {}
@@ -1027,9 +1027,9 @@
             },
             "band3:effect": {
               "id": "band3:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": -5
               },
               "outputs": {}
@@ -1055,9 +1055,9 @@
             },
             "band4:effect": {
               "id": "band4:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": -5
               },
               "outputs": {}
@@ -1083,9 +1083,9 @@
             },
             "band5:effect": {
               "id": "band5:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": -5
               },
               "outputs": {}
@@ -1366,10 +1366,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:image": {
@@ -1735,10 +1735,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -1965,10 +1965,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -2206,10 +2206,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -2469,10 +2469,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -2696,10 +2696,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -2926,10 +2926,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -3170,10 +3170,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -3451,10 +3451,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -3714,10 +3714,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -3941,10 +3941,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -4170,10 +4170,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -4187,9 +4187,9 @@
             },
             "band0:effect": {
               "id": "band0:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": 5
               },
               "outputs": {},
@@ -4217,9 +4217,9 @@
             },
             "band1:effect": {
               "id": "band1:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": 5
               },
               "outputs": {},
@@ -4239,9 +4239,9 @@
             },
             "band2:effect": {
               "id": "band2:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": 5
               },
               "outputs": {},
@@ -4261,9 +4261,9 @@
             },
             "band3:effect": {
               "id": "band3:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": 5
               },
               "outputs": {},
@@ -4283,9 +4283,9 @@
             },
             "band4:effect": {
               "id": "band4:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": 5
               },
               "outputs": {},
@@ -4305,9 +4305,9 @@
             },
             "band5:effect": {
               "id": "band5:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": 5
               },
               "outputs": {},
@@ -4327,9 +4327,9 @@
             },
             "band6:effect": {
               "id": "band6:effect",
-              "type": "statOperation",
+              "type": "setGlobal",
               "inputs": {
-                "statId": "mental",
+                "variableId": 1,
                 "delta": 5
               },
               "outputs": {},
@@ -4533,10 +4533,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -4759,10 +4759,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -4986,10 +4986,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -5204,10 +5204,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -5426,10 +5426,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -5652,10 +5652,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -5901,10 +5901,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {
@@ -6116,10 +6116,10 @@
             },
             "mental": {
               "id": "mental",
-              "type": "getProtagonistStat",
-              "inputs": {
-                "statId": "mental"
-              },
+              "type": "getGlobal",
+                     "inputs": {
+                       "variableId": 1
+                     },
               "outputs": {}
             },
             "band0:result": {

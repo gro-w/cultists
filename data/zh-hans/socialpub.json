@@ -534,12 +534,6 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "game_start",
             "fromPort": "flowOut",
             "toNodeId": "line_0",
@@ -1268,12 +1262,6 @@
             "fromNodeId": "study_time",
             "fromPort": "flowOut",
             "toNodeId": "study_san",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
             "toPort": "flowIn"
           },
           {
@@ -2078,12 +2066,6 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "game_start",
             "fromPort": "flowOut",
             "toNodeId": "line_0",
@@ -2810,12 +2792,6 @@
             "fromNodeId": "study_time",
             "fromPort": "flowOut",
             "toNodeId": "study_san",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
             "toPort": "flowIn"
           },
           {

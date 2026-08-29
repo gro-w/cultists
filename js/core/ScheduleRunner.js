@@ -278,7 +278,10 @@ export class ScheduleRunner {
         if (option.effects) applyDialogueOnShow({ onShow: option.effects }, this.definition.npcId || this.definition.actorId || this.definition.id);
         this.appendLine("player", "我", button.textContent);
         this.optionsEl.innerHTML = "";
-        const next = option.next || option.target || nextFlow(this.blueprint, node, `option${index}`);
+        // Typed blueprint connections are authoritative. Legacy option.next
+        // values may refer to pre-migration node IDs that no longer exist.
+        const next = nextFlow(this.blueprint, node, `option${index}`)
+          || option.next || option.target;
         this.instance.executedNodeIds.push(node.id);
         this.instance.currentNodeId = next || null;
         this.onCheckpoint(this.instance);

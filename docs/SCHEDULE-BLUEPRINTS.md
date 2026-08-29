@@ -204,22 +204,22 @@
 | `getScheduleStatus` | 数值 | 读取日程实例状态 |
 | `getScheduleInstanceCount` | 数值 | 读取日程实例数量 |
 | `getGameTime` | 数值 | 读取当前游戏绝对分钟 |
-| `returnValue` | 数值 | 先决条件蓝图唯一返回值；输入为 `true` 才允许 Social 条目插入 |
+| `prerequisite` | 数值 | 可选的唯一先决条件节点；输入为 `true` 才允许 Social 条目插入 |
 
 ### 4.12 Social 插入先决条件
 
-Social 日期日程表条目可以使用 `insertPrerequisite`。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。先决条件蓝图不得包含流程节点或流程引脚，只能使用数值输入/输出节点，并且必须有且仅有一个 `returnValue` 节点。该节点的 `condition` 输入为严格 `true` 时才插入；`false`、结构校验失败和运行时错误都会明确跳过。
+Social 日期日程表条目所在的完整蓝图可选添加一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点不得包含流程引脚，只能接收数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
 
 例如，读取“昨天是否与阿杰对话”的公共变量：
 
 ```json
 {
-  "insertPrerequisite": {
+  "blueprint": {
     "nodes": {
       "read_yesterday": { "id": "read_yesterday", "type": "getGlobal", "inputs": { "variableId": 100 } },
-      "return": { "id": "return", "type": "returnValue", "inputs": {} }
+      "prerequisite": { "id": "prerequisite", "type": "prerequisite", "inputs": {} }
     },
-    "connections": [{ "fromNodeId": "read_yesterday", "fromPort": "value", "toNodeId": "return", "toPort": "condition" }]
+    "connections": [{ "fromNodeId": "read_yesterday", "fromPort": "value", "toNodeId": "prerequisite", "toPort": "condition" }]
   }
 }
 ```

@@ -6,7 +6,7 @@ import { itemManager } from "../core/ItemManager.js";
 import { skillManager } from "../core/SkillManager.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition, getScheduleNodePort } from "../core/ScheduleNodeRegistry.js";
-import { validateBlueprint, validatePrerequisiteBlueprint, createEmptyPrerequisiteBlueprint } from "../core/ScheduleBlueprint.js";
+import { validateBlueprint, embedLegacyPrerequisite } from "../core/ScheduleBlueprint.js";
 import { windowManager } from "../core/WindowManager.js";
 
 /**
@@ -92,7 +92,10 @@ export class DevDialogueEditorTab {
     if (type==='schedule') {
       const schedule = this.project.schedules?.[id];
       const entry = schedule?.entries?.[this.currentCtx.entryIndex];
-      return this._prerequisiteScope ? entry?.insertPrerequisite || null : entry?.dialogueTree || null;
+      if (this._prerequisiteScope) return entry?.insertPrerequisite || null;
+      const blueprint = embedLegacyPrerequisite(entry?.blueprint || entry?.dialogueTree || null, entry?.insertPrerequisite);
+      if (entry && blueprint) { entry.blueprint = blueprint; delete entry.insertPrerequisite; }
+      return blueprint;
     }
     if (type==='event')  return this.project.events[id];
     if (type==='ending') return this.project.endings[id];
@@ -492,9 +495,8 @@ export class DevDialogueEditorTab {
    const priorityField = this.currentCtx.type === 'ending'
      ? `<label>结局优先级<input data-de-ending-priority type="number" step="1" value="${Number.isFinite(Number(entry.priority)) ? Number(entry.priority) : 0}"></label>`
      : '';
-   const prerequisite = this.currentCtx.type === 'schedule' && this.currentCtx.id.startsWith('social')
-     ? `<button type="button" class="win95-btn dev-btn" onclick="_de._openPrerequisiteEditor()">🧩 编辑插入先决条件</button><div class="dev-de-input-help">到达这个 Social 日期槽位时才计算；返回值为 true 才会创建实例加入社交队列。</div>` : '';
-   el.innerHTML = `<div class="dev-de-context-settings"><strong>当前日程属性</strong><label>日程 ID<input data-de-schedule-id value="${this._e(entry.id || '')}"></label><label>显示名称<input data-de-schedule-display-name value="${this._e(displayName)}"></label>${priorityField}${prerequisite}<div class="dev-de-input-help">这里只修改当前日程条目的 ID 和显示名称${this.currentCtx.type === 'ending' ? '，以及结局优先级（数值越大越优先；同优先级先触发者胜出）' : ''}，不修改日程表文件名。</div></div>`;
+   const prerequisiteHelp = this.currentCtx.type === 'schedule' && this.currentCtx.id.startsWith('social') ? '；先决条件请在当前蓝图中最多添加一个“先决条件”节点' : '';
+   el.innerHTML = `<div class="dev-de-context-settings"><strong>当前日程属性</strong><label>日程 ID<input data-de-schedule-id value="${this._e(entry.id || '')}"></label><label>显示名称<input data-de-schedule-display-name value="${this._e(displayName)}"></label>${priorityField}<div class="dev-de-input-help">这里只修改当前日程条目的 ID 和显示名称${this.currentCtx.type === 'ending' ? '，以及结局优先级（数值越大越优先；同优先级先触发者胜出）' : ''}${prerequisiteHelp}，不修改日程表文件名。</div></div>`;
    el.querySelector('[data-de-schedule-id]')?.addEventListener('change', event => this._saveScheduleMeta('id', event.target.value));
    el.querySelector('[data-de-schedule-display-name]')?.addEventListener('input', event => this._saveScheduleMeta('displayName', event.target.value));
    el.querySelector('[data-de-ending-priority]')?.addEventListener('change', event => this._saveScheduleMeta('priority', event.target.value));
@@ -1196,6 +1198,7 @@ export class DevDialogueEditorTab {
     const data = this._ctxData(); if (!data) { this._st('请先从左侧选择天数或事件'); return; }
     const nodeType = type || this._el('de-new-node-type-1')?.value || 'text';
     if (!nodeType || !getScheduleNodeDefinition(nodeType)) { this._st('已取消或节点种类无效'); return; }
+    if (!this._prerequisiteScope && nodeType === 'prerequisite' && Object.values(data.nodes || {}).some(node => node.type === 'prerequisite')) { this._st('当前蓝图最多只能有一个先决条件节点'); return; }
     if (this._prerequisiteScope && !['arithmetic', 'getGlobal', 'getInventory', 'getScheduleStatus', 'getScheduleInstanceCount', 'getGameTime', 'returnValue'].includes(nodeType)) { this._st('先决条件蓝图只能添加数值节点或一个返回值节点'); return; }
     if (this._prerequisiteScope && nodeType === 'returnValue' && Object.values(data.nodes).some(node => node.type === 'returnValue')) { this._st('先决条件蓝图只能有一个返回值节点'); return; }
     const node = this._emptyNode(80 + Object.keys(data.nodes).length * 20, 80 + Object.keys(data.nodes).length * 20);
@@ -1391,7 +1394,7 @@ export class DevDialogueEditorTab {
       if(!result.ok) result.errors.forEach(error=>errors.push(`${label}: ${error}`));
     };
     Object.entries(this.project?.schedules||{}).forEach(([file,schedule])=>
-      (schedule.entries||[]).forEach((entry,index)=>visit(entry.dialogueTree,`${file} 条目 ${index+1}`)));
+      (schedule.entries||[]).forEach((entry,index)=>visit(entry.blueprint || entry.dialogueTree,`${file} 条目 ${index+1}`)));
     Object.entries(this.project?.events||{}).forEach(([id,ctx])=>visit(ctx,`事件 ${id}`));
     Object.entries(this.project?.endings||{}).forEach(([id,ctx])=>visit(ctx,`结局 ${id}`));
     return errors;

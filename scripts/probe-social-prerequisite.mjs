@@ -1,24 +1,33 @@
-import { validatePrerequisiteBlueprint } from "../js/core/ScheduleBlueprint.js";
+import { validateBlueprint, embedLegacyPrerequisite } from "../js/core/ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "../js/core/ScheduleValueEvaluator.js";
 
 const blueprint = {
+  startNodeId: "start",
   nodes: {
+    start: { id: "start", type: "flowStart", inputs: {}, outputs: {} },
+    end: { id: "end", type: "scheduleEnd", inputs: {}, outputs: {} },
     publicVariable: { id: "publicVariable", type: "getGlobal", inputs: { variableId: 100 }, outputs: {} },
-    return: { id: "return", type: "returnValue", inputs: {}, outputs: {} },
+    gate: { id: "gate", type: "prerequisite", inputs: {}, outputs: {} },
   },
-  connections: [{ fromNodeId: "publicVariable", fromPort: "value", toNodeId: "return", toPort: "condition" }],
+  connections: [
+    { fromNodeId: "start", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
+    { fromNodeId: "publicVariable", fromPort: "value", toNodeId: "gate", toPort: "condition" },
+  ],
 };
-const checked = validatePrerequisiteBlueprint(blueprint);
+const checked = validateBlueprint(blueprint);
 if (!checked.ok) throw new Error(checked.errors.join("; "));
 const result = (value) => new ScheduleValueEvaluator(checked.blueprint, {
   globalVariableManager: { get: () => value },
-}).evaluateNode("return", "value");
+}).evaluateNode("gate", "value");
 if (result(true) !== true || result(false) !== false || result(1) !== false) {
   throw new Error("prerequisite gate result is not strict boolean");
 }
-const invalid = validatePrerequisiteBlueprint({ nodes: {
-  flow: { id: "flow", type: "flowStart", inputs: {}, outputs: {} },
-  return: { id: "return", type: "returnValue", inputs: { condition: true }, outputs: {} },
-}, connections: [] });
-if (invalid.ok) throw new Error("flow node was accepted in prerequisite blueprint");
+const duplicate = structuredClone(blueprint);
+duplicate.nodes.gate2 = { id: "gate2", type: "prerequisite", inputs: { condition: false }, outputs: {} };
+if (validateBlueprint(duplicate).ok) throw new Error("duplicate prerequisite node was accepted");
+const legacy = embedLegacyPrerequisite(blueprint, { nodes: {
+  read: { id: "read", type: "getGlobal", inputs: { variableId: 100 }, outputs: {} },
+  return: { id: "return", type: "returnValue", inputs: {}, outputs: {} },
+}, connections: [{ fromNodeId: "read", fromPort: "value", toNodeId: "return", toPort: "condition" }] });
+if (!Object.values(legacy.nodes).some((node) => node.type === "prerequisite")) throw new Error("legacy embedding failed");
 console.log("social prerequisite probe: ok");

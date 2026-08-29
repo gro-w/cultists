@@ -61,7 +61,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 `maininit.json` 和 `mainpub.json` 使用 `{ "entries": [] }` 顶层结构；其中每个条目的 `id` 是稳定日程 ID。`maininit.json` 的条目启动时以 `main` 队列实例加入，并由统一 `ScheduleRunner` 执行。`mainpub.json` 只注册主要公共日程定义；通过 `insertSchedule` 指定 `queue="main"` 插入的日程进入主要日程队列并由同一运行时执行。初始主要日程的条件等待应使用 `waitUntil`，不应在应用层另行订阅或轮询。
 
-Social 日期日程条目可选 `insertPrerequisite` 字段。它是到达该日期和时间时才求值的受限数值蓝图；只有唯一 `returnValue` 节点返回严格的 `true` 时，条目才会创建实例并加入 `socialQueue`。蓝图禁止流程节点和流程引脚，只允许数值节点（如 `getGlobal`、`arithmetic`）及一个 `returnValue` 节点；缺失、非法或求值失败均跳过该条目。旧条目未提供此字段时保持无条件插入。
+Social 日期日程条目所在的完整蓝图可选添加一个 `prerequisite` 节点。它是在到达该日期和时间时才求值的受限数值节点；其输入为严格 `true` 时，条目才会创建实例并加入 `socialQueue`。该节点禁止流程引脚，缺失、非法或求值失败均跳过条目。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
 
 ## 公共变量
 

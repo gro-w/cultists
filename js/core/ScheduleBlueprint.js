@@ -31,6 +31,12 @@ export function validateBlueprint(raw) {
   const blueprint = normalizeBlueprint(raw);
   const errors = [];
   const entries = nodeEntries(blueprint.nodes);
+  const prerequisites = entries.filter(([, node]) => node.type === "prerequisite");
+  if (prerequisites.length > 1) errors.push(`蓝图最多只能有一个先决条件节点，当前为 ${prerequisites.length} 个`);
+  prerequisites.forEach(([id, node]) => {
+    const definition = getScheduleNodeDefinition(node.type);
+    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`先决条件节点不能有流程引脚：${id}`);
+  });
   const starts = entries.filter(([, node]) => node.type === "flowStart");
   if (starts.length !== 1) errors.push(`流程起始节点必须恰好有一个，当前为 ${starts.length} 个`);
   if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push("缺少有效的流程起始节点");
@@ -84,6 +90,23 @@ export function validateBlueprint(raw) {
     }
   });
   return { ok: errors.length === 0, errors, blueprint };
+}
+
+export function embedLegacyPrerequisite(rawBlueprint, legacyPrerequisite) {
+  const blueprint = normalizeBlueprint(rawBlueprint);
+  if (!legacyPrerequisite || Object.values(blueprint.nodes).some((node) => node.type === "prerequisite")) return blueprint;
+  const old = normalizeBlueprint(legacyPrerequisite);
+  const oldReturn = Object.values(old.nodes).find((node) => node.type === "returnValue");
+  if (!oldReturn) return blueprint;
+  Object.entries(old.nodes).forEach(([id, node]) => {
+    if (id !== oldReturn.id && !blueprint.nodes[id]) blueprint.nodes[id] = clone(node);
+  });
+  const nodeId = "__prerequisite__";
+  blueprint.nodes[nodeId] = { id: nodeId, type: "prerequisite", inputs: {}, outputs: {}, x: oldReturn.x ?? 80, y: oldReturn.y ?? 260 };
+  const incoming = old.connections.find((connection) => connection.toNodeId === oldReturn.id && connection.toPort === "condition");
+  if (incoming && blueprint.nodes[incoming.fromNodeId]) blueprint.connections.push({ ...incoming, toNodeId: nodeId });
+  else if (Object.prototype.hasOwnProperty.call(oldReturn.inputs || {}, "condition")) blueprint.nodes[nodeId].inputs.condition = oldReturn.inputs.condition;
+  return blueprint;
 }
 
 const PREREQUISITE_NODE_TYPES = new Set([

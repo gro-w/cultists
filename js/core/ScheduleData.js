@@ -8,7 +8,7 @@ import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
-import { validatePrerequisiteBlueprint } from "./ScheduleBlueprint.js";
+import { validateBlueprint, embedLegacyPrerequisite } from "./ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
 
 const CHECKPOINTS = [
@@ -174,7 +174,7 @@ class ScheduleData {
       const sourceEntries = this.slots.get(key) || [];
       const entries = sourceEntries
         .filter((entry) => {
-          if (queueId === "social" && entry.insertPrerequisite && !this.matchesInsertPrerequisite(entry.insertPrerequisite)) return false;
+          if (queueId === "social" && !this.matchesPrerequisite(entry.blueprint || entry.dialogueTree, entry.insertPrerequisite)) return false;
           if (!this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)) return false;
           // special and ending schedules are one-shot: skip if already queued (any status).
           const cat = this.scheduleCatalog.get(entry.scheduleId || entry.id)?.category;
@@ -202,17 +202,20 @@ class ScheduleData {
     }
   }
 
-  matchesInsertPrerequisite(raw) {
-    const validation = validatePrerequisiteBlueprint(raw);
+  matchesPrerequisite(rawBlueprint, legacyPrerequisite = null) {
+    if (!rawBlueprint && !legacyPrerequisite) return true;
+    const blueprint = embedLegacyPrerequisite(rawBlueprint || {}, legacyPrerequisite);
+    const validation = validateBlueprint(blueprint);
     if (!validation.ok) {
-      console.warn("Skipped invalid social insert prerequisite:", validation.errors);
+      console.warn("Skipped invalid social prerequisite:", validation.errors);
       return false;
     }
     try {
-      const returnNode = Object.values(validation.blueprint.nodes).find((node) => node.type === "returnValue");
-      return new ScheduleValueEvaluator(validation.blueprint).evaluateNode(returnNode.id, "value") === true;
+      const prerequisite = Object.values(validation.blueprint.nodes).find((node) => node.type === "prerequisite");
+      if (!prerequisite) return true;
+      return new ScheduleValueEvaluator(validation.blueprint).evaluateNode(prerequisite.id, "value") === true;
     } catch (error) {
-      console.warn("Skipped social insert prerequisite evaluation:", error);
+      console.warn("Skipped social prerequisite evaluation:", error);
       return false;
     }
   }

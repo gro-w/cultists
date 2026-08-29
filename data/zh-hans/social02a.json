@@ -8,15 +8,6 @@
       "name": "阿杰",
       "avatar": "🐶",
       "displayName": "闲聊池",
-      "insertPrerequisite": {
-        "nodes": {
-          "read_yesterday": { "id": "read_yesterday", "type": "getGlobal", "inputs": { "variableId": 100 }, "outputs": {} },
-          "return": { "id": "return", "type": "returnValue", "inputs": {}, "outputs": {} }
-        },
-        "connections": [
-          { "fromNodeId": "read_yesterday", "fromPort": "value", "toNodeId": "return", "toPort": "condition" }
-        ]
-      },
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
@@ -232,6 +223,22 @@
             "outputs": {},
             "x": 60,
             "y": 40
+          },
+          "read_yesterday": {
+            "id": "read_yesterday",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 100
+            },
+            "outputs": {}
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {},
+            "outputs": {},
+            "x": 80,
+            "y": 260
           }
         },
         "connections": [
@@ -366,6 +373,12 @@
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "read_yesterday",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
           }
         ]
       }
@@ -377,15 +390,6 @@
       "name": "阿伟",
       "avatar": "🐱",
       "displayName": "闲聊池",
-      "insertPrerequisite": {
-        "nodes": {
-          "read_yesterday": { "id": "read_yesterday", "type": "getGlobal", "inputs": { "variableId": 101 }, "outputs": {} },
-          "return": { "id": "return", "type": "returnValue", "inputs": {}, "outputs": {} }
-        },
-        "connections": [
-          { "fromNodeId": "read_yesterday", "fromPort": "value", "toNodeId": "return", "toPort": "condition" }
-        ]
-      },
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
@@ -610,6 +614,22 @@
             "outputs": {},
             "x": 60,
             "y": 40
+          },
+          "read_yesterday": {
+            "id": "read_yesterday",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 101
+            },
+            "outputs": {}
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {},
+            "outputs": {},
+            "x": 80,
+            "y": 260
           }
         },
         "connections": [
@@ -750,6 +770,12 @@
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "read_yesterday",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
           }
         ]
       }

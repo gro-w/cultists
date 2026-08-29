@@ -699,8 +699,13 @@ export class DevDialogueEditorTab {
           }
           return;
         }
-        if (!this.selectedNodeIds.has(node.id)) this.selectedNodeIds = new Set([node.id]);
-        this.selectedNodeId=node.id;
+        const hitNodeIds = [...new Set((document.elementsFromPoint?.(e.clientX, e.clientY) || [])
+          .map(element => element.closest?.('.dev-de-node')?.dataset.nodeId)
+          .filter(Boolean))];
+        const selectedHitId = hitNodeIds.find(id => this.selectedNodeIds.has(id));
+        const interactionNode = data.nodes[selectedHitId] || node;
+        if (!this.selectedNodeIds.has(interactionNode.id)) this.selectedNodeIds = new Set([interactionNode.id]);
+        this.selectedNodeId=interactionNode.id;
         this.root?.querySelectorAll('.dev-de-node').forEach(item => item.classList.toggle('selected', this.selectedNodeIds.has(item.dataset.nodeId)));
         this._loadNodeEditor();
         const sx=e.clientX, sy=e.clientY;

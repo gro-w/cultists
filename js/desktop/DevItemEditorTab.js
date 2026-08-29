@@ -1,7 +1,6 @@
 // DEV-TOOLS:START
 import { dataLoader } from "../core/DataLoader.js";
 import { locationSystem } from "../core/LocationSystem.js";
-import { windowManager } from "../core/WindowManager.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { createEmptyBlueprint } from "../core/ScheduleBlueprint.js";
 
@@ -32,6 +31,8 @@ export class DevItemEditorTab {
     this.dirty = false;
     this._initialItemId = options.initialItemId || null;
     this.root = null;
+    this._investigateEditor = null;
+    this._investigateEditorHost = null;
   }
 
   // ── helpers ──────────────────────────────────────────────────────────────
@@ -144,8 +145,8 @@ export class DevItemEditorTab {
           <button type="button" class="win95-btn dev-btn" onclick="_ie._addKwTag()">添加</button>
         </div>
       </div>
-      <div class="dev-section dev-ie-sec"><h3>🧩 内嵌日程表</h3><p style="font-size:11px;color:#888">use 在物品使用时加入 realtime；obtain 在物品获得时加入 realtime。</p>
-        <div style="display:flex;gap:8px"><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('item',null,'use')">编辑 use 内嵌日程表</button><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('item',null,'obtain')">编辑 obtain 内嵌日程表</button></div>
+      <div class="dev-section dev-ie-sec"><h3>🔎 调查日程</h3><p style="font-size:11px;color:#888">直接编辑当前物品的 investigate 内嵌日程；保存蓝图后会写回物品草稿。</p>
+        <div id="ie-investigate-editor" class="dev-ie-investigate-editor"></div>
       </div>
       <div class="dev-section dev-ie-sec" id="ie-sec-use" style="display:none"><h3>⚡ 使用效果</h3>
 
@@ -272,8 +273,7 @@ export class DevItemEditorTab {
       <div class="dev-ie-field"><label>效果描述</label><textarea id="ie-spell-desc" class="dev-textarea" rows="4" oninput="_ie._spellField('description',this.value)">${this._e(spell.description)}</textarea></div>
       <div class="dev-ie-row"><div class="dev-ie-field"><label>学习时间（分钟）</label><input type="number" min="0" value="${Number(spell.learnTimeMinutes || 240)}" oninput="_ie._spellField('learnTimeMinutes',this.value)"></div>
       <div class="dev-ie-field"><label>施放 SAN 消耗</label><input type="number" min="0" value="${Number(spell.castSanCost || 5)}" oninput="_ie._spellField('castSanCost',this.value)"></div></div>
-      <div style="display:flex;gap:8px;padding-top:8px"><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('spell',${index},'use')">🧩 编辑 use 内嵌日程表</button><button type="button" class="win95-btn dev-btn" onclick="_ie._openEmbeddedSchedule('spell',${index},'obtain')">🧩 编辑 obtain 内嵌日程表</button></div>
-      <p style="font-size:11px;color:#888">use：法术施放时加入 realtime；obtain：法术习得完成时加入 realtime。</p></div>`;
+      </div>`;
   }
 
   _spellField(field, value) {
@@ -289,25 +289,53 @@ export class DevItemEditorTab {
     return blueprint;
   }
 
-  _openEmbeddedSchedule(kind, spellIndex, action) {
-    const item = this.items.find((entry) => entry.id === this.currentId);
-    const spell = kind === 'spell' ? item?.spells?.[spellIndex] : null;
-    const host = spell || item;
-    if (!host) return;
-    host.schedules ||= {};
-    host.schedules[action] ||= this._defaultSchedule();
-    const schedule = host.schedules[action];
-    const project = { version: 2, totalDays: 1, customVars: [], schedules: { embedded: { displayName: `${action}`, entries: [{ id: action, name: action, dialogueTree: JSON.parse(JSON.stringify(schedule)) }] } }, events: {}, endings: {}, eventFileDoc: { events: [] }, endingFileDoc: { endings: [] } };
-    const hostName = spell ? spell.name || '未命名法术' : item.defaultName || item.id;
+  _defaultInvestigateSchedule() {
+    return this._defaultSchedule();
+  }
+
+  _unmountInvestigateEditor() {
+    if (this._investigateEditor) this._investigateEditor.unmount();
+    this._investigateEditor = null;
+    this._investigateEditorHost = null;
+  }
+
+  _mountInvestigateEditor(item) {
+    const host = this._el('ie-investigate-editor');
+    if (!host || !item) { this._unmountInvestigateEditor(); return; }
+    if (this._investigateEditorHost === item && this._investigateEditor) return;
+    this._unmountInvestigateEditor();
+    item.schedules ||= {};
+    item.schedules.investigate ||= this._defaultInvestigateSchedule();
+    const project = {
+      version: 2, totalDays: 1, customVars: [],
+      schedules: { embedded: { displayName: 'investigate', entries: [{
+        id: 'investigate', name: 'investigate',
+        dialogueTree: JSON.parse(JSON.stringify(item.schedules.investigate)),
+      }] } },
+      events: {}, endings: {}, eventFileDoc: { events: [] }, endingFileDoc: { endings: [] },
+    };
     const editor = new DevDialogueEditorTab(this._dev, {
-      workspace: false, project, initialCtx: { type: 'schedule', id: 'embedded', entryIndex: 0 },
-      fileScope: { fileName: 'embedded.json', type: 'schedule' },
-      embeddedScope: { title: `${hostName} · ${action}`, onSave: (blueprint) => { host.schedules[action] = JSON.parse(JSON.stringify(blueprint)); this.dirty = true; this._persist(); this._renderSpellForm(); } },
+      workspace: false,
+      project,
+      initialCtx: { type: 'schedule', id: 'embedded', entryIndex: 0 },
+      embeddedScope: {
+        title: `${item.defaultName || item.id} · investigate`,
+        onSave: (blueprint) => {
+          item.schedules.investigate = JSON.parse(JSON.stringify(blueprint));
+          this.dirty = true;
+          this._persist();
+        },
+      },
     });
-    const root = document.createElement('div');
-    const win = windowManager.createWindow({ title: `蓝图编辑器 · ${hostName} · ${action}`, icon: '🧩', width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: root, onClose: () => editor.unmount() });
-    win.el?.classList.add('dev-blueprint-window');
-    root.innerHTML = editor.html(); editor.mount(root.querySelector('.dev-de-root'));
+    host.replaceChildren();
+    host.append(document.createRange().createContextualFragment(editor.html()));
+    editor.mount(host.querySelector('.dev-de-root'));
+    this._investigateEditor = editor;
+    this._investigateEditorHost = item;
+  }
+
+  unmount() {
+    this._unmountInvestigateEditor();
   }
 
   _selectItem(id, skipSave) {
@@ -343,6 +371,7 @@ export class DevItemEditorTab {
     this._el('f-failMsg').value=ue.failMsg;
     this._renderLocTags(); this._renderKwTags(); this._renderFlags();
     this._renderSanTabs(); this._renderSanPanel(); this._renderBookEntries(); this._renderSpells();
+    this._mountInvestigateEditor(it);
     const sm=this._el('ie-save-msg'); if(sm) sm.textContent='';
   }
 
@@ -559,6 +588,7 @@ export class DevItemEditorTab {
   }
   deleteItem() {
     if(!this.currentId||!confirm('确认删除？')) return;
+    this._unmountInvestigateEditor();
     this.items=this.items.filter(i=>i.id!==this.currentId);
     this.currentId=null; this.dirty=false; this._persist();
     const ef=this._el('ie-editor-empty'), ff=this._el('ie-editor-form');

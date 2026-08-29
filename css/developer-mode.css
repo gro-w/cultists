@@ -108,6 +108,8 @@
 .dev-ie-editor { flex:1; overflow-y:auto; min-width:0; }
 .dev-ie-sec { margin:6px 8px; padding:8px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
 .dev-ie-sec h3 { margin:0 0 8px; font-size:13px; }
+.dev-ie-investigate-editor { height:620px; min-height:420px; border:1px solid #808080; background:#c0c0c0; overflow:hidden; }
+.dev-ie-investigate-editor > .dev-de-root { height:100%; min-height:0; }
 .dev-ie-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:4px; }
 .dev-ie-field { display:flex; flex-direction:column; gap:3px; flex:1; min-width:120px; font-size:12px; }
 .dev-ie-field label { font-size:11px; color:#444; font-weight:600; }

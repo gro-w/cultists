@@ -2,6 +2,14 @@
    Windows 95 style core stylesheet
    ========================================================================== */
 
+@font-face {
+  font-family: "Sarasa Fixed SC";
+  src: url("../data/assets/sarasa-fixed-sc-regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --w95-bg: #008080;
   --w95-gray: #c0c0c0;
@@ -12,7 +20,7 @@
   --w95-blue: #000080;
   --w95-blue-light: #1084d0;
   --w95-black: #000000;
-  --w95-font: "MS Sans Serif", "Tahoma", "Segoe UI", sans-serif;
+  --w95-font: "Sarasa Fixed SC", sans-serif;
 }
 
 * {

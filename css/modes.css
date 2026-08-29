@@ -110,7 +110,7 @@
   transform: rotate(-2deg);
 }
 .dorm-wall-clock-label { display: block; font-size: 8px; letter-spacing: 1px; }
-.dorm-wall-clock strong { display: block; font: bold 20px monospace; }
+.dorm-wall-clock strong { display: block; font: bold 20px var(--w95-font); }
 
 .dorm-npc-marker,
 .dorm-bed-marker {

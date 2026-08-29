@@ -27,6 +27,7 @@ import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
 import { DevLocationEditorTab } from "./DevLocationEditorTab.js";
 import { DevDormComputerTab } from "./DevDormComputerTab.js";
 import { DevCGEditorTab } from "./DevCGEditorTab.js";
+import { DevTurtleSoupEditorTab } from "./DevTurtleSoupEditorTab.js";
 import { DEDICATED_EDITOR_CLASSES } from "./DevDedicatedDataEditors.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -68,7 +69,7 @@ const DEDICATED_EDITOR_TITLES = {
 const DEV_EDITOR_ICONS = {
   "tab-cg-editor": "🖼️", "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
   "tab-item-editor": "📦", "tab-dialogue-editor": "📅", "tab-bgm-editor": "🎵", "tab-location-editor": "📍",
-  "tab-dorm-computer": "💻", "tab-state": "🕒", "tab-npc-state": "👤", "tab-inventory": "🎒",
+  "tab-dorm-computer": "💻", "tab-turtle-soup": "🐢", "tab-state": "🕒", "tab-npc-state": "👤", "tab-inventory": "🎒",
   "tab-schedules": "📋", "tab-world": "🌐", "tab-medical-ending": "⚕️",
 };
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
@@ -105,7 +106,7 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._turtleSoupEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
     const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset", "npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored"];
     events.forEach((event) => this._runtimeUnsubs.push(eventBus.on(event, () => this._queueRuntimeRefresh())));
@@ -127,7 +128,7 @@ export class DeveloperMode {
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
       ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["全局变量定义", "🔢", "tab-global-variables"],
-      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
+      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
     const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC状态", "👤", "tab-npc-state"], ["日程与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
@@ -217,7 +218,7 @@ export class DeveloperMode {
     const editor = new DeveloperMode(root, win, false);
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
-    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
+    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-turtle-soup": "showTurtleSoupEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
     if (methods[action]) {
       editor._unmountEditorTabs();
       Promise.resolve(editor[methods[action]]()).catch((error) => editor.setStatus(`加载失败：${error.message}`, true));
@@ -263,6 +264,7 @@ export class DeveloperMode {
     if (this._locationEditorTab) { this._locationEditorTab.unmount(); this._locationEditorTab = null; }
     if (this._dormComputerTab) { this._dormComputerTab.unmount(); this._dormComputerTab = null; }
     if (this._cgEditorTab) { this._cgEditorTab.unmount(); this._cgEditorTab = null; }
+    if (this._turtleSoupEditorTab) { this._turtleSoupEditorTab.unmount(); this._turtleSoupEditorTab = null; }
     if (this._structuredEditorTab) { this._structuredEditorTab.unmount(); this._structuredEditorTab = null; }
     if (this._itemEditorTab) this._itemEditorTab.unmount();
     this._itemEditorTab = null;
@@ -320,6 +322,15 @@ export class DeveloperMode {
     this.root.querySelector("[data-dev-panel]").innerHTML = this._cgEditorTab.html();
     this.bindPanel();
     this._cgEditorTab.mount(this.root.querySelector(".dev-cg-root"));
+  }
+
+  showTurtleSoupEditor() {
+    this._unmountEditorTabs();
+    this._setPanelKind("data");
+    this._turtleSoupEditorTab = new DevTurtleSoupEditorTab(this);
+    this.root.querySelector("[data-dev-panel]").innerHTML = this._turtleSoupEditorTab.html();
+    this.bindPanel();
+    this._turtleSoupEditorTab.mount(this.root.querySelector(".dev-turtle-root"));
   }
 
   showStructuredEditor(key) {
@@ -416,7 +427,7 @@ export class DeveloperMode {
     const medical = medicalCaseManager.snapshot();
     const submissions = (medical.submissions || []).map((submission) => `<tr><td>${esc(submission.patientId)}</td><td>${submission.day}</td><td>${submission.dueDay}</td><td>${esc(submission.diagnosisId)}</td><td>${submission.processed ? "已处理" : "待处理"}</td></tr>`).join("");
     const endings = [...endingManager.defs.keys()].map((id) => `<option value="${esc(id)}">${esc(id)}</option>`).join("");
-    this.panel(`<section class="dev-section"><h3>医疗与结局</h3><p>医疗提交、待结算金额和延迟事件均来自 MedicalCaseManager；结局遵循 EndingManager 的首个结局规则。</p><p>当前收入：${medical.income}；待收入：${medical.pendingIncome}；待支出：${medical.pendingExpenses}；待处理事件：${(medical.pendingIncidents || []).length}；已结束：${endingManager.isEnded ? "是" : "否"}</p><table class="dev-table"><thead><tr><th>患者</th><th>提交日</th><th>到期日</th><th>诊断</th><th>状态</th></tr></thead><tbody>${submissions || "<tr><td colspan=5>暂无提交</td></tr>"}</tbody></table><div>${button("结算上一日医疗账目", "settle-medical-day")} ${button("重置结局锁定", "reset-ending")}</div><label>触发结局 <select data-ending-id>${endings}</select> ${button("触发", "trigger-ending")}</label></section>`);
+    this.panel(`<section class="dev-section"><h3>医疗与结局</h3><p>医疗提交、待结算金额和延迟事件均来自 MedicalCaseManager；结局按 EndingManager 的优先级规则互斥选择：数值越大越优先，同优先级先触发者胜出。</p><p>当前收入：${medical.income}；待收入：${medical.pendingIncome}；待支出：${medical.pendingExpenses}；待处理事件：${(medical.pendingIncidents || []).length}；已结束：${endingManager.isEnded ? "是" : "否"}</p><table class="dev-table"><thead><tr><th>患者</th><th>提交日</th><th>到期日</th><th>诊断</th><th>状态</th></tr></thead><tbody>${submissions || "<tr><td colspan=5>暂无提交</td></tr>"}</tbody></table><div>${button("结算上一日医疗账目", "settle-medical-day")} ${button("重置结局锁定", "reset-ending")}</div><label>触发结局 <select data-ending-id>${endings}</select> ${button("触发", "trigger-ending")}</label></section>`);
   }
 
   async loadDoc(fileName) {

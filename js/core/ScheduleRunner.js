@@ -8,6 +8,7 @@ import { modifyStatValue } from "./ScheduleValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
+import { spellEffectManager } from "./SpellEffectManager.js";
 import { keywordManager } from "./KeywordManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
@@ -191,6 +192,25 @@ export class ScheduleRunner {
       case "spellOperation": {
         const learned = spellManager.learn(node.spell || node.inputs?.spell);
         if (!learned && node.requireNew !== false) throw new Error("Spell is already known or invalid");
+        return {};
+      }
+      case "spellCast": {
+        const result = spellManager.cast(get("spellId", ""), {
+          target: get("target", ""),
+          eventId: get("eventId", this.definition.id),
+          choiceId: get("choiceId", ""),
+        });
+        if (!result.ok) throw new Error(result.message);
+        return {};
+      }
+      case "spellEffect": {
+        const spell = spellManager.all().find((item) => item.id === get("spellId", ""));
+        if (!spell) throw new Error("Unknown learned spell");
+        spellEffectManager.handleCast(spell, {
+          target: get("target", ""),
+          eventId: get("eventId", this.definition.id),
+          choiceId: get("choiceId", ""),
+        });
         return {};
       }
       default: throw new Error(`Unsupported flow node: ${node.type}`);

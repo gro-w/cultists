@@ -32,11 +32,12 @@ const dialogueKeywordIds = (tree) => {
 
 /** Full-screen off-duty dorm: NPC interaction, desk/fridge items, bed, computer. */
 export default class DormMode {
-  constructor(root, { workShell, launchWorkApp, showLocation = null }) {
+  constructor(root, { workShell, launchWorkApp, showLocation = null, launchTurtleSoup = null }) {
     this.root = root;
     this.workShell = workShell;
     this.launchWorkApp = launchWorkApp;
     this._showLocation = showLocation; // (locationId) => void
+    this._launchTurtleSoup = launchTurtleSoup;
     this._npcsData = null;
     this.entry = null;
     this._transitioning = false;
@@ -166,7 +167,7 @@ export default class DormMode {
 
   // ── Background (sanity-aware) ────────────────────────────────────────────
   _updateDormBg() {
-    const img = locationSystem.resolveBackground("dorm", gameState.mental ?? 100);
+    const img = locationSystem.resolveBackground("dorm", gameState.sanity ?? 100);
     if (img) {
       this._bgEl.src = img;
       this._bgEl.hidden = false;
@@ -222,6 +223,15 @@ export default class DormMode {
       if (!offline) btn.addEventListener("click", () => this._showDialogue(actor, keywordDefs));
       else btn.disabled = true;
       this._npcStrip.appendChild(btn);
+      if (npcId === "binbin" && !offline && this._launchTurtleSoup) {
+        const soupBtn = document.createElement("button");
+        soupBtn.type = "button";
+        soupBtn.className = "win95-btn bevel-out dorm-npc-strip-btn";
+        soupBtn.textContent = "🐢 海龟汤";
+        soupBtn.title = "进入彬彬支线——海龟汤";
+        soupBtn.addEventListener("click", () => this._launchTurtleSoup());
+        this._npcStrip.appendChild(soupBtn);
+      }
     });
 
     // ── Items in the scene ─────────────────────────────────────────────────

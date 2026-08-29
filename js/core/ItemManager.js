@@ -143,6 +143,13 @@ class ItemManager {
     return "0-15";
   }
 
+  getDisplayName(id) {
+    const def = this.defs.get(id);
+    if (!def) return "";
+    const variant = def.sanVariants?.[this._getSanBandKey(gameState.sanity)];
+    return variant?.name || def.name || "";
+  }
+
   /**
    * Build a `keywordDefs` map covering:
    *   - explicitly listed `revealIds` (with source attribution), and
@@ -183,14 +190,15 @@ class ItemManager {
     // SAN 范围条件：书籍仅在 0 < SAN ≤ 50 时可使用
     const sanMin = def.useCondition && def.useCondition.sanMin;
     const sanMax = def.useCondition && def.useCondition.sanMax;
-    if (sanMin !== undefined && sanMin > 0 && gameState.mental < sanMin) {
+    if (sanMin !== undefined && sanMin > 0 && gameState.sanity < sanMin) {
       return { ok: false, message: def.failMessage || "理智值过低，无法使用。" };
     }
-    if (sanMax !== undefined && sanMax > 0 && gameState.mental > sanMax) {
+    if (sanMax !== undefined && sanMax > 0 && gameState.sanity > sanMax) {
       return { ok: false, message: def.failMessage || "理智值过高，此时已无法从书籍中学习法术。" };
     }
 
-    const result = { ok: true, message: def.successMessage || `使用了${def.name}。` };
+    const displayName = this.getDisplayName(id);
+    const result = { ok: true, message: def.successMessage || `使用了${displayName}。` };
     // Let EndingManager (and anything else) react to a successful item use
     // without ItemManager needing to import it directly.
     // The item-owned schedule is now the sole effect/time execution owner.
@@ -200,7 +208,7 @@ class ItemManager {
     if (def.isBook && def.spells && def.spells.length > 0) {
       eventBus.emit("book:learnSpell", {
         id,
-        bookName: def.name,
+        bookName: displayName,
         spells: def.spells, // [{ name, description, learnTimeMinutes:240, castSanCost:5 }]
       });
     }
@@ -218,7 +226,7 @@ class ItemManager {
   getImage(id) {
     const def = this.defs.get(id);
     if (!def?.sanVariants) return null;
-    const bandKey = this._getSanBandKey(gameState.mental);
+    const bandKey = this._getSanBandKey(gameState.sanity);
     return def.sanVariants[bandKey]?.image || null;
   }
 

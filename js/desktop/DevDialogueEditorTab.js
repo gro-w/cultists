@@ -252,6 +252,7 @@ export class DevDialogueEditorTab {
       <button type="button" class="win95-btn dev-btn" onclick="_de._addScheduleEntry()">＋ 日程条目</button>
       <button type="button" class="win95-btn dev-btn" onclick="_de._deleteScheduleEntry()">🗑 删除日程条目</button>
     </div>
+    <div id="de-meta-tools" class="dev-de-sidebar-tools" style="display:none"></div>
     <div id="de-sidebar-inner" style="flex:1;overflow-y:auto;padding:4px">
       <div class="dev-de-sb-sec">
         <div class="dev-de-sb-title">📄 日程文件</div>
@@ -416,12 +417,21 @@ export class DevDialogueEditorTab {
   _renderScopedSidebar() {
     const dayEl = this._el('de-sb-file-entries');
     const scheduleTools = this._el('de-schedule-tools');
+    const metaTools = this._el('de-meta-tools');
     const scope = this._fileScope;
     if (!dayEl) return;
     const fileName = scope?.fileName || '';
     const base = fileName.replace(/\.json$/i, '');
     const isSchedule = scope?.type === 'schedule';
     if (scheduleTools) scheduleTools.style.display = isSchedule ? '' : 'none';
+    if (metaTools) {
+      metaTools.style.display = isSchedule ? 'none' : '';
+      metaTools.innerHTML = scope?.type === 'event'
+        ? '<button type="button" class="win95-btn dev-btn" onclick="_de._addEvent()">＋ 新增日程</button>'
+        : scope?.type === 'ending'
+          ? '<button type="button" class="win95-btn dev-btn" onclick="_de._addEnding()">＋ 新增日程</button>'
+          : '';
+    }
     const section = dayEl.closest('.dev-de-sb-sec');
     const title = section?.querySelector('.dev-de-sb-title');
     if (title) title.textContent = `📄 ${fileName} 日程列表`;
@@ -433,7 +443,8 @@ export class DevDialogueEditorTab {
     const key = scope?.type === 'event' ? 'events' : 'endings';
     const doc = scope?.type === 'event' ? this.project.eventFileDoc : this.project.endingFileDoc;
     const entries = Array.isArray(doc?.[key]) ? doc[key] : [];
-    dayEl.innerHTML = entries.map(entry => `<div class="dev-de-sb-item${this.currentCtx?.id === entry.id ? ' active' : ''}" onclick="_de._selectCtx('${this._e(scope?.type)}','${this._e(entry.id)}')"><span>${this._e(entry.title || entry.name || entry.id)}</span></div>`).join('') || '<div class="dev-de-sb-empty">暂无条目</div>';
+    const entryType = scope?.type === 'event' ? 'event' : 'ending';
+    dayEl.innerHTML = entries.map(entry => `<div class="dev-de-sb-item${this.currentCtx?.id === entry.id ? ' active' : ''}" onclick="_de._selectCtx('${this._e(entryType)}','${this._e(entry.id)}')"><span>${this._e(entry.title || entry.name || entry.id)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._copyEntry('${entryType}','${this._e(entry.id)}')" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._deleteEntry('${entryType}','${this._e(entry.id)}')" title="删除日程">−</button></span></div>`).join('') || '<div class="dev-de-sb-empty">暂无条目</div>';
   }
 
   _selectSchedule(id, entryIndex = 0) {
@@ -467,9 +478,13 @@ export class DevDialogueEditorTab {
    const entry = this._currentEntry();
    if (!entry) { el.innerHTML = '<div style="color:#888">当前文件暂无日程条目，请先新增日程条目。</div>'; return; }
    const displayName = this.currentCtx.type === 'ending' ? (entry.displayName || entry.title || '') : (entry.displayName || entry.name || '');
-   el.innerHTML = `<div class="dev-de-context-settings"><strong>当前日程属性</strong><label>日程 ID<input data-de-schedule-id value="${this._e(entry.id || '')}"></label><label>显示名称<input data-de-schedule-display-name value="${this._e(displayName)}"></label><div class="dev-de-input-help">这里只修改当前日程条目的 ID 和显示名称，不修改日程表文件名。</div></div>`;
+   const priorityField = this.currentCtx.type === 'ending'
+     ? `<label>结局优先级<input data-de-ending-priority type="number" step="1" value="${Number.isFinite(Number(entry.priority)) ? Number(entry.priority) : 0}"></label>`
+     : '';
+   el.innerHTML = `<div class="dev-de-context-settings"><strong>当前日程属性</strong><label>日程 ID<input data-de-schedule-id value="${this._e(entry.id || '')}"></label><label>显示名称<input data-de-schedule-display-name value="${this._e(displayName)}"></label>${priorityField}<div class="dev-de-input-help">这里只修改当前日程条目的 ID 和显示名称${this.currentCtx.type === 'ending' ? '，以及结局优先级（数值越大越优先；同优先级先触发者胜出）' : ''}，不修改日程表文件名。</div></div>`;
    el.querySelector('[data-de-schedule-id]')?.addEventListener('change', event => this._saveScheduleMeta('id', event.target.value));
    el.querySelector('[data-de-schedule-display-name]')?.addEventListener('input', event => this._saveScheduleMeta('displayName', event.target.value));
+   el.querySelector('[data-de-ending-priority]')?.addEventListener('change', event => this._saveScheduleMeta('priority', event.target.value));
  }
 
  _saveScheduleMeta(field, value) {
@@ -486,7 +501,10 @@ export class DevDialogueEditorTab {
        collection[id] = collection[oldId]; delete collection[oldId];
        this.currentCtx.id = id;
      }
-   } else if (this.currentCtx.type === 'ending') { entry.displayName = String(value ?? ''); entry.title = entry.displayName; }
+   } else if (this.currentCtx.type === 'ending') {
+    if (field === 'priority') entry.priority = Number.isFinite(Number(value)) ? Number(value) : 0;
+    else { entry.displayName = String(value ?? ''); entry.title = entry.displayName; }
+  }
    else { entry.displayName = String(value ?? ''); entry.name = entry.displayName; }
    this._saveLS(); this._renderScopedSidebar(); this._renderCanvas();
    // Do NOT call _renderContextSettings() for displayName changes — it would
@@ -1264,7 +1282,11 @@ export class DevDialogueEditorTab {
     const id = prompt('事件 ID（英文/数字，唯一）:', 'event_'+Date.now().toString(36).slice(-5));
     if (!id?.trim()) return;
     if (this.project.events[id]) { alert('ID 已存在'); return; }
-    this.project.events[id] = this._emptyCtx();
+    const blueprint = this._emptyCtx();
+    this.project.events[id] = blueprint;
+    this.project.eventFileDoc ||= { events: [] };
+    this.project.eventFileDoc.events ||= [];
+    this.project.eventFileDoc.events.push({ id, blueprint });
     this.loadedMetaFiles.add('special_events.json');
     this._renderScopedSidebar(); this._saveLS(); this._selectCtx('event', id);
   }
@@ -1273,7 +1295,11 @@ export class DevDialogueEditorTab {
     const id = prompt('结局 ID（英文/数字，唯一）:', 'ending_'+Date.now().toString(36).slice(-5));
     if (!id?.trim()) return;
     if (this.project.endings[id]) { alert('ID 已存在'); return; }
-    this.project.endings[id] = this._emptyCtx();
+    const blueprint = this._emptyCtx();
+    this.project.endings[id] = blueprint;
+    this.project.endingFileDoc ||= { endings: [] };
+    this.project.endingFileDoc.endings ||= [];
+    this.project.endingFileDoc.endings.push({ id, title: id, displayName: id, priority: 0, blueprint });
     this.loadedMetaFiles.add('endings.json');
     this._renderScopedSidebar(); this._saveLS(); this._selectCtx('ending', id);
   }

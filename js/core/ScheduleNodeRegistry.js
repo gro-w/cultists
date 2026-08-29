@@ -24,6 +24,8 @@ const definitions = {
   inventoryOperation: { label: "操作背包", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("itemId", VALUE, "string"), input("count", VALUE, "number")] },
   statOperation: { label: "操作主角数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
   spellOperation: { label: "调整法术状态", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
+  spellCast: { label: "施放法术", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("spellId", VALUE, "string"), input("target", VALUE, "string"), input("eventId", VALUE, "string"), input("choiceId", VALUE, "string")] },
+  spellEffect: { label: "法术后续效果", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("spellId", VALUE, "string"), input("target", VALUE, "string"), input("eventId", VALUE, "string"), input("choiceId", VALUE, "string")] },
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getInventory: { label: "背包取值", valueInputs: [input("itemId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },

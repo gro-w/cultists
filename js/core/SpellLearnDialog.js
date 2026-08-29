@@ -33,7 +33,7 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
 
   const intro = document.createElement("p");
   intro.style.cssText = "color:#555;margin:0;line-height:1.5";
-  intro.textContent = `在 0 < SAN ≤ 50 时研读《${bookName}》，你从中窥见了以下法术。每学习一个法术消耗 4 小时。施放每次消耗 5 SAN。`;
+  intro.textContent = `在 0 < SAN ≤ 50 时研读《${bookName}》，你从中窥见了以下法术。每学习一个法术消耗 4 小时，具体施放代价见下方说明。`;
   root.appendChild(intro);
 
   const list = document.createElement("div");
@@ -54,7 +54,7 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
       info.style.cssText = "flex:1;";
       info.innerHTML = `<strong style="font-size:13px;color:${known ? "#999" : "#1565c0"}">${s.name}</strong>` +
         `<p style="margin:4px 0 0;color:#444;font-size:12px;line-height:1.5">${s.description || "（无效果描述）"}</p>` +
-        `<p style="margin:4px 0 0;color:#888;font-size:11px">⏱ 学习 4h &nbsp;·&nbsp; 💀 施放 5 SAN</p>`;
+        `<p style="margin:4px 0 0;color:#888;font-size:11px">⏱ 学习 ${Number(s.learnTimeMinutes || 240) / 60}h &nbsp;·&nbsp; 💀 施放 ${Number(s.castSanCost ?? 5)} SAN</p>`;
 
       const btn = document.createElement("button");
       btn.className = "win95-btn bevel-out";
@@ -72,7 +72,7 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             name: s.name,
             description: s.description || "",
             learnTimeMinutes: 240,
-            castSanCost: 5,
+            castSanCost: Number(s.castSanCost ?? 5),
             sourceBookId: bookId,
             sourceBookName: bookName,
             spellIndex: idx,

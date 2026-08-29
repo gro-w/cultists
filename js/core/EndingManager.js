@@ -13,11 +13,13 @@ import { globalVariableManager } from "./GlobalVariableManager.js";
  *   - stat-threshold-based: checked on every `gamestate:changed` event
  *     against the configured `statTriggers` (e.g. satiety > 150).
  *   - time-based: `resolveFinalEnding()` is called by DayNightSystem once
- *     the last authored day/night phase is reached, picking the first
- *     matching `finalConditions` entry (or `defaultEndingId` as a fallback).
+ *     the last authored day/night phase is reached, picking the matching
+ *     `finalConditions` entry with the highest ending priority (or
+ *     `defaultEndingId` as a fallback).
  *
- * Once any ending triggers, `endingManager.isEnded` becomes true and no
- * further ending can trigger (first ending wins).
+ * Once an ending triggers, it becomes the active ending for this playthrough.
+ * If another candidate is triggered later, the ending with the higher
+ * data-defined `priority` wins; equal priorities keep the earlier candidate.
  */
 class EndingManager {
   constructor() {
@@ -28,6 +30,8 @@ class EndingManager {
     this.defaultEndingId = null;
     this._loadPromise = null;
     this._ended = false;
+    this._endingId = null;
+    this._endingPriority = null;
     this._restoring = false;
   }
 
@@ -54,15 +58,16 @@ class EndingManager {
   }
 
   _checkStatTriggers(snapshot) {
-    if (this._ended || this._restoring) return;
+    if (this._restoring) return;
+    const candidates = [];
     for (const t of this.statTriggers) {
       const value = snapshot[t.stat];
       if (value == null) continue;
       if (this._compare(value, t.op, t.value)) {
-        this.trigger(t.endingId);
-        return;
+        candidates.push(t.endingId);
       }
     }
+    this._triggerHighestPriority(candidates);
   }
 
   _compare(value, op, target) {
@@ -80,26 +85,49 @@ class EndingManager {
     }
   }
 
-  /** Trigger an ending by id (no-op if the game has already ended, or the id is unknown). */
+  _priority(endingId) {
+    const priority = Number(this.defs.get(endingId)?.priority);
+    return Number.isFinite(priority) ? priority : 0;
+  }
+
+  _triggerHighestPriority(endingIds) {
+    const uniqueIds = [...new Set(endingIds)].filter((id) => this.defs.has(id));
+    if (!uniqueIds.length) return false;
+    let winner = uniqueIds[0];
+    for (const id of uniqueIds.slice(1)) {
+      if (this._priority(id) > this._priority(winner)) winner = id;
+    }
+    return this.trigger(winner);
+  }
+
+  /** Trigger an ending by id; a higher-priority candidate may replace a lower one. */
   trigger(endingId) {
-    if (this._ended || this._restoring) return;
+    if (this._restoring) return false;
     const def = this.defs.get(endingId);
     if (!def) {
       console.warn(`[EndingManager] Unknown ending id "${endingId}".`);
-      return;
+      return false;
     }
+    const priority = this._priority(endingId);
+    if (this._ended && priority <= this._endingPriority) return false;
     this._ended = true;
+    this._endingId = endingId;
+    this._endingPriority = priority;
     eventBus.emit("ending:triggered", def);
+    return true;
   }
 
   /** Resolve the time-based ending once the final authored day/night is reached. */
   resolveFinalEnding() {
-    if (this._ended) return;
+    const candidates = [];
     for (const cond of this.finalConditions) {
       if (this._matchesFinalCondition(cond)) {
-        this.trigger(cond.endingId);
-        return;
+        candidates.push(cond.endingId);
       }
+    }
+    if (candidates.length) {
+      this._triggerHighestPriority(candidates);
+      return;
     }
     if (this.defaultEndingId) this.trigger(this.defaultEndingId);
   }
@@ -128,11 +156,17 @@ class EndingManager {
   }
 
   snapshot() {
-    return { ended: this._ended === true };
+    return {
+      ended: this._ended === true,
+      endingId: this._endingId,
+      priority: this._endingPriority,
+    };
   }
 
   restore(snapshot = {}) {
     this._ended = snapshot?.ended === true;
+    this._endingId = this._ended && this.defs.has(snapshot?.endingId) ? snapshot.endingId : null;
+    this._endingPriority = this._endingId ? this._priority(this._endingId) : null;
     eventBus.emit("ending:restored", this.snapshot());
   }
 
@@ -152,6 +186,8 @@ class EndingManager {
   /** Used by SaveManager when restoring a save from before any ending happened. */
   reset() {
     this._ended = false;
+    this._endingId = null;
+    this._endingPriority = null;
     eventBus.emit("ending:reset", this.snapshot());
   }
 }

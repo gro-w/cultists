@@ -24,6 +24,7 @@ import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import { locationSystem } from "./core/LocationSystem.js";
 import { cgManager } from "./core/CGManager.js";
+import { spellEffectManager } from "./core/SpellEffectManager.js";
 import Desktop from "./desktop/Desktop.js";
 import Taskbar from "./desktop/Taskbar.js";
 import NotificationBanner from "./desktop/NotificationBanner.js";
@@ -42,6 +43,8 @@ import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
 import { launchCalendarApp } from "./apps/CalendarApp.js";
+import { launchTurtleSoup } from "./apps/TurtleSoupApp.js";
+import { turtleSoupManager } from "./core/TurtleSoupManager.js";
 // DEV-TOOLS:START
 import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
 import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
@@ -139,6 +142,8 @@ function boot() {
   cgManager.mount(); // subscribe to schedule:cg / schedule:end_cg events
   onboardingManager.init();
   const tutorialOverlay = new TutorialOverlay(document.getElementById("tutorial-overlay"));
+  spellEffectManager.mount();
+  turtleSoupManager.mount();
 
   new Desktop(document.getElementById("desktop-icons"), APP_REGISTRY);
 
@@ -160,6 +165,7 @@ function boot() {
       if (gameState.location === "dorm") dayNightSystem.toggle();
     },
     showLocation: (id) => locationScene?.show(id),
+    launchTurtleSoup: () => launchTurtleSoup("binbin_turtle_01"),
   });
   dormMode.init().catch((err) => console.error("[Cultists] Failed to initialize dorm mode:", err));
 
@@ -220,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bgmManager.load(),
     locationSystem.load(),
     cgManager.load(),
+    turtleSoupManager.load(),
   ])
     .catch((err) => console.error("[Cultists] Failed to preload data:", err))
     .finally(() => {

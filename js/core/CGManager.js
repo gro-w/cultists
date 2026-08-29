@@ -23,6 +23,7 @@ class CGManager {
     /** @type {Map<string, {id:string, label:string, imageData:string}>} */
     this.defs = new Map();
     this._activeCgId = null;
+    this._unlockedIds = new Set();
     this._loadPromise = null;
     this._subscribed = false;
   }
@@ -33,6 +34,7 @@ class CGManager {
     if (!this._loadPromise) {
       this._loadPromise = dataLoader.loadJSON("cg.json").then((data) => {
         (data.cgs || []).forEach((cg) => this.defs.set(cg.id, cg));
+        try { JSON.parse(localStorage.getItem("cultists_cg_unlocks") || "[]").forEach((id) => this._unlockedIds.add(id)); } catch (_) { /* best effort */ }
       }).catch(() => { /* file may not exist yet */ });
     }
     return this._loadPromise;
@@ -90,6 +92,17 @@ class CGManager {
   getDef(cgId) {
     return this.defs.get(String(cgId)) || null;
   }
+
+  unlock(cgId) {
+    const id = String(cgId || "");
+    if (!id || !this.defs.has(id)) return false;
+    this._unlockedIds.add(id);
+    try { localStorage.setItem("cultists_cg_unlocks", JSON.stringify([...this._unlockedIds])); } catch (_) { /* best effort */ }
+    eventBus.emit("cg:unlocked", { cgId: id });
+    return true;
+  }
+
+  isUnlocked(cgId) { return this._unlockedIds.has(String(cgId)); }
 
   // ── save/restore ───────────────────────────────────────────────────────────
 

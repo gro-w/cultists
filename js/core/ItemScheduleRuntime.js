@@ -57,7 +57,9 @@ export function runItemSchedule(payload = {}) {
     const effect = payload.context?.effect || payload.effect || {};
     const effectResult = applyEffect(effect);
     timeService.advanceBy(Number(payload.context?.timeMinutes || payload.context?.effect?.timeAdvance || payload.timeMinutes || 0));
-    if (payload.source === "spell" && (payload.action === "use" || payload.action === "cast")) eventBus.emit("spell:cast", payload.context?.spell || payload.spell);
+    if (payload.source === "spell" && (payload.action === "use" || payload.action === "cast")) {
+      eventBus.emit("spell:cast", { spell: payload.context?.spell || payload.spell, context: payload.context || {} });
+    }
     if (payload.source === "npc") eventBus.emit("npc:offline", { actorId: payload.actorId });
     queue.complete(instance.instanceId);
     payload.context?.onComplete?.({ ...instance, result: effectResult });

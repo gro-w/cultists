@@ -54,9 +54,10 @@ export async function launchChatGTPApp(options = {}) {
     return existing;
   }
 
-  const [qa, socialApps, diagnoses, medicines] = await Promise.all([
+  const [qa, socialApps, importedDaily, diagnoses, medicines] = await Promise.all([
     dataLoader.loadJSON("chatgtp_qa.json"),
     dataLoader.loadJSON("social_apps.json"),
+    dataLoader.loadJSON("chatgtp_daily_import.json"),
     dataLoader.loadJSON("diagnoses.json"),
     dataLoader.loadJSON("medicines.json"),
   ]);
@@ -182,7 +183,7 @@ export async function launchChatGTPApp(options = {}) {
   }
 
   function renderDailyMessages() {
-    const daily = socialApps.chatgtpDaily || [];
+    const daily = importedDaily?.length ? importedDaily : (socialApps.chatgtpDaily || []);
     const day = gameState.day;
     const entry = daily.find((item) => item.day === day) ?? (day <= daily.length ? daily[day - 1] : null);
     const pairs = entry?.pairs || [];
@@ -190,6 +191,13 @@ export async function launchChatGTPApp(options = {}) {
 
     const banner = document.createElement("div");
     banner.className = "chatgtp-daily-banner";
+    const sanUnlockThresholds = { 3: 90, 4: 70, 5: 50, 6: 30 };
+    const requiredSan = sanUnlockThresholds[Number(entry.day)];
+    if (requiredSan !== undefined && !(Number(gameState.sanity) < requiredSan)) {
+      banner.textContent = `📬 第${entry.day}天预设对话尚未解锁（需要 SAN < ${requiredSan}，当前 SAN ${gameState.sanity}）。`;
+      historyEl.prepend(banner);
+      return;
+    }
     let pairIndex = 0;
     const renderBanner = () => {
       if (pairIndex >= pairs.length) {
@@ -222,14 +230,14 @@ export async function launchChatGTPApp(options = {}) {
   }
 
   function diseaseKeywordId(disease) {
-    const lowSan = gameState.mental <= Number(diagnoses.lowSanThreshold ?? 30);
+    const lowSan = gameState.sanity <= Number(diagnoses.lowSanThreshold ?? 30);
     return `disease:${disease.id}:${lowSan ? "low" : "normal"}`;
   }
 
   function renderCategoryOptions() {
     categorySelect.innerHTML = '<option value="">-- 选择关键词类别（可选） --</option>';
     categoryIndex.forEach((category) => {
-      const low = gameState.mental <= Number(diagnoses.lowSanThreshold ?? 30);
+      const low = gameState.sanity <= Number(diagnoses.lowSanThreshold ?? 30);
       const id = `disease-category:${category.id}:${low ? "low" : "normal"}`;
       const option = document.createElement("option"); option.value = id; option.textContent = low ? category.lowSanName || category.name : category.name;
       categorySelect.appendChild(option);
@@ -240,7 +248,7 @@ export async function launchChatGTPApp(options = {}) {
     if (selectedCategoryId) {
       const category = categoryIndex.get(selectedCategoryId);
       if (category) {
-        const low = gameState.mental <= Number(diagnoses.lowSanThreshold ?? 30);
+        const low = gameState.sanity <= Number(diagnoses.lowSanThreshold ?? 30);
         const categoryKeywordId = `disease-category:${category.id}:${low ? "low" : "normal"}`;
         const categoryOption = document.createElement("option");
         categoryOption.value = categoryKeywordId;

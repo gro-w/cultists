@@ -5,6 +5,7 @@ import { eventBus } from "../core/EventBus.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
 import { gameState } from "../core/GameState.js";
 import { cgManager } from "../core/CGManager.js";
+import { spellManager } from "../core/SpellManager.js";
 
 /**
  * LocationScene — full-screen location overlay for non-dorm locations:
@@ -25,6 +26,8 @@ export default class LocationScene {
     this._offItems = null;
     this._offPlacements = null;
     this._offSan = null;
+    this._offSpells = null;
+    this._offDay = null;
     this._offCG = [];
     this._build();
   }
@@ -93,6 +96,14 @@ export default class LocationScene {
     // Swap background when sanity changes while scene is open
     if (this._offSan) this._offSan();
     this._offSan = eventBus.on("game:sanity_changed", () => this._applySanityBg());
+    if (this._offSpells) this._offSpells();
+    this._offSpells = eventBus.on("spells:changed", () => {
+      if (this._locationId === "seaside") this._renderItems(locationSystem.get("seaside"));
+    });
+    if (this._offDay) this._offDay();
+    this._offDay = eventBus.on("daynight:changed", () => {
+      if (this._locationId === "seaside") this._renderItems(locationSystem.get("seaside"));
+    });
 
     // CG overlay — suppress item layer while a CG is active
     this._offCG.forEach((off) => off());
@@ -114,6 +125,8 @@ export default class LocationScene {
     if (this._offItems)      { this._offItems();      this._offItems      = null; }
     if (this._offPlacements) { this._offPlacements(); this._offPlacements = null; }
     if (this._offSan)        { this._offSan();        this._offSan        = null; }
+    if (this._offSpells)    { this._offSpells();    this._offSpells    = null; }
+    if (this._offDay)       { this._offDay();       this._offDay       = null; }
     this._offCG.forEach((off) => off());
     this._offCG = [];
     this._itemLayer.classList.remove("cg-active-layer");
@@ -174,6 +187,53 @@ export default class LocationScene {
         x: h.x, y: h.y,
         onClick: () => def ? this._inspectWorldItem(h.targetId) : this._message(`（${h.label || h.targetId}）`),
       }));
+    });
+
+    if (loc.id === "seaside") this._renderSeasideSpells();
+  }
+
+  _renderSeasideSpells() {
+    this._interactionEl.innerHTML = "";
+    const title = document.createElement("strong");
+    title.textContent = "海边的法术";
+    this._interactionEl.appendChild(title);
+
+    const learned = spellManager.all().filter((spell) => spellManager.isSeasideSpell(spell));
+    if (learned.length === 0) {
+      const empty = document.createElement("p");
+      empty.textContent = "你还没有习得“接触深潜者”或“接触克苏鲁”。";
+      this._interactionEl.appendChild(empty);
+      return;
+    }
+
+    const hint = document.createElement("p");
+    hint.style.cssText = "font-size:12px;color:#666;margin:6px 0;";
+    hint.textContent = "每天只能在海边施放其中一个法术。";
+    this._interactionEl.appendChild(hint);
+    learned.forEach((spell) => {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex;align-items:center;gap:8px;margin-top:6px;";
+      const name = document.createElement("span");
+      name.textContent = spell.name;
+      name.style.flex = "1";
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "win95-btn bevel-out";
+      button.textContent = "施放";
+      const validation = spellManager.canCast(spell.id, { location: "seaside" });
+      button.disabled = !validation.ok;
+      button.title = validation.ok ? "" : validation.message;
+      button.addEventListener("click", () => {
+        const result = spellManager.cast(spell.id, { location: "seaside" });
+        if (result.ok) {
+          this._renderItems(locationSystem.get("seaside"));
+        } else {
+          this._message(result.message);
+        }
+      });
+      row.appendChild(name);
+      row.appendChild(button);
+      this._interactionEl.appendChild(row);
     });
   }
 

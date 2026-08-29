@@ -111,7 +111,7 @@
       "category": "favorability",
       "hidden": false,
       "icon": "🚫",
-      "trigger": { "event": "favorability:changed", "condition": { "value": { "lte": 0 } }, "once": true }
+      "trigger": { "event": "favorability:changed", "condition": { "value": { "eq": 0 } }, "once": true }
     },
     {
       "id": "fav_three_high",
@@ -244,7 +244,7 @@
       "icon": "🛡️",
       "trigger": {
         "event": "daynight:changed",
-        "condition": { "day": { "gte": 5 }, "mental": { "gte": 80 } },
+        "condition": { "day": { "gte": 5 }, "sanity": { "gte": 80 } },
         "once": true
       }
     },
@@ -272,7 +272,7 @@
       "icon": "👁️",
       "trigger": {
         "event": "gamestate:changed",
-        "condition": { "mental": { "lte": 0 } },
+        "condition": { "sanity": { "eq": 0 } },
         "once": true
       }
     },

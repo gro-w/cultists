@@ -169,7 +169,7 @@ class BgmManager {
 
   _matchDefaultRule() {
     const { day, phase } = gameState;
-    const san = gameState.mental ?? 100;
+    const san = gameState.sanity ?? 100;
     const candidates = this.defaultRules.filter((r) => {
       if (r.dayMin != null && day < Number(r.dayMin)) return false;
       if (r.dayMax != null && day > Number(r.dayMax)) return false;

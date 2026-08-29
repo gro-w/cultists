@@ -83,7 +83,7 @@ class KeywordManager {
       ? this.definitions.get(keywordOrId)
       : keywordOrId;
     if (!definition) return typeof keywordOrId === "string" ? keywordOrId : "";
-    const san = gameState.mental ?? 100;
+    const san = gameState.sanity ?? 100;
     if (definition.contentLowSan && san < 50) return definition.contentLowSan;
     return definition.content || definition.label || definition.id;
   }

@@ -16,9 +16,12 @@ import { cgManager } from "./CGManager.js";
 import { endingManager } from "./EndingManager.js";
 import { onboardingManager } from "./OnboardingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
+import { turtleSoupManager } from "./TurtleSoupManager.js";
 
-// v17 adds per-save onboarding progress to the v16 payload.
-const SAVE_FORMAT_VERSION = 17;
+// v17 = v16 plus TurtleSoup branch state.
+// v18 = v17 plus the active ending ID and priority.
+// v19 = v18 plus daily seaside spell usage.
+const SAVE_FORMAT_VERSION = 19;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -125,12 +128,14 @@ class SaveManager {
       globalVariables: globalVariableManager.snapshot(),
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
       spells: spellManager.all(),
+      spellUsage: spellManager.usageSnapshot(),
       scheduledAdds: scheduleData.snapshotScheduled(),
       favorability: favorabilityManager.snapshot(),
       itemPlacements: itemPlacementManager.snapshot(),
       ending: endingManager.snapshot(),
       cg: cgManager.snapshot(),
       onboarding: onboardingManager.snapshot(),
+      turtleSoup: turtleSoupManager.snapshot(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
   }
@@ -178,6 +183,7 @@ class SaveManager {
       keywordManager.restoreCollected(payload.keywords || []);
       itemManager.restoreInventory(payload.inventory || []);
       spellManager.restore(payload.spells || []);
+      spellManager.restoreUsage(payload.spellUsage || {});
       npcStateManager.restore(payload.npcState || {}, { useGlobalValues: hasGlobalVariable(5) || globalVariables.some((entry) => {
         const id = Number(entry.id);
         return id >= 60 && id <= 79;
@@ -192,6 +198,7 @@ class SaveManager {
       endingManager.restore(payload.ending || {});
       cgManager.restore(payload.cg || {});
       onboardingManager.restore(payload.onboarding || {});
+      turtleSoupManager.restore(payload.turtleSoup || {});
       scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
       this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     } finally {

@@ -107,7 +107,7 @@ class MedicalCaseManager {
     return this.diagnosisCategories.find((category) => category.id === categoryId)?.diagnoses || [];
   }
 
-  diagnosisLabel(id, mental = gameState.mental) {
+  diagnosisLabel(id, mental = gameState.sanity) {
     const diagnosis = this.diagnoses.get(id);
     if (!diagnosis) return id || "未知诊断";
     return Number(mental) <= this.lowSanThreshold

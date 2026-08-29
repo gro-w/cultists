@@ -1,0 +1,36 @@
+{
+  "puzzles": [
+    {
+      "id": "binbin_turtle_01",
+      "title": "那碗记忆中的汤",
+      "story": "一个人走进餐厅，喝了一口汤后突然脸色大变。他没有报警，也没有责怪厨师，只是放下钱，独自离开了餐厅。",
+      "solution": "这个人曾经在海难中失去亲人，获救后喝到的第一碗汤被告知是亲人留下的肉汤；多年后他再次喝到真正的汤，发现当年喝到的并不是同一种肉，从而意识到自己曾在无意中吃下亲人的肉。",
+      "max_days": 7,
+      "questions_per_day": 5,
+      "questions": [
+        { "question_id": "Q001", "text": "这个人以前喝过这种汤吗？", "answer": "yes" },
+        { "question_id": "Q002", "text": "汤本身有毒吗？", "answer": "no" },
+        { "question_id": "Q003", "text": "这个人的反应和过去发生的事情有关吗？", "answer": "both" },
+        { "question_id": "Q004", "text": "他曾经遭遇过海难吗？", "answer": "yes" },
+        { "question_id": "Q005", "text": "汤里真的有人的肉吗？", "answer": "no" },
+        { "question_id": "Q006", "text": "他失去过重要的人吗？", "answer": "yes" },
+        { "question_id": "Q007", "text": "厨师认识这个人吗？", "answer": "no" },
+        { "question_id": "Q008", "text": "他离开是因为认出了汤的味道吗？", "answer": "yes" },
+        { "question_id": "Q009", "text": "当年有人告诉他那是某种肉汤吗？", "answer": "yes" },
+        { "question_id": "Q010", "text": "他当年喝到的汤确实是普通动物肉汤吗？", "answer": "no" }
+      ],
+      "accepted_guesses": [
+        "他发现自己当年吃的是亲人的肉",
+        "他曾经误食了亲人的肉",
+        "海难获救后喝到的是亲人肉，后来发现真相"
+      ],
+      "required_keywords": ["海难", "亲人", "肉汤"],
+      "forbidden_keywords": ["毒药"],
+      "success_cg": "cg_binbin_turtle_01",
+      "success_event": "binbin_turtle_success",
+      "fail_event": "binbin_turtle_fail",
+      "wrong_guess_message": "彬彬摇了摇头：还差一点。",
+      "success_message": "彬彬沉默了很久，随后点了点头。你猜中了汤底。"
+    }
+  ]
+}

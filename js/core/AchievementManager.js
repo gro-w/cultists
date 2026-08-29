@@ -400,8 +400,9 @@ class AchievementManager {
       if (!this._compareValue(payload.delta, cond.delta)) return false;
     }
     // absolute stat check (gamestate:changed)
-    if (cond.mental != null) {
-      if (!this._compareValue(payload.mental, cond.mental)) return false;
+    const sanityCondition = cond.sanity ?? cond.mental;
+    if (sanityCondition != null) {
+      if (!this._compareValue(payload.sanity ?? payload.mental, sanityCondition)) return false;
     }
     // SAN recovery: sanEverLow AND current value above target
     if (cond.hadLow != null) {

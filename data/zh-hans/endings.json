@@ -70,6 +70,28 @@
     },
     {
       "id": "现实=现实"
+    },
+    {
+      "id": "自杀结局",
+      "title": "自杀结局",
+      "text": "致病术反噬了施术者。"
+    },
+    {
+      "id": "入院快乐",
+      "title": "入院快乐",
+      "displayName": "入院快乐",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {} },
+          "text": { "id": "text", "type": "text", "inputs": { "speaker": "narrator", "text": "欢迎来到医院。至少这里暂时没人要求你解释发生了什么。" }, "outputs": {} },
+          "end": { "id": "end", "type": "scheduleEnd", "inputs": {}, "outputs": {} }
+        },
+        "connections": [
+          { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "text", "toPort": "flowIn" },
+          { "fromNodeId": "text", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+        ]
+      }
     }
   ]
 }

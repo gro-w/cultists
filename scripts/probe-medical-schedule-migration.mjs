@@ -6,16 +6,19 @@ const runner = fs.readFileSync("js/core/ScheduleRunner.js", "utf8");
 const scheduleData = fs.readFileSync("js/core/ScheduleData.js", "utf8");
 const hisApp = fs.readFileSync("js/apps/HISApp.js", "utf8");
 const data = JSON.parse(fs.readFileSync("data/zh-hans/workpub.json", "utf8"));
-const template = data.entries.find((entry) => entry.id === "medical_incident_work");
-assert.ok(template, "public medical work template missing");
+const complaint = data.entries.find((entry) => entry.id === "medical_complaint_work");
+const riot = data.entries.find((entry) => entry.id === "medical_riot_work");
+assert.ok(complaint, "public complaint work schedule missing");
+assert.ok(riot, "public riot work schedule missing");
+assert.notEqual(complaint.id, riot.id);
 assert.ok(!registry.includes("medicalIncident"), "medical settlement node must be retired");
 assert.ok(registry.includes("ending:"), "generic ending node missing");
 assert.ok(runner.includes('case "ending"'), "generic ending runtime missing");
 assert.ok(!runner.includes('case "medicalIncident"'), "medical settlement runtime must be retired");
 assert.ok(scheduleData.includes("向愤怒的患者解释"), "complaint choice label missing");
-assert.ok(scheduleData.includes("riotLargeSuccess"), "riot generic consequence path missing");
+assert.ok(scheduleData.includes("medical_riot_work"), "riot schedule selection missing");
 assert.ok(hisApp.includes("renderMedicalIncident"), "medical incidents must use the HIS choice UI");
-const { blueprint } = template;
+const { blueprint } = complaint;
 const { nodes, connections } = blueprint;
 assert.equal(nodes.random.type, "randomBranch");
 assert.equal(nodes.explain.type, "choice");
@@ -25,7 +28,7 @@ assert.equal(nodes.fine.inputs.variableId, 2);
 assert.equal(nodes.doubleFine.inputs.variableId, 2);
 assert.match(nodes.fineText.inputs.text, /罚款了100元/);
 assert.match(nodes.doubleFineText.inputs.text, /罚款了200元/);
-assert.ok(!nodes.death, "complaint template should not contain riot-only death node");
+assert.ok(!nodes.death, "complaint schedule should not contain riot-only death node");
 assert.equal(Object.values(nodes).filter((node) => node.type === "scheduleEnd").length, 1);
 for (const port of ["flowOut0", "flowOut1", "flowOut2"]) {
   assert.ok(connections.some((edge) => edge.fromNodeId === "random" && edge.fromPort === port));
@@ -35,4 +38,11 @@ assert.ok(connections.some((edge) => edge.fromNodeId === "skill" && edge.fromPor
 for (const port of ["largeSuccess", "success", "failure", "largeFailure"]) {
   assert.ok(connections.some((edge) => edge.fromNodeId === "check" && edge.fromPort === port));
 }
+const riotNodes = riot.blueprint.nodes;
+assert.equal(riotNodes.riotFine.type, "setGlobal");
+assert.equal(riotNodes.riotFine.inputs.variableId, 2);
+assert.equal(riotNodes.riotLargeSuccess.inputs.variableId, 2);
+assert.equal(riotNodes.death.type, "ending");
+assert.equal(riotNodes.death.inputs.endingId, "mob_violence_death");
+assert.ok(riot.blueprint.connections.some((edge) => edge.toNodeId === "explain" && edge.fromNodeId.startsWith("dialogue")));
 console.log("medical schedule migration probe: ok");

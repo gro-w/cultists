@@ -44,8 +44,23 @@ import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
 import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
 // DEV-TOOLS:END
 
+let phaseToggleLaunch = () => handlePhaseToggle();
+let phaseToggleLabel = () => gameState.location === "work"
+  ? i18n.t("apps.phaseToggleWork", "下班")
+  : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
+    ? "去上班"
+    : "去睡觉";
 // DEV-TOOLS:START
-const developerModeEnabled = isDeveloperModeSearch();
+let developerModeEnabled = false;
+developerModeEnabled = isDeveloperModeSearch();
+phaseToggleLabel = () => gameState.location === "work"
+  ? "强制下班"
+  : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
+    ? "去上班"
+    : "去睡觉";
+phaseToggleLaunch = () => developerModeEnabled && gameState.location === "work"
+  ? dayNightSystem.forceEndWork()
+  : handlePhaseToggle();
 // DEV-TOOLS:END
 
 /**
@@ -116,14 +131,9 @@ const APP_REGISTRY = [
   { id: "seaside",    label: "海边",   icon: "🌊", launch: () => locationScene?.show("seaside") },
   {
     id: "phase-toggle",
-    label: () =>
-      gameState.location === "work"
-        ? i18n.t("apps.phaseToggleWork", "下班")
-        : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
-          ? "去上班"
-          : "去睡觉",
+    label: () => phaseToggleLabel(),
     icon: () => gameState.location === "work" ? "🚪" : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60 ? "🚶" : "🛏️",
-    launch: () => handlePhaseToggle(),
+    launch: () => phaseToggleLaunch(),
   },
 ];
 

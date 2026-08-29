@@ -7,7 +7,7 @@ import { itemManager } from "./ItemManager.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
-import { chatgtpQueue } from "./ScheduleQueue.js";
+
 
 let sequence = 0;
 
@@ -43,7 +43,7 @@ function applyEffect(effect = {}) {
 export function runItemSchedule(payload = {}) {
   const definition = definitionFor(payload);
   const instanceId = `${definition.id}:${++sequence}`;
-  const queue = payload.queueId === "chatgtp" ? chatgtpQueue : mainQueue;
+  const queue = mainQueue;
   let instance = payload.instance || { instanceId, scheduleId: definition.id, status: "unresolved", transcript: [] };
   // A producer may pass a pre-created instance (for example a ChatGTP query),
   // but every runtime execution must still be represented in its queue. NPC

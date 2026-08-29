@@ -660,11 +660,6 @@
 .loc-scene-interaction p { margin: 4px 0; }
 .loc-scene-hint { color: #888; font-size: 12px; }
 
-/* ── Location editor (dev) ──────────────────────────────────────────────── */
-.dev-le-root { display: flex; flex-direction: column; height: 100%; }
-.dev-le-toolbar { padding: 6px 8px; flex-shrink: 0; }
-.dev-le-main { display: flex; flex: 1; min-height: 0; overflow: hidden; }
-
 /* ── ChatGTP daily banner (dorm computer) ───────────────────────────────── */
 .chatgtp-daily-banner {
   display: flex;

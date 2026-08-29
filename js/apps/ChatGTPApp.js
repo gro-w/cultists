@@ -6,7 +6,8 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
-import { chatgtpQueue } from "../core/ScheduleQueue.js";
+import { mainQueue } from "../core/ScheduleQueue.js";
+
 
 import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js";
 import { getPinyinInitial } from "../core/Pinyin.js";
@@ -394,7 +395,7 @@ export async function launchChatGTPApp(options = {}) {
 
   function ask(queryText, labels) {
     if (!queryText) return;
-    const instance = chatgtpQueue.append([{
+    const instance = mainQueue.append([{
       scheduleId: "chatgtp:query",
       status: "unresolved",
       transcript: [],
@@ -407,7 +408,7 @@ export async function launchChatGTPApp(options = {}) {
     runItemSchedule({
       source: "chatgtp",
       action: "query",
-      queueId: "chatgtp",
+      queueId: "main",
       instance,
       context: {
         effect: sanCostPerQuery > 0 ? { npcSanChanges: [{ actorId: CHATGTP_ACTOR_ID, delta: -sanCostPerQuery }] } : {},

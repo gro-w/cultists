@@ -148,7 +148,7 @@ export class ScheduleRunner {
         const outcome = roll === 100 || (n < 50 && roll >= 96)
           ? "largeFailure"
           : roll <= n / 5 ? "largeSuccess" : roll <= n ? "success" : "failure";
-        this.instance.lastDiceCheck = { roll, target: n, outcome };
+        this.instance.lastDiceCheck = { roll, target: n, skillValue: n, outcome };
         return { next: nextFlow(this.blueprint, node, outcome) };
       }
       case "medicalIncident": {

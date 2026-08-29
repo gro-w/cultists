@@ -76,7 +76,10 @@ class TimeService {
     }
     scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
     if (crossesEight) {
-      medicalCaseManager.processDue(gameState.day).forEach((request) => scheduleData.enqueueMedicalIncident(request));
+      medicalCaseManager.processDue(gameState.day).forEach((request) => {
+        const result = scheduleData.enqueueMedicalIncident(request);
+        if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
+      });
       this.settleAtEight({ day: Math.floor(eightOClock / 1440), sleepMinutes: 0, phaseSettlement });
     }
     this._syncClock();
@@ -97,7 +100,10 @@ class TimeService {
   advanceTo(day, minutes, { sleepMinutes = 0, automatic = false } = {}) {
     const previousPhase = gameState.phase;
     if (minutes === 8 * 60 && Number(day) > gameState.day) {
-      medicalCaseManager.processDue(Number(day)).forEach((request) => scheduleData.enqueueMedicalIncident(request));
+      medicalCaseManager.processDue(Number(day)).forEach((request) => {
+        const result = scheduleData.enqueueMedicalIncident(request);
+        if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
+      });
       const phaseSettlement = this.settlePhase("night");
       this.settleAtEight({ day: Number(day), sleepMinutes, phaseSettlement });
     }

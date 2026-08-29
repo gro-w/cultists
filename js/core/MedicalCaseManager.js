@@ -125,7 +125,6 @@ class MedicalCaseManager {
     const requests = [];
     for (const submission of this.submissions.values()) {
       if (submission.processed || submission.dueDay > day || !submission.incidentType) continue;
-      submission.processed = true;
       const dialogueKey = submission.incidentType === "riot" ? "riotDialogues" : "complaintDialogues";
       requests.push({
         submission: { ...submission },

@@ -215,11 +215,12 @@ class ScheduleData {
     entry.receivedTime = 8 * 60;
     entry.receivedPhase = "day";
     entry.scheduleId = `${template.id}:${submission.patientId}`;
-    if (dialogues.length) {
-      ["dialogue0", "dialogue1", "dialogue2"].forEach((nodeId, index) => {
-        if (entry.blueprint.nodes[nodeId] && dialogues[index]) entry.blueprint.nodes[nodeId].inputs.text = dialogues[index];
-      });
-    }
+    const selectedDialogues = dialogues.length ? dialogues.slice(0, 3) : ["患者家属前来说明情况。"];
+    entry.blueprint.nodes.random.inputs.n = selectedDialogues.length;
+    selectedDialogues.forEach((text, index) => {
+      const node = entry.blueprint.nodes[`dialogue${index}`];
+      if (node) node.inputs.text = text;
+    });
     workQueue.append([entry]);
     return { ok: true, scheduleId: entry.scheduleId };
   }

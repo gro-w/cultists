@@ -340,8 +340,8 @@ export class DeveloperMode {
     const achievements = achievementManager.getAllAchievements().map(({ def, state }) => `<tr><td>${esc(def.name || def.title || def.id)}</td><td><code>${esc(def.id)}</code></td><td>${state?.unlocked ? "已解锁" : "未解锁"}</td><td>${state?.progress || 0}</td><td>${state?.seen ? "已查看" : "未查看"}</td><td>${state?.unlocked ? button("标记已查看", `mark-achievement-${def.id}`) : button("强制解锁", `unlock-achievement-${def.id}`)}</td></tr>`).join("");
     this.panel(`
       <section class="dev-section"><h3>快速读档</h3>
-        <textarea data-save-input class="dev-textarea dev-save-input" placeholder="粘贴存档字符串（可带 ?）"></textarea>
-        <div>${button("解析并载入（不修改 URL）", "load-save")} ${button("保存当前游戏", "save-game")}</div>
+        <textarea data-save-input class="dev-textarea dev-save-input" placeholder="开发调试：粘贴旧版 base64 存档字符串"></textarea>
+        <div>${button("解析并载入", "load-save")} ${button("下载当前游戏存档", "save-game")}</div>
       </section>
       <section class="dev-section"><h3>时间</h3>
         <label>第 <input data-day type="number" min="1" value="${gameState.day}"> 日</label>
@@ -352,7 +352,7 @@ export class DeveloperMode {
         <p>阶段：${esc(gameState.phase)}；值班：${esc(gameState.duty)}；位置：${esc(gameState.location)}；睡眠历史：${esc((time.sleepHistory || []).join(", ") || "无")}；连续睡眠不足：${time.insufficientSleepStreak || 0} 天</p>
       </section>
       <section class="dev-section"><h3>成就调试器</h3>
-        <p>成就使用 AchievementManager 的跨周目 localStorage 状态，不属于单局 URL 存档。</p>
+        <p>成就使用 AchievementManager 的跨周目 localStorage 状态，不属于单局文件存档。</p>
         <div>${button("重置全部成就", "reset-achievements")}</div>
         <table class="dev-table"><thead><tr><th>成就</th><th>ID</th><th>状态</th><th>进度</th><th>查看</th><th>操作</th></tr></thead><tbody>${achievements || "<tr><td colspan=6>成就数据尚未加载</td></tr>"}</tbody></table>
       </section>
@@ -724,17 +724,14 @@ export class DeveloperMode {
     }
     if (action === "load-save") {
       const raw = this.root.querySelector("[data-save-input]").value.trim().replace(/^\?/, "");
-      const ok = raw && saveManager.loadFromString(raw, { updateLocation: false });
-      this.setStatus(ok ? "存档已载入，地址栏未改变。" : "存档字符串无效。", !ok);
+      const ok = raw && saveManager.loadFromString(raw);
+      this.setStatus(ok ? "存档已载入。" : "存档字符串无效。", !ok);
       if (ok) this.showState();
       return;
     }
     if (action === "save-game") {
-      const url = saveManager.save();
-      const encoded = url.split("?")[1] || "";
-      const input = this.root.querySelector("[data-save-input]");
-      if (input) input.value = encoded;
-      this.setStatus(`当前游戏已保存（${encoded.length} 字符，地址栏已更新）。`);
+      const fileName = saveManager.saveToFile();
+      this.setStatus(`当前游戏已下载为 ${fileName}。`);
       return;
     }
     const achievementAction = action.match(/^(unlock|mark)-achievement-(.+)$/);

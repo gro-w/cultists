@@ -66,10 +66,8 @@ developerModeEnabled = isDeveloperModeSearch();
  * Social app instead vary *what content* they show based on the current
  * day + phase (see their own data-driven schedules).
  *
- * Boot flow: if `location.search` is empty, an XP-style Main Menu overlay
- * is shown first (new game / load save-string). If a search string is
- * already present, the game boots straight in and shows a "welcome back"
- * toast instead of the old per-phase "XX 已开启" wording.
+ * Boot flow: an XP-style Main Menu overlay is shown first; saves are loaded
+ * from files selected by the player rather than from the URL.
  */
 
 /** Perform the 下班/睡觉 phase-change action, with optional confirmation. */
@@ -130,7 +128,7 @@ const APP_REGISTRY = [
   },
 ];
 
-function boot({ welcomeBack }) {
+function boot() {
   const windowLayer = document.getElementById("window-layer");
   const workShell = document.getElementById("work-shell");
   windowManager.mount(windowLayer);
@@ -178,18 +176,14 @@ function boot({ welcomeBack }) {
   });
 
   // Register launchers so SaveManager can reopen windows that were open at
-  // save time, then restore from `location.search` if a save is present.
+  // save time when a file save is restored.
   const launcherMap = {};
   APP_REGISTRY.forEach((app) => {
     if (app.id !== "phase-toggle") launcherMap[app.id] = () => app.launch();
   });
   saveManager.registerLaunchers(launcherMap);
 
-  let saveLoaded = true;
-  if (welcomeBack) {
-    saveLoaded = saveManager.loadFromLocation();
-    if (saveLoaded) notificationBanner.showWelcomeBack();
-  }
+
   // Start main schedule execution only after save restoration has replaced
   // the preloaded queue snapshot, so a waiting runner never survives against
   // an obsolete queue entry object.
@@ -198,13 +192,11 @@ function boot({ welcomeBack }) {
   console.info(
     `[Cultists] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
   );
-  return { saveLoaded };
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   // Preload item/schedule/ending defs + the canonical index tables
-  // SaveManager needs before any UI is shown, so a save-string restore (if
-  // present) is deterministic. UI strings load first since several of the
+  // SaveManager needs before any UI is shown. UI strings load first since several of the
   // preloaded modules (Settings, Notebook...) read i18n.t() during render.
   const language = settingsManager.language;
   dataLoader.setLanguage(language);
@@ -236,20 +228,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // DEV-TOOLS:START
       const developerMode = developerModeEnabled;
       // DEV-TOOLS:END
-      const welcomeBack = Boolean(window.location.search)
-        // DEV-TOOLS:START
-        && !developerMode
-        // DEV-TOOLS:END
-        ;
-      const bootResult = boot({ welcomeBack });
+      boot();
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
         onNewGame: () => {
           window.history.replaceState(null, "", window.location.pathname);
         },
-        onLoadSave: (saveString) => {
-          const ok = saveManager.loadFromString(saveString);
+        onLoadSaveFile: async (file) => {
+          const ok = await saveManager.loadFromFile(file);
           if (!ok) {
-            confirmDialog("该存档格式已不再支持。由于日程系统已经重构，旧存档无法继续使用，请重新开始游戏。", {
+            confirmDialog("该存档文件无效或版本已不再支持，请选择正确的存档文件。", {
               title: "存档不受支持",
               icon: "⚠️",
             });
@@ -257,17 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return ok;
         },
       });
-      if (welcomeBack && bootResult.saveLoaded) mainMenu.hide();
-      else if (welcomeBack) {
-        mainMenu.show();
-        confirmDialog("该存档格式已不再支持。由于日程系统已经重构，旧存档无法继续使用，请重新开始游戏。", {
-          title: "存档不受支持",
-          icon: "⚠️",
-        }).then(() => {
-          window.history.replaceState(null, "", window.location.pathname);
-        });
-      }
-      else {
+      {
         // DEV-TOOLS:START
         if (developerMode) {
           mainMenu.hide();

@@ -24,8 +24,8 @@ import { medicalCaseManager } from "../core/MedicalCaseManager.js";
  *   - NPC: every patient/contact/ChatGTP the player has interacted with,
  *     and their own SAN (NpcStateManager) - distressed/offline status is
  *     shown here at a glance instead of only inside each app.
- *   - 保存: builds/display the save-string URL (SaveManager) and lets the
- *     player load a save string back in.
+ *   - 保存: downloads a save file (SaveManager) and lets the player select
+ *     a save file to restore.
  * Always available; live-updates via GameState/ItemManager/TimeService/
  * NpcStateManager events.
  */
@@ -217,39 +217,29 @@ export async function launchStatusApp() {
   function renderSave() {
     panels.save.innerHTML = `
       <h4>保存 / 读取</h4>
-      <p>点击“保存”会把当前存档写入地址栏（URL 的 ? 后面部分），请复制该网址保存。</p>
-      <button class="win95-btn bevel-out" data-action="save-btn">保存到网址</button>
-      <div class="save-url-row">
-        <label>存档网址：</label>
-        <input type="text" class="win95-input save-url-input" readonly />
-      </div>
-      <p>粘贴一段存档字符串（? 后面的部分）到下方并点击“读取”即可恢复进度：</p>
+      <p>点击“下载存档”将当前进度保存为文件，请妥善保管该文件。</p>
+      <button class="win95-btn bevel-out" data-action="save-btn">下载存档文件</button>
+      <p>选择之前下载的存档文件即可恢复进度：</p>
       <div class="save-load-row">
-        <input type="text" class="win95-input save-load-input" placeholder="粘贴存档字符串" />
-        <button class="win95-btn bevel-out" data-action="load-btn">读取</button>
+        <input type="file" class="win95-input save-file-input" accept=".sav,application/octet-stream" />
+        <button class="win95-btn bevel-out" data-action="load-btn">载入文件</button>
       </div>
       <p class="save-feedback" hidden></p>
     `;
-    const urlInput = panels.save.querySelector(".save-url-input");
-    const loadInput = panels.save.querySelector(".save-load-input");
+    const loadInput = panels.save.querySelector(".save-file-input");
     const feedback = panels.save.querySelector(".save-feedback");
-    urlInput.value = window.location.href;
-
     panels.save.querySelector('[data-action="save-btn"]').addEventListener("click", () => {
-      const url = saveManager.save();
-      urlInput.value = url;
+      const fileName = saveManager.saveToFile();
       feedback.hidden = false;
-      feedback.textContent = "已保存！请复制上方网址妥善保管。";
+      feedback.textContent = `已下载 ${fileName}，请妥善保管。`;
     });
 
-    panels.save.querySelector('[data-action="load-btn"]').addEventListener("click", () => {
-      const raw = loadInput.value.trim();
-      const ok = raw && saveManager.loadFromString(raw.replace(/^\?/, ""));
+    panels.save.querySelector('[data-action="load-btn"]').addEventListener("click", async () => {
+      const ok = await saveManager.loadFromFile(loadInput.files[0]);
       feedback.hidden = false;
-      feedback.textContent = ok ? "读取成功！" : "读取失败，请检查存档字符串是否正确。";
+      feedback.textContent = ok ? "读取成功！" : "读取失败，请检查存档文件是否有效或版本是否受支持。";
       if (ok) {
-        urlInput.value = window.location.href;
-        renderStats();
+        renderAll();
       }
     });
   }

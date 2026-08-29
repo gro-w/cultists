@@ -22,14 +22,6 @@ const SAVE_FORMAT_VERSION = 16;
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
 
-function base64UrlEncode(uint8arr) {
-  let binary = "";
-  uint8arr.forEach((b) => {
-    binary += String.fromCharCode(b);
-  });
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-
 function base64UrlDecode(str) {
   let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
   while (b64.length % 4 !== 0) b64 += "=";
@@ -41,8 +33,8 @@ function base64UrlDecode(str) {
 
 /**
  * SaveManager packs the complete v16 game state into a version-prefixed JSON
- * payload, base64url-encodes it, and writes it to `location.search` so a save
- * is represented by the current URL. Loading reverses the process.
+ * payload and exports the bytes as a downloaded file. Loading reverses the
+ * process from a user-selected File object.
  */
 class SaveManager {
   constructor() {
@@ -79,23 +71,24 @@ class SaveManager {
     this._launchers = launcherMap || {};
   }
 
-  /** Encode the current game state and write it to the URL's search string. */
-  save() {
+  /** Download the current game state as a binary save file. */
+  saveToFile(fileName = `cultists-save-v${SAVE_FORMAT_VERSION}.sav`) {
     const bytes = this._encode();
-    const encoded = base64UrlEncode(bytes);
-    const url = `${window.location.pathname}?${encoded}`;
-    window.history.replaceState(null, "", url);
-    return window.location.href;
+    const blob = new Blob([bytes], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = fileName;
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+    return fileName;
   }
 
-  /** Decode a save string (without the leading "?") and restore it. */
-  loadFromString(str, { updateLocation = true } = {}) {
+  /** Decode a legacy/base64 save string and restore it without touching the URL. */
+  loadFromString(str) {
     try {
       const bytes = base64UrlDecode(str);
       this._decode(bytes);
-      if (updateLocation) {
-        window.history.replaceState(null, "", `${window.location.pathname}?${str}`);
-      }
       return true;
     } catch (err) {
       endingManager.endRestore();
@@ -104,11 +97,17 @@ class SaveManager {
     }
   }
 
-  /** Called once at boot: restores from `location.search` if present. */
-  loadFromLocation() {
-    const search = window.location.search.replace(/^\?/, "");
-    if (!search) return false;
-    return this.loadFromString(search);
+  /** Read and restore a save file selected by the user. */
+  async loadFromFile(file) {
+    if (!file || typeof file.arrayBuffer !== "function") return false;
+    try {
+      this._decode(new Uint8Array(await file.arrayBuffer()));
+      return true;
+    } catch (err) {
+      endingManager.endRestore();
+      console.error("[SaveManager] Failed to load save file:", err);
+      return false;
+    }
   }
 
   _encode() {

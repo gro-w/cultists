@@ -2,7 +2,7 @@
 
 > 审计依据：`js/core/SaveManager.js` 的 `_encode()` / `_decode()`、各核心单例的状态字段与 `snapshot/restore()`、`js/main.js` 的 App 注册，以及 `js/desktop/DeveloperMode.js` 的调试器入口。
 >
-> “重要”定义：所有会影响游戏规则、结局、可见世界、可恢复流程或存档一致性的运行时状态均为重要状态；所有实际写入 URL 存档的字段无条件属于重要状态。
+> “重要”定义：所有会影响游戏规则、结局、可见世界、可恢复流程或存档一致性的运行时状态均为重要状态；所有实际写入文件存档的字段无条件属于重要状态。
 
 ## 1. 重要运行时变量与所有者
 
@@ -26,9 +26,9 @@
 | 窗口布局 | `WindowManager` | 已打开 appId、窗口 x/y 及窗口顺序 | 时间与读档中的读档恢复间接覆盖 |
 | 数据加载缓存 | `DataLoader` | JSON 缓存与开发服务器缓存失效状态 | 无；基础设施状态，不属于游戏调试器 |
 
-## 2. 当前 URL 存档实际保存的运行时变量
+## 2. 当前文件存档实际保存的运行时变量
 
-`SaveManager` 当前格式为 v15，`_encode()` 保存以下域：
+`SaveManager` 当前格式为 v16，`_encode()` 保存以下域：
 
 1. **`gameState`**：`day`、`clockMinutes`、`phase`、`duty`、`location`、`energy`、`mental`、`physical`、`satiety`、`recoverableMentalLoss`。
 2. **`timeService`**：`phaseMinutes`、最近三次 `sleepHistory`、`insufficientSleepStreak`。
@@ -53,7 +53,7 @@
 
 ## 3. 已修复的存档缺口与仍需后续决策的状态
 
-历史审计发现的存档缺口已在 v13–v15 期间补齐：
+历史审计发现的存档缺口已在 v13–v16 期间补齐：
 
 - `FavorabilityManager`：好感度 `values` 与 `hadPositive`，保存键为 `favorability`。
 - `ItemPlacementManager`：场景物品 `placed` 映射，保存键为 `itemPlacements`。
@@ -75,7 +75,7 @@
 
 当前入口已重命名为“时间与读档”，图标为时钟 `🕒`。现有能力：
 
-- 粘贴并载入存档字符串。
+- 选择并载入存档文件。
 - 修改第几日、时、分和地点。
 - 通过 `TimeService.debugSetTime()` 调整时间。
 - 强制结束当前工作批次。
@@ -113,7 +113,7 @@
 
 1. `ScheduleData.fired`、`pendingAdds`、`lastAbsoluteMinute` 尚未在“日程与队列”中单独展示。
 2. `KeywordManager` 和 `SpellManager` 当前只读展示，尚未提供独立的运行时增删控件。
-3. `FavorabilityManager.hadPositive` 尚未单独展示，但已随 NPC 与对话调试器和当前 v15 存档覆盖。
+3. `FavorabilityManager.hadPositive` 尚未单独展示，但已随 NPC 与对话调试器和当前 v16 存档覆盖。
 4. `BgmManager` 的对话栈和结局 BGM 层（通常属于表现层，不建议优先开放）。
 
 ## 6. 推荐的调试器分组
@@ -124,7 +124,7 @@
 
 - `GameState.day/clockMinutes/phase/duty/location`。
 - `TimeService.phaseMinutes/sleepHistory/insufficientSleepStreak`。
-- 存档字符串载入与当前存档导出。
+- 存档文件载入与当前存档下载。
 - 强制下班、阶段边界和最终阶段观察。
 
 ### B. 日程与队列

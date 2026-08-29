@@ -20,7 +20,7 @@ index.html
   -> main.js
      -> SettingsManager / DataLoader
      -> 并行初始化内容 singleton
-     -> SaveManager 初始化与恢复 URL 存档
+     -> SaveManager 初始化与恢复文件存档
      -> Desktop / Taskbar / DormMode
      -> 根据 GameState 挂载当前工作或宿舍模式
 ```
@@ -39,7 +39,7 @@ index.html
 | `ScheduleRunner` | 按流程节点执行蓝图、暂停等待 UI、记录 transcript |
 | `ItemScheduleRuntime` | 物品和其他非阻塞操作的日程运行时 |
 | `DialogueEffects` | 对话节点/选项显示时的共享副作用 |
-| `SaveManager` | v15 URL 存档、索引、队列实例、窗口和持久状态恢复 |
+| `SaveManager` | v16 文件存档、索引、队列实例、窗口和持久状态恢复 |
 | `DataLoader` | 语言目录 JSON 加载、缓存和开发服务器读写桥接 |
 
 新增系统前先确定 owner、输入数据、输出事件、快照字段和恢复顺序；不要把状态放在 App 的局部变量中。
@@ -235,7 +235,7 @@ App 点击
 
 ## 9. 存档和版本
 
-`SaveManager` 当前格式为 v16。它保存游戏状态、TimeService、工作/社交/主要三个队列、关键词、背包、医疗、NPC 状态、好感度、场景物品、结局锁定、全局变量、窗口布局、法术、动态日程插入和 CG 状态。对话进度与状态由日程实例负责，不再单独保存。存档是 URL query 中的 base64url 文本；索引表由已加载数据建立。
+`SaveManager` 当前格式为 v16。它保存游戏状态、TimeService、工作/社交/主要三个队列、关键词、背包、医疗、NPC 状态、好感度、场景物品、结局锁定、全局变量、窗口布局、法术、动态日程插入和 CG 状态。对话进度与状态由日程实例负责，不再单独保存。存档以二进制文件下载和选择载入；索引表由已加载数据建立。
 
 改变 payload、字段含义、编码或索引表时必须评估版本，并显式拒绝不支持版本；不能静默把旧数据当新格式。新增可恢复窗口要同时更新 `WINDOW_APP_IDS` 和 launcher 注册。恢复顺序要先加载 canonical data，再恢复状态和队列，最后刷新窗口。
 

@@ -71,7 +71,7 @@ docs/                      架构、数据 schema 和协作指南
 | `SpellManager` | 已学习法术和 SAN 消耗的施放 |
 | `DialogueRunner` / `DialogueEffects` | 共享对话树、条件和显示时副作用 |
 | `KeywordManager` / `NotebookApp` | 关键词收集、来源、查询和法术笔记本 |
-| `SaveManager` | v15 URL 存档、全局变量、法术、CG 和窗口布局恢复 |
+| `SaveManager` | v16 文件存档、全局变量、法术、CG 和窗口布局恢复 |
 | `DeveloperMode` / `dev-server.js` | 开发调试、数据编辑和本地写盘 |
 
 模块间优先通过 `EventBus` 通信；内容相关逻辑应放入 JSON，而不是硬编码在应用中。

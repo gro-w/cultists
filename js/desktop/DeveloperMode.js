@@ -423,7 +423,7 @@ export class DeveloperMode {
     npcIds.forEach((numericId) => {
       ids.add(40 + numericId);
       ids.add(60 + numericId);
-    }
+    });
     return ids;
   }
 

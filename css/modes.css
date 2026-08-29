@@ -488,7 +488,7 @@
 /* ChatGTP inside computer */
 .dorm-computer-panel .chatgtp-history { background: #f0eef8; color: #111; }
 .dorm-computer-panel .chatgtp-keywords { background: #f5f3fc; color: #111; }
-.dorm-computer-panel .chatgtp-dialogue-layout { background: #f0eef8; color: #111; }
+
 .dorm-computer-panel .bubble-npc { background: #e8f0fe; border-color: #aac; color: #111; }
 .dorm-computer-panel .bubble-me { background: #d4edda; border-color: #8bc; color: #111; }
 .dorm-computer-panel .chatgtp-san-indicator { color: #444; }

@@ -6,9 +6,8 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
 import { chatgtpQueue } from "../core/ScheduleQueue.js";
-import { dialogueProgress } from "../core/DialogueProgress.js";
+
 import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js";
 import { getPinyinInitial } from "../core/Pinyin.js";
 
@@ -24,16 +23,12 @@ const NOTEBOOK_CATEGORY_LABELS = {
 };
 
 /**
- * ChatGTPApp - a ChatGPT-styled assistant, split into two tabs:
+ * ChatGTPApp - a ChatGPT-styled assistant:
  *   - "关键词问答": select 1-2 keywords and get a looked-up answer from
  *     `data/chatgtp_qa.json`.
- *   - "对话模式": a normal branching NPC-style conversation (walked via the
- *     the shared schedule runner, authored in `chatgtp_dialog.json`.
- *
  * ChatGTP has its OWN SAN (tracked via NpcStateManager under the actor id
  * "chatgtp", same mechanism as any patient/contact): every keyword-QA
- * query costs `sanCostPerQuery` SAN, and dialogue-mode nodes can carry
- * `onShow.npcSanChange` same as any other dialogueTree. Once its SAN drops
+ * query costs `sanCostPerQuery` SAN. Once its SAN drops
  * below the "distressed" threshold, each matched entry chooses its own
  * corrupted answer (or reuses the normal answer); once it goes fully offline,
  * queries get `offlineAnswer` instead of any real answer.
@@ -58,9 +53,9 @@ export async function launchChatGTPApp(options = {}) {
     return existing;
   }
 
-  const [qa, dialog, diagnoses, medicines] = await Promise.all([
+  const [qa, socialApps, diagnoses, medicines] = await Promise.all([
     dataLoader.loadJSON("chatgtp_qa.json"),
-    dataLoader.loadJSON("chatgtp_dialog.json"),
+    dataLoader.loadJSON("social_apps.json"),
     dataLoader.loadJSON("diagnoses.json"),
     dataLoader.loadJSON("medicines.json"),
   ]);
@@ -89,13 +84,8 @@ export async function launchChatGTPApp(options = {}) {
   const root = document.createElement("div");
   root.className = "app-chatgtp";
   root.innerHTML = `
-    <div class="chatgtp-tabs">
-      <button type="button" class="win95-btn bevel-out chatgtp-tab-btn" data-tab="qa">关键词问答</button>
-      <button type="button" class="win95-btn bevel-out chatgtp-tab-btn" data-tab="dialogue">对话模式</button>
-      <span class="chatgtp-san-indicator"></span>
-    </div>
-    <div class="chatgtp-tab-panel" data-panel="qa">
-      <div class="chatgtp-layout">
+    <div class="chatgtp-san-indicator"></div>
+    <div class="chatgtp-layout">
         <div class="chatgtp-history panel-inset"></div>
         <div class="chatgtp-keywords panel-inset">
           <h4>选择 1-2 个关键词进行查询：</h4>
@@ -130,21 +120,9 @@ export async function launchChatGTPApp(options = {}) {
           </div>
         </div>
 
-      </div>
-    </div>
-    <div class="chatgtp-tab-panel" data-panel="dialogue" hidden>
-      <div class="chatgtp-dialogue-layout panel-inset">
-        <div class="dialogue-lines chatgtp-dialogue-lines"></div>
-        <div class="dialogue-options"></div>
-      </div>
     </div>
   `;
 
-  const tabButtons = [...root.querySelectorAll(".chatgtp-tab-btn")];
-  const panels = {
-    qa: root.querySelector('[data-panel="qa"]'),
-    dialogue: root.querySelector('[data-panel="dialogue"]'),
-  };
   const sanIndicatorEl = root.querySelector(".chatgtp-san-indicator");
   const historyEl = root.querySelector(".chatgtp-history");
   const notebookCategorySelect = root.querySelector(".chatgtp-notebook-category-select");
@@ -156,31 +134,14 @@ export async function launchChatGTPApp(options = {}) {
   const queryBtn = root.querySelector(".chatgtp-query-btn");
   const selectedKeywordEls = [...root.querySelectorAll(".chatgtp-selected-keyword")];
 
-  const dialogueLinesEl = root.querySelector(".chatgtp-dialogue-lines");
-  const dialogueOptionsEl = root.querySelector(".dialogue-options");
 
   /** @type {Set<string>} ids of keywords currently selected for combo query */
   const selectedIds = new Set();
   let selectedCategoryId = null;
   let selectedMedicineCategoryId = null;
   let selectedNotebookCategory = "";
-  let dialogueStarted = false;
-  let dialogueCurrentNode = dialogueProgress.get("chatgtp").nodeId;
 
-  function selectTab(name) {
-    tabButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.tab === name));
-    Object.entries(panels).forEach(([key, el]) => {
-      el.hidden = key !== name;
-    });
-    if (name === "dialogue" && !dialogueStarted) {
-      dialogueStarted = true;
-      startDialogueMode();
-    }
-  }
 
-  tabButtons.forEach((btn) => {
-    btn.addEventListener("click", () => selectTab(btn.dataset.tab));
-  });
 
   function updateSanIndicator() {
     const offline = npcStateManager.isOffline(CHATGTP_ACTOR_ID);
@@ -217,6 +178,42 @@ export async function launchChatGTPApp(options = {}) {
     historyEl.appendChild(bubble);
     keywordManager.bindHighlights(bubble, ownKeywordDefs);
     historyEl.scrollTop = historyEl.scrollHeight;
+  }
+
+  function renderDailyMessages() {
+    const daily = socialApps.chatgtpDaily || [];
+    const day = gameState.day;
+    const entry = daily.find((item) => item.day === day) ?? (day <= daily.length ? daily[day - 1] : null);
+    const pairs = entry?.pairs || [];
+    if (pairs.length === 0) return;
+
+    const banner = document.createElement("div");
+    banner.className = "chatgtp-daily-banner";
+    let pairIndex = 0;
+    const renderBanner = () => {
+      if (pairIndex >= pairs.length) {
+        banner.textContent = "📬 今日预设对话：已全部查看。";
+        return;
+      }
+      banner.replaceChildren();
+      const label = document.createElement("span");
+      label.className = "chatgtp-daily-label";
+      label.textContent = `📬 今日消息 (${pairIndex + 1}/${pairs.length})`;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "win95-btn bevel-out chatgtp-daily-btn";
+      button.textContent = "查看";
+      button.addEventListener("click", () => {
+        const pair = pairs[pairIndex];
+        appendMessage("me", escapeHtml(pair.q || ""));
+        appendMessage("npc", escapeHtml(pair.a || ""));
+        pairIndex += 1;
+        renderBanner();
+      });
+      banner.append(label, button);
+    };
+    renderBanner();
+    historyEl.prepend(banner);
   }
 
   function answerFor(labels) {
@@ -475,40 +472,6 @@ export async function launchChatGTPApp(options = {}) {
     renderKeywordChips();
   }
 
-  /** "对话模式" tab: walk `chatgtp_qa.json`'s `dialogueMode` tree like any NPC. */
-  function startDialogueMode() {
-    const definition = dialog;
-    if (!definition?.blueprint) {
-      dialogueLinesEl.innerHTML = '<p class="dialogue-end">（暂无日程对话内容）</p>';
-      return;
-    }
-    function appendLine(speaker, label, text) {
-      const p = document.createElement("p");
-      p.className = `dialogue-line speaker-${speaker}`;
-      p.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, ownKeywordDefs)}`;
-      dialogueLinesEl.replaceChildren(p);
-      keywordManager.bindHighlights(p, ownKeywordDefs);
-      dialogueLinesEl.scrollTop = dialogueLinesEl.scrollHeight;
-    }
-    if (npcStateManager.isOffline(CHATGTP_ACTOR_ID)) {
-      dialogueLinesEl.innerHTML = '<p class="dialogue-end">（ChatGTP 已经宕机，无法进入对话模式。）</p>';
-      return;
-    }
-    let instance = chatgtpQueue.current();
-    if (!instance || instance.scheduleId !== definition.id) {
-      instance = chatgtpQueue.append([{ scheduleId: definition.id, payload: definition, status: "unresolved", transcript: [] }])[0];
-    }
-    const runner = createScheduleRunner({
-      definition,
-      instance,
-      appendLine,
-      optionsEl: dialogueOptionsEl,
-      appId: "chatgtp",
-      onCheckpoint: (next) => chatgtpQueue.updateInstance(instance.instanceId, next),
-      onComplete: () => chatgtpQueue.complete(instance.instanceId),
-    });
-    runner.start();
-  }
 
   const offSelectKeyword = eventBus.on("chatgtp:select-keyword", ({ id }) => selectKeyword(id));
   const offKeywordChange = keywordManager.onChange(() => renderKeywordChips());
@@ -524,8 +487,9 @@ export async function launchChatGTPApp(options = {}) {
   renderKeywordChips();
   updateSanIndicator();
   appendMessage("npc", "你好，我是 ChatGTP，你可以输入问题、选择疾病关键词，或用疾病关键词与普通关键词组合查询～");
+  renderDailyMessages();
   if (options.presetKeywordId) selectKeyword(options.presetKeywordId);
-  selectTab("qa");
+
 
   if (options.container) {
     options.container.replaceChildren(root);

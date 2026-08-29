@@ -453,59 +453,14 @@ export default class DormMode {
       this._compTabInit[tabId] = true;
       const panel = this.root.querySelector(`[data-comppanel="${tabId}"]`);
       if (tabId === "chatgtp") {
-        this._renderChatGTPWithDaily(panel);
+        this._renderChatGTP(panel);
       } else if (tabId === "social") {
         this._renderSocialMedia(panel);
       }
     }
   }
 
-  async _renderChatGTPWithDaily(panel) {
-    // Daily preset Q&A banner — one per day, sequential by chatgtpDaily index
-    try {
-      const data = await dataLoader.loadJSON("social_apps.json");
-      const daily = data.chatgtpDaily || [];
-      const day   = gameState.day;
-      // Find the entry for today (matched by day field, fall back to sequential index day-1)
-      const entry = daily.find((e) => e.day === day)
-        ?? (day <= daily.length ? daily[day - 1] : null);
-      const pairs = entry?.pairs || [];
-
-      if (pairs.length > 0) {
-        const viewKey = `chatgtp_daily_${day}`;
-        const pairIdx = this._viewedApps.get(viewKey) ?? 0;
-        const banner = document.createElement("div");
-        banner.className = "chatgtp-daily-banner";
-        if (pairIdx >= pairs.length) {
-          banner.textContent = "📬 今日预设对话：已全部查看。";
-        } else {
-          const pair = pairs[pairIdx];
-          banner.innerHTML = `<span class="chatgtp-daily-label">📬 今日消息 (${pairIdx + 1}/${pairs.length})</span>
-            <button type="button" class="win95-btn bevel-out chatgtp-daily-btn">查看</button>`;
-          banner.querySelector(".chatgtp-daily-btn").addEventListener("click", async () => {
-            // Append into the ChatGTP history after it initialises
-            const histEl = panel.querySelector(".chatgtp-history");
-            if (histEl) {
-              const q = document.createElement("div");
-              q.className = "chat-bubble bubble-me";
-              q.textContent = pair.q;
-              const a = document.createElement("div");
-              a.className = "chat-bubble bubble-npc";
-              a.textContent = pair.a;
-              histEl.appendChild(q);
-              histEl.appendChild(a);
-              histEl.scrollTop = histEl.scrollHeight;
-            }
-            this._viewedApps.set(viewKey, pairIdx + 1);
-            banner.textContent = pairIdx + 1 >= pairs.length
-              ? "📬 今日预设对话：已全部查看。"
-              : `📬 今日消息已查看（剩余 ${pairs.length - pairIdx - 1} 条）`;
-          });
-        }
-        panel.appendChild(banner);
-      }
-    } catch (_) { /* daily section optional */ }
-
+  _renderChatGTP(panel) {
     launchChatGTPApp({ container: { replaceChildren: (el) => panel.appendChild(el) } })
       .catch((err) => { panel.insertAdjacentHTML("beforeend", `<p>ChatGTP 无法打开：${err.message}</p>`); });
   }

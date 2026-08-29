@@ -401,53 +401,65 @@ export default class DormMode {
   }
 
   async _renderChatGTPWithDaily(panel) {
-    // Daily preset Q&A banner — one per day, sequential by chatgtpDaily index
+    // Launch ChatGTP first so .chatgtp-history is in the DOM before the
+    // daily banner's "查看" button tries to append messages into it.
+    await launchChatGTPApp({ container: { replaceChildren: (el) => panel.appendChild(el) } })
+      .catch((err) => { panel.insertAdjacentHTML("beforeend", `<p>ChatGTP 无法打开：${err.message}</p>`); });
+
+    // Daily preset Q&A banner — one exchange per click, limited to the
+    // number of exchanges available for today.
     try {
       const data = await dataLoader.loadJSON("social_apps.json");
       const daily = data.chatgtpDaily || [];
       const day   = gameState.day;
-      // Find the entry for today (matched by day field, fall back to sequential index day-1)
+      // Match by day field; fall back to sequential index (day-1) if no exact match
       const entry = daily.find((e) => e.day === day)
         ?? (day <= daily.length ? daily[day - 1] : null);
-      const pairs = entry?.pairs || [];
+      const exchanges = entry?.exchanges || [];
 
-      if (pairs.length > 0) {
-        const viewKey = `chatgtp_daily_${day}`;
-        const pairIdx = this._viewedApps.get(viewKey) ?? 0;
-        const banner = document.createElement("div");
-        banner.className = "chatgtp-daily-banner";
-        if (pairIdx >= pairs.length) {
-          banner.textContent = "📬 今日预设对话：已全部查看。";
-        } else {
-          const pair = pairs[pairIdx];
-          banner.innerHTML = `<span class="chatgtp-daily-label">📬 今日消息 (${pairIdx + 1}/${pairs.length})</span>
-            <button type="button" class="win95-btn bevel-out chatgtp-daily-btn">查看</button>`;
-          banner.querySelector(".chatgtp-daily-btn").addEventListener("click", async () => {
-            // Append into the ChatGTP history after it initialises
-            const histEl = panel.querySelector(".chatgtp-history");
-            if (histEl) {
-              const q = document.createElement("div");
-              q.className = "chat-bubble bubble-me";
-              q.textContent = pair.q;
-              const a = document.createElement("div");
-              a.className = "chat-bubble bubble-npc";
-              a.textContent = pair.a;
-              histEl.appendChild(q);
-              histEl.appendChild(a);
-              histEl.scrollTop = histEl.scrollHeight;
-            }
-            this._viewedApps.set(viewKey, pairIdx + 1);
-            banner.textContent = pairIdx + 1 >= pairs.length
-              ? "📬 今日预设对话：已全部查看。"
-              : `📬 今日消息已查看（剩余 ${pairs.length - pairIdx - 1} 条）`;
-          });
+      if (exchanges.length === 0) return;
+
+      const viewKey = `chatgtp_daily_${day}`;
+      // Persist viewed count in _viewedApps map (survives tab switches this session)
+      const getIdx = () => this._viewedApps.get(viewKey) ?? 0;
+
+      const banner = document.createElement("div");
+      banner.className = "chatgtp-daily-banner";
+
+      const refreshBanner = () => {
+        const idx = getIdx();
+        if (idx >= exchanges.length) {
+          banner.innerHTML = `<span class="chatgtp-daily-label">📬 今日预设对话：已全部查看（共 ${exchanges.length} 条）。</span>`;
+          return;
         }
-        panel.appendChild(banner);
-      }
-    } catch (_) { /* daily section optional */ }
+        banner.innerHTML = `
+          <span class="chatgtp-daily-label">📬 今日消息 (${idx + 1}/${exchanges.length})</span>
+          <button type="button" class="win95-btn bevel-out chatgtp-daily-btn">查看</button>`;
+        banner.querySelector(".chatgtp-daily-btn").addEventListener("click", () => {
+          const currentIdx = getIdx();
+          if (currentIdx >= exchanges.length) { refreshBanner(); return; }
+          const exchange = exchanges[currentIdx];
+          const histEl = panel.querySelector(".chatgtp-history");
+          if (histEl) {
+            const q = document.createElement("div");
+            q.className = "chat-bubble bubble-me";
+            q.textContent = exchange.q;
+            const a = document.createElement("div");
+            a.className = "chat-bubble bubble-npc";
+            a.textContent = exchange.a;
+            histEl.appendChild(q);
+            histEl.appendChild(a);
+            histEl.scrollTop = histEl.scrollHeight;
+          }
+          this._viewedApps.set(viewKey, currentIdx + 1);
+          refreshBanner();
+        });
+      };
 
-    launchChatGTPApp({ container: { replaceChildren: (el) => panel.appendChild(el) } })
-      .catch((err) => { panel.insertAdjacentHTML("beforeend", `<p>ChatGTP 无法打开：${err.message}</p>`); });
+      refreshBanner();
+      // Insert banner before the ChatGTP root so it appears at the top
+      panel.insertBefore(banner, panel.firstChild);
+    } catch (_) { /* daily section optional */ }
   }
 
   async _renderSocialMedia(panel) {

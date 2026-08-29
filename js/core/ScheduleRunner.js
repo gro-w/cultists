@@ -10,6 +10,7 @@ import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
 import { spellEffectManager } from "./SpellEffectManager.js";
 import { keywordManager } from "./KeywordManager.js";
+import { medicalCaseManager } from "./MedicalCaseManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -119,6 +120,7 @@ export class ScheduleRunner {
         const speaker = get("speaker", node.speaker || "npc");
         const text = String(get("text", node.text || ""));
         this._record({ type: "text", speaker, text });
+        if (this.definition.kind === "medicalIncident") this.instance.lastScheduleText = text;
         this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
         if (this.definition.action === "investigate" && Array.isArray(node.keywordIds)) {
           this._emitInspection(node, text);
@@ -148,6 +150,18 @@ export class ScheduleRunner {
           : roll <= n / 5 ? "largeSuccess" : roll <= n ? "success" : "failure";
         this.instance.lastDiceCheck = { roll, target: n, outcome };
         return { next: nextFlow(this.blueprint, node, outcome) };
+      }
+      case "medicalIncident": {
+        if (this.definition.kind !== "medicalIncident" || !this.instance.lastDiceCheck) {
+          throw new Error("Medical incident requires a scheduled medical incident and dice check");
+        }
+        medicalCaseManager.resolveScheduledIncident({
+          submission: this.definition.submission,
+          type: this.definition.incidentType,
+          text: this.instance.lastScheduleText || "患者家属前来说明情况。",
+          check: this.instance.lastDiceCheck,
+        });
+        return {};
       }
       case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
       case "setGlobal": {

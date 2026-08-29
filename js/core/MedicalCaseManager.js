@@ -2,7 +2,7 @@ import { dataLoader } from "./DataLoader.js";
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
 import { endingManager } from "./EndingManager.js";
-import { checkSkill } from "./DiceCheck.js";
+
 
 /** Owns submitted HIS cases, income, and delayed medical incidents. */
 class MedicalCaseManager {
@@ -121,45 +121,50 @@ class MedicalCaseManager {
   }
 
   processDue(day = gameState.day) {
-    if (this._restoring) return;
+    if (this._restoring) return [];
+    const requests = [];
     for (const submission of this.submissions.values()) {
       if (submission.processed || submission.dueDay > day || !submission.incidentType) continue;
       submission.processed = true;
-      this._createIncident(submission);
+      const dialogueKey = submission.incidentType === "riot" ? "riotDialogues" : "complaintDialogues";
+      requests.push({
+        submission: { ...submission },
+        type: submission.incidentType,
+        dialogues: [...(this.config?.[dialogueKey] || [])],
+      });
     }
+    return requests;
   }
 
-  _createIncident(submission) {
-    const type = submission.incidentType;
-    const dialogueKey = type === "riot" ? "riotDialogues" : "complaintDialogues";
-    const dialogues = this.config?.[dialogueKey] || [];
-    const text = dialogues.length ? dialogues[Math.floor(Math.random() * dialogues.length)] : "患者家属前来说明情况。";
-    const check = checkSkill("communication");
+  resolveScheduledIncident({ submission, type, text, check }) {
+    if (!submission || !type || !text || !check) throw new Error("Invalid scheduled medical incident");
+    const displayCheck = { ...check, skillValue: check.skillValue ?? check.target };
     let result;
     if (type === "complaint") {
-      if (check.outcome === "success" || check.outcome === "criticalSuccess") {
+      if (check.outcome === "success" || check.outcome === "largeSuccess") {
         result = { kind: "none", fine: 0, message: "沟通成功，投诉暂时平息。" };
       } else {
-        const multiplier = check.outcome === "criticalFailure" ? 2 : 1;
+        const multiplier = check.outcome === "largeFailure" || Number(check.roll) >= 96 ? 2 : 1;
         const fine = Number(this.config?.complaintFine || 0) * multiplier;
         this.pendingExpenses += fine;
         result = { kind: "fine", fine, message: `投诉处理失败，罚款 ${fine} 元。` };
       }
-    } else if (check.outcome === "failure" || check.outcome === "criticalFailure") {
+    } else if (check.outcome === "failure" || check.outcome === "largeFailure") {
       result = { kind: "ending", fine: 0, message: "医闹失控，你被家属当场杀死。" };
-      eventBus.emit("medical:incident", { type, text, check, result, submission });
+      eventBus.emit("medical:incident", { type, text, check: displayCheck, result, submission });
       endingManager.trigger("mob_violence_death");
-      return;
+      return result;
     } else {
       const multiplier = check.outcome === "success" ? 2 : 1;
       const fine = Number(this.config?.riotFine || 0) * multiplier;
       this.pendingExpenses += fine;
       result = { kind: "fine", fine, message: `医闹暂时平息，罚款 ${fine} 元。` };
     }
-    const incident = { type, text, check, result, submission };
+    const incident = { type, text, check: displayCheck, result, submission };
     this.pendingIncidents.push(incident);
     eventBus.emit("medical:incident", incident);
     eventBus.emit("medical:incomeChanged", { income: this.income });
+    return incident;
   }
 
   consumePendingIncidents() {

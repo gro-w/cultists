@@ -204,6 +204,26 @@ class ScheduleData {
     }
   }
 
+  enqueueMedicalIncident({ submission, type, dialogues = [] }) {
+    const template = this.publicEntries.get("work")?.find((entry) => entry.id === "medical_incident_work");
+    if (!template) return { ok: false, reason: "missingMedicalIncidentTemplate" };
+    const entry = JSON.parse(JSON.stringify(template));
+    entry.kind = "medicalIncident";
+    entry.incidentType = type;
+    entry.submission = submission;
+    entry.receivedDay = submission.dueDay;
+    entry.receivedTime = 8 * 60;
+    entry.receivedPhase = "day";
+    entry.scheduleId = `${template.id}:${submission.patientId}`;
+    if (dialogues.length) {
+      ["dialogue0", "dialogue1", "dialogue2"].forEach((nodeId, index) => {
+        if (entry.blueprint.nodes[nodeId] && dialogues[index]) entry.blueprint.nodes[nodeId].inputs.text = dialogues[index];
+      });
+    }
+    workQueue.append([entry]);
+    return { ok: true, scheduleId: entry.scheduleId };
+  }
+
   matchesPrerequisite(rawBlueprint, legacyPrerequisite = null) {
     if (!rawBlueprint && !legacyPrerequisite) return true;
     const blueprint = embedLegacyPrerequisite(rawBlueprint || {}, legacyPrerequisite);

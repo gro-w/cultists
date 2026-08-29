@@ -21,7 +21,8 @@ import { turtleSoupManager } from "./TurtleSoupManager.js";
 // v17 = v16 plus TurtleSoup branch state.
 // v18 = v17 plus the active ending ID and priority.
 // v19 = v18 plus daily seaside spell usage.
-const SAVE_FORMAT_VERSION = 19;
+// v20 = v19 plus resumable medical incidents in workQueue.
+const SAVE_FORMAT_VERSION = 20;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -36,7 +37,7 @@ function base64UrlDecode(str) {
 }
 
 /**
- * SaveManager packs the complete v16 game state into a version-prefixed JSON
+ * SaveManager packs the complete v20 game state into a version-prefixed JSON
  * payload and exports the bytes as a downloaded file. Loading reverses the
  * process from a user-selected File object.
  */

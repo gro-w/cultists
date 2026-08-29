@@ -35,6 +35,8 @@ export const OUTCOME_LABELS = {
   success: "成功",
   failure: "失败",
   criticalFailure: "大失败",
+  largeSuccess: "大成功",
+  largeFailure: "大失败",
 };
 
 /**

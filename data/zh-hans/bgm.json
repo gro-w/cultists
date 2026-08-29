@@ -23,8 +23,231 @@
       "name": "邪教阴谋",
       "src": "audio/昼光.wav",
       "note": ""
+    },
+    {
+      "id": "bgm_dnpotl",
+      "name": "不谐弦乐",
+      "src": "audio/不谐弦乐.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_956b14",
+      "name": "刺耳混沌",
+      "src": "audio/刺耳混沌.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_19a32b",
+      "name": "怀疑调查",
+      "src": "audio/怀疑调查.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_98ea77",
+      "name": "迫近的恐惧",
+      "src": "audio/迫近的恐惧.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_f448cb",
+      "name": "迫近的威胁",
+      "src": "audio/迫近的威胁.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_802575",
+      "name": "邪教氛围",
+      "src": "audio/邪教氛围.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_51d50c",
+      "name": "夜间调查2",
+      "src": "audio/夜间调查2.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_550ca9",
+      "name": "幽静铃声",
+      "src": "audio/幽静铃声.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_4a8e1e",
+      "name": "钟声",
+      "src": "audio/钟声.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_dnpttt",
+      "name": "ambient克苏鲁",
+      "src": "audio/ambient克苏鲁.wav",
+      "note": ""
+    },
+    {
+      "id": "bgm_dnpxxh",
+      "name": "amaz",
+      "src": "audio/amaz.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_a92dac",
+      "name": "anta",
+      "src": "audio/anta.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_54621d",
+      "name": "lobu",
+      "src": "audio/lobu.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_33f0a9",
+      "name": "pooka (1)",
+      "src": "audio/pooka (1).mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_ba0044",
+      "name": "swf",
+      "src": "audio/swf.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_dnq5kl",
+      "name": "朝霞",
+      "src": "audio/朝霞.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_901ff8",
+      "name": "富有的日常",
+      "src": "audio/富有的日常.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_07115f",
+      "name": "和风吹拂",
+      "src": "audio/和风吹拂.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_63757d",
+      "name": "决意",
+      "src": "audio/决意.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_97c893",
+      "name": "窥探",
+      "src": "audio/窥探.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_69267b",
+      "name": "潜藏的危机",
+      "src": "audio/潜藏的危机.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_7185cf",
+      "name": "失真回忆",
+      "src": "audio/失真回忆.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_ea539f",
+      "name": "素材2 抒情个人向",
+      "src": "audio/素材2 抒情个人向.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_9a448c",
+      "name": "素材6 有点悲情向",
+      "src": "audio/素材6 有点悲情向.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_574ce8",
+      "name": "素材12 战斗金属",
+      "src": "audio/素材12 战斗金属.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_4c5d49",
+      "name": "素材15 loop练习（悲壮的感觉）",
+      "src": "audio/素材15 loop练习（悲壮的感觉）.mp3",
+      "note": ""
+    },
+    {
+      "id": "bgm_717cbd",
+      "name": "永远的瞬间",
+      "src": "audio/永远的瞬间.mp3",
+      "note": ""
     }
   ],
-  "defaultRules": [],
+  "defaultRules": [
+    {
+      "id": "bgm_dnqyel",
+      "dayMin": null,
+      "dayMax": null,
+      "phase": "day",
+      "sanMin": null,
+      "sanMax": null,
+      "bgmId": "bgm_dnpotl",
+      "priority": 1
+    },
+    {
+      "id": "bgm_dnro5w",
+      "dayMin": null,
+      "dayMax": null,
+      "phase": "night",
+      "sanMin": 70,
+      "sanMax": null,
+      "bgmId": "bgm_dnpxxh",
+      "priority": 2
+    },
+    {
+      "id": "bgm_dnrzx1",
+      "dayMin": null,
+      "dayMax": null,
+      "phase": "night",
+      "sanMin": 50,
+      "sanMax": 70,
+      "bgmId": "bgm_dnpotl",
+      "priority": 3
+    },
+    {
+      "id": "bgm_dnsvd4",
+      "dayMin": null,
+      "dayMax": null,
+      "phase": null,
+      "sanMin": 30,
+      "sanMax": 50,
+      "bgmId": "bgm_dnpotl",
+      "priority": 4
+    },
+    {
+      "id": "bgm_dnt9m3",
+      "dayMin": null,
+      "dayMax": null,
+      "phase": null,
+      "sanMin": 15,
+      "sanMax": 30,
+      "bgmId": "bgm_dnpotl",
+      "priority": 5
+    },
+    {
+      "id": "bgm_dnud3r",
+      "dayMin": null,
+      "dayMax": null,
+      "phase": null,
+      "sanMin": null,
+      "sanMax": 15,
+      "bgmId": "bgm_dnpotl",
+      "priority": 6
+    }
+  ],
   "fallback": "stop"
 }

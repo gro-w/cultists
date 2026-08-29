@@ -4,6 +4,7 @@ import { globalVariableManager } from "./GlobalVariableManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { timeService } from "./TimeService.js";
+import { skillManager } from "./SkillManager.js";
 
 const GAME_STATS = new Set(["energy", "mental", "physical", "satiety", "recoverableMentalLoss"]);
 
@@ -14,6 +15,7 @@ export function getStatValue(statId) {
   if (id.startsWith("favorability:")) return favorabilityManager.get(id.slice(14));
   if (id === "timeService:phaseMinutes") return timeService.phaseMinutes;
   if (id === "gameTime") return gameState.getGameTime();
+  if (skillManager.values.has(id)) return skillManager.get(id);
   return undefined;
 }
 

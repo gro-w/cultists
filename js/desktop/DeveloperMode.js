@@ -408,8 +408,23 @@ export class DeveloperMode {
 
   async showKeywords() {
     const doc = await this.loadDoc("keywords.json");
-    const rows = (doc.keywords || []).map((k, i) => `<tr data-keyword-row="${i}"><td><input data-k-id value="${esc(k.id)}"></td><td><input data-k-content value="${esc(k.content || k.label || "")}"></td><td>${button("删除", `remove-keyword-${i}`)}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3><p>关键词只保存稳定 ID 和显示内容。疾病关键词的介绍、药物和秘药资料请在 ChatGTP 编辑器中修改。</p><table class="dev-table dev-keyword-table"><thead><tr><th>ID</th><th>内容</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table><div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div></section>`, "data");
+    const rows = (doc.keywords || []).map((k, i) => `<tr data-keyword-row="${i}">
+      <td><input data-k-id value="${esc(k.id)}" style="width:160px"></td>
+      <td><input data-k-content value="${esc(k.content || k.label || "")}" style="width:140px"></td>
+      <td><input data-k-content-low-san value="${esc(k.contentLowSan || "")}" placeholder="（SAN&lt;50 显示）" style="width:160px"></td>
+      <td><input data-k-related-ids value="${esc((k.relatedIds || []).join(","))}" placeholder="ID,ID,… 逗号分隔" style="width:180px"></td>
+      <td>${button("删除", `remove-keyword-${i}`)}</td>
+    </tr>`).join("");
+    this.panel(`<section class="dev-section"><h3>关键词编辑器</h3>
+      <p>关键词只保存稳定 ID 和显示内容。<br>
+      <strong>低理智名称</strong>（contentLowSan）：SAN &lt; 50 时玩家看到的扭曲版文本。<br>
+      <strong>关联词</strong>（relatedIds）：笔记本和线索墙连线用，逗号分隔关键词 ID。</p>
+      <table class="dev-table dev-keyword-table">
+        <thead><tr><th>ID</th><th>正常名称</th><th>低理智名称</th><th>关联词 ID</th><th>操作</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div>${button("新增关键词", "add-keyword")} ${button("保存关键词到内存", "save-keywords")} ${button("下载 keywords.json", "download-keywords")} ${button("写入磁盘", "write-keywords")}</div>
+    </section>`, "data");
   }
 
   _syncQaPage() {
@@ -776,7 +791,15 @@ export class DeveloperMode {
       const ids = rows.map((row) => row.querySelector("[data-k-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("关键词保存失败：ID 不能为空且不能重复。", true); return; }
       doc.keywords = rows.map((row) => {
-        return { id: row.querySelector("[data-k-id]").value.trim(), content: row.querySelector("[data-k-content]").value };
+        const id = row.querySelector("[data-k-id]").value.trim();
+        const content = row.querySelector("[data-k-content]").value;
+        const contentLowSan = row.querySelector("[data-k-content-low-san]").value.trim();
+        const relatedRaw = row.querySelector("[data-k-related-ids]").value.trim();
+        const relatedIds = relatedRaw ? relatedRaw.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
+        const kw = { id, content };
+        if (contentLowSan) kw.contentLowSan = contentLowSan;
+        if (relatedIds?.length) kw.relatedIds = relatedIds;
+        return kw;
       });
       this.docs.set("keywords.json", doc);
       if (action === "download-keywords") { downloadJson("keywords.json", doc); this.setStatus("keywords.json 已下载。"); return; }

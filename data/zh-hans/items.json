@@ -113,44 +113,56 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
-            },
-            "use:effect": {
-              "id": "use:effect",
-              "type": "itemEffect",
-              "inputs": {},
               "outputs": {},
-              "effect": {
-                "remove": [
-                  {
-                    "itemId": "locked_box",
-                    "count": 1
-                  }
-                ],
-                "add": [
-                  {
-                    "itemId": "opened_box",
-                    "count": 1
-                  }
-                ]
-              }
+              "x": 420,
+              "y": 80
+            },
+            "use:remove:locked_box": {
+              "id": "use:remove:locked_box",
+              "type": "inventoryOperation",
+              "inputs": {
+                "itemId": "locked_box",
+                "count": -1
+              },
+              "outputs": {},
+              "x": 0,
+              "y": 0
+            },
+            "use:add:opened_box": {
+              "id": "use:add:opened_box",
+              "type": "inventoryOperation",
+              "inputs": {
+                "itemId": "opened_box",
+                "count": 1
+              },
+              "outputs": {},
+              "x": 0,
+              "y": 0
             }
           },
           "connections": [
             {
               "fromNodeId": "start",
               "fromPort": "flowOut",
-              "toNodeId": "use:effect",
+              "toNodeId": "use:remove:locked_box",
               "toPort": "flowIn"
             },
             {
-              "fromNodeId": "use:effect",
+              "fromNodeId": "use:remove:locked_box",
+              "fromPort": "flowOut",
+              "toNodeId": "use:add:opened_box",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:add:opened_box",
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
@@ -422,41 +434,56 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
-            },
-            "use:effect": {
-              "id": "use:effect",
-              "type": "itemEffect",
-              "inputs": {},
               "outputs": {},
-              "effect": {
-                "statChanges": {
-                  "satiety": 6
-                },
-                "remove": [
-                  {
-                    "itemId": "sandwich",
-                    "count": 1
-                  }
-                ]
-              }
+              "x": 420,
+              "y": 80
+            },
+            "use:remove:sandwich": {
+              "id": "use:remove:sandwich",
+              "type": "inventoryOperation",
+              "inputs": {
+                "itemId": "sandwich",
+                "count": -1
+              },
+              "outputs": {},
+              "x": 0,
+              "y": 0
+            },
+            "use:stat:satiety": {
+              "id": "use:stat:satiety",
+              "type": "statOperation",
+              "inputs": {
+                "statId": "satiety",
+                "delta": 6
+              },
+              "outputs": {},
+              "x": 0,
+              "y": 0
             }
           },
           "connections": [
             {
               "fromNodeId": "start",
               "fromPort": "flowOut",
-              "toNodeId": "use:effect",
+              "toNodeId": "use:remove:sandwich",
               "toPort": "flowIn"
             },
             {
-              "fromNodeId": "use:effect",
+              "fromNodeId": "use:remove:sandwich",
+              "fromPort": "flowOut",
+              "toNodeId": "use:stat:satiety",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:stat:satiety",
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
@@ -523,41 +550,56 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
-            },
-            "use:effect": {
-              "id": "use:effect",
-              "type": "itemEffect",
-              "inputs": {},
               "outputs": {},
-              "effect": {
-                "statChanges": {
-                  "satiety": 90
-                },
-                "remove": [
-                  {
-                    "itemId": "feast_set",
-                    "count": 1
-                  }
-                ]
-              }
+              "x": 420,
+              "y": 80
+            },
+            "use:remove:feast_set": {
+              "id": "use:remove:feast_set",
+              "type": "inventoryOperation",
+              "inputs": {
+                "itemId": "feast_set",
+                "count": -1
+              },
+              "outputs": {},
+              "x": 0,
+              "y": 0
+            },
+            "use:stat:satiety": {
+              "id": "use:stat:satiety",
+              "type": "statOperation",
+              "inputs": {
+                "statId": "satiety",
+                "delta": 90
+              },
+              "outputs": {},
+              "x": 0,
+              "y": 0
             }
           },
           "connections": [
             {
               "fromNodeId": "start",
               "fromPort": "flowOut",
-              "toNodeId": "use:effect",
+              "toNodeId": "use:remove:feast_set",
               "toPort": "flowIn"
             },
             {
-              "fromNodeId": "use:effect",
+              "fromNodeId": "use:remove:feast_set",
+              "fromPort": "flowOut",
+              "toNodeId": "use:stat:satiety",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:stat:satiety",
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
@@ -723,39 +765,42 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
-            },
-            "use:effect": {
-              "id": "use:effect",
-              "type": "itemEffect",
-              "inputs": {},
               "outputs": {},
-              "effect": {
-                "ending": "poisoned_death",
-                "remove": [
-                  {
-                    "itemId": "mystery_potion",
-                    "count": 1
-                  }
-                ]
+              "x": 420,
+              "y": 80,
+              "onShow": {
+                "ending": "poisoned_death"
               }
+            },
+            "use:remove:mystery_potion": {
+              "id": "use:remove:mystery_potion",
+              "type": "inventoryOperation",
+              "inputs": {
+                "itemId": "mystery_potion",
+                "count": -1
+              },
+              "outputs": {},
+              "x": 0,
+              "y": 0
             }
           },
           "connections": [
             {
               "fromNodeId": "start",
               "fromPort": "flowOut",
-              "toNodeId": "use:effect",
+              "toNodeId": "use:remove:mystery_potion",
               "toPort": "flowIn"
             },
             {
-              "fromNodeId": "use:effect",
+              "fromNodeId": "use:remove:mystery_potion",
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
@@ -1246,13 +1291,17 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 420,
+              "y": 80
             }
           },
           "connections": [
@@ -1629,13 +1678,17 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 420,
+              "y": 80
             }
           },
           "connections": [
@@ -2380,13 +2433,17 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 420,
+              "y": 80
             }
           },
           "connections": [
@@ -3376,13 +3433,17 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 420,
+              "y": 80
             }
           },
           "connections": [
@@ -3652,13 +3713,17 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 420,
+              "y": 80
             }
           },
           "connections": [
@@ -5889,20 +5954,18 @@
               "id": "start",
               "type": "flowStart",
               "inputs": {},
-              "outputs": {}
+              "outputs": {},
+              "x": 80,
+              "y": 80
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
-            },
-            "use:effect": {
-              "id": "use:effect",
-              "type": "itemEffect",
-              "inputs": {},
               "outputs": {},
-              "effect": {
+              "x": 420,
+              "y": 80,
+              "onShow": {
                 "ending": "abnormal_end"
               }
             }
@@ -5910,12 +5973,6 @@
           "connections": [
             {
               "fromNodeId": "start",
-              "fromPort": "flowOut",
-              "toNodeId": "use:effect",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "use:effect",
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"

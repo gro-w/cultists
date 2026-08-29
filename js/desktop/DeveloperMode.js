@@ -778,7 +778,7 @@ export class DeveloperMode {
     if (action === "add-item") { itemManager.add(this.root.querySelector("[data-item-id]").value, Math.max(1, Number(this.root.querySelector("[data-item-count]").value) || 1)); return this.showInventory(); }
     if (action === "apply-npc-state") {
       const forceOffline = this.root.querySelector("[data-force-offline]")?.checked;
-      const offlineThreshold = Number(globalVariableManager.get(4)) || 20;
+      const offlineThreshold = Number(globalVariableManager.get(4) ?? 20);
       this.root.querySelectorAll("[data-npc-state-row]").forEach((row) => {
         const actorId = row.dataset.npcStateRow;
         const san = Math.max(0, Math.min(256, Number(row.querySelector("[data-npc-san]")?.value) || 0));

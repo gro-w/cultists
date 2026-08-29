@@ -53,7 +53,7 @@ function keywordCategory(keyword) {
 }
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 const DEDICATED_EDITOR_TITLES = {
-  "chatgtp-dialog": "ChatGTP 对话编辑器", "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
+  "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
   medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器", "npc-state": "NPC 状态规则编辑器",
   "time-rules": "时间规则编辑器", calendar: "日历规则编辑器", achievements: "成就定义编辑器",
   skills: "技能定义编辑器", "monitor-scenes": "监控场景编辑器",

@@ -307,19 +307,6 @@
 }
 
 
-.chatgtp-tabs {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-bottom: 6px;
-  flex-shrink: 0;
-}
-
-.chatgtp-tab-btn.active {
-  font-weight: bold;
-  background: var(--w95-white);
-}
-
 .chatgtp-san-indicator {
   margin-left: auto;
   font-size: 11px;
@@ -337,22 +324,6 @@
   font-weight: bold;
 }
 
-.chatgtp-tab-panel {
-  flex: 1;
-  min-height: 0;
-  height: auto;
-}
-
-.chatgtp-dialogue-layout {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.chatgtp-dialogue-lines {
-  flex: 1;
-  overflow: auto;
-}
 
 /* ---------------------------------------------------------------------- */
 /* NPC state (own SAN, distress/offline) - shared across HIS/Social/     */

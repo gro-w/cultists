@@ -10,7 +10,7 @@ import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
 import { spellEffectManager } from "./SpellEffectManager.js";
 import { keywordManager } from "./KeywordManager.js";
-import { medicalCaseManager } from "./MedicalCaseManager.js";
+import { endingManager } from "./EndingManager.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -151,18 +151,7 @@ export class ScheduleRunner {
         this.instance.lastDiceCheck = { roll, target: n, skillValue: n, outcome };
         return { next: nextFlow(this.blueprint, node, outcome) };
       }
-      case "medicalIncident": {
-        if (this.definition.kind !== "medicalIncident" || !this.instance.lastDiceCheck) {
-          throw new Error("Medical incident requires a scheduled medical incident and dice check");
-        }
-        medicalCaseManager.resolveScheduledIncident({
-          submission: this.definition.submission,
-          type: this.definition.incidentType,
-          text: this.instance.lastScheduleText || "患者家属前来说明情况。",
-          check: this.instance.lastDiceCheck,
-        });
-        return {};
-      }
+      case "ending": endingManager.trigger(String(get("endingId", ""))); return {};
       case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
       case "setGlobal": {
         const id = get("variableId");

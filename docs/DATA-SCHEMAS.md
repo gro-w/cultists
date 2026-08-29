@@ -157,7 +157,7 @@ Social 日期日程条目所在的完整蓝图必须有且只有一个 `prerequi
 
 新日程可以使用对象式蓝图：`nodes` 是节点 ID 到节点对象的映射，`connections` 保存类型化引脚连接，`startNodeId` 指向唯一的 `flowStart` 节点。流程引脚只能连接流程引脚，数值引脚只能连接数值引脚；一个节点不能同时拥有流程输出和数值输出。旧 `dialogueTree` 会在运行时兼容迁移。完整的节点端口、运行时语义和蓝图语法见 [`SCHEDULE-BLUEPRINTS.md`](./SCHEDULE-BLUEPRINTS.md)。
 
-当前注册的节点包括：`flowStart`、`scheduleEnd`、`text`、`choice`、`randomBranch`、`branch`、`waitUntil`、`diceCheck`、`medicalIncident`、`segmentBranch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前注册的节点包括：`flowStart`、`scheduleEnd`、`text`、`choice`、`randomBranch`、`branch`、`waitUntil`、`diceCheck`、`segmentBranch`、`consumeTime`、`setGlobal`、`ending`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
 `consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。它按输入值通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点；20 分钟是普通行动的约定单位，蓝图运行器本身不把 `minutes` 强制限制为 20 的倍数。数值输入可以连接运算或取值节点。完整节点语法见 [`SCHEDULE-BLUEPRINTS.md`](./SCHEDULE-BLUEPRINTS.md)。
 

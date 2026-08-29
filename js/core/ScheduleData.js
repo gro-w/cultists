@@ -217,6 +217,37 @@ class ScheduleData {
     entry.scheduleId = `${template.id}:${submission.patientId}`;
     const selectedDialogues = dialogues.length ? dialogues.slice(0, 3) : ["患者家属前来说明情况。"];
     entry.blueprint.nodes.random.inputs.n = selectedDialogues.length;
+    entry.blueprint.nodes.explain.inputs.label0 = type === "riot" ? "向愤怒的家属解释" : "向愤怒的患者解释";
+    entry.blueprint.nodes.explain.options[0].label = entry.blueprint.nodes.explain.inputs.label0;
+    if (type === "riot") {
+      const connections = entry.blueprint.connections;
+      entry.blueprint.nodes.riotFine = { id: "riotFine", type: "setGlobal", inputs: { variableId: 2, delta: -600 }, outputs: {} };
+      entry.blueprint.nodes.riotLargeSuccess = { id: "riotLargeSuccess", type: "setGlobal", inputs: { variableId: 2, delta: -300 }, outputs: {} };
+      entry.blueprint.nodes.death = { id: "death", type: "ending", inputs: { endingId: "mob_violence_death" }, outputs: {} };
+      entry.blueprint.nodes.riotFineText = { id: "riotFineText", type: "text", inputs: { speaker: "系统", text: "你未能平息家属的愤怒，医院被罚款了600元。" }, outputs: {} };
+      entry.blueprint.nodes.riotLargeText = { id: "riotLargeText", type: "text", inputs: { speaker: "系统", text: "你的辩解暂时稳住了家属，但医院仍被罚款了300元。" }, outputs: {} };
+      entry.blueprint.nodes.riotDeathText = { id: "riotDeathText", type: "text", inputs: { speaker: "系统", text: "你的解释彻底激怒了家属，医闹失控了。" }, outputs: {} };
+      delete entry.blueprint.nodes.persuaded;
+      delete entry.blueprint.nodes.fine;
+      delete entry.blueprint.nodes.doubleFine;
+      delete entry.blueprint.nodes.fineText;
+      delete entry.blueprint.nodes.doubleFineText;
+      connections.splice(0, connections.length, ...connections.filter((connection) =>
+        !((connection.fromNodeId === "check" && ["largeSuccess", "success", "failure", "largeFailure"].includes(connection.fromPort))
+          || ["fine", "doubleFine", "fineText", "doubleFineText", "persuaded"].includes(connection.toNodeId))));
+      connections.push(
+        { fromNodeId: "check", fromPort: "largeSuccess", toNodeId: "riotLargeText", toPort: "flowIn" },
+        { fromNodeId: "check", fromPort: "success", toNodeId: "riotFineText", toPort: "flowIn" },
+        { fromNodeId: "check", fromPort: "failure", toNodeId: "riotDeathText", toPort: "flowIn" },
+        { fromNodeId: "check", fromPort: "largeFailure", toNodeId: "riotDeathText", toPort: "flowIn" },
+        { fromNodeId: "riotFineText", fromPort: "flowOut", toNodeId: "riotFine", toPort: "flowIn" },
+        { fromNodeId: "riotLargeText", fromPort: "flowOut", toNodeId: "riotLargeSuccess", toPort: "flowIn" },
+        { fromNodeId: "riotDeathText", fromPort: "flowOut", toNodeId: "death", toPort: "flowIn" },
+        { fromNodeId: "riotLargeSuccess", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
+        { fromNodeId: "riotFine", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
+        { fromNodeId: "death", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
+      );
+    }
     selectedDialogues.forEach((text, index) => {
       const node = entry.blueprint.nodes[`dialogue${index}`];
       if (node) node.inputs.text = text;

@@ -190,9 +190,9 @@
 | `branch` | 流程 | 按布尔条件分支 |
 | `waitUntil` | 流程 | 条件为真前阻塞，变为真后继续 |
 | `diceCheck` | 流程 | 执行百分骰检定 |
-| `medicalIncident` | 流程/效果 | 结算公共工作日程中的投诉或医闹事件 |
 | `consumeTime` | 流程/状态 | 推进游戏时间 |
 | `setGlobal` | 流程/状态 | 设置公共变量 |
+| `ending` | 流程/效果 | 触发指定结局 |
 | `insertSchedule` | 流程/状态 | 向日程队列插入日程；可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`） |
 | `showCg` | 流程/显示 | 发出显示 CG 事件 |
 | `endCg` | 流程/显示 | 结束当前 CG 显示 |

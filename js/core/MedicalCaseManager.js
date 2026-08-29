@@ -1,7 +1,7 @@
 import { dataLoader } from "./DataLoader.js";
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
-import { endingManager } from "./EndingManager.js";
+
 
 
 /** Owns submitted HIS cases, income, and delayed medical incidents. */
@@ -135,36 +135,6 @@ class MedicalCaseManager {
     return requests;
   }
 
-  resolveScheduledIncident({ submission, type, text, check }) {
-    if (!submission || !type || !text || !check) throw new Error("Invalid scheduled medical incident");
-    const displayCheck = { ...check, skillValue: check.skillValue ?? check.target };
-    let result;
-    if (type === "complaint") {
-      if (check.outcome === "success" || check.outcome === "largeSuccess") {
-        result = { kind: "none", fine: 0, message: "沟通成功，投诉暂时平息。" };
-      } else {
-        const multiplier = check.outcome === "largeFailure" || Number(check.roll) >= 96 ? 2 : 1;
-        const fine = Number(this.config?.complaintFine || 0) * multiplier;
-        this.pendingExpenses += fine;
-        result = { kind: "fine", fine, message: `投诉处理失败，罚款 ${fine} 元。` };
-      }
-    } else if (check.outcome === "failure" || check.outcome === "largeFailure") {
-      result = { kind: "ending", fine: 0, message: "医闹失控，你被家属当场杀死。" };
-      eventBus.emit("medical:incident", { type, text, check: displayCheck, result, submission });
-      endingManager.trigger("mob_violence_death");
-      return result;
-    } else {
-      const multiplier = check.outcome === "success" ? 2 : 1;
-      const fine = Number(this.config?.riotFine || 0) * multiplier;
-      this.pendingExpenses += fine;
-      result = { kind: "fine", fine, message: `医闹暂时平息，罚款 ${fine} 元。` };
-    }
-    const incident = { type, text, check: displayCheck, result, submission };
-    this.pendingIncidents.push(incident);
-    eventBus.emit("medical:incident", incident);
-    eventBus.emit("medical:incomeChanged", { income: this.income });
-    return incident;
-  }
 
   consumePendingIncidents() {
     const incidents = this.pendingIncidents.slice();

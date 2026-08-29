@@ -91,6 +91,7 @@ export async function launchHISApp() {
       patientListEl.appendChild(note);
     }
 
+    renderMedicalIncidentButtons();
     if (!entry.patients || entry.patients.length === 0) {
       const empty = document.createElement("p");
       empty.className = "his-empty";
@@ -133,6 +134,46 @@ export async function launchHISApp() {
 
     const currentPatient = entry.patients.find((p) => p.queueStatus !== "resolved") || entry.patients[0];
     renderDialogue(currentPatient, keywordDefs);
+  }
+
+  function renderMedicalIncidentButtons() {
+    workQueue.getPending().filter((incident) => incident.kind === "medicalIncident")
+      .forEach((incident) => {
+        const btn = document.createElement("button");
+        btn.className = "win95-btn bevel-out his-patient-btn his-medical-incident-btn";
+        btn.textContent = incident.incidentType === "riot" ? "⚠️ 愤怒的家属（医闹）" : "⚠️ 愤怒的患者（投诉）";
+        btn.addEventListener("click", () => renderMedicalIncident(incident));
+        patientListEl.appendChild(btn);
+      });
+  }
+
+  function renderMedicalIncident(incident) {
+    dialogueEl.innerHTML = `<h4>${incident.incidentType === "riot" ? "医闹" : "投诉"}</h4>`;
+    diagnosisEl.innerHTML = "<h4>诊断</h4>";
+    prescriptionEl.innerHTML = "<h4>处方</h4>";
+    const linesEl = document.createElement("div");
+    const optionsEl = document.createElement("div");
+    linesEl.className = "dialogue-lines";
+    optionsEl.className = "dialogue-options";
+    dialogueEl.append(linesEl, optionsEl);
+    const appendLine = (speaker, speakerLabel, text) => {
+      const p = document.createElement("p");
+      p.className = `dialogue-line speaker-${speaker}`;
+      p.innerHTML = `<strong>${speakerLabel}:</strong> ${text}`;
+      linesEl.replaceChildren(p);
+    };
+    createScheduleRunner({
+      definition: incident,
+      instance: incident,
+      appendLine,
+      optionsEl,
+      appId: "his",
+      onCheckpoint: (instance) => workQueue.updateInstance(instance.instanceId, instance),
+      onComplete: (instance) => {
+        workQueue.complete(instance.instanceId);
+        renderCurrentEntry();
+      },
+    }).start();
   }
 
   function renderDialogue(patient, keywordDefs) {
@@ -420,6 +461,9 @@ export async function launchHISApp() {
   const offDayNight = eventBus.on("daynight:changed", renderCurrentEntry);
 
   const offNpcState = eventBus.on("npc:offline", renderCurrentEntry);
+  const offSchedule = eventBus.on("schedule:changed", ({ queueId }) => {
+    if (queueId === "work") renderCurrentEntry();
+  });
   const offIncident = eventBus.on("medical:incident", renderMedicalIncidents);
   const offGameState = eventBus.on("gamestate:changed", refreshDiagnosisLabels);
 
@@ -436,6 +480,7 @@ export async function launchHISApp() {
       offDayNight();
 
       offNpcState();
+      offSchedule();
       offIncident();
       offGameState();
     },

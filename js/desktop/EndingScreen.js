@@ -119,6 +119,7 @@ export default class EndingScreen {
     const statusEl = this.rootEl.querySelector(".ending-schedule-status");
     const appendLine = (speaker, label, text) => {
       if (token !== this._runToken) return;
+      if (pendingLines.length === 0) logEl.replaceChildren();
       const speakerLabels = { player: "主控", awei: "阿伟", binbin: "彬彬", narrator: "旁白" };
       const speakerIds = { 主控: "player", 彬彬: "binbin", 旁白: "narrator" };
       const fallbackSpeaker = speakerLabels[speaker] || label || speaker || "日程";

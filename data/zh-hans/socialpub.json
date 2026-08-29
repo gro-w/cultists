@@ -462,24 +462,6 @@
               "operator": "or"
             },
             "outputs": {}
-          },
-          "choice_op0": {
-            "id": "choice_op0",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
-          },
-          "choice_op1": {
-            "id": "choice_op1",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
           }
         },
         "connections": [
@@ -742,39 +724,27 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "choice_op0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "choice_op1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_op0",
-            "fromPort": "flowOut",
-            "toNodeId": "study_set",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "study_san",
             "fromPort": "flowOut",
             "toNodeId": "study_end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "activity_set",
             "fromPort": "flowOut",
             "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]
@@ -1221,24 +1191,6 @@
               "operator": "or"
             },
             "outputs": {}
-          },
-          "choice_op0": {
-            "id": "choice_op0",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
-          },
-          "choice_op1": {
-            "id": "choice_op1",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
           }
         },
         "connections": [
@@ -1495,39 +1447,27 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "choice_op0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "choice_op1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_op0",
-            "fromPort": "flowOut",
-            "toNodeId": "study_set",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "study_san",
             "fromPort": "flowOut",
             "toNodeId": "study_end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "activity_set",
             "fromPort": "flowOut",
             "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]
@@ -2044,24 +1984,6 @@
               "operator": "or"
             },
             "outputs": {}
-          },
-          "choice_op0": {
-            "id": "choice_op0",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
-          },
-          "choice_op1": {
-            "id": "choice_op1",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
           }
         },
         "connections": [
@@ -2384,39 +2306,27 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "choice_op0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "choice_op1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_op0",
-            "fromPort": "flowOut",
-            "toNodeId": "study_set",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "study_san",
             "fromPort": "flowOut",
             "toNodeId": "study_end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "activity_set",
             "fromPort": "flowOut",
             "toNodeId": "previous_activity_branch",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]
@@ -2796,24 +2706,6 @@
             },
             "outputs": {}
           },
-          "choice_op0": {
-            "id": "choice_op0",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
-          },
-          "choice_op1": {
-            "id": "choice_op1",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
-          },
           "end": {
             "id": "end",
             "type": "scheduleEnd",
@@ -3057,39 +2949,27 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "choice_op0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "choice_op1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_op0",
-            "fromPort": "flowOut",
-            "toNodeId": "study_set",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "study_san",
             "fromPort": "flowOut",
             "toNodeId": "study_end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "activity_set",
             "fromPort": "flowOut",
             "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]

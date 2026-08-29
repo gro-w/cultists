@@ -1878,7 +1878,7 @@
             "id": "choice_final_24_op1",
             "type": "setGlobal",
             "inputs": {
-              "variableId": 40,
+              "variableId": 41,
               "delta": -5
             },
             "outputs": {}

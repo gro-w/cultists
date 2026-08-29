@@ -66,16 +66,7 @@
             "type": "setGlobal",
             "inputs": {
               "variableId": 0,
-              "delta": 0
-            },
-            "outputs": {}
-          },
-          "choice4_op1": {
-            "id": "choice4_op1",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 40,
-              "delta": 0
+              "delta": 5
             },
             "outputs": {}
           },
@@ -386,19 +377,7 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice4",
-            "fromPort": "option1",
-            "toNodeId": "choice4_op1",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "choice4_op0",
-            "fromPort": "flowOut",
-            "toNodeId": "n5",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice4_op1",
             "fromPort": "flowOut",
             "toNodeId": "n5",
             "toPort": "flowIn"
@@ -479,6 +458,12 @@
             "fromNodeId": "favor_check",
             "fromPort": "false",
             "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice4",
+            "fromPort": "option1",
+            "toNodeId": "n5",
             "toPort": "flowIn"
           }
         ]
@@ -737,15 +722,6 @@
             "x": 80,
             "y": 360
           },
-          "choice5_op1_favorability": {
-            "id": "choice5_op1_favorability",
-            "type": "setGlobal",
-            "inputs": {
-              "variableId": 41,
-              "delta": 0
-            },
-            "outputs": {}
-          },
           "__social_gate_global_101": {
             "id": "__social_gate_global_101",
             "type": "getGlobal",
@@ -891,34 +867,16 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice5_op1_favorability",
-            "fromPort": "flowOut",
-            "toNodeId": "n6",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice5_op1_favorability",
-            "fromPort": "flowOut",
-            "toNodeId": "choice5_op1_favorability",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice5_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "choice5_op1_favorability",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice5_op1_favorability",
-            "fromPort": "flowOut",
-            "toNodeId": "choice5_op1_favorability",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "__social_gate_global_101",
             "fromPort": "value",
             "toNodeId": "__prerequisite__",
             "toPort": "condition"
+          },
+          {
+            "fromNodeId": "choice5_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "n6",
+            "toPort": "flowIn"
           }
         ]
       }

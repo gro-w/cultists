@@ -102,11 +102,23 @@ export class AchievementsEditor extends DedicatedEditor {
 }
 
 export class SkillsEditor extends DedicatedEditor {
-  constructor(dev) { super(dev, "skills.json", "技能定义编辑器", "编辑技能 ID、名称、类别和初始值"); }
-  render() { const list = this.data.skills || (this.data.skills = []); this.root().innerHTML = `<div class="dev-ded-toolbar">${btn("＋ 添加技能", "add-skill")}</div>${list.map((s, i) => `<article class="dev-ded-card"><div class="dev-ded-card-title"><b>${esc(s.name || s.id || "未命名技能")}</b>${btn("− 删除", "remove-skill", i)}</div><div class="dev-ded-grid">${input("技能 ID", `s.${i}.id`, s.id)} ${input("名称", `s.${i}.name`, s.name)} ${input("类别", `s.${i}.category`, s.category || "")}${num("初始值", `s.${i}.initialValue`, s.initialValue ?? s.default ?? 0, "min=0 max=100")}</div></article>`).join("")}`; }
-  sync() { (this.data.skills || []).forEach((s, i) => { s.id = this.value(`s.${i}.id`); s.name = this.value(`s.${i}.name`); s.category = this.value(`s.${i}.category`); if ("initialValue" in s) s.initialValue = Number(this.value(`s.${i}.initialValue`)); else s.default = Number(this.value(`s.${i}.initialValue`)); }); }
-  addSkill() { this.data.skills.push({ id: `skill_${this.data.skills.length + 1}`, name: "新技能", initialValue: 0 }); this.render(); }
-  removeSkill(i) { this.data.skills.splice(Number(i), 1); this.render(); }
+  constructor(dev) { super(dev, "skills.json", "技能定义编辑器", "编辑技能 ID、显示名称和初始值（0–100）"); }
+  render() {
+    const list = this.data.skills || (this.data.skills = []);
+    this.root().innerHTML = `<div class="dev-ded-toolbar">${btn("＋ 添加技能", "add-skill")}</div>`
+      + list.map((s, i) => `<article class="dev-ded-card"><div class="dev-ded-card-title"><b>${esc(s.label || s.id || "未命名技能")}</b>${btn("− 删除", "remove-skill", i)}</div><div class="dev-ded-grid">${input("技能 ID", `s.${i}.id`, s.id)}${input("显示名称 (label)", `s.${i}.label`, s.label || "")}${num("初始值", `s.${i}.value`, s.value ?? 50, "min=0 max=100")}</div></article>`).join("");
+  }
+  sync() {
+    (this.data.skills || []).forEach((s, i) => {
+      s.id    = this.value(`s.${i}.id`);
+      s.label = this.value(`s.${i}.label`);
+      s.value = Number(this.value(`s.${i}.value`)) || 0;
+      // Remove stale legacy fields if present
+      delete s.name; delete s.category; delete s.initialValue; delete s.default;
+    });
+  }
+  addSkill()      { this.data.skills.push({ id: `skill_${this.data.skills.length + 1}`, label: "新技能", value: 50 }); this.render(); }
+  removeSkill(i)  { this.data.skills.splice(Number(i), 1); this.render(); }
 }
 
 export class MonitorScenesEditor extends DedicatedEditor {

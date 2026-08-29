@@ -34,7 +34,6 @@ export default class DormMode {
     this.root = root;
     this.workShell = workShell;
     this.launchWorkApp = launchWorkApp;
-    this.scenes = null;
     this.entry = null;
     this._transitioning = false;
     this._computerOpen = false;
@@ -50,7 +49,6 @@ export default class DormMode {
   }
 
   async init() {
-    this.scenes = await dataLoader.loadJSON("monitor_scenes.json");
     await locationSystem.load();
     this._updateDormBg();
     if (this._dormSanOff) this._dormSanOff();
@@ -192,7 +190,6 @@ export default class DormMode {
 
   // ── Scene render ────────────────────────────────────────────────────────────
   async _renderScene() {
-    if (!this.scenes) return;
     this._renderClock();
 
     // ── NPC characters on their bunks ──────────────────────────────────────

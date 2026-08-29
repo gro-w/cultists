@@ -90,14 +90,6 @@ export class SkillsEditor extends DedicatedEditor {
   removeSkill(i) { this.data.skills.splice(Number(i), 1); this.render(); }
 }
 
-export class MonitorScenesEditor extends DedicatedEditor {
-  constructor(dev) { super(dev, "monitor_scenes.json", "监控场景编辑器", "编辑白天/夜间画面、场景名称和可见条件"); }
-  render() { const section = (phase) => { const d = this.data[phase] || (this.data[phase] = {}); return `<section class="dev-ded-card"><h3>${phase === "day" ? "白天" : "夜间"}场景</h3>${input("背景图片", `${phase}.background`, d.backgroundImage || d.background || "")}${input("场景名称", `${phase}.name`, d.name || "")}${input("默认说明", `${phase}.description`, d.description || "")}${checkbox("启用监控画面", `${phase}.enabled`, d.enabled !== false)}<div class="dev-ded-subtitle">场景记录</div>${(d.scenes || []).map((s, i) => `<div class="dev-ded-inline">${input("记录", `${phase}.scene.${i}`, typeof s === "string" ? s : s.name || s.description || "")}${btn("−", "remove-scene", `${phase}:${i}`)}</div>`).join("")}${btn("＋ 添加记录", "add-scene", phase)}</section>`; }; this.root().innerHTML = section("day") + section("night"); }
-  sync() { ["day", "night"].forEach((phase) => { const d = this.data[phase]; if ("backgroundImage" in d) d.backgroundImage = this.value(`${phase}.background`); else d.background = this.value(`${phase}.background`); d.name = this.value(`${phase}.name`); d.description = this.value(`${phase}.description`); d.enabled = this.value(`${phase}.enabled`); d.scenes = (d.scenes || []).map((_, i) => this.value(`${phase}.scene.${i}`)); }); }
-  addScene(p) { this.data[p].scenes ||= []; this.data[p].scenes.push(""); this.render(); }
-  removeScene(v) { const [p, i] = v.split(":"); this.data[p].scenes.splice(i, 1); this.render(); }
-}
-
 export const DEDICATED_EDITOR_CLASSES = {
   "item-placements": ItemPlacementsEditor,
   diagnoses: DiagnosesEditor,
@@ -108,6 +100,5 @@ export const DEDICATED_EDITOR_CLASSES = {
   calendar: CalendarEditor,
   achievements: AchievementsEditor,
   skills: SkillsEditor,
-  "monitor-scenes": MonitorScenesEditor,
 };
 // DEV-TOOLS:END

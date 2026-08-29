@@ -62,7 +62,7 @@ const DEDICATED_EDITOR_TITLES = {
   "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
   medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器",
   "time-rules": "时间规则编辑器", calendar: "日历规则编辑器", achievements: "成就定义编辑器",
-  skills: "技能定义编辑器", "monitor-scenes": "监控场景编辑器",
+  skills: "技能定义编辑器",
 };
 const DEV_EDITOR_ICONS = {
   "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",

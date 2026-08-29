@@ -9,7 +9,7 @@ import { bgmManager } from "./BgmManager.js";
 
 /**
  * applyDialogueOnShow - applies a dialogue node's optional `onShow` effects
- * (shared by HISApp/SocialApp/MonitorApp, so a text node can grant items,
+ * (shared by HISApp/SocialApp, so a text node can grant items,
  * remove items, nudge an actor's own SAN, and/or trigger an event-based
  * ending just by reaching a node).
  *

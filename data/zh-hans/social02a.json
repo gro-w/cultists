@@ -1,15 +1,14 @@
 {
-  "displayName": "第2天社交·闲聊池",
+  "displayName": "第2天社交·08:00",
   "entries": [
     {
-      "id": "social01a_ajie_chat",
+      "id": "social02a_ajie_chat",
       "type": "other",
       "npcId": "ajie",
       "name": "阿杰",
       "avatar": "🐶",
       "displayName": "闲聊池",
       "blueprint": {
-        "startNodeId": "start",
         "nodes": {
           "start": {
             "id": "start",
@@ -262,7 +261,9 @@
             "inputs": {
               "variableId": 100
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
           }
         },
         "connections": [
@@ -398,24 +399,26 @@
             "toNodeId": "__prerequisite__",
             "toPort": "condition"
           }
-        ]
+        ],
+        "startNodeId": "start"
       }
     },
     {
-      "id": "social01a_awei_chat",
+      "id": "social02a_awei_chat",
       "type": "other",
       "npcId": "awei",
       "name": "阿伟",
       "avatar": "🐱",
       "displayName": "闲聊池",
       "blueprint": {
-        "startNodeId": "start",
         "nodes": {
           "start": {
             "id": "start",
             "type": "flowStart",
             "inputs": {},
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "n1": {
             "id": "n1",
@@ -424,7 +427,9 @@
               "speaker": "阿伟",
               "text": "你晚饭吃什么？"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "n2": {
             "id": "n2",
@@ -433,7 +438,9 @@
               "speaker": "player",
               "text": "没想好呢。"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "n3": {
             "id": "n3",
@@ -442,7 +449,9 @@
               "speaker": "阿伟",
               "text": "我去食堂看看有没有剩饭。"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "n4": {
             "id": "n4",
@@ -451,7 +460,9 @@
               "speaker": "player",
               "text": "……剩饭也要花钱吧。"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "n5": {
             "id": "n5",
@@ -460,7 +471,9 @@
               "speaker": "阿伟",
               "text": "能省则省了。话说，你觉不觉得屋里越来越潮了？"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "choice6": {
             "id": "choice6",
@@ -470,15 +483,9 @@
               "label0": "不清楚，好像有点。",
               "label1": "我没觉得啊。"
             },
-            "options": [
-              {
-                "label": "不清楚，好像有点。"
-              },
-              {
-                "label": "我没觉得啊。"
-              }
-            ],
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "choice6_op0": {
             "id": "choice6_op0",
@@ -487,7 +494,9 @@
               "variableId": 41,
               "delta": 5
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "n7": {
             "id": "n7",
@@ -496,7 +505,9 @@
               "speaker": "阿伟",
               "text": "看来不止我一个人这么觉得。"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "choice6_op1": {
             "id": "choice6_op1",
@@ -505,7 +516,9 @@
               "variableId": 41,
               "delta": -5
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "n8": {
             "id": "n8",
@@ -514,13 +527,17 @@
               "speaker": "阿伟",
               "text": "难道这也是我的错觉？我真该多睡点了……"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "end": {
             "id": "end",
             "type": "scheduleEnd",
             "inputs": {},
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "consume_time_20_1": {
             "id": "consume_time_20_1",
@@ -670,7 +687,9 @@
               "variableId": 0,
               "delta": 5
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 100,
+            "y": 100
           },
           "__social_gate_global_101": {
             "id": "__social_gate_global_101",
@@ -678,7 +697,9 @@
             "inputs": {
               "variableId": 101
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
           }
         },
         "connections": [
@@ -833,12 +854,6 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "__social_gate_global_101",
-            "fromPort": "value",
-            "toNodeId": "__prerequisite__",
-            "toPort": "condition"
-          },
-          {
             "fromNodeId": "choice6_op1",
             "fromPort": "flowOut",
             "toNodeId": "choice6_op1_suspicion",
@@ -849,8 +864,15 @@
             "fromPort": "flowOut",
             "toNodeId": "choice6_op1_suspicion",
             "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "__social_gate_global_101",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
           }
-        ]
+        ],
+        "startNodeId": "start"
       }
     }
   ]

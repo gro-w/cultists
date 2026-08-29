@@ -1,7 +1,7 @@
 {
   "entries": [
     {
-      "id": "social02a_ajie_chat",
+      "id": "social04a_ajie_chat",
       "type": "other",
       "npcId": "ajie",
       "name": "阿杰",
@@ -223,14 +223,6 @@
             "x": 60,
             "y": 40
           },
-          "read_yesterday": {
-            "id": "read_yesterday",
-            "type": "getGlobal",
-            "inputs": {
-              "variableId": 100
-            },
-            "outputs": {}
-          },
           "__prerequisite__": {
             "id": "__prerequisite__",
             "type": "prerequisite",
@@ -258,30 +250,60 @@
             "inputs": {
               "variableId": 100
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
           },
-          "__social_gate_time": {
-            "id": "__social_gate_time",
-            "type": "getGameTime",
+          "favor_check": {
+            "id": "favor_check",
+            "type": "branch",
             "inputs": {},
-            "outputs": {}
+            "outputs": {},
+            "x": 2500,
+            "y": 160
           },
-          "__social_gate_compare": {
-            "id": "__social_gate_compare",
+          "favor_global": {
+            "id": "favor_global",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 40
+            },
+            "outputs": {},
+            "x": 2300,
+            "y": 80
+          },
+          "favor_compare": {
+            "id": "favor_compare",
             "type": "arithmetic",
             "inputs": {
               "operator": ">",
-              "right": 4320
+              "right": 49
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 2400,
+            "y": 80
           },
-          "__social_gate_and": {
-            "id": "__social_gate_and",
-            "type": "arithmetic",
+          "tabletop_invite": {
+            "id": "tabletop_invite",
+            "type": "text",
             "inputs": {
-              "operator": "and"
+              "speaker": "阿杰",
+              "text": "那晚上一起打桌游吗？"
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 2700,
+            "y": 80
+          },
+          "tabletop_reply": {
+            "id": "tabletop_reply",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "待会儿有空我就来。"
+            },
+            "outputs": {},
+            "x": 2950,
+            "y": 80
           }
         },
         "connections": [
@@ -412,46 +434,58 @@
             "toPort": "flowIn"
           },
           {
+            "fromNodeId": "__social_gate_global_100",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
+          },
+          {
             "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "favor_check",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "favor_global",
+            "fromPort": "value",
+            "toNodeId": "favor_compare",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "favor_compare",
+            "fromPort": "value",
+            "toNodeId": "favor_check",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "favor_check",
+            "fromPort": "true",
+            "toNodeId": "tabletop_invite",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "tabletop_invite",
+            "fromPort": "flowOut",
+            "toNodeId": "tabletop_reply",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "tabletop_reply",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "read_yesterday",
-            "fromPort": "value",
-            "toNodeId": "__prerequisite__",
-            "toPort": "condition"
-          },
-          {
-            "fromNodeId": "__social_gate_time",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_compare",
-            "toPort": "left"
-          },
-          {
-            "fromNodeId": "__social_gate_global_100",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_and",
-            "toPort": "left"
-          },
-          {
-            "fromNodeId": "__social_gate_compare",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_and",
-            "toPort": "right"
-          },
-          {
-            "fromNodeId": "__social_gate_and",
-            "fromPort": "value",
-            "toNodeId": "__prerequisite__",
-            "toPort": "condition"
+            "fromNodeId": "favor_check",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
           }
         ]
       }
     },
     {
-      "id": "social02a_awei_chat",
+      "id": "social04a_awei_chat",
       "type": "other",
       "npcId": "awei",
       "name": "阿伟",
@@ -682,14 +716,6 @@
             "x": 60,
             "y": 40
           },
-          "read_yesterday": {
-            "id": "read_yesterday",
-            "type": "getGlobal",
-            "inputs": {
-              "variableId": 101
-            },
-            "outputs": {}
-          },
           "__prerequisite__": {
             "id": "__prerequisite__",
             "type": "prerequisite",
@@ -726,30 +752,9 @@
             "inputs": {
               "variableId": 101
             },
-            "outputs": {}
-          },
-          "__social_gate_time": {
-            "id": "__social_gate_time",
-            "type": "getGameTime",
-            "inputs": {},
-            "outputs": {}
-          },
-          "__social_gate_compare": {
-            "id": "__social_gate_compare",
-            "type": "arithmetic",
-            "inputs": {
-              "operator": ">",
-              "right": 4320
-            },
-            "outputs": {}
-          },
-          "__social_gate_and": {
-            "id": "__social_gate_and",
-            "type": "arithmetic",
-            "inputs": {
-              "operator": "and"
-            },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
           }
         },
         "connections": [
@@ -886,12 +891,6 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "read_yesterday",
-            "fromPort": "value",
-            "toNodeId": "__prerequisite__",
-            "toPort": "condition"
-          },
-          {
             "fromNodeId": "choice5_op1_favorability",
             "fromPort": "flowOut",
             "toNodeId": "n6",
@@ -904,30 +903,6 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "__social_gate_time",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_compare",
-            "toPort": "left"
-          },
-          {
-            "fromNodeId": "__social_gate_global_101",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_and",
-            "toPort": "left"
-          },
-          {
-            "fromNodeId": "__social_gate_compare",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_and",
-            "toPort": "right"
-          },
-          {
-            "fromNodeId": "__social_gate_and",
-            "fromPort": "value",
-            "toNodeId": "__prerequisite__",
-            "toPort": "condition"
-          },
-          {
             "fromNodeId": "choice5_op1",
             "fromPort": "flowOut",
             "toNodeId": "choice5_op1_favorability",
@@ -938,10 +913,16 @@
             "fromPort": "flowOut",
             "toNodeId": "choice5_op1_favorability",
             "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "__social_gate_global_101",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
           }
         ]
       }
     }
   ],
-  "displayName": "第4天社交·闲聊池"
+  "displayName": "第4天社交·08:00"
 }

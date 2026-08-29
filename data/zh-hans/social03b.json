@@ -1,7 +1,7 @@
 {
   "entries": [
     {
-      "id": "social02b_ajie_24_personality_high",
+      "id": "social03b_ajie_24_personality_high",
       "type": "other",
       "npcId": "ajie",
       "name": "阿杰",
@@ -475,7 +475,20 @@
             "inputs": {
               "variableId": 40
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
+          },
+          "__social_gate_compare_40": {
+            "id": "__social_gate_compare_40",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": ">",
+              "right": 49
+            },
+            "outputs": {},
+            "x": 160,
+            "y": 80
           }
         },
         "connections": [
@@ -762,10 +775,16 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "__social_gate_global_40",
+            "fromNodeId": "__social_gate_compare_40",
             "fromPort": "value",
             "toNodeId": "__prerequisite__",
             "toPort": "condition"
+          },
+          {
+            "fromNodeId": "__social_gate_global_40",
+            "fromPort": "value",
+            "toNodeId": "__social_gate_compare_40",
+            "toPort": "left"
           }
         ]
       },
@@ -780,7 +799,7 @@
       }
     },
     {
-      "id": "social02b_ajie_24_personality_low",
+      "id": "social03b_ajie_24_personality_low",
       "type": "other",
       "npcId": "ajie",
       "name": "阿杰",
@@ -1173,15 +1192,20 @@
             "inputs": {
               "variableId": 40
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
           },
-          "__social_gate_compare": {
-            "id": "__social_gate_compare",
+          "__social_gate_compare_40": {
+            "id": "__social_gate_compare_40",
             "type": "arithmetic",
             "inputs": {
-              "operator": "not"
+              "operator": "<",
+              "right": 50
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 160,
+            "y": 80
           }
         },
         "connections": [
@@ -1414,16 +1438,16 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "__social_gate_global_40",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_compare",
-            "toPort": "left"
-          },
-          {
-            "fromNodeId": "__social_gate_compare",
+            "fromNodeId": "__social_gate_compare_40",
             "fromPort": "value",
             "toNodeId": "__prerequisite__",
             "toPort": "condition"
+          },
+          {
+            "fromNodeId": "__social_gate_global_40",
+            "fromPort": "value",
+            "toNodeId": "__social_gate_compare_40",
+            "toPort": "left"
           }
         ]
       },
@@ -1438,7 +1462,7 @@
       }
     },
     {
-      "id": "social02b_awei_tail_high",
+      "id": "social03b_awei_tail_high",
       "type": "other",
       "npcId": "awei",
       "name": "阿伟",
@@ -1688,7 +1712,7 @@
             "id": "choice_final_24_op0",
             "type": "setGlobal",
             "inputs": {
-              "variableId": 40,
+              "variableId": 41,
               "delta": 5
             },
             "outputs": {}
@@ -1867,7 +1891,49 @@
             "inputs": {
               "variableId": 41
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
+          },
+          "__social_gate_compare_41": {
+            "id": "__social_gate_compare_41",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": ">",
+              "right": 49
+            },
+            "outputs": {},
+            "x": 160,
+            "y": 80
+          },
+          "listen_check": {
+            "id": "listen_check",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {},
+            "x": 2200,
+            "y": 80
+          },
+          "listen_global": {
+            "id": "listen_global",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 41
+            },
+            "outputs": {},
+            "x": 2000,
+            "y": 80
+          },
+          "listen_compare": {
+            "id": "listen_compare",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": ">",
+              "right": 49
+            },
+            "outputs": {},
+            "x": 2100,
+            "y": 80
           }
         },
         "connections": [
@@ -2010,12 +2076,6 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice10_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "n15",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "n14",
             "fromPort": "flowOut",
             "toNodeId": "consume_time_20_8",
@@ -2124,10 +2184,46 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "__social_gate_global_41",
+            "fromNodeId": "__social_gate_compare_41",
             "fromPort": "value",
             "toNodeId": "__prerequisite__",
             "toPort": "condition"
+          },
+          {
+            "fromNodeId": "__social_gate_global_41",
+            "fromPort": "value",
+            "toNodeId": "__social_gate_compare_41",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "choice10_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "listen_check",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "listen_global",
+            "fromPort": "value",
+            "toNodeId": "listen_compare",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "listen_compare",
+            "fromPort": "value",
+            "toNodeId": "listen_check",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "listen_check",
+            "fromPort": "true",
+            "toNodeId": "n15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "listen_check",
+            "fromPort": "false",
+            "toNodeId": "n19",
+            "toPort": "flowIn"
           }
         ]
       },
@@ -2142,7 +2238,7 @@
       }
     },
     {
-      "id": "social02b_awei_tail_low",
+      "id": "social03b_awei_tail_low",
       "type": "other",
       "npcId": "awei",
       "name": "阿伟",
@@ -2570,7 +2666,7 @@
             "type": "setGlobal",
             "inputs": {
               "variableId": 0,
-              "delta": -5
+              "delta": 5
             },
             "outputs": {}
           },
@@ -2580,15 +2676,20 @@
             "inputs": {
               "variableId": 41
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 80,
+            "y": 80
           },
-          "__social_gate_compare": {
-            "id": "__social_gate_compare",
+          "__social_gate_compare_41": {
+            "id": "__social_gate_compare_41",
             "type": "arithmetic",
             "inputs": {
-              "operator": "not"
+              "operator": "<",
+              "right": 50
             },
-            "outputs": {}
+            "outputs": {},
+            "x": 160,
+            "y": 80
           }
         },
         "connections": [
@@ -2839,39 +2940,27 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice_final_23_op0_suspicion",
-            "fromPort": "flowOut",
-            "toNodeId": "choice_final_23_0_0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_final_23_op0_suspicion",
-            "fromPort": "flowOut",
-            "toNodeId": "choice_final_23_op0_suspicion",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "__social_gate_global_41",
-            "fromPort": "value",
-            "toNodeId": "__social_gate_compare",
-            "toPort": "left"
-          },
-          {
-            "fromNodeId": "__social_gate_compare",
-            "fromPort": "value",
-            "toNodeId": "__prerequisite__",
-            "toPort": "condition"
-          },
-          {
             "fromNodeId": "choice_final_23_op0",
             "fromPort": "flowOut",
             "toNodeId": "choice_final_23_op0_suspicion",
             "toPort": "flowIn"
           },
           {
+            "fromNodeId": "__social_gate_compare_41",
+            "fromPort": "value",
+            "toNodeId": "__prerequisite__",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "__social_gate_global_41",
+            "fromPort": "value",
+            "toNodeId": "__social_gate_compare_41",
+            "toPort": "left"
+          },
+          {
             "fromNodeId": "choice_final_23_op0_suspicion",
             "fromPort": "flowOut",
-            "toNodeId": "choice_final_23_op0_suspicion",
+            "toNodeId": "choice_final_23_0_0",
             "toPort": "flowIn"
           }
         ]
@@ -2887,5 +2976,5 @@
       }
     }
   ],
-  "displayName": "第3天社交·主线"
+  "displayName": "第3天社交·16:00"
 }

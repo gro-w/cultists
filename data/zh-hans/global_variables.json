@@ -1,9 +1,9 @@
 [
   {
     "id": 0,
-    "name": "变量0",
-    "type": "bool",
-    "default": false
+    "name": "怀疑度",
+    "type": "number",
+    "default": 0
   },
   {
     "id": 1,

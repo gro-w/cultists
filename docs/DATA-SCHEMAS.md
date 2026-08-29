@@ -67,7 +67,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 ```json
 [
-  { "id": 0, "name": "变量0", "type": "bool", "default": false },
+  { "id": 0, "name": "怀疑度", "type": "number", "default": 0 },
   { "id": 1, "name": "主角SAN", "type": "number", "default": 100 },
   { "id": 2, "name": "金钱", "type": "decimal", "default": 0 },
   { "id": 5, "name": "ChatGTP SAN", "type": "number", "default": 80 },

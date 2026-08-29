@@ -287,6 +287,7 @@ export class ScheduleRunner {
       });
       this.optionsEl.appendChild(button);
     });
+    if (this.appId === "his-patient") eventBus.emit("his:dialogue_choice_available", { instanceId: this.instance.instanceId, nodeId: node.id });
     this.onCheckpoint(this.instance);
   }
 

@@ -11,7 +11,7 @@ export const ONBOARDING_MILESTONES = [
 const HINTS = [
   { id: "welcome", trigger: "desktop_seen", completeOn: "his_opened", target: ".desktop-icon[data-app-id=\"his\"]", title: "欢迎！新的实习生~", text: "请先打开 HIS 系统吧！" },
   { id: "his-first-open", trigger: "his_opened", completeOn: "first_patient_selected", target: ".his-patient-btn", title: "第一次问诊", text: "点击病人查看对话，收集症状，最后提交诊断与处方。" },
-  { id: "dialogue-questions", trigger: "first_dialogue_seen", completeOn: "first_dialogue_choice", target: ".dialogue-options .dialogue-choice-option[data-onboarding-choice=\"history-medication\"]", title: "选择询问方式", text: "先询问既往病史和用药情况，继续了解病人的线索。" },
+  { id: "dialogue-questions", trigger: "his:dialogue_choice_available", completeOn: "first_dialogue_choice", target: ".dialogue-options .dialogue-choice-option[data-onboarding-choice=\"history-medication\"]", title: "选择询问方式", text: "先询问既往病史和用药情况，继续了解病人的线索。" },
   { id: "keyword-first", trigger: "his:keyword_available", completeOn: "first_abdominal_pain_collected", target: ".keyword-highlight[data-keyword-id=\"symptom_005\"]", title: "收集关键词", text: "请点击高亮的“腹痛”，把这个关键词收集到笔记本里。" },
   { id: "keyword-second", trigger: "first_abdominal_pain_collected", completeOn: "first_nausea_collected", target: ".keyword-highlight[data-keyword-id=\"symptom_003\"]", title: "继续收集关键词", text: "很好！继续收集下一个高亮关键词“恶心”。" },
   { id: "keyword-missed", trigger: "his:keyword_missed", target: ".keyword-highlight", title: "错过的关键词", text: "时间不等人啊~错过的关键词是找不回来的呢~" },
@@ -64,8 +64,9 @@ class OnboardingManager {
     this._unsubs.push(this.bus.on("his:diagnosis_ready", () => this.requestHint("his:diagnosis_ready")));
     this._unsubs.push(this.bus.on("his:diagnosis_picker_opened", () => this.requestHint("his:diagnosis_picker_opened")));
     this._unsubs.push(this.bus.on("dorm:about_to_sleep", () => this.requestHint("dorm:about_to_sleep")));
-    this._unsubs.push(this.bus.on("his:keyword_available", () => {
-      if (this.hasMilestone("first_dialogue_choice")) this.requestHint("his:keyword_available");
+    this._unsubs.push(this.bus.on("his:keyword_available", () => this.requestHint("his:keyword_available")));
+    this._unsubs.push(this.bus.on("his:dialogue_choice_available", () => {
+      if (this.hasMilestone("first_nausea_collected")) this.requestHint("his:dialogue_choice_available");
     }));
     this._unsubs.push(this.bus.on("his:keyword_missed", () => this.requestHint("his:keyword_missed")));
     this._unsubs.push(this.bus.on("daynight:changed", ({ location, phaseChanged }) => {

@@ -652,7 +652,7 @@ export class DeveloperMode {
       const definitionLock = reserved ? " disabled" : "";
       const valueLock = reserved ? " disabled" : "";
       const action = reserved ? "系统预留" : button("删除", `remove-global-variable-${variable.id}`);
-      return `<tr data-global-variable-row="${variable.id}" data-global-variable-reserved="${reserved}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"${definitionLock}></td><td><input data-gv-name value="${esc(variable.name)}"${definitionLock}></td><td><select data-gv-type${definitionLock}><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-256 数字</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"${valueLock}></td><td>${action}</td></tr>`;
+      return `<tr data-global-variable-row="${variable.id}" data-global-variable-reserved="${reserved}"><td><input data-gv-id type="number" min="0" step="1" value="${variable.id}"${definitionLock}></td><td><input data-gv-name value="${esc(variable.name)}"${definitionLock}></td><td><select data-gv-type${definitionLock}><option value="bool" ${variable.type === "bool" ? "selected" : ""}>bool</option><option value="number" ${variable.type === "number" ? "selected" : ""}>0-255 整数</option><option value="decimal" ${variable.type === "decimal" ? "selected" : ""}>小数（精确到小数点后2位）</option><option value="string" ${variable.type === "string" ? "selected" : ""}>字符串</option></select></td><td><input data-gv-default value="${esc(valueText(variable, variable.default))}"></td><td><input data-gv-value value="${esc(valueText(variable, variable.value))}"${valueLock}></td><td>${action}</td></tr>`;
     }).join("");
     this.panel(`<section class="dev-section"><h3>公共变量编辑器</h3><p>系统预留变量的 ID、名称和类型固定不可编辑；默认值可以编辑。当前值仅在调试器中编辑。ID 0-99 为系统预留变量，引擎使用这些固定 ID 读写技能点、好感度、SAN 和金钱。</p>${this._globalVariableVisibilityControls()}<table class="dev-table dev-global-variable-table"><thead><tr><th>ID</th><th>名称</th><th>类型</th><th>默认值</th><th>当前值</th><th>操作</th></tr></thead><tbody>${rows || "<tr><td colspan=6>暂无公共变量</td></tr>"}</tbody></table><div>${button("新增变量", "add-global-variable")} ${button("保存到内存", "save-global-variables")} ${button("下载 global_variables.json", "download-global-variables")} ${button("写入磁盘", "write-global-variables")}</div></section>`, "data");
     this._bindGlobalVariableVisibility("showGlobalVariables");
@@ -666,7 +666,8 @@ export class DeveloperMode {
       }
       if (type === "number" || type === "decimal") {
         const value = Number(raw);
-        if (!Number.isFinite(value) || value < 0 || value > 256) throw new Error(`变量 ${id} 的${field}必须是 0-256 的数字`);
+        if (!Number.isFinite(value)) throw new Error(`变量 ${id} 的${field}必须是有限数字`);
+        if (type === "number" && (!Number.isInteger(value) || value < 0 || value > 255)) throw new Error(`变量 ${id} 的${field}必须是 0-255 的整数数字`);
         return type === "decimal" ? Math.round((value + Number.EPSILON * Math.max(1, Math.abs(value))) * 100) / 100 : value;
       }
       return raw;

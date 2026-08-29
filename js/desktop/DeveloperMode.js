@@ -359,11 +359,12 @@ export class DeveloperMode {
       const def = itemManager.getDef(id);
       return `<option value="${id}">${def.name || id} (${id})</option>`;
     }).join("");
-    const stats = ["energy", "mental", "physical", "satiety"].map((id) => `<label>${id} <input data-player-stat="${id}" type="number" min="0" max="255" value="${gameState[id]}"></label>`).join("");
-    const recoverable = `<label>recoverableMentalLoss <input data-player-stat="recoverableMentalLoss" type="number" min="0" value="${gameState.recoverableMentalLoss}"></label>`;
+    const stats = ["sanity", "roommateSuspicion"].map((id) =>
+      `<label>${id === "sanity" ? "理智 (sanity)" : "室友怀疑度 (roommateSuspicion)"} <input data-player-stat="${id}" type="number" min="0" max="100" value="${gameState[id]}"></label>`
+    ).join("");
     const learned = spellManager.all().map((spell) => `<li>${esc(spell.name || spell.id)} <code>${esc(spell.id)}</code></li>`).join("") || "<li>尚未学习法术</li>";
     const keywords = keywordManager.all().filter((keyword) => keyword.collectedDay != null).map((keyword) => `<li>${esc(keyword.content || keyword.id)} <code>${esc(keyword.id)}</code>（第 ${keyword.collectedDay} 日）</li>`).join("") || "<li>尚未收集关键词</li>";
-    this.panel(`<section class="dev-section"><h3>玩家与资源</h3><p>玩家属性通过 GameState 修改；库存、法术和关键词使用各自的运行时管理器。</p><div>${stats} ${recoverable} ${button("应用玩家属性", "apply-player-stats")}</div></section><section class="dev-section"><h3>物品背包</h3>
+    this.panel(`<section class="dev-section"><h3>玩家与资源</h3><p>玩家属性通过 GameState 修改；库存、法术和关键词使用各自的运行时管理器。</p><div>${stats} ${button("应用玩家属性", "apply-player-stats")}</div></section><section class="dev-section"><h3>物品背包</h3>
       <div class="dev-inventory-add"><select data-item-id>${defs}</select><input data-item-count type="number" min="1" value="1">${button("增加", "add-item")}</div>
       <table class="dev-table"><thead><tr><th>物品</th><th>ID</th><th>数量</th><th>操作</th></tr></thead><tbody>
       ${itemManager.all().map(({ id, count, def }) => `<tr><td><button type="button" class="win95-btn dev-btn" data-open-item="${esc(id)}">${esc(def.name || id)}</button></td><td><code>${esc(id)}</code></td><td>${count}</td><td>${button("−1", `remove-item-${id}`)} ${button("清空", `clear-item-${id}`)}</td></tr>`).join("") || "<tr><td colspan=4>背包为空</td></tr>"}
@@ -642,16 +643,13 @@ export class DeveloperMode {
 
     if (action === "apply-player-stats") {
       const changes = {};
-      ["energy", "mental", "physical", "satiety"].forEach((id) => {
+      ["sanity", "roommateSuspicion"].forEach((id) => {
         const input = this.root.querySelector(`[data-player-stat="${id}"]`);
         if (!input) return;
-        const max = id === "satiety" ? 255 : 100;
-        const value = Math.max(0, Math.min(max, Number(input.value) || 0));
+        const value = Math.max(0, Math.min(100, Number(input.value) || 0));
         changes[id] = value - gameState[id];
       });
       gameState.modify(changes);
-      const recoveryInput = this.root.querySelector('[data-player-stat="recoverableMentalLoss"]');
-      if (recoveryInput) gameState.restore({ ...gameState.snapshot(), recoverableMentalLoss: Math.max(0, Number(recoveryInput.value) || 0) });
       this.setStatus("玩家属性已应用。");
       return this.showInventory();
     }

@@ -15,8 +15,8 @@ import { dialogueProgress } from "./DialogueProgress.js";
 import { endingManager } from "./EndingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v13 = v12 plus all runtime snapshot owners that previously had a persistence gap.
-const SAVE_FORMAT_VERSION = 13;
+// v14 = v13 plus sanity refactor (mental→sanity, dropped energy/physical/satiety/recoverableMentalLoss, added roommateSuspicion).
+const SAVE_FORMAT_VERSION = 14;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];

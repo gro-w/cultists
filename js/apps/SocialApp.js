@@ -3,7 +3,7 @@ import { windowManager } from "../core/WindowManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
-import { dialogueProgress } from "../core/DialogueProgress.js";
+
 import { scheduleData } from "../core/ScheduleData.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
@@ -94,9 +94,8 @@ export async function launchSocialApp() {
       contactListEl.appendChild(btn);
     });
 
-    const resumeId = dialogueProgress.get("social").actorId;
-    const resumeContact = entry.contacts.find((c) => c.id === resumeId);
-    renderChat(resumeContact || entry.contacts[0], keywordDefs);
+    const currentContact = entry.contacts.find((c) => c.queueStatus !== "resolved") || entry.contacts[0];
+    renderChat(currentContact, keywordDefs);
   }
 
   function renderChat(contact, keywordDefs) {
@@ -145,17 +144,12 @@ export async function launchSocialApp() {
       optionsEl,
       appId: "social",
       onCheckpoint: (instance) => {
-        dialogueProgress.set("social", contact.id, instance.currentNodeId || null);
         return socialQueue.updateInstance(instance.instanceId, instance);
       },
       onComplete: (instance) => socialQueue.complete(instance.instanceId),
     });
 
-    const resumeNodeId =
-      dialogueProgress.get("social").actorId === contact.id
-        ? dialogueProgress.get("social").nodeId
-        : null;
-    runner.start(resumeNodeId);
+    runner.start();
   }
 
   async function renderCurrentEntry() {

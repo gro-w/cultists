@@ -17,7 +17,7 @@
 | 法术 | `SpellManager` | 已学习法术完整对象、来源书籍、索引及施放参数 | 玩家与资源（只读） |
 | NPC SAN/在线状态 | `NpcStateManager` | 每个 NPC 的 SAN、`offlineActors`、`pendingOfflineActors` | NPC与对话 |
 | NPC 好感度 | `FavorabilityManager` | `values`、`hadPositive` | NPC与对话 |
-| 对话恢复位置 | `DialogueProgress` | HIS/Social/ChatGTP 的 `actorId`、`nodeId` | NPC与对话 |
+
 | HIS/医疗流程 | `MedicalCaseManager` | `submissions`、`income`、`pendingIncome`、`pendingExpenses`、`settledDays`、`pendingIncidents` | 医疗与结局 |
 | 全局变量当前值 | `GlobalVariableManager` | 每个定义 ID 对应的当前 `value` | 世界与场景 |
 | 结局锁定状态 | `EndingManager` | `_ended` | 医疗与结局 |
@@ -45,7 +45,7 @@
 14. **`scheduledAdds`**：动态日程的 `scheduleId`、`addTime`、可选 `queueId`。
 15. **`favorability`**：NPC 好感度值和 `hadPositive`。
 16. **`itemPlacements`**：场景物品的 `placed` 状态。
-17. **`dialogueProgress`**：HIS/Social/ChatGTP 的当前 actor/node。
+
 18. **`ending`**：结局是否已经锁定。
 19. **`cg`**：当前 CG 的 `activeCgId`。
 
@@ -57,7 +57,7 @@
 
 - `FavorabilityManager`：好感度 `values` 与 `hadPositive`，保存键为 `favorability`。
 - `ItemPlacementManager`：场景物品 `placed` 映射，保存键为 `itemPlacements`。
-- `DialogueProgress`：HIS/Social/ChatGTP 当前对话位置，保存键为 `dialogueProgress`。
+
 - `EndingManager`：结局锁定状态，保存键为 `ending`。
 
 这些状态均由各自 owner 的 `snapshot/restore()` 负责，SaveManager 只负责编排保存和恢复顺序。
@@ -89,9 +89,7 @@
 - NPC 与 ChatGTP 的 SAN。
 - NPC 离线状态。
 - 三名核心角色的好感度。
-- HIS/Social/ChatGTP 对话恢复位置。
-
-它现在以“NPC与对话”为入口，并在界面上分成 NPC 状态和对话进度两个明确分组。
+它现在以“NPC状态”为入口；对话进度与状态由日程实例及其队列调试信息管理。
 
 ### 玩家与资源
 
@@ -156,7 +154,7 @@
 
 - NPC SAN、在线/离线、pendingOffline。
 - `FavorabilityManager.values/hadPositive`。
-- `DialogueProgress` 的 HIS/Social/ChatGTP 恢复位置。
+
 
 ### E. 世界与场景
 

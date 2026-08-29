@@ -11,13 +11,13 @@ import { medicalCaseManager } from "./MedicalCaseManager.js";
 import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
-import { dialogueProgress } from "./DialogueProgress.js";
+
 import { cgManager } from "./CGManager.js";
 import { endingManager } from "./EndingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v15 = v14 plus CGManager snapshot (activeCgId); removes dedicated query queue payload.
-const SAVE_FORMAT_VERSION = 15;
+// v16 = v15 without the obsolete standalone dialogue-progress state.
+const SAVE_FORMAT_VERSION = 16;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -40,7 +40,7 @@ function base64UrlDecode(str) {
 }
 
 /**
- * SaveManager packs the complete v13 game state into a version-prefixed JSON
+ * SaveManager packs the complete v16 game state into a version-prefixed JSON
  * payload, base64url-encodes it, and writes it to `location.search` so a save
  * is represented by the current URL. Loading reverses the process.
  */
@@ -128,7 +128,6 @@ class SaveManager {
       scheduledAdds: scheduleData.snapshotScheduled(),
       favorability: favorabilityManager.snapshot(),
       itemPlacements: itemPlacementManager.snapshot(),
-      dialogueProgress: dialogueProgress.snapshot(),
       ending: endingManager.snapshot(),
       cg: cgManager.snapshot(),
     };
@@ -156,7 +155,7 @@ class SaveManager {
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)
       || !Array.isArray(payload.mainQueue || [])
       || !payload.favorability || !Array.isArray(payload.itemPlacements)
-      || !payload.dialogueProgress || typeof payload.ending !== "object") {
+      || typeof payload.ending !== "object") {
       throw new Error("Invalid save data");
     }
     if (!Number.isInteger(payload.gameState.day) || payload.gameState.day < 1 || payload.gameState.day > MAX_GAME_DAYS) {
@@ -188,7 +187,7 @@ class SaveManager {
         return id >= 40 && id <= 59;
       }) });
       itemPlacementManager.restore(payload.itemPlacements || []);
-      dialogueProgress.restore(payload.dialogueProgress || {});
+
       endingManager.restore(payload.ending || {});
       cgManager.restore(payload.cg || {});
       scheduleData.restoreAt(gameState.day, gameState.clockMinutes);

@@ -4,7 +4,7 @@ import { dataLoader } from "../core/DataLoader.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
-import { dialogueProgress } from "../core/DialogueProgress.js";
+
 import { scheduleData } from "../core/ScheduleData.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
@@ -126,10 +126,8 @@ export async function launchHISApp() {
       patientListEl.appendChild(btn);
       });
 
-    // Resume the previously-selected patient in this entry, if any.
-    const resumeId = dialogueProgress.get("his").actorId;
-    const resumePatient = entry.patients.find((p) => p.id === resumeId);
-    renderDialogue(resumePatient || entry.patients[0], keywordDefs);
+    const currentPatient = entry.patients.find((p) => p.queueStatus !== "resolved") || entry.patients[0];
+    renderDialogue(currentPatient, keywordDefs);
   }
 
   function renderDialogue(patient, keywordDefs) {
@@ -179,15 +177,12 @@ export async function launchHISApp() {
       optionsEl,
       appId: "his",
       onCheckpoint: (instance) => {
-        dialogueProgress.set("his", patient.id, instance.currentNodeId || null);
         return workQueue.updateInstance(instance.instanceId, instance);
       },
       onComplete: (instance) => workQueue.complete(instance.instanceId),
     });
 
-    const resumeNodeId =
-      dialogueProgress.get("his").actorId === patient.id ? dialogueProgress.get("his").nodeId : null;
-    runner.start(resumeNodeId || undefined);
+    runner.start();
 
   }
 

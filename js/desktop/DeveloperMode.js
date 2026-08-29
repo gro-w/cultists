@@ -11,7 +11,7 @@ import { dayNightSystem } from "../core/DayNightSystem.js";
 import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { favorabilityManager } from "../core/FavorabilityManager.js";
-import { dialogueProgress } from "../core/DialogueProgress.js";
+
 import { globalVariableManager, RESERVED_GLOBAL_VARIABLE_MAX_ID } from "../core/GlobalVariableManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
@@ -107,8 +107,7 @@ export const launchDeveloperMode = launchDatabaseApp;
 export class DeveloperMode {
   constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
-    const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "dialogueProgress:changed", "dialogueProgress:restored", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset"];
-    events.push("npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored");
+    const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset", "npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored"];
     events.forEach((event) => this._runtimeUnsubs.push(eventBus.on(event, () => this._queueRuntimeRefresh())));
     this.win?.element?.addEventListener("remove", () => {
       this._runtimeUnsubs.forEach((unsubscribe) => unsubscribe());
@@ -131,7 +130,7 @@ export class DeveloperMode {
       ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
-    const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC与对话", "👤", "tab-npc-state"], ["日程与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
+    const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC状态", "👤", "tab-npc-state"], ["日程与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
     this.root.innerHTML = `<section class="dev-app-section dev-database-section"><div class="dev-app-heading"><strong>数据库 App</strong><span>静态数据编辑器。蓝色表示仍在开发，灰色表示较为成熟；双击图标在新窗口打开。</span></div><div class="dev-app-grid">${dataIcons.map(([label, glyph, action]) => icon(label, glyph, action, matureActions.has(action) ? "mature" : "data")).join("")}</div></section><section class="dev-app-section dev-debugger-section"><div class="dev-app-heading dev-runtime-heading"><strong>调试器</strong><span>观察或修改当前游戏运行时变量。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${runtimeIcons.map(([label, glyph, action]) => icon(label, glyph, action, "runtime")).join("")}</div></section><div class="dev-status" data-dev-status>开发人员模式就绪。</div>`;
     this.bindPanel();
   }
@@ -364,16 +363,7 @@ export class DeveloperMode {
     this._activeRuntimeMethod = "showNpcState";
     const actors = [{ id: "chatgtp", name: "ChatGTP", favorability: null }, ...npcStateManager.npcs.map((npc) => ({ id: npc.id, name: npc.name, favorability: favorabilityManager.get(npc.id) }))];
     const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="256" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="256" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
-    const hisProgress = dialogueProgress.get("his");
-    const socialProgress = dialogueProgress.get("social");
-    const chatgtpProgress = dialogueProgress.get("chatgtp");
-    this.panel(`<section class="dev-section"><h3>NPC与对话</h3><p>通过 NPC 状态和好感度所有者 API 修改运行时值；对话进度单独保存并可恢复。</p><table class="dev-table"><thead><tr><th>角色</th><th>SAN</th><th>好感度</th><th>当前状态</th></tr></thead><tbody>${rows}</tbody></table><label><input data-force-offline type="checkbox"> 将 SAN 不高于离线阈值的角色强制设为离线</label><div>${button("应用 NPC 状态", "apply-npc-state")}</div></section><section class="dev-section"><h3>对话进度</h3><p>设置后，重新打开对应应用时会从指定角色和节点继续。</p><label>应用 <select data-dialogue-app><option value="his">HIS</option><option value="social">Social</option><option value="chatgtp">ChatGTP</option></select></label><label>角色 ID <input data-dialogue-actor value="${esc(hisProgress.actorId || "")}" placeholder="例如 ajie"></label><label>节点 ID <input data-dialogue-node value="${esc(hisProgress.nodeId || "")}" placeholder="例如 start"></label><div>${button("应用对话状态", "apply-dialogue-state")} ${button("清除对话状态", "clear-dialogue-state")}</div><p class="dev-current-file">当前 HIS：${esc(hisProgress.actorId || "无")} / ${esc(hisProgress.nodeId || "无")}；Social：${esc(socialProgress.actorId || "无")} / ${esc(socialProgress.nodeId || "无")}；ChatGTP：${esc(chatgtpProgress.nodeId || "无")}</p></section>`);
-    const appSelect = this.root.querySelector("[data-dialogue-app]");
-    appSelect.addEventListener("change", () => {
-      const progress = dialogueProgress.get(appSelect.value);
-      this.root.querySelector("[data-dialogue-actor]").value = progress.actorId || (appSelect.value === "chatgtp" ? "chatgtp" : "");
-      this.root.querySelector("[data-dialogue-node]").value = progress.nodeId || "";
-    });
+    this.panel(`<section class="dev-section"><h3>NPC 状态</h3><p>通过 NPC 状态和好感度所有者 API 修改运行时值；日程实例负责对话进度与状态。</p><table class="dev-table"><thead><tr><th>角色</th><th>SAN</th><th>好感度</th><th>当前状态</th></tr></thead><tbody>${rows}</tbody></table><label><input data-force-offline type="checkbox"> 将 SAN 不高于离线阈值的角色强制设为离线</label><div>${button("应用 NPC 状态", "apply-npc-state")}</div></section>`, "data");
   }
 
   showInventory() {
@@ -876,17 +866,10 @@ export class DeveloperMode {
         const favorInput = row.querySelector("[data-npc-favor]");
         if (favorInput) favorabilityManager.modify(actorId, Math.max(0, Math.min(256, Number(favorInput.value) || 0)) - favorabilityManager.get(actorId));
       });
-      this.setStatus("NPC与对话状态已应用。");
+      this.setStatus("NPC 状态已应用。");
       return this.showNpcState();
     }
-    if (action === "apply-dialogue-state" || action === "clear-dialogue-state") {
-      const app = this.root.querySelector("[data-dialogue-app]")?.value;
-      const actorId = action === "clear-dialogue-state" ? null : this.root.querySelector("[data-dialogue-actor]")?.value.trim() || null;
-      const nodeId = action === "clear-dialogue-state" ? null : this.root.querySelector("[data-dialogue-node]")?.value.trim() || null;
-      dialogueProgress.set(app, app === "chatgtp" ? "chatgtp" : actorId, nodeId);
-      this.setStatus(action === "clear-dialogue-state" ? "对话状态已清除。" : `${app} 对话状态已设置为 ${actorId || "无"} / ${nodeId || "无"}。`);
-      return this.showNpcState();
-    }
+
 
     const removeQa = action.match(/^remove-qa-entry-(\d+)$/);
     if (removeQa) { this._syncQaPage(); this.qaDraft.splice(Number(removeQa[1]), 1); this.qaPage = Math.min(this.qaPage, Math.max(1, Math.ceil(this.qaDraft.length / QA_PAGE_SIZE))); return this.showChatgtp(); }

@@ -4,6 +4,7 @@ import { gameState } from "./GameState.js";
 import { mainQueue, socialQueue } from "./ScheduleQueue.js";
 import { specialEventManager } from "./SpecialEventManager.js";
 import { cgManager } from "./CGManager.js";
+import { favorabilityManager } from "./FavorabilityManager.js";
 
 const ANSWERS = Object.freeze({ yes: "是", no: "不是", both: "是也不是" });
 
@@ -100,6 +101,9 @@ class TurtleSoupManager {
     }
     this.state.solved = true;
     this.state.solvedDay = gameState.day;
+    const rewardNpcId = puzzle.reward_npc_id || puzzle.npcId || "binbin";
+    const reward = Number(puzzle.reward_favorability ?? 15);
+    if (reward > 0) favorabilityManager.modify(rewardNpcId, reward);
     if (puzzle.success_cg) cgManager.unlock(puzzle.success_cg);
     eventBus.emit("turtle-soup:guess-correct", this.snapshot());
     eventBus.emit("turtle-soup:guessCorrect", this.snapshot());

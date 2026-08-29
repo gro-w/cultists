@@ -443,7 +443,9 @@ export class DevItemEditorTab {
     const v=it.sanVariants[this.activeSanKey]||{name:'',description:'',image:'',revealKeywordIds:[],inspEffect:{gameEvent:'',mental:0,ending:''}};
     if(!v.inspEffect) v.inspEffect={gameEvent:'',mental:0,ending:''};
     const band=_IE_BANDS.find(b=>b.key===this.activeSanKey);
-    const imageSrc=this._imageSrc(v.image);
+    const isZeroSan=this.activeSanKey==='=0';
+    const imageValue=isZeroSan ? (it.sanVariants['>90']?.image||'') : (v.image||'');
+    const imageSrc=this._imageSrc(imageValue);
     const imgHTML=imageSrc
       ?`<img style="width:96px;height:96px;border:1px solid #ccc;object-fit:contain;background:#f9f9f9" src="${this._e(imageSrc)}" id="ie-sp-img" alt="图片预览" onerror="this.alt='图片加载失败'">`
       :`<div style="width:64px;height:64px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:10px" id="ie-sp-img">无图片</div>`;
@@ -455,7 +457,7 @@ export class DevItemEditorTab {
       <div style="color:${band.color};font-weight:600;margin-bottom:6px;font-size:12px">${this._e(band.label)} 时的表现</div>
       <div class="dev-ie-field"><label>名称（留空=默认）</label>
         <input type="text" id="ie-sp-name" value="${this._e(v.name)}" oninput="_ie._sanInput()"></div>
-      <div class="dev-ie-field"><label>调查描述（留空=基础文本）</label>
+      <div class="dev-ie-field"><label>${this.activeSanKey === '=0' ? 'SAN=0 调查文字（图片沿用 SAN=100）' : '调查描述（留空=基础文本）'}</label>
         <textarea id="ie-sp-desc" class="dev-textarea" rows="3" oninput="_ie._sanInput()">${this._e(v.description)}</textarea></div>
       <div class="dev-ie-field"><label>此段专属关键词</label>
         <div id="ie-sp-kw-tags" class="dev-ie-tags">${kwHTML}</div>
@@ -473,12 +475,39 @@ export class DevItemEditorTab {
           <div class="dev-ie-field" style="flex:1;min-width:140px"><label>触发结局</label>
             <input type="text" id="ie-sp-insp-ending" value="${this._e(v.inspEffect.ending||'')}" oninput="_ie._sanInspInput()"></div>
         </div></details>
-      <div class="dev-ie-field"><label>外观图片地址</label>
+      <div class="dev-ie-field"><label>${isZeroSan ? 'SAN=0 图片（自动沿用 SAN=100）' : '外观图片地址'}</label>
         <div style="display:flex;gap:10px;align-items:flex-start">
           ${imgHTML}
-          <div style="display:flex;flex-direction:column;gap:5px;flex:1"><input type="text" id="ie-sp-image" value="${this._e(v.image||'')}" placeholder="data/assets/item_book_nahan_90_xxx.jpg" oninput="_ie._sanImageInput()"><span style="font-size:11px;color:#888">填写 data/assets/ 下的图片地址，或其他可访问的图片 URL。</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+            <div style="display:flex;gap:5px;align-items:center">
+              <input type="text" id="ie-sp-image" value="${this._e(imageValue)}" placeholder="data/assets/item_book_nahan_90_xxx.jpg" oninput="_ie._sanImageInput()" style="flex:1" ${isZeroSan?'disabled':''}>
+              <label class="win95-btn dev-btn" style="cursor:${isZeroSan?'not-allowed':'pointer'};white-space:nowrap;${isZeroSan?'opacity:.55;pointer-events:none':''}" title="${isZeroSan?'SAN=0 自动沿用 SAN=100 图片':'从文件资源管理器选择物品图'}">
+                📁 浏览上传
+                <input type="file" accept="image/*" id="ie-sp-image-upload" style="display:none">
+              </label>
+            </div>
+            <span style="font-size:11px;color:#888">填写 data/assets/ 下的图片地址，或点击「浏览上传」从文件资源管理器选择图片。</span>
+          </div>
         </div>
       </div>`;
+    this._el('ie-sp-image-upload')?.addEventListener('change', (event) => this._onSanImageFile(event));
+  }
+
+  _onSanImageFile(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const it = this.items.find(i => i.id === this.currentId);
+      if (!it) return;
+      it.sanVariants[this.activeSanKey].image = String(reader.result || '');
+      this.dirty = true;
+      this._renderSanPanel();
+      this._st(`已上传物品图：${file.name}`);
+    };
+    reader.onerror = () => this._st(`读取物品图失败：${file.name}`, true);
+    reader.readAsDataURL(file);
   }
 
   _sanInput() {
@@ -670,7 +699,20 @@ export class DevItemEditorTab {
     if(it.isBook) out.isBook=true; else delete out.isBook;
     if(it.bookContents&&it.bookContents.length) out.bookContents=it.bookContents; else delete out.bookContents;
     if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>{ const spell={...s,name:s.name,description:s.description||'',learnTimeMinutes:Number(s.learnTimeMinutes||240),castSanCost:Number(s.castSanCost||5)}; return spell; }); else delete out.spells;
-    if(it.schedules && Object.keys(it.schedules).length) out.schedules=JSON.parse(JSON.stringify(it.schedules)); else delete out.schedules;
+    if(it.schedules && Object.keys(it.schedules).length) {
+      out.schedules=JSON.parse(JSON.stringify(it.schedules));
+      const resultNode=out.schedules.investigate?.nodes?.["band6:result"];
+      const san0Text=it.sanVariants['=0']?.description;
+      if(resultNode && san0Text) resultNode.inputs ||= {}, resultNode.inputs.text=san0Text;
+      _IE_BANDS.forEach((b,index)=>{
+        const imageNode=out.schedules.investigate?.nodes?.[`band${index}:image`];
+        const image=it.sanVariants[b.key]?.image;
+        if(imageNode && image) imageNode.inputs ||= {}, imageNode.inputs.image=image;
+      });
+      const normalImage=out.schedules.investigate?.nodes?.['band0:image']?.inputs?.image;
+      const zeroImage=out.schedules.investigate?.nodes?.['band6:image'];
+      if(normalImage && zeroImage) zeroImage.inputs ||= {}, zeroImage.inputs.image=normalImage;
+    } else delete out.schedules;
     delete out.useEffect; delete out.successMessage; delete out.failMessage;
     return out;
   }
@@ -686,10 +728,18 @@ export class DevItemEditorTab {
     it.spells=(g.spells||[]).map(s=>({ ...s, name:s.name||'', description:s.description||'', learnTimeMinutes:Number(s.learnTimeMinutes||240), castSanCost:Number(s.castSanCost||5), schedules:s.schedules ? JSON.parse(JSON.stringify(s.schedules)) : {} }));
     it.schedules=g.schedules ? JSON.parse(JSON.stringify(g.schedules)) : {};
     it.revealKeywordIds=g.revealKeywordIds||[];
+    const san0Result=it.schedules.investigate?.nodes?.["band6:result"]?.inputs?.text;
+    if(san0Result !== undefined) it.sanVariants['=0'].description=String(san0Result);
+    _IE_BANDS.forEach((b,index)=>{
+      const image=it.schedules.investigate?.nodes?.[`band${index}:image`]?.inputs?.image;
+      if(image !== undefined && !it.sanVariants[b.key].image) it.sanVariants[b.key].image=String(image);
+    });
+    if(it.sanVariants['>90'].image) it.sanVariants['=0'].image=it.sanVariants['>90'].image;
     const topIE=g.inspectEffect||null;
     const readIE=src=>({gameEvent:src.gameEvent||'',mental:(src.statChanges&&src.statChanges.mental)||0,ending:src.ending||''});
     if(g.sanVariants){_IE_BANDS.forEach(b=>{const src=g.sanVariants[b.key];const dst=it.sanVariants[b.key];if(src){if(src.name!==undefined)dst.name=src.name;if(src.description!==undefined)dst.description=src.description;const image=src.image??src.imagePath??src.imageUrl;if(image!==undefined)dst.image=String(image);if(src.revealKeywordIds)dst.revealKeywordIds=[...src.revealKeywordIds];if(src.inspectEffect)dst.inspEffect=readIE(src.inspectEffect);else if(topIE)dst.inspEffect=readIE(topIE);}else if(topIE){dst.inspEffect=readIE(topIE);}});}
     else if(topIE){_IE_BANDS.forEach(b=>{it.sanVariants[b.key].inspEffect=readIE(topIE);});}
+    if(it.sanVariants['>90'].image) it.sanVariants['=0'].image=it.sanVariants['>90'].image;
 
     return it;
   }

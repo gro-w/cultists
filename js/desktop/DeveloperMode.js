@@ -324,13 +324,14 @@ export class DeveloperMode {
     this._cgEditorTab.mount(this.root.querySelector(".dev-cg-root"));
   }
 
-  showTurtleSoupEditor() {
+  async showTurtleSoupEditor() {
     this._unmountEditorTabs();
     this._setPanelKind("data");
     this._turtleSoupEditorTab = new DevTurtleSoupEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._turtleSoupEditorTab.html();
     this.bindPanel();
-    this._turtleSoupEditorTab.mount(this.root.querySelector(".dev-turtle-root"));
+    await this._turtleSoupEditorTab.mount(this.root.querySelector(".dev-turtle-root"));
+    this.setStatus("已加载。");
   }
 
   showStructuredEditor(key) {
@@ -556,7 +557,7 @@ export class DeveloperMode {
             📁 上传
             <input type="file" accept="image/*" data-portrait-upload="${index}-${pi}" style="display:none">
           </label>
-          <button type="button" class="win95-btn dev-btn" data-action="remove-portrait-${index}-${pi}" style="font-size:11px">✕</button>
+          <button type="button" class="win95-btn dev-btn" data-dev-action="remove-portrait-${index}-${pi}" style="font-size:11px">✕</button>
         </div>`).join("");
       return `<div class="dev-ded-card" data-npc-row="${index}" style="margin-bottom:10px">
         <div class="dev-ded-card-title">
@@ -573,7 +574,7 @@ export class DeveloperMode {
         <div style="margin-bottom:4px">
           <strong style="font-size:12px">立绘变体</strong>
           <span style="font-size:11px;color:#aaa">（点击上传图片；对话时自动根据 SAN 值选择匹配变体；点击立绘可关闭）</span>
-          <button type="button" class="win95-btn dev-btn" style="font-size:11px;margin-left:6px" data-action="add-portrait-${index}">＋ 添加变体</button>
+          <button type="button" class="win95-btn dev-btn" style="font-size:11px;margin-left:6px" data-dev-action="add-portrait-${index}">＋ 添加变体</button>
         </div>
         ${portraits || '<p style="font-size:11px;color:#aaa;margin:0 0 4px">暂无立绘。点击「添加变体」上传。</p>'}
       </div>`;
@@ -584,21 +585,61 @@ export class DeveloperMode {
       <div style="margin-top:8px">${button("新增 NPC", "add-npc")} ${button("保存到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div>
     </section>`, "data");
 
-    // Bind file upload inputs
+    // Bind file upload inputs after rendering. The input is nested in a label,
+    // so binding the input itself keeps the native file-picker interaction
+    // reliable in both the main editor and editor sub-windows.
     this.root.querySelectorAll("[data-portrait-upload]").forEach((input) => {
-      input.addEventListener("change", async (e) => {
-        const file = e.target.files[0];
+      input.addEventListener("change", (event) => {
+        const file = event.target.files?.[0];
+        event.target.value = "";
         if (!file) return;
+        if (!file.type.startsWith("image/")) {
+          this.setStatus("立绘上传失败：请选择图片文件。", true);
+          return;
+        }
+        const [npcIdx, portIdx] = input.dataset.portraitUpload.split("-").map(Number);
+        this._syncNpcFormToDoc();
+        const doc = this.docs.get("npcs.json");
+        if (!doc?.npcs?.[npcIdx]?.portraits?.[portIdx]) {
+          this.setStatus("立绘上传失败：找不到对应的立绘变体。", true);
+          return;
+        }
         const reader = new FileReader();
-        reader.onload = () => {
-          const [npcIdx, portIdx] = input.dataset.portraitUpload.split("-").map(Number);
-          const d = this.docs.get("npcs.json");
-          if (!d?.npcs?.[npcIdx]?.portraits?.[portIdx]) return;
-          d.npcs[npcIdx].portraits[portIdx].imageData = reader.result;
-          this.docs.set("npcs.json", d);
-          this.showNpcs();
+        reader.onload = async () => {
+          doc.npcs[npcIdx].portraits[portIdx].imageData = String(reader.result || "");
+          this.docs.set("npcs.json", doc);
+          this.setStatus(`立绘已上传：${file.name}`);
+          await this.showNpcs();
         };
+        reader.onerror = () => this.setStatus(`立绘读取失败：${file.name}`, true);
         reader.readAsDataURL(file);
+      });
+    });
+  }
+
+  _syncNpcFormToDoc() {
+    const doc = this.docs.get("npcs.json");
+    if (!doc?.npcs) return;
+    this.root.querySelectorAll("[data-npc-row]").forEach((card, npcIdx) => {
+      const npc = doc.npcs[npcIdx];
+      if (!npc) return;
+      npc.id = card.querySelector("[data-npc-id]")?.value.trim() || npc.id;
+      npc.name = card.querySelector("[data-npc-name]")?.value ?? npc.name;
+      npc.avatar = card.querySelector("[data-npc-avatar]")?.value || "🙂";
+      npc.initialFavorability = Number(card.querySelector("[data-npc-favor]")?.value) || 0;
+      npc.initialSan = Number(card.querySelector("[data-npc-san]")?.value) || 0;
+      npc.portraits = Array.from(card.querySelectorAll("[data-portrait-row]")).map((row, portIdx) => {
+        const previous = npc.portraits?.[portIdx] || {};
+        const sanMin = row.querySelector("[data-p-san-min]")?.value ?? "";
+        const sanMax = row.querySelector("[data-p-san-max]")?.value ?? "";
+        return {
+          sanMin: sanMin === "" ? null : Number(sanMin),
+          sanMax: sanMax === "" ? null : Number(sanMax),
+          height: Number(row.querySelector("[data-p-height]")?.value) || 66,
+          offsetX: Number(row.querySelector("[data-p-offset-x]")?.value) || 0,
+          offsetY: Number(row.querySelector("[data-p-offset-y]")?.value) || 0,
+          imageData: previous.imageData || "",
+        };
       });
     });
   }
@@ -919,6 +960,7 @@ export class DeveloperMode {
     }
     const addPortrait = action.match(/^add-portrait-(\d+)$/);
     if (addPortrait) {
+      this._syncNpcFormToDoc();
       const doc = await this.loadDoc("npcs.json");
       const npc = doc.npcs?.[Number(addPortrait[1])];
       if (npc) { if (!npc.portraits) npc.portraits = []; npc.portraits.push({ sanMin: null, sanMax: null, height: 66, offsetX: 0, offsetY: 0, imageData: "" }); this.docs.set("npcs.json", doc); }
@@ -926,6 +968,7 @@ export class DeveloperMode {
     }
     const removePortrait = action.match(/^remove-portrait-(\d+)-(\d+)$/);
     if (removePortrait) {
+      this._syncNpcFormToDoc();
       const doc = await this.loadDoc("npcs.json");
       doc.npcs?.[Number(removePortrait[1])]?.portraits?.splice(Number(removePortrait[2]), 1);
       this.docs.set("npcs.json", doc);

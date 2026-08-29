@@ -95,7 +95,18 @@ class ItemManager {
   scheduleFor(id, action) {
     const def = this.defs.get(id);
     const schedules = def?.schedules || def?.scheduleTable || {};
-    return schedules[action] || null;
+    const blueprint = schedules[action] || null;
+    if (!blueprint || action !== "investigate") return blueprint;
+    const nodes = blueprint.nodes || {};
+    if (nodes.san?.type !== "segmentBranch") return blueprint;
+    const normalImage = nodes["band0:image"]?.inputs?.image;
+    const zeroImage = nodes["band6:image"];
+    if (!normalImage || !zeroImage) return blueprint;
+    // SAN=0 keeps the normal item's appearance; its investigation text is
+    // still read from the separate band6:result node.
+    const copy = JSON.parse(JSON.stringify(blueprint));
+    copy.nodes["band6:image"].inputs.image = normalImage;
+    return copy;
   }
 
   _emitItemSchedule(id, action, context = {}) {

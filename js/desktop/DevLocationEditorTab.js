@@ -540,12 +540,36 @@ export class DevLocationEditorTab {
           ${this._imageSrc(band.image)
             ? `<img id="le-bg-img-${i}" src="${this._e(this._imageSrc(band.image))}" style="width:80px;height:45px;object-fit:cover;border:1px solid #555;vertical-align:middle" alt="图片预览" onerror="this.alt='图片加载失败'">`
             : `<span style="color:#aaa;font-size:11px">（空）</span>`}
-          <input type="text" value="${this._e(band.image || "")}" placeholder="data/assets/location_xxx.jpg"
-            style="width:220px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
-            oninput="_le._setBgBandField(${i},'image',this.value)">
+          <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+            <input type="text" value="${this._e(band.image || "")}" placeholder="data/assets/location_xxx.jpg"
+              style="width:220px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
+              oninput="_le._setBgBandField(${i},'image',this.value)">
+            <label class="win95-btn dev-btn" style="cursor:pointer;white-space:nowrap" title="从文件资源管理器选择背景图">
+              📁 浏览上传
+              <input type="file" accept="image/*" data-bg-upload="${i}" style="display:none">
+            </label>
+          </div>
         </td>
         <td><button type="button" class="win95-btn dev-btn" onclick="_le._removeBgBand(${i})">✕</button></td>
       </tr>`).join("") || '<tr><td colspan="4" style="color:#aaa;font-size:11px;padding:6px">暂无背景图</td></tr>';
+    tbody.querySelectorAll("[data-bg-upload]").forEach((input) => {
+      input.addEventListener("change", (event) => this._onBgImageFile(event, Number(input.dataset.bgUpload)));
+    });
+  }
+
+  _onBgImageFile(event, index) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this._setBgBandField(index, "image", String(reader.result || ""));
+      this._renderBgList();
+      this._redrawZoneCanvas();
+      this._st(`已上传位置背景图：${file.name}`);
+    };
+    reader.onerror = () => this._st(`读取背景图失败：${file.name}`, true);
+    reader.readAsDataURL(file);
   }
 
   _addBgBand() {

@@ -3,6 +3,7 @@
     {
       "id": "physician_cert",
       "name": "医师证书",
+      "icon": "🪪",
       "consumable": false,
       "usable": false,
       "pickable": false,
@@ -54,6 +55,7 @@
     {
       "id": "old_key",
       "name": "一把旧钥匙",
+      "icon": "🗝️",
       "consumable": false,
       "usable": true,
       "pickable": false,
@@ -170,6 +172,7 @@
     {
       "id": "locked_box",
       "name": "一个锁住的盒子",
+      "icon": "🔒",
       "consumable": false,
       "usable": false,
       "pickable": false,
@@ -329,6 +332,7 @@
     {
       "id": "opened_box",
       "name": "一个打开的盒子",
+      "icon": "📭",
       "consumable": false,
       "usable": false,
       "pickable": false,
@@ -382,6 +386,7 @@
     {
       "id": "sandwich",
       "name": "三明治",
+      "icon": "🥪",
       "consumable": true,
       "usable": true,
       "pickable": false,
@@ -496,6 +501,7 @@
     {
       "id": "feast_set",
       "name": "暴食套餐",
+      "icon": "🍱",
       "consumable": true,
       "usable": true,
       "pickable": false,
@@ -610,6 +616,7 @@
     {
       "id": "mystery_potion",
       "name": "不明液体",
+      "icon": "🧪",
       "consumable": true,
       "usable": true,
       "pickable": false,
@@ -818,6 +825,7 @@
     {
       "id": "extra_workload",
       "name": "额外工作量",
+      "icon": "📚",
       "consumable": false,
       "usable": false,
       "pickable": false,
@@ -869,6 +877,7 @@
     {
       "id": "book_nahan",
       "name": "《呐喊》",
+      "icon": "📕",
       "consumable": false,
       "usable": true,
       "worldCount": 1,
@@ -1310,6 +1319,7 @@
     {
       "id": "book_wangxb",
       "name": "《王小波小说选集》",
+      "icon": "📘",
       "consumable": false,
       "usable": true,
       "worldCount": 1,
@@ -1692,6 +1702,7 @@
     {
       "id": "statue_ajie",
       "name": "彬彬同款雕像（阿杰桌）",
+      "icon": "🗿",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -1922,6 +1933,7 @@
     {
       "id": "necklace_ajie",
       "name": "金色倒五芒星项链（阿杰桌）",
+      "icon": "📿",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -2150,6 +2162,7 @@
     {
       "id": "book_moon",
       "name": "《月亮与六便士》",
+      "icon": "📗",
       "consumable": false,
       "usable": true,
       "worldCount": 1,
@@ -2427,7 +2440,8 @@
     },
     {
       "id": "poster_jesus",
-      "name": "耶稣海报",
+      "name": "摇滚海报",
+      "icon": "🖼️",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -2655,6 +2669,7 @@
     {
       "id": "statue_awei",
       "name": "彬彬同款雕像（阿伟桌）",
+      "icon": "🗿",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -2885,6 +2900,7 @@
     {
       "id": "necklace_awei",
       "name": "金色倒五芒星项链（阿伟桌）",
+      "icon": "📿",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -3113,6 +3129,7 @@
     {
       "id": "book_innsmouth",
       "name": "《印斯茅斯的阴霾》",
+      "icon": "📓",
       "consumable": false,
       "usable": true,
       "worldCount": 1,
@@ -3402,6 +3419,7 @@
     {
       "id": "book_coc7",
       "name": "《克苏鲁的呼唤第七版规则书》",
+      "icon": "📖",
       "consumable": false,
       "usable": true,
       "worldCount": 1,
@@ -3677,6 +3695,7 @@
     {
       "id": "statue_binbin",
       "name": "奇怪的雕像（彬彬桌）",
+      "icon": "🗿",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -3904,6 +3923,7 @@
     {
       "id": "necklace_binbin",
       "name": "金色倒五芒星项链（彬彬桌）",
+      "icon": "📿",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -4132,6 +4152,7 @@
     {
       "id": "book_blue_love",
       "name": "《蓝色生死恋》",
+      "icon": "💙",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -4496,6 +4517,7 @@
     {
       "id": "frozen_meat",
       "name": "冻肉",
+      "icon": "🥩",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -4722,6 +4744,7 @@
     {
       "id": "ketchup",
       "name": "番茄酱",
+      "icon": "🍅",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -4949,6 +4972,7 @@
     {
       "id": "pasta",
       "name": "意面",
+      "icon": "🍝",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -5167,6 +5191,7 @@
     {
       "id": "salt_bag",
       "name": "袋装盐",
+      "icon": "🧂",
       "consumable": false,
       "usable": false,
       "worldCount": 3,
@@ -5389,6 +5414,7 @@
     {
       "id": "perfume",
       "name": "香薰",
+      "icon": "🕯️",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -5616,6 +5642,7 @@
     {
       "id": "swastika",
       "name": "万字符",
+      "icon": "☸️",
       "consumable": false,
       "usable": true,
       "pickable": true,
@@ -5865,6 +5892,7 @@
     {
       "id": "hotpot",
       "name": "火锅",
+      "icon": "🍲",
       "consumable": true,
       "usable": false,
       "worldCount": 1,
@@ -6080,6 +6108,7 @@
     {
       "id": "menu",
       "name": "菜单",
+      "icon": "📋",
       "consumable": false,
       "usable": false,
       "worldCount": 1,
@@ -6295,6 +6324,7 @@
     {
       "id": "roommate_necklace",
       "name": "室友的项链",
+      "icon": "🔗",
       "consumable": false,
       "usable": false,
       "pickable": false,

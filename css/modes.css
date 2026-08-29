@@ -718,17 +718,22 @@
 .loc-scene-item-layer > .loc-item-btn {
   position: absolute;
 }
-/* Unpositioned items go into a flex bar at the bottom of the scene */
+/* Unpositioned items go into a centered single row just above the interaction box */
 .loc-item-float-bar {
   position: absolute;
-  bottom: 8px;
-  left: 8px;
-  right: 8px;
+  bottom: 6px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  justify-content: center;
   gap: 6px;
   pointer-events: none;
   align-items: flex-end;
+  max-width: calc(100% - 16px);
+  overflow-x: auto;
+  padding: 2px 0;
 }
 .loc-item-float-bar .loc-item-btn {
   position: relative;

@@ -203,6 +203,12 @@ export default class DormMode {
       const npcId = actor.npcId || actor.id;
       if (["ajie", "awei", "binbin"].includes(npcId)) npcMap.set(npcId, actor);
     });
+    // Binbin's turtle-soup entrance is a night-only dorm action, so it must
+    // remain available even when the nightly contact schedule omits him.
+    if (gameState.phase === "night" && !npcMap.has("binbin")) {
+      const binbin = this._npcsData?.npcs?.find((npc) => npc.id === "binbin");
+      if (binbin) npcMap.set("binbin", binbin);
+    }
 
     const keywordDefs = {};
     npcMap.forEach((actor) =>
@@ -215,23 +221,25 @@ export default class DormMode {
       const actor = npcMap.get(npcId);
       if (!actor) return;
       const offline = npcStateManager.isOffline(npcId);
+      const turtleSoupShortcut = npcId === "binbin" && gameState.phase === "night" && this._launchTurtleSoup;
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = `win95-btn bevel-out dorm-npc-strip-btn${offline ? " offline" : ""}`;
-      btn.textContent = `${actor.avatar || roommateImage(npcId) ? "" : "🙂"} ${actor.name}`;
-      btn.title = offline ? `${actor.name}（暂时离线）` : actor.name;
-      if (!offline) btn.addEventListener("click", () => this._showDialogue(actor, keywordDefs));
+      btn.className = `win95-btn bevel-out dorm-npc-strip-btn${offline && !turtleSoupShortcut ? " offline" : ""}`;
+      btn.textContent = npcId === "binbin" && gameState.phase === "night"
+        ? "彬彬"
+        : `${actor.avatar || roommateImage(npcId) ? "" : "🙂"} ${actor.name}`;
+      btn.title = turtleSoupShortcut ? "与彬彬玩海龟汤" : offline ? `${actor.name}（暂时离线）` : actor.name;
+      if (!offline || turtleSoupShortcut) {
+        btn.addEventListener("click", () => {
+          if (npcId === "binbin" && gameState.phase === "night" && this._launchTurtleSoup) {
+            this._launchTurtleSoup();
+            return;
+          }
+          this._showDialogue(actor, keywordDefs);
+        });
+      }
       else btn.disabled = true;
       this._npcStrip.appendChild(btn);
-      if (npcId === "binbin" && !offline && this._launchTurtleSoup) {
-        const soupBtn = document.createElement("button");
-        soupBtn.type = "button";
-        soupBtn.className = "win95-btn bevel-out dorm-npc-strip-btn";
-        soupBtn.textContent = "🐢 海龟汤";
-        soupBtn.title = "进入彬彬支线——海龟汤";
-        soupBtn.addEventListener("click", () => this._launchTurtleSoup());
-        this._npcStrip.appendChild(soupBtn);
-      }
     });
 
     // ── Items in the scene ─────────────────────────────────────────────────
@@ -248,7 +256,14 @@ export default class DormMode {
    */
   _renderSceneItems(loc) {
     this._itemLayer.innerHTML = "";
+    const floatBar = document.createElement("div");
+    floatBar.className = "loc-item-float-bar";
+    this._itemLayer.appendChild(floatBar);
     const rendered = new Set();
+    const place = (btn) => {
+      if (btn.dataset.positioned) this._itemLayer.appendChild(btn);
+      else floatBar.appendChild(btn);
+    };
 
     // Source 1: condition-gated placements
     itemPlacementManager.visibleFor("dorm").forEach((placement) => {
@@ -257,7 +272,7 @@ export default class DormMode {
       rendered.add(key);
       const def = itemManager.getDef(placement.itemId);
       const hotspot = placement.hotspot || {};
-      this._itemLayer.appendChild(this._makeItemBtn({
+      place(this._makeItemBtn({
         icon: hotspot.icon || def?.icon || "❔",
         label: hotspot.label || def?.name || placement.itemId,
         x: hotspot.x, y: hotspot.y,
@@ -272,7 +287,7 @@ export default class DormMode {
       const key = `item:${def.id}`;
       if (rendered.has(key)) return;
       rendered.add(key);
-      this._itemLayer.appendChild(this._makeItemBtn({
+      place(this._makeItemBtn({
         icon: def.icon || "📦",
         label: def.name || def.id,
         x: def.sceneX, y: def.sceneY,
@@ -284,7 +299,7 @@ export default class DormMode {
     (loc.hotspots || []).forEach((h) => {
       if (!h.targetId) return;
       const def = itemManager.getDef(h.targetId);
-      this._itemLayer.appendChild(this._makeItemBtn({
+      place(this._makeItemBtn({
         icon: h.icon || def?.icon || "👤",
         label: h.label || def?.name || h.targetId,
         x: h.x, y: h.y,
@@ -304,6 +319,7 @@ export default class DormMode {
       btn.style.position = "absolute";
       btn.style.left = `${x}px`;
       btn.style.top = `${y}px`;
+      btn.dataset.positioned = "1";
     }
     btn.addEventListener("click", onClick);
     return btn;

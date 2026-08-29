@@ -73,6 +73,10 @@ export default class LocationScene {
 
   // ── Public API ───────────────────────────────────────────────────────────────
   async show(locationId) {
+    // A scene instance is reused when moving between locations. Clear the
+    // previous location's item/spell/dialogue panel immediately, rather than
+    // leaving its lower interaction box visible while the new location loads.
+    this._resetInteraction();
     await locationSystem.load();
     const loc = locationSystem.get(locationId);
     if (!loc) {
@@ -122,6 +126,7 @@ export default class LocationScene {
   hide() {
     this._container.classList.add("hidden");
     this._locationId = null;
+    this._resetInteraction();
     if (this._offItems)      { this._offItems();      this._offItems      = null; }
     if (this._offPlacements) { this._offPlacements(); this._offPlacements = null; }
     if (this._offSan)        { this._offSan();        this._offSan        = null; }
@@ -130,6 +135,12 @@ export default class LocationScene {
     this._offCG.forEach((off) => off());
     this._offCG = [];
     this._itemLayer.classList.remove("cg-active-layer");
+  }
+
+  _resetInteraction() {
+    if (!this._interactionEl) return;
+    this._interactionEl.className = "loc-scene-interaction panel-inset";
+    this._interactionEl.innerHTML = '<p class="loc-scene-hint">点击场景中的物品进行交互。</p>';
   }
 
   // ── Item rendering ───────────────────────────────────────────────────────────

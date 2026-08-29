@@ -1,3 +1,511 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "id": "dorm_hotpot_day5",
+      "type": "dormActivity",
+      "name": "海底O火锅",
+      "displayName": "【海底O火锅】",
+      "day": 5,
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "line_0": {
+            "id": "line_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "之前我们来吃的时候锅底里有这些东西吗？？"
+            },
+            "outputs": {}
+          },
+          "line_1": {
+            "id": "line_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "怎么了，味道不对？它家香料发霉了？"
+            },
+            "outputs": {}
+          },
+          "line_2": {
+            "id": "line_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "不是，你们看，红红的……"
+            },
+            "outputs": {}
+          },
+          "line_3": {
+            "id": "line_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "因为是麻辣牛油锅啦笨蛋。"
+            },
+            "outputs": {}
+          },
+          "time_3": {
+            "id": "time_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_4": {
+            "id": "line_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "还是说你之前一直是色盲？"
+            },
+            "outputs": {}
+          },
+          "line_5": {
+            "id": "line_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你们先别吃了，不太对劲！"
+            },
+            "outputs": {}
+          },
+          "line_6": {
+            "id": "line_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "有什么屁快放，一会儿我的牛肚就老了。"
+            },
+            "outputs": {}
+          },
+          "time_6": {
+            "id": "time_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_7": {
+            "id": "line_7",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "……不对劲，不对劲，你夹的不是牛肚，是……是一根手指！"
+            },
+            "outputs": {}
+          },
+          "line_8": {
+            "id": "line_8",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "主控，我的手指拿着筷子呢。"
+            },
+            "outputs": {}
+          },
+          "line_9": {
+            "id": "line_9",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "那一盘里装的是什么东西？怎么都看着我？"
+            },
+            "outputs": {}
+          },
+          "time_9": {
+            "id": "time_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_10": {
+            "id": "line_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "按理来说，香菇在下锅还是活的，如果它有视力的话确实可能在盯着你看。"
+            },
+            "outputs": {}
+          },
+          "line_11": {
+            "id": "line_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "而我很怀疑这一点。"
+            },
+            "outputs": {}
+          },
+          "line_12": {
+            "id": "line_12",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "那不是香菇，那是绝对不是香菇！刚摘下来的，还没被冻坏的……它们正盯着我看！"
+            },
+            "outputs": {}
+          },
+          "time_12": {
+            "id": "time_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_13": {
+            "id": "line_13",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "你什么时候接受的万物有灵论？大二将怀孕的小鼠开膛破肚之后吗？"
+            },
+            "outputs": {}
+          },
+          "line_14": {
+            "id": "line_14",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "我不记得我们有修菌菇学。如果香菇不算药物的话。"
+            },
+            "outputs": {}
+          },
+          "line_15": {
+            "id": "line_15",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "听我说……锅里滚动的不是牛油，是人油，我在外科实习的时候闻到过这个味道，你们都闻不出来吗？？"
+            },
+            "outputs": {}
+          },
+          "time_15": {
+            "id": "time_15",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_16": {
+            "id": "line_16",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "服务员！这边帮我们拿点热水。"
+            },
+            "outputs": {}
+          },
+          "line_17": {
+            "id": "line_17",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你们真的察觉不出来吗？我不信！！为什么要骗我？"
+            },
+            "outputs": {}
+          },
+          "line_18": {
+            "id": "line_18",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我说主控最近压力大吧。"
+            },
+            "outputs": {}
+          },
+          "time_18": {
+            "id": "time_18",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_19": {
+            "id": "line_19",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "乖，要不还是送你去医院吧。"
+            },
+            "outputs": {}
+          },
+          "line_20": {
+            "id": "line_20",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "不对劲，一切都不对劲，你们有什么瞒着我，你们不想让我知道，因为你们也是*它*的一份子……只有这一个解释！"
+            },
+            "outputs": {}
+          },
+          "line_21": {
+            "id": "line_21",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "主控好像怔住了。Ta嘴巴一张一合的，已经在口式呼吸了。"
+            },
+            "outputs": {}
+          },
+          "time_21": {
+            "id": "time_21",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_22": {
+            "id": "line_22",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没想到这么严重，我们快走吧。"
+            },
+            "outputs": {}
+          },
+          "line_23": {
+            "id": "line_23",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "（尖叫）不要碰我，不要碰我——"
+            },
+            "outputs": {}
+          },
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 8639
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_7",
+            "fromPort": "flowOut",
+            "toNodeId": "line_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_8",
+            "fromPort": "flowOut",
+            "toNodeId": "time_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_10",
+            "fromPort": "flowOut",
+            "toNodeId": "line_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_11",
+            "fromPort": "flowOut",
+            "toNodeId": "time_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_13",
+            "fromPort": "flowOut",
+            "toNodeId": "line_14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_14",
+            "fromPort": "flowOut",
+            "toNodeId": "time_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_16",
+            "fromPort": "flowOut",
+            "toNodeId": "line_17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_17",
+            "fromPort": "flowOut",
+            "toNodeId": "time_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_18",
+            "fromPort": "flowOut",
+            "toNodeId": "line_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_18",
+            "fromPort": "flowOut",
+            "toNodeId": "line_19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_19",
+            "fromPort": "flowOut",
+            "toNodeId": "line_20",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_20",
+            "fromPort": "flowOut",
+            "toNodeId": "time_21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_21",
+            "fromPort": "flowOut",
+            "toNodeId": "line_21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_21",
+            "fromPort": "flowOut",
+            "toNodeId": "line_22",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_22",
+            "fromPort": "flowOut",
+            "toNodeId": "line_23",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_23",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    }
+  ]
 }

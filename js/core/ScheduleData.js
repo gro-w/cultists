@@ -204,7 +204,7 @@ class ScheduleData {
     }
   }
 
-  enqueueMedicalIncident({ submission, type, dialogues = [] }) {
+  enqueueMedicalIncident({ submission, type }) {
     const scheduleId = type === "riot" ? "medical_riot_work" : "medical_complaint_work";
     const template = this.publicEntries.get("work")?.find((entry) => entry.id === scheduleId);
     if (!template) return { ok: false, reason: "missingMedicalIncidentTemplate" };
@@ -213,18 +213,11 @@ class ScheduleData {
     entry.incidentType = type;
     entry.submission = submission;
     entry.receivedDay = submission.dueDay;
-    entry.receivedTime = 8 * 60;
-    entry.receivedPhase = "day";
+    entry.receivedTime = submission.dueTime ?? (type === "riot" ? 16 * 60 : 8 * 60);
+    entry.receivedPhase = entry.receivedTime >= 16 * 60 ? "night" : "day";
     entry.scheduleId = `${template.id}:${submission.patientId}`;
-    const selectedDialogues = dialogues.length ? dialogues.slice(0, 3) : ["患者家属前来说明情况。"];
-    entry.blueprint.nodes.random.inputs.n = selectedDialogues.length;
     entry.blueprint.nodes.explain.inputs.label0 = type === "riot" ? "向愤怒的家属解释" : "向愤怒的患者解释";
     entry.blueprint.nodes.explain.options[0].label = entry.blueprint.nodes.explain.inputs.label0;
-
-    selectedDialogues.forEach((text, index) => {
-      const node = entry.blueprint.nodes[`dialogue${index}`];
-      if (node) node.inputs.text = text;
-    });
     workQueue.append([entry]);
     return { ok: true, scheduleId: entry.scheduleId };
   }

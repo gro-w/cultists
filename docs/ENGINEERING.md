@@ -212,7 +212,6 @@ App 点击
 | `item_placements.json` | 场景物品摆放编辑器 | 物品位置、区域、条件和拾取/放回提示 |
 | `diagnoses.json` | 诊断知识编辑器 | ICD 分类、诊断、症状和药品关系 |
 | `medicines.json` | 药品知识编辑器 | 药品、分类、价格和诊断关系 |
-| `medical_events.json` | 医疗事件编辑器 | 罚款、奖励和投诉/暴动对话 |
 
 | `time_rules.json` | 时间规则编辑器 | 阶段时长、睡眠恢复、睡眠债和熬夜 SAN 损失 |
 | `calendar.json` | 日历规则编辑器 | 总天数、休息日和夜班日 |

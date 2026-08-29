@@ -515,6 +515,50 @@
             "outputs": {},
             "x": 80,
             "y": 360
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -767,7 +811,7 @@
           {
             "fromNodeId": "excited_endline",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -784,6 +828,36 @@
           },
           {
             "fromNodeId": "regret_endline",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_guard",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
@@ -1178,6 +1252,50 @@
             "outputs": {},
             "x": 80,
             "y": 360
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day1"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -1405,6 +1523,36 @@
           },
           {
             "fromNodeId": "n22",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_guard",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"

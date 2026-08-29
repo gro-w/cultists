@@ -75,13 +75,11 @@ class TimeService {
       gameState.setDuty("off-duty");
     }
     scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
-    if (crossesEight) {
-      medicalCaseManager.processDue(gameState.day).forEach((request) => {
-        const result = scheduleData.enqueueMedicalIncident(request);
-        if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
-      });
-      this.settleAtEight({ day: Math.floor(eightOClock / 1440), sleepMinutes: 0, phaseSettlement });
-    }
+    if (crossesEight) this.settleAtEight({ day: Math.floor(eightOClock / 1440), sleepMinutes: 0, phaseSettlement });
+    medicalCaseManager.processDue(gameState.day, gameState.clockMinutes).forEach((request) => {
+      const result = scheduleData.enqueueMedicalIncident(request);
+      if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
+    });
     this._syncClock();
     if (previousPhase !== gameState.phase) {
       eventBus.emit("daynight:changed", {
@@ -100,7 +98,7 @@ class TimeService {
   advanceTo(day, minutes, { sleepMinutes = 0, automatic = false } = {}) {
     const previousPhase = gameState.phase;
     if (minutes === 8 * 60 && Number(day) > gameState.day) {
-      medicalCaseManager.processDue(Number(day)).forEach((request) => {
+      medicalCaseManager.processDue(Number(day), minutes).forEach((request) => {
         const result = scheduleData.enqueueMedicalIncident(request);
         if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
       });
@@ -109,6 +107,10 @@ class TimeService {
     }
     gameState.setClock(day, minutes);
     scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
+    medicalCaseManager.processDue(gameState.day, gameState.clockMinutes).forEach((request) => {
+      const result = scheduleData.enqueueMedicalIncident(request);
+      if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
+    });
     this._syncClock();
     if (previousPhase !== gameState.phase) {
       eventBus.emit("daynight:changed", {

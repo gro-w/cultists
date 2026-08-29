@@ -62,7 +62,7 @@ function keywordCategory(keyword) {
 const button = (text, action, className = "") => `<button type="button" class="win95-btn dev-btn ${className}" data-dev-action="${action}">${text}</button>`;
 const DEDICATED_EDITOR_TITLES = {
   "item-placements": "场景物品摆放编辑器", diagnoses: "诊断知识编辑器",
-  medicines: "药品知识编辑器", "medical-events": "医疗事件编辑器",
+  medicines: "药品知识编辑器",
   "time-rules": "时间规则编辑器", calendar: "日历规则编辑器", achievements: "成就定义编辑器",
   skills: "技能定义编辑器",
 };
@@ -427,7 +427,7 @@ export class DeveloperMode {
     const medical = medicalCaseManager.snapshot();
     const submissions = (medical.submissions || []).map((submission) => `<tr><td>${esc(submission.patientId)}</td><td>${submission.day}</td><td>${submission.dueDay}</td><td>${esc(submission.diagnosisId)}</td><td>${submission.processed ? "已处理" : "待处理"}</td></tr>`).join("");
     const endings = [...endingManager.defs.keys()].map((id) => `<option value="${esc(id)}">${esc(id)}</option>`).join("");
-    this.panel(`<section class="dev-section"><h3>医疗与结局</h3><p>医疗提交、待结算金额和延迟事件均来自 MedicalCaseManager；结局按 EndingManager 的优先级规则互斥选择：数值越大越优先，同优先级先触发者胜出。</p><p>当前收入：${medical.income}；待收入：${medical.pendingIncome}；待支出：${medical.pendingExpenses}；待处理事件：${(medical.pendingIncidents || []).length}；已结束：${endingManager.isEnded ? "是" : "否"}</p><table class="dev-table"><thead><tr><th>患者</th><th>提交日</th><th>到期日</th><th>诊断</th><th>状态</th></tr></thead><tbody>${submissions || "<tr><td colspan=5>暂无提交</td></tr>"}</tbody></table><div>${button("结算上一日医疗账目", "settle-medical-day")} ${button("重置结局锁定", "reset-ending")}</div><label>触发结局 <select data-ending-id>${endings}</select> ${button("触发", "trigger-ending")}</label></section>`);
+    this.panel(`<section class="dev-section"><h3>医疗与结局</h3><p>医疗提交、待结算金额和延迟事件均来自 MedicalCaseManager；结局按 EndingManager 的优先级规则互斥选择：数值越大越优先，同优先级先触发者胜出。</p><p>当前收入：${medicalCaseManager.money()}；待收入：${medical.pendingIncome}；待支出：${medical.pendingExpenses}；待处理事件：${(medical.pendingIncidents || []).length}；已结束：${endingManager.isEnded ? "是" : "否"}</p><table class="dev-table"><thead><tr><th>患者</th><th>提交日</th><th>到期日</th><th>诊断</th><th>状态</th></tr></thead><tbody>${submissions || "<tr><td colspan=5>暂无提交</td></tr>"}</tbody></table><div>${button("结算上一日医疗账目", "settle-medical-day")} ${button("重置结局锁定", "reset-ending")}</div><label>触发结局 <select data-ending-id>${endings}</select> ${button("触发", "trigger-ending")}</label></section>`);
   }
 
   async loadDoc(fileName) {

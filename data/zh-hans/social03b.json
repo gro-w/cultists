@@ -489,6 +489,50 @@
             "outputs": {},
             "x": 160,
             "y": 80
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -753,7 +797,7 @@
           {
             "fromNodeId": "choice_final_25_1_2",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -771,7 +815,7 @@
           {
             "fromNodeId": "choice_final_25_0_2",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -785,6 +829,36 @@
             "fromPort": "value",
             "toNodeId": "__social_gate_compare_40",
             "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
           }
         ]
       },
@@ -1206,6 +1280,50 @@
             "outputs": {},
             "x": 160,
             "y": 80
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -1416,7 +1534,7 @@
           {
             "fromNodeId": "choice_final_20_1_0",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -1434,7 +1552,7 @@
           {
             "fromNodeId": "choice_final_20_0_0",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -1448,6 +1566,36 @@
             "fromPort": "value",
             "toNodeId": "__social_gate_compare_40",
             "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
           }
         ]
       },
@@ -1934,6 +2082,50 @@
             "outputs": {},
             "x": 2100,
             "y": 80
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -2162,7 +2354,7 @@
           {
             "fromNodeId": "choice_final_24_0_0",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -2180,7 +2372,7 @@
           {
             "fromNodeId": "choice_final_24_1_0",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -2223,6 +2415,36 @@
             "fromNodeId": "listen_check",
             "fromPort": "false",
             "toNodeId": "n19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
             "toPort": "flowIn"
           }
         ]
@@ -2690,6 +2912,50 @@
             "outputs": {},
             "x": 160,
             "y": 80
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3",
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false,
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              }
+            },
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day3"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
@@ -2918,7 +3184,7 @@
           {
             "fromNodeId": "choice_final_23_0_1",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -2936,7 +3202,7 @@
           {
             "fromNodeId": "choice_final_23_1_0",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "activity_guard",
             "toPort": "flowIn"
           },
           {
@@ -2961,6 +3227,36 @@
             "fromNodeId": "choice_final_23_op0_suspicion",
             "fromPort": "flowOut",
             "toNodeId": "choice_final_23_0_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
             "toPort": "flowIn"
           }
         ]

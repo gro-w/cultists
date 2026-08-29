@@ -1,1 +1,1374 @@
-{"entries":[{"id":"medical_complaint_work","type":"medicalIncident","name":"公共投诉处理","blueprint":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"outputs":{}},"random":{"id":"random","type":"randomBranch","inputs":{"n":3},"outputs":{}},"dialogue0":{"id":"dialogue0","type":"text","inputs":{"speaker":"患者家属","text":""},"outputs":{}},"dialogue1":{"id":"dialogue1","type":"text","inputs":{"speaker":"患者家属","text":""},"outputs":{}},"dialogue2":{"id":"dialogue2","type":"text","inputs":{"speaker":"患者家属","text":""},"outputs":{}},"explain":{"id":"explain","type":"choice","inputs":{"branchCount":1,"label0":"向愤怒的患者解释"},"options":[{"label":"向愤怒的患者解释"}],"outputs":{}},"skill":{"id":"skill","type":"getGlobal","inputs":{"variableId":22},"outputs":{}},"check":{"id":"check","type":"diceCheck","inputs":{"n":0},"outputs":{}},"persuaded":{"id":"persuaded","type":"text","inputs":{"speaker":"系统","text":"你成功说服了对方，对方暂时平静下来并离开了。"},"outputs":{}},"fine":{"id":"fine","type":"setGlobal","inputs":{"variableId":2,"delta":-100},"outputs":{}},"doubleFine":{"id":"doubleFine","type":"setGlobal","inputs":{"variableId":2,"delta":-200},"outputs":{}},"end":{"id":"end","type":"scheduleEnd","inputs":{},"outputs":{}},"__prerequisite__":{"id":"__prerequisite__","type":"prerequisite","inputs":{"condition":true},"outputs":{}},"__schedule_expiry__":{"id":"__schedule_expiry__","type":"scheduleExpiry","inputs":{"expires":false,"expiresAt":0},"outputs":{}},"fineText":{"id":"fineText","type":"text","inputs":{"speaker":"系统","text":"你未能平息对方的愤怒，你被罚款了100元。"},"outputs":{}},"doubleFineText":{"id":"doubleFineText","type":"text","inputs":{"speaker":"系统","text":"你的辩解反而激起了对方的怒火，你被罚款了200元。"},"outputs":{}}},"connections":[{"fromNodeId":"start","fromPort":"flowOut","toNodeId":"random","toPort":"flowIn"},{"fromNodeId":"random","fromPort":"flowOut0","toNodeId":"dialogue0","toPort":"flowIn"},{"fromNodeId":"random","fromPort":"flowOut1","toNodeId":"dialogue1","toPort":"flowIn"},{"fromNodeId":"random","fromPort":"flowOut2","toNodeId":"dialogue2","toPort":"flowIn"},{"fromNodeId":"dialogue0","fromPort":"flowOut","toNodeId":"explain","toPort":"flowIn"},{"fromNodeId":"dialogue1","fromPort":"flowOut","toNodeId":"explain","toPort":"flowIn"},{"fromNodeId":"dialogue2","fromPort":"flowOut","toNodeId":"explain","toPort":"flowIn"},{"fromNodeId":"explain","fromPort":"option0","toNodeId":"check","toPort":"flowIn"},{"fromNodeId":"skill","fromPort":"value","toNodeId":"check","toPort":"n"},{"fromNodeId":"check","fromPort":"largeSuccess","toNodeId":"persuaded","toPort":"flowIn"},{"fromNodeId":"check","fromPort":"success","toNodeId":"persuaded","toPort":"flowIn"},{"fromNodeId":"check","fromPort":"failure","toNodeId":"fineText","toPort":"flowIn"},{"fromNodeId":"check","fromPort":"largeFailure","toNodeId":"doubleFineText","toPort":"flowIn"},{"fromNodeId":"persuaded","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"},{"fromNodeId":"fine","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"},{"fromNodeId":"doubleFine","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"},{"fromNodeId":"fineText","fromPort":"flowOut","toNodeId":"fine","toPort":"flowIn"},{"fromNodeId":"doubleFineText","fromPort":"flowOut","toNodeId":"doubleFine","toPort":"flowIn"}]}},{"id":"medical_riot_work","type":"medicalIncident","name":"公共医闹处理","blueprint":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"outputs":{}},"random":{"id":"random","type":"randomBranch","inputs":{"n":3},"outputs":{}},"dialogue0":{"id":"dialogue0","type":"text","inputs":{"speaker":"患者家属","text":""},"outputs":{}},"dialogue1":{"id":"dialogue1","type":"text","inputs":{"speaker":"患者家属","text":""},"outputs":{}},"dialogue2":{"id":"dialogue2","type":"text","inputs":{"speaker":"患者家属","text":""},"outputs":{}},"explain":{"id":"explain","type":"choice","inputs":{"branchCount":1,"label0":"向愤怒的家属解释"},"options":[{"label":"向愤怒的家属解释"}],"outputs":{}},"skill":{"id":"skill","type":"getGlobal","inputs":{"variableId":22},"outputs":{}},"check":{"id":"check","type":"diceCheck","inputs":{"n":0},"outputs":{}},"end":{"id":"end","type":"scheduleEnd","inputs":{},"outputs":{}},"__prerequisite__":{"id":"__prerequisite__","type":"prerequisite","inputs":{"condition":true},"outputs":{}},"__schedule_expiry__":{"id":"__schedule_expiry__","type":"scheduleExpiry","inputs":{"expires":false,"expiresAt":0},"outputs":{}},"riotFine":{"id":"riotFine","type":"setGlobal","inputs":{"variableId":2,"delta":-600},"outputs":{}},"riotLargeSuccess":{"id":"riotLargeSuccess","type":"setGlobal","inputs":{"variableId":2,"delta":-300},"outputs":{}},"death":{"id":"death","type":"ending","inputs":{"endingId":"mob_violence_death"},"outputs":{}},"riotFineText":{"id":"riotFineText","type":"text","inputs":{"speaker":"系统","text":"你未能平息家属的愤怒，医院被罚款了600元。"},"outputs":{}},"riotLargeText":{"id":"riotLargeText","type":"text","inputs":{"speaker":"系统","text":"你的辩解暂时稳住了家属，但医院仍被罚款了300元。"},"outputs":{}},"riotDeathText":{"id":"riotDeathText","type":"text","inputs":{"speaker":"系统","text":"你的解释彻底激怒了家属，医闹失控了。"},"outputs":{}}},"connections":[{"fromNodeId":"start","fromPort":"flowOut","toNodeId":"random","toPort":"flowIn"},{"fromNodeId":"random","fromPort":"flowOut0","toNodeId":"dialogue0","toPort":"flowIn"},{"fromNodeId":"random","fromPort":"flowOut1","toNodeId":"dialogue1","toPort":"flowIn"},{"fromNodeId":"random","fromPort":"flowOut2","toNodeId":"dialogue2","toPort":"flowIn"},{"fromNodeId":"dialogue0","fromPort":"flowOut","toNodeId":"explain","toPort":"flowIn"},{"fromNodeId":"dialogue1","fromPort":"flowOut","toNodeId":"explain","toPort":"flowIn"},{"fromNodeId":"dialogue2","fromPort":"flowOut","toNodeId":"explain","toPort":"flowIn"},{"fromNodeId":"explain","fromPort":"option0","toNodeId":"check","toPort":"flowIn"},{"fromNodeId":"skill","fromPort":"value","toNodeId":"check","toPort":"n"},{"fromNodeId":"check","fromPort":"largeSuccess","toNodeId":"riotLargeText","toPort":"flowIn"},{"fromNodeId":"check","fromPort":"success","toNodeId":"riotFineText","toPort":"flowIn"},{"fromNodeId":"check","fromPort":"failure","toNodeId":"riotDeathText","toPort":"flowIn"},{"fromNodeId":"check","fromPort":"largeFailure","toNodeId":"riotDeathText","toPort":"flowIn"},{"fromNodeId":"riotLargeText","fromPort":"flowOut","toNodeId":"riotLargeSuccess","toPort":"flowIn"},{"fromNodeId":"riotFineText","fromPort":"flowOut","toNodeId":"riotFine","toPort":"flowIn"},{"fromNodeId":"riotDeathText","fromPort":"flowOut","toNodeId":"death","toPort":"flowIn"},{"fromNodeId":"riotLargeSuccess","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"},{"fromNodeId":"riotFine","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"},{"fromNodeId":"death","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"}]}}]}
+{
+  "entries": [
+    {
+      "id": "medical_complaint_work",
+      "type": "medicalIncident",
+      "name": "公共投诉处理",
+      "blueprint": {
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "random": {
+            "id": "random",
+            "type": "randomBranch",
+            "inputs": {
+              "n": 20
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue0": {
+            "id": "dialogue0",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "医生，药吃了好几天，症状一点都没减轻，你们到底有没有认真看病？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue1": {
+            "id": "dialogue1",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "我照着处方按时吃药，病情却越来越严重，这让我怎么相信你们？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue2": {
+            "id": "dialogue2",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "这药不仅没效果，还让我整晚睡不着，你们必须给我一个解释。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "explain": {
+            "id": "explain",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 1,
+              "label0": "向愤怒的患者解释"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "skill": {
+            "id": "skill",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 22
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "check": {
+            "id": "check",
+            "type": "diceCheck",
+            "inputs": {
+              "n": 0
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "persuaded": {
+            "id": "persuaded",
+            "type": "text",
+            "inputs": {
+              "speaker": "系统",
+              "text": "你成功说服了对方，对方暂时平静下来并离开了。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "fine": {
+            "id": "fine",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 2,
+              "delta": -100
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "doubleFine": {
+            "id": "doubleFine",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 2,
+              "delta": -200
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": false,
+              "expiresAt": 0
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "fineText": {
+            "id": "fineText",
+            "type": "text",
+            "inputs": {
+              "speaker": "系统",
+              "text": "你未能平息对方的愤怒，你被罚款了100元。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "doubleFineText": {
+            "id": "doubleFineText",
+            "type": "text",
+            "inputs": {
+              "speaker": "系统",
+              "text": "你的辩解反而激起了对方的怒火，你被罚款了200元。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue3": {
+            "id": "dialogue3",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "复诊的时候你说很快会好，现在一点起色都没有，是不是误诊了？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue4": {
+            "id": "dialogue4",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "我们花钱来治病，不是来试药的，这个治疗结果太让人失望了。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue5": {
+            "id": "dialogue5",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "药盒上的说明和你说的不一样，我吃出不舒服谁来负责？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue6": {
+            "id": "dialogue6",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "我已经跑了三趟医院，问题还是没有解决，你们的医生能不能上点心？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue7": {
+            "id": "dialogue7",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "你开的药让我胃疼得更厉害了，之前为什么不把风险说清楚？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue8": {
+            "id": "dialogue8",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "病人一直在受罪，你们却只会让我们继续等，今天必须说明白。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue9": {
+            "id": "dialogue9",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "检查结果出来这么久了还没人解释，这种服务也太不负责任了。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue10": {
+            "id": "dialogue10",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "我按你说的换了药，反而出现了新的症状，你们是不是把人当实验品？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue11": {
+            "id": "dialogue11",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "同样的病别人都能治好，为什么到了你这里就一直拖着？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue12": {
+            "id": "dialogue12",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "你们承诺的治疗效果完全没有出现，这笔钱是不是该退给我们？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue13": {
+            "id": "dialogue13",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "我问了好几次注意事项都没人说，现在出了问题就想装作不知道？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue14": {
+            "id": "dialogue14",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "病情明明在恶化，你还说这是正常反应，我不能接受这个说法。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue15": {
+            "id": "dialogue15",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "今天不给出明确的处理办法，我就要向医院和有关部门投诉。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue16": {
+            "id": "dialogue16",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "处方上的剂量是不是写错了？病人吃完之后整个人都不对劲。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue17": {
+            "id": "dialogue17",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "我们相信你的专业判断才接受治疗，现在结果这样，你必须承担责任。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue18": {
+            "id": "dialogue18",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "这次看病既浪费时间又花了冤枉钱，你们至少应该认真道歉。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue19": {
+            "id": "dialogue19",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者",
+              "text": "我只想知道病什么时候能好，你们不能每次都用几句话把我打发走。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut0",
+            "toNodeId": "dialogue0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut1",
+            "toNodeId": "dialogue1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut2",
+            "toNodeId": "dialogue2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut3",
+            "toNodeId": "dialogue3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut4",
+            "toNodeId": "dialogue4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut5",
+            "toNodeId": "dialogue5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut6",
+            "toNodeId": "dialogue6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut7",
+            "toNodeId": "dialogue7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut8",
+            "toNodeId": "dialogue8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut9",
+            "toNodeId": "dialogue9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut10",
+            "toNodeId": "dialogue10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut11",
+            "toNodeId": "dialogue11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut12",
+            "toNodeId": "dialogue12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut13",
+            "toNodeId": "dialogue13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut14",
+            "toNodeId": "dialogue14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut15",
+            "toNodeId": "dialogue15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut16",
+            "toNodeId": "dialogue16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut17",
+            "toNodeId": "dialogue17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut18",
+            "toNodeId": "dialogue18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut19",
+            "toNodeId": "dialogue19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "random",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "explain",
+            "fromPort": "option0",
+            "toNodeId": "check",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "skill",
+            "fromPort": "value",
+            "toNodeId": "check",
+            "toPort": "n"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "largeSuccess",
+            "toNodeId": "persuaded",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "success",
+            "toNodeId": "persuaded",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "failure",
+            "toNodeId": "fineText",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "largeFailure",
+            "toNodeId": "doubleFineText",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "persuaded",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "fine",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "doubleFine",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "fineText",
+            "fromPort": "flowOut",
+            "toNodeId": "fine",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "doubleFineText",
+            "fromPort": "flowOut",
+            "toNodeId": "doubleFine",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue0",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue1",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue2",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue3",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue4",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue5",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue6",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue7",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue8",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue9",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue10",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue11",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue12",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue13",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue14",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue15",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue16",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue17",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue18",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue19",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          }
+        ],
+        "startNodeId": "start"
+      }
+    },
+    {
+      "id": "medical_riot_work",
+      "type": "medicalIncident",
+      "name": "公共医闹处理",
+      "blueprint": {
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "random": {
+            "id": "random",
+            "type": "randomBranch",
+            "inputs": {
+              "n": 20
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue0": {
+            "id": "dialogue0",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "你们把人治成这样还敢说没问题？今天不把责任说清楚谁也别想走！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue1": {
+            "id": "dialogue1",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "我家人因为你开的药出了大事，你们医院必须马上给个交代！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue2": {
+            "id": "dialogue2",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "你是不是根本没看清病情就乱开药？出了人命你赔得起吗？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "explain": {
+            "id": "explain",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 1,
+              "label0": "向愤怒的家属解释"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "skill": {
+            "id": "skill",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 22
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "check": {
+            "id": "check",
+            "type": "diceCheck",
+            "inputs": {
+              "n": 0
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": false,
+              "expiresAt": 0
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "riotFine": {
+            "id": "riotFine",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 2,
+              "delta": -600
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "riotLargeSuccess": {
+            "id": "riotLargeSuccess",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 2,
+              "delta": -300
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "death": {
+            "id": "death",
+            "type": "ending",
+            "inputs": {
+              "endingId": "mob_violence_death"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "riotFineText": {
+            "id": "riotFineText",
+            "type": "text",
+            "inputs": {
+              "speaker": "系统",
+              "text": "你未能平息家属的愤怒，医院被罚款了600元。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "riotLargeText": {
+            "id": "riotLargeText",
+            "type": "text",
+            "inputs": {
+              "speaker": "系统",
+              "text": "你的辩解暂时稳住了家属，但医院仍被罚款了300元。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "riotDeathText": {
+            "id": "riotDeathText",
+            "type": "text",
+            "inputs": {
+              "speaker": "系统",
+              "text": "你的解释彻底激怒了家属，医闹失控了。"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue3": {
+            "id": "dialogue3",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "我们把病人交给你们，你们却把他越治越糟，今天必须负责！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue4": {
+            "id": "dialogue4",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "别拿什么正常反应来糊弄人，病人现在这个样子就是你们的错！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue5": {
+            "id": "dialogue5",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "你们这不是治病，是在拿我家人的命开玩笑，我绝不会善罢甘休！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue6": {
+            "id": "dialogue6",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "检查和处方都是你们开的，现在出了问题还想把责任推给我们？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue7": {
+            "id": "dialogue7",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "我家人躺在病床上受罪，你们却一个个躲着不见，谁给我解释？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue8": {
+            "id": "dialogue8",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "如果你们不给赔偿，我现在就把这件事闹到所有人都知道！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue9": {
+            "id": "dialogue9",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "这家医院到底有没有规矩？庸医害人还不肯承认错误！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue10": {
+            "id": "dialogue10",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "你们说药没问题，那为什么人吃完之后会突然恶化？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue11": {
+            "id": "dialogue11",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "今天谁也别想用一句道歉打发我们，必须给出实际的解决办法！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue12": {
+            "id": "dialogue12",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "我已经忍了这么久，你们还敢说这是病人自己的原因？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue13": {
+            "id": "dialogue13",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "你开的药让病人差点出事，出了这种医疗事故谁承担后果？"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue14": {
+            "id": "dialogue14",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "我们不是来听推诿的，院长和负责医生都必须出来面对我们！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue15": {
+            "id": "dialogue15",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "你们的治疗方案害得病人更严重，这笔账今天一定要算清楚！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue16": {
+            "id": "dialogue16",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "别以为穿着白大褂就可以不负责任，病人的命不是你们的试错成本！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue17": {
+            "id": "dialogue17",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "我家人现在生死未卜，你们还在这里互相推责，简直欺人太甚！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue18": {
+            "id": "dialogue18",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "如果医院不给我们满意答复，我就让所有媒体和监管部门来评评理！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          },
+          "dialogue19": {
+            "id": "dialogue19",
+            "type": "text",
+            "inputs": {
+              "speaker": "患者家属",
+              "text": "你们今天要是不给个说法，我就把这间医院闹个天翻地覆！"
+            },
+            "outputs": {},
+            "x": 100,
+            "y": 100
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut0",
+            "toNodeId": "dialogue0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut1",
+            "toNodeId": "dialogue1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut2",
+            "toNodeId": "dialogue2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut3",
+            "toNodeId": "dialogue3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut4",
+            "toNodeId": "dialogue4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut5",
+            "toNodeId": "dialogue5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut6",
+            "toNodeId": "dialogue6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut7",
+            "toNodeId": "dialogue7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut8",
+            "toNodeId": "dialogue8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut9",
+            "toNodeId": "dialogue9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut10",
+            "toNodeId": "dialogue10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut11",
+            "toNodeId": "dialogue11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut12",
+            "toNodeId": "dialogue12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut13",
+            "toNodeId": "dialogue13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut14",
+            "toNodeId": "dialogue14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut15",
+            "toNodeId": "dialogue15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut16",
+            "toNodeId": "dialogue16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut17",
+            "toNodeId": "dialogue17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut18",
+            "toNodeId": "dialogue18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "random",
+            "fromPort": "flowOut19",
+            "toNodeId": "dialogue19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "random",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "explain",
+            "fromPort": "option0",
+            "toNodeId": "check",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "skill",
+            "fromPort": "value",
+            "toNodeId": "check",
+            "toPort": "n"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "largeSuccess",
+            "toNodeId": "riotLargeText",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "success",
+            "toNodeId": "riotFineText",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "failure",
+            "toNodeId": "riotDeathText",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check",
+            "fromPort": "largeFailure",
+            "toNodeId": "riotDeathText",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "riotLargeText",
+            "fromPort": "flowOut",
+            "toNodeId": "riotLargeSuccess",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "riotFineText",
+            "fromPort": "flowOut",
+            "toNodeId": "riotFine",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "riotDeathText",
+            "fromPort": "flowOut",
+            "toNodeId": "death",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "riotLargeSuccess",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "riotFine",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "death",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue0",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue1",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue2",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue3",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue4",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue5",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue6",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue7",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue8",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue9",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue10",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue11",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue12",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue13",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue14",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue15",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue16",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue17",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue18",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "dialogue19",
+            "fromPort": "flowOut",
+            "toNodeId": "explain",
+            "toPort": "flowIn"
+          }
+        ],
+        "startNodeId": "start"
+      }
+    }
+  ]
+}

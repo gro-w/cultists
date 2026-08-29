@@ -1,3 +1,2489 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "id": "dorm_activity_day1",
+      "type": "dormActivity",
+      "name": "宿舍集体活动",
+      "displayName": "第1天宿舍集体活动",
+      "day": 1,
+      "afterSocialDialogue": true,
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 2879
+            },
+            "outputs": {}
+          },
+          "choice": {
+            "id": "choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "我还是刷题好了。",
+              "label1": "【卡卡送】要不要来一起打桌游！"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "我还是刷题好了。",
+                "next": "study_set"
+              },
+              {
+                "label": "【卡卡送】要不要来一起打桌游！",
+                "next": "game_start",
+                "condition": {
+                  "any": [
+                    {
+                      "globalVariables": {
+                        "id": 40,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 41,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 42,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "study_set": {
+            "id": "study_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 113,
+              "value": false
+            },
+            "outputs": {}
+          },
+          "study_time": {
+            "id": "study_time",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "study_san": {
+            "id": "study_san",
+            "type": "statOperation",
+            "inputs": {
+              "statId": "mental",
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "study_end": {
+            "id": "study_end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "game_start": {
+            "id": "game_start",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_0": {
+            "id": "line_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "今天我们来玩《卡卡送》吧，一款互相割据来占领更多地盘的桌游。"
+            },
+            "outputs": {}
+          },
+          "line_1": {
+            "id": "line_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "是零和博弈吗？"
+            },
+            "outputs": {}
+          },
+          "line_2": {
+            "id": "line_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "看我一统四国。"
+            },
+            "outputs": {}
+          },
+          "line_3": {
+            "id": "line_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "等一下，我需要看完全部规则和攻略才能开始玩。"
+            },
+            "outputs": {}
+          },
+          "game_time_3": {
+            "id": "game_time_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_4": {
+            "id": "line_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "我们又不赌钱，玩儿而已，认真就没意思了。"
+            },
+            "outputs": {}
+          },
+          "line_5": {
+            "id": "line_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "放轻松，不会的我教你。"
+            },
+            "outputs": {}
+          },
+          "line_6": {
+            "id": "line_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "别让阿伟久等，他一会儿还要去打工赚钱养耳机。"
+            },
+            "outputs": {}
+          },
+          "game_time_6": {
+            "id": "game_time_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_7": {
+            "id": "line_7",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "不行，等等，我再看最后一眼……"
+            },
+            "outputs": {}
+          },
+          "line_8": {
+            "id": "line_8",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "快快藏好主控手机。"
+            },
+            "outputs": {}
+          },
+          "line_9": {
+            "id": "line_9",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "*游戏进行中"
+            },
+            "outputs": {}
+          },
+          "game_time_9": {
+            "id": "game_time_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_10": {
+            "id": "line_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "这是谁的人在我地盘上？"
+            },
+            "outputs": {}
+          },
+          "line_11": {
+            "id": "line_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "我的。"
+            },
+            "outputs": {}
+          },
+          "line_12": {
+            "id": "line_12",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "他也挡住我的路了。我的城堡围不起来了。"
+            },
+            "outputs": {}
+          },
+          "game_time_12": {
+            "id": "game_time_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_13": {
+            "id": "line_13",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你的策略是什么？"
+            },
+            "outputs": {}
+          },
+          "line_14": {
+            "id": "line_14",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "只要让你们都没法赢，我就不会输了，不是吗？"
+            },
+            "outputs": {}
+          },
+          "line_15": {
+            "id": "line_15",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "原来是搅屎棍流。"
+            },
+            "outputs": {}
+          },
+          "game_time_15": {
+            "id": "game_time_15",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_16": {
+            "id": "line_16",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "你觉得你能防住我们全部吗？"
+            },
+            "outputs": {}
+          },
+          "line_17": {
+            "id": "line_17",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "这是我最有可能立于不败之地的办法了，因为一开始我没把握好节奏，晚于你们一步，建自己的城堡已经不可能了。"
+            },
+            "outputs": {}
+          },
+          "line_18": {
+            "id": "line_18",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不试试怎么知道？你这一上来就放弃了啊。"
+            },
+            "outputs": {}
+          },
+          "game_time_18": {
+            "id": "game_time_18",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_19": {
+            "id": "line_19",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "对。只有这样，我才不会被打倒。"
+            },
+            "outputs": {}
+          },
+          "line_20": {
+            "id": "line_20",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "对未知的恐惧只会招来更多未知。"
+            },
+            "outputs": {}
+          },
+          "line_21": {
+            "id": "line_21",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "我不在乎。"
+            },
+            "outputs": {}
+          },
+          "game_time_21": {
+            "id": "game_time_21",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "study_set_2": {
+            "id": "study_set_2",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 109,
+              "value": true
+            },
+            "outputs": {}
+          },
+          "activity_set": {
+            "id": "activity_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 104,
+              "value": true
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_set",
+            "fromPort": "flowOut",
+            "toNodeId": "study_set_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_time",
+            "fromPort": "flowOut",
+            "toNodeId": "study_san",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_san",
+            "fromPort": "flowOut",
+            "toNodeId": "study_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_start",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_7",
+            "fromPort": "flowOut",
+            "toNodeId": "line_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_8",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_10",
+            "fromPort": "flowOut",
+            "toNodeId": "line_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_11",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_13",
+            "fromPort": "flowOut",
+            "toNodeId": "line_14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_14",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_16",
+            "fromPort": "flowOut",
+            "toNodeId": "line_17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_17",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_18",
+            "fromPort": "flowOut",
+            "toNodeId": "line_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_18",
+            "fromPort": "flowOut",
+            "toNodeId": "line_19",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_19",
+            "fromPort": "flowOut",
+            "toNodeId": "line_20",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_20",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_21",
+            "fromPort": "flowOut",
+            "toNodeId": "line_21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_21",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_set_2",
+            "fromPort": "flowOut",
+            "toNodeId": "study_time",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_set",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dorm_activity_day2",
+      "type": "dormActivity",
+      "name": "宿舍集体活动",
+      "displayName": "第2天宿舍集体活动",
+      "day": 2,
+      "afterSocialDialogue": true,
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 4319
+            },
+            "outputs": {}
+          },
+          "choice": {
+            "id": "choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "我还是刷题好了。",
+              "label1": "【冰冷的TA醒来之前】今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "我还是刷题好了。",
+                "next": "study_set"
+              },
+              {
+                "label": "【冰冷的TA醒来之前】今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~",
+                "next": "game_start",
+                "condition": {
+                  "any": [
+                    {
+                      "globalVariables": {
+                        "id": 40,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 41,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 42,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "study_set": {
+            "id": "study_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 110,
+              "value": true
+            },
+            "outputs": {}
+          },
+          "study_time": {
+            "id": "study_time",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "study_san": {
+            "id": "study_san",
+            "type": "statOperation",
+            "inputs": {
+              "statId": "mental",
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "study_end": {
+            "id": "study_end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "game_start": {
+            "id": "game_start",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "day1_activity": {
+            "id": "day1_activity",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 104
+            },
+            "outputs": {}
+          },
+          "day2_intro_branch": {
+            "id": "day2_intro_branch",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "day2_extra": {
+            "id": "day2_extra",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "又是个恐怖游戏？"
+            },
+            "outputs": {}
+          },
+          "line_0": {
+            "id": "line_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "今天玩什么？"
+            },
+            "outputs": {}
+          },
+          "line_1": {
+            "id": "line_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "一个我淘来的小众桌游，你们肯定会喜欢的。"
+            },
+            "outputs": {}
+          },
+          "line_2": {
+            "id": "line_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "“一边调查犯人，一边调和防腐剂处理尸体……”怎么是关于尸体的游戏？"
+            },
+            "outputs": {}
+          },
+          "line_3": {
+            "id": "line_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "你不喜欢吗？多刺激啊。"
+            },
+            "outputs": {}
+          },
+          "game_time_3": {
+            "id": "game_time_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_4": {
+            "id": "line_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "……不喜欢。"
+            },
+            "outputs": {}
+          },
+          "line_5": {
+            "id": "line_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "我来发牌了，身份牌可不要让别人看到哦~"
+            },
+            "outputs": {}
+          },
+          "line_6": {
+            "id": "line_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "*游戏进行中"
+            },
+            "outputs": {}
+          },
+          "game_time_6": {
+            "id": "game_time_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_7": {
+            "id": "line_7",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "大家都是希望能够调和成功的好人呢……"
+            },
+            "outputs": {}
+          },
+          "line_8": {
+            "id": "line_8",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "是吗？我看不一定。"
+            },
+            "outputs": {}
+          },
+          "line_9": {
+            "id": "line_9",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你们为什么都质疑我？我不是……但有人是叛徒。"
+            },
+            "outputs": {}
+          },
+          "game_time_9": {
+            "id": "game_time_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_10": {
+            "id": "line_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "我们中有叛徒？这个人不是我。"
+            },
+            "outputs": {}
+          },
+          "line_11": {
+            "id": "line_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "也不是我。"
+            },
+            "outputs": {}
+          },
+          "line_12": {
+            "id": "line_12",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "嘘嘘，不能透露身份。"
+            },
+            "outputs": {}
+          },
+          "game_time_12": {
+            "id": "game_time_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_13": {
+            "id": "line_13",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "到了揭露谜底的时候了——"
+            },
+            "outputs": {}
+          },
+          "line_14": {
+            "id": "line_14",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "你们三个居然都是坏人！只有我真的在调和防腐药剂！"
+            },
+            "outputs": {}
+          },
+          "line_15": {
+            "id": "line_15",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "抱歉呢主控，看来尸体会无可避免地腐烂了呢。"
+            },
+            "outputs": {}
+          },
+          "game_time_15": {
+            "id": "game_time_15",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_16": {
+            "id": "line_16",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "真正的犯人也没有抓到。"
+            },
+            "outputs": {}
+          },
+          "line_17": {
+            "id": "line_17",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "运气不好啊优等生。"
+            },
+            "outputs": {}
+          },
+          "line_18": {
+            "id": "line_18",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "……以后不想再玩这种输了会做噩梦的游戏了。"
+            },
+            "outputs": {}
+          },
+          "game_time_18": {
+            "id": "game_time_18",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "activity_set": {
+            "id": "activity_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 105,
+              "value": true
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_set",
+            "fromPort": "flowOut",
+            "toNodeId": "study_time",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_time",
+            "fromPort": "flowOut",
+            "toNodeId": "study_san",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_san",
+            "fromPort": "flowOut",
+            "toNodeId": "study_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_start",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "day1_activity",
+            "fromPort": "value",
+            "toNodeId": "day2_intro_branch",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "day2_intro_branch",
+            "fromPort": "true",
+            "toNodeId": "day2_extra",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "day2_extra",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_7",
+            "fromPort": "flowOut",
+            "toNodeId": "line_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_8",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_10",
+            "fromPort": "flowOut",
+            "toNodeId": "line_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_11",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_13",
+            "fromPort": "flowOut",
+            "toNodeId": "line_14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_14",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_16",
+            "fromPort": "flowOut",
+            "toNodeId": "line_17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_17",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_18",
+            "fromPort": "flowOut",
+            "toNodeId": "line_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_18",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_set",
+            "fromPort": "flowOut",
+            "toNodeId": "day2_intro_branch",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dorm_activity_day3",
+      "type": "dormActivity",
+      "name": "宿舍集体活动",
+      "displayName": "第3天宿舍集体活动",
+      "day": 3,
+      "afterSocialDialogue": true,
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 5759
+            },
+            "outputs": {}
+          },
+          "choice": {
+            "id": "choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "我还是刷题好了。",
+              "label1": "【虹色的门与杀人鬼的钥匙】来玩来玩，《虹色的门与杀人鬼的钥匙》。"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "我还是刷题好了。",
+                "next": "study_set"
+              },
+              {
+                "label": "【虹色的门与杀人鬼的钥匙】来玩来玩，《虹色的门与杀人鬼的钥匙》。",
+                "next": "game_start",
+                "condition": {
+                  "any": [
+                    {
+                      "globalVariables": {
+                        "id": 40,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 41,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 42,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "study_set": {
+            "id": "study_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 111,
+              "value": true
+            },
+            "outputs": {}
+          },
+          "study_time": {
+            "id": "study_time",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "study_san": {
+            "id": "study_san",
+            "type": "statOperation",
+            "inputs": {
+              "statId": "mental",
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "study_end": {
+            "id": "study_end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "game_start": {
+            "id": "game_start",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_0": {
+            "id": "line_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "这是什么？"
+            },
+            "outputs": {}
+          },
+          "line_1": {
+            "id": "line_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "“当我醒来的时候……躺在黑色迷宫的地面上，失去了近期的记忆……同行的人中隐藏着一名嗜血的‘杀人鬼’……”"
+            },
+            "outputs": {}
+          },
+          "line_2": {
+            "id": "line_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "听起来很刺激。"
+            },
+            "outputs": {}
+          },
+          "line_3": {
+            "id": "line_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "快来快来。"
+            },
+            "outputs": {}
+          },
+          "game_time_3": {
+            "id": "game_time_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_4": {
+            "id": "line_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "*游戏进行中"
+            },
+            "outputs": {}
+          },
+          "line_5": {
+            "id": "line_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "旁白",
+              "text": "*游戏结束"
+            },
+            "outputs": {}
+          },
+          "line_6": {
+            "id": "line_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "原来杀人魔是你。"
+            },
+            "outputs": {}
+          },
+          "game_time_6": {
+            "id": "game_time_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_7": {
+            "id": "line_7",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "我死在你手里了，主控。鲜血直流的死状呢。"
+            },
+            "outputs": {}
+          },
+          "line_8": {
+            "id": "line_8",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "不要再说下去了。"
+            },
+            "outputs": {}
+          },
+          "line_9": {
+            "id": "line_9",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你伪装得太好我们都没认出来——成功卧底杀死所有人得感觉很爽吧。"
+            },
+            "outputs": {}
+          },
+          "game_time_9": {
+            "id": "game_time_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_10": {
+            "id": "line_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "我不知道自己是杀人魔，也不想当杀人魔……一切都不是我的本意。"
+            },
+            "outputs": {}
+          },
+          "line_11": {
+            "id": "line_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "杀人魔都会这么说。"
+            },
+            "outputs": {}
+          },
+          "line_12": {
+            "id": "line_12",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "实际上是在暗爽吧。"
+            },
+            "outputs": {}
+          },
+          "game_time_12": {
+            "id": "game_time_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_13": {
+            "id": "line_13",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "再开一局？"
+            },
+            "outputs": {}
+          },
+          "line_14": {
+            "id": "line_14",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "不要再说了！我不玩了，你们都要当杀人魔杀我——我不想被杀死，我不要被杀死……"
+            },
+            "outputs": {}
+          },
+          "line_15": {
+            "id": "line_15",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "这么入戏？"
+            },
+            "outputs": {}
+          },
+          "game_time_15": {
+            "id": "game_time_15",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_16": {
+            "id": "line_16",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "小心今晚睡下去醒来就失去全部记忆躺在一个红房间里……"
+            },
+            "outputs": {}
+          },
+          "line_17": {
+            "id": "line_17",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "不要逗这个可怜人了，放他去刷题吧。"
+            },
+            "outputs": {}
+          },
+          "streak_text1": {
+            "id": "streak_text1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你都多久不跟我们一起玩了？"
+            },
+            "outputs": {}
+          },
+          "streak_text2": {
+            "id": "streak_text2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "三天了。提高一分，干掉千人；在这三天里，我已经干掉了……大约五千人。"
+            },
+            "outputs": {}
+          },
+          "streak_text3": {
+            "id": "streak_text3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "他居然计数。"
+            },
+            "outputs": {}
+          },
+          "streak_text4": {
+            "id": "streak_text4",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "这个精神状态已经很危险了。"
+            },
+            "outputs": {}
+          },
+          "suspicion": {
+            "id": "suspicion",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 0,
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "streak_end": {
+            "id": "streak_end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "check_0": {
+            "id": "check_0",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 109
+            },
+            "outputs": {}
+          },
+          "check_branch_0": {
+            "id": "check_branch_0",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "check_1": {
+            "id": "check_1",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 110
+            },
+            "outputs": {}
+          },
+          "check_branch_1": {
+            "id": "check_branch_1",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "check_2": {
+            "id": "check_2",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 111
+            },
+            "outputs": {}
+          },
+          "check_branch_2": {
+            "id": "check_branch_2",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "activity_set": {
+            "id": "activity_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 106,
+              "value": true
+            },
+            "outputs": {}
+          },
+          "previous_activity": {
+            "id": "previous_activity",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 105
+            },
+            "outputs": {}
+          },
+          "previous_activity_branch": {
+            "id": "previous_activity_branch",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "previous_activity_line": {
+            "id": "previous_activity_line",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "又是个恐怖游戏？"
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_set",
+            "fromPort": "flowOut",
+            "toNodeId": "study_time",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_time",
+            "fromPort": "flowOut",
+            "toNodeId": "study_san",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_san",
+            "fromPort": "flowOut",
+            "toNodeId": "study_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_start",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_7",
+            "fromPort": "flowOut",
+            "toNodeId": "line_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_8",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_10",
+            "fromPort": "flowOut",
+            "toNodeId": "line_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_11",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_13",
+            "fromPort": "flowOut",
+            "toNodeId": "line_14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_14",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_16",
+            "fromPort": "flowOut",
+            "toNodeId": "line_17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_0",
+            "fromPort": "value",
+            "toNodeId": "check_branch_0",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "check_1",
+            "fromPort": "value",
+            "toNodeId": "check_branch_1",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "check_2",
+            "fromPort": "value",
+            "toNodeId": "check_branch_2",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "true",
+            "toNodeId": "check_branch_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "false",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "true",
+            "toNodeId": "check_branch_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "false",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "true",
+            "toNodeId": "streak_text1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "false",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text1",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_text2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text2",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_text3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text3",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_text4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text4",
+            "fromPort": "flowOut",
+            "toNodeId": "suspicion",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_set",
+            "fromPort": "flowOut",
+            "toNodeId": "previous_activity_branch",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_17",
+            "fromPort": "flowOut",
+            "toNodeId": "check_branch_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "previous_activity_branch",
+            "fromPort": "true",
+            "toNodeId": "previous_activity_line",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "previous_activity_branch",
+            "fromPort": "false",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "previous_activity_line",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dorm_activity_day4",
+      "type": "dormActivity",
+      "name": "宿舍集体活动",
+      "displayName": "第4天宿舍集体活动",
+      "day": 4,
+      "afterSocialDialogue": true,
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 7199
+            },
+            "outputs": {}
+          },
+          "choice": {
+            "id": "choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "我还是刷题好了。",
+              "label1": "【山中小黑屋】快来玩！少了我们你的生活该多么沉闷无趣啊~"
+            },
+            "outputs": {},
+            "options": [
+              {
+                "label": "我还是刷题好了。",
+                "next": "study_set"
+              },
+              {
+                "label": "【山中小黑屋】快来玩！少了我们你的生活该多么沉闷无趣啊~",
+                "next": "game_start",
+                "condition": {
+                  "any": [
+                    {
+                      "globalVariables": {
+                        "id": 40,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 41,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    },
+                    {
+                      "globalVariables": {
+                        "id": 42,
+                        "op": "gte",
+                        "value": 50
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "study_set": {
+            "id": "study_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 112,
+              "value": true
+            },
+            "outputs": {}
+          },
+          "study_time": {
+            "id": "study_time",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "study_san": {
+            "id": "study_san",
+            "type": "statOperation",
+            "inputs": {
+              "statId": "mental",
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "study_end": {
+            "id": "study_end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "game_start": {
+            "id": "game_start",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_0": {
+            "id": "line_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "今天我们来到山中一栋荒废已久的小黑屋里……"
+            },
+            "outputs": {}
+          },
+          "line_1": {
+            "id": "line_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "潮湿的雾气，蒸腾的鬼气，月亮照映之下的摇滚之魂在歌唱……"
+            },
+            "outputs": {}
+          },
+          "line_2": {
+            "id": "line_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "自己人别开腔。"
+            },
+            "outputs": {}
+          },
+          "line_3": {
+            "id": "line_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "谁挑的游戏？果然我该去刷题的。"
+            },
+            "outputs": {}
+          },
+          "game_time_3": {
+            "id": "game_time_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_4": {
+            "id": "line_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "怎么会呢，你该天天都加入我们相亲相爱的宿舍集体活动。"
+            },
+            "outputs": {}
+          },
+          "line_5": {
+            "id": "line_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "有人会玩吗？有人会我就不看攻略了"
+            },
+            "outputs": {}
+          },
+          "line_6": {
+            "id": "line_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "我玩过。"
+            },
+            "outputs": {}
+          },
+          "game_time_6": {
+            "id": "game_time_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "streak_text1": {
+            "id": "streak_text1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你都多久不跟我们一起玩了？"
+            },
+            "outputs": {}
+          },
+          "streak_text2": {
+            "id": "streak_text2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "三天了。提高一分，干掉千人；在这三天里，我已经干掉了……大约五千人。"
+            },
+            "outputs": {}
+          },
+          "streak_text3": {
+            "id": "streak_text3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "他居然计数。"
+            },
+            "outputs": {}
+          },
+          "streak_text4": {
+            "id": "streak_text4",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "这个精神状态已经很危险了。"
+            },
+            "outputs": {}
+          },
+          "suspicion": {
+            "id": "suspicion",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 0,
+              "delta": 10
+            },
+            "outputs": {}
+          },
+          "streak_end": {
+            "id": "streak_end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "check_0": {
+            "id": "check_0",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 113
+            },
+            "outputs": {}
+          },
+          "check_branch_0": {
+            "id": "check_branch_0",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "check_1": {
+            "id": "check_1",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 110
+            },
+            "outputs": {}
+          },
+          "check_branch_1": {
+            "id": "check_branch_1",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "check_2": {
+            "id": "check_2",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 111
+            },
+            "outputs": {}
+          },
+          "check_branch_2": {
+            "id": "check_branch_2",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "check_3": {
+            "id": "check_3",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 112
+            },
+            "outputs": {}
+          },
+          "check_branch_3": {
+            "id": "check_branch_3",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "activity_set": {
+            "id": "activity_set",
+            "type": "setGlobal",
+            "inputs": {
+              "variableId": 107,
+              "value": true
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_set",
+            "fromPort": "flowOut",
+            "toNodeId": "study_time",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_time",
+            "fromPort": "flowOut",
+            "toNodeId": "study_san",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_san",
+            "fromPort": "flowOut",
+            "toNodeId": "study_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_start",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_0",
+            "fromPort": "value",
+            "toNodeId": "check_branch_0",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "check_1",
+            "fromPort": "value",
+            "toNodeId": "check_branch_1",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "check_2",
+            "fromPort": "value",
+            "toNodeId": "check_branch_2",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "check_3",
+            "fromPort": "value",
+            "toNodeId": "check_branch_3",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "true",
+            "toNodeId": "check_branch_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "false",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "true",
+            "toNodeId": "check_branch_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "false",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "true",
+            "toNodeId": "check_branch_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "false",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_3",
+            "fromPort": "true",
+            "toNodeId": "streak_text1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_3",
+            "fromPort": "false",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text1",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_text2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text2",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_text3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text3",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_text4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "streak_text4",
+            "fromPort": "flowOut",
+            "toNodeId": "suspicion",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "suspicion",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_set",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "check_branch_0",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    }
+  ]
 }

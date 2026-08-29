@@ -82,15 +82,6 @@ export class MedicinesEditor extends DedicatedEditor {
   removeMedicine(i) { this.data.medicines.splice(Number(i), 1); this.render(); }
 }
 
-export class MedicalEventsEditor extends DedicatedEditor {
-  constructor(dev) { super(dev, "medical_events.json", "医疗事件编辑器", "编辑罚款、奖励和投诉/暴动对话列表"); }
-  render() { const list = (key) => (this.data[key] || []).map((x, i) => `<div class="dev-ded-inline">${input(`第 ${i + 1} 条`, `${key}.${i}`, x)}${btn("−", "remove-dialogue", `${key}:${i}`)}</div>`).join(""); this.root().innerHTML = `<div class="dev-ded-grid">${num("投诉罚款", "complaintFine", this.data.complaintFine, "min=0")}${num("暴动罚款", "riotFine", this.data.riotFine, "min=0")}${num("诊断奖励", "diagnosisBonus", this.data.diagnosisBonus, "min=0")}</div><section class="dev-ded-card"><h3>投诉对话</h3>${list("complaintDialogues")}${btn("＋ 添加对话", "add-dialogue", "complaintDialogues")}</section><section class="dev-ded-card"><h3>暴动对话</h3>${list("riotDialogues")}${btn("＋ 添加对话", "add-dialogue", "riotDialogues")}</section>`; }
-  sync() { ["complaintFine", "riotFine", "diagnosisBonus"].forEach((k) => { this.data[k] = Number(this.value(k)) || 0; }); ["complaintDialogues", "riotDialogues"].forEach((k) => this.data[k] = (this.data[k] || []).map((_, i) => this.value(`${k}.${i}`))); }
-  addDialogue(k) { this.data[k].push(""); this.render(); }
-  removeDialogue(v) { const [k, i] = v.split(":"); this.data[k].splice(i, 1); this.render(); }
-}
-
-
 export class TimeRulesEditor extends DedicatedEditor {
   constructor(dev) { super(dev, "time_rules.json", "时间规则编辑器", "编辑阶段时长、睡眠恢复和熬夜规则"); }
   render() { this.root().innerHTML = `<section class="dev-ded-card"><h3>阶段时长</h3>${num("白天分钟", "day.workMinutes", this.data.day?.workMinutes, "min=0 step=20")}${num("夜间分钟", "night.nightMinutes", this.data.night?.nightMinutes, "min=0 step=20")}</section><section class="dev-ded-card"><h3>睡眠与 SAN</h3>${num("完整睡眠分钟", "fullSleepMinutes", this.data.fullSleepMinutes, "min=0 step=20")}${num("不足睡眠分钟", "insufficientSleepMinutes", this.data.insufficientSleepMinutes, "min=0 step=20")}${num("每睡眠小时 SAN 恢复", "sanRecoveryPerSleepHour", this.data.sanRecoveryPerSleepHour, "min=0")}${num("三日睡眠债 SAN 损失", "threeDaySleepDebtSanLoss", this.data.threeDaySleepDebtSanLoss, "min=0")}${num("每次熬夜行动 SAN 损失", "sanLossPerLateNightAction", this.data.sanLossPerLateNightAction, "min=0")}</section>`; }
@@ -137,7 +128,7 @@ export const DEDICATED_EDITOR_CLASSES = {
   "item-placements": ItemPlacementsEditor,
   diagnoses: DiagnosesEditor,
   medicines: MedicinesEditor,
-  "medical-events": MedicalEventsEditor,
+
   "time-rules": TimeRulesEditor,
   calendar: CalendarEditor,
   achievements: AchievementsEditor,

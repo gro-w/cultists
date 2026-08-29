@@ -1,4 +1,157 @@
 {
-  "displayName": "第2天社交·16:00",
-  "entries": []
+  "entries": [
+    {
+      "id": "social02b_dorm_invite",
+      "type": "other",
+      "npcId": "ajie",
+      "name": "阿杰",
+      "avatar": "🐶",
+      "displayName": "宿舍集体活动邀请",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "line": {
+            "id": "line",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "阿杰：下班了！今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~"
+            },
+            "outputs": {}
+          },
+          "time": {
+            "id": "time",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "insert_dorm_activity": {
+            "id": "insert_dorm_activity",
+            "type": "insertSchedule",
+            "inputs": {
+              "scheduleId": "dorm_activity_day2",
+              "addTime": {
+                "nodeId": "current_game_time",
+                "port": "value"
+              },
+              "queue": "social",
+              "respectPrerequisite": true,
+              "protectFromExpiry": false
+            },
+            "outputs": {}
+          },
+          "current_game_time": {
+            "id": "current_game_time",
+            "type": "getGameTime",
+            "inputs": {},
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "activity_count": {
+            "id": "activity_count",
+            "type": "getScheduleInstanceCount",
+            "inputs": {
+              "scheduleId": "dorm_activity_day2"
+            },
+            "outputs": {}
+          },
+          "activity_available": {
+            "id": "activity_available",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "eq",
+              "right": 0
+            },
+            "outputs": {}
+          },
+          "activity_guard": {
+            "id": "activity_guard",
+            "type": "branch",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "scheduleExpiry": {
+            "id": "scheduleExpiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 4319
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "line",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line",
+            "fromPort": "flowOut",
+            "toNodeId": "time",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_guard",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_count",
+            "fromPort": "value",
+            "toNodeId": "activity_available",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "activity_available",
+            "fromPort": "value",
+            "toNodeId": "activity_guard",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "false",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_guard",
+            "fromPort": "true",
+            "toNodeId": "insert_dorm_activity",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "insert_dorm_activity",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
+    }
+  ]
 }

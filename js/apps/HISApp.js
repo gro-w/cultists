@@ -461,7 +461,7 @@ export async function launchHISApp() {
   const offDayNight = eventBus.on("daynight:changed", renderCurrentEntry);
 
   const offNpcState = eventBus.on("npc:offline", renderCurrentEntry);
-  const offSchedule = eventBus.on("schedule:changed", ({ queueId }) => {
+  const offSchedule = eventBus.on("schedule:appended", ({ queueId }) => {
     if (queueId === "work") renderCurrentEntry();
   });
   const offIncident = eventBus.on("medical:incident", renderMedicalIncidents);

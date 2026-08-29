@@ -33,6 +33,7 @@ const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&"
 const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, scheduleData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
 
 const QA_PAGE_SIZE = 50;
+const SCHEDULE_CATEGORIES = { calendar: "日历日程", public: "公共日程", special: "特殊事件日程", ending: "结局日程", embedded: "物品与法术内嵌日程" };
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",
   "disease-category": "疾病类别",
@@ -188,6 +189,21 @@ export class DeveloperMode {
     const structured = action.match(/^tab-structured-(.+)$/);
     if (structured) return editor.showStructuredEditor(structured[1]);
   }
+  openTemporaryScheduleEditor() {
+    const host = document.createElement("div");
+    const queueId = "social";
+    const child = new DevDialogueEditorTab(this, { workspace: false, temporaryScope: {
+      onSave: (blueprint) => {
+        const result = scheduleData.createTemporaryInstance(blueprint, queueId);
+        this.setStatus(result.ok ? `临时日程已插入 ${queueId} 队列。` : "临时日程插入失败。", !result.ok);
+        return result;
+      },
+    } });
+    const win = windowManager.createWindow({ title: "临时日程编辑器", icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
+    win.el?.classList.add("dev-blueprint-window");
+    host.innerHTML = child.html(); child.mount(host.querySelector(".dev-de-root"));
+    win.el?.addEventListener("remove", () => child.unmount(), { once: true });
+  }
   _setPanelKind(kind) {
     const panel = this.root.querySelector("[data-dev-panel]");
     if (!panel) return;
@@ -328,12 +344,18 @@ export class DeveloperMode {
       </tbody></table></section><section class="dev-section"><h3>已学习法术</h3><ul>${learned}</ul><h3>已收集关键词</h3><ul>${keywords}</ul></section>`);
   }
 
-  showSchedules() {
+  async showSchedules() {
     this._activeRuntimeMethod = "showSchedules";
+    await scheduleData.init();
+    const category = this._scheduleCatalogCategory || "calendar";
+    const catalog = scheduleData.catalog(category);
+    const categoryOptions = Object.entries(SCHEDULE_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
+    const scheduleOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
     const queues = [["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue], ["realtime", realtimeQueue]];
     const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td>${esc(entry.scheduleId)}</td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
     const scheduled = scheduleData.snapshotScheduled();
-    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><p>ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
+    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><span>将自动进入该日程所属队列</span>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
+    this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });
   }
 
   showWorld() {
@@ -591,6 +613,13 @@ export class DeveloperMode {
       this.setStatus("玩家属性已应用。");
       return this.showInventory();
     }
+    if (action === "create-schedule-instance") {
+      const scheduleId = this.root.querySelector("[data-schedule-definition]")?.value;
+      const result = await scheduleData.createInstance(scheduleId);
+      this.setStatus(result.ok ? `日程实例 ${result.instance.instanceId} 已插入 ${result.queueId} 队列。` : `新建日程失败：${result.reason}`, !result.ok);
+      return this.showSchedules();
+    }
+    if (action === "insert-temporary-schedule") return this.openTemporaryScheduleEditor();
     const queueAction = action.match(/^(resolve|reopen)-queue-(work|social|chatgtp|realtime)-(.+)$/);
     if (queueAction) {
       const queues = { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue };

@@ -54,6 +54,7 @@ export class DevDialogueEditorTab {
     this._initialCtx = options.initialCtx || null;
     this._fileScope = options.fileScope || null;
     this._embeddedScope = options.embeddedScope || null;
+    this._temporaryScope = options.temporaryScope || null;
     this.root = null;
     this.project = null;
     this.currentCtx = null;       // { type:'schedule'|'event'|'ending', id, entryIndex }
@@ -150,10 +151,15 @@ export class DevDialogueEditorTab {
     window._de = this;
     this.root?.addEventListener('pointerdown', () => { window._de = this; });
     this.project = this._sharedProject || this._emptyProject();
+    if (this._temporaryScope) {
+      const id = "__temporary_schedule__";
+      this.project.schedules[id] = { displayName: "临时日程", entries: [{ id: "temporary_entry", type: "other", name: "临时日程", dialogueTree: this._temporaryScope.blueprint || this._temporaryBlueprint() }] };
+      this.currentCtx = { type: "schedule", id, entryIndex: 0 };
+    }
     this.loadedScheduleFiles = new Set(this._sharedProject ? Object.keys(this.project.schedules || {}) : []);
     this.loadedMetaFiles = new Set(this._sharedProject ? ['special_events.json', 'endings.json'] : []);
-    if (this._sharedProject) {
-      this.currentCtx = this._initialCtx;
+    if (this._sharedProject || this._temporaryScope) {
+      if (this._initialCtx) this.currentCtx = this._initialCtx;
       this._renderCanvas();
       if (this.currentCtx) this._selectCtx(this.currentCtx.type, this.currentCtx.id, this.currentCtx.entryIndex || 0);
     } else if (this._workspace) this._loadCurrentGame();
@@ -187,6 +193,16 @@ export class DevDialogueEditorTab {
 
   // ── HTML skeleton ─────────────────────────────────────────────────────────
   html() { return this._embeddedScope ? this._embeddedHtml() : this._standardHtml(); }
+  _temporaryBlueprint() {
+    return { startNodeId: "start", nodes: {
+      start: { id: "start", type: "flowStart", inputs: {}, outputs: {}, x: 80, y: 80 },
+      text: { id: "text", type: "text", inputs: { speaker: "narrator", text: "" }, outputs: {}, x: 320, y: 80 },
+      end: { id: "end", type: "scheduleEnd", inputs: {}, outputs: {}, x: 560, y: 80 },
+    }, connections: [
+      { fromNodeId: "start", fromPort: "flowOut", toNodeId: "text", toPort: "flowIn" },
+      { fromNodeId: "text", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
+    ] };
+  }
   _embeddedHtml() {
     return this._standardHtml().replace(
       /<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/,
@@ -194,6 +210,15 @@ export class DevDialogueEditorTab {
     );
   }
   _standardHtml() {
+    if (this._temporaryScope) {
+      return this._standardHtmlBase().replace(
+        /<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/,
+        `<div class="dev-de-header"><strong>临时日程编辑器</strong><button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存并插入队列</button></div>\n<div class="dev-de-main">`
+      );
+    }
+    return this._standardHtmlBase();
+  }
+  _standardHtmlBase() {
     if (this._workspace) return this._workspaceHtml();
     const nodeShortcut = (index) => `<label class="dev-de-node-type-label">节点类型
         <select id="de-new-node-type-${index}" class="dev-de-node-type">
@@ -1557,9 +1582,14 @@ export class DevDialogueEditorTab {
     this._st('已新建项目');
   }
 
-  _saveProject() {
+  async _saveProject() {
     const errors=this._validateTypedBlueprints();
     if(errors.length){ alert(`蓝图校验失败：\n${errors.slice(0,8).join('\n')}`); return; }
+    if (this._temporaryScope?.onSave) {
+      await this._temporaryScope.onSave(this._ctxData());
+      this._st('临时日程已创建并插入队列');
+      return;
+    }
     this._saveLS();
     if (this._embeddedScope?.onSave) this._embeddedScope.onSave(this._ctxData());
     this._st(this._embeddedScope ? '内嵌日程已保存到宿主编辑器内存' : '已保存到浏览器');

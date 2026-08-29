@@ -20,6 +20,7 @@ class ScheduleData {
     this.slots = new Map();
     this.fired = new Set();
     this.scheduleById = new Map();
+    this.scheduleCatalog = new Map();
     this.publicEntries = new Map();
     this.pendingAdds = [];
     this.lastAbsoluteMinute = null;
@@ -42,7 +43,7 @@ class ScheduleData {
           requests.push(dataLoader.loadJSON(file).then((data) => {
             const entries = Array.isArray(data.entries) ? data.entries : [];
             this.slots.set(`${day}:${checkpoint.time}:${queueId}`, entries);
-            this._indexEntries(entries, queueId);
+            this._indexEntries(entries, queueId, "calendar");
           }));
         }
       }
@@ -51,7 +52,7 @@ class ScheduleData {
       requests.push(dataLoader.loadJSON(`${queueId}pub.json`).then((data) => {
         const entries = Array.isArray(data.entries) ? data.entries : [];
         this.publicEntries.set(queueId, entries);
-        this._indexEntries(entries, queueId);
+        this._indexEntries(entries, queueId, "public");
       }));
     }
     await Promise.all(requests);
@@ -61,7 +62,7 @@ class ScheduleData {
       favorabilityManager.load(),
       npcStateManager.load(),
     ]).then(([events, endingDoc]) => [events, endingDoc]);
-    this._indexExternalEntries(specialEventManager.events, "social");
+    this._indexExternalEntries(specialEventManager.events, "social", "special");
     this._indexExternalEntries((endings.endings || []).map((ending) => ({
       ...ending,
       blueprint: ending.blueprint || ending.dialogueTree || {
@@ -72,31 +73,34 @@ class ScheduleData {
         },
         connections: [{ fromNodeId: "start", fromPort: "flowOut", toNodeId: "text", toPort: "flowIn" }],
       },
-    })), "social");
+    })), "social", "ending");
     for (const def of itemManager.defs.values()) {
       Object.values(def.schedules || def.scheduleTable || {}).forEach((schedule) => {
         const entries = Array.isArray(schedule?.entries) ? schedule.entries : [schedule];
-        this._indexExternalEntries(entries.filter((entry) => entry && entry.id), "social");
+        this._indexExternalEntries(entries.filter((entry) => entry && entry.id), "realtime", "embedded");
       });
     }
     this.initializeAt(gameState.day, gameState.clockMinutes);
   }
 
-  _indexExternalEntries(entries, defaultQueueId) {
+  _indexExternalEntries(entries, defaultQueueId, category = "calendar") {
     (entries || []).forEach((entry) => {
       if (!entry || typeof entry.id !== "string" || !entry.id.trim()) return;
       if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
-      this.scheduleById.set(entry.id, { ...entry, queueId: entry.queueId || defaultQueueId });
+      const definition = { ...entry, queueId: entry.queueId || defaultQueueId };
+      this.scheduleById.set(entry.id, definition);
+      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId: definition.queueId });
     });
   }
 
-  _indexEntries(entries, queueId) {
+  _indexEntries(entries, queueId, category = "calendar") {
     entries.forEach((entry) => {
       if (!entry || typeof entry.id !== "string" || !entry.id.trim()) {
         throw new Error(`Schedule entry in ${queueId} needs a stable string id`);
       }
       if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
       this.scheduleById.set(entry.id, { ...entry, queueId });
+      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId });
     });
   }
 
@@ -251,6 +255,53 @@ class ScheduleData {
 
   queue(queueId) {
     return { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue }[queueId] || socialQueue;
+  }
+
+  catalog(category = undefined) {
+    return [...this.scheduleCatalog.values()]
+      .filter((entry) => !category || entry.category === category)
+      .map((entry) => ({ ...entry, definition: this.scheduleById.get(entry.id) }))
+      .filter((entry) => entry.definition)
+      .sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  async createInstance(scheduleId, queueId = undefined, received = {}) {
+    await this.init();
+    const definition = this.scheduleById.get(scheduleId);
+    if (!definition) return { ok: false, reason: "unknownSchedule" };
+    const targetQueueId = queueId || definition.queueId || "social";
+    const day = Number.isInteger(received.day) ? received.day : gameState.day;
+    const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
+    const entry = {
+      ...JSON.parse(JSON.stringify(definition)),
+      scheduleId,
+      receivedDay: day,
+      receivedTime: time,
+      receivedPhase: time < 16 * 60 ? "day" : "night",
+      status: "unresolved",
+      currentNodeId: definition.blueprint?.startNodeId || null,
+      transcript: [],
+    };
+    delete entry.queueId;
+    const [instance] = this.queue(targetQueueId).append(entry);
+    return { ok: true, queueId: targetQueueId, instance };
+  }
+
+  createTemporaryInstance(blueprint, queueId = "social", received = {}) {
+    const day = Number.isInteger(received.day) ? received.day : gameState.day;
+    const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
+    const scheduleId = `temporary:${Date.now()}`;
+    const [instance] = this.queue(queueId).append({
+      scheduleId,
+      payload: { id: scheduleId, blueprint: JSON.parse(JSON.stringify(blueprint)) },
+      receivedDay: day,
+      receivedTime: time,
+      receivedPhase: time < 16 * 60 ? "day" : "night",
+      status: "unresolved",
+      currentNodeId: blueprint?.startNodeId || null,
+      transcript: [],
+    });
+    return { ok: true, queueId, instance };
   }
 
   fileNameFor(day, phase) {

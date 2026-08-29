@@ -32,7 +32,7 @@ const dialogueKeywordIds = (tree) => {
  * conversation (click highlighted keywords to collect them) -> choose a
  * diagnosis -> prescribe medicines from the configured list.
  *
- * Dialogue tree walking is shared with SocialApp/MonitorApp via the schedule
+ * Dialogue tree walking is shared with SocialApp via the schedule
  * runner. A patient whose own SAN
  * (NpcStateManager) has dropped to "offline" can no longer be talked to.
  */

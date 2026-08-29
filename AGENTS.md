@@ -64,7 +64,7 @@ export default ExampleManager;
 | `GlobalVariableManager` | 全局变量定义、值、条件比较、效果、存档快照 |
 | `SpellManager` | 学习/施放法术 |
 | `KeywordManager` | 关键词定义、收集和笔记本来源 |
-| `DialogueRunner` | HIS/Social/Monitor 共用对话树执行 |
+| `DialogueRunner` | HIS/Social 共用对话树执行 |
 | `DialogueEffects` | 对话节点 onShow 的共享副作用 |
 | `EndingManager` | 事件、对话、道具、属性和最终阶段结局 |
 | `SaveManager` | v11 存档和窗口布局恢复 |

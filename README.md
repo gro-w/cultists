@@ -51,7 +51,7 @@ index.html                 入口、桌面、宿舍、主菜单和结局界面
 css/                       Win95、应用、模式和开发工具样式
 js/main.js                 组成根、应用注册和启动流程
 js/core/                   状态、时间、数据、事件、存档和内容系统
-js/apps/                   HIS、Social、Monitor、ChatGTP、Notebook 等应用
+js/apps/                   HIS、Social、ChatGTP、Notebook 等应用
 js/desktop/                桌面、任务栏、宿舍、菜单、结局和开发工具
 data/zh-hans/              当前语言的全部游戏数据
 dev-server.js              本地静态 + JSON REST + SSE 开发服务器

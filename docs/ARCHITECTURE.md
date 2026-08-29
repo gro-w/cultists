@@ -31,7 +31,7 @@
 | `GlobalVariableManager` | 数据定义的 bool/number/decimal/string 全局变量、条件和效果 |
 | `SpellManager` | 已学习法术、法术施放和法术状态事件 |
 | `KeywordManager` | 关键词注册、收集、来源和笔记本数据 |
-| `ScheduleRunner` | HIS/Social/Monitor 对话及所有对象式日程蓝图执行器 |
+| `ScheduleRunner` | HIS/Social 对话及所有对象式日程蓝图执行器 |
 | `DialogueEffects` | 对话显示时的物品、NPC、好感度、结局、变量和游戏事件效果 |
 | `EndingManager` | 事件、对话、物品、属性阈值和最终阶段结局 |
 | `SaveManager` | v13 存档编码/恢复、窗口布局、队列实例和所有持久状态 |
@@ -55,7 +55,7 @@
 
 | 操作 | 队列 | 执行顺序 |
 | --- | --- | --- |
-| HIS/Social/Monitor 对话 | `workQueue` / `socialQueue` / `mainQueue` | `ScheduleRunner` 执行蓝图节点、对话效果和 `consumeTime` |
+| HIS/Social 对话 | `workQueue` / `socialQueue` / `mainQueue` | `ScheduleRunner` 执行蓝图节点、对话效果和 `consumeTime` |
 | ChatGTP 关键词查询 | `chatgtpQueue` | 扣 NPC SAN、推进 20 分钟、提交回答 |
 | 物品调查/使用、法术施放 | `mainQueue` | `ItemScheduleRuntime` 执行效果、时间和完成事件 |
 | HIS 诊断提交 | `mainQueue` | 提交医疗记录、推进 20 分钟、完成实例 |

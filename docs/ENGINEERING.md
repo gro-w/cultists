@@ -163,7 +163,7 @@ App 点击
 
 `ScheduleRunner` 每遇到 `text` 节点就暂停；有 UI 容器时等待明确的继续动作，遇到 `choice` 时等待选项。无 UI 容器的 headless realtime 日程必须自动继续，不能因为没有按钮而死锁。
 
-`transcript` 是持久化历史；当前画面是单独的 active dialogue container。Social、HIS、Monitor、Dorm、ChatGTP 的 renderer 应替换当前内容，而不是追加成聊天记录。读档/只读回放时可以遍历 transcript，但不能重新执行节点副作用。
+`transcript` 是持久化历史；当前画面是单独的 active dialogue container。Social、HIS、Dorm、ChatGTP 的 renderer 应替换当前内容，而不是追加成聊天记录。读档/只读回放时可以遍历 transcript，但不能重新执行节点副作用。
 
 关键词只使用文本标记：`[[keyword_id]]`。角色显示名不是持久化 ID；NPC 引用使用 `npcId`。
 
@@ -186,13 +186,13 @@ App 点击
 - `special_events.json`、`endings.json`、`achievements.json`：特殊事件、结局和成就。
 - `social_apps.json`：宿舍电脑中的社交网站、群聊和 ChatGTP 每日内容。
 - `bgm.json`、`locations.json`：BGM 资源/规则和位置、子位置、热点定义。
-- `time_rules.json`、`calendar.json`、`skills.json`、`monitor_scenes.json`：时间规则、日历、技能和宿舍监控场景。
+- `time_rules.json`、`calendar.json`、`skills.json`：时间规则、日历和技能。
 
 生成内容时先读取 schema 和同类条目，再写入目标文件；保持原有条目、LF 换行和稳定 ID。新增角色、关键词、物品或诊断后，搜索日程、特殊事件、结局、存档索引和编辑器中的全部引用。
 
 ### 7.1 数据文件与开发人员模式编辑器映射
 
-下面的清单按当前 `data/zh-hans/` 实际存在的 52 个 JSON 文件逐项列出。每个文件都有对应的专用入口；日程、物品等专用编辑器使用自己的表单和校验，不提供无上下文的通用 JSON 编辑器。
+下面的清单按当前 `data/zh-hans/` 实际存在的 50 个 JSON 文件逐项列出。每个文件都有对应的专用入口；日程、物品等专用编辑器使用自己的表单和校验，不提供无上下文的通用 JSON 编辑器。
 
 | 数据文件 | 专用编辑器/入口 | 说明 |
 | --- | --- | --- |
@@ -218,13 +218,11 @@ App 点击
 | `calendar.json` | 日历规则编辑器 | 总天数、休息日和夜班日 |
 | `achievements.json` | 成就定义编辑器 | 成就内容、分类、隐藏和触发条件 |
 | `skills.json` | 技能定义编辑器 | 技能 ID、数值 ID、名称和类别 |
-| `monitor_scenes.json` | 监控场景编辑器 | 白天/夜间监控场景记录 |
-
 因此，当前没有专用编辑器的文件：**无**。上述数据文件均已增加独立的专用编辑器入口；NPC 的 SAN 阈值由全局变量 3/4 定义，运行时 NPC 状态仍由 NPC 与对话调试器操作。
 
 ## 8. 开发人员模式
 
-开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 的成熟编辑器（关键词、ChatGTP 问答、NPC 列表、全局变量定义、日程、BGM、位置、电脑内容）使用中性图标，其余 11 个专用数据编辑器使用蓝色图标表示尚未完全开发；调试器包含时间与读档（含成就调试器）、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
+开发人员模式只在严格 `?dev` 下启用，源码块使用 `DEV-TOOLS:START/END`。它是一个独立窗口（`developer-mode`），内部上半部为数据库 App，下半部为调试器。数据库 App 的成熟编辑器（关键词、ChatGTP 问答、NPC 列表、全局变量定义、日程、BGM、位置、电脑内容）使用中性图标，其余 9 个专用数据编辑器使用蓝色图标表示尚未完全开发；调试器包含时间与读档（含成就调试器）、玩家与资源、NPC与对话、日程与队列、世界与场景、医疗与结局等运行时工具。时间与读档只负责存档、时间和阶段操作，不再包含玩家数值或当前数据文件面板。图标双击后以 `developer-editor-*` 独立窗口打开。通用 JSON 编辑器已移除，且运行时当前值不属于静态数据库定义。
 
 旧的“对话分支树”“患者分支树”“Work 事件队列”“Social 事件队列”已删除；不要恢复这些旧入口。对话/患者内容统一通过“日程编辑器”按源文件和 entry 编辑对象式蓝图。运行时 queue 仅用于执行与保存，不是编辑器的内容来源。
 

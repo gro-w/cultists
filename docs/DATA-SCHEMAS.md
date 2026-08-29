@@ -126,7 +126,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 ## 旧式 dialogueTree（仅兼容读取）
 
-历史数据中的 `dialogueTree` 仍可由 `ScheduleBlueprint.migrateDialogueTree()` 转换，但新内容不得再使用它。HIS、Social 和 Monitor 的正式运行入口都是对象式日程蓝图和共用的 `ScheduleRunner`：
+历史数据中的 `dialogueTree` 仍可由 `ScheduleBlueprint.migrateDialogueTree()` 转换，但新内容不得再使用它。HIS 和 Social 的正式运行入口都是对象式日程蓝图和共用的 `ScheduleRunner`：
 
 ```json
 {

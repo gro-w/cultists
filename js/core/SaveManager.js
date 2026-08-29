@@ -19,7 +19,7 @@ import { MAX_GAME_DAYS } from "./GameRules.js";
 const SAVE_FORMAT_VERSION = 14;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
-const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];
+const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
 
 function base64UrlEncode(uint8arr) {
   let binary = "";

@@ -695,10 +695,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -1069,6 +1065,12 @@
               "fromPort": "flowOut",
               "toNodeId": "band0:time",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -1117,10 +1119,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -1426,6 +1424,12 @@
               "fromPort": "flowOut",
               "toNodeId": "band0:time",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -1462,10 +1466,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -1661,6 +1661,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -1697,10 +1703,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -1894,6 +1896,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -1944,10 +1952,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -2147,6 +2151,12 @@
               "fromPort": "flowOut",
               "toNodeId": "band0:time",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -2183,10 +2193,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -2379,6 +2385,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -2415,10 +2427,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -2614,6 +2622,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -2650,10 +2664,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -2847,6 +2857,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -2900,10 +2916,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -3111,6 +3123,12 @@
               "fromPort": "flowOut",
               "toNodeId": "band0:time",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -3158,10 +3176,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -3361,6 +3375,12 @@
               "fromPort": "flowOut",
               "toNodeId": "band0:time",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -3397,10 +3417,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -3593,6 +3609,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -3629,10 +3651,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -3826,6 +3844,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -3863,10 +3887,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -4188,6 +4208,12 @@
               "fromPort": "flowOut",
               "toNodeId": "band0:time",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -4224,10 +4250,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -4419,6 +4441,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -4455,10 +4483,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -4651,6 +4675,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -4687,10 +4717,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -4874,6 +4900,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -4910,10 +4942,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -5101,6 +5129,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -5137,10 +5171,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -5333,6 +5363,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -5371,10 +5407,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -5558,6 +5590,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -5593,10 +5631,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -5778,6 +5812,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }
@@ -5813,10 +5853,6 @@
               "id": "san",
               "type": "segmentBranch",
               "inputs": {
-                "value": {
-                  "nodeId": "mental",
-                  "port": "value"
-                },
                 "branchCount": 7,
                 "boundary0": 100,
                 "boundary1": 90,
@@ -5998,6 +6034,12 @@
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "mental",
+              "fromPort": "value",
+              "toNodeId": "san",
+              "toPort": "value"
             }
           ]
         }

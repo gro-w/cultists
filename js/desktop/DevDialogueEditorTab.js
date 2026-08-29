@@ -1524,29 +1524,63 @@ export class DevDialogueEditorTab {
     const data = this._ctxData(); if (!data) return;
     const nodes = data.nodes; const ids = Object.keys(nodes);
     if (!ids.length) return;
-    const W = 200, H = 120, GAPX = 40, GAPY = 50, PAD = 40, COLS = 4;
-    // BFS from startNode to get traversal order, then append orphans
-    const start = data.startNodeId || ids[0];
-    const visited = new Set(), order = [];
-    const queue = [start]; visited.add(start);
-    while (queue.length) {
-      const id = queue.shift(); order.push(id);
-      const n = nodes[id];
-      const nexts = [];
-      if (n.next && nodes[n.next]) nexts.push(n.next);
-      (n.options||[]).forEach(o => { if (o.next && nodes[o.next]) nexts.push(o.next); });
-      nexts.forEach(nid => { if (!visited.has(nid)) { visited.add(nid); queue.push(nid); } });
-    }
-    ids.filter(id => !visited.has(id)).forEach(id => order.push(id));
-    // Place in a grid: COLS columns, rows grow downward
-    order.forEach((id, i) => {
-      nodes[id].x = PAD + (i % COLS) * (W + GAPX);
-      nodes[id].y = PAD + Math.floor(i / COLS) * (H + GAPY);
+    const W = 200, H = 120, GAPX = 100, GAPY = 45, PAD = 40;
+    const orderIndex = new Map(ids.map((id, index) => [id, index]));
+    const outgoing = new Map(ids.map(id => [id, new Set()]));
+    const incoming = new Map(ids.map(id => [id, new Set()]));
+    const addEdge = (from, to) => {
+      if (!nodes[from] || !nodes[to] || from === to) return;
+      outgoing.get(from).add(to); incoming.get(to).add(from);
+    };
+    // Object blueprints store the authoritative graph in typed connections.
+    (data.connections || []).forEach(connection => addEdge(connection.fromNodeId, connection.toNodeId));
+    // Keep compatibility with legacy tree-shaped entries while laying them out.
+    ids.forEach(id => {
+      const node = nodes[id];
+      addEdge(id, node.next);
+      (node.options || []).forEach(option => addEdge(id, option.next));
     });
-    // Expand canvas to fit all placed nodes so nothing is clipped
-    const rows = Math.ceil(order.length / COLS);
-    const needW = PAD + COLS * (W + GAPX) + PAD;
-    const needH = PAD + rows * (H + GAPY) + PAD;
+    const indegree = new Map(ids.map(id => [id, incoming.get(id).size]));
+    const ranks = new Map(ids.map(id => [id, 0]));
+    const queue = ids.filter(id => indegree.get(id) === 0);
+    for (let cursor = 0; cursor < queue.length; cursor += 1) {
+      const id = queue[cursor];
+      outgoing.get(id).forEach(target => {
+        ranks.set(target, Math.max(ranks.get(target), ranks.get(id) + 1));
+        indegree.set(target, indegree.get(target) - 1);
+        if (indegree.get(target) === 0) queue.push(target);
+      });
+    }
+    // Cycles are invalid for normal flow graphs, but still receive stable ranks.
+    const maxRank = Math.max(0, ...ranks.values());
+    const layers = Array.from({ length: maxRank + 1 }, () => []);
+    ids.forEach(id => layers[ranks.get(id)].push(id));
+    const position = () => new Map(layers.flatMap(layer => layer.map((id, index) => [id, index])));
+    const reorder = (layerIndex, useParents) => {
+      const current = layers[layerIndex];
+      const positions = position();
+      current.sort((left, right) => {
+        const neighbors = id => [...(useParents ? incoming.get(id) : outgoing.get(id))]
+          .filter(neighbor => ranks.get(neighbor) === (useParents ? layerIndex - 1 : layerIndex + 1))
+          .map(neighbor => positions.get(neighbor))
+          .sort((a, b) => a - b);
+        const median = values => values.length ? values[Math.floor((values.length - 1) / 2)] : Number.POSITIVE_INFINITY;
+        return median(neighbors(left)) - median(neighbors(right)) || orderIndex.get(left) - orderIndex.get(right);
+      });
+    };
+    // Barycenter sweeps keep fan-out and fan-in branches in their natural order,
+    // reducing crossings without making layout depend on DOM measurements.
+    for (let pass = 0; pass < 4; pass += 1) {
+      for (let layer = 1; layer < layers.length; layer += 1) reorder(layer, true);
+      for (let layer = layers.length - 2; layer >= 0; layer -= 1) reorder(layer, false);
+    }
+    layers.forEach((layer, rank) => layer.forEach((id, row) => {
+      nodes[id].x = PAD + rank * (W + GAPX);
+      nodes[id].y = PAD + row * (H + GAPY);
+    }));
+    const widestLayer = Math.max(1, ...layers.map(layer => layer.length));
+    const needW = PAD + layers.length * (W + GAPX) + PAD;
+    const needH = PAD + widestLayer * (H + GAPY) + PAD;
     const nodesDiv = this._el('de-canvas-nodes');
     const svgEl    = this._el('de-canvas-svg');
     if (nodesDiv) { nodesDiv.style.minWidth  = Math.max(2000, needW) + 'px';

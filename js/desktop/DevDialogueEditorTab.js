@@ -75,7 +75,7 @@ export class DevDialogueEditorTab {
     this.gameSpells = [];
     this._inputModes = new Map();
     this._abort = null;           // AbortController for document listeners
-    this._workspaceSelections = { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'realtimeinit' };
+    this._workspaceSelections = { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'maininit' };
   }
 
   // ── utilities ─────────────────────────────────────────────────────────────
@@ -108,7 +108,8 @@ export class DevDialogueEditorTab {
     for (let d=1;d<=totalDays;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={displayName:'',entries:[]};
     schedules.socialpub = { displayName: '', entries: [] };
     schedules.workpub = { displayName: '', entries: [] };
-    schedules.realtimeinit = { displayName: '', entries: [] };
+    schedules.mainpub = { displayName: '', entries: [] };
+    schedules.maininit = { displayName: '', entries: [] };
     return {version:2,totalDays,customVars:[],schedules,events:{},endings:{},eventFileDoc:{events:[]},endingFileDoc:{endings:[]}};
   }
 
@@ -321,12 +322,12 @@ export class DevDialogueEditorTab {
   _renderWorkspace() {
     const el = this._el('de-workspace-tables'); if (!el || !this.project) return;
     const schedules = Object.keys(this.project.schedules || {});
-    const groups = { scheduleSocial: schedules.filter(id => /^social\d{2}[ab]$/.test(id)), scheduleWork: schedules.filter(id => /^work\d{2}[ab]$/.test(id)), public: ['socialpub', 'workpub'], other: ['endings', 'special_events', 'realtimeinit'] };
+    const groups = { scheduleSocial: schedules.filter(id => /^social\d{2}[ab]$/.test(id)), scheduleWork: schedules.filter(id => /^work\d{2}[ab]$/.test(id)), public: ['socialpub', 'workpub', 'mainpub'], other: ['endings', 'special_events', 'maininit'] };
     const titles = { scheduleSocial: '📄 Social 日期日程表', scheduleWork: '📄 Work 日期日程表', public: '🌐 公共日程表', other: '🗂️ 其他日程表' };
-    this._workspaceSelections ||= { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'realtimeinit' };
+    this._workspaceSelections ||= { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'maininit' };
     for (const type of ['scheduleSocial', 'scheduleWork']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || `${type === 'scheduleSocial' ? 'social' : 'work'}01a`;
     for (const type of ['public', 'other']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || '';
-    const labels = { socialpub: 'Social（socialpub.json）', workpub: 'Work（workpub.json）', endings: '结局（endings.json）', special_events: '特殊事件（special_events.json）', realtimeinit: '初始 realtime（realtimeinit.json）' };
+    const labels = { socialpub: 'Social（socialpub.json）', workpub: 'Work（workpub.json）', mainpub: '主要（mainpub.json）', endings: '结局（endings.json）', special_events: '特殊事件（special_events.json）', maininit: '初始主要（maininit.json）' };
     el.innerHTML = Object.entries(groups).map(([type, list]) => this._workspaceTable(type, titles[type], list.map(id => [id, labels[id] || `${id}.json`]), this._workspaceSelections[type])).join('');
     el.querySelectorAll('[data-ws-select]').forEach(node => node.addEventListener('change', () => { this._workspaceSelections[node.dataset.wsSelect] = node.value; this._renderWorkspace(); }));
     el.querySelectorAll('[data-ws-edit]').forEach(node => node.addEventListener('click', () => this._openWorkspaceBlueprint(node.dataset.wsEdit)));
@@ -365,7 +366,7 @@ export class DevDialogueEditorTab {
   }
   _applyGameDocument(fileName, data, type = null) {
     const base = fileName.replace(/\.json$/i, '');
-    const kind = type || (fileName === 'special_events.json' || fileName === 'endings.json' || base === 'realtimeinit' ? 'other' : base === 'socialpub' || base === 'workpub' ? 'public' : base.startsWith('social') ? 'scheduleSocial' : 'scheduleWork');
+    const kind = type || (fileName === 'special_events.json' || fileName === 'endings.json' || base === 'maininit' ? 'other' : base === 'socialpub' || base === 'workpub' || base === 'mainpub' ? 'public' : base.startsWith('social') ? 'scheduleSocial' : 'scheduleWork');
     if (fileName === 'special_events.json') {
       if (!Array.isArray(data.events)) throw new Error('special_events.json 缺少 events 数组');
       this.project.eventFileDoc = data; this.project.events = Object.fromEntries(data.events.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('special_events.json'); this._workspaceSelections.other = 'special_events';

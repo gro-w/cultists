@@ -19,7 +19,7 @@ import { endingManager } from "../core/EndingManager.js";
 import { spellManager } from "../core/SpellManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { achievementManager } from "../core/AchievementManager.js";
-import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "../core/ScheduleQueue.js";
+import { workQueue, socialQueue, chatgtpQueue, mainQueue } from "../core/ScheduleQueue.js";
 import { normalizeBlueprint } from "../core/ScheduleBlueprint.js";
 import { DevItemEditorTab } from "./DevItemEditorTab.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
@@ -375,11 +375,11 @@ export class DeveloperMode {
     const catalog = scheduleData.catalog(category);
     const categoryOptions = Object.entries(SCHEDULE_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
     const scheduleOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
-    const queueOptions = [["", "默认（按日程定义；临时日程默认 social）"], ["work", "work"], ["social", "social"], ["chatgtp", "chatgtp"], ["realtime", "realtime"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
-    const queues = [["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue], ["realtime", realtimeQueue]];
+    const queueOptions = [["", "默认（按日程定义；临时日程默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"], ["chatgtp", "chatgtp"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
+    const queues = [["main", mainQueue], ["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue]];
     const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-schedule="${esc(entry.scheduleId)}">${esc(entry.scheduleId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
     const scheduled = scheduleData.snapshotScheduled();
-    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 social 队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
+    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示主要、工作、社交和 ChatGTP 四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 main 主要队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
     this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });
   }
 
@@ -649,19 +649,19 @@ export class DeveloperMode {
       const queueId = this.root.querySelector("[data-schedule-queue]")?.value || undefined;
       return this.openTemporaryScheduleEditor(queueId);
     }
-    const queueAction = action.match(/^(resolve|reopen)-queue-(work|social|chatgtp|realtime)-(.+)$/);
+    const queueAction = action.match(/^(resolve|reopen)-queue-(main|work|social|chatgtp)-(.+)$/);
     if (queueAction) {
-      const queues = { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue };
+      const queues = { main: mainQueue, work: workQueue, social: socialQueue, chatgtp: chatgtpQueue };
       const queue = queues[queueAction[2]];
       const ok = queue.updateInstance(queueAction[3], { status: queueAction[1] === "resolve" ? "resolved" : "unresolved" });
       this.setStatus(ok ? "日程实例状态已更新。" : "未找到日程实例。", !ok);
       return this.showSchedules();
     }
-    const jumpAction = action.match(/^jump-queue-(work|social|chatgtp|realtime)-(.+)$/);
+    const jumpAction = action.match(/^jump-queue-(main|work|social|chatgtp)-(.+)$/);
     if (jumpAction) {
       const queueId = jumpAction[1];
       const instanceId = jumpAction[2];
-      const queue = { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue }[queueId];
+      const queue = { main: mainQueue, work: workQueue, social: socialQueue, chatgtp: chatgtpQueue }[queueId];
       const select = Array.from(this.root.querySelectorAll("[data-schedule-jump]"))
         .find((element) => element.dataset.scheduleJump === instanceId);
       const entry = queue.getInstance(instanceId);

@@ -1,7 +1,7 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { itemManager } from "./ItemManager.js";
-import { realtimeQueue } from "./ScheduleQueue.js";
+import { mainQueue } from "./ScheduleQueue.js";
 
 function clamp(value) {
   return Math.max(0, Math.min(100, Number(value) || 0));

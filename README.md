@@ -6,7 +6,7 @@
 
 - 原生 HTML/CSS/ES6 modules，无框架、无 bundler、无 `package.json`。
 - JSON 驱动的日程、对话、关键词、物品、医疗、结局、成就和全局变量。
-- 工作/宿舍双模式，独立的工作、社交、ChatGTP 与 realtime 日程队列。
+- 工作/宿舍双模式，独立的工作、社交、ChatGTP 与主要日程队列。
 - 确定性的游戏时钟：普通行动默认推进 20 分钟，跨日和睡眠在明确边界处理。
 - 物品调查、SAN 变体、技能检定、条件摆放和使用效果。
 - 法术学习/施放系统与关键词笔记本的法术标签页。
@@ -65,7 +65,7 @@ docs/                      架构、数据 schema 和协作指南
 | --- | --- |
 | `GameState` / `DayNightSystem` | 玩家状态、游戏时钟、上下班、睡眠和日结 |
 | `TimeService` | 唯一普通游戏时间推进与阶段结算 owner |
-| `ScheduleData` / `ScheduleQueue` / `ScheduleRunner` | 按时间加载内容，维护 work/social/chatgtp/realtime 队列并执行统一日程 |
+| `ScheduleData` / `ScheduleQueue` / `ScheduleRunner` | 按时间加载内容，维护 work/social/chatgtp/main 队列并执行统一日程 |
 | `ItemManager` / `ItemPlacementManager` | 背包、物品调查、物品使用和场景物品 |
 | `GlobalVariableManager` | bool、0–256 number、string 全局变量的条件和效果 |
 | `SpellManager` | 已学习法术和 SAN 消耗的施放 |
@@ -78,9 +78,9 @@ docs/                      架构、数据 schema 和协作指南
 
 ## 统一日程架构
 
-所有会改变游戏时间或产生可持久化游戏副作用的玩家操作都必须先进入日程系统。普通对话由对应的 work/social 队列执行；ChatGTP 查询进入 `chatgtpQueue`；物品调查/使用、HIS 诊断提交、法术施放、法术学习和 NPC 离线进入非阻塞 `realtimeQueue`（ChatGTP 使用其专用队列）。
+所有会改变游戏时间或产生可持久化游戏副作用的玩家操作都必须先进入日程系统。普通对话由对应的 work/social 队列执行；ChatGTP 查询进入 `chatgtpQueue`；物品调查/使用、HIS 诊断提交、法术施放、法术学习和 NPC 离线进入非阻塞 `mainQueue`（ChatGTP 使用其专用队列）。
 
-一个操作的时间消耗、状态副作用和完成标记必须由同一个日程实例完成。法术学习蓝图严格先执行 `consumeTime(240)`，再执行 `spellOperation`；NPC 离线由阈值变化创建 realtime 实例，在实例中执行离线状态与配置后果。应用层只负责创建实例和显示结果，不能直接调用 `TimeService.advanceBy()`、直接修改法术/医疗/NPC 状态来模拟日程。
+一个操作的时间消耗、状态副作用和完成标记必须由同一个日程实例完成。法术学习蓝图严格先执行 `consumeTime(240)`，再执行 `spellOperation`；NPC 离线由阈值变化创建 main 实例，在实例中执行离线状态与配置后果。应用层只负责创建实例和显示结果，不能直接调用 `TimeService.advanceBy()`、直接修改法术/医疗/NPC 状态来模拟日程。
 
 睡眠、醒来、下班、跨日、日结和最终阶段是明确的系统边界，由 `TimeService`/`DayNightSystem` 统一处理，不属于普通叙事日程。医疗到期处理只由 `TimeService` 在醒来边界调用；`MedicalCaseManager` 不再订阅 `daynight:changed`。
 

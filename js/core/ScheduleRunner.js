@@ -306,13 +306,13 @@ export class ScheduleRunner {
   }
 
   _scheduleStatus(instanceId) {
-    const queues = ["work", "social", "chatgtp", "realtime"];
+    const queues = ["work", "social", "chatgtp", "main"];
     const status = queues.map((id) => scheduleData.queue(id).statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
     return STATUS[status] ?? STATUS.nonexistent;
   }
 
   _scheduleInstanceCount(scheduleId) {
-    return ["work", "social", "chatgtp", "realtime"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
+    return ["work", "social", "chatgtp", "main"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
   }
 }
 

@@ -9,7 +9,7 @@
 | 状态域 | 所有者 | 重要变量 | 当前调试器 |
 | --- | --- | --- | --- |
 | 游戏时间与模式 | `GameState` / `TimeService` | `day`、`clockMinutes`、`phase`、`duty`、`location`、`phaseMinutes`、`sleepHistory`、`insufficientSleepStreak`、`energy`、`mental`、`physical`、`satiety`、`recoverableMentalLoss` | 时间与读档 |
-| 工作/社交/ChatGTP/实时流程 | `ScheduleQueue` | `workQueue`、`socialQueue`、`chatgtpQueue`、`realtimeQueue` 的全部实例：`scheduleId`、`instanceId`、`status`、`payload`、接收时间、transcript 及实例扩展字段 | 无专用队列调试器 |
+| 工作/社交/ChatGTP/主要流程 | `ScheduleQueue` | `workQueue`、`socialQueue`、`chatgtpQueue`、`mainQueue` 的全部实例：`scheduleId`、`instanceId`、`status`、`payload`、接收时间、transcript 及实例扩展字段 | 无专用队列调试器 |
 | 日程来源与动态追加 | `ScheduleData` | `fired`、`pendingAdds`、`lastAbsoluteMinute`、动态日程请求及其目标队列 | 无 |
 | 玩家背包 | `ItemManager` | 物品 ID 与持有数量 | 玩家与资源 |
 | 场景物品摆放 | `ItemPlacementManager` | 每个 placement 的 `placed` 状态 | 世界与场景 |
@@ -35,7 +35,7 @@
 3. **`workQueue`**：完整实例数组及 transcript。
 4. **`socialQueue`**：完整实例数组及 transcript。
 5. **`chatgtpQueue`**：完整实例数组及 transcript。
-6. **`realtimeQueue`**：完整实例数组及 transcript。
+6. **`mainQueue`**：完整实例数组及 transcript。
 7. **`keywords`**：已收集关键词的 `id`、`collectedDay`。
 8. **`inventory`**：物品 `id`、`count`，以及当前实现中附带的 `def` 静态定义对象。
 9. **`medical`**：`income`、`pendingIncome`、`pendingExpenses`、`settledDays`、`submissions`、`pendingIncidents`。
@@ -133,7 +133,7 @@
 
 新增一个运行时调试器，统一观察但分栏显示：
 
-- `workQueue`、`socialQueue`、`chatgtpQueue`、`realtimeQueue`。
+- `workQueue`、`socialQueue`、`chatgtpQueue`、`mainQueue`。
 - 每个实例的 `instanceId`、`scheduleId`、状态、收到时间和 transcript。
 - 标记 resolved、重放/清除单个实例、查看 `pendingAdds`。
 

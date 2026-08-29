@@ -7,7 +7,7 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { createScheduleRunner } from "../core/ScheduleRunner.js";
-import { realtimeQueue } from "../core/ScheduleQueue.js";
+import { mainQueue } from "../core/ScheduleQueue.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 
 import { formatInspectResult, renderInspectResult } from "../core/InspectFormat.js";
@@ -147,15 +147,15 @@ export async function launchMonitorApp() {
       linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
       return;
     }
-    const instance = realtimeQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
+    const instance = mainQueue.append([{ scheduleId: actor.id, payload: actor, status: "unresolved", transcript: [] }])[0];
     const runner = createScheduleRunner({
       definition: actor,
       instance,
       appendLine,
       optionsEl,
       appId: "monitor",
-      onCheckpoint: (next) => realtimeQueue.updateInstance(instance.instanceId, next),
-      onComplete: () => realtimeQueue.complete(instance.instanceId),
+      onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
+      onComplete: () => mainQueue.complete(instance.instanceId),
     });
 
     runner.start();

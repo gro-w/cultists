@@ -590,13 +590,13 @@ segment2 ─┘
 
 运行时的权威执行身份是队列中的日程实例，而不是界面 transcript。普通、临时
 和实时日程都应经过相应的队列和 `ScheduleRunner` 路径；物品调查/使用使用
-`realtimeQueue`。应用层负责创建/触发日程和展示结果，不应绕过蓝图直接推进时间
+`mainQueue`。应用层负责创建/触发日程和展示结果，不应绕过蓝图直接推进时间
 或重复应用效果。
 
-`data/<lang>/realtimeinit.json` 是实时日程初始化表，格式为 `{ "entries": [] }`。
-游戏加载数据后会把其中每个条目作为 `realtimeQueue` 的初始实例加入；启动时由
-`RealtimeScheduleRuntime` 统一创建 `ScheduleRunner` 执行。通过 `insertSchedule`
-插入 `queue="realtime"` 的日程也由同一运行时执行。需要等待游戏状态变化时，应使用
+`data/<lang>/maininit.json` 是主要日程初始化表，格式为 `{ "entries": [] }`。
+游戏加载数据后会把其中每个条目作为 `mainQueue` 的初始实例加入；启动时由
+`MainScheduleRuntime` 统一创建 `ScheduleRunner` 执行。`data/<lang>/mainpub.json` 注册主要公共日程定义；通过 `insertSchedule`
+插入 `queue="main"` 的日程也由同一运行时执行。需要等待游戏状态变化时，应使用
 `waitUntil` 连接通用取值节点，不要在应用层增加专用时间或成就监听器。
 
 蓝图变更后至少运行：

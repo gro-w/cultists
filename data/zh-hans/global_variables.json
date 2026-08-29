@@ -123,19 +123,19 @@
     "id": 20,
     "name": "主角技能0点",
     "type": "number",
-    "default": 0
+    "default": 55
   },
   {
     "id": 21,
     "name": "主角技能1点",
     "type": "number",
-    "default": 0
+    "default": 65
   },
   {
     "id": 22,
     "name": "主角技能2点",
     "type": "number",
-    "default": 0
+    "default": 50
   },
   {
     "id": 23,
@@ -243,19 +243,19 @@
     "id": 40,
     "name": "NPC0好感度",
     "type": "number",
-    "default": 0
+    "default": 60
   },
   {
     "id": 41,
     "name": "NPC1好感度",
     "type": "number",
-    "default": 0
+    "default": 50
   },
   {
     "id": 42,
     "name": "NPC2好感度",
     "type": "number",
-    "default": 0
+    "default": 40
   },
   {
     "id": 43,
@@ -363,19 +363,19 @@
     "id": 60,
     "name": "NPC0 SAN",
     "type": "number",
-    "default": 0
+    "default": 80
   },
   {
     "id": 61,
     "name": "NPC1 SAN",
     "type": "number",
-    "default": 0
+    "default": 80
   },
   {
     "id": 62,
     "name": "NPC2 SAN",
     "type": "number",
-    "default": 0
+    "default": 80
   },
   {
     "id": 63,

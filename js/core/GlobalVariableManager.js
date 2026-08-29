@@ -11,7 +11,7 @@ export const RESERVED_GLOBAL_VARIABLE_MAX_ID = RESERVED_MAX_ID;
 
 function reservedDefinition(id) {
   if (id < RESERVED_MIN_ID || id > RESERVED_MAX_ID) return null;
-  if (id === 0) return { id, name: "变量0", type: "bool", default: false };
+  if (id === 0) return { id, name: "怀疑度", type: "number", default: 0 };
   if (id === 1) return { id, name: "主角SAN", type: "number", default: 100 };
   if (id === 2) return { id, name: "金钱", type: "decimal", default: 0 };
   if (id === 5) return { id, name: "ChatGTP SAN", type: "number", default: 80 };

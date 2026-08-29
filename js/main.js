@@ -19,6 +19,7 @@ import { achievementManager } from "./core/AchievementManager.js";
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
 import "./core/ItemScheduleRuntime.js"; // side-effect: executes item-owned schedules
+import { realtimeScheduleRuntime } from "./core/RealtimeScheduleRuntime.js";
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import { locationSystem } from "./core/LocationSystem.js";
@@ -186,6 +187,10 @@ function boot({ welcomeBack }) {
     saveLoaded = saveManager.loadFromLocation();
     if (saveLoaded) notificationBanner.showWelcomeBack();
   }
+  // Start realtime schedule execution only after save restoration has replaced
+  // the preloaded queue snapshot, so a waiting runner never survives against
+  // an obsolete queue entry object.
+  realtimeScheduleRuntime.init().catch((err) => console.error("[Cultists] Failed to initialize realtime schedules:", err));
 
   console.info(
     `[Cultists] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
@@ -206,6 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     i18n.loadLanguages(),
     itemManager.load(),
     scheduleData.init(),
+
     endingManager.load(),
     saveManager.init(),
     skillManager.load(),

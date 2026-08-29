@@ -12,7 +12,7 @@
 
 ## 日程文件
 
-当前使用两条独立队列，每天两个时间点，并有不自动追加的公共日程：
+当前使用工作、社交和实时等独立队列。工作/社交日程每天两个时间点追加，公共日程不会自动追加；`realtimeinit.json` 中的日程则在游戏启动时一次性加入初始实时队列：
 
 ```text
 work01a.json ... work07a.json   # 工作日/白班批次，08:00 追加
@@ -20,6 +20,7 @@ work01b.json ... work07b.json   # 工作/夜班批次，16:00 追加
 social01a.json ... social07a.json
 social01b.json ... social07b.json
 workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
+realtimeinit.json                 # 游戏启动时加入 realtimeQueue 的初始日程
 ```
 
 游戏流程只有第 1 至第 7 天。日历配置和运行时都会将天数上限限制为 7；第 7 天最终阶段结束后进入结局，不会推进到第 8 天。包含第 8 天及以后状态的旧存档会被拒绝加载，不会静默截断玩家进度。
@@ -56,6 +57,8 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 ```
 
 `addTime` 必须是非负、20 分钟的整数倍，使用与游戏时钟相同的绝对分钟坐标。执行操作时只创建计时器；计时器到期后才检查日程先决条件，并把日程加入其来源文件决定的 Work 或 Social 队列。`socialpub.json` / `workpub.json` 的条目不会随日期检查点自动追加。旧的 `addSchedule` 简写仍可读取，但新内容应使用 `operations`。
+
+`realtimeinit.json` 使用 `{ "entries": [] }` 顶层结构；其中每个条目的 `id` 是稳定日程 ID，启动时会以 `realtime` 队列实例加入，并由统一 `ScheduleRunner` 执行。通过 `insertSchedule` 指定 `queue="realtime"` 插入的日程也由该运行器自动执行。初始实时日程的条件等待应使用 `waitUntil`，不应在应用层另行订阅或轮询。
 
 ## 全局变量
 

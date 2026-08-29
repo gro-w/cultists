@@ -8,7 +8,7 @@ import { npcStateManager } from "./NpcStateManager.js";
 import { spellManager } from "./SpellManager.js";
 import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
-import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "./ScheduleQueue.js";
+import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 import { dialogueProgress } from "./DialogueProgress.js";
@@ -16,11 +16,11 @@ import { cgManager } from "./CGManager.js";
 import { endingManager } from "./EndingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 
-// v15 = v14 plus CGManager snapshot (activeCgId).
+// v15 = v14 plus CGManager snapshot (activeCgId); removes dedicated query queue payload.
 const SAVE_FORMAT_VERSION = 15;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
-const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "monitor", "achievements", "calendar"];
+const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
 
 function base64UrlEncode(uint8arr) {
   let binary = "";
@@ -117,8 +117,7 @@ class SaveManager {
       timeService: timeService.snapshot(),
       workQueue: workQueue.snapshot(),
       socialQueue: socialQueue.snapshot(),
-      chatgtpQueue: chatgtpQueue.snapshot(),
-      realtimeQueue: realtimeQueue.snapshot(),
+      mainQueue: mainQueue.snapshot(),
       keywords: keywordManager.all().map((kw) => ({ id: kw.id, collectedDay: kw.collectedDay })),
       inventory: itemManager.all(),
       medical: medicalCaseManager.snapshot(),
@@ -155,7 +154,7 @@ class SaveManager {
     if (version !== SAVE_FORMAT_VERSION) throw new Error("Unsupported save version");
     const payload = JSON.parse(new TextDecoder().decode(bytes.slice(i)));
     if (!payload || !payload.gameState || !Array.isArray(payload.workQueue) || !Array.isArray(payload.socialQueue)
-      || !Array.isArray(payload.chatgtpQueue || []) || !Array.isArray(payload.realtimeQueue || [])
+      || !Array.isArray(payload.mainQueue || [])
       || !payload.favorability || !Array.isArray(payload.itemPlacements)
       || !payload.dialogueProgress || typeof payload.ending !== "object") {
       throw new Error("Invalid save data");
@@ -165,20 +164,29 @@ class SaveManager {
     }
     endingManager.beginRestore();
     try {
-      globalVariableManager.restore(payload.globalVariables || []);
-      gameState.restore(payload.gameState);
+      const globalVariables = payload.globalVariables || [];
+      const hasGlobalVariable = (id) => globalVariables.some((entry) => Number(entry.id) === id);
+      globalVariableManager.restore(globalVariables);
+      const gameStatePayload = { ...payload.gameState };
+      if (hasGlobalVariable(1)) delete gameStatePayload.mental;
+      gameState.restore(gameStatePayload);
       timeService.restore(payload.timeService || {});
       workQueue.restore(payload.workQueue);
       socialQueue.restore(payload.socialQueue);
-      chatgtpQueue.restore(payload.chatgtpQueue || []);
-      realtimeQueue.restore(payload.realtimeQueue || []);
+      mainQueue.restore(payload.mainQueue || []);
       scheduleData.restoreScheduled(payload.scheduledAdds || []);
       keywordManager.restoreCollected(payload.keywords || []);
       itemManager.restoreInventory(payload.inventory || []);
       spellManager.restore(payload.spells || []);
-      npcStateManager.restore(payload.npcState || {});
+      npcStateManager.restore(payload.npcState || {}, { useGlobalValues: hasGlobalVariable(5) || globalVariables.some((entry) => {
+        const id = Number(entry.id);
+        return id >= 60 && id <= 79;
+      }) });
       medicalCaseManager.restore(payload.medical || {});
-      favorabilityManager.restore(payload.favorability || {});
+      favorabilityManager.restore(payload.favorability || {}, { useGlobalValues: globalVariables.some((entry) => {
+        const id = Number(entry.id);
+        return id >= 40 && id <= 59;
+      }) });
       itemPlacementManager.restore(payload.itemPlacements || []);
       dialogueProgress.restore(payload.dialogueProgress || {});
       endingManager.restore(payload.ending || {});

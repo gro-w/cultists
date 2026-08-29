@@ -307,19 +307,6 @@
 }
 
 
-.chatgtp-tabs {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-bottom: 6px;
-  flex-shrink: 0;
-}
-
-.chatgtp-tab-btn.active {
-  font-weight: bold;
-  background: var(--w95-white);
-}
-
 .chatgtp-san-indicator {
   margin-left: auto;
   font-size: 11px;
@@ -337,148 +324,18 @@
   font-weight: bold;
 }
 
-.chatgtp-tab-panel {
-  flex: 1;
-  min-height: 0;
-  height: auto;
-}
-
-.chatgtp-dialogue-layout {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.chatgtp-dialogue-lines {
-  flex: 1;
-  overflow: auto;
-}
 
 /* ---------------------------------------------------------------------- */
 /* NPC state (own SAN, distress/offline) - shared across HIS/Social/     */
-/* Monitor/ChatGTP + StatusApp's NPC tab                                  */
+/* ChatGTP + StatusApp's NPC tab                                          */
 /* ---------------------------------------------------------------------- */
 .npc-distress-warning {
   color: #a86b00;
 }
 
-.monitor-npc-marker.distressed {
-  color: #a86b00;
-}
-
-.monitor-npc-marker.offline {
-  color: #b00020;
-  text-decoration: line-through;
-}
-
 .action-budget-hint {
   font-size: 11px;
   color: var(--w95-gray-dark);
-}
-
-/* ---------------------------------------------------------------------- */
-/* Monitor App (surveillance-camera view: walk / talk / inspect)          */
-/* ---------------------------------------------------------------------- */
-.app-monitor {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 6px;
-}
-
-.monitor-title {
-  flex-shrink: 0;
-}
-
-.monitor-viewport-wrap {
-  flex: 2;
-  min-height: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #000;
-}
-
-.monitor-viewport {
-  position: relative;
-  width: 480px;
-  height: 300px;
-  max-width: 100%;
-  outline: none;
-  cursor: crosshair;
-  flex-shrink: 0;
-}
-
-.monitor-scene-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
-}
-
-.monitor-marker-layer {
-  position: absolute;
-  inset: 0;
-}
-
-.monitor-npc-marker,
-.monitor-item-marker {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  font-size: 11px;
-  white-space: nowrap;
-  z-index: 2;
-}
-
-.monitor-item-marker {
-  font-size: 16px;
-  padding: 1px 4px;
-}
-
-.monitor-player {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -100%);
-  pointer-events: none;
-  z-index: 3;
-  image-rendering: -webkit-optimize-contrast;
-}
-
-.monitor-interaction {
-  flex: 1;
-  min-height: 90px;
-  overflow: auto;
-}
-
-.monitor-hint {
-  color: var(--w95-gray-dark);
-  font-style: italic;
-  margin: 0;
-}
-
-.monitor-dialogue-lines {
-  margin-bottom: 6px;
-}
-
-.monitor-item-text {
-  margin: 6px 0;
-}
-
-.monitor-item-text .inspect-text {
-  margin: 0 0 3px;
-  line-height: 1.5;
-}
-
-.monitor-item-text .inspect-check-meta {
-  margin: 0;
-  font-size: 11px;
-  color: #888;
-  font-style: italic;
 }
 
 /* ---------------------------------------------------------------------- */

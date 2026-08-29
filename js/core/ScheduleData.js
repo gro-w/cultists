@@ -4,7 +4,7 @@ import { favorabilityManager } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { calendarData } from "./CalendarData.js";
 import { gameState } from "./GameState.js";
-import { workQueue, socialQueue, chatgtpQueue, realtimeQueue } from "./ScheduleQueue.js";
+import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
@@ -48,7 +48,7 @@ class ScheduleData {
         }
       }
     }
-    for (const queueId of ["work", "social"]) {
+    for (const queueId of ["work", "social", "main"]) {
       requests.push(dataLoader.loadJSON(`${queueId}pub.json`).then((data) => {
         const entries = Array.isArray(data.entries) ? data.entries : [];
         this.publicEntries.set(queueId, entries);
@@ -56,6 +56,14 @@ class ScheduleData {
       }));
     }
     await Promise.all(requests);
+    const mainInit = await dataLoader.loadJSON("maininit.json");
+    const mainEntries = Array.isArray(mainInit.entries) ? mainInit.entries.map((entry) => ({
+      ...entry,
+      queueId: "main",
+      autoRun: true,
+    })) : [];
+    this._indexExternalEntries(mainEntries, "main", "main-init", "maininit");
+    mainQueue.append(mainEntries);
     const [specialEvents, endings] = await Promise.all([
       specialEventManager.load(),
       dataLoader.loadJSON("endings.json"),
@@ -77,7 +85,7 @@ class ScheduleData {
     for (const def of itemManager.defs.values()) {
       Object.values(def.schedules || def.scheduleTable || {}).forEach((schedule) => {
         const entries = Array.isArray(schedule?.entries) ? schedule.entries : [schedule];
-        this._indexExternalEntries(entries.filter((entry) => entry && entry.id), "realtime", "embedded");
+        this._indexExternalEntries(entries.filter((entry) => entry && entry.id), "main", "embedded");
       });
     }
     this.initializeAt(gameState.day, gameState.clockMinutes);
@@ -198,7 +206,9 @@ class ScheduleData {
       const entry = { ...definition, scheduleId: definition.id, receivedDay: day, receivedTime: time,
         receivedPhase: time < 16 * 60 ? "day" : "night" };
       delete entry.queueId;
-      this.queue(request.queueId || definition.queueId).append([entry]);
+      const targetQueueId = request.queueId || definition.queueId;
+      if (targetQueueId === "main") entry.autoRun = true;
+      this.queue(targetQueueId).append([entry]);
       this._applyScheduleOperations(entry);
     });
   }
@@ -258,7 +268,7 @@ class ScheduleData {
     const target = Number(addTime);
     const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
     if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
-    if (queueId !== undefined && !["work", "social", "chatgtp", "realtime"].includes(queueId)) return { ok: false, reason: "invalidQueue" };
+    if (queueId !== undefined && !["work", "social", "main"].includes(queueId)) return { ok: false, reason: "invalidQueue" };
     const request = { scheduleId, addTime: target, ...(queueId ? { queueId } : {}) };
     this.pendingAdds.push(request);
     if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
@@ -266,7 +276,7 @@ class ScheduleData {
   }
 
   queue(queueId) {
-    return { work: workQueue, social: socialQueue, chatgtp: chatgtpQueue, realtime: realtimeQueue }[queueId] || socialQueue;
+    return { work: workQueue, social: socialQueue, main: mainQueue }[queueId] || mainQueue;
   }
 
   catalog(category = undefined) {
@@ -281,7 +291,7 @@ class ScheduleData {
     await this.init();
     const definition = this.scheduleById.get(scheduleId);
     if (!definition) return { ok: false, reason: "unknownSchedule" };
-    const targetQueueId = queueId || definition.queueId || "social";
+    const targetQueueId = queueId || definition.queueId || "main";
     const day = Number.isInteger(received.day) ? received.day : gameState.day;
     const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
     const entry = {
@@ -302,7 +312,7 @@ class ScheduleData {
   createTemporaryInstance(blueprint, queueId = undefined, received = {}) {
     const day = Number.isInteger(received.day) ? received.day : gameState.day;
     const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
-    const targetQueueId = queueId || "social";
+    const targetQueueId = queueId || "main";
     const scheduleId = `temporary:${Date.now()}`;
     const [instance] = this.queue(targetQueueId).append({
       scheduleId,

@@ -2,12 +2,12 @@
   "achievements": [
     {
       "id": "developer_mode",
-      "title": "我是开发人员",
-      "description": "打开开发人员模式。你可以用存档把这个成就带出开发版。",
+      "title": "我要强制下班",
+      "description": "你可以通过存档把这个成就带出开发人员模式。",
       "category": "special",
       "hidden": false,
       "icon": "🛠️",
-      "trigger": { "event": "developer:opened", "once": true }
+      "trigger": { "event": "developer:force_end_work", "once": true }
     },
     {
       "id": "study_first",

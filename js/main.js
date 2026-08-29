@@ -19,6 +19,7 @@ import { achievementManager } from "./core/AchievementManager.js";
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
 import "./core/ItemScheduleRuntime.js"; // side-effect: executes item-owned schedules
+import { mainScheduleRuntime } from "./core/MainScheduleRuntime.js";
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
 import { locationSystem } from "./core/LocationSystem.js";
@@ -37,7 +38,6 @@ import { launchChatGTPApp } from "./apps/ChatGTPApp.js";
 import { launchNotebookApp } from "./apps/NotebookApp.js";
 import { launchStatusApp } from "./apps/StatusApp.js";
 import { launchSettingsApp } from "./apps/SettingsApp.js";
-import { launchMonitorApp } from "./apps/MonitorApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
 import { launchCalendarApp } from "./apps/CalendarApp.js";
 // DEV-TOOLS:START
@@ -45,8 +45,23 @@ import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
 import { isDeveloperModeSearch } from "./core/DeveloperConfig.js";
 // DEV-TOOLS:END
 
+let phaseToggleLaunch = () => handlePhaseToggle();
+let phaseToggleLabel = () => gameState.location === "work"
+  ? i18n.t("apps.phaseToggleWork", "下班")
+  : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
+    ? "去上班"
+    : "去睡觉";
 // DEV-TOOLS:START
-const developerModeEnabled = isDeveloperModeSearch();
+let developerModeEnabled = false;
+developerModeEnabled = isDeveloperModeSearch();
+phaseToggleLabel = () => gameState.location === "work"
+  ? "强制下班"
+  : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
+    ? "去上班"
+    : "去睡觉";
+phaseToggleLaunch = () => developerModeEnabled && gameState.location === "work"
+  ? dayNightSystem.forceEndWork()
+  : handlePhaseToggle();
 // DEV-TOOLS:END
 
 /**
@@ -103,7 +118,6 @@ let locationScene = null;
 const APP_REGISTRY = [
   { id: "his", label: () => i18n.t("apps.his", "HIS 医疗系统"), icon: "🏥", launch: () => launchHISApp() },
   { id: "social", label: () => i18n.t("apps.social", "夜聊 Messenger"), icon: "💬", launch: () => launchSocialApp() },
-  { id: "monitor", label: () => i18n.t("apps.monitor", "监控画面"), icon: "🖥️", launch: () => launchMonitorApp() },
   { id: "chatgtp", label: () => i18n.t("apps.chatgtp", "ChatGTP"), icon: "🤖", launch: () => launchChatGTPApp() },
   { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },
   { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },
@@ -118,14 +132,9 @@ const APP_REGISTRY = [
   { id: "seaside",    label: "海边",   icon: "🌊", launch: () => locationScene?.show("seaside") },
   {
     id: "phase-toggle",
-    label: () =>
-      gameState.location === "work"
-        ? i18n.t("apps.phaseToggleWork", "下班")
-        : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
-          ? "去上班"
-          : "去睡觉",
+    label: () => phaseToggleLabel(),
     icon: () => gameState.location === "work" ? "🚪" : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60 ? "🚶" : "🛏️",
-    launch: () => handlePhaseToggle(),
+    launch: () => phaseToggleLaunch(),
   },
 ];
 
@@ -189,6 +198,10 @@ function boot({ welcomeBack }) {
     saveLoaded = saveManager.loadFromLocation();
     if (saveLoaded) notificationBanner.showWelcomeBack();
   }
+  // Start main schedule execution only after save restoration has replaced
+  // the preloaded queue snapshot, so a waiting runner never survives against
+  // an obsolete queue entry object.
+  mainScheduleRuntime.init().catch((err) => console.error("[Cultists] Failed to initialize main schedules:", err));
 
   console.info(
     `[Cultists] Boot complete. Current phase: ${dayNightSystem.phase}, day ${dayNightSystem.day}.`
@@ -209,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
     i18n.loadLanguages(),
     itemManager.load(),
     scheduleData.init(),
+
     endingManager.load(),
     saveManager.init(),
     skillManager.load(),

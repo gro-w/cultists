@@ -58,13 +58,13 @@ export default ExampleManager;
 | `DayNightSystem` | 上班/下班/睡眠、工作日/休息日、最终阶段 |
 | `TimeService` | 唯一普通游戏时间推进与阶段结算 owner；处理 20 分钟行动、物品/法术时间、睡眠日结 |
 | `ScheduleData` | 加载 `workXXa/b` 和 `socialXXa/b`，按时间追加队列 |
-| `ScheduleQueue` | 独立 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `realtimeQueue` |
+| `ScheduleQueue` | 独立 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件/效果 |
 | `ItemPlacementManager` | 场景物品摆放、可见条件、拾取/放回 |
 | `GlobalVariableManager` | 全局变量定义、值、条件比较、效果、存档快照 |
 | `SpellManager` | 学习/施放法术 |
 | `KeywordManager` | 关键词定义、收集和笔记本来源 |
-| `DialogueRunner` | HIS/Social/Monitor 共用对话树执行 |
+| `DialogueRunner` | HIS/Social 共用对话树执行 |
 | `DialogueEffects` | 对话节点 onShow 的共享副作用 |
 | `EndingManager` | 事件、对话、道具、属性和最终阶段结局 |
 | `SaveManager` | v11 存档和窗口布局恢复 |
@@ -87,9 +87,10 @@ export default ExampleManager;
 - UI 外壳字符串走 `i18n.t()` 并维护 `data/strings.<lang>.json`；剧情和内容直接放语言数据目录。
 - 关键词内容只能来自 `keywords.json`；对话关键词通过 `[[keyword_id]]` 标记引用。
 - NPC 使用稳定 `npcId`；不要把角色显示名当作持久化 ID。
-- 全局变量文件顶层是数组；ID 唯一、非负整数；类型只能是 `bool`、`number`、`string`；number 范围 `0..256`。
+- 全局变量文件顶层是数组；ID 唯一、非负整数；类型只能是 `bool`、`number`、`decimal`、`string`；number/decimal 范围 `0..256`，decimal 精确到小数点后 2 位。
+- 全局变量 ID `0..99` 是系统预留，必须存在且不能通过开发人员模式删改；其中 `1` 为主角 SAN、`2` 为金钱、`5` 为 ChatGTP SAN、`20..39` 为主角技能点、`40..59` 为 NPC 好感度、`60..79` 为 NPC SAN。
 - 条件支持 `condition`/`globalVariableCondition`、`globalVariables`、`all`、`any` 和 `eq/neq/gt/gte/lt/lte`。
-- 全局变量效果使用 `value`，number 才能使用 `delta`。
+- 全局变量效果使用 `value`，number/decimal 才能使用 `delta`。
 - 书籍法术放在物品的 `spells` 数组；学习 240 分钟，施放默认消耗 5 SAN。代码存在不代表当前数据已有法术。
 
 完整字段示例见 `docs/DATA-SCHEMAS.md`，状态与事件流见 `docs/ARCHITECTURE.md`。

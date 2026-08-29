@@ -1,11 +1,16 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { itemManager } from "./ItemManager.js";
-import { realtimeQueue } from "./ScheduleQueue.js";
+import { mainQueue } from "./ScheduleQueue.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 function clamp(value) {
-  return Math.max(0, Math.min(100, Number(value) || 0));
+  return Math.max(0, Math.min(256, Number(value) || 0));
 }
+
+const NPC_OFFLINE_CONSEQUENCE = Object.freeze({
+  grantItems: Object.freeze([{ itemId: "extra_workload", count: 1 }]),
+});
 
 /**
  * NpcStateManager - singleton tracking every NPC's own SAN (精神值),
@@ -15,64 +20,73 @@ function clamp(value) {
  * far enough they show visible distress, and low enough they go "offline"
  * (给自己请假/下线) - removed from further conversation for the rest of
  * the game and dumping extra workload on the protagonist as a consequence
- * (data-driven via `data/npc_state.json`'s `offlineConsequence`).
+ * (the offline consequence is defined by this manager).
  *
- * Thresholds/consequence are entirely data-driven; this module only
- * applies them. Mirrors EndingManager's pattern of importing ItemManager
- * directly to apply a data-described side effect.
+ * Thresholds come from global variables 3/4; this module applies the
+ * resulting state transition and offline consequence.
  */
 class NpcStateManager {
   constructor() {
-    this.config = null;
-    /** @type {Map<string, number>} actorId -> SAN (0-100) */
+    /** @type {Map<string, number>} actorId -> SAN (0-256) */
     this.san = new Map();
     /** @type {Set<string>} actorIds that have gone offline */
     this.offlineActors = new Set();
     this.pendingOfflineActors = new Set();
     this.npcs = [];
+    this.indexById = new Map();
     this._loadPromise = null;
+    eventBus.on("global-variable:changed", ({ id, value }) => {
+      const actorId = id === 5 ? "chatgtp" : id >= 60 && id < 80 ? this.npcs.find((npc) => Number(npc.numericid) === id - 60)?.id : null;
+      if (!actorId) return;
+      this.san.set(actorId, value);
+      eventBus.emit("npcState:changed", { actorId, san: value });
+      if (value <= this._offlineThreshold() && !this.offlineActors.has(actorId) && !this.pendingOfflineActors.has(actorId)) this._goOffline(actorId);
+    });
   }
 
-  /** Load `data/npc_state.json` (idempotent, safe to call concurrently). */
+  /** Load NPC identities and reserved SAN values (idempotent, safe to call concurrently). */
   async load() {
     if (!this._loadPromise) {
       this._loadPromise = Promise.all([
-        dataLoader.loadJSON("npc_state.json"),
+        globalVariableManager.init(),
         dataLoader.loadJSON("npcs.json"),
-      ]).then(([data, npcDoc]) => {
-        this.config = data;
+      ]).then(([, npcDoc]) => {
         this.npcs = npcDoc.npcs || [];
+        this.san.set("chatgtp", globalVariableManager.get(5));
         this.npcs.forEach((npc) => {
-          if (!this.san.has(npc.id)) {
-            const initialSan = Number(npc.initialSan);
-            this.san.set(npc.id, Math.max(0, Math.min(100, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
-          }
+          const numericId = Number(npc.numericid);
+          if (!Number.isInteger(numericId) || numericId < 0 || numericId >= 20) return;
+          this.indexById.set(npc.id, numericId);
+          this.san.set(npc.id, globalVariableManager.get(60 + numericId));
         });
       });
     }
     return this._loadPromise;
   }
 
-  _defaultSan() {
-    return (this.config && Number(this.config.defaultSan)) || 80;
-  }
 
   _distressedThreshold() {
-    return (this.config && Number(this.config.distressedThreshold)) || 50;
+    return globalVariableManager.get(3) ?? 50;
   }
 
   _offlineThreshold() {
-    return (this.config && Number(this.config.offlineThreshold)) || 20;
+    return globalVariableManager.get(4) ?? 20;
   }
 
-  /** Current SAN (0-100) for an actor id; unseen actors start at the configured default. */
+  /** Current SAN (0-256) for an actor id; unknown actors use a compatibility fallback. */
   get(actorId) {
+    const globalId = this._globalIdForActor(actorId);
+    if (globalId !== null && globalVariableManager.get(globalId) !== undefined) return globalVariableManager.get(globalId);
     if (!this.san.has(actorId)) {
-      const npc = this.npcs.find((entry) => entry.id === actorId);
-      const initialSan = Number(npc?.initialSan);
-      this.san.set(actorId, Math.max(0, Math.min(100, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
+      this.san.set(actorId, 0);
     }
     return this.san.get(actorId);
+  }
+
+  _globalIdForActor(actorId) {
+    if (actorId === "chatgtp") return 5;
+    const index = this.indexById.get(actorId);
+    return index === undefined ? null : 60 + index;
   }
 
   isOffline(actorId) {
@@ -88,26 +102,28 @@ class NpcStateManager {
   modify(actorId, delta) {
     if (!actorId || !delta) return;
     const next = clamp(this.get(actorId) + delta);
-    this.san.set(actorId, next);
-    eventBus.emit("npcState:changed", { actorId, san: next });
-    if (next <= this._offlineThreshold() && !this.offlineActors.has(actorId) && !this.pendingOfflineActors.has(actorId)) {
-      this._goOffline(actorId);
-    }
+    const globalId = this._globalIdForActor(actorId);
+    if (globalId === null) { this.san.set(actorId, next); eventBus.emit("npcState:changed", { actorId, san: next }); return; }
+    globalVariableManager.set(globalId, next);
   }
 
+  // DEV-TOOLS:START
   /** Set an actor's SAN directly for developer tools and deterministic probes. */
   setSan(actorId, value, { offline = false } = {}) {
     if (!actorId) return;
     const next = clamp(value);
-    this.san.set(actorId, next);
+    const globalId = this._globalIdForActor(actorId);
+    if (globalId === null) return;
+    globalVariableManager.set(globalId, next);
     if (offline) this.offlineActors.add(actorId);
     else this.offlineActors.delete(actorId);
     eventBus.emit("npcState:changed", { actorId, san: next, offline: this.offlineActors.has(actorId), developer: true });
   }
+  // DEV-TOOLS:END
 
   _goOffline(actorId) {
     this.pendingOfflineActors.add(actorId);
-    const consequence = (this.config && this.config.offlineConsequence) || {};
+    const consequence = NPC_OFFLINE_CONSEQUENCE;
     const entry = {
       id: `npc-offline:${actorId}`,
       scheduleId: `npc-offline:${actorId}`,
@@ -144,9 +160,18 @@ class NpcStateManager {
     };
   }
 
-  restore({ san = {}, offline = [], pendingOffline = [] } = {}) {
-    Object.entries(san).forEach(([id, value]) => {
-      if (this.san.has(id) || this.npcs.some((npc) => npc.id === id)) this.san.set(id, Math.max(0, Math.min(100, Number(value) || 0)));
+  restore({ san = {}, offline = [], pendingOffline = [] } = {}, { useGlobalValues = false } = {}) {
+    if (!useGlobalValues) Object.entries(san).forEach(([id, value]) => {
+      if (this.san.has(id) || this.npcs.some((npc) => npc.id === id) || id === "chatgtp") {
+        const next = Math.max(0, Math.min(256, Number(value) || 0));
+        this.san.set(id, next);
+        const globalId = this._globalIdForActor(id);
+        if (globalId !== null) globalVariableManager.set(globalId, next, { emit: false });
+      }
+    });
+    if (useGlobalValues) this.san.forEach((_, id) => {
+      const globalId = this._globalIdForActor(id);
+      if (globalId !== null) this.san.set(id, globalVariableManager.get(globalId));
     });
     this.offlineActors = new Set(offline.filter((id) => this.san.has(id)));
     this.pendingOfflineActors = new Set(pendingOffline.filter((id) => this.san.has(id) && !this.offlineActors.has(id)));

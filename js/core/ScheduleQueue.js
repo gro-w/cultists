@@ -128,6 +128,5 @@ class ScheduleQueue {
 
 export const workQueue = new ScheduleQueue("work");
 export const socialQueue = new ScheduleQueue("social");
-export const chatgtpQueue = new ScheduleQueue("chatgtp", { singleCurrent: true });
-export const realtimeQueue = new ScheduleQueue("realtime", { nonBlocking: true });
+export const mainQueue = new ScheduleQueue("main", { nonBlocking: true });
 export default ScheduleQueue;

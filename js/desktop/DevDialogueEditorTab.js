@@ -3,10 +3,10 @@ import { dataLoader } from "../core/DataLoader.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { globalVariableManager } from "../core/GlobalVariableManager.js";
 import { itemManager } from "../core/ItemManager.js";
+import { skillManager } from "../core/SkillManager.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { SCHEDULE_NODE_TYPES, getScheduleNodeDefinition, getScheduleNodePort } from "../core/ScheduleNodeRegistry.js";
 import { validateBlueprint } from "../core/ScheduleBlueprint.js";
-import { bgmManager } from "../core/BgmManager.js";
 import { windowManager } from "../core/WindowManager.js";
 
 /**
@@ -75,7 +75,7 @@ export class DevDialogueEditorTab {
     this.gameSpells = [];
     this._inputModes = new Map();
     this._abort = null;           // AbortController for document listeners
-    this._workspaceSelections = { daySocial: '', dayWork: '', publicSocial: 'socialpub', publicWork: 'workpub', special: '', ending: '' };
+    this._workspaceSelections = { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'maininit' };
   }
 
   // ── utilities ─────────────────────────────────────────────────────────────
@@ -108,6 +108,8 @@ export class DevDialogueEditorTab {
     for (let d=1;d<=totalDays;d++) for (const queue of ['work','social']) for (const ph of ['a','b']) schedules[`${queue}${String(d).padStart(2,'0')}${ph}`]={displayName:'',entries:[]};
     schedules.socialpub = { displayName: '', entries: [] };
     schedules.workpub = { displayName: '', entries: [] };
+    schedules.mainpub = { displayName: '', entries: [] };
+    schedules.maininit = { displayName: '', entries: [] };
     return {version:2,totalDays,customVars:[],schedules,events:{},endings:{},eventFileDoc:{events:[]},endingFileDoc:{endings:[]}};
   }
 
@@ -186,7 +188,7 @@ export class DevDialogueEditorTab {
       if ((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='v') { e.preventDefault(); this._pasteSelectedNodes(); }
       if (e.key==='Delete' && this.selectedNodeIds.size) { e.preventDefault(); this._deleteSelectedNodes(); }
     }, {signal:sig});
-    if (!this._workspace) this._renderSidebar();
+    if (!this._workspace) this._renderScopedSidebar();
     else this._renderWorkspace();
   }
   unmount() {
@@ -207,10 +209,16 @@ export class DevDialogueEditorTab {
     ] };
   }
   _embeddedHtml() {
-    return this._standardHtml().replace(
-      /<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/,
-      `<div class="dev-de-header"><strong>${this._e(this._embeddedScope.title || '内嵌日程表')}</strong><button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存内嵌日程</button></div>\n<div class="dev-de-main">`
-    );
+    // Embedded blueprints are mounted inside another editor. They keep the
+    // normal toolbar, canvas and right node editor, but must not expose the
+    // project-level schedule sidebar or its unrelated file controls.
+    const html = this._standardHtml();
+    return html
+      .replace(
+        /<div class="dev-de-header">[\s\S]*?<\/div>\n<div class="dev-de-main">/,
+        `<div class="dev-de-header"><strong>${this._e(this._embeddedScope.title || '内嵌日程表')}</strong><button type="button" class="win95-btn dev-btn" onclick="_de._saveProject()">💾 保存内嵌日程</button></div>\n<div class="dev-de-main">`
+      )
+      .replace(/  <!-- Sidebar -->[\s\S]*?  <!-- Canvas -->/, '  <!-- Canvas -->');
   }
   _standardHtml() {
     if (this._temporaryScope) {
@@ -240,36 +248,14 @@ export class DevDialogueEditorTab {
 <div class="dev-de-main">
   <!-- Sidebar -->
   <div class="dev-de-sidebar">
-    <div id="de-queue-tabs" class="dev-de-phase-tabs">
-      <div class="dev-de-ptab" data-queue="work" onclick="_de._selectQueue('work')">Work 患者</div>
-      <div class="dev-de-ptab" data-queue="social" onclick="_de._selectQueue('social')">Social 联系人</div>
-    </div>
-    <div id="de-phase-tabs" class="dev-de-phase-tabs">
-      <div class="dev-de-ptab" data-phase="a" onclick="_de._selectPhase('a')">08:00 白班</div>
-      <div class="dev-de-ptab" data-phase="b" onclick="_de._selectPhase('b')">16:00 夜班</div>
-    </div>
     <div id="de-schedule-tools" class="dev-de-sidebar-tools">
       <button type="button" class="win95-btn dev-btn" onclick="_de._addScheduleEntry()">＋ 日程条目</button>
       <button type="button" class="win95-btn dev-btn" onclick="_de._deleteScheduleEntry()">🗑 删除日程条目</button>
     </div>
     <div id="de-sidebar-inner" style="flex:1;overflow-y:auto;padding:4px">
       <div class="dev-de-sb-sec">
-        <div class="dev-de-sb-title">📅 天数
-          <button class="dev-de-sb-add" type="button" onclick="_de.addDay()" title="新增一天">＋</button>
-        </div>
-        <div id="de-sb-days"></div>
-      </div>
-      <div class="dev-de-sb-sec">
-        <div class="dev-de-sb-title">🎪 事件
-          <button class="dev-de-sb-add" type="button" onclick="_de._addEvent()" title="新增事件">＋</button>
-        </div>
-        <div id="de-sb-events"></div>
-      </div>
-      <div class="dev-de-sb-sec">
-        <div class="dev-de-sb-title">🏁 结局
-          <button class="dev-de-sb-add" type="button" onclick="_de._addEnding()" title="新增结局">＋</button>
-        </div>
-        <div id="de-sb-endings"></div>
+        <div class="dev-de-sb-title">📄 日程文件</div>
+        <div id="de-sb-file-entries"></div>
       </div>
     </div>
   </div>
@@ -297,93 +283,15 @@ export class DevDialogueEditorTab {
     <div id="de-editor-body" style="flex:1;overflow-y:auto;padding:6px">
       <div id="de-editor-empty" style="padding:10px;color:#555;font-size:12px"><div id="de-context-settings"></div><div style="margin-top:12px;text-align:center">选择节点后在此编辑节点；当前日程属性可直接在上方编辑。</div></div>
       <div id="de-editor-form" style="display:none">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">节点种类</div>
-          <select id="de-ed-type" style="width:100%;min-height:23px;border:2px inset #eee" onchange="_de._saveNodeType(this.value)">
-            ${SCHEDULE_NODE_TYPES.map(type=>`<option value="${type}">${this._e(_DE_NODE_LABELS[type])} (${type})</option>`).join('')}
-          </select>
-          <div class="dev-de-ed-label" style="margin-top:4px">节点输入</div>
+        <div>
+          <div class="dev-de-ed-label" id="de-ed-type-label">节点</div>
+          <div class="dev-de-ed-label" style="margin-top:4px">数值输入</div>
           <div id="de-ed-inputs"></div>
-          <div id="de-ed-outputs" class="dev-de-port-summary"></div>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">发言角色</div>
-          <div style="display:flex;gap:3px;flex-wrap:wrap" id="de-spk-btns">
-            ${_DE_SPEAKERS.map(s=>`<button type="button" class="win95-btn dev-btn dev-de-spk-btn" data-spk="${s.id}" onclick="_de._setSpeaker('${s.id}')">${s.label}</button>`).join('')}
-          </div>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">对话文本</div>
-          <textarea class="dev-textarea" id="de-ed-text" style="width:100%;height:80px;resize:vertical" placeholder="输入对话内容…" oninput="_de._saveNodeText()"></textarea>
-        </div>
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">亮起关键词 ID（逗号分隔）</div>
-          <input style="width:100%;min-height:23px;border:2px inset #eee;padding:2px 4px" id="de-ed-keywords" placeholder="keyword_id1, keyword_id2" oninput="_de._saveNodeKeywords()">
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">选项分支</div>
-          <div id="de-opt-list"></div>
-          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addOption()">＋ 添加选项</button>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">直接跳转（无选项时）</div>
-          <div style="display:flex;gap:4px">
-            <select id="de-ed-next" style="flex:1;min-height:23px;border:2px inset #eee;padding:2px" onchange="_de._saveNodeNext()">
-              <option value="">(结束)</option>
-            </select>
-            <button type="button" class="win95-btn dev-btn" onclick="_de._addNodeAndLink()">＋新节点</button>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">onShow 效果</div>
-          <div id="de-onshow-effects">
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>好感：阿杰</span><input class="dev-de-wnum" id="de-os-aje" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>阿伟</span><input class="dev-de-wnum" id="de-os-awei" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>彬彬</span><input class="dev-de-wnum" id="de-os-binbin" type="number" placeholder="0" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>理智值</span><input class="dev-de-wnum" id="de-os-sanity" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span>怀疑度</span><input class="dev-de-wnum" id="de-os-suspicion" type="number" placeholder="0" oninput="_de._saveOnShow()">
-              <span title="sanity=0解锁">清晰值</span><input class="dev-de-wnum" id="de-os-clarity" type="number" placeholder="0" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>给予物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-grant" placeholder="item_id" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:11px">
-              <span>移除物品</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-remove" placeholder="item_id" oninput="_de._saveOnShow()">
-            </div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-              <span>触发结局</span><input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px;font-size:11px" id="de-os-ending" placeholder="ending_id" oninput="_de._saveOnShow()">
-            </div>
-            <div class="dev-de-onshow-bgm">
-              <span>🎵 BGM 动作</span>
-              <select id="de-os-bgm-action" onchange="_de._saveOnShow()">
-                <option value="">(不改变)</option>
-                <option value="play">play — 播放指定 BGM</option>
-                <option value="stop">stop — 停止（静音）</option>
-                <option value="restore">restore — 恢复上层 BGM</option>
-              </select>
-              <select id="de-os-bgm-id" onchange="_de._saveOnShow()">
-                <option value="">(选择曲目)</option>
-              </select>
-              <span class="dev-de-onshow-bgm-indicator" id="de-os-bgm-warn" style="display:none">⚠️ BGM ID 无效</span>
-            </div>
-          </div>
-        </div>
-        <hr style="border:none;border-top:1px solid #808080;margin:6px 0">
-        <div class="dev-de-ed-sec">
-          <div class="dev-de-ed-label">进入条件</div>
-          <div id="de-entry-conds"></div>
-          <button type="button" class="win95-btn dev-btn" style="width:100%;margin-top:3px" onclick="_de._addEntryCond()">＋ 添加条件</button>
-        <div class="dev-de-ed-sec dev-de-connection-editor">
-          <div class="dev-de-ed-label">流程输出（选择下家）</div>
+          <div class="dev-de-ed-label" style="margin-top:8px">流程输出（选择下家）</div>
           <div id="de-flow-outputs"></div>
-          <div class="dev-de-ed-help">流程输出只能连接到流程输入；每个输出最多一个下家。</div>
         </div>
+
+
       </div>
     </div>
   </div>
@@ -407,25 +315,21 @@ export class DevDialogueEditorTab {
   }
 
   _workspaceTable(type, title, options, selected) {
-    const isDay = type.startsWith('day');
-    const day = isDay ? (selected || 'social01a').slice(5, 7) : '';
-    const phase = isDay ? (selected || 'social01a').slice(-1) : '';
-    const picker = isDay
-      ? `<select data-ws-day="${type}">${Array.from({length: this.totalDays}, (_, i) => { const value = String(i + 1).padStart(2, '0'); return `<option value="${value}"${value === day ? ' selected' : ''}>第 ${i + 1} 天</option>`; }).join('')}</select><select data-ws-phase="${type}"><option value="a"${phase === 'a' ? ' selected' : ''}>a · 白天</option><option value="b"${phase === 'b' ? ' selected' : ''}>b · 夜晚</option></select>`
-      : '<span class="dev-schedule-file-label">整个文件</span>';
-    return `<section class="dev-schedule-table"><h3>${title}</h3><div class="dev-schedule-picker">${picker}<button type="button" class="win95-btn dev-btn" data-ws-edit="${type}">✎ 编辑</button></div><div class="dev-schedule-actions"><button type="button" class="win95-btn dev-btn" data-ws-current="${type}">⬇ 从当前游戏读取</button><button type="button" class="win95-btn dev-btn" data-ws-file="${type}">📂 从文件读取</button><button type="button" class="win95-btn dev-btn" data-ws-export="${type}">📤 导出 JSON</button><button type="button" class="win95-btn dev-btn" data-ws-write="${type}">💽 写入磁盘</button></div></section>`;
+    const files = `<select class="dev-schedule-file-select" data-ws-select="${type}">${options.map(([id, label]) => `<option value="${this._e(id)}"${id === selected ? ' selected' : ''}>${this._e(label)}</option>`).join('')}</select>`;
+    return `<section class="dev-schedule-table"><h3>${title}</h3><div class="dev-schedule-file-list">${files || '<span class="dev-schedule-file-label">暂无文件</span>'}</div><div class="dev-schedule-actions"><button type="button" class="win95-btn dev-btn" data-ws-edit="${type}">✎ 编辑当前文件</button><button type="button" class="win95-btn dev-btn" data-ws-current="${type}">⬇ 从当前游戏读取</button><button type="button" class="win95-btn dev-btn" data-ws-file="${type}">📂 从文件读取</button><button type="button" class="win95-btn dev-btn" data-ws-export="${type}">📤 导出 JSON</button><button type="button" class="win95-btn dev-btn" data-ws-write="${type}">💽 写入磁盘</button></div></section>`;
   }
 
   _renderWorkspace() {
     const el = this._el('de-workspace-tables'); if (!el || !this.project) return;
     const schedules = Object.keys(this.project.schedules || {});
-    const groups = { daySocial: schedules.filter(id => /^social\d{2}[ab]$/.test(id)), dayWork: schedules.filter(id => /^work\d{2}[ab]$/.test(id)), publicSocial: ['socialpub'], publicWork: ['workpub'], special: Object.keys(this.project.events || {}), ending: Object.keys(this.project.endings || {}) };
-    const titles = { daySocial: '📅 日期日程表 · Social', dayWork: '📅 日期日程表 · Work', publicSocial: '🌐 公共 Social 日程表', publicWork: '🌐 公共 Work 日程表', special: '🎪 特殊事件日程表', ending: '🏁 结局日程表' };
-    this._workspaceSelections ||= { daySocial: '', dayWork: '', publicSocial: 'socialpub', publicWork: 'workpub', special: '', ending: '' };
-    for (const type of ['daySocial', 'dayWork']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || `${type === 'daySocial' ? 'social' : 'work'}01a`;
-    for (const type of ['publicSocial', 'publicWork', 'special', 'ending']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || '';
-    el.innerHTML = Object.entries(groups).map(([type, list]) => this._workspaceTable(type, titles[type], list.map(id => [id, id]), this._workspaceSelections[type])).join('');
-    el.querySelectorAll('[data-ws-day], [data-ws-phase]').forEach(node => node.addEventListener('change', () => { const type = node.dataset.wsDay || node.dataset.wsPhase; const prefix = type === 'daySocial' ? 'social' : 'work'; const day = el.querySelector(`[data-ws-day="${type}"]`).value; const phase = el.querySelector(`[data-ws-phase="${type}"]`).value; this._workspaceSelections[type] = `${prefix}${day}${phase}`; }));
+    const groups = { scheduleSocial: schedules.filter(id => /^social\d{2}[ab]$/.test(id)), scheduleWork: schedules.filter(id => /^work\d{2}[ab]$/.test(id)), public: ['socialpub', 'workpub', 'mainpub'], other: ['endings', 'special_events', 'maininit'] };
+    const titles = { scheduleSocial: '📄 Social 日期日程表', scheduleWork: '📄 Work 日期日程表', public: '🌐 公共日程表', other: '🗂️ 其他日程表' };
+    this._workspaceSelections ||= { scheduleSocial: '', scheduleWork: '', public: 'socialpub', other: 'maininit' };
+    for (const type of ['scheduleSocial', 'scheduleWork']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || `${type === 'scheduleSocial' ? 'social' : 'work'}01a`;
+    for (const type of ['public', 'other']) if (!this._workspaceSelections[type] || !groups[type].includes(this._workspaceSelections[type])) this._workspaceSelections[type] = groups[type][0] || '';
+    const labels = { socialpub: 'Social（socialpub.json）', workpub: 'Work（workpub.json）', mainpub: '主要（mainpub.json）', endings: '结局（endings.json）', special_events: '特殊事件（special_events.json）', maininit: '初始主要（maininit.json）' };
+    el.innerHTML = Object.entries(groups).map(([type, list]) => this._workspaceTable(type, titles[type], list.map(id => [id, labels[id] || `${id}.json`]), this._workspaceSelections[type])).join('');
+    el.querySelectorAll('[data-ws-select]').forEach(node => node.addEventListener('change', () => { this._workspaceSelections[node.dataset.wsSelect] = node.value; this._renderWorkspace(); }));
     el.querySelectorAll('[data-ws-edit]').forEach(node => node.addEventListener('click', () => this._openWorkspaceBlueprint(node.dataset.wsEdit)));
     el.querySelectorAll('[data-ws-current]').forEach(node => node.addEventListener('click', () => this._loadWorkspaceFile(node.dataset.wsCurrent)));
     el.querySelectorAll('[data-ws-file]').forEach(node => node.addEventListener('click', () => { const input = this._el('de-game-input'); input.dataset.wsType = node.dataset.wsFile; input.click(); }));
@@ -433,7 +337,12 @@ export class DevDialogueEditorTab {
     el.querySelectorAll('[data-ws-write]').forEach(node => node.addEventListener('click', () => this._writeWorkspaceEntry(node.dataset.wsWrite)));
   }
 
-  _workspaceContext(type) { const id = this._workspaceSelections[type]; if (!id) return null; return type === 'special' ? { type: 'event', id, entryIndex: 0 } : type === 'ending' ? { type: 'ending', id, entryIndex: 0 } : { type: 'schedule', id, entryIndex: 0 }; }
+  _workspaceContext(type) {
+    const id = this._workspaceSelections[type]; if (!id) return null;
+    if (type === 'other' && id === 'special_events') return { type: 'event', id: Object.keys(this.project.events || {})[0], entryIndex: 0 };
+    if (type === 'other' && id === 'endings') return { type: 'ending', id: Object.keys(this.project.endings || {})[0], entryIndex: 0 };
+    return { type: 'schedule', id, entryIndex: 0 };
+  }
   _openWorkspaceBlueprint(type) {
     const ctx = this._workspaceContext(type); if (!ctx) return this._st('当前文件暂无可编辑条目');
     if (ctx.type === 'schedule' && !this.project.schedules[ctx.id]) this.project.schedules[ctx.id] = { displayName: '', entries: [] };
@@ -442,7 +351,12 @@ export class DevDialogueEditorTab {
     win.el?.classList.add('dev-blueprint-window');
     host.innerHTML = child.html(); child.mount(host.querySelector('.dev-de-root')); win.el?.addEventListener('remove', () => child.unmount(), { once: true });
   }
-  _workspaceDoc(type) { const id = this._workspaceSelections[type]; if (type === 'special') return ['special_events.json', this._eventFileToGame()]; if (type === 'ending') return ['endings.json', this._endingFileToGame()]; return id ? [`${id}.json`, this._scheduleToGame(this.project.schedules[id])] : null; }
+  _workspaceDoc(type) {
+    const id = this._workspaceSelections[type];
+    if (type === 'other' && id === 'special_events') return ['special_events.json', this._eventFileToGame()];
+    if (type === 'other' && id === 'endings') return ['endings.json', this._endingFileToGame()];
+    return id ? [`${id}.json`, this._scheduleToGame(this.project.schedules[id] || { entries: [] })] : null;
+  }
   _exportWorkspaceEntry(type) { const doc = this._workspaceDoc(type); if (doc) { downloadJson(doc[0], doc[1]); this._st(`已导出 ${doc[0]}`); } }
   async _writeWorkspaceEntry(type) { const doc = this._workspaceDoc(type); if (doc) await this._dev.writeToDisk(doc[0], doc[1]); }
   async _loadWorkspaceFile(type) {
@@ -452,17 +366,19 @@ export class DevDialogueEditorTab {
   }
   _applyGameDocument(fileName, data, type = null) {
     const base = fileName.replace(/\.json$/i, '');
-    const kind = type || (fileName === 'special_events.json' ? 'special' : fileName === 'endings.json' ? 'ending' : base.startsWith('social') ? 'daySocial' : 'dayWork');
-    if (kind === 'special' || fileName === 'special_events.json') {
+    const kind = type || (fileName === 'special_events.json' || fileName === 'endings.json' || base === 'maininit' ? 'other' : base === 'socialpub' || base === 'workpub' || base === 'mainpub' ? 'public' : base.startsWith('social') ? 'scheduleSocial' : 'scheduleWork');
+    if (fileName === 'special_events.json') {
       if (!Array.isArray(data.events)) throw new Error('special_events.json 缺少 events 数组');
-      this.project.eventFileDoc = data; this.project.events = Object.fromEntries(data.events.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('special_events.json'); this._workspaceSelections.special = Object.keys(this.project.events)[0] || '';
-    } else if (kind === 'ending' || fileName === 'endings.json') {
+      this.project.eventFileDoc = data; this.project.events = Object.fromEntries(data.events.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('special_events.json'); this._workspaceSelections.other = 'special_events';
+    } else if (fileName === 'endings.json') {
       if (!Array.isArray(data.endings)) throw new Error('endings.json 缺少 endings 数组');
-      this.project.endingFileDoc = data; this.project.endings = Object.fromEntries(data.endings.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('endings.json'); this._workspaceSelections.ending = Object.keys(this.project.endings)[0] || '';
+      this.project.endingFileDoc = data; this.project.endings = Object.fromEntries(data.endings.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('endings.json'); this._workspaceSelections.other = 'endings';
     } else {
       if (!Array.isArray(data.entries)) throw new Error(`${fileName} 缺少 entries 数组`);
       this.project.schedules[base] = { ...data, entries: data.entries.map(entry => ({ ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree) })) };
       this.loadedScheduleFiles.add(base); this._workspaceSelections[kind] = base;
+      if (kind === 'other') this._workspaceSelections.other = base;
+      if (kind === 'public') this._workspaceSelections.public = base;
     }
   }
   _scopedDocument() {
@@ -473,11 +389,11 @@ export class DevDialogueEditorTab {
   }
   async _loadScopedCurrentGame() {
     const doc = this._scopedDocument(); if (!doc) return;
-    try { const data = await dataLoader.loadJSON(doc[0]); this._applyGameDocument(doc[0], data, this._fileScope.type === 'event' ? 'special' : this._fileScope.type === 'ending' ? 'ending' : null); this.currentCtx = this._initialCtx || this.currentCtx; this._renderSidebar(); this._renderCanvas(); this._st(`已从当前游戏读取 ${doc[0]}`); }
+    try { const data = await dataLoader.loadJSON(doc[0]); this._applyGameDocument(doc[0], data, this._fileScope.type === 'event' ? 'special' : this._fileScope.type === 'ending' ? 'ending' : null); this.currentCtx = this._initialCtx || this.currentCtx; this._renderScopedSidebar(); this._renderCanvas(); this._st(`已从当前游戏读取 ${doc[0]}`); }
     catch (error) { this._st(`读取失败：${error.message}`, true); }
   }
   _loadScopedFile() { this._el('de-scoped-file-input')?.click(); }
-  _onScopedFile(ev) { const file = ev.target.files?.[0]; ev.target.value = ''; if (!file) return; const reader = new FileReader(); reader.onload = () => { try { this._applyGameDocument(this._fileScope.fileName, JSON.parse(reader.result), this._fileScope.type === 'event' ? 'special' : this._fileScope.type === 'ending' ? 'ending' : null); this._renderSidebar(); this._renderCanvas(); this._st(`已从文件读取 ${this._fileScope.fileName}`); } catch (error) { this._st(`读取失败：${error.message}`, true); } }; reader.readAsText(file, 'utf-8'); }
+  _onScopedFile(ev) { const file = ev.target.files?.[0]; ev.target.value = ''; if (!file) return; const reader = new FileReader(); reader.onload = () => { try { this._applyGameDocument(this._fileScope.fileName, JSON.parse(reader.result), this._fileScope.type === 'event' ? 'special' : this._fileScope.type === 'ending' ? 'ending' : null); this._renderScopedSidebar(); this._renderCanvas(); this._st(`已从文件读取 ${this._fileScope.fileName}`); } catch (error) { this._st(`读取失败：${error.message}`, true); } }; reader.readAsText(file, 'utf-8'); }
   _validateCurrentBlueprint() {
     const data = this._ctxData();
     if (!data) return true;
@@ -498,95 +414,26 @@ export class DevDialogueEditorTab {
 
   // ── sidebar ───────────────────────────────────────────────────────────────
   _renderScopedSidebar() {
-    const dayEl = this._el('de-sb-days');
-    const evEl = this._el('de-sb-events');
-    const endEl = this._el('de-sb-endings');
-    const queueTabs = this._el('de-queue-tabs');
-    const phaseTabs = this._el('de-phase-tabs');
+    const dayEl = this._el('de-sb-file-entries');
     const scheduleTools = this._el('de-schedule-tools');
-    if (queueTabs) queueTabs.style.display = 'none';
-    if (phaseTabs) phaseTabs.style.display = 'none';
-    const section = (node, visible) => { if (node?.closest('.dev-de-sb-sec')) node.closest('.dev-de-sb-sec').style.display = visible ? '' : 'none'; };
     const scope = this._fileScope;
-    if (scope?.type === 'schedule') {
-      if (scheduleTools) scheduleTools.style.display = '';
-      section(dayEl, true); section(evEl, false); section(endEl, false);
-      const daySection = dayEl?.closest('.dev-de-sb-sec');
-      const dayTitle = daySection?.querySelector('.dev-de-sb-title');
-      if (dayTitle) dayTitle.innerHTML = `📄 ${this._e(scope.fileName)} 日程列表`;
-      daySection?.querySelector('.dev-de-sb-add')?.remove();
-      const scopedFile = scope.fileName.replace(/\.json$/i, '');
-      const schedule = this.project.schedules?.[scopedFile] || { entries: [] };
-      dayEl.innerHTML = (schedule.entries || []).map((entry, index) => `<div class="dev-de-sb-item${this.currentCtx?.entryIndex === index ? ' active' : ''}" onclick="_de._selectSchedule('${this._e(scopedFile)}',${index})"><span>${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._selectSchedule('${this._e(scopedFile)}',${index});_de._copyEntry('schedule',${index})" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._selectSchedule('${this._e(scopedFile)}',${index});_de._deleteEntry('schedule',${index})" title="删除日程">−</button></span></div>`).join('') || '<div class="dev-de-sb-empty">暂无条目</div>';
-    } else if (scope?.type === 'event') {
-      if (scheduleTools) scheduleTools.style.display = 'none';
-      section(dayEl, false); section(evEl, true); section(endEl, false);
-      const eventSection = evEl?.closest('.dev-de-sb-sec');
-      const eventTitle = eventSection?.querySelector('.dev-de-sb-title');
-      if (eventTitle) eventTitle.innerHTML = `📄 ${this._e(scope.fileName)} 日程列表`;
-      eventSection?.querySelector('.dev-de-sb-add')?.remove();
-      const eventEntries = Array.isArray(this.project.eventFileDoc?.events) ? this.project.eventFileDoc.events : [];
-      evEl.innerHTML = eventEntries.map((entry) => `<div class="dev-de-sb-item${this.currentCtx?.id === entry.id ? ' active' : ''}" onclick="_de._selectCtx('event','${this._e(entry.id)}')"><span>${this._e(entry.name || entry.id)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._copyEntry('event','${this._e(entry.id)}')" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._deleteEntry('event','${this._e(entry.id)}')" title="删除日程">−</button></span></div>`).join('') || '<div class="dev-de-sb-empty">暂无条目</div>';
-    } else {
-      if (scheduleTools) scheduleTools.style.display = 'none';
-      section(dayEl, false); section(evEl, false); section(endEl, true);
-      const endingSection = endEl?.closest('.dev-de-sb-sec');
-      const endingTitle = endingSection?.querySelector('.dev-de-sb-title');
-      if (endingTitle) endingTitle.innerHTML = `📄 ${this._e(scope?.fileName || 'endings.json')} 日程列表`;
-      endingSection?.querySelector('.dev-de-sb-add')?.remove();
-      const endingEntries = Array.isArray(this.project.endingFileDoc?.endings) ? this.project.endingFileDoc.endings : [];
-      endEl.innerHTML = endingEntries.map((entry) => `<div class="dev-de-sb-item${this.currentCtx?.id === entry.id ? ' active' : ''}" onclick="_de._selectCtx('ending','${this._e(entry.id)}')"><span>${this._e(entry.title || entry.name || entry.id)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._copyEntry('ending','${this._e(entry.id)}')" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._deleteEntry('ending','${this._e(entry.id)}')" title="删除日程">−</button></span></div>`).join('') || '<div class="dev-de-sb-empty">暂无条目</div>';
-    }
-  }
-  _renderSidebar() {
-    if (this._fileScope) return this._renderScopedSidebar();
-    const dayEl = this._el('de-sb-days');
-    const evEl  = this._el('de-sb-events');
-    const endEl = this._el('de-sb-endings');
     if (!dayEl) return;
-    this._el('de-queue-tabs')?.querySelectorAll('[data-queue]').forEach((tab) => tab.classList.toggle('active', tab.dataset.queue === this.currentQueue));
-    let dayHtml = '';
-    for (let d = 1; d <= this.totalDays; d++) {
-      const pad = String(d).padStart(2,'0');
-      const phase = this.currentCtx?.type === 'schedule' && this.currentCtx.id.endsWith('b') ? 'b' : 'a';
-      const file = `${this.currentQueue}${pad}${phase}`;
-      const schedule = this.project.schedules?.[file] || { entries: [] };
-      const isActive = this.currentCtx?.type === 'schedule' && this.currentCtx.id === file;
-      const entries = schedule.entries.map((entry, index) => `<div class="dev-de-sb-item${isActive && this.currentCtx.entryIndex === index ? ' active' : ''}" onclick="_de._selectSchedule('${file}',${index})"><span>${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._selectSchedule('${file}',${index});_de._copyEntry('schedule',${index})" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._selectSchedule('${file}',${index});_de._deleteEntry('schedule',${index})" title="删除日程">−</button></span></div>`).join('');
-      dayHtml += `<div class="dev-de-sb-day${isActive?' active':''}" onclick="_de._selectSchedule('${file}',0)">第 ${d} 天 · ${phase === 'a' ? '08:00' : '16:00'}${schedule.entries.length ? `（${schedule.entries.length} 条）` : ''}</div>${entries}`;
+    const fileName = scope?.fileName || '';
+    const base = fileName.replace(/\.json$/i, '');
+    const isSchedule = scope?.type === 'schedule';
+    if (scheduleTools) scheduleTools.style.display = isSchedule ? '' : 'none';
+    const section = dayEl.closest('.dev-de-sb-sec');
+    const title = section?.querySelector('.dev-de-sb-title');
+    if (title) title.textContent = `📄 ${fileName} 日程列表`;
+    if (isSchedule) {
+      const entries = this.project.schedules?.[base]?.entries || [];
+      dayEl.innerHTML = entries.map((entry, index) => `<div class="dev-de-sb-item${this.currentCtx?.entryIndex === index ? ' active' : ''}" onclick="_de._selectSchedule('${this._e(base)}',${index})"><span>${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._selectSchedule('${this._e(base)}',${index});_de._copyEntry('schedule',${index})" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._selectSchedule('${this._e(base)}',${index});_de._deleteEntry('schedule',${index})" title="删除日程">−</button></span></div>`).join('') || '<div class="dev-de-sb-empty">暂无条目</div>';
+      return;
     }
-    const publicFile = `${this.currentQueue}pub`;
-    const publicSchedule = this.project.schedules?.[publicFile] || { entries: [] };
-    const publicActive = this.currentCtx?.type === 'schedule' && this.currentCtx.id === publicFile;
-    dayHtml += `<div class="dev-de-sb-day${publicActive ? ' active' : ''}" onclick="_de._selectSchedule('${publicFile}',0)">${this.currentQueue === 'work' ? 'Work' : 'Social'} 公共日程${publicSchedule.entries.length ? `（${publicSchedule.entries.length} 条）` : ''}</div>`;
-    if (publicActive) dayHtml += publicSchedule.entries.map((entry, index) => `<div class="dev-de-sb-item active" onclick="_de._selectSchedule('${publicFile}',${index})"><span>${this._e(entry.name || entry.npcId || entry.id || `条目 ${index + 1}`)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._copyEntry('schedule',${index})" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._deleteEntry('schedule',${index})" title="删除日程">−</button></span></div>`).join('');
-    dayEl.innerHTML = dayHtml;
-    evEl.innerHTML  = Object.keys(this.project.events||{}).map(id=>
-      `<div class="dev-de-sb-item${this.currentCtx?.id===id?' active':''}" onclick="_de._selectCtx('event','${id}')">
-        <span>${this._e(id)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._copyEntry('event','${id}')" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._deleteEntry('event','${id}')" title="删除日程">−</button></span></div>`
-    ).join('')||'<div class="dev-de-sb-empty">暂无</div>';
-    endEl.innerHTML = Object.keys(this.project.endings||{}).map(id=>
-      `<div class="dev-de-sb-item${this.currentCtx?.id===id?' active':''}" onclick="_de._selectCtx('ending','${id}')">
-        <span>${this._e(id)}</span><span class="dev-de-sb-actions"><button type="button" class="dev-de-sb-copy" onclick="event.stopPropagation();_de._copyEntry('ending','${id}')" title="复制日程">＋</button><button type="button" class="dev-de-sb-del" onclick="event.stopPropagation();_de._deleteEntry('ending','${id}')" title="删除日程">−</button></span></div>`
-    ).join('')||'<div class="dev-de-sb-empty">暂无</div>';
-  }
-
-  _selectQueue(queue) {
-    this.currentQueue = queue;
-    const phase = this.currentCtx?.type === 'schedule' && this.currentCtx.id.endsWith('b') ? 'b' : 'a';
-    const day = this.currentCtx?.type === 'schedule' ? this.currentCtx.id.slice(5, 7) : '01';
-    this._selectSchedule(`${queue}${day}${phase}`, 0);
-  }
-
-  _selectDayGroup(d) {
-    const pad = String(d).padStart(2,'0');
-    const curPh = (this.currentCtx?.type==='schedule'&&this.currentCtx.id.endsWith('b')) ? 'b' : 'a';
-    this._selectSchedule(`${this.currentQueue}${pad}${curPh}`, 0);
-  }
-
-  _selectPhase(ph) {
-    if (!this.currentCtx||this.currentCtx.type!=='schedule') return;
-    this._selectSchedule(this.currentCtx.id.slice(0,-1)+ph, 0);
+    const key = scope?.type === 'event' ? 'events' : 'endings';
+    const doc = scope?.type === 'event' ? this.project.eventFileDoc : this.project.endingFileDoc;
+    const entries = Array.isArray(doc?.[key]) ? doc[key] : [];
+    dayEl.innerHTML = entries.map(entry => `<div class="dev-de-sb-item${this.currentCtx?.id === entry.id ? ' active' : ''}" onclick="_de._selectCtx('${this._e(scope?.type)}','${this._e(entry.id)}')"><span>${this._e(entry.title || entry.name || entry.id)}</span></div>`).join('') || '<div class="dev-de-sb-empty">暂无条目</div>';
   }
 
   _selectSchedule(id, entryIndex = 0) {
@@ -600,15 +447,7 @@ export class DevDialogueEditorTab {
     this.currentCtx = {type, id, entryIndex};
     this.selectedNodeId = null;
     this.selectedNodeIds.clear();
-    const ptabs = this._el('de-phase-tabs');
-    if (ptabs) {
-      ptabs.style.display = type==='schedule' ? 'flex' : 'none';
-      if (type==='schedule') {
-        const ph = id.endsWith('b') ? 'b' : 'a';
-        ptabs.querySelectorAll('.dev-de-ptab').forEach(t=>t.classList.toggle('active', t.dataset.phase===ph));
-      }
-    }
-    this._renderSidebar();
+    this._renderScopedSidebar();
     this._renderCanvas();
     const ef=this._el('de-editor-empty'),ff=this._el('de-editor-form');
     if(ef) ef.style.display=''; if(ff) ff.style.display='none';
@@ -649,7 +488,7 @@ export class DevDialogueEditorTab {
      }
    } else if (this.currentCtx.type === 'ending') { entry.displayName = String(value ?? ''); entry.title = entry.displayName; }
    else { entry.displayName = String(value ?? ''); entry.name = entry.displayName; }
-   this._saveLS(); this._renderSidebar(); this._renderCanvas();
+   this._saveLS(); this._renderScopedSidebar(); this._renderCanvas();
    // Do NOT call _renderContextSettings() for displayName changes — it would
    // rebuild the input DOM and steal focus after every keystroke.
    if (field === 'id') this._renderContextSettings();
@@ -731,7 +570,7 @@ export class DevDialogueEditorTab {
     delete contexts[key];
     this.loadedMetaFiles.add(type === 'event' ? 'special_events.json' : 'endings.json');
     if (this.currentCtx?.id === key) this.currentCtx = null;
-    this._saveLS(); this._renderSidebar(); this._renderCanvas();
+    this._saveLS(); this._renderScopedSidebar(); this._renderCanvas();
   }
 
   _deleteCtx(type, id) {
@@ -739,7 +578,7 @@ export class DevDialogueEditorTab {
     if (type==='event')  { delete this.project.events[id]; this.loadedMetaFiles.add('special_events.json'); }
     if (type==='ending') { delete this.project.endings[id]; this.loadedMetaFiles.add('endings.json'); }
     if (this.currentCtx?.id===id) { this.currentCtx=null; this._renderCanvas(); }
-    this._renderSidebar(); this._saveLS();
+    this._renderScopedSidebar(); this._saveLS();
   }
 
   // ── canvas ────────────────────────────────────────────────────────────────
@@ -789,6 +628,16 @@ export class DevDialogueEditorTab {
     if (node.type === 'choice' && direction === 'input') {
       for (let index = 0; index < choiceCount; index += 1) ports.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
+    if (node.type === 'segmentBranch') {
+      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
+      if (direction === 'output') return [{ name: 'segment0', kind: 'flow', type: null }, ...Array.from({ length: count - 1 }, (_, index) => ({ name: `segment${index + 1}`, kind: 'flow', type: null }))];
+      return [
+        { name: 'flowIn', kind: 'flow', type: null },
+        { name: 'value', kind: 'value', type: 'number' },
+        { name: 'branchCount', kind: 'value', type: 'number' },
+        ...Array.from({ length: count + 1 }, (_, index) => ({ name: `boundary${index}`, kind: 'value', type: 'number' })),
+      ];
+    }
     return ports;
   }
 
@@ -810,6 +659,7 @@ export class DevDialogueEditorTab {
       const div=document.createElement('div');
       div.className=`dev-de-node${isSel?' selected':''}${isStart?' start':''}`;
       div.id=`de-node-${node.id}`;
+      div.dataset.nodeId=node.id;
       div.style.cssText=`left:${node.x||60}px;top:${node.y||60}px`;
       const optBadge=node.options?.length?`<span class="dev-de-nbadge">${node.options.length}选项</span>`:'';
       const nxtBadge=node.next&&!(node.options?.length)?`<span class="dev-de-nbadge">→${this._e(String(node.next).slice(-8))}</span>`:'';
@@ -853,15 +703,49 @@ export class DevDialogueEditorTab {
         if (e.target.closest('.dev-de-port-pin') || e.target.closest('button')) return;
         if (this._connectMode) { this._finishConnect(node.id); return; }
         e.stopPropagation();
-        this.selectedNodeId=node.id;
-        this.selectedNodeIds = new Set([node.id]);
+        const additive = e.ctrlKey || e.metaKey;
+        if (additive) {
+          if (!this.selectedNodeIds.size && this.selectedNodeId) this.selectedNodeIds.add(this.selectedNodeId);
+          if (this.selectedNodeIds.has(node.id)) this.selectedNodeIds.delete(node.id);
+          else this.selectedNodeIds.add(node.id);
+          this.selectedNodeId = this.selectedNodeIds.size === 1 ? [...this.selectedNodeIds][0] : null;
+          this.root?.querySelectorAll('.dev-de-node').forEach(item => item.classList.toggle('selected', this.selectedNodeIds.has(item.dataset.nodeId)));
+          if (this.selectedNodeId) this._loadNodeEditor();
+          else {
+            const empty=this._el('de-editor-empty'), form=this._el('de-editor-form');
+            if(empty) empty.style.display=''; if(form) form.style.display='none';
+          }
+          return;
+        }
+        const hitNodeIds = [...new Set((document.elementsFromPoint?.(e.clientX, e.clientY) || [])
+          .map(element => element.closest?.('.dev-de-node')?.dataset.nodeId)
+          .filter(Boolean))];
+        const selectedHitId = hitNodeIds.find(id => this.selectedNodeIds.has(id));
+        const interactionNode = data.nodes[selectedHitId] || node;
+        if (!this.selectedNodeIds.has(interactionNode.id)) this.selectedNodeIds = new Set([interactionNode.id]);
+        this.selectedNodeId=interactionNode.id;
+        this.root?.querySelectorAll('.dev-de-node').forEach(item => item.classList.toggle('selected', this.selectedNodeIds.has(item.dataset.nodeId)));
         this._loadNodeEditor();
-        div.classList.add('selected');
-        const sx=e.clientX, sy=e.clientY, ox=node.x||60, oy=node.y||60;
+        const sx=e.clientX, sy=e.clientY;
+        const dragIds = [...this.selectedNodeIds];
+        const origins = new Map(dragIds.map(id => {
+          const selected = data.nodes[id];
+          return [id, { x: selected?.x ?? 60, y: selected?.y ?? 60 }];
+        }));
         let moved=false;
-        const onMove=mv=>{ moved=true; node.x=Math.max(0,ox+(mv.clientX-sx)/this.canvasZoom); node.y=Math.max(0,oy+(mv.clientY-sy)/this.canvasZoom); div.style.left=node.x+'px'; div.style.top=node.y+'px'; this._drawArrows(data); };
+        const onMove=mv=>{
+          moved=true;
+          const dx=(mv.clientX-sx)/this.canvasZoom, dy=(mv.clientY-sy)/this.canvasZoom;
+          dragIds.forEach(id=>{
+            const selected=data.nodes[id], origin=origins.get(id), selectedEl=this.root?.querySelector(`#de-node-${CSS.escape(id)}`);
+            if (!selected || !origin) return;
+            selected.x=Math.max(0, origin.x+dx); selected.y=Math.max(0, origin.y+dy);
+            if (selectedEl) { selectedEl.style.left=selected.x+'px'; selectedEl.style.top=selected.y+'px'; }
+          });
+          this._drawArrows(data);
+        };
         const onUp=()=>{ document.removeEventListener('pointermove',onMove); document.removeEventListener('pointerup',onUp); this._dragState=null; if(moved) this._saveLS(); };
-        this._dragState={nodeId:node.id};
+        this._dragState={nodeIds:dragIds};
         document.addEventListener('pointermove',onMove);
         document.addEventListener('pointerup',onUp, { once: true });
       });
@@ -940,6 +824,7 @@ export class DevDialogueEditorTab {
     e.preventDefault();
     e.stopPropagation();
     const start = this._canvasPoint(e);
+    const additive = e.ctrlKey || e.metaKey;
     const box = document.createElement('div');
     box.className = 'dev-de-selection-box';
     content.appendChild(box);
@@ -957,11 +842,14 @@ export class DevDialogueEditorTab {
       const left = Math.min(start.x, point.x), right = Math.max(start.x, point.x);
       const top = Math.min(start.y, point.y), bottom = Math.max(start.y, point.y);
       const data = this._ctxData();
-      this.selectedNodeIds = new Set(Object.values(data?.nodes || {}).filter(node => {
+      const hitIds = new Set(Object.values(data?.nodes || {}).filter(node => {
         const el = document.getElementById(`de-node-${node.id}`);
         const x = node.x ?? 60, y = node.y ?? 60, w = el?.offsetWidth || 200, h = el?.offsetHeight || 120;
         return x < right && x + w > left && y < bottom && y + h > top;
       }).map(node => node.id));
+      this.selectedNodeIds = additive
+        ? new Set([...this.selectedNodeIds].filter(id => !hitIds.has(id)).concat([...hitIds].filter(id => !this.selectedNodeIds.has(id))))
+        : hitIds;
       this.selectedNodeId = this.selectedNodeIds.size === 1 ? [...this.selectedNodeIds][0] : null;
       box.remove(); this._boxSelect = null;
       this._suppressCanvasClick = true;
@@ -1028,77 +916,15 @@ export class DevDialogueEditorTab {
 
   // ── node editor ──────────────────────────────────────────────────────────
   _loadNodeEditor() {
-    const data = this._ctxData(); if (!data||!this.selectedNodeId) return;
+    const data = this._ctxData(); if (!data || !this.selectedNodeId) return;
     const node = data.nodes[this.selectedNodeId]; if (!node) return;
-    const ef=this._el('de-editor-empty'), ff=this._el('de-editor-form');
-    if (ef) ef.style.display='none'; if (ff) ff.style.display='';
-    const typeEl=this._el('de-ed-type'); if(typeEl) typeEl.value=node.type||'text';
+    const empty = this._el('de-editor-empty'), form = this._el('de-editor-form');
+    if (empty) empty.style.display = 'none';
+    if (form) form.style.display = '';
+    const typeLabel = this._el('de-ed-type-label');
+    if (typeLabel) typeLabel.textContent = `${_DE_NODE_LABELS[node.type] || node.type || '节点'}（${node.type || 'unknown'}）`;
     this._renderNodeInputs(node, data);
-    // speaker buttons
-    this._el('de-spk-btns')?.querySelectorAll('.dev-de-spk-btn').forEach(b=>{
-      b.classList.toggle('active', b.dataset.spk===node.speaker);
-      b.style.borderColor = b.dataset.spk===node.speaker ? this._spk(node.speaker).color : '';
-    });
-    const txt=this._el('de-ed-text'); if(txt) txt.value=node.text||'';
-    const kw=this._el('de-ed-keywords'); if(kw) kw.value=(node.keywordIds||[]).join(', ');
-    // next dropdown
-    this._rebuildNextDropdown('de-ed-next', node.next, data);
-    // options
-    this._renderOptList(node, data);
-    // onShow
-    const os=node.onShow||{};
-    const set=(id,v)=>{ const e=this._el(id); if(e) e.value=v||''; };
-    set('de-os-aje',     os.aje_favor);
-    set('de-os-awei',    os.awei_favor);
-    set('de-os-binbin',  os.binbin_favor);
-    set('de-os-sanity',  os.sanity);
-    set('de-os-suspicion',os.suspicion);
-    set('de-os-clarity', os.clarity);
-    set('de-os-grant',   (os.grantItems||[]).join(', '));
-    set('de-os-remove',  (os.removeItems||[]).join(', '));
-    set('de-os-ending',  os.ending);
-    // BGM selects: populate track options, then restore saved values
-    const bgmActionSel = this._el('de-os-bgm-action');
-    const bgmIdSel     = this._el('de-os-bgm-id');
-    const bgmWarn      = this._el('de-os-bgm-warn');
-    if (bgmIdSel) {
-      bgmIdSel.innerHTML = '<option value="">(选择曲目)</option>' +
-        bgmManager.allTracks().map(t =>
-          `<option value="${this._e(t.id)}">${this._e(t.name || t.id)}</option>`
-        ).join('');
-    }
-    const bgm = os.bgm || {};
-    if (bgmActionSel) bgmActionSel.value = bgm.action || '';
-    if (bgmIdSel)     bgmIdSel.value     = bgm.bgmId  || '';
-    // show id selector only when action === 'play'
-    if (bgmIdSel)  bgmIdSel.style.display  = (bgm.action === 'play') ? '' : 'none';
-    // warn when bgmId is set but the track no longer exists
-    const idInvalid = bgm.action === 'play' && bgm.bgmId && !bgmManager.tracks.has(bgm.bgmId);
-    if (bgmWarn) bgmWarn.style.display = idInvalid ? '' : 'none';
-    // Show/hide bgmId select live when action changes
-    if (bgmActionSel) bgmActionSel.onchange = () => {
-      if (bgmIdSel) bgmIdSel.style.display = (bgmActionSel.value === 'play') ? '' : 'none';
-      _de._saveOnShow();
-    };
-    // entry conditions
-    this._renderEntryConds(node);
-    const flowOutputs = this._el('de-flow-outputs');
-    if (flowOutputs) this._renderFlowOutputs(node, data);
-  }
-
-  _saveNodeType(type) {
-    const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
-    if(!node || !getScheduleNodeDefinition(type)) return;
-    node.type=type;
-    ['speaker','text','keywordIds','options','branches','onShow','entryConds','condition','globalVariableCondition','next'].forEach(field => delete node[field]);
-    node.inputs={...(node.inputs||{})};
-    if(type==='flowStart') node.inputs={};
-    data.connections=(data.connections||[]).filter(connection => {
-      const from=getScheduleNodePort(data.nodes[connection.fromNodeId]?.type,connection.fromPort,'output',data.nodes[connection.fromNodeId]);
-      const to=getScheduleNodePort(data.nodes[connection.toNodeId]?.type,connection.toPort,'input',data.nodes[connection.toNodeId]);
-      return from && to && from.kind===to.kind && (from.kind==='flow' || from.type==='any' || to.type==='any' || from.type===to.type);
-    });
-    this._saveLS(); this._renderCanvas(); this._loadNodeEditor();
+    this._renderFlowOutputs(node, data);
   }
 
   _valueOutputRefs(data) {
@@ -1113,7 +939,9 @@ export class DevDialogueEditorTab {
         ['and','与'], ['or','或'], ['xor','异或'],
         ['>','大于'], ['<','小于'], ['=','等于'], ['not','非'],
       ],
-      statId: _DE_NUMVARS.map(id => [id, id]),
+      condition: [['false', '否'], ['true', '是']],
+      statId: [..._DE_NUMVARS.map(id => [id, id]), ...skillManager.all().map(item => [item.id, `${item.label} (${item.id})`])],
+      npcId: _DE_SPEAKERS.filter(item => item.id !== 'player').map(item => [item.id, item.label]),
       queue: [['work','Work'],['social','Social']],
       variableId: (globalVariableManager.definitions || []).map(item => [String(item.id), `${item.name} (${item.id})`]),
       itemId: (itemManager.defs ? Array.from(itemManager.defs.values()) : this.gameItems).map(item => [item.id, item.name || item.id]),
@@ -1126,7 +954,7 @@ export class DevDialogueEditorTab {
   _constantControl(port, value) {
     const choices = this._constantChoices(port);
     if (choices) return `<select class="dev-de-input-value" onchange="_de._saveInputValue('${this._e(port.name)}',this.value)"><option value="">选择常量</option>${choices.map(([id,label]) => `<option value="${this._e(id)}"${String(value)===String(id)?' selected':''}>${this._e(label)}</option>`).join('')}</select>`;
-    if (port.name === 'text' || port.name === 'condition') return `<textarea class="dev-de-input-value dev-de-input-text" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">${this._e(value ?? '')}</textarea>`;
+    if (port.name === 'text') return `<textarea class="dev-de-input-value dev-de-input-text" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">${this._e(value ?? '')}</textarea>`;
     return `<input class="dev-de-input-value" type="${port.type==='number'?'number':'text'}" value="${this._e(value ?? '')}" oninput="_de._saveInputValue('${this._e(port.name)}',this.value)">`;
   }
 
@@ -1165,7 +993,11 @@ export class DevDialogueEditorTab {
       const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : (node.options || []).length));
       for (let index = 0; index < count; index += 1) valueInputs.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
-    const html=[...(def.flowInputs || []).map(port => `<div class="dev-de-input-row"><span>${this._e(port.name)}</span><em>流程输入引脚</em></div>`), ...valueInputs.map(port => {
+    if (node.type === 'segmentBranch') {
+      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
+      for (let index = 1; index <= count; index += 1) valueInputs.push({ name: `boundary${index}`, kind: 'value', type: 'number' });
+    }
+    const html=valueInputs.map(port => {
       const connection=connections.find(item=>item.toNodeId===node.id && item.toPort===port.name);
       const modeKey=`${node.id}:${port.name}`;
       const pinMode=this._inputModes.get(modeKey) ?? Boolean(connection);
@@ -1176,14 +1008,9 @@ export class DevDialogueEditorTab {
         const source=getScheduleNodePort(data.nodes[ref.nodeId]?.type,ref.port,'output',data.nodes[ref.nodeId]);
         return source && (port.type==='any' || source.type==='any' || source.type===port.type) ? `<option value="${this._e(`${ref.nodeId}::${ref.port}`)}" ${connection && connection.fromNodeId===ref.nodeId && connection.fromPort===ref.port ? 'selected' : ''}>${this._e(ref.label)}</option>` : '';
       }).join('');
-      return `<div class="dev-de-input-row"><label>${this._e(port.name)}</label><select class="dev-de-input-mode" onchange="_de._setInputMode('${this._e(port.name)}',this.value)"><option value="constant" ${pinMode?'':'selected'}>输入常量</option><option value="pin" ${pinMode?'selected':''}>来自上游数值引脚</option></select>${pinMode ? `<select class="dev-de-input-source" onchange="_de._setInputSource('${this._e(port.name)}',this.value)"><option value="">选择上游输出</option>${refOptions}</select>` : this._constantControl(port,value)}</div>`;
-    })].join('');
+      return `<div class="dev-de-input-row"><label>${this._e(port.name)}</label><select class="dev-de-input-mode" onchange="_de._setInputMode('${this._e(port.name)}',this.value)"><option value="constant" ${pinMode?'':'selected'}>固定值</option><option value="pin" ${pinMode?'selected':''}>来自上游数值引脚</option></select>${pinMode ? `<select class="dev-de-input-source" onchange="_de._setInputSource('${this._e(port.name)}',this.value)"><option value="">选择上游输出</option>${refOptions}</select>` : this._constantControl(port,value)}</div>`;
+    }).join('');
     el.innerHTML=html || '<div class="dev-de-no-ports">此节点没有输入</div>';
-    const outputEl=this._el('de-ed-outputs');
-    if(outputEl) {
-      const outputs=this._portsFor(node,'output');
-      outputEl.innerHTML=outputs.length ? `输出引脚：${outputs.map(port=>`<span class="dev-de-port-chip ${port.kind}">${this._e(port.name)}</span>`).join('')}` : '无输出引脚';
-    }
     this._renderFlowOutputs(node,data);
   }
 
@@ -1191,8 +1018,10 @@ export class DevDialogueEditorTab {
     const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
     const port=node && getScheduleNodePort(node.type,name,'input',node);
     if(!node || !port || port.kind!=='value') return;
-    node.inputs={...(node.inputs||{}),[name]:port.type==='number' && value!=='' ? Number(value) : value};
+    const parsedValue = port.type === 'number' && value !== '' ? Number(value) : port.type === 'bool' ? value === 'true' : value;
+    node.inputs={...(node.inputs||{}),[name]:parsedValue};
     if (node.type === 'choice' && name === 'branchCount') this._syncChoiceOptions(node);
+    if (node.type === 'segmentBranch' && name === 'branchCount') this._syncSegmentPorts(node);
     if (node.type === 'choice') {
       const labelIndex = /^label(\d+)$/.exec(name)?.[1];
       if (labelIndex != null) {
@@ -1218,6 +1047,19 @@ export class DevDialogueEditorTab {
     });
   }
 
+  _syncSegmentPorts(node) {
+    const count = Math.max(1, Math.min(32, Math.floor(Number(node.inputs?.branchCount) || 1)));
+    node.inputs ||= {};
+    for (let index = 0; index <= count; index += 1) if (!Object.prototype.hasOwnProperty.call(node.inputs, `boundary${index}`)) node.inputs[`boundary${index}`] = 0;
+    Object.keys(node.inputs).filter(name => /^boundary\d+$/.test(name) && Number(name.slice(8)) > count).forEach(name => delete node.inputs[name]);
+    const data = this._ctxData();
+    if (data) data.connections = (data.connections || []).filter((connection) => {
+      const removedOutput = connection.fromNodeId === node.id && connection.fromPort?.startsWith('segment') && Number(connection.fromPort.slice(7)) >= count;
+      const removedInput = connection.toNodeId === node.id && connection.toPort?.startsWith('boundary') && Number(connection.toPort.slice(8)) > count;
+      return !removedOutput && !removedInput;
+    });
+  }
+
   _setInputMode(name,mode) {
     const data=this._ctxData(); const node=data?.nodes?.[this.selectedNodeId];
     if(!node) return;
@@ -1237,151 +1079,6 @@ export class DevDialogueEditorTab {
     data.connections=(data.connections||[]).filter(item=>!(item.toNodeId===node.id && item.toPort===name));
     data.connections.push({fromNodeId,fromPort,toNodeId:node.id,toPort:name});
     this._saveLS(); this._renderNodeInputs(node,data); this._renderCanvas();
-  }
-
-  _rebuildNextDropdown(dropId, currentVal, data) {
-    const sel=this._el(dropId); if(!sel) return;
-    const nodeIds=Object.keys(data.nodes||{});
-    sel.innerHTML=`<option value="">(结束)</option>`+nodeIds.map(id=>
-      `<option value="${this._e(id)}"${id===currentVal?' selected':''}>${this._e(id)}</option>`
-    ).join('');
-  }
-
-  _setSpeaker(spkId) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.speaker=spkId; this._saveLS(); this._loadNodeEditor(); this._renderCanvas();
-  }
-
-  _saveNodeText() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.text=this._el('de-ed-text')?.value||''; this._saveLS();
-    // update canvas card text without full re-render
-    const body=document.querySelector(`#de-node-${this.selectedNodeId} .dev-de-node-body`);
-    if(body) body.textContent=(node.text||'').slice(0,60);
-  }
-
-  _saveNodeKeywords() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    const raw=this._el('de-ed-keywords')?.value||'';
-    node.keywordIds=raw.split(',').map(s=>s.trim()).filter(Boolean); this._saveLS();
-  }
-
-  _saveNodeNext() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.next=this._el('de-ed-next')?.value||null; this._saveLS(); this._drawArrows(data);
-  }
-
-  _saveOnShow() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    const num=id=>{ const v=parseFloat(this._el(id)?.value); return isNaN(v)?null:v; };
-    const str=id=>this._el(id)?.value.trim()||null;
-    const os={};
-    const naje=num('de-os-aje');   if(naje)  os.aje_favor=naje;
-    const nawei=num('de-os-awei'); if(nawei) os.awei_favor=nawei;
-    const nbin=num('de-os-binbin');if(nbin)  os.binbin_favor=nbin;
-    const nsan=num('de-os-sanity');if(nsan)  os.sanity=nsan;
-    const nsus=num('de-os-suspicion');if(nsus) os.suspicion=nsus;
-    const ncl=num('de-os-clarity');if(ncl)   os.clarity=ncl;
-    const grant=str('de-os-grant'); if(grant) os.grantItems=grant.split(',').map(s=>s.trim()).filter(Boolean);
-    const rem=str('de-os-remove');  if(rem)   os.removeItems=rem.split(',').map(s=>s.trim()).filter(Boolean);
-    const end=str('de-os-ending');  if(end)   os.ending=end;
-    // BGM
-    const bgmAction=str('de-os-bgm-action');
-    const bgmId=str('de-os-bgm-id');
-    if(bgmAction) { os.bgm={ action:bgmAction }; if(bgmAction==='play' && bgmId) os.bgm.bgmId=bgmId; }
-    node.onShow=os; this._saveLS();
-  }
-
-  // ── options ───────────────────────────────────────────────────────────────
-  _renderOptList(node, data) {
-    const el=this._el('de-opt-list'); if(!el) return;
-    if (!node.options?.length) { el.innerHTML='<div style="color:#aaa;font-size:12px;padding:4px 0">无分支选项</div>'; return; }
-    el.innerHTML=node.options.map((opt,i)=>{
-      const nextOpts=Object.keys(data.nodes||{}).map(id=>`<option value="${this._e(id)}"${id===opt.next?' selected':''}>${this._e(id)}</option>`).join('');
-      const eff=opt.effects||{};
-      return `<div class="dev-de-opt-row">
-        <div style="display:flex;gap:4px;align-items:center">
-          <span style="font-size:11px;color:#666;min-width:12px">${i+1}.</span>
-          <input class="dev-de-opt-label" placeholder="选项文本…" value="${this._e(opt.label||'')}" oninput="_de._saveOptLabel(${i},this.value)">
-          <select class="dev-de-opt-next" onchange="_de._saveOptNext(${i},this.value)"><option value="">(结束)</option>${nextOpts}</select>
-          <button type="button" class="win95-btn dev-btn" onclick="_de._startConnect(null,${i})" title="连线">🔗</button>
-          <button type="button" class="win95-btn dev-btn" onclick="_de._deleteOption(${i})">✕</button>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;padding:3px 0 0 16px;font-size:11px">
-          <label>好感阿杰<input class="dev-de-wnum" type="number" value="${eff.aje_favor||''}" placeholder="0" oninput="_de._saveOptEff(${i},'aje_favor',this.value)"></label>
-          <label>阿伟<input class="dev-de-wnum" type="number" value="${eff.awei_favor||''}" placeholder="0" oninput="_de._saveOptEff(${i},'awei_favor',this.value)"></label>
-          <label>彬彬<input class="dev-de-wnum" type="number" value="${eff.binbin_favor||''}" placeholder="0" oninput="_de._saveOptEff(${i},'binbin_favor',this.value)"></label>
-          <label>理智<input class="dev-de-wnum" type="number" value="${eff.sanity||''}" placeholder="0" oninput="_de._saveOptEff(${i},'sanity',this.value)"></label>
-          <label>怀疑<input class="dev-de-wnum" type="number" value="${eff.suspicion||''}" placeholder="0" oninput="_de._saveOptEff(${i},'suspicion',this.value)"></label>
-          <label>清晰<input class="dev-de-wnum" type="number" value="${eff.clarity||''}" placeholder="0" oninput="_de._saveOptEff(${i},'clarity',this.value)"></label>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  _saveOptLabel(i, val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.options[i]) return;
-    node.options[i].label=val; this._saveLS();
-  }
-  _saveOptNext(i, val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.options[i]) return;
-    node.options[i].next=val||null; this._saveLS(); this._drawArrows(data);
-  }
-  _saveOptEff(i, field, val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.options[i]) return;
-    if (!node.options[i].effects) node.options[i].effects={};
-    const n=parseFloat(val); node.options[i].effects[field]=isNaN(n)?val:n; this._saveLS();
-  }
-  _addOption() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    if (!node.options) node.options=[];
-    node.options.push(this._emptyOpt()); this._saveLS(); this._renderOptList(node, data);
-  }
-  _deleteOption(i) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.options.splice(i,1); this._saveLS(); this._renderOptList(node,data); this._drawArrows(data);
-  }
-
-  // ── entry conditions ──────────────────────────────────────────────────────
-  _renderEntryConds(node) {
-    const el=this._el('de-entry-conds'); if(!el) return;
-    const vars=this._allVars();
-    el.innerHTML=(node.entryConds||[]).map((c,i)=>{
-      const varOpts=vars.map(v=>`<option value="${this._e(v.id)}"${v.id===c.var?' selected':''}>${this._e(v.label)}</option>`).join('');
-      const opOpts=_DE_COND_OPS.map(op=>`<option${op===c.op?' selected':''}>${op}</option>`).join('');
-      return `<div style="display:flex;gap:3px;margin-bottom:3px;font-size:11px">
-        <select style="flex:2;min-height:21px;border:1px inset #eee" onchange="_de._saveCond(${i},'var',this.value)">${varOpts}</select>
-        <select style="flex:0 0 56px;min-height:21px;border:1px inset #eee" onchange="_de._saveCond(${i},'op',this.value)">${opOpts}</select>
-        <input style="flex:1;min-height:21px;border:1px inset #eee;padding:1px 3px" value="${this._e(c.value||'')}" oninput="_de._saveCond(${i},'value',this.value)">
-        <button type="button" class="win95-btn dev-btn" onclick="_de._deleteCond(${i})">✕</button>
-      </div>`;
-    }).join('')||'<div style="color:#aaa;font-size:12px">无条件（始终显示）</div>';
-  }
-  _addEntryCond() {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    if (!node.entryConds) node.entryConds=[];
-    node.entryConds.push({var:'sanity',op:'>=',value:'0'}); this._saveLS(); this._renderEntryConds(node);
-  }
-  _saveCond(i,field,val) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node||!node.entryConds[i]) return;
-    node.entryConds[i][field]=val; this._saveLS();
-  }
-  _deleteCond(i) {
-    const data=this._ctxData(); if(!data||!this.selectedNodeId) return;
-    const node=data.nodes[this.selectedNodeId]; if(!node) return;
-    node.entryConds.splice(i,1); this._saveLS(); this._renderEntryConds(node);
   }
 
   // ── connect mode ─────────────────────────────────────────────────────────
@@ -1493,29 +1190,63 @@ export class DevDialogueEditorTab {
     const data = this._ctxData(); if (!data) return;
     const nodes = data.nodes; const ids = Object.keys(nodes);
     if (!ids.length) return;
-    const W = 200, H = 120, GAPX = 40, GAPY = 50, PAD = 40, COLS = 4;
-    // BFS from startNode to get traversal order, then append orphans
-    const start = data.startNodeId || ids[0];
-    const visited = new Set(), order = [];
-    const queue = [start]; visited.add(start);
-    while (queue.length) {
-      const id = queue.shift(); order.push(id);
-      const n = nodes[id];
-      const nexts = [];
-      if (n.next && nodes[n.next]) nexts.push(n.next);
-      (n.options||[]).forEach(o => { if (o.next && nodes[o.next]) nexts.push(o.next); });
-      nexts.forEach(nid => { if (!visited.has(nid)) { visited.add(nid); queue.push(nid); } });
-    }
-    ids.filter(id => !visited.has(id)).forEach(id => order.push(id));
-    // Place in a grid: COLS columns, rows grow downward
-    order.forEach((id, i) => {
-      nodes[id].x = PAD + (i % COLS) * (W + GAPX);
-      nodes[id].y = PAD + Math.floor(i / COLS) * (H + GAPY);
+    const W = 200, H = 120, GAPX = 100, GAPY = 45, PAD = 40;
+    const orderIndex = new Map(ids.map((id, index) => [id, index]));
+    const outgoing = new Map(ids.map(id => [id, new Set()]));
+    const incoming = new Map(ids.map(id => [id, new Set()]));
+    const addEdge = (from, to) => {
+      if (!nodes[from] || !nodes[to] || from === to) return;
+      outgoing.get(from).add(to); incoming.get(to).add(from);
+    };
+    // Object blueprints store the authoritative graph in typed connections.
+    (data.connections || []).forEach(connection => addEdge(connection.fromNodeId, connection.toNodeId));
+    // Keep compatibility with legacy tree-shaped entries while laying them out.
+    ids.forEach(id => {
+      const node = nodes[id];
+      addEdge(id, node.next);
+      (node.options || []).forEach(option => addEdge(id, option.next));
     });
-    // Expand canvas to fit all placed nodes so nothing is clipped
-    const rows = Math.ceil(order.length / COLS);
-    const needW = PAD + COLS * (W + GAPX) + PAD;
-    const needH = PAD + rows * (H + GAPY) + PAD;
+    const indegree = new Map(ids.map(id => [id, incoming.get(id).size]));
+    const ranks = new Map(ids.map(id => [id, 0]));
+    const queue = ids.filter(id => indegree.get(id) === 0);
+    for (let cursor = 0; cursor < queue.length; cursor += 1) {
+      const id = queue[cursor];
+      outgoing.get(id).forEach(target => {
+        ranks.set(target, Math.max(ranks.get(target), ranks.get(id) + 1));
+        indegree.set(target, indegree.get(target) - 1);
+        if (indegree.get(target) === 0) queue.push(target);
+      });
+    }
+    // Cycles are invalid for normal flow graphs, but still receive stable ranks.
+    const maxRank = Math.max(0, ...ranks.values());
+    const layers = Array.from({ length: maxRank + 1 }, () => []);
+    ids.forEach(id => layers[ranks.get(id)].push(id));
+    const position = () => new Map(layers.flatMap(layer => layer.map((id, index) => [id, index])));
+    const reorder = (layerIndex, useParents) => {
+      const current = layers[layerIndex];
+      const positions = position();
+      current.sort((left, right) => {
+        const neighbors = id => [...(useParents ? incoming.get(id) : outgoing.get(id))]
+          .filter(neighbor => ranks.get(neighbor) === (useParents ? layerIndex - 1 : layerIndex + 1))
+          .map(neighbor => positions.get(neighbor))
+          .sort((a, b) => a - b);
+        const median = values => values.length ? values[Math.floor((values.length - 1) / 2)] : Number.POSITIVE_INFINITY;
+        return median(neighbors(left)) - median(neighbors(right)) || orderIndex.get(left) - orderIndex.get(right);
+      });
+    };
+    // Barycenter sweeps keep fan-out and fan-in branches in their natural order,
+    // reducing crossings without making layout depend on DOM measurements.
+    for (let pass = 0; pass < 4; pass += 1) {
+      for (let layer = 1; layer < layers.length; layer += 1) reorder(layer, true);
+      for (let layer = layers.length - 2; layer >= 0; layer -= 1) reorder(layer, false);
+    }
+    layers.forEach((layer, rank) => layer.forEach((id, row) => {
+      nodes[id].x = PAD + rank * (W + GAPX);
+      nodes[id].y = PAD + row * (H + GAPY);
+    }));
+    const widestLayer = Math.max(1, ...layers.map(layer => layer.length));
+    const needW = PAD + layers.length * (W + GAPX) + PAD;
+    const needH = PAD + widestLayer * (H + GAPY) + PAD;
     const nodesDiv = this._el('de-canvas-nodes');
     const svgEl    = this._el('de-canvas-svg');
     if (nodesDiv) { nodesDiv.style.minWidth  = Math.max(2000, needW) + 'px';
@@ -1528,28 +1259,14 @@ export class DevDialogueEditorTab {
     if (wrap) { wrap.scrollLeft = 0; wrap.scrollTop = 0; }
   }
 
-  // ── day / event / ending ──────────────────────────────────────────────────
-  addDay() {
-    if (!this.project) return;
-    if (this.totalDays >= MAX_GAME_DAYS) { this._st(`游戏最多支持 ${MAX_GAME_DAYS} 天`); return; }
-    this.totalDays += 1;
-    this.project.totalDays = this.totalDays;
-    const pad = String(this.totalDays).padStart(2,'0');
-    for (const queue of ['work','social']) for (const ph of ['a','b']) {
-      const k = `${queue}${pad}${ph}`;
-      if (!this.project.schedules[k]) this.project.schedules[k] = {entries:[]};
-    }
-    this._renderSidebar(); this._saveLS();
-    this._st(`已添加第 ${this.totalDays} 天`);
-  }
-
+  // ── event / ending ───────────────────────────────────────────────────────
   _addEvent() {
     const id = prompt('事件 ID（英文/数字，唯一）:', 'event_'+Date.now().toString(36).slice(-5));
     if (!id?.trim()) return;
     if (this.project.events[id]) { alert('ID 已存在'); return; }
     this.project.events[id] = this._emptyCtx();
     this.loadedMetaFiles.add('special_events.json');
-    this._renderSidebar(); this._saveLS(); this._selectCtx('event', id);
+    this._renderScopedSidebar(); this._saveLS(); this._selectCtx('event', id);
   }
 
   _addEnding() {
@@ -1558,7 +1275,7 @@ export class DevDialogueEditorTab {
     if (this.project.endings[id]) { alert('ID 已存在'); return; }
     this.project.endings[id] = this._emptyCtx();
     this.loadedMetaFiles.add('endings.json');
-    this._renderSidebar(); this._saveLS(); this._selectCtx('ending', id);
+    this._renderScopedSidebar(); this._saveLS(); this._selectCtx('ending', id);
   }
 
   // ── persistence ───────────────────────────────────────────────────────────
@@ -1582,7 +1299,7 @@ export class DevDialogueEditorTab {
     this.totalDays = MAX_GAME_DAYS; this.currentCtx = null; this.selectedNodeId = null;
     this._saveLS();
     if (this._workspace) this._renderWorkspace();
-    else { this._renderSidebar(); this._renderCanvas(); }
+    else { this._renderScopedSidebar(); this._renderCanvas(); }
     const ef=this._el('de-editor-empty'),ff=this._el('de-editor-form');
     if(ef) ef.style.display=''; if(ff) ff.style.display='none';
     this._st('已新建项目');
@@ -1631,7 +1348,7 @@ export class DevDialogueEditorTab {
         this.currentCtx = null; this.selectedNodeId = null;
         this._saveLS();
         if (this._workspace) this._renderWorkspace();
-        else { this._renderSidebar(); this._renderCanvas(); }
+        else { this._renderScopedSidebar(); this._renderCanvas(); }
         this._st('项目已载入：' + f.name);
       } catch(err) { alert('JSON 解析失败：' + err.message); }
     };
@@ -1673,7 +1390,7 @@ export class DevDialogueEditorTab {
       ]));
       this._saveLS();
       if (this._workspace) this._renderWorkspace();
-      else { this._renderSidebar(); this._renderCanvas(); }
+      else { this._renderScopedSidebar(); this._renderCanvas(); }
       if (this._workspace && this.currentCtx) this._selectCtx(this.currentCtx.type, this.currentCtx.id, this.currentCtx.entryIndex || 0);
       this._st(`已从当前游戏读取 ${files.length} 个日程文件`);
     } catch (err) { this._st(`读取当前游戏失败：${err.message}`, true); }
@@ -1684,7 +1401,7 @@ export class DevDialogueEditorTab {
     let count = 0;
     const done = () => {
       count++;
-      if (count === files.length) { this._saveLS(); this._renderSidebar(); this._st(`已导入 ${files.length} 个游戏文件`); }
+      if (count === files.length) { this._saveLS(); this._renderScopedSidebar(); this._st(`已导入 ${files.length} 个游戏文件`); }
     };
     files.forEach(f => {
       const r = new FileReader();

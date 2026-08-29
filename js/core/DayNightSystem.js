@@ -111,6 +111,7 @@ class DayNightSystem {
     if (!this.isRestDay() && inWorkWindow) this._setTime(gameState.day, 16 * 60);
     gameState.setDuty("off-duty");
     this._emitChanged(previousPhase);
+    eventBus.emit("developer:force_end_work", { day: gameState.day, phase: gameState.phase });
     return { ok: true, phase: gameState.phase };
   }
   // DEV-TOOLS:END

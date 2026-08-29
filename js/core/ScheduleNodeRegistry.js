@@ -12,19 +12,22 @@ const definitions = {
   text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string")] },
   choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("branchCount", VALUE, "number")] },
   branch: { label: "逻辑分支", flowInputs: [flowIn()], flowOutputs: [flowOut("false"), flowOut("true")], valueInputs: [input("condition")] },
+  waitUntil: { label: "阻塞直到", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("condition", VALUE, "bool")] },
   diceCheck: { label: "骰子检定", flowInputs: [flowIn()], flowOutputs: [flowOut("largeSuccess"), flowOut("success"), flowOut("failure"), flowOut("largeFailure")], valueInputs: [input("n", VALUE, "number")] },
   consumeTime: { label: "消耗时间", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("minutes", VALUE, "number")] },
-  setGlobal: { label: "操作公共变量", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("variableId"), input("value")] },
+  setGlobal: { label: "操作公共变量", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("variableId"), input("value"), input("delta", VALUE, "number")] },
   insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string")] },
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   endCg:  { label: "结束 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
+  showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },
+  segmentBranch: { label: "分段分支", flowInputs: [flowIn()], flowOutputs: [flowOut("segment0")], valueInputs: [input("value", VALUE, "number"), input("branchCount", VALUE, "number"), input("boundary0", VALUE, "number")] },
   inventoryOperation: { label: "操作背包", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("itemId", VALUE, "string"), input("count", VALUE, "number")] },
-  statOperation: { label: "操作数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
+  statOperation: { label: "操作主角数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
   spellOperation: { label: "调整法术状态", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getInventory: { label: "背包取值", valueInputs: [input("itemId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
-  getProtagonistStat: { label: "主角数值取值", valueInputs: [input("statId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
+
   getScheduleStatus: { label: "日程状态", valueInputs: [input("instanceId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
   getScheduleInstanceCount: { label: "日程实例数量", valueInputs: [input("scheduleId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
   getGameTime: { label: "当前游戏时间", valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
@@ -39,6 +42,18 @@ export function getScheduleNodeDefinition(type) {
 export function getScheduleNodePort(type, portName, direction, node = null) {
   const def = getScheduleNodeDefinition(type);
   if (!def) return null;
+  if (type === "segmentBranch") {
+    const match = /^(segment|boundary)(\d+)$/.exec(portName);
+    if (match) {
+      const index = Number(match[2]);
+      const count = Number.isInteger(Number(node?.inputs?.branchCount))
+        ? Math.max(1, Math.min(32, Number(node.inputs.branchCount)))
+        : 1;
+      if (match[1] === "segment" && direction === "output" && index < count) return { name: portName, kind: FLOW, type: null };
+      if (match[1] === "boundary" && direction === "input" && index <= count) return { name: portName, kind: VALUE, type: "number" };
+      return null;
+    }
+  }
   if (type === "choice" && /^(option|label)\d+$/.test(portName)) {
     const index = Number(portName.replace(/\D/g, ''));
     const count = node && Number.isInteger(Number(node.inputs?.branchCount))

@@ -328,6 +328,126 @@
               "text": "哈哈，被你发现了。"
             },
             "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
           }
         },
         "connections": [
@@ -339,6 +459,12 @@
           },
           {
             "fromNodeId": "n1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
             "fromPort": "flowOut",
             "toNodeId": "n2",
             "toPort": "flowIn"
@@ -352,6 +478,12 @@
           {
             "fromNodeId": "n3",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
+            "fromPort": "flowOut",
             "toNodeId": "n4",
             "toPort": "flowIn"
           },
@@ -363,6 +495,12 @@
           },
           {
             "fromNodeId": "n5",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
             "fromPort": "flowOut",
             "toNodeId": "n6",
             "toPort": "flowIn"
@@ -376,6 +514,12 @@
           {
             "fromNodeId": "n7",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
+            "fromPort": "flowOut",
             "toNodeId": "n8",
             "toPort": "flowIn"
           },
@@ -387,6 +531,12 @@
           },
           {
             "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
             "fromPort": "flowOut",
             "toNodeId": "n10",
             "toPort": "flowIn"
@@ -412,6 +562,12 @@
           {
             "fromNodeId": "n12",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
+            "fromPort": "flowOut",
             "toNodeId": "n13",
             "toPort": "flowIn"
           },
@@ -435,6 +591,12 @@
           },
           {
             "fromNodeId": "n15",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
             "fromPort": "flowOut",
             "toNodeId": "n16",
             "toPort": "flowIn"
@@ -460,6 +622,12 @@
           {
             "fromNodeId": "n18",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
             "toNodeId": "n19",
             "toPort": "flowIn"
           },
@@ -471,6 +639,12 @@
           },
           {
             "fromNodeId": "n20",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
             "fromPort": "flowOut",
             "toNodeId": "n21",
             "toPort": "flowIn"
@@ -496,19 +670,13 @@
           {
             "fromNodeId": "choice_final_25_0_0",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
+            "fromPort": "flowOut",
             "toNodeId": "choice_final_25_0_1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_final_25_0_1",
-            "fromPort": "flowOut",
-            "toNodeId": "choice_final_25_0_2",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_final_25_0_2",
-            "fromPort": "flowOut",
-            "toNodeId": "end",
             "toPort": "flowIn"
           },
           {
@@ -532,11 +700,35 @@
           {
             "fromNodeId": "choice_final_25_1_1",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
+            "fromPort": "flowOut",
             "toNodeId": "choice_final_25_1_2",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "choice_final_25_1_2",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_0_1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_25_0_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_25_0_2",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
@@ -799,6 +991,126 @@
               "text": "那你就做好准备为游戏之神奉献全部吧。"
             },
             "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
           }
         },
         "connections": [
@@ -811,17 +1123,35 @@
           {
             "fromNodeId": "n1",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
             "toNodeId": "n2",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n2",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
+            "fromPort": "flowOut",
             "toNodeId": "n3",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n3",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
             "fromPort": "flowOut",
             "toNodeId": "n4",
             "toPort": "flowIn"
@@ -835,11 +1165,23 @@
           {
             "fromNodeId": "n5",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
+            "fromPort": "flowOut",
             "toNodeId": "n6",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
             "fromPort": "flowOut",
             "toNodeId": "n7",
             "toPort": "flowIn"
@@ -865,11 +1207,23 @@
           {
             "fromNodeId": "n9",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
+            "fromPort": "flowOut",
             "toNodeId": "n10",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n10",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
             "fromPort": "flowOut",
             "toNodeId": "n11",
             "toPort": "flowIn"
@@ -889,17 +1243,35 @@
           {
             "fromNodeId": "n12",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
             "toNodeId": "n13",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n13",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
             "toNodeId": "n14",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n11",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
             "fromPort": "flowOut",
             "toNodeId": "n15",
             "toPort": "flowIn"
@@ -919,6 +1291,12 @@
           {
             "fromNodeId": "n16",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
+            "fromPort": "flowOut",
             "toNodeId": "choice_final_20",
             "toPort": "flowIn"
           },
@@ -926,18 +1304,6 @@
             "fromNodeId": "choice_final_20",
             "fromPort": "option0",
             "toNodeId": "choice_final_20_op0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_final_20_op0",
-            "fromPort": "flowOut",
-            "toNodeId": "choice_final_20_0_0",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice_final_20_0_0",
-            "fromPort": "flowOut",
-            "toNodeId": "end",
             "toPort": "flowIn"
           },
           {
@@ -954,6 +1320,24 @@
           },
           {
             "fromNodeId": "choice_final_20_1_0",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20_op0",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_final_20_0_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_final_20_0_0",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"
@@ -1252,6 +1636,126 @@
               "text": "魔怔人是你吧，我从来不刷题。"
             },
             "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
           }
         },
         "connections": [
@@ -1264,11 +1768,23 @@
           {
             "fromNodeId": "n1",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
             "toNodeId": "n2",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
             "fromPort": "flowOut",
             "toNodeId": "n3",
             "toPort": "flowIn"
@@ -1282,6 +1798,12 @@
           {
             "fromNodeId": "n4",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
             "toNodeId": "n5",
             "toPort": "flowIn"
           },
@@ -1293,6 +1815,12 @@
           },
           {
             "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
             "fromPort": "flowOut",
             "toNodeId": "n7",
             "toPort": "flowIn"
@@ -1306,11 +1834,23 @@
           {
             "fromNodeId": "n8",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
             "toNodeId": "n9",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
             "fromPort": "flowOut",
             "toNodeId": "choice10",
             "toPort": "flowIn"
@@ -1336,6 +1876,12 @@
           {
             "fromNodeId": "n12",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
+            "fromPort": "flowOut",
             "toNodeId": "n13",
             "toPort": "flowIn"
           },
@@ -1360,6 +1906,12 @@
           {
             "fromNodeId": "n14",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
             "toNodeId": "n16",
             "toPort": "flowIn"
           },
@@ -1378,11 +1930,23 @@
           {
             "fromNodeId": "n17",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
             "toNodeId": "n18",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n18",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
             "fromPort": "flowOut",
             "toNodeId": "n19",
             "toPort": "flowIn"
@@ -1395,6 +1959,12 @@
           },
           {
             "fromNodeId": "n20",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_11",
             "fromPort": "flowOut",
             "toNodeId": "choice_final_24",
             "toPort": "flowIn"
@@ -1412,19 +1982,25 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice_final_24_0_0",
-            "fromPort": "flowOut",
-            "toNodeId": "end",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "choice_final_24",
             "fromPort": "option1",
             "toNodeId": "choice_final_24_op1",
             "toPort": "flowIn"
           },
           {
+            "fromNodeId": "choice_final_24_0_0",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
             "fromNodeId": "choice_final_24_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
             "fromPort": "flowOut",
             "toNodeId": "choice_final_24_1_0",
             "toPort": "flowIn"
@@ -1729,6 +2305,126 @@
               "text": "真好笑。"
             },
             "outputs": {}
+          },
+          "consume_time_20_1": {
+            "id": "consume_time_20_1",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_2": {
+            "id": "consume_time_20_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_3": {
+            "id": "consume_time_20_3",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_4": {
+            "id": "consume_time_20_4",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_5": {
+            "id": "consume_time_20_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_6": {
+            "id": "consume_time_20_6",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_7": {
+            "id": "consume_time_20_7",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_8": {
+            "id": "consume_time_20_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_9": {
+            "id": "consume_time_20_9",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_10": {
+            "id": "consume_time_20_10",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_11": {
+            "id": "consume_time_20_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
+          },
+          "consume_time_20_12": {
+            "id": "consume_time_20_12",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {},
+            "x": 30,
+            "y": 40
           }
         },
         "connections": [
@@ -1741,11 +2437,23 @@
           {
             "fromNodeId": "n1",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_1",
+            "fromPort": "flowOut",
             "toNodeId": "n2",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n2",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_2",
             "fromPort": "flowOut",
             "toNodeId": "n3",
             "toPort": "flowIn"
@@ -1759,6 +2467,12 @@
           {
             "fromNodeId": "n4",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_3",
+            "fromPort": "flowOut",
             "toNodeId": "n5",
             "toPort": "flowIn"
           },
@@ -1770,6 +2484,12 @@
           },
           {
             "fromNodeId": "n6",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_4",
             "fromPort": "flowOut",
             "toNodeId": "n7",
             "toPort": "flowIn"
@@ -1783,11 +2503,23 @@
           {
             "fromNodeId": "n8",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_5",
+            "fromPort": "flowOut",
             "toNodeId": "n9",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n9",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_6",
             "fromPort": "flowOut",
             "toNodeId": "choice10",
             "toPort": "flowIn"
@@ -1813,6 +2545,12 @@
           {
             "fromNodeId": "n12",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_7",
+            "fromPort": "flowOut",
             "toNodeId": "n13",
             "toPort": "flowIn"
           },
@@ -1837,6 +2575,12 @@
           {
             "fromNodeId": "n14",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_8",
+            "fromPort": "flowOut",
             "toNodeId": "n16",
             "toPort": "flowIn"
           },
@@ -1855,11 +2599,23 @@
           {
             "fromNodeId": "n17",
             "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_9",
+            "fromPort": "flowOut",
             "toNodeId": "n18",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "n18",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_10",
             "fromPort": "flowOut",
             "toNodeId": "n19",
             "toPort": "flowIn"
@@ -1885,13 +2641,13 @@
           {
             "fromNodeId": "choice_final_23_0_0",
             "fromPort": "flowOut",
-            "toNodeId": "choice_final_23_0_1",
+            "toNodeId": "consume_time_20_11",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice_final_23_0_1",
+            "fromNodeId": "consume_time_20_11",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "choice_final_23_0_1",
             "toPort": "flowIn"
           },
           {
@@ -1901,7 +2657,19 @@
             "toPort": "flowIn"
           },
           {
+            "fromNodeId": "choice_final_23_0_1",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
             "fromNodeId": "choice_final_23_op1",
+            "fromPort": "flowOut",
+            "toNodeId": "consume_time_20_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "consume_time_20_12",
             "fromPort": "flowOut",
             "toNodeId": "choice_final_23_1_0",
             "toPort": "flowIn"

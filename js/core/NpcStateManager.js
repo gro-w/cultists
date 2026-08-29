@@ -2,9 +2,10 @@ import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { itemManager } from "./ItemManager.js";
 import { mainQueue } from "./ScheduleQueue.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 function clamp(value) {
-  return Math.max(0, Math.min(100, Number(value) || 0));
+  return Math.max(0, Math.min(256, Number(value) || 0));
 }
 
 /**
@@ -30,22 +31,36 @@ class NpcStateManager {
     this.offlineActors = new Set();
     this.pendingOfflineActors = new Set();
     this.npcs = [];
+    this.indexById = new Map();
     this._loadPromise = null;
+    eventBus.on("global-variable:changed", ({ id, value }) => {
+      const actorId = id === 5 ? "chatgtp" : id >= 60 && id < 80 ? this.npcs[id - 60]?.id : null;
+      if (!actorId) return;
+      this.san.set(actorId, value);
+      eventBus.emit("npcState:changed", { actorId, san: value });
+      if (value <= this._offlineThreshold() && !this.offlineActors.has(actorId) && !this.pendingOfflineActors.has(actorId)) this._goOffline(actorId);
+    });
   }
 
   /** Load `data/npc_state.json` (idempotent, safe to call concurrently). */
   async load() {
     if (!this._loadPromise) {
       this._loadPromise = Promise.all([
+        globalVariableManager.init(),
         dataLoader.loadJSON("npc_state.json"),
         dataLoader.loadJSON("npcs.json"),
-      ]).then(([data, npcDoc]) => {
+      ]).then(([, data, npcDoc]) => {
         this.config = data;
         this.npcs = npcDoc.npcs || [];
-        this.npcs.forEach((npc) => {
+        globalVariableManager.set(5, this._defaultSan(), { emit: false });
+        this.san.set("chatgtp", this._defaultSan());
+        this.npcs.slice(0, 20).forEach((npc, index) => {
+          this.indexById.set(npc.id, index);
           if (!this.san.has(npc.id)) {
             const initialSan = Number(npc.initialSan);
-            this.san.set(npc.id, Math.max(0, Math.min(100, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
+            const value = Math.max(0, Math.min(256, Number.isFinite(initialSan) ? initialSan : this._defaultSan()));
+            this.san.set(npc.id, value);
+            globalVariableManager.set(60 + index, value, { emit: false });
           }
         });
       });
@@ -67,12 +82,20 @@ class NpcStateManager {
 
   /** Current SAN (0-100) for an actor id; unseen actors start at the configured default. */
   get(actorId) {
+    const globalId = this._globalIdForActor(actorId);
+    if (globalId !== null && globalVariableManager.get(globalId) !== undefined) return globalVariableManager.get(globalId);
     if (!this.san.has(actorId)) {
       const npc = this.npcs.find((entry) => entry.id === actorId);
       const initialSan = Number(npc?.initialSan);
-      this.san.set(actorId, Math.max(0, Math.min(100, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
+      this.san.set(actorId, Math.max(0, Math.min(256, Number.isFinite(initialSan) ? initialSan : this._defaultSan())));
     }
     return this.san.get(actorId);
+  }
+
+  _globalIdForActor(actorId) {
+    if (actorId === "chatgtp") return 5;
+    const index = this.indexById.get(actorId);
+    return index === undefined ? null : 60 + index;
   }
 
   isOffline(actorId) {
@@ -88,18 +111,18 @@ class NpcStateManager {
   modify(actorId, delta) {
     if (!actorId || !delta) return;
     const next = clamp(this.get(actorId) + delta);
-    this.san.set(actorId, next);
-    eventBus.emit("npcState:changed", { actorId, san: next });
-    if (next <= this._offlineThreshold() && !this.offlineActors.has(actorId) && !this.pendingOfflineActors.has(actorId)) {
-      this._goOffline(actorId);
-    }
+    const globalId = this._globalIdForActor(actorId);
+    if (globalId === null) { this.san.set(actorId, next); eventBus.emit("npcState:changed", { actorId, san: next }); return; }
+    globalVariableManager.set(globalId, next);
   }
 
   /** Set an actor's SAN directly for developer tools and deterministic probes. */
   setSan(actorId, value, { offline = false } = {}) {
     if (!actorId) return;
     const next = clamp(value);
-    this.san.set(actorId, next);
+    const globalId = this._globalIdForActor(actorId);
+    if (globalId === null) return;
+    globalVariableManager.set(globalId, next);
     if (offline) this.offlineActors.add(actorId);
     else this.offlineActors.delete(actorId);
     eventBus.emit("npcState:changed", { actorId, san: next, offline: this.offlineActors.has(actorId), developer: true });
@@ -144,9 +167,18 @@ class NpcStateManager {
     };
   }
 
-  restore({ san = {}, offline = [], pendingOffline = [] } = {}) {
-    Object.entries(san).forEach(([id, value]) => {
-      if (this.san.has(id) || this.npcs.some((npc) => npc.id === id)) this.san.set(id, Math.max(0, Math.min(100, Number(value) || 0)));
+  restore({ san = {}, offline = [], pendingOffline = [] } = {}, { useGlobalValues = false } = {}) {
+    if (!useGlobalValues) Object.entries(san).forEach(([id, value]) => {
+      if (this.san.has(id) || this.npcs.some((npc) => npc.id === id) || id === "chatgtp") {
+        const next = Math.max(0, Math.min(256, Number(value) || 0));
+        this.san.set(id, next);
+        const globalId = this._globalIdForActor(id);
+        if (globalId !== null) globalVariableManager.set(globalId, next, { emit: false });
+      }
+    });
+    if (useGlobalValues) this.san.forEach((_, id) => {
+      const globalId = this._globalIdForActor(id);
+      if (globalId !== null) this.san.set(id, globalVariableManager.get(globalId));
     });
     this.offlineActors = new Set(offline.filter((id) => this.san.has(id)));
     this.pendingOfflineActors = new Set(pendingOffline.filter((id) => this.san.has(id) && !this.offlineActors.has(id)));

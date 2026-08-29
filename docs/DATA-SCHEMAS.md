@@ -67,11 +67,17 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 ```json
 [
-  { "id": 0, "name": "是否取得钥匙", "type": "bool", "default": false },
-  { "id": 1, "name": "调查进度", "type": "number", "default": 0 },
-  { "id": 2, "name": "金钱", "type": "decimal", "default": 0 }
+  { "id": 0, "name": "变量0", "type": "bool", "default": false },
+  { "id": 1, "name": "主角SAN", "type": "number", "default": 100 },
+  { "id": 2, "name": "金钱", "type": "decimal", "default": 0 },
+  { "id": 5, "name": "ChatGTP SAN", "type": "number", "default": 80 },
+  { "id": 20, "name": "主角技能0点", "type": "number", "default": 0 },
+  { "id": 40, "name": "NPC0好感度", "type": "number", "default": 0 },
+  { "id": 60, "name": "NPC0 SAN", "type": "number", "default": 0 }
 ]
 ```
+
+实际语言数据还必须包含全部 `id=0..99` 的系统预留定义；上例只展示关键 ID。
 
 约束：
 
@@ -141,7 +147,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 
 新日程可以使用对象式蓝图：`nodes` 是节点 ID 到节点对象的映射，`connections` 保存类型化引脚连接，`startNodeId` 指向唯一的 `flowStart` 节点。流程引脚只能连接流程引脚，数值引脚只能连接数值引脚；一个节点不能同时拥有流程输出和数值输出。旧 `dialogueTree` 会在运行时兼容迁移。完整的节点端口、运行时语义和蓝图语法见 [`SCHEDULE-BLUEPRINTS.md`](./SCHEDULE-BLUEPRINTS.md)。
 
-当前注册的节点包括：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`waitUntil`、`diceCheck`、`segmentBranch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`favorabilityOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前注册的节点包括：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`waitUntil`、`diceCheck`、`segmentBranch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
 `consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。它按输入值通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点；20 分钟是普通行动的约定单位，蓝图运行器本身不把 `minutes` 强制限制为 20 的倍数。数值输入可以连接运算或取值节点。完整节点语法见 [`SCHEDULE-BLUEPRINTS.md`](./SCHEDULE-BLUEPRINTS.md)。
 
@@ -161,7 +167,7 @@ maininit.json                     # 游戏启动时加入 mainQueue 的初始日
 - `useCondition.requires`：物品数量条件
 - `useCondition.sanMin` / `sanMax`：SAN 条件
 - `useCondition.globalVariables`：全局变量条件
-- `schedules.investigate` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图。使用和调查效果都使用通用的 `statOperation`、`inventoryOperation`、`setGlobal` 等操作节点表达，结局可放在结束节点的 `onShow.ending`，时间推进使用后继的 `consumeTime` 节点；按技能检定时，将 `getProtagonistStat` 的 `value` 连接到 `diceCheck.n`。调查文本使用普通 `text` 节点，图片使用 `showImage`，调查文本可带 `inspection` 元数据以生成调查回调。`segmentBranch` 接收 `value`、`branchCount=n` 和降序的 `boundary0..boundaryN` 共 `n+2` 个数值输入，另有 `flowIn`，输出 `segment0..segmentN-1` 共 `n` 个流程分支；第 i 段满足 `boundary[i+1] < value ≤ boundary[i]`。
+- `schedules.investigate` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图。使用和调查效果都使用通用的 `statOperation`、`inventoryOperation`、`setGlobal` 等操作节点表达，结局可放在结束节点的 `onShow.ending`，时间推进使用后继的 `consumeTime` 节点；按技能检定时，将 `getGlobal` 的 `value` 连接到 `diceCheck.n`。调查文本使用普通 `text` 节点，图片使用 `showImage`，调查文本可带 `inspection` 元数据以生成调查回调。`segmentBranch` 接收 `value`、`branchCount=n` 和降序的 `boundary0..boundaryN` 共 `n+2` 个数值输入，另有 `flowIn`，输出 `segment0..segmentN-1` 共 `n` 个流程分支；第 i 段满足 `boundary[i+1] < value ≤ boundary[i]`。
 - realtime 操作使用运行时 effect：ChatGTP 可使用 `npcSanChanges`，HIS 使用 `medicalSubmission`，NPC 离线使用 `npcOffline`；这些 effect 与同一实例的时间推进一起执行。
 - `isBook`、`spells`：可学习法术的书籍
 

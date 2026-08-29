@@ -3,6 +3,28 @@ import { eventBus } from "./EventBus.js";
 
 const TYPES = new Set(["bool", "number", "decimal", "string"]);
 const OPERATORS = new Set(["eq", "neq", "gt", "gte", "lt", "lte"]);
+const RESERVED_MIN_ID = 0;
+const RESERVED_MAX_ID = 99;
+
+export const RESERVED_GLOBAL_VARIABLE_MIN_ID = RESERVED_MIN_ID;
+export const RESERVED_GLOBAL_VARIABLE_MAX_ID = RESERVED_MAX_ID;
+
+function reservedDefinition(id) {
+  if (id < RESERVED_MIN_ID || id > RESERVED_MAX_ID) return null;
+  if (id === 0) return { id, name: "变量0", type: "bool", default: false };
+  if (id === 1) return { id, name: "主角SAN", type: "number", default: 100 };
+  if (id === 2) return { id, name: "金钱", type: "decimal", default: 0 };
+  if (id === 5) return { id, name: "ChatGTP SAN", type: "number", default: 80 };
+  if (id >= 20 && id < 40) return { id, name: `主角技能${id - 20}点`, type: "number", default: 0 };
+  if (id >= 40 && id < 60) return { id, name: `NPC${id - 40}好感度`, type: "number", default: 0 };
+  if (id >= 60 && id < 80) return { id, name: `NPC${id - 60} SAN`, type: "number", default: 0 };
+  return { id, name: `预留变量${id}`, type: "number", default: 0 };
+}
+
+export function isReservedGlobalVariableId(id) {
+  const normalized = variableId(id);
+  return normalized !== null && normalized >= RESERVED_MIN_ID && normalized <= RESERVED_MAX_ID;
+}
 
 function clone(value) {
   return value == null ? value : JSON.parse(JSON.stringify(value));
@@ -37,6 +59,10 @@ class GlobalVariableManager {
   definition(id) {
     const normalized = variableId(id);
     return normalized == null ? null : this.definitions.find((definition) => definition.id === normalized) || null;
+  }
+
+  isReserved(id) {
+    return isReservedGlobalVariableId(id);
   }
 
   get(id) {
@@ -89,6 +115,14 @@ class GlobalVariableManager {
       return definition;
     });
     if (new Set(definitions.map((definition) => definition.id)).size !== definitions.length) throw new Error("Global variable IDs must be unique");
+    for (let id = RESERVED_MIN_ID; id <= RESERVED_MAX_ID; id += 1) {
+      const actual = definitions.find((definition) => definition.id === id);
+      const expected = reservedDefinition(id);
+      if (!actual) throw new Error(`Reserved global variable ${id} cannot be deleted`);
+      if (actual.name !== expected.name || actual.type !== expected.type || actual.default !== expected.default) {
+        throw new Error(`Reserved global variable ${id} cannot be modified`);
+      }
+    }
     definitions.sort((a, b) => a.id - b.id);
     const oldValues = this.values;
     this.definitions = definitions;

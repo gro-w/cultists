@@ -1,5 +1,6 @@
 import { eventBus } from "./EventBus.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
+import { globalVariableManager } from "./GlobalVariableManager.js";
 
 function phaseForClock(clockMinutes) {
   return clockMinutes >= 8 * 60 && clockMinutes < 16 * 60 ? "day" : "night";
@@ -25,10 +26,27 @@ class GameState {
     this.duty = "on-duty"; // "on-duty" | "off-duty"
     this.location = "work"; // compatibility alias for the current duty mode
     this.energy = 100;
-    this.mental = 100;
+    this._mental = 100;
     this.physical = 100;
     this.satiety = 70;
     this.recoverableMentalLoss = 0;
+    eventBus.on("global-variable:changed", ({ id, previous, value }) => {
+      if (id !== 1) return;
+      this._mental = value;
+      if (previous === value) return;
+      eventBus.emit("game:sanity_changed", { value, delta: value - (typeof previous === "number" ? previous : value) });
+      eventBus.emit("gamestate:changed", this.snapshot());
+    });
+  }
+
+  get mental() {
+    return globalVariableManager.get(1) ?? this._mental;
+  }
+
+  set mental(value) {
+    const next = clamp(value);
+    this._mental = next;
+    if (globalVariableManager.definition(1)) globalVariableManager.set(1, next);
   }
 
   getGameTime() {
@@ -79,9 +97,9 @@ class GameState {
 
   modify({ energy = 0, mental = 0, physical = 0, satiety = 0 } = {}) {
     const prevMental = this.mental;
-    this.energy = clamp(this.energy + energy);
-    this.mental = clamp(this.mental + mental);
-    this.physical = clamp(this.physical + physical);
+    this.energy = clamp(this.energy + energy, 0, 100);
+    this.mental = clamp(this.mental + mental, 0, 256);
+    this.physical = clamp(this.physical + physical, 0, 100);
     this.satiety = clamp(this.satiety + satiety, 0, SATIETY_MAX);
     // Emit a semantic sanity-change event for the achievement system whenever
     // mental (= SAN / 理智值) actually moves.  This keeps AchievementManager
@@ -96,7 +114,7 @@ class GameState {
   applyMentalLoss(amount, { recoverable = false } = {}) {
     const loss = Math.max(0, Number(amount) || 0);
     if (!loss) return;
-    this.mental = clamp(this.mental - loss);
+    this.mental = clamp(this.mental - loss, 0, 256);
     if (recoverable) this.recoverableMentalLoss += loss;
     eventBus.emit("gamestate:changed", this.snapshot());
   }
@@ -105,7 +123,7 @@ class GameState {
     const recovery = Math.min(this.recoverableMentalLoss, Math.max(0, Number(amount) || 0));
     if (!recovery) return 0;
     this.recoverableMentalLoss -= recovery;
-    this.mental = clamp(this.mental + recovery);
+    this.mental = clamp(this.mental + recovery, 0, 256);
     eventBus.emit("gamestate:changed", this.snapshot());
     return recovery;
   }
@@ -130,9 +148,9 @@ class GameState {
     this.phase = derivedPhase;
     this.duty = duty || (location === "dorm" ? "off-duty" : "on-duty");
     this.location = location || (this.duty === "on-duty" ? "work" : "dorm");
-    if (typeof energy === "number") this.energy = clamp(energy);
-    if (typeof mental === "number") this.mental = clamp(mental);
-    if (typeof physical === "number") this.physical = clamp(physical);
+    if (typeof energy === "number") this.energy = clamp(energy, 0, 100);
+    if (typeof mental === "number") this.mental = clamp(mental, 0, 256);
+    if (typeof physical === "number") this.physical = clamp(physical, 0, 100);
     if (typeof satiety === "number") this.satiety = clamp(satiety, 0, SATIETY_MAX);
     if (typeof recoverableMentalLoss === "number") {
       this.recoverableMentalLoss = Math.max(0, recoverableMentalLoss);
@@ -157,7 +175,7 @@ class GameState {
   }
 }
 
-function clamp(value, min = 0, max = 100) {
+function clamp(value, min = 0, max = 256) {
   return Math.min(max, Math.max(min, value));
 }
 

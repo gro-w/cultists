@@ -163,8 +163,12 @@ class SaveManager {
     }
     endingManager.beginRestore();
     try {
-      globalVariableManager.restore(payload.globalVariables || []);
-      gameState.restore(payload.gameState);
+      const globalVariables = payload.globalVariables || [];
+      const hasGlobalVariable = (id) => globalVariables.some((entry) => Number(entry.id) === id);
+      globalVariableManager.restore(globalVariables);
+      const gameStatePayload = { ...payload.gameState };
+      if (hasGlobalVariable(1)) delete gameStatePayload.mental;
+      gameState.restore(gameStatePayload);
       timeService.restore(payload.timeService || {});
       workQueue.restore(payload.workQueue);
       socialQueue.restore(payload.socialQueue);
@@ -174,9 +178,15 @@ class SaveManager {
       keywordManager.restoreCollected(payload.keywords || []);
       itemManager.restoreInventory(payload.inventory || []);
       spellManager.restore(payload.spells || []);
-      npcStateManager.restore(payload.npcState || {});
+      npcStateManager.restore(payload.npcState || {}, { useGlobalValues: hasGlobalVariable(5) || globalVariables.some((entry) => {
+        const id = Number(entry.id);
+        return id >= 60 && id <= 79;
+      }) });
       medicalCaseManager.restore(payload.medical || {});
-      favorabilityManager.restore(payload.favorability || {});
+      favorabilityManager.restore(payload.favorability || {}, { useGlobalValues: globalVariables.some((entry) => {
+        const id = Number(entry.id);
+        return id >= 40 && id <= 59;
+      }) });
       itemPlacementManager.restore(payload.itemPlacements || []);
       dialogueProgress.restore(payload.dialogueProgress || {});
       endingManager.restore(payload.ending || {});

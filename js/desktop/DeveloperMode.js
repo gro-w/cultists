@@ -348,7 +348,7 @@ export class DeveloperMode {
         <label>时 <input data-hour type="number" min="0" max="23" value="${hour}"></label>
         <label>分 <input data-minute type="number" min="0" max="59" value="${minute}"></label>
         <label>地点 <select data-location><option value="work" ${gameState.location === "work" ? "selected" : ""}>工作</option><option value="dorm" ${gameState.location === "dorm" ? "selected" : ""}>宿舍</option></select></label>
-        <div>${button("应用时间", "apply-time")} ${button("强制下班（忽略阻塞）", "force-end-work")} <span>当前总分钟：${total}；阶段累计：${time.phaseMinutes} 分钟</span></div>
+        <div>${button("应用时间", "apply-time")} ${button("强制下班（忽略阻塞）", "force-end-work", "dev-btn-danger")} <span>当前总分钟：${total}；阶段累计：${time.phaseMinutes} 分钟</span></div>
         <p>阶段：${esc(gameState.phase)}；值班：${esc(gameState.duty)}；位置：${esc(gameState.location)}；睡眠历史：${esc((time.sleepHistory || []).join(", ") || "无")}；连续睡眠不足：${time.insufficientSleepStreak || 0} 天</p>
       </section>
       <section class="dev-section"><h3>成就调试器</h3>

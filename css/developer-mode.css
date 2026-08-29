@@ -72,6 +72,8 @@
 .dev-btn-data:hover { background: #2828a0; }
 .dev-btn-runtime { background: #d4d0c8; color: #111; border-color: #808080; }
 .dev-btn-runtime:hover { background: #e4e0d8; }
+.dev-btn-danger { background: #c00000; color: #fff; border-color: #800000; }
+.dev-btn-danger:hover { background: #e00000; }
 .dev-ded-root { padding: 8px; background: #c7d9f7; border: 1px solid #6f86ad; }
 .dev-ded-header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
 .dev-ded-header strong { font-size: 14px; }

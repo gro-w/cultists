@@ -54,14 +54,6 @@ let phaseToggleLabel = () => gameState.location === "work"
 // DEV-TOOLS:START
 let developerModeEnabled = false;
 developerModeEnabled = isDeveloperModeSearch();
-phaseToggleLabel = () => gameState.location === "work"
-  ? "强制下班"
-  : dayNightSystem.currentClockMinutes() >= 8 * 60 && dayNightSystem.currentClockMinutes() < 16 * 60
-    ? "去上班"
-    : "去睡觉";
-phaseToggleLaunch = () => developerModeEnabled && gameState.location === "work"
-  ? dayNightSystem.forceEndWork()
-  : handlePhaseToggle();
 // DEV-TOOLS:END
 
 /**

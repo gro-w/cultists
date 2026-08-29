@@ -138,7 +138,7 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 
 新日程可以使用对象式蓝图：`nodes` 是节点 ID 到节点对象的映射，`connections` 保存类型化引脚连接，`startNodeId` 指向唯一的 `flowStart` 节点。流程引脚只能连接流程引脚，数值引脚只能连接数值引脚；一个节点不能同时拥有流程输出和数值输出。旧 `dialogueTree` 会在运行时兼容迁移。
 
-当前注册的节点包括：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`skillCheck`、`sanBand`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`itemInspect`、`itemEffect`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
+当前注册的节点包括：`flowStart`、`scheduleEnd`、`text`、`choice`、`branch`、`diceCheck`、`skillCheck`、`segmentBranch`、`consumeTime`、`setGlobal`、`insertSchedule`、`showCg`、`showImage`、`itemInspect`、`itemEffect`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getProtagonistStat`、`getScheduleStatus`、`getScheduleInstanceCount`、`getGameTime`。
 
 `consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。输入必须是非负整数且为 20 分钟的倍数；执行时通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、日程和结算检查点。数值输入可以连接运算或取值节点。
 
@@ -161,7 +161,7 @@ workpub.json / socialpub.json     # 公共日程文件，可由编辑器编辑
 - `useEffect.remove` / `add` / `statChanges` / `npcSanChanges` / `npcOffline` / `timeAdvance` / `ending`
 - realtime 操作使用运行时 effect：ChatGTP 可使用 `npcSanChanges`，HIS 使用 `medicalSubmission`，NPC 离线使用 `npcOffline`；这些 effect 与同一实例的时间推进一起执行。
 - `useEffect.globalVariables`：使用成功后的变量效果
-- `schedules.investigate` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图；调查蓝图使用 `sanBand`、`skillCheck`、`showImage`、`itemInspect`、`itemEffect` 和 `consumeTime` 表达原调查属性
+- `schedules.investigate` / `schedules.use` / `schedules.obtain` / `schedules.lose`：四类直接嵌套在物品对象中的日程蓝图；调查蓝图使用 `segmentBranch`、`skillCheck`、`showImage`、`itemInspect`、`itemEffect` 和公共 `consumeTime` 表达原调查属性。`segmentBranch` 接收 `value`、`branchCount=n` 和降序的 `boundary0..boundaryN` 共 `n+2` 个数值输入，另有 `flowIn`，输出 `segment0..segmentN-1` 共 `n` 个流程分支；第 i 段满足 `boundary[i+1] < value ≤ boundary[i]`。
 - `isBook`、`spells`：可学习法术的书籍
 
 调查蓝图 `itemInspect` 节点中的关键词标记会传给 `KeywordManager`；节点的 `revealKeywordIds` 会自动收集，文本标记则由玩家点击收集。

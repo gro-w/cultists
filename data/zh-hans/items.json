@@ -693,12 +693,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -754,14 +763,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band1:time": {
-              "id": "band1:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band2:image": {
               "id": "band2:image",
               "type": "showImage",
@@ -792,14 +793,6 @@
                   "mental": -5
                 }
               }
-            },
-            "band2:time": {
-              "id": "band2:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             },
             "band3:image": {
               "id": "band3:image",
@@ -833,14 +826,6 @@
                 }
               }
             },
-            "band3:time": {
-              "id": "band3:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band4:image": {
               "id": "band4:image",
               "type": "showImage",
@@ -871,14 +856,6 @@
                   "mental": -5
                 }
               }
-            },
-            "band4:time": {
-              "id": "band4:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             },
             "band5:image": {
               "id": "band5:image",
@@ -911,14 +888,6 @@
                 }
               }
             },
-            "band5:time": {
-              "id": "band5:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band6:image": {
               "id": "band6:image",
               "type": "showImage",
@@ -936,14 +905,6 @@
               },
               "outputs": {},
               "revealKeywordIds": []
-            },
-            "band6:time": {
-              "id": "band6:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             }
           },
           "connections": [
@@ -955,7 +916,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:image",
               "toPort": "flowIn"
             },
@@ -979,7 +940,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:image",
               "toPort": "flowIn"
             },
@@ -992,18 +953,12 @@
             {
               "fromNodeId": "band1:result",
               "fromPort": "flowOut",
-              "toNodeId": "band1:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band1:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:image",
               "toPort": "flowIn"
             },
@@ -1022,18 +977,12 @@
             {
               "fromNodeId": "band2:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band2:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band2:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:image",
               "toPort": "flowIn"
             },
@@ -1052,18 +1001,12 @@
             {
               "fromNodeId": "band3:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band3:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band3:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:image",
               "toPort": "flowIn"
             },
@@ -1082,18 +1025,12 @@
             {
               "fromNodeId": "band4:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band4:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band4:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:image",
               "toPort": "flowIn"
             },
@@ -1112,18 +1049,12 @@
             {
               "fromNodeId": "band5:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band5:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band5:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:image",
               "toPort": "flowIn"
             },
@@ -1136,13 +1067,7 @@
             {
               "fromNodeId": "band6:result",
               "fromPort": "flowOut",
-              "toNodeId": "band6:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band6:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             }
           ]
@@ -1190,12 +1115,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -1251,14 +1185,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band1:time": {
-              "id": "band1:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band2:image": {
               "id": "band2:image",
               "type": "showImage",
@@ -1281,14 +1207,6 @@
                 "绿色水怪"
               ]
             },
-            "band2:time": {
-              "id": "band2:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band3:image": {
               "id": "band3:image",
               "type": "showImage",
@@ -1308,14 +1226,6 @@
               "revealKeywordIds": [
                 "药"
               ]
-            },
-            "band3:time": {
-              "id": "band3:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             },
             "band4:image": {
               "id": "band4:image",
@@ -1341,14 +1251,6 @@
                 "深潜秘药"
               ]
             },
-            "band4:time": {
-              "id": "band4:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band5:image": {
               "id": "band5:image",
               "type": "showImage",
@@ -1367,14 +1269,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band5:time": {
-              "id": "band5:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band6:image": {
               "id": "band6:image",
               "type": "showImage",
@@ -1392,14 +1286,6 @@
               },
               "outputs": {},
               "revealKeywordIds": []
-            },
-            "band6:time": {
-              "id": "band6:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             }
           },
           "connections": [
@@ -1411,7 +1297,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:image",
               "toPort": "flowIn"
             },
@@ -1435,7 +1321,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:image",
               "toPort": "flowIn"
             },
@@ -1448,18 +1334,12 @@
             {
               "fromNodeId": "band1:result",
               "fromPort": "flowOut",
-              "toNodeId": "band1:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band1:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:image",
               "toPort": "flowIn"
             },
@@ -1472,18 +1352,12 @@
             {
               "fromNodeId": "band2:result",
               "fromPort": "flowOut",
-              "toNodeId": "band2:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band2:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:image",
               "toPort": "flowIn"
             },
@@ -1496,18 +1370,12 @@
             {
               "fromNodeId": "band3:result",
               "fromPort": "flowOut",
-              "toNodeId": "band3:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band3:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:image",
               "toPort": "flowIn"
             },
@@ -1520,18 +1388,12 @@
             {
               "fromNodeId": "band4:result",
               "fromPort": "flowOut",
-              "toNodeId": "band4:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band4:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:image",
               "toPort": "flowIn"
             },
@@ -1544,18 +1406,12 @@
             {
               "fromNodeId": "band5:result",
               "fromPort": "flowOut",
-              "toNodeId": "band5:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band5:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:image",
               "toPort": "flowIn"
             },
@@ -1568,13 +1424,7 @@
             {
               "fromNodeId": "band6:result",
               "fromPort": "flowOut",
-              "toNodeId": "band6:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band6:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             }
           ]
@@ -1610,12 +1460,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -1721,7 +1580,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -1733,7 +1592,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -1745,7 +1604,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -1757,7 +1616,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -1769,7 +1628,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -1781,7 +1640,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -1793,7 +1652,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -1836,12 +1695,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -1945,7 +1813,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -1957,7 +1825,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -1969,7 +1837,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -1981,7 +1849,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -1993,7 +1861,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -2005,7 +1873,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -2017,7 +1885,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -2074,12 +1942,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -2119,14 +1996,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band1:time": {
-              "id": "band1:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band2:result": {
               "id": "band2:result",
               "type": "itemInspect",
@@ -2139,14 +2008,6 @@
                 "邪教"
               ]
             },
-            "band2:time": {
-              "id": "band2:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band3:result": {
               "id": "band3:result",
               "type": "itemInspect",
@@ -2156,14 +2017,6 @@
               },
               "outputs": {},
               "revealKeywordIds": []
-            },
-            "band3:time": {
-              "id": "band3:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             },
             "band4:result": {
               "id": "band4:result",
@@ -2177,14 +2030,6 @@
                 "克苏鲁"
               ]
             },
-            "band4:time": {
-              "id": "band4:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band5:result": {
               "id": "band5:result",
               "type": "itemInspect",
@@ -2195,14 +2040,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band5:time": {
-              "id": "band5:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band6:result": {
               "id": "band6:result",
               "type": "itemInspect",
@@ -2212,14 +2049,6 @@
               },
               "outputs": {},
               "revealKeywordIds": []
-            },
-            "band6:time": {
-              "id": "band6:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             }
           },
           "connections": [
@@ -2231,7 +2060,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -2249,110 +2078,74 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band1:result",
               "fromPort": "flowOut",
-              "toNodeId": "band1:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band1:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band2:result",
               "fromPort": "flowOut",
-              "toNodeId": "band2:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band2:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band3:result",
               "fromPort": "flowOut",
-              "toNodeId": "band3:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band3:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band4:result",
               "fromPort": "flowOut",
-              "toNodeId": "band4:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band4:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band5:result",
               "fromPort": "flowOut",
-              "toNodeId": "band5:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band5:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band6:result",
               "fromPort": "flowOut",
-              "toNodeId": "band6:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band6:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             }
           ]
@@ -2388,12 +2181,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -2496,7 +2298,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -2508,7 +2310,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -2520,7 +2322,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -2532,7 +2334,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -2544,7 +2346,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -2556,7 +2358,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -2568,7 +2370,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -2611,12 +2413,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -2722,7 +2533,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -2734,7 +2545,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -2746,7 +2557,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -2758,7 +2569,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -2770,7 +2581,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -2782,7 +2593,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -2794,7 +2605,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -2837,12 +2648,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -2946,7 +2766,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -2958,7 +2778,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -2970,7 +2790,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -2982,7 +2802,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -2994,7 +2814,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -3006,7 +2826,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -3018,7 +2838,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -3078,12 +2898,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -3126,14 +2955,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band1:time": {
-              "id": "band1:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band2:result": {
               "id": "band2:result",
               "type": "itemInspect",
@@ -3145,14 +2966,6 @@
               "revealKeywordIds": [
                 "跑团"
               ]
-            },
-            "band2:time": {
-              "id": "band2:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             },
             "band3:result": {
               "id": "band3:result",
@@ -3168,14 +2981,6 @@
                 "大衮"
               ]
             },
-            "band3:time": {
-              "id": "band3:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band4:result": {
               "id": "band4:result",
               "type": "itemInspect",
@@ -3189,14 +2994,6 @@
                 "克苏鲁"
               ]
             },
-            "band4:time": {
-              "id": "band4:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band5:result": {
               "id": "band5:result",
               "type": "itemInspect",
@@ -3207,14 +3004,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band5:time": {
-              "id": "band5:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band6:result": {
               "id": "band6:result",
               "type": "itemInspect",
@@ -3224,14 +3013,6 @@
               },
               "outputs": {},
               "revealKeywordIds": []
-            },
-            "band6:time": {
-              "id": "band6:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             }
           },
           "connections": [
@@ -3243,7 +3024,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -3261,110 +3042,74 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band1:result",
               "fromPort": "flowOut",
-              "toNodeId": "band1:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band1:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band2:result",
               "fromPort": "flowOut",
-              "toNodeId": "band2:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band2:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band3:result",
               "fromPort": "flowOut",
-              "toNodeId": "band3:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band3:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band4:result",
               "fromPort": "flowOut",
-              "toNodeId": "band4:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band4:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band5:result",
               "fromPort": "flowOut",
-              "toNodeId": "band5:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band5:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band6:result",
               "fromPort": "flowOut",
-              "toNodeId": "band6:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band6:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             }
           ]
@@ -3411,12 +3156,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -3456,14 +3210,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band1:time": {
-              "id": "band1:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band2:result": {
               "id": "band2:result",
               "type": "itemInspect",
@@ -3473,14 +3219,6 @@
               },
               "outputs": {},
               "revealKeywordIds": []
-            },
-            "band2:time": {
-              "id": "band2:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             },
             "band3:result": {
               "id": "band3:result",
@@ -3494,14 +3232,6 @@
                 "大衮密教"
               ]
             },
-            "band3:time": {
-              "id": "band3:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band4:result": {
               "id": "band4:result",
               "type": "itemInspect",
@@ -3514,14 +3244,6 @@
                 "深潜秘药"
               ]
             },
-            "band4:time": {
-              "id": "band4:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band5:result": {
               "id": "band5:result",
               "type": "itemInspect",
@@ -3532,14 +3254,6 @@
               "outputs": {},
               "revealKeywordIds": []
             },
-            "band5:time": {
-              "id": "band5:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
-            },
             "band6:result": {
               "id": "band6:result",
               "type": "itemInspect",
@@ -3549,14 +3263,6 @@
               },
               "outputs": {},
               "revealKeywordIds": []
-            },
-            "band6:time": {
-              "id": "band6:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 60
-              },
-              "outputs": {}
             }
           },
           "connections": [
@@ -3568,7 +3274,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -3586,110 +3292,74 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band1:result",
               "fromPort": "flowOut",
-              "toNodeId": "band1:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band1:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band2:result",
               "fromPort": "flowOut",
-              "toNodeId": "band2:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band2:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band3:result",
               "fromPort": "flowOut",
-              "toNodeId": "band3:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band3:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band4:result",
               "fromPort": "flowOut",
-              "toNodeId": "band4:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band4:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band5:result",
               "fromPort": "flowOut",
-              "toNodeId": "band5:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band5:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "band6:result",
               "fromPort": "flowOut",
-              "toNodeId": "band6:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band6:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             }
           ]
@@ -3725,12 +3395,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -3833,7 +3512,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -3845,7 +3524,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -3857,7 +3536,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -3869,7 +3548,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -3881,7 +3560,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -3893,7 +3572,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -3905,7 +3584,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -3948,12 +3627,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -4057,7 +3745,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -4069,7 +3757,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -4081,7 +3769,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -4093,7 +3781,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -4105,7 +3793,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -4117,7 +3805,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -4129,7 +3817,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -4173,12 +3861,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -4242,14 +3939,6 @@
                 }
               }
             },
-            "band1:time": {
-              "id": "band1:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 240
-              },
-              "outputs": {}
-            },
             "band2:result": {
               "id": "band2:result",
               "type": "itemInspect",
@@ -4271,14 +3960,6 @@
                   "mental": 5
                 }
               }
-            },
-            "band2:time": {
-              "id": "band2:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 240
-              },
-              "outputs": {}
             },
             "band3:result": {
               "id": "band3:result",
@@ -4302,14 +3983,6 @@
                 }
               }
             },
-            "band3:time": {
-              "id": "band3:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 240
-              },
-              "outputs": {}
-            },
             "band4:result": {
               "id": "band4:result",
               "type": "itemInspect",
@@ -4331,14 +4004,6 @@
                   "mental": 5
                 }
               }
-            },
-            "band4:time": {
-              "id": "band4:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 240
-              },
-              "outputs": {}
             },
             "band5:result": {
               "id": "band5:result",
@@ -4362,14 +4027,6 @@
                 }
               }
             },
-            "band5:time": {
-              "id": "band5:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 240
-              },
-              "outputs": {}
-            },
             "band6:result": {
               "id": "band6:result",
               "type": "itemInspect",
@@ -4391,14 +4048,6 @@
                   "mental": 5
                 }
               }
-            },
-            "band6:time": {
-              "id": "band6:time",
-              "type": "consumeTime",
-              "inputs": {
-                "minutes": 240
-              },
-              "outputs": {}
             }
           },
           "connections": [
@@ -4410,7 +4059,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -4434,7 +4083,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -4447,18 +4096,12 @@
             {
               "fromNodeId": "band1:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band1:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band1:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -4471,18 +4114,12 @@
             {
               "fromNodeId": "band2:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band2:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band2:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -4495,18 +4132,12 @@
             {
               "fromNodeId": "band3:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band3:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band3:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -4519,18 +4150,12 @@
             {
               "fromNodeId": "band4:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band4:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band4:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -4543,18 +4168,12 @@
             {
               "fromNodeId": "band5:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band5:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band5:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -4567,13 +4186,7 @@
             {
               "fromNodeId": "band6:effect",
               "fromPort": "flowOut",
-              "toNodeId": "band6:time",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "band6:time",
-              "fromPort": "flowOut",
-              "toNodeId": "end",
+              "toNodeId": "band0:time",
               "toPort": "flowIn"
             }
           ]
@@ -4609,12 +4222,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -4716,7 +4338,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -4728,7 +4350,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -4740,7 +4362,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -4752,7 +4374,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -4764,7 +4386,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -4776,7 +4398,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -4788,7 +4410,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -4831,12 +4453,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -4939,7 +4570,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -4951,7 +4582,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -4963,7 +4594,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -4975,7 +4606,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -4987,7 +4618,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -4999,7 +4630,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -5011,7 +4642,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -5054,12 +4685,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -5153,7 +4793,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -5165,7 +4805,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -5177,7 +4817,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -5189,7 +4829,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -5201,7 +4841,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -5213,7 +4853,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -5225,7 +4865,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -5268,12 +4908,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -5371,7 +5020,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -5383,7 +5032,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -5395,7 +5044,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -5407,7 +5056,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -5419,7 +5068,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -5431,7 +5080,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -5443,7 +5092,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -5486,12 +5135,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -5594,7 +5252,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -5606,7 +5264,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -5618,7 +5276,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -5630,7 +5288,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -5642,7 +5300,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -5654,7 +5312,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -5666,7 +5324,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -5711,12 +5369,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -5810,7 +5477,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -5822,7 +5489,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -5834,7 +5501,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -5846,7 +5513,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -5858,7 +5525,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -5870,7 +5537,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -5882,7 +5549,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -5924,12 +5591,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -6021,7 +5697,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -6033,7 +5709,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -6045,7 +5721,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -6057,7 +5733,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -6069,7 +5745,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -6081,7 +5757,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -6093,7 +5769,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },
@@ -6135,12 +5811,21 @@
             },
             "san": {
               "id": "san",
-              "type": "sanBand",
+              "type": "segmentBranch",
               "inputs": {
-                "mental": {
+                "value": {
                   "nodeId": "mental",
                   "port": "value"
-                }
+                },
+                "branchCount": 7,
+                "boundary0": 100,
+                "boundary1": 90,
+                "boundary2": 70,
+                "boundary3": 50,
+                "boundary4": 30,
+                "boundary5": 15,
+                "boundary6": 0,
+                "boundary7": -1
               },
               "outputs": {}
             },
@@ -6232,7 +5917,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": ">90",
+              "fromPort": "segment0",
               "toNodeId": "band0:result",
               "toPort": "flowIn"
             },
@@ -6244,7 +5929,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "70-90",
+              "fromPort": "segment1",
               "toNodeId": "band1:result",
               "toPort": "flowIn"
             },
@@ -6256,7 +5941,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "50-70",
+              "fromPort": "segment2",
               "toNodeId": "band2:result",
               "toPort": "flowIn"
             },
@@ -6268,7 +5953,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "30-50",
+              "fromPort": "segment3",
               "toNodeId": "band3:result",
               "toPort": "flowIn"
             },
@@ -6280,7 +5965,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "15-30",
+              "fromPort": "segment4",
               "toNodeId": "band4:result",
               "toPort": "flowIn"
             },
@@ -6292,7 +5977,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "0-15",
+              "fromPort": "segment5",
               "toNodeId": "band5:result",
               "toPort": "flowIn"
             },
@@ -6304,7 +5989,7 @@
             },
             {
               "fromNodeId": "san",
-              "fromPort": "=0",
+              "fromPort": "segment6",
               "toNodeId": "band6:result",
               "toPort": "flowIn"
             },

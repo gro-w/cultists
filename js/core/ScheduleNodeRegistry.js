@@ -18,7 +18,7 @@ const definitions = {
   insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string")] },
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },
-  sanBand: { label: "SAN 分段", flowInputs: [flowIn()], flowOutputs: [flowOut(">90"), flowOut("70-90"), flowOut("50-70"), flowOut("30-50"), flowOut("15-30"), flowOut("0-15"), flowOut("=0")], valueInputs: [input("mental", VALUE, "number")] },
+  segmentBranch: { label: "分段分支", flowInputs: [flowIn()], flowOutputs: [flowOut("segment0")], valueInputs: [input("value", VALUE, "number"), input("branchCount", VALUE, "number"), input("boundary0", VALUE, "number")] },
   skillCheck: { label: "技能检定", flowInputs: [flowIn()], flowOutputs: [flowOut("criticalSuccess"), flowOut("success"), flowOut("failure"), flowOut("criticalFailure")], valueInputs: [input("skillId", VALUE, "string")] },
   itemInspect: { label: "调查结果", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("text", VALUE, "string"), input("itemId", VALUE, "string")] },
   itemEffect: { label: "调查效果", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
@@ -43,6 +43,18 @@ export function getScheduleNodeDefinition(type) {
 export function getScheduleNodePort(type, portName, direction, node = null) {
   const def = getScheduleNodeDefinition(type);
   if (!def) return null;
+  if (type === "segmentBranch") {
+    const match = /^(segment|boundary)(\d+)$/.exec(portName);
+    if (match) {
+      const index = Number(match[2]);
+      const count = Number.isInteger(Number(node?.inputs?.branchCount))
+        ? Math.max(1, Math.min(32, Number(node.inputs.branchCount)))
+        : 1;
+      if (match[1] === "segment" && direction === "output" && index < count) return { name: portName, kind: FLOW, type: null };
+      if (match[1] === "boundary" && direction === "input" && index <= count) return { name: portName, kind: VALUE, type: "number" };
+      return null;
+    }
+  }
   if (type === "choice" && /^(option|label)\d+$/.test(portName)) {
     const index = Number(portName.replace(/\D/g, ''));
     const count = node && Number.isInteger(Number(node.inputs?.branchCount))

@@ -792,6 +792,16 @@ export class DevDialogueEditorTab {
     if (node.type === 'choice' && direction === 'input') {
       for (let index = 0; index < choiceCount; index += 1) ports.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
+    if (node.type === 'segmentBranch') {
+      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
+      if (direction === 'output') return [{ name: 'segment0', kind: 'flow', type: null }, ...Array.from({ length: count - 1 }, (_, index) => ({ name: `segment${index + 1}`, kind: 'flow', type: null }))];
+      return [
+        { name: 'flowIn', kind: 'flow', type: null },
+        { name: 'value', kind: 'value', type: 'number' },
+        { name: 'branchCount', kind: 'value', type: 'number' },
+        ...Array.from({ length: count + 1 }, (_, index) => ({ name: `boundary${index}`, kind: 'value', type: 'number' })),
+      ];
+    }
     return ports;
   }
 
@@ -1168,6 +1178,10 @@ export class DevDialogueEditorTab {
       const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : (node.options || []).length));
       for (let index = 0; index < count; index += 1) valueInputs.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
+    if (node.type === 'segmentBranch') {
+      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
+      for (let index = 1; index <= count; index += 1) valueInputs.push({ name: `boundary${index}`, kind: 'value', type: 'number' });
+    }
     const html=[...(def.flowInputs || []).map(port => `<div class="dev-de-input-row"><span>${this._e(port.name)}</span><em>流程输入引脚</em></div>`), ...valueInputs.map(port => {
       const connection=connections.find(item=>item.toNodeId===node.id && item.toPort===port.name);
       const modeKey=`${node.id}:${port.name}`;
@@ -1196,6 +1210,7 @@ export class DevDialogueEditorTab {
     if(!node || !port || port.kind!=='value') return;
     node.inputs={...(node.inputs||{}),[name]:port.type==='number' && value!=='' ? Number(value) : value};
     if (node.type === 'choice' && name === 'branchCount') this._syncChoiceOptions(node);
+    if (node.type === 'segmentBranch' && name === 'branchCount') this._syncSegmentPorts(node);
     if (node.type === 'choice') {
       const labelIndex = /^label(\d+)$/.exec(name)?.[1];
       if (labelIndex != null) {
@@ -1217,6 +1232,19 @@ export class DevDialogueEditorTab {
     if (data) data.connections = (data.connections || []).filter((connection) => {
       const removedOutput = connection.fromNodeId === node.id && connection.fromPort?.startsWith('option') && Number(connection.fromPort.slice(6)) >= count;
       const removedInput = connection.toNodeId === node.id && connection.toPort?.startsWith('label') && Number(connection.toPort.slice(5)) >= count;
+      return !removedOutput && !removedInput;
+    });
+  }
+
+  _syncSegmentPorts(node) {
+    const count = Math.max(1, Math.min(32, Math.floor(Number(node.inputs?.branchCount) || 1)));
+    node.inputs ||= {};
+    for (let index = 0; index <= count; index += 1) if (!Object.prototype.hasOwnProperty.call(node.inputs, `boundary${index}`)) node.inputs[`boundary${index}`] = 0;
+    Object.keys(node.inputs).filter(name => /^boundary\d+$/.test(name) && Number(name.slice(8)) > count).forEach(name => delete node.inputs[name]);
+    const data = this._ctxData();
+    if (data) data.connections = (data.connections || []).filter((connection) => {
+      const removedOutput = connection.fromNodeId === node.id && connection.fromPort?.startsWith('segment') && Number(connection.fromPort.slice(7)) >= count;
+      const removedInput = connection.toNodeId === node.id && connection.toPort?.startsWith('boundary') && Number(connection.toPort.slice(8)) > count;
       return !removedOutput && !removedInput;
     });
   }

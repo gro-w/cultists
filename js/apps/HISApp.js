@@ -132,8 +132,10 @@ export async function launchHISApp() {
       patientListEl.appendChild(btn);
       });
 
-    const currentPatient = entry.patients.find((p) => p.queueStatus !== "resolved") || entry.patients[0];
-    renderDialogue(currentPatient, keywordDefs);
+    currentRecord = null;
+    dialogueEl.innerHTML = "<h4>与病人的对话</h4><p class=\"dialogue-end\">请选择左侧病人开始问诊。</p>";
+    diagnosisEl.innerHTML = "<h4>诊断</h4>";
+    prescriptionEl.innerHTML = "<h4>处方</h4>";
   }
 
   function renderMedicalIncidentButtons() {

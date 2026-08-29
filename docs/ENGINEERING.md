@@ -182,7 +182,7 @@ App 点击
 - `items.json`：物品、调查、使用效果和书籍法术。
 - `item_placements.json`：场景物品摆放。
 - `diagnoses.json`、`medicines.json`：医疗知识图谱。
-- `global_variables.json`：顶层数组，ID 唯一，类型为 bool/number/string。
+- `global_variables.json`：顶层数组，ID 唯一，类型为 bool/number/decimal/string；decimal 为精确到小数点后 2 位的实数。
 - `special_events.json`、`endings.json`、`achievements.json`：特殊事件、结局和成就。
 - `social_apps.json`：宿舍电脑中的社交网站、群聊和 ChatGTP 每日内容。
 - `bgm.json`、`locations.json`：BGM 资源/规则和位置、子位置、热点定义。

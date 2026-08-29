@@ -28,7 +28,7 @@
 | `ScheduleQueue` | 独立的 `workQueue`、`socialQueue`、`chatgtpQueue` 和非阻塞 `mainQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件和使用效果 |
 | `ItemPlacementManager` | 场景中的条件物品摆放、拾取和放回 |
-| `GlobalVariableManager` | 数据定义的 bool/number/string 全局变量、条件和效果 |
+| `GlobalVariableManager` | 数据定义的 bool/number/decimal/string 全局变量、条件和效果 |
 | `SpellManager` | 已学习法术、法术施放和法术状态事件 |
 | `KeywordManager` | 关键词注册、收集、来源和笔记本数据 |
 | `ScheduleRunner` | HIS/Social/Monitor 对话及所有对象式日程蓝图执行器 |

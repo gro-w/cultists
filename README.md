@@ -67,7 +67,7 @@ docs/                      架构、数据 schema 和协作指南
 | `TimeService` | 唯一普通游戏时间推进与阶段结算 owner |
 | `ScheduleData` / `ScheduleQueue` / `ScheduleRunner` | 按时间加载内容，维护 work/social/chatgtp/main 队列并执行统一日程 |
 | `ItemManager` / `ItemPlacementManager` | 背包、物品调查、物品使用和场景物品 |
-| `GlobalVariableManager` | bool、0–256 number、string 全局变量的条件和效果 |
+| `GlobalVariableManager` | bool、0–256 number/decimal、string 全局变量的条件和效果 |
 | `SpellManager` | 已学习法术和 SAN 消耗的施放 |
 | `DialogueRunner` / `DialogueEffects` | 共享对话树、条件和显示时副作用 |
 | `KeywordManager` / `NotebookApp` | 关键词收集、来源、查询和法术笔记本 |

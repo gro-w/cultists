@@ -87,9 +87,9 @@ export default ExampleManager;
 - UI 外壳字符串走 `i18n.t()` 并维护 `data/strings.<lang>.json`；剧情和内容直接放语言数据目录。
 - 关键词内容只能来自 `keywords.json`；对话关键词通过 `[[keyword_id]]` 标记引用。
 - NPC 使用稳定 `npcId`；不要把角色显示名当作持久化 ID。
-- 全局变量文件顶层是数组；ID 唯一、非负整数；类型只能是 `bool`、`number`、`string`；number 范围 `0..256`。
+- 全局变量文件顶层是数组；ID 唯一、非负整数；类型只能是 `bool`、`number`、`decimal`、`string`；number/decimal 范围 `0..256`，decimal 精确到小数点后 2 位。
 - 条件支持 `condition`/`globalVariableCondition`、`globalVariables`、`all`、`any` 和 `eq/neq/gt/gte/lt/lte`。
-- 全局变量效果使用 `value`，number 才能使用 `delta`。
+- 全局变量效果使用 `value`，number/decimal 才能使用 `delta`。
 - 书籍法术放在物品的 `spells` 数组；学习 240 分钟，施放默认消耗 5 SAN。代码存在不代表当前数据已有法术。
 
 完整字段示例见 `docs/DATA-SCHEMAS.md`，状态与事件流见 `docs/ARCHITECTURE.md`。

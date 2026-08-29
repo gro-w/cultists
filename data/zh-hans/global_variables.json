@@ -4,5 +4,11 @@
     "name": "变量0",
     "type": "bool",
     "default": false
+  },
+  {
+    "id": 2,
+    "name": "金钱",
+    "type": "decimal",
+    "default": 0
   }
 ]

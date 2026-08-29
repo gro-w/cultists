@@ -313,6 +313,15 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.ending-schedule-options .dialogue-continue,
+.ending-schedule-options button {
+  min-width: 110px;
+  padding: 8px 18px;
+  font-size: 14px;
 }
 
 .ending-final {

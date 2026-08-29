@@ -15,14 +15,8 @@ import { keywordManager } from "./KeywordManager.js";
  *     id, name,
  *     consumable: boolean,   // removed from inventory after a successful use
  *     usable: boolean,       // whether "使用" is available at all
- *     schedules: { investigate, use, obtain, lose }, // item-owned blueprints
  *     useCondition: { requires: [{ itemId, count }] },  // optional
- *     useEffect: {
- *       remove: [{ itemId, count }],
- *       add: [{ itemId, count }],
- *       statChanges: { energy, mental, physical, satiety },
- *       ending: string  // optional ending id (data/endings.json) triggered on success
- *     },
+ *     schedules: { investigate, use, obtain, lose }, // item-owned blueprints
  *     failMessage, successMessage
  *   }
  */
@@ -196,13 +190,11 @@ class ItemManager {
       return { ok: false, message: def.failMessage || "理智值过高，此时已无法从书籍中学习法术。" };
     }
 
-    const effect = { ...(def.useEffect || {}) };
-    if (def.consumable) effect.remove = [...(effect.remove || []), { itemId: id, count: 1 }];
     const result = { ok: true, message: def.successMessage || `使用了${def.name}。` };
     // Let EndingManager (and anything else) react to a successful item use
     // without ItemManager needing to import it directly.
     // The item-owned schedule is now the sole effect/time execution owner.
-    this._emitItemSchedule(id, "use", { effect, timeMinutes: effect.timeAdvance || 0 });
+    this._emitItemSchedule(id, "use");
 
     // 书籍法术学习：0 < SAN ≤ 50 时使用书籍触发，游戏层负责展示学习界面
     if (def.isBook && def.spells && def.spells.length > 0) {

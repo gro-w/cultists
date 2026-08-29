@@ -57,20 +57,6 @@
       "name": "一把旧钥匙",
       "consumable": false,
       "usable": true,
-      "useEffect": {
-        "remove": [
-          {
-            "itemId": "locked_box",
-            "count": 1
-          }
-        ],
-        "add": [
-          {
-            "itemId": "opened_box",
-            "count": 1
-          }
-        ]
-      },
       "failMessage": "身上没有需要用这把钥匙打开的盒子，这把钥匙暂时用不上。",
       "successMessage": "你用旧钥匙打开了锁住的盒子。",
       "pickable": false,
@@ -114,6 +100,57 @@
             },
             {
               "fromNodeId": "plain:result",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            },
+            "use:effect": {
+              "id": "use:effect",
+              "type": "itemEffect",
+              "inputs": {},
+              "outputs": {},
+              "effect": {
+                "remove": [
+                  {
+                    "itemId": "locked_box",
+                    "count": 1
+                  }
+                ],
+                "add": [
+                  {
+                    "itemId": "opened_box",
+                    "count": 1
+                  }
+                ]
+              }
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "use:effect",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:effect",
               "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
@@ -332,11 +369,6 @@
       "name": "三明治",
       "consumable": true,
       "usable": true,
-      "useEffect": {
-        "statChanges": {
-          "satiety": 6
-        }
-      },
       "successMessage": "吃掉了三明治，饱腹感增加了。",
       "pickable": false,
       "worldCount": 1,
@@ -382,6 +414,54 @@
               "toPort": "flowIn"
             }
           ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            },
+            "use:effect": {
+              "id": "use:effect",
+              "type": "itemEffect",
+              "inputs": {},
+              "outputs": {},
+              "effect": {
+                "statChanges": {
+                  "satiety": 6
+                },
+                "remove": [
+                  {
+                    "itemId": "sandwich",
+                    "count": 1
+                  }
+                ]
+              }
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "use:effect",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:effect",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ]
         }
       }
     },
@@ -390,11 +470,6 @@
       "name": "暴食套餐",
       "consumable": true,
       "usable": true,
-      "useEffect": {
-        "statChanges": {
-          "satiety": 90
-        }
-      },
       "successMessage": "你把整份套餐都吃光了，感觉肚子快要撑破了。",
       "pickable": false,
       "worldCount": 1,
@@ -440,6 +515,54 @@
               "toPort": "flowIn"
             }
           ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            },
+            "use:effect": {
+              "id": "use:effect",
+              "type": "itemEffect",
+              "inputs": {},
+              "outputs": {},
+              "effect": {
+                "statChanges": {
+                  "satiety": 90
+                },
+                "remove": [
+                  {
+                    "itemId": "feast_set",
+                    "count": 1
+                  }
+                ]
+              }
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "use:effect",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:effect",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ]
         }
       }
     },
@@ -448,9 +571,6 @@
       "name": "不明液体",
       "consumable": true,
       "usable": true,
-      "useEffect": {
-        "ending": "poisoned_death"
-      },
       "successMessage": "你喝下了这瓶不明液体……",
       "pickable": false,
       "worldCount": 1,
@@ -595,6 +715,52 @@
               "toPort": "flowIn"
             }
           ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            },
+            "use:effect": {
+              "id": "use:effect",
+              "type": "itemEffect",
+              "inputs": {},
+              "outputs": {},
+              "effect": {
+                "ending": "poisoned_death",
+                "remove": [
+                  {
+                    "itemId": "mystery_potion",
+                    "count": 1
+                  }
+                ]
+              }
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "use:effect",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:effect",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ]
         }
       }
     },
@@ -674,7 +840,6 @@
         "不能想了。\n\n四千年来时时吃人的地方，今天才明白，我也在其中混了多年；大哥正管着家务，妹子恰恰死了，他未必不和在饭菜里，暗暗给我们吃。\n\n我未必无意之中，不吃了我妹子的几片肉，现在也轮到我自己，……\n\n有了四千年吃人履历的我，当初虽然不知道，现在明白，难见真的人！\n\n没有吃过人的孩子，或者还有？\n\n救救孩子……"
       ],
       "pickable": false,
-      "useEffect": {},
       "schedules": {
         "investigate": {
           "startNodeId": "start",
@@ -1073,6 +1238,31 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ]
         }
       }
     },
@@ -1098,7 +1288,6 @@
         "它们都是吃了一种药变成这样的。"
       ],
       "pickable": false,
-      "useEffect": {},
       "schedules": {
         "investigate": {
           "startNodeId": "start",
@@ -1430,6 +1619,31 @@
               "fromPort": "value",
               "toNodeId": "san",
               "toPort": "value"
+            }
+          ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
             }
           ]
         }
@@ -1931,7 +2145,6 @@
         "谁能知道，是什么痛苦的幻想创造出这些果实的呢？该不是看管金苹果园的赫斯珀里得斯三姐妹在波利尼西亚果园中培植出来的吧！奇怪的是，这些果实都象活的一样，仿佛是在混沌初开时创造出来的，当时任何事物还都没有固定的形体，丰实肥硕，散发着浓郁的热带气息，好象具有一种独特的忧郁的感情。它们是被施展了魔法的果子，任何人尝了就能打开通向不知道哪些灵魂秘密的门扉，就可以走进幻境的神秘宫殿。它们孕育着无法预知的危险，咬一口就可能把一个人变成野兽，但也说不定变成神灵。一切健康的、正常的东西，淳朴人们所有的一切美好的情谊、朴素的欢乐都远远地避开了它们；但它们又具有莫大的诱惑力，就象伊甸园中能分辨善恶的智慧果一样，能把人带进未知的境界。"
       ],
       "pickable": false,
-      "useEffect": {},
       "schedules": {
         "investigate": {
           "startNodeId": "start",
@@ -2157,6 +2370,31 @@
               "fromPort": "value",
               "toNodeId": "san",
               "toPort": "value"
+            }
+          ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
             }
           ]
         }
@@ -2895,7 +3133,6 @@
         "我要计划帮助表弟从康顿市的疯人院里逃出来，然后一同回到被奇迹笼罩着的印斯茅斯。我们将游到海中那块若隐若现的礁石边，然后下潜进黑色的深渊里，进入耸立着无数立柱、雄伟壮丽的伊哈斯雷。此后，我们将在奇迹与荣光的围绕下，永远生活在那片深潜者的栖身之地里。"
       ],
       "pickable": false,
-      "useEffect": {},
       "schedules": {
         "investigate": {
           "startNodeId": "start",
@@ -3131,6 +3368,31 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ]
         }
       }
     },
@@ -3155,7 +3417,6 @@
         "“不要认为人类是地球上最古老和最后的支配者，也不要认为在地球上行走的全是寻常可见的生命和形体。古神们昔在，今在，永在。”"
       ],
       "pickable": false,
-      "useEffect": {},
       "schedules": {
         "investigate": {
           "startNodeId": "start",
@@ -3381,6 +3642,31 @@
               "fromPort": "value",
               "toNodeId": "san",
               "toPort": "value"
+            }
+          ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
             }
           ]
         }
@@ -5384,9 +5670,6 @@
       "locations": [
         "hospital"
       ],
-      "useEffect": {
-        "ending": "abnormal_end"
-      },
       "schedules": {
         "investigate": {
           "startNodeId": "start",
@@ -5596,6 +5879,46 @@
               "fromPort": "value",
               "toNodeId": "san",
               "toPort": "value"
+            }
+          ]
+        },
+        "use": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "inputs": {},
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {}
+            },
+            "use:effect": {
+              "id": "use:effect",
+              "type": "itemEffect",
+              "inputs": {},
+              "outputs": {},
+              "effect": {
+                "ending": "abnormal_end"
+              }
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "use:effect",
+              "toPort": "flowIn"
+            },
+            {
+              "fromNodeId": "use:effect",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
             }
           ]
         }

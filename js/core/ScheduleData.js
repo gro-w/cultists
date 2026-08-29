@@ -43,7 +43,7 @@ class ScheduleData {
           requests.push(dataLoader.loadJSON(file).then((data) => {
             const entries = Array.isArray(data.entries) ? data.entries : [];
             this.slots.set(`${day}:${checkpoint.time}:${queueId}`, entries);
-            this._indexEntries(entries, queueId, "calendar");
+            this._indexEntries(entries, queueId, "calendar", file.replace(/\.json$/, ""));
           }));
         }
       }
@@ -52,7 +52,7 @@ class ScheduleData {
       requests.push(dataLoader.loadJSON(`${queueId}pub.json`).then((data) => {
         const entries = Array.isArray(data.entries) ? data.entries : [];
         this.publicEntries.set(queueId, entries);
-        this._indexEntries(entries, queueId, "public");
+        this._indexEntries(entries, queueId, "public", `${queueId}pub`);
       }));
     }
     await Promise.all(requests);
@@ -62,7 +62,7 @@ class ScheduleData {
       favorabilityManager.load(),
       npcStateManager.load(),
     ]).then(([events, endingDoc]) => [events, endingDoc]);
-    this._indexExternalEntries(specialEventManager.events, "social", "special");
+    this._indexExternalEntries(specialEventManager.events, "social", "special", "special_events");
     this._indexExternalEntries((endings.endings || []).map((ending) => ({
       ...ending,
       blueprint: ending.blueprint || ending.dialogueTree || {
@@ -73,7 +73,7 @@ class ScheduleData {
         },
         connections: [{ fromNodeId: "start", fromPort: "flowOut", toNodeId: "text", toPort: "flowIn" }],
       },
-    })), "social", "ending");
+    })), "social", "ending", "endings");
     for (const def of itemManager.defs.values()) {
       Object.values(def.schedules || def.scheduleTable || {}).forEach((schedule) => {
         const entries = Array.isArray(schedule?.entries) ? schedule.entries : [schedule];
@@ -83,24 +83,24 @@ class ScheduleData {
     this.initializeAt(gameState.day, gameState.clockMinutes);
   }
 
-  _indexExternalEntries(entries, defaultQueueId, category = "calendar") {
-    (entries || []).forEach((entry) => {
+  _indexExternalEntries(entries, defaultQueueId, category = "calendar", sourceFile = undefined) {
+    (entries || []).forEach((entry, entryIndex) => {
       if (!entry || typeof entry.id !== "string" || !entry.id.trim()) return;
       if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
       const definition = { ...entry, queueId: entry.queueId || defaultQueueId };
       this.scheduleById.set(entry.id, definition);
-      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId: definition.queueId });
+      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId: definition.queueId, sourceFile, entryIndex });
     });
   }
 
-  _indexEntries(entries, queueId, category = "calendar") {
-    entries.forEach((entry) => {
+  _indexEntries(entries, queueId, category = "calendar", sourceFile = undefined) {
+    entries.forEach((entry, entryIndex) => {
       if (!entry || typeof entry.id !== "string" || !entry.id.trim()) {
         throw new Error(`Schedule entry in ${queueId} needs a stable string id`);
       }
       if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
       this.scheduleById.set(entry.id, { ...entry, queueId });
-      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId });
+      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId, sourceFile, entryIndex });
     });
   }
 

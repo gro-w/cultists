@@ -22,7 +22,7 @@ const _IE_BANDS = [
 ];
 
 export class DevItemEditorTab {
-  constructor(devMode) {
+  constructor(devMode, options = {}) {
     this._dev = devMode;
     this.items = [];
     this.currentId = null;
@@ -30,6 +30,7 @@ export class DevItemEditorTab {
     this.currentSpellKey = null;
     this.activeSanKey = '>90';
     this.dirty = false;
+    this._initialItemId = options.initialItemId || null;
   }
 
   // ── helpers ──────────────────────────────────────────────────────────────
@@ -67,7 +68,7 @@ export class DevItemEditorTab {
   /** Called by DeveloperMode after injecting html() into the panel. */
   mount() {
     window._ie = this;
-    this._loadCurrentGame();
+    this._loadCurrentGame(this._initialItemId);
     this._renderList();
     this._loadLocationPicker();
   }
@@ -584,7 +585,8 @@ export class DevItemEditorTab {
         throw new Error('items.json 的 items 必须全部是 JSON 对象');
       }
       this.items = data.items.map(g=>this._fromGame(g));
-      this.currentId=null; this.dirty=false; this._persist(); this._renderList();
+      this.currentId = initialItemId && this.items.some((item) => item.id === initialItemId) ? initialItemId : null;
+      this.dirty=false; this._persist(); this._renderList(); this._loadForm();
       const imageCount=this.items.reduce((n,item)=>n+        +Object.values(item.sanVariants||{}).filter(v=>typeof v.image==='string'&&v.image.trim()).length,0);
       this._st('已从当前游戏读取 items.json：'+this.items.length+' 个物品，图片路径 '+imageCount+' 条');
     } catch (err) { this._st('读取当前游戏失败：'+err.message); }

@@ -173,6 +173,31 @@ export class DeveloperMode {
       el.dataset.devBound = "1";
       el.addEventListener("dblclick", () => this.handle(el.dataset.devDblclick, el));
     });
+    this.root.querySelectorAll("[data-open-schedule]").forEach((el) => {
+      el.addEventListener("click", () => this.openScheduleEditor(el.dataset.openSchedule));
+    });
+    this.root.querySelectorAll("[data-open-item]").forEach((el) => {
+      el.addEventListener("click", () => this.openItemEditor(el.dataset.openItem));
+    });
+  }
+
+  openScheduleEditor(scheduleId) {
+    const entry = scheduleData.catalog().find((candidate) => candidate.id === scheduleId);
+    if (!entry) return this.setStatus(`找不到日程定义：${scheduleId}`, true);
+    const type = entry.category === "special" ? "event" : entry.category === "ending" ? "ending" : "schedule";
+    const id = type === "schedule" ? entry.sourceFile : scheduleId;
+    const host = document.createElement("div");
+    const child = new DevDialogueEditorTab(this, { workspace: true, initialCtx: { type, id, entryIndex: entry.entryIndex || 0 } });
+    const win = windowManager.createWindow({ title: `蓝图编辑器 · ${scheduleId}`, icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
+    win.el?.classList.add("dev-blueprint-window");
+    host.innerHTML = child.html(); child.mount(host.querySelector(".dev-de-root"));
+  }
+
+  openItemEditor(itemId) {
+    const host = document.createElement("div");
+    const child = new DevItemEditorTab(this, { initialItemId: itemId });
+    windowManager.createWindow({ title: `物品编辑器 · ${itemId}`, icon: "📦", width: 900, height: 680, x: 0, y: 0, content: host });
+    host.innerHTML = child.html(); child.mount();
   }
   async openEditorWindow(action, title, kind) {
     const appId = `developer-editor-${action}`;
@@ -339,7 +364,7 @@ export class DeveloperMode {
     this.panel(`<section class="dev-section"><h3>玩家与资源</h3><p>玩家属性通过 GameState 修改；库存、法术和关键词使用各自的运行时管理器。</p><div>${stats} ${recoverable} ${button("应用玩家属性", "apply-player-stats")}</div></section><section class="dev-section"><h3>物品背包</h3>
       <div class="dev-inventory-add"><select data-item-id>${defs}</select><input data-item-count type="number" min="1" value="1">${button("增加", "add-item")}</div>
       <table class="dev-table"><thead><tr><th>物品</th><th>ID</th><th>数量</th><th>操作</th></tr></thead><tbody>
-      ${itemManager.all().map(({ id, count, def }) => `<tr><td>${def.name}</td><td>${id}</td><td>${count}</td><td>${button("−1", `remove-item-${id}`)} ${button("清空", `clear-item-${id}`)}</td></tr>`).join("") || "<tr><td colspan=4>背包为空</td></tr>"}
+      ${itemManager.all().map(({ id, count, def }) => `<tr><td><button type="button" class="win95-btn dev-btn" data-open-item="${esc(id)}">${esc(def.name || id)}</button></td><td><code>${esc(id)}</code></td><td>${count}</td><td>${button("−1", `remove-item-${id}`)} ${button("清空", `clear-item-${id}`)}</td></tr>`).join("") || "<tr><td colspan=4>背包为空</td></tr>"}
       </tbody></table></section><section class="dev-section"><h3>已学习法术</h3><ul>${learned}</ul><h3>已收集关键词</h3><ul>${keywords}</ul></section>`);
   }
 
@@ -352,7 +377,7 @@ export class DeveloperMode {
     const scheduleOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
     const queueOptions = [["", "默认（按日程定义；临时日程默认 social）"], ["work", "work"], ["social", "social"], ["chatgtp", "chatgtp"], ["realtime", "realtime"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
     const queues = [["work", workQueue], ["social", socialQueue], ["chatgtp", chatgtpQueue], ["realtime", realtimeQueue]];
-    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td>${esc(entry.scheduleId)}</td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
+    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-schedule="${esc(entry.scheduleId)}">${esc(entry.scheduleId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
     const scheduled = scheduleData.snapshotScheduled();
     this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示四个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 social 队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
     this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });

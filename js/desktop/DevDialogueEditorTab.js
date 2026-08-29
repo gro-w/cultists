@@ -162,7 +162,10 @@ export class DevDialogueEditorTab {
       if (this._initialCtx) this.currentCtx = this._initialCtx;
       this._renderCanvas();
       if (this.currentCtx) this._selectCtx(this.currentCtx.type, this.currentCtx.id, this.currentCtx.entryIndex || 0);
-    } else if (this._workspace) this._loadCurrentGame();
+    } else if (this._workspace) {
+      this.currentCtx = this._initialCtx;
+      this._loadCurrentGame();
+    }
     // try pick up items/spells from item editor localStorage
     try {
       const seed = localStorage.getItem('cultists_item_editor_v2');
@@ -1668,6 +1671,7 @@ export class DevDialogueEditorTab {
       this._saveLS();
       if (this._workspace) this._renderWorkspace();
       else { this._renderSidebar(); this._renderCanvas(); }
+      if (this._workspace && this.currentCtx) this._selectCtx(this.currentCtx.type, this.currentCtx.id, this.currentCtx.entryIndex || 0);
       this._st(`已从当前游戏读取 ${files.length} 个日程文件`);
     } catch (err) { this._st(`读取当前游戏失败：${err.message}`, true); }
   }

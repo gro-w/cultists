@@ -28,6 +28,7 @@ export class DevItemEditorTab {
     this.activeTab = 'items';
     this.currentSpellKey = null;
     this.activeSanKey = '>90';
+    this._selectedSanImageKeys = new Set();
     this.dirty = false;
     this._initialItemId = options.initialItemId || null;
     this.root = null;
@@ -335,14 +336,14 @@ export class DevItemEditorTab {
 
   _selectItem(id, skipSave) {
     if (this.currentId&&this.dirty&&!skipSave) this.saveItem(true);
-    this.currentId=id; this.activeSanKey='>90'; this.dirty=false;
+    this.currentId=id; this.activeSanKey='>90'; this._selectedSanImageKeys.clear(); this.dirty=false;
     this._loadForm(); this._renderList();
   }
 
   addItem() {
     if (this.currentId&&this.dirty) this.saveItem(true);
     const it=this._emptyItem(); this.items.push(it);
-    this.currentId=it.id; this.activeSanKey='>90'; this.dirty=false;
+    this.currentId=it.id; this.activeSanKey='>90'; this._selectedSanImageKeys.clear(); this.dirty=false;
     this._loadForm(); this._renderList();
   }
 
@@ -431,10 +432,20 @@ export class DevItemEditorTab {
   _renderSanTabs() {
     const el=this._el('ie-san-tabs'); if(!el) return;
     el.innerHTML=_IE_BANDS.map(b=>
-      `<button type="button" class="win95-btn dev-btn"
-        style="${this.activeSanKey===b.key?'background:'+b.color+';color:#fff':''}"
-        onclick="_ie._switchSanTab('${b.key}')">${this._e(b.label)}</button>`
+      `<span style="display:inline-flex;align-items:center;gap:2px">
+        <input type="checkbox" title="上传图片时同时应用到此 SAN 变体" ${this._selectedSanImageKeys.has(b.key)?'checked':''}
+          ${b.key==='=0'?'disabled':''} onchange="_ie._toggleSanImageTarget('${b.key}',this.checked)">
+        <button type="button" class="win95-btn dev-btn"
+          style="${this.activeSanKey===b.key?'background:'+b.color+';color:#fff':''}"
+          onclick="_ie._switchSanTab('${b.key}')">${this._e(b.label)}</button>
+      </span>`
     ).join('');
+  }
+  _toggleSanImageTarget(key, checked) {
+    if (key === '=0') return;
+    if (checked) this._selectedSanImageKeys.add(key);
+    else this._selectedSanImageKeys.delete(key);
+    this._renderSanTabs();
   }
   _switchSanTab(key) { this.activeSanKey=key; this._renderSanTabs(); this._renderSanPanel(); }
 
@@ -480,11 +491,11 @@ export class DevItemEditorTab {
           ${imgHTML}
           <div style="display:flex;flex-direction:column;gap:5px;flex:1">
             <div style="display:flex;gap:5px;align-items:center">
-              <input type="text" id="ie-sp-image" value="${this._e(imageValue)}" placeholder="data/assets/item_book_nahan_90_xxx.jpg" oninput="_ie._sanImageInput()" style="flex:1" ${isZeroSan?'disabled':''}>
               <label class="win95-btn dev-btn" style="cursor:${isZeroSan?'not-allowed':'pointer'};white-space:nowrap;${isZeroSan?'opacity:.55;pointer-events:none':''}" title="${isZeroSan?'SAN=0 自动沿用 SAN=100 图片':'从文件资源管理器选择物品图'}">
                 📁 浏览上传
                 <input type="file" accept="image/*" id="ie-sp-image-upload" style="display:none">
               </label>
+              <input type="text" id="ie-sp-image" value="${this._e(imageValue)}" placeholder="data/assets/item_book_nahan_90_xxx.jpg" oninput="_ie._sanImageInput()" style="flex:1;min-width:0" ${isZeroSan?'disabled':''}>
             </div>
             <span style="font-size:11px;color:#888">填写 data/assets/ 下的图片地址，或点击「浏览上传」从文件资源管理器选择图片。</span>
           </div>
@@ -501,10 +512,13 @@ export class DevItemEditorTab {
     reader.onload = () => {
       const it = this.items.find(i => i.id === this.currentId);
       if (!it) return;
-      it.sanVariants[this.activeSanKey].image = String(reader.result || '');
+      const selected = [...this._selectedSanImageKeys].filter((key) => key !== '=0' && it.sanVariants[key]);
+      const targets = selected.length ? selected : (this.activeSanKey === '=0' ? ['>90'] : [this.activeSanKey]);
+      const image = String(reader.result || '');
+      targets.forEach((key) => { it.sanVariants[key].image = image; });
       this.dirty = true;
       this._renderSanPanel();
-      this._st(`已上传物品图：${file.name}`);
+      this._st(`已上传物品图：${file.name}（应用于 ${targets.length} 个 SAN 变体）`);
     };
     reader.onerror = () => this._st(`读取物品图失败：${file.name}`, true);
     reader.readAsDataURL(file);

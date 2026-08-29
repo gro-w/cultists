@@ -27,6 +27,7 @@ export class DevLocationEditorTab {
     this._currentId = null;
     this._dirty = false;
     this._placementsDirty = false;
+    this._selectedBgBands = new Set();
     // canvas drag state
     this._dragging = false;
     this._dragSubId = null;
@@ -104,7 +105,7 @@ export class DevLocationEditorTab {
           <label>背景图片（按理智值区间）</label>
           <p style="font-size:11px;color:#888;margin:0 0 4px">每行对应一个理智值区间，进入场景时自动显示匹配的背景图。留空则任意理智值匹配。</p>
           <table class="dev-table" style="font-size:11px;width:100%">
-            <thead><tr><th>理智 ≥</th><th>理智 ≤</th><th>预览</th><th>操作</th></tr></thead>
+            <thead><tr><th>选择</th><th>理智 ≥</th><th>理智 ≤</th><th>预览</th><th>操作</th></tr></thead>
             <tbody id="le-bg-list"></tbody>
           </table>
           <button type="button" class="win95-btn dev-btn" style="margin-top:6px" onclick="_le._addBgBand()">＋ 添加背景图</button>
@@ -185,6 +186,7 @@ export class DevLocationEditorTab {
       this._locations = JSON.parse(JSON.stringify(locData.locations || []));
       this._allPlacements = JSON.parse(JSON.stringify(placData.placements || []));
       this._currentId = null;
+      this._selectedBgBands.clear();
       this._dirty = false;
       this._placementsDirty = false;
       this._bgImage = null;
@@ -214,6 +216,7 @@ export class DevLocationEditorTab {
   _selectLocation(id) {
     if (this._currentId && this._dirty) this._saveLocation(true);
     this._currentId = id;
+    this._selectedBgBands.clear();
     this._dirty = false;
     this._bgImage = null;
     this._bgImageSrc = null;
@@ -227,6 +230,7 @@ export class DevLocationEditorTab {
     const newLoc = { id: "loc_" + Math.random().toString(36).slice(2, 7), name: "新位置", backgroundImages: [], layer: "above", subLocations: [] };
     this._locations.push(newLoc);
     this._currentId = newLoc.id;
+    this._selectedBgBands.clear();
     this._dirty = false;
     this._loadForm();
     this._renderList();
@@ -530,6 +534,9 @@ export class DevLocationEditorTab {
     if (!loc.backgroundImages) loc.backgroundImages = [];
     tbody.innerHTML = loc.backgroundImages.map((band, i) => `
       <tr>
+        <td><input type="checkbox" title="上传图片时同时应用到此 SAN 区间"
+          ${this._selectedBgBands.has(i) ? "checked" : ""}
+          onchange="_le._toggleBgBandTarget(${i},this.checked)"></td>
         <td><input type="number" min="0" max="100" placeholder="—" value="${band.sanMin ?? ""}"
           style="width:48px;min-height:20px;border:2px inset #eee;padding:1px 3px;font-size:11px"
           onchange="_le._setBgBandField(${i},'sanMin',this.value)"></td>
@@ -551,10 +558,16 @@ export class DevLocationEditorTab {
           </div>
         </td>
         <td><button type="button" class="win95-btn dev-btn" onclick="_le._removeBgBand(${i})">✕</button></td>
-      </tr>`).join("") || '<tr><td colspan="4" style="color:#aaa;font-size:11px;padding:6px">暂无背景图</td></tr>';
+      </tr>`).join("") || '<tr><td colspan="5" style="color:#aaa;font-size:11px;padding:6px">暂无背景图</td></tr>';
     tbody.querySelectorAll("[data-bg-upload]").forEach((input) => {
       input.addEventListener("change", (event) => this._onBgImageFile(event, Number(input.dataset.bgUpload)));
     });
+  }
+
+  _toggleBgBandTarget(index, checked) {
+    if (checked) this._selectedBgBands.add(index);
+    else this._selectedBgBands.delete(index);
+    this._renderBgList();
   }
 
   _onBgImageFile(event, index) {
@@ -563,10 +576,13 @@ export class DevLocationEditorTab {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      this._setBgBandField(index, "image", String(reader.result || ""));
+      const selected = [...this._selectedBgBands].filter((i) => Number.isInteger(i));
+      const targets = selected.length ? selected : [index];
+      const image = String(reader.result || "");
+      targets.forEach((target) => this._setBgBandField(target, "image", image));
       this._renderBgList();
       this._redrawZoneCanvas();
-      this._st(`已上传位置背景图：${file.name}`);
+      this._st(`已上传位置背景图：${file.name}（应用于 ${targets.length} 个 SAN 区间）`);
     };
     reader.onerror = () => this._st(`读取背景图失败：${file.name}`, true);
     reader.readAsDataURL(file);
@@ -602,6 +618,9 @@ export class DevLocationEditorTab {
     const loc = this._locations.find((l) => l.id === this._currentId);
     if (!loc?.backgroundImages) return;
     loc.backgroundImages.splice(i, 1);
+    this._selectedBgBands = new Set([...this._selectedBgBands]
+      .filter((index) => index !== i)
+      .map((index) => index > i ? index - 1 : index));
     this._dirty = true;
     this._bgImage = null;
     this._bgImageSrc = null;

@@ -258,6 +258,52 @@
   opacity: 0.92;
 }
 
+.ending-schedule-status {
+  color: #9cffb8;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.ending-schedule-log {
+  width: min(760px, 90vw);
+  max-height: 48vh;
+  overflow-y: auto;
+  text-align: left;
+  border: 1px solid rgba(77, 255, 136, 0.35);
+  padding: 10px 14px;
+  box-sizing: border-box;
+}
+
+.ending-dialogue-line {
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #baffc9;
+}
+
+.ending-dialogue-line strong {
+  color: #4dff88;
+  margin-right: 6px;
+}
+
+.ending-schedule-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ending-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ending-final.hidden {
+  display: none;
+}
+
 .ending-screen-btn {
   margin-top: 8px;
 }

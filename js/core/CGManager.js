@@ -26,6 +26,7 @@ class CGManager {
     this._unlockedIds = new Set();
     this._loadPromise = null;
     this._subscribed = false;
+    this._keyHandler = null;
   }
 
   // ── lifecycle ──────────────────────────────────────────────────────────────
@@ -44,6 +45,13 @@ class CGManager {
   mount() {
     if (this._subscribed) return;
     this._subscribed = true;
+    this._keyHandler = (event) => {
+      if (event.key !== "Escape" || !this.isActive) return;
+      event.preventDefault();
+      event.stopPropagation();
+      this.end();
+    };
+    window.addEventListener("keydown", this._keyHandler);
     // ScheduleRunner emits schedule:cg for showCg nodes.
     eventBus.on("schedule:cg", ({ cgId }) => {
       if (!cgId || cgId === "") {

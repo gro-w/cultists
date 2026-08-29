@@ -3,7 +3,8 @@ import { dataLoader, writeJSONToDisk } from "../core/DataLoader.js";
 import { cgManager } from "../core/CGManager.js";
 
 const _esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const _uid = () => `cg_${Date.now().toString(36).slice(-6)}`;
+let _uidSequence = 0;
+const _uid = () => `cg_${Date.now().toString(36).slice(-6)}_${(++_uidSequence).toString(36)}`;
 
 /**
  * DevCGEditorTab — CG image resource manager panel for DeveloperMode.
@@ -99,10 +100,11 @@ export class DevCGEditorTab {
         </div>
         <div class="dev-cg-fields">
           <label>CG ID <input data-cg-id value="${_esc(cg.id)}" style="width:140px"></label>
-          <label>标签 <input data-cg-label value="${_esc(cg.label)}" style="width:180px"></label>
-          <label class="dev-cg-upload-label" title="上传图片">
-            📁 上传图片
-            <input type="file" accept="image/*" data-cg-upload="${i}" style="display:none">
+          <label>标签 <input data-cg-label value="${_esc(cg.label)}" style="width:180px"
+            oninput="_cg._onLabelInput(this)"></label>
+          <label class="dev-cg-upload-label" title="替换此 CG 图片">
+          📁 替换图片
+          <input type="file" accept="image/*" data-cg-upload="${i}" style="display:none">
           </label>
         </div>
         <div class="dev-cg-preview">
@@ -115,6 +117,10 @@ export class DevCGEditorTab {
     root.innerHTML = `
       <div class="dev-cg-toolbar">
         <button type="button" class="win95-btn dev-btn" data-cg-action="add">＋ 添加 CG</button>
+        <label class="win95-btn dev-btn" title="一次选择多张图片，每张图片创建一个新的 CG">
+          📁 批量上传新 CG
+          <input type="file" accept="image/*" multiple data-cg-batch-upload style="display:none">
+        </label>
         <button type="button" class="win95-btn dev-btn" data-cg-action="end-preview" title="结束当前游戏内预览">■ 结束预览</button>
         <button type="button" class="win95-btn dev-btn" data-cg-action="save">💾 保存到内存</button>
         <button type="button" class="win95-btn dev-btn" data-cg-action="download">⬇ 下载 cg.json</button>
@@ -131,6 +137,7 @@ export class DevCGEditorTab {
     root.querySelector("[data-cg-action='save']").addEventListener("click", () => this._doSave());
     root.querySelector("[data-cg-action='download']").addEventListener("click", () => this._doDownload());
     root.querySelector("[data-cg-action='write']").addEventListener("click", () => this._doWrite());
+    root.querySelector("[data-cg-batch-upload]").addEventListener("change", (event) => this._onBatchUpload(event));
     root.querySelector("[data-cg-action='end-preview']").addEventListener("click", () => {
       cgManager.end();
       this._st("CG 预览已结束。");
@@ -175,6 +182,49 @@ export class DevCGEditorTab {
   }
 
   // ── actions ────────────────────────────────────────────────────────────────
+
+  _readImageFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error(`读取图片失败：${file.name}`));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async _onBatchUpload(event) {
+    const input = event.target;
+    const files = Array.from(input.files || []);
+    input.value = "";
+    if (!files.length || !this._doc) return;
+    if (!this._collectAndSave()) return;
+
+    try {
+      const images = await Promise.all(files.map((file) => this._readImageFile(file)));
+      const existingIds = new Set(this._doc.cgs.map((cg) => cg.id));
+      images.forEach((imageData, index) => {
+        const file = files[index];
+        let id = _uid();
+        while (existingIds.has(id)) id = _uid();
+        existingIds.add(id);
+        const label = file.name.replace(/\.[^.]+$/, "") || "新 CG";
+        this._doc.cgs.push({ id, label, imageData });
+      });
+      this._save();
+      this._render();
+      this._st(`已批量创建 ${images.length} 个新 CG，请修改标签名称。`);
+    } catch (err) {
+      this._st(`批量上传失败：${err.message}`, true);
+    }
+  }
+
+  _onLabelInput(input) {
+    const row = input.closest("[data-cg-row]");
+    const index = Number(row?.dataset.cgRow);
+    if (!this._doc?.cgs?.[index]) return;
+    this._doc.cgs[index].label = input.value;
+    this._save();
+  }
 
   _add() {
     if (!this._doc) return;

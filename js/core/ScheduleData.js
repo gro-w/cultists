@@ -355,6 +355,10 @@ class ScheduleData {
     return { work: workQueue, social: socialQueue, main: mainQueue }[queueId] || mainQueue;
   }
 
+  definition(scheduleId) {
+    return this.scheduleById.get(scheduleId) || null;
+  }
+
   catalog(category = undefined) {
     return [...this.scheduleCatalog.values()]
       .filter((entry) => !category || entry.category === category)

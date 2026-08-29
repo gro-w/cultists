@@ -61,7 +61,9 @@ export class ScheduleValueEvaluator {
       case "or": case "或": return bool(left) || bool(right);
       case "xor": case "异或": return bool(left) !== bool(right);
       case ">": case "gt": case "大于": return left > right;
+      case ">=": case "gte": case "大于等于": return left >= right;
       case "<": case "lt": case "小于": return left < right;
+      case "<=": case "lte": case "小于等于": return left <= right;
       case "=": case "eq": case "等于": return left === right;
       case "not": case "非": return !bool(left);
       default: throw new Error(`Unknown arithmetic operator: ${operator}`);

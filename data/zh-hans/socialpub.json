@@ -19,7 +19,9 @@
           "prerequisite": {
             "id": "prerequisite",
             "type": "prerequisite",
-            "inputs": {},
+            "inputs": {
+              "condition": true
+            },
             "outputs": {}
           },
           "choice": {
@@ -769,7 +771,9 @@
           "prerequisite": {
             "id": "prerequisite",
             "type": "prerequisite",
-            "inputs": {},
+            "inputs": {
+              "condition": true
+            },
             "outputs": {}
           },
           "choice": {
@@ -1492,7 +1496,9 @@
           "prerequisite": {
             "id": "prerequisite",
             "type": "prerequisite",
-            "inputs": {},
+            "inputs": {
+              "condition": true
+            },
             "outputs": {}
           },
           "choice": {
@@ -2351,7 +2357,9 @@
           "prerequisite": {
             "id": "prerequisite",
             "type": "prerequisite",
-            "inputs": {},
+            "inputs": {
+              "condition": true
+            },
             "outputs": {}
           },
           "choice": {

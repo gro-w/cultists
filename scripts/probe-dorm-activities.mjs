@@ -47,7 +47,7 @@ for (const [day, file] of [[1, "social01b.json"], [2, "social02b.json"], [3, "so
 }
 const day5 = read("social05a.json").entries;
 assert.equal(day5.length, 1);
-assert.equal(day5[0].id, "dorm_hotpot_day5");
+assert.equal(day5[0].id, "dorm_activity_day5");
 assert.ok(Object.values(day5[0].blueprint.nodes).some((node) => node.type === "scheduleEnd"));
 const globals = read("global_variables.json");
 for (const id of [104, 105, 106, 107, 109, 110, 111, 112, 113]) assert.ok(globals.some((entry) => entry.id === id), `missing global ${id}`);

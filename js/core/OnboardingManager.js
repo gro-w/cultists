@@ -16,7 +16,7 @@ const HINTS = [
   { id: "keyword-second", trigger: "first_abdominal_pain_collected", completeOn: "first_nausea_collected", target: ".keyword-highlight[data-keyword-id=\"symptom_003\"]", title: "继续收集关键词", text: "很好！继续收集下一个高亮关键词“恶心”。" },
   { id: "keyword-missed", trigger: "his:keyword_missed", target: ".keyword-highlight", title: "错过的关键词", text: "时间不等人啊~错过的关键词是找不回来的呢~" },
   { id: "chatgtp-suggestion", trigger: "his:diagnosis_picker_opened", completeOn: "chatgtp_opened", target: ".desktop-icon[data-app-id=\"chatgtp\"]", title: "需要一点帮助？", text: "不知道该选什么诊断用什么药？要不要试试问问万能的ChatGTP？" },
-  { id: "notebook-first-open", trigger: "notebook_opened", completeOn: "first_query_completed", target: ".app-notebook", title: "关键词笔记本", text: "笔记本会保存你收集到的关键词。双击关键词，可以直接交给 ChatGTP 查询。" },
+  { id: "notebook-first-open", trigger: "first_nausea_collected", completeOn: "notebook_opened", target: ".desktop-icon[data-app-id=\"notebook\"]", title: "关键词笔记本", text: "你收集到的关键词会保存在这里。点击桌面上的关键词笔记本，就能查看它们。" },
   { id: "chatgtp-first-open", trigger: "chatgtp_opened", completeOn: "first_query_completed", target: ".chatgtp-notebook-select", title: "ChatGTP", text: "请从上方笔记本关键词中依次选择“腹痛”和“恶心”，组成这组两个关键词后再查询。" },
   { id: "diagnosis-submit", trigger: "his:diagnosis_ready", completeOn: "first_diagnosis_submitted", target: ".his-prescription", title: "提交问诊", text: "提交后会结算本次问诊，并推进 20 分钟。提交前请确认诊断和处方。" },
   { id: "dorm-first-seen", trigger: "dorm_seen", completeOn: "first_social_interaction", target: ".dorm-npc-strip", title: "宿舍", text: "夜间可以和室友交流、调查物品、使用电脑。准备结束今天时，可以点击床铺睡觉。" },
@@ -66,7 +66,10 @@ class OnboardingManager {
     this._unsubs.push(this.bus.on("dorm:about_to_sleep", () => this.requestHint("dorm:about_to_sleep")));
     this._unsubs.push(this.bus.on("his:keyword_available", () => this.requestHint("his:keyword_available")));
     this._unsubs.push(this.bus.on("his:dialogue_choice_available", () => {
-      if (this.hasMilestone("first_nausea_collected")) this.requestHint("his:dialogue_choice_available");
+      if (this.hasMilestone("first_nausea_collected") && this.hasMilestone("notebook_opened")) this.requestHint("his:dialogue_choice_available");
+    }));
+    this._unsubs.push(this.bus.on("window:opened", ({ appId }) => {
+      if (appId === "notebook" && this.hasMilestone("first_nausea_collected")) this.requestHint("his:dialogue_choice_available");
     }));
     this._unsubs.push(this.bus.on("his:keyword_missed", () => this.requestHint("his:keyword_missed")));
     this._unsubs.push(this.bus.on("daynight:changed", ({ location, phaseChanged }) => {

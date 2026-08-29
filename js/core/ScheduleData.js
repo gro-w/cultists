@@ -287,11 +287,12 @@ class ScheduleData {
     return { ok: true, queueId: targetQueueId, instance };
   }
 
-  createTemporaryInstance(blueprint, queueId = "social", received = {}) {
+  createTemporaryInstance(blueprint, queueId = undefined, received = {}) {
     const day = Number.isInteger(received.day) ? received.day : gameState.day;
     const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
+    const targetQueueId = queueId || "social";
     const scheduleId = `temporary:${Date.now()}`;
-    const [instance] = this.queue(queueId).append({
+    const [instance] = this.queue(targetQueueId).append({
       scheduleId,
       payload: { id: scheduleId, blueprint: JSON.parse(JSON.stringify(blueprint)) },
       receivedDay: day,
@@ -301,7 +302,7 @@ class ScheduleData {
       currentNodeId: blueprint?.startNodeId || null,
       transcript: [],
     });
-    return { ok: true, queueId, instance };
+    return { ok: true, queueId: targetQueueId, instance };
   }
 
   fileNameFor(day, phase) {

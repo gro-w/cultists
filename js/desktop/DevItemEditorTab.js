@@ -31,10 +31,11 @@ export class DevItemEditorTab {
     this.activeSanKey = '>90';
     this.dirty = false;
     this._initialItemId = options.initialItemId || null;
+    this.root = null;
   }
 
   // ── helpers ──────────────────────────────────────────────────────────────
-  _el(id) { return document.getElementById(id); }
+  _el(id) { return (this.root || document).querySelector(`#${id}`); }
   _v(id)  { const e=this._el(id); return e?e.value:''; }
   _vi(id) { return parseInt(this._v(id))||0; }
   _vc(id) { const e=this._el(id); return e?e.checked:false; }
@@ -66,8 +67,10 @@ export class DevItemEditorTab {
 
   // ── lifecycle ─────────────────────────────────────────────────────────────
   /** Called by DeveloperMode after injecting html() into the panel. */
-  mount() {
+  mount(root = null) {
+    this.root = root || this._dev.root.querySelector('.dev-ie-root') || document;
     window._ie = this;
+    this.root.addEventListener('pointerdown', () => { window._ie = this; });
     this._loadCurrentGame(this._initialItemId);
     this._renderList();
     this._loadLocationPicker();

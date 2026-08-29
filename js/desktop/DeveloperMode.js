@@ -197,7 +197,7 @@ export class DeveloperMode {
     const host = document.createElement("div");
     const child = new DevItemEditorTab(this, { initialItemId: itemId });
     windowManager.createWindow({ title: `物品编辑器 · ${itemId}`, icon: "📦", width: 900, height: 680, x: 0, y: 0, content: host });
-    host.innerHTML = child.html(); child.mount();
+    host.innerHTML = child.html(); child.mount(host.querySelector(".dev-ie-root"));
   }
   async openEditorWindow(action, title, kind) {
     const appId = `developer-editor-${action}`;
@@ -259,7 +259,7 @@ export class DeveloperMode {
     this._itemEditorTab = new DevItemEditorTab(this);
     this.root.querySelector("[data-dev-panel]").innerHTML = this._itemEditorTab.html();
     this.bindPanel();
-    this._itemEditorTab.mount();
+    this._itemEditorTab.mount(this.root.querySelector(".dev-ie-root"));
   }
 
   showDialogueEditor() {

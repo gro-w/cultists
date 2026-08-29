@@ -3,6 +3,10 @@ import fs from "node:fs";
 
 const root = new URL("../", import.meta.url);
 const read = (name) => JSON.parse(fs.readFileSync(new URL(`data/zh-hans/${name}`, root), "utf8"));
+const dormMode = fs.readFileSync(new URL("js/desktop/DormMode.js", root), "utf8");
+assert.match(dormMode, /socialQueue\.getPending\(\)\s*\.filter\(\(item\) => !\(item\.payload\?\.npcId \|\| item\.payload\?\.actorId\)/, "dorm must render NPC-less social schedules");
+assert.match(dormMode, /_showScheduleDialogue\(definition, item\)/, "activity button must reuse the schedule dialogue runner");
+assert.match(dormMode, /eventBus\.on\("schedule:appended"/, "dorm must refresh after a schedule is inserted");
 const social = read("socialpub.json").entries;
 const activities = social.filter((entry) => entry.id.startsWith("dorm_activity_day"));
 assert.equal(activities.length, 4, "four weekday dorm activities expected");

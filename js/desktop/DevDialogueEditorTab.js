@@ -649,7 +649,10 @@ export class DevDialogueEditorTab {
      }
    } else if (this.currentCtx.type === 'ending') { entry.displayName = String(value ?? ''); entry.title = entry.displayName; }
    else { entry.displayName = String(value ?? ''); entry.name = entry.displayName; }
-   this._saveLS(); this._renderSidebar(); this._renderCanvas(); this._renderContextSettings();
+   this._saveLS(); this._renderSidebar(); this._renderCanvas();
+   // Do NOT call _renderContextSettings() for displayName changes — it would
+   // rebuild the input DOM and steal focus after every keystroke.
+   if (field === 'id') this._renderContextSettings();
  }
 
  _addScheduleEntry() {

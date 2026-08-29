@@ -13,6 +13,7 @@ import { realtimeQueue } from "../core/ScheduleQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
+import { checkSkill, OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { locationSystem } from "../core/LocationSystem.js";
 
 const roommateImage = (npcId) => ({
@@ -30,10 +31,11 @@ const dialogueKeywordIds = (tree) => {
 
 /** Full-screen off-duty dorm: NPC interaction, desk/fridge items, bed, computer. */
 export default class DormMode {
-  constructor(root, { workShell, launchWorkApp }) {
+  constructor(root, { workShell, launchWorkApp, showLocation = null }) {
     this.root = root;
     this.workShell = workShell;
     this.launchWorkApp = launchWorkApp;
+    this._showLocation = showLocation; // (locationId) => void
     this.scenes = null;
     this.entry = null;
     this._transitioning = false;
@@ -41,6 +43,7 @@ export default class DormMode {
     this._compTabInit = {};
     this._transitionTimer = null;
     this._dormSanOff = null;
+    this._npcsData = null;
     /** Map<appId, gameDay> — which day the player already browsed each app */
     this._viewedApps = new Map();
     this._build();
@@ -51,6 +54,7 @@ export default class DormMode {
 
   async init() {
     this.scenes = await dataLoader.loadJSON("monitor_scenes.json");
+    this._npcsData = await dataLoader.loadJSON("npcs.json").catch(() => ({ npcs: [] }));
     await locationSystem.load();
     this._updateDormBg();
     if (this._dormSanOff) this._dormSanOff();
@@ -74,6 +78,8 @@ export default class DormMode {
             <button type="button" class="win95-btn bevel-out" data-action="bed">🛏️ 睡觉</button>
             <button type="button" class="win95-btn bevel-out" data-action="clue">🧵 线索墙</button>
             <button type="button" class="win95-btn bevel-out" data-action="computer">🖥️ 电脑</button>
+            <button type="button" class="win95-btn bevel-out" data-action="go-restaurant">🍲 火锅店</button>
+            <button type="button" class="win95-btn bevel-out" data-action="go-seaside">🌊 海边</button>
           </div>
         </div>
 
@@ -128,6 +134,14 @@ export default class DormMode {
     this.root.querySelector('[data-action="clue"]').addEventListener("click", () => this._showClueWall());
     this.root.querySelector('[data-action="computer"]').addEventListener("click", () => this._openComputer());
     this.root.querySelector('[data-action="player-menu"]').addEventListener("click", () => this._showPlayerMenu());
+    this.root.querySelector('[data-action="go-restaurant"]').addEventListener("click", () => {
+      if (this._showLocation) this._showLocation("restaurant");
+      else this._message("（前往火锅店的通道尚未连接。）");
+    });
+    this.root.querySelector('[data-action="go-seaside"]').addEventListener("click", () => {
+      if (this._showLocation) this._showLocation("seaside");
+      else this._message("（前往海边的通道尚未连接。）");
+    });
 
     this.root.querySelectorAll(".dorm-comp-tab-btn[data-comptab]").forEach((btn) => {
       btn.addEventListener("click", () => this._switchCompTab(btn.dataset.comptab));
@@ -272,14 +286,41 @@ export default class DormMode {
 
   // ── Item interaction ────────────────────────────────────────────────────────
 
-  /** Inspect a world-placed item (item_placements.json, has take/put-back). */
+  /** Inspect a world-placed item (item_placements.json, has take/put-back).
+   * At night, if the placement is on a roommate's desk, a stealth check
+   * (observation skill) is performed first. Failure: suspicion +20, item hidden. */
   _inspectPlacedItem(placementId) {
     const inspected = itemPlacementManager.inspect(placementId);
     if (!inspected.ok) {
       this._message(inspected.message);
       return;
     }
-    const def = itemManager.getDef(inspected.placement.itemId);
+
+    // Night stealth check for desk items
+    const placement = inspected.placement;
+    const isNight = dayNightSystem.areRoommatesSleeping();
+    const isDeskItem = typeof placement.zone === "string" && placement.zone.includes("desk");
+    if (isNight && isDeskItem) {
+      const check = checkSkill("observation");
+      const outcomeLabel = OUTCOME_LABELS[check.outcome] ?? check.outcome;
+      const passed = check.outcome === "criticalSuccess" || check.outcome === "success";
+      if (!passed) {
+        // Caught — hide item and raise suspicion
+        itemPlacementManager.hideByRoommate(placementId);
+        gameState.raiseSuspicion(20);
+        this._renderScene();
+        const npcName = placement.zone.split("_")[0]; // e.g. "ajie" from "ajie_desk"
+        const name = this._npcsData?.npcs?.find?.((n) => n.id === npcName)?.name || "室友";
+        this._message(
+          `潜行检定 ${outcomeLabel}（掷出 ${check.roll} / 需 ≤ ${check.skillValue}）——${name}醒来发现了你！室友怀疑度 +20，物品被${name}收起。`,
+        );
+        return;
+      }
+      // Success — note the roll and proceed
+      this.interaction.innerHTML = `<p style="color:#81c784;font-size:12px">潜行检定 ${outcomeLabel}（掷出 ${check.roll}）</p>`;
+    }
+
+    const def = itemManager.getDef(placement.itemId);
     this._showItemInteraction(def, inspected.result, {
       canTake: def?.pickable !== false,
       onTake: () => {
@@ -700,7 +741,9 @@ export default class DormMode {
   _showPlayerMenu() {
     const state = gameState.snapshot();
     const items = itemManager.all();
-    this.interaction.innerHTML = `<h3>主角菜单</h3><p>第 ${state.day} 天 · ${dayNightSystem.isDaylight() ? "白天" : "夜晚"} · ${this.clock.textContent}</p><p>精神 ${state.mental} · 体力 ${state.physical} · 精力 ${state.energy} · 饱腹 ${state.satiety}</p>`;
+    this.interaction.innerHTML = `<h3>主角菜单</h3>
+      <p>第 ${state.day} 天 · ${dayNightSystem.isDaylight() ? "☀ 白天" : "🌙 夜晚"} · ${this.clock.textContent}</p>
+      <p>理智 ${state.sanity} · 室友怀疑度 ${state.roommateSuspicion}</p>`;
     const itemTitle = document.createElement("h4");
     itemTitle.textContent = "物品";
     this.interaction.appendChild(itemTitle);
@@ -712,6 +755,25 @@ export default class DormMode {
     });
     if (!items.length) list.innerHTML = "<li>（空）</li>";
     this.interaction.appendChild(list);
+
+    // Skip-work button (visible during work hours while in dorm)
+    const clock = gameState.clockMinutes;
+    const isWorkHours = !dayNightSystem.isRestDay() && clock >= 8 * 60 && clock < 16 * 60;
+    const isOffDuty = gameState.duty === "off-duty";
+    if (isWorkHours && isOffDuty) {
+      const skipBtn = document.createElement("button");
+      skipBtn.className = "win95-btn bevel-out";
+      skipBtn.textContent = "跳过上班（怀疑度 +10）";
+      skipBtn.addEventListener("click", () => {
+        const result = dayNightSystem.skipWork();
+        if (result.ok) {
+          gameState.raiseSuspicion(10);
+          this._message("你在宿舍度过了工作时间。室友怀疑度上升了。", "");
+        }
+      });
+      this.interaction.appendChild(skipBtn);
+    }
+
     const save = document.createElement("button");
     save.className = "win95-btn bevel-out";
     save.textContent = "保存游戏";

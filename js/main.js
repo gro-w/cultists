@@ -157,6 +157,7 @@ function boot({ welcomeBack }) {
     launchWorkApp: () => {
       if (gameState.location === "dorm") dayNightSystem.toggle();
     },
+    showLocation: (id) => locationScene?.show(id),
   });
   dormMode.init().catch((err) => console.error("[Cultists] Failed to initialize dorm mode:", err));
 

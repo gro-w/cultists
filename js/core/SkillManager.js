@@ -29,10 +29,12 @@ class SkillManager {
   async load() {
     if (!this._loadPromise) {
       this._loadPromise = Promise.all([globalVariableManager.init(), dataLoader.loadJSON("skills.json")]).then(([, data]) => {
-        (data.skills || []).slice(0, 20).forEach((s, index) => {
+        (data.skills || []).forEach((s) => {
           if (!s || !s.id) return;
-          this.indexById.set(s.id, index);
-          const value = clamp(globalVariableManager.get(20 + index));
+          const numericId = Number(s.numericid);
+          if (!Number.isInteger(numericId) || numericId < 0 || numericId >= 20) return;
+          this.indexById.set(s.id, numericId);
+          const value = clamp(globalVariableManager.get(20 + numericId));
           this.values.set(s.id, value);
           this.labels.set(s.id, s.label || s.id);
         });

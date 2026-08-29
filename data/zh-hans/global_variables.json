@@ -19,15 +19,15 @@
   },
   {
     "id": 3,
-    "name": "预留变量3",
+    "name": "NPC不稳定SAN阈值",
     "type": "number",
-    "default": 0
+    "default": 50
   },
   {
     "id": 4,
-    "name": "预留变量4",
+    "name": "NPC下线SAN阈值",
     "type": "number",
-    "default": 0
+    "default": 20
   },
   {
     "id": 5,

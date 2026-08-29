@@ -8,6 +8,10 @@ function clamp(value) {
   return Math.max(0, Math.min(256, Number(value) || 0));
 }
 
+const NPC_OFFLINE_CONSEQUENCE = Object.freeze({
+  grantItems: Object.freeze([{ itemId: "extra_workload", count: 1 }]),
+});
+
 /**
  * NpcStateManager - singleton tracking every NPC's own SAN (精神值),
  * separate from the protagonist's `gameState.mental`. The player's dialogue
@@ -16,15 +20,13 @@ function clamp(value) {
  * far enough they show visible distress, and low enough they go "offline"
  * (给自己请假/下线) - removed from further conversation for the rest of
  * the game and dumping extra workload on the protagonist as a consequence
- * (data-driven via `data/npc_state.json`'s `offlineConsequence`).
+ * (the offline consequence is defined by this manager).
  *
- * Thresholds/consequence are entirely data-driven; this module only
- * applies them. Mirrors EndingManager's pattern of importing ItemManager
- * directly to apply a data-described side effect.
+ * Thresholds come from global variables 3/4; this module applies the
+ * resulting state transition and offline consequence.
  */
 class NpcStateManager {
   constructor() {
-    this.config = null;
     /** @type {Map<string, number>} actorId -> SAN (0-256) */
     this.san = new Map();
     /** @type {Set<string>} actorIds that have gone offline */
@@ -34,7 +36,7 @@ class NpcStateManager {
     this.indexById = new Map();
     this._loadPromise = null;
     eventBus.on("global-variable:changed", ({ id, value }) => {
-      const actorId = id === 5 ? "chatgtp" : id >= 60 && id < 80 ? this.npcs[id - 60]?.id : null;
+      const actorId = id === 5 ? "chatgtp" : id >= 60 && id < 80 ? this.npcs.find((npc) => Number(npc.numericid) === id - 60)?.id : null;
       if (!actorId) return;
       this.san.set(actorId, value);
       eventBus.emit("npcState:changed", { actorId, san: value });
@@ -42,20 +44,20 @@ class NpcStateManager {
     });
   }
 
-  /** Load `data/npc_state.json` (idempotent, safe to call concurrently). */
+  /** Load NPC identities and reserved SAN values (idempotent, safe to call concurrently). */
   async load() {
     if (!this._loadPromise) {
       this._loadPromise = Promise.all([
         globalVariableManager.init(),
-        dataLoader.loadJSON("npc_state.json"),
         dataLoader.loadJSON("npcs.json"),
-      ]).then(([, data, npcDoc]) => {
-        this.config = data;
+      ]).then(([, npcDoc]) => {
         this.npcs = npcDoc.npcs || [];
         this.san.set("chatgtp", globalVariableManager.get(5));
-        this.npcs.slice(0, 20).forEach((npc, index) => {
-          this.indexById.set(npc.id, index);
-          this.san.set(npc.id, globalVariableManager.get(60 + index));
+        this.npcs.forEach((npc) => {
+          const numericId = Number(npc.numericid);
+          if (!Number.isInteger(numericId) || numericId < 0 || numericId >= 20) return;
+          this.indexById.set(npc.id, numericId);
+          this.san.set(npc.id, globalVariableManager.get(60 + numericId));
         });
       });
     }
@@ -64,11 +66,11 @@ class NpcStateManager {
 
 
   _distressedThreshold() {
-    return (this.config && Number(this.config.distressedThreshold)) || 50;
+    return globalVariableManager.get(3) ?? 50;
   }
 
   _offlineThreshold() {
-    return (this.config && Number(this.config.offlineThreshold)) || 20;
+    return globalVariableManager.get(4) ?? 20;
   }
 
   /** Current SAN (0-256) for an actor id; unknown actors use a compatibility fallback. */
@@ -119,7 +121,7 @@ class NpcStateManager {
 
   _goOffline(actorId) {
     this.pendingOfflineActors.add(actorId);
-    const consequence = (this.config && this.config.offlineConsequence) || {};
+    const consequence = NPC_OFFLINE_CONSEQUENCE;
     const entry = {
       id: `npc-offline:${actorId}`,
       scheduleId: `npc-offline:${actorId}`,

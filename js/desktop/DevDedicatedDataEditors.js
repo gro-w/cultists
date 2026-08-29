@@ -60,12 +60,6 @@ export class MedicalEventsEditor extends DedicatedEditor {
   removeDialogue(v) { const [k, i] = v.split(":"); this.data[k].splice(i, 1); this.render(); }
 }
 
-export class NpcStateRulesEditor extends DedicatedEditor {
-  constructor(dev) { super(dev, "npc_state.json", "NPC 状态规则编辑器", "编辑 SAN 阈值和离线后果"); }
-  render() { const c = this.data.offlineConsequence || {}; this.root().innerHTML = `<div class="dev-ded-grid">${num("不稳定阈值", "distressedThreshold", this.data.distressedThreshold, "min=0 max=256")}${num("离线阈值", "offlineThreshold", this.data.offlineThreshold, "min=0 max=256")}</div><section class="dev-ded-card"><h3>离线后果</h3>${num("SAN 变化", "offline.sanChange", c.sanChange ?? 0)}${input("游戏事件", "offline.gameEvent", c.gameEvent || "")}${checkbox("触发对话离线", "offline.dialogueOffline", c.dialogueOffline)}</section>`; }
-  sync() { this.data.distressedThreshold = Number(this.value("distressedThreshold")); this.data.offlineThreshold = Number(this.value("offlineThreshold")); this.data.offlineConsequence = { ...(this.data.offlineConsequence || {}), sanChange: Number(this.value("offline.sanChange")) || 0, gameEvent: this.value("offline.gameEvent"), dialogueOffline: this.value("offline.dialogueOffline") }; }
-}
-
 export class TimeRulesEditor extends DedicatedEditor {
   constructor(dev) { super(dev, "time_rules.json", "时间规则编辑器", "编辑阶段时长、睡眠恢复和熬夜规则"); }
   render() { this.root().innerHTML = `<section class="dev-ded-card"><h3>阶段时长</h3>${num("白天分钟", "day.workMinutes", this.data.day?.workMinutes, "min=0 step=20")}${num("夜间分钟", "night.nightMinutes", this.data.night?.nightMinutes, "min=0 step=20")}</section><section class="dev-ded-card"><h3>睡眠与 SAN</h3>${num("完整睡眠分钟", "fullSleepMinutes", this.data.fullSleepMinutes, "min=0 step=20")}${num("不足睡眠分钟", "insufficientSleepMinutes", this.data.insufficientSleepMinutes, "min=0 step=20")}${num("每睡眠小时 SAN 恢复", "sanRecoveryPerSleepHour", this.data.sanRecoveryPerSleepHour, "min=0")}${num("三日睡眠债 SAN 损失", "threeDaySleepDebtSanLoss", this.data.threeDaySleepDebtSanLoss, "min=0")}${num("每次熬夜行动 SAN 损失", "sanLossPerLateNightAction", this.data.sanLossPerLateNightAction, "min=0")}</section>`; }
@@ -89,10 +83,10 @@ export class AchievementsEditor extends DedicatedEditor {
 }
 
 export class SkillsEditor extends DedicatedEditor {
-  constructor(dev) { super(dev, "skills.json", "技能定义编辑器", "编辑技能 ID、名称、类别和初始值"); }
-  render() { const list = this.data.skills || (this.data.skills = []); this.root().innerHTML = `<div class="dev-ded-toolbar">${btn("＋ 添加技能", "add-skill")}</div>${list.map((s, i) => `<article class="dev-ded-card"><div class="dev-ded-card-title"><b>${esc(s.name || s.id || "未命名技能")}</b>${btn("− 删除", "remove-skill", i)}</div><div class="dev-ded-grid">${input("技能 ID", `s.${i}.id`, s.id)} ${input("名称", `s.${i}.name`, s.name)} ${input("类别", `s.${i}.category`, s.category || "")}${num("初始值", `s.${i}.initialValue`, s.initialValue ?? s.default ?? 0, "min=0 max=100")}</div></article>`).join("")}`; }
-  sync() { (this.data.skills || []).forEach((s, i) => { s.id = this.value(`s.${i}.id`); s.name = this.value(`s.${i}.name`); s.category = this.value(`s.${i}.category`); if ("initialValue" in s) s.initialValue = Number(this.value(`s.${i}.initialValue`)); else s.default = Number(this.value(`s.${i}.initialValue`)); }); }
-  addSkill() { this.data.skills.push({ id: `skill_${this.data.skills.length + 1}`, name: "新技能", initialValue: 0 }); this.render(); }
+  constructor(dev) { super(dev, "skills.json", "技能定义编辑器", "编辑技能 ID、数值 ID 和名称"); }
+  render() { const list = this.data.skills || (this.data.skills = []); this.root().innerHTML = `<div class="dev-ded-toolbar">${btn("＋ 添加技能", "add-skill")}</div>${list.map((s, i) => `<article class="dev-ded-card"><div class="dev-ded-card-title"><b>${esc(s.label || s.name || s.id || "未命名技能")}</b>${btn("− 删除", "remove-skill", i)}</div><div class="dev-ded-grid">${input("技能 ID", `s.${i}.id`, s.id)} ${num("数值 ID", `s.${i}.numericid`, s.numericid ?? i, "min=0 max=19 step=1")} ${input("名称", `s.${i}.label`, s.label ?? s.name ?? "")}</div></article>`).join("")}`; }
+  sync() { (this.data.skills || []).forEach((s, i) => { s.id = this.value(`s.${i}.id`); s.numericid = Number(this.value(`s.${i}.numericid`)); s.label = this.value(`s.${i}.label`); }); }
+  addSkill() { this.data.skills.push({ id: `skill_${this.data.skills.length + 1}`, numericid: this.data.skills.length, label: "新技能" }); this.render(); }
   removeSkill(i) { this.data.skills.splice(Number(i), 1); this.render(); }
 }
 
@@ -109,7 +103,7 @@ export const DEDICATED_EDITOR_CLASSES = {
   diagnoses: DiagnosesEditor,
   medicines: MedicinesEditor,
   "medical-events": MedicalEventsEditor,
-  "npc-state": NpcStateRulesEditor,
+
   "time-rules": TimeRulesEditor,
   calendar: CalendarEditor,
   achievements: AchievementsEditor,

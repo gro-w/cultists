@@ -1,7 +1,7 @@
 {
   "skills": [
-    { "id": "observation", "label": "细致观察" },
-    { "id": "medicine", "label": "医学诊断" },
-    { "id": "communication", "label": "沟通应对" }
+    { "id": "observation", "numericid": 0, "label": "细致观察" },
+    { "id": "medicine", "numericid": 1, "label": "医学诊断" },
+    { "id": "communication", "numericid": 2, "label": "沟通应对" }
   ]
 }

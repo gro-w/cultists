@@ -155,7 +155,9 @@ export class DeveloperMode {
 
   /** Write a validated doc to disk via the dev-server API. Returns true on success. */
   async writeToDisk(filename, value) {
-    if (!this._devServerActive) { this.setStatus("未检测到开发服务器，无法写入磁盘。请用「下载」按钮代替。", true); return false; }
+    // Use the static DataLoader flag so editor sub-windows (which have their own
+    // DeveloperMode instance and never receive setDevServer()) also work correctly.
+    if (!this._devServerActive && !DataLoader._devServerOrigin) { this.setStatus("未检测到开发服务器，无法写入磁盘。请用「下载」按钮代替。", true); return false; }
     try { await writeJSONToDisk(filename, value); this.setStatus(`✅ ${filename} 已写入磁盘。`); return true; }
     catch (err) { this.setStatus(`✗ 写入磁盘失败：${err.message}`, true); return false; }
   }

@@ -70,6 +70,56 @@
               "toPort": "flowIn"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
         }
       }
     },
@@ -485,6 +535,56 @@
               "toPort": "flowIn"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
         }
       }
     },
@@ -1123,6 +1223,56 @@
               "toPort": "flowIn"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
         }
       }
     },
@@ -1143,14 +1293,30 @@
       },
       "isBook": true,
       "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_book_nahan_90_58e0c48144f6.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_book_nahan_70_90_58e0c48144f6.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_book_nahan_50_70_33d406c8077c.jpg"
+        },
         "30-50": {
-          "name": "《尸食教典仪》"
+          "name": "《尸食教典仪》",
+          "image": "data/assets/item_book_nahan_30_50_90cc2136c4e4.jpg"
         },
         "15-30": {
-          "name": "《尸食教典仪》"
+          "name": "《尸食教典仪》",
+          "image": "data/assets/item_book_nahan_15_30_90cc2136c4e4.jpg"
         },
         "0-15": {
-          "name": "《尸食教典仪》"
+          "name": "《尸食教典仪》",
+          "image": "data/assets/item_book_nahan_0_15_90cc2136c4e4.jpg"
+        },
+        "=0": {
+          "description": "阿杰喜欢中国文学，总是翻看这本鲁迅的小说集。",
+          "image": "data/assets/item_book_nahan_90_58e0c48144f6.jpg"
         }
       },
       "spells": [
@@ -1162,7 +1328,8 @@
           "effect": {
             "type": "disease",
             "selfEnding": "自杀结局"
-          }
+          },
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -1373,7 +1540,7 @@
               "id": "band6:image",
               "type": "showImage",
               "inputs": {
-                "image": "data/assets/item_book_nahan_0_58e0c48144f6.jpg"
+                "image": "data/assets/item_book_nahan_90_58e0c48144f6.jpg"
               },
               "outputs": {}
             },
@@ -1648,14 +1815,30 @@
       },
       "isBook": true,
       "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_book_wangxb_90_f20fc5e6966c.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_book_wangxb_70_90_f20fc5e6966c.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_book_wangxb_50_70_f20fc5e6966c.jpg"
+        },
         "30-50": {
-          "name": "《拉莱耶文本》"
+          "name": "《拉莱耶文本》",
+          "image": "data/assets/item_book_wangxb_30_50_f20fc5e6966c.jpg"
         },
         "15-30": {
-          "name": "《拉莱耶文本》"
+          "name": "《拉莱耶文本》",
+          "image": "data/assets/item_book_wangxb_15_30_1bef75d29e4a.jpg"
         },
         "0-15": {
-          "name": "《拉莱耶文本》"
+          "name": "《拉莱耶文本》",
+          "image": "data/assets/item_book_wangxb_0_15_1bef75d29e4a.jpg"
+        },
+        "=0": {
+          "description": "阿杰喜欢中国文学，总是翻看这本王小波的小说集。",
+          "image": "data/assets/item_book_wangxb_90_f20fc5e6966c.jpg"
         }
       },
       "spells": [
@@ -1663,12 +1846,13 @@
           "name": "接触克苏鲁",
           "description": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！",
           "learnTimeMinutes": 240,
-          "castSanCost": 0,
+          "castSanCost": 5,
           "effect": {
             "type": "cthulhu_contact",
             "wakeSanity": 0,
             "sleepEvent": "长眠的克苏鲁候汝入梦"
-          }
+          },
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -1844,7 +2028,7 @@
               "id": "band6:image",
               "type": "showImage",
               "inputs": {
-                "image": "data/assets/item_book_wangxb_0_f20fc5e6966c.jpg"
+                "image": "data/assets/item_book_wangxb_90_f20fc5e6966c.jpg"
               },
               "outputs": {}
             },
@@ -2327,6 +2511,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -2577,6 +2834,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -2597,14 +2927,29 @@
       },
       "isBook": true,
       "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_book_moon_472e02008b36.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_book_moon_472e02008b36.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_book_moon_472e02008b36.jpg"
+        },
         "30-50": {
-          "name": "《死灵之书中的克苏鲁》"
+          "name": "《死灵之书中的克苏鲁》",
+          "image": "data/assets/item_book_moon_87c2afcddbe3.jpg"
         },
         "15-30": {
-          "name": "《死灵之书中的克苏鲁》"
+          "name": "《死灵之书中的克苏鲁》",
+          "image": "data/assets/item_book_moon_87c2afcddbe3.jpg"
         },
         "0-15": {
-          "name": "《死灵之书中的克苏鲁》"
+          "name": "《死灵之书中的克苏鲁》",
+          "image": "data/assets/item_book_moon_87c2afcddbe3.jpg"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       },
       "spells": [
@@ -2616,7 +2961,8 @@
           "effect": {
             "type": "seal_activation",
             "chaseEnding": "异常结局"
-          }
+          },
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -3168,6 +3514,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
+        },
+        "30-50": {
+          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
+        },
+        "15-30": {
+          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
+        },
+        "0-15": {
+          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -3420,6 +3839,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -3670,6 +4162,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -3690,14 +4255,29 @@
       },
       "isBook": true,
       "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_book_innsmouth_556ee63102f7.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_book_innsmouth_556ee63102f7.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_book_innsmouth_556ee63102f7.jpg"
+        },
         "30-50": {
-          "name": "《水神克塔亚特》"
+          "name": "《水神克塔亚特》",
+          "image": "data/assets/item_book_innsmouth_1a28a7530f9e.jpg"
         },
         "15-30": {
-          "name": "《水神克塔亚特》"
+          "name": "《水神克塔亚特》",
+          "image": "data/assets/item_book_innsmouth_1a28a7530f9e.jpg"
         },
         "0-15": {
-          "name": "《水神克塔亚特》"
+          "name": "《水神克塔亚特》",
+          "image": "data/assets/item_book_innsmouth_1a28a7530f9e.jpg"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       },
       "spells": [
@@ -3711,7 +4291,8 @@
             "event": "与海之子对话",
             "ending": "蹈海",
             "sanThreshold": 30
-          }
+          },
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -4045,14 +4626,29 @@
       },
       "isBook": true,
       "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_book_coc7_d10dfd3fbabb.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_book_coc7_d10dfd3fbabb.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_book_coc7_d10dfd3fbabb.jpg"
+        },
         "30-50": {
-          "name": "《死灵之书》"
+          "name": "《死灵之书》",
+          "image": "data/assets/item_book_coc7_7773850fb36a.jpg"
         },
         "15-30": {
-          "name": "《死灵之书》"
+          "name": "《死灵之书》",
+          "image": "data/assets/item_book_coc7_7773850fb36a.jpg"
         },
         "0-15": {
-          "name": "《死灵之书》"
+          "name": "《死灵之书》",
+          "image": "data/assets/item_book_coc7_7773850fb36a.jpg"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       },
       "spells": [
@@ -4064,7 +4660,8 @@
           "effect": {
             "type": "domination",
             "chaseEnding": "异常结局"
-          }
+          },
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -4613,6 +5210,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -4863,6 +5533,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -5249,6 +5992,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "30-50": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "15-30": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "0-15": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -5497,6 +6313,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -5746,6 +6635,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -5986,6 +6948,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "=0": {
+          "description": "上面印着飞天意面神教的logo。"
         }
       }
     },
@@ -6230,6 +7265,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -6479,6 +7587,79 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -6772,6 +7953,29 @@
             }
           ]
         }
+      },
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
       }
     },
     {
@@ -7008,6 +8212,61 @@
               "toPort": "value"
             }
           ]
+        },
+        "use": {
+          "nodes": {
+            "start": {
+              "id": "start",
+              "type": "flowStart",
+              "x": 80,
+              "y": 80,
+              "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
+              "outputs": {}
+            },
+            "end": {
+              "id": "end",
+              "type": "scheduleEnd",
+              "inputs": {},
+              "outputs": {},
+              "x": 280,
+              "y": 80
+            }
+          },
+          "connections": [
+            {
+              "fromNodeId": "start",
+              "fromPort": "flowOut",
+              "toNodeId": "end",
+              "toPort": "flowIn"
+            }
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -7245,81 +8504,61 @@
               "toPort": "value"
             }
           ]
-        }
-      }
-    },
-    {
-      "id": "roommate_necklace",
-      "name": "室友的项链",
-      "icon": "🔗",
-      "consumable": false,
-      "usable": false,
-      "pickable": false,
-      "worldCount": 1,
-      "locations": [],
-      "schedules": {
-        "investigate": {
-          "startNodeId": "start",
+        },
+        "use": {
           "nodes": {
             "start": {
               "id": "start",
               "type": "flowStart",
+              "x": 80,
+              "y": 80,
               "inputs": {},
+              "outputs": {}
+            },
+            "__prerequisite__": {
+              "id": "__prerequisite__",
+              "type": "prerequisite",
+              "x": 80,
+              "y": 240,
+              "inputs": {
+                "condition": true
+              },
+              "outputs": {}
+            },
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
+              "type": "scheduleExpiry",
+              "x": 80,
+              "y": 360,
+              "inputs": {
+                "expires": false,
+                "expiresAt": 0
+              },
               "outputs": {}
             },
             "end": {
               "id": "end",
               "type": "scheduleEnd",
               "inputs": {},
-              "outputs": {}
-            },
-            "plain:result": {
-              "id": "plain:result",
-              "type": "text",
-              "inputs": {
-                "text": "书桌上放着一条室友平时从不离身的项链。链坠背面刻着一个陌生的[[roommate_necklace_clue|奇怪符号]]。"
-              },
               "outputs": {},
-              "keywordIds": [
-                "roommate_necklace_clue"
-              ]
-            },
-            "__prerequisite__": {
-              "id": "__prerequisite__",
-              "type": "prerequisite",
-              "inputs": {
-                "condition": true
-              },
-              "outputs": {},
-              "x": 80,
-              "y": 240
-            },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
-              "inputs": {
-                "expires": false,
-                "expiresAt": 0
-              },
-              "outputs": {},
-              "x": 80,
-              "y": 360
+              "x": 280,
+              "y": 80
             }
           },
           "connections": [
             {
               "fromNodeId": "start",
               "fromPort": "flowOut",
-              "toNodeId": "plain:result",
-              "toPort": "flowIn"
-            },
-            {
-              "fromNodeId": "plain:result",
-              "fromPort": "flowOut",
               "toNodeId": "end",
               "toPort": "flowIn"
             }
-          ]
+          ],
+          "startNodeId": "start"
+        }
+      },
+      "sanVariants": {
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
         }
       }
     }

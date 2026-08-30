@@ -51,6 +51,14 @@ export class DevItemEditorTab {
     if (!path) return '';
     try { return new URL(path, document.baseURI).href; } catch (_) { return path; }
   }
+  _assetPaths() {
+    const paths = new Set();
+    this.items.forEach((item) => Object.values(item.sanVariants || {}).forEach((variant) => {
+      const path = typeof variant?.image === 'string' ? variant.image.trim() : '';
+      if (path && !path.startsWith('data:')) paths.add(path);
+    }));
+    return [...paths].sort();
+  }
 
   _emptyItem() {
     const v={};
@@ -491,37 +499,26 @@ export class DevItemEditorTab {
           ${imgHTML}
           <div style="display:flex;flex-direction:column;gap:5px;flex:1">
             <div style="display:flex;gap:5px;align-items:center">
-              <label class="win95-btn dev-btn" style="cursor:${isZeroSan?'not-allowed':'pointer'};white-space:nowrap;${isZeroSan?'opacity:.55;pointer-events:none':''}" title="${isZeroSan?'SAN=0 自动沿用 SAN=100 图片':'从文件资源管理器选择物品图'}">
-                📁 浏览上传
-                <input type="file" accept="image/*" id="ie-sp-image-upload" style="display:none">
-              </label>
-              <input type="text" id="ie-sp-image" value="${this._e(imageValue)}" placeholder="data/assets/item_book_nahan_90_xxx.jpg" oninput="_ie._sanImageInput()" style="flex:1;min-width:0" ${isZeroSan?'disabled':''}>
+              <select id="ie-sp-image-picker" onchange="_ie._selectSanImage(this.value)" style="max-width:260px" ${isZeroSan?'disabled':''}>
+                <option value="">── 从 data/assets 选择 ──</option>
+                ${this._assetPaths().map((path) => `<option value="${this._e(path)}" ${path === imageValue ? 'selected' : ''}>${this._e(path)}</option>`).join('')}
+              </select>
+              <input type="text" id="ie-sp-image" value="${this._e(imageValue)}" placeholder="data/assets/item_xxx.png" oninput="_ie._sanImageInput()" style="flex:1;min-width:0" ${isZeroSan?'disabled':''}>
             </div>
-            <span style="font-size:11px;color:#888">填写 data/assets/ 下的图片地址，或点击「浏览上传」从文件资源管理器选择图片。</span>
+            <span style="font-size:11px;color:#888">选择已登记的 data/assets 图片，或直接填写资源路径。</span>
           </div>
         </div>
       </div>`;
-    this._el('ie-sp-image-upload')?.addEventListener('change', (event) => this._onSanImageFile(event));
   }
 
-  _onSanImageFile(event) {
-    const file = event.target.files?.[0];
-    event.target.value = '';
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const it = this.items.find(i => i.id === this.currentId);
-      if (!it) return;
-      const selected = [...this._selectedSanImageKeys].filter((key) => key !== '=0' && it.sanVariants[key]);
-      const targets = selected.length ? selected : (this.activeSanKey === '=0' ? ['>90'] : [this.activeSanKey]);
-      const image = String(reader.result || '');
-      targets.forEach((key) => { it.sanVariants[key].image = image; });
-      this.dirty = true;
-      this._renderSanPanel();
-      this._st(`已上传物品图：${file.name}（应用于 ${targets.length} 个 SAN 变体）`);
-    };
-    reader.onerror = () => this._st(`读取物品图失败：${file.name}`, true);
-    reader.readAsDataURL(file);
+  _selectSanImage(value) {
+    const it = this.items.find(i => i.id === this.currentId);
+    if (!it || this.activeSanKey === '=0') return;
+    const selected = [...this._selectedSanImageKeys].filter((key) => key !== '=0' && it.sanVariants[key]);
+    const targets = selected.length ? selected : [this.activeSanKey];
+    targets.forEach((key) => { it.sanVariants[key].image = String(value || '').trim(); });
+    this.dirty = true;
+    this._renderSanPanel();
   }
 
   _sanInput() {

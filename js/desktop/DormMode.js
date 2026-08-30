@@ -45,6 +45,7 @@ export default class DormMode {
     this._compTabInit = {};
     this._transitionTimer = null;
     this._dormSanOff = null;
+    this._socialScheduleOff = null;
     this._npcsData = null;
     this._cgOverlay = null;     // global #cg-overlay element
     this._cgOff = [];           // EventBus unsub functions
@@ -62,6 +63,10 @@ export default class DormMode {
     this._updateDormBg();
     if (this._dormSanOff) this._dormSanOff();
     this._dormSanOff = eventBus.on("game:sanity_changed", () => this._updateDormBg());
+    if (this._socialScheduleOff) this._socialScheduleOff();
+    this._socialScheduleOff = eventBus.on("schedule:appended", ({ queueId }) => {
+      if (queueId === "social" && !this.root.classList.contains("hidden")) this._renderScene();
+    });
     // Wire CG overlay (the global #cg-overlay element handles both dorm and location views)
     this._cgOverlay = document.getElementById("cg-overlay");
     this._cgOff.forEach((off) => off());
@@ -241,6 +246,22 @@ export default class DormMode {
       else btn.disabled = true;
       this._npcStrip.appendChild(btn);
     });
+
+    // Blueprint-driven social activities have no NPC owner.  Expose them as
+    // ordinary pending social schedules instead of trying to route them
+    // through a roommate portrait.
+    socialQueue.getPending()
+      .filter((item) => !(item.payload?.npcId || item.payload?.actorId) && item.payload?.blueprint)
+      .forEach((item) => {
+        const definition = item.payload;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "win95-btn bevel-out dorm-schedule-btn";
+        btn.textContent = definition.name || definition.id || "集体活动";
+        btn.title = definition.name || definition.id || "集体活动";
+        btn.addEventListener("click", () => this._showScheduleDialogue(definition, item));
+        this._npcStrip.appendChild(btn);
+      });
 
     // ── Items in the scene ─────────────────────────────────────────────────
     const loc = locationSystem.get("dorm");
@@ -897,21 +918,39 @@ export default class DormMode {
       lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
       return;
     }
+    this._showScheduleDialogue(definition, pending, keywordDefs, { lines, options, npcId });
+  }
+
+  _showScheduleDialogue(definition, pending, keywordDefs = {}, context = {}) {
+    const lines = context.lines || document.createElement("div");
+    const options = context.options || document.createElement("div");
+    if (!context.lines) {
+      lines.className = "dialogue-lines";
+      options.className = "dialogue-options";
+      this.interaction.replaceChildren(lines, options);
+    }
+    const resolvedKeywordDefs = keywordDefs && Object.keys(keywordDefs).length
+      ? keywordDefs
+      : keywordManager.definitionsWithSource(
+        dialogueKeywordIds(definition.blueprint),
+        `宿舍-${definition.name || definition.id || "活动"}`,
+      );
+    const npcId = context.npcId || definition.npcId || definition.actorId || definition.id;
     const runner = createScheduleRunner({
       definition,
       instance: pending,
       appendLine: (speaker, label, text) => {
         const line = document.createElement("p");
-        line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, keywordDefs)}`;
+        line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, resolvedKeywordDefs)}`;
         lines.replaceChildren(line);
-        keywordManager.bindHighlights(line, keywordDefs);
+        keywordManager.bindHighlights(line, resolvedKeywordDefs);
       },
       optionsEl: options,
       appId: "dorm",
       onCheckpoint: (next) => socialQueue.updateInstance(pending.instanceId, next),
       onComplete: () => {
         socialQueue.complete(pending.instanceId);
-        eventBus.emit("dorm:interaction", { npcId });
+        if (context.npcId) eventBus.emit("dorm:interaction", { npcId });
       },
     });
     runner.start();

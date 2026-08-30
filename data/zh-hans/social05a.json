@@ -1,14 +1,22 @@
 {
+  "displayName": "第5天宿舍集体活动",
   "entries": [
     {
-      "id": "dorm_hotpot_day5",
+      "id": "dorm_activity_day5",
       "type": "dormActivity",
       "name": "海底O火锅",
       "displayName": "【海底O火锅】",
       "day": 5,
+      "afterSocialDialogue": false,
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
           "line_0": {
             "id": "line_0",
             "type": "text",
@@ -36,20 +44,20 @@
             },
             "outputs": {}
           },
+          "time_2": {
+            "id": "time_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
           "line_3": {
             "id": "line_3",
             "type": "text",
             "inputs": {
               "speaker": "阿杰",
               "text": "因为是麻辣牛油锅啦笨蛋。"
-            },
-            "outputs": {}
-          },
-          "time_3": {
-            "id": "time_3",
-            "type": "consumeTime",
-            "inputs": {
-              "minutes": 20
             },
             "outputs": {}
           },
@@ -71,20 +79,20 @@
             },
             "outputs": {}
           },
+          "time_5": {
+            "id": "time_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
           "line_6": {
             "id": "line_6",
             "type": "text",
             "inputs": {
               "speaker": "阿伟",
               "text": "有什么屁快放，一会儿我的牛肚就老了。"
-            },
-            "outputs": {}
-          },
-          "time_6": {
-            "id": "time_6",
-            "type": "consumeTime",
-            "inputs": {
-              "minutes": 20
             },
             "outputs": {}
           },
@@ -106,20 +114,20 @@
             },
             "outputs": {}
           },
+          "time_8": {
+            "id": "time_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
           "line_9": {
             "id": "line_9",
             "type": "text",
             "inputs": {
               "speaker": "主控",
               "text": "那一盘里装的是什么东西？怎么都看着我？"
-            },
-            "outputs": {}
-          },
-          "time_9": {
-            "id": "time_9",
-            "type": "consumeTime",
-            "inputs": {
-              "minutes": 20
             },
             "outputs": {}
           },
@@ -141,20 +149,20 @@
             },
             "outputs": {}
           },
+          "time_11": {
+            "id": "time_11",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
           "line_12": {
             "id": "line_12",
             "type": "text",
             "inputs": {
               "speaker": "主控",
               "text": "那不是香菇，那是绝对不是香菇！刚摘下来的，还没被冻坏的……它们正盯着我看！"
-            },
-            "outputs": {}
-          },
-          "time_12": {
-            "id": "time_12",
-            "type": "consumeTime",
-            "inputs": {
-              "minutes": 20
             },
             "outputs": {}
           },
@@ -176,20 +184,20 @@
             },
             "outputs": {}
           },
+          "time_14": {
+            "id": "time_14",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
           "line_15": {
             "id": "line_15",
             "type": "text",
             "inputs": {
               "speaker": "主控",
               "text": "听我说……锅里滚动的不是牛油，是人油，我在外科实习的时候闻到过这个味道，你们都闻不出来吗？？"
-            },
-            "outputs": {}
-          },
-          "time_15": {
-            "id": "time_15",
-            "type": "consumeTime",
-            "inputs": {
-              "minutes": 20
             },
             "outputs": {}
           },
@@ -211,20 +219,20 @@
             },
             "outputs": {}
           },
+          "time_17": {
+            "id": "time_17",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
           "line_18": {
             "id": "line_18",
             "type": "text",
             "inputs": {
               "speaker": "阿伟",
               "text": "我说主控最近压力大吧。"
-            },
-            "outputs": {}
-          },
-          "time_18": {
-            "id": "time_18",
-            "type": "consumeTime",
-            "inputs": {
-              "minutes": 20
             },
             "outputs": {}
           },
@@ -246,20 +254,20 @@
             },
             "outputs": {}
           },
+          "time_20": {
+            "id": "time_20",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
           "line_21": {
             "id": "line_21",
             "type": "text",
             "inputs": {
               "speaker": "阿伟",
               "text": "主控好像怔住了。Ta嘴巴一张一合的，已经在口式呼吸了。"
-            },
-            "outputs": {}
-          },
-          "time_21": {
-            "id": "time_21",
-            "type": "consumeTime",
-            "inputs": {
-              "minutes": 20
             },
             "outputs": {}
           },
@@ -281,9 +289,9 @@
             },
             "outputs": {}
           },
-          "start": {
-            "id": "start",
-            "type": "flowStart",
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -295,19 +303,13 @@
             },
             "outputs": {}
           },
-          "expiry": {
-            "id": "expiry",
+          "scheduleExpiry": {
+            "id": "scheduleExpiry",
             "type": "scheduleExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 8639
             },
-            "outputs": {}
-          },
-          "end": {
-            "id": "end",
-            "type": "scheduleEnd",
-            "inputs": {},
             "outputs": {}
           }
         },
@@ -333,11 +335,11 @@
           {
             "fromNodeId": "line_2",
             "fromPort": "flowOut",
-            "toNodeId": "time_3",
+            "toNodeId": "time_2",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "time_3",
+            "fromNodeId": "time_2",
             "fromPort": "flowOut",
             "toNodeId": "line_3",
             "toPort": "flowIn"
@@ -357,11 +359,11 @@
           {
             "fromNodeId": "line_5",
             "fromPort": "flowOut",
-            "toNodeId": "time_6",
+            "toNodeId": "time_5",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "time_6",
+            "fromNodeId": "time_5",
             "fromPort": "flowOut",
             "toNodeId": "line_6",
             "toPort": "flowIn"
@@ -381,11 +383,11 @@
           {
             "fromNodeId": "line_8",
             "fromPort": "flowOut",
-            "toNodeId": "time_9",
+            "toNodeId": "time_8",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "time_9",
+            "fromNodeId": "time_8",
             "fromPort": "flowOut",
             "toNodeId": "line_9",
             "toPort": "flowIn"
@@ -405,11 +407,11 @@
           {
             "fromNodeId": "line_11",
             "fromPort": "flowOut",
-            "toNodeId": "time_12",
+            "toNodeId": "time_11",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "time_12",
+            "fromNodeId": "time_11",
             "fromPort": "flowOut",
             "toNodeId": "line_12",
             "toPort": "flowIn"
@@ -429,11 +431,11 @@
           {
             "fromNodeId": "line_14",
             "fromPort": "flowOut",
-            "toNodeId": "time_15",
+            "toNodeId": "time_14",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "time_15",
+            "fromNodeId": "time_14",
             "fromPort": "flowOut",
             "toNodeId": "line_15",
             "toPort": "flowIn"
@@ -453,11 +455,11 @@
           {
             "fromNodeId": "line_17",
             "fromPort": "flowOut",
-            "toNodeId": "time_18",
+            "toNodeId": "time_17",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "time_18",
+            "fromNodeId": "time_17",
             "fromPort": "flowOut",
             "toNodeId": "line_18",
             "toPort": "flowIn"
@@ -477,11 +479,11 @@
           {
             "fromNodeId": "line_20",
             "fromPort": "flowOut",
-            "toNodeId": "time_21",
+            "toNodeId": "time_20",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "time_21",
+            "fromNodeId": "time_20",
             "fromPort": "flowOut",
             "toNodeId": "line_21",
             "toPort": "flowIn"

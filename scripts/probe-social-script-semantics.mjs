@@ -10,11 +10,11 @@ const expected = {
   social01a: [],
   social01b: ["social01b_ajie_honor_of_kings", "social01b_awei_headphones"],
   social02a: ["social02a_ajie_chat", "social02a_awei_chat"],
-  social02b: [],
+  social02b: ["social02b_dorm_invite"],
   social03a: [],
   social03b: ["social03b_ajie_24_personality_high", "social03b_ajie_24_personality_low", "social03b_awei_tail_high", "social03b_awei_tail_low"],
   social04a: ["social04a_ajie_chat", "social04a_awei_chat"],
-  social04b: [],
+  social04b: ["social04b_dorm_invite"],
 };
 for (const file of files) assert.deepEqual(docs[file].entries.map((e) => e.id), expected[file], `${file}: wrong entries`);
 const all = files.flatMap((file) => docs[file].entries);

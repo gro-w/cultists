@@ -848,19 +848,7 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice6_op1_suspicion",
-            "fromPort": "flowOut",
-            "toNodeId": "choice6_op1_suspicion",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "choice6_op1",
-            "fromPort": "flowOut",
-            "toNodeId": "choice6_op1_suspicion",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice6_op1_suspicion",
             "fromPort": "flowOut",
             "toNodeId": "choice6_op1_suspicion",
             "toPort": "flowIn"

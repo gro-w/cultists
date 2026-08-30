@@ -270,20 +270,31 @@ export class ScheduleRunner {
         ? this.evaluator.evaluateNode(labelConnection.fromNodeId, labelConnection.fromPort)
         : (option.label || option.text || "");
       button.textContent = String(label);
+      if (this.appId === "his-patient") {
+        button.classList.add("dialogue-choice-option");
+        if (/既往史/.test(button.textContent) && /用药/.test(button.textContent)) {
+          button.dataset.onboardingChoice = "history-medication";
+        }
+      }
       button.addEventListener("click", () => {
         if (this.readOnly) return;
         this._record({ type: "choice", index, label: button.textContent });
         if (option.effects) applyDialogueOnShow({ onShow: option.effects }, this.definition.npcId || this.definition.actorId || this.definition.id);
         this.appendLine("player", "我", button.textContent);
         this.optionsEl.innerHTML = "";
-        const next = option.next || option.target || nextFlow(this.blueprint, node, `option${index}`);
+        // Typed blueprint connections are authoritative. Legacy option.next
+        // values may refer to pre-migration node IDs that no longer exist.
+        const next = nextFlow(this.blueprint, node, `option${index}`)
+          || option.next || option.target;
         this.instance.executedNodeIds.push(node.id);
         this.instance.currentNodeId = next || null;
         this.onCheckpoint(this.instance);
         this._run(next);
+        if (this.appId === "his-patient") eventBus.emit("his:dialogue_choice_selected", { instanceId: this.instance.instanceId, nodeId: node.id, optionIndex: index });
       });
       this.optionsEl.appendChild(button);
     });
+    if (this.appId === "his-patient") eventBus.emit("his:dialogue_choice_available", { instanceId: this.instance.instanceId, nodeId: node.id });
     this.onCheckpoint(this.instance);
   }
 

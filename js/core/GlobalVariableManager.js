@@ -79,8 +79,11 @@ class GlobalVariableManager {
     }
     if (definition.type === "number" || definition.type === "decimal") {
       const number = Number(value);
-      if (!Number.isFinite(number) || number < 0 || number > 256) {
-        throw new Error(`Global variable ${definition.id} must be a number from 0 to 256`);
+      if (!Number.isFinite(number)) {
+        throw new Error(`Global variable ${definition.id} must be a finite number`);
+      }
+      if (definition.type === "number" && (!Number.isInteger(number) || number < 0 || number > 255)) {
+        throw new Error(`Global variable ${definition.id} must be an integer number from 0 to 255`);
       }
       if (definition.type === "decimal") return roundDecimal(number);
       return number;

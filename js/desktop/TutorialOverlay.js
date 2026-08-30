@@ -6,6 +6,7 @@ export default class TutorialOverlay {
     this.root = root;
     this.manager = manager;
     this._off = eventBus.on("onboarding:hint_requested", (hint) => this.show(hint));
+    this._offChanged = eventBus.on("onboarding:changed", (state) => this._closeCompletedHint(state));
     this._hint = null;
     this._pendingHints = [];
     this.root.className = "tutorial-overlay hidden";
@@ -21,6 +22,10 @@ export default class TutorialOverlay {
     window.addEventListener("resize", this._onResize);
   }
   show(hint) {
+    if (hint.completeOn && this.manager.hasMilestone?.(hint.completeOn)) {
+      this._showNextPending();
+      return;
+    }
     if (!this.root.classList.contains("hidden")) {
       if (!this._pendingHints.some((queued) => queued.id === hint.id)) this._pendingHints.push(hint);
       return;
@@ -42,11 +47,23 @@ export default class TutorialOverlay {
     this.card.style.left = `${Math.min(window.innerWidth - 320, Math.max(12, rect.left))}px`;
     this.card.style.top = `${Math.min(window.innerHeight - 150, rect.bottom + 12)}px`;
   }
+  _closeCompletedHint(state = {}) {
+    if (!this._hint || !this._hint.completeOn) return;
+    if (state.milestones?.includes(this._hint.completeOn)) this.close();
+  }
+  _showNextPending() {
+    let next;
+    while ((next = this._pendingHints.shift())) {
+      if (!next.completeOn || !this.manager.hasMilestone?.(next.completeOn)) {
+        this.show(next);
+        return;
+      }
+    }
+  }
   close() {
     this.root.classList.add("hidden");
     this._hint = null;
-    const next = this._pendingHints.shift();
-    if (next) this.show(next);
+    this._showNextPending();
   }
-  destroy() { this._off(); window.removeEventListener("resize", this._onResize); }
+  destroy() { this._off(); this._offChanged(); window.removeEventListener("resize", this._onResize); }
 }

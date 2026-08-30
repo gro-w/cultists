@@ -11,6 +11,7 @@ import { MAX_GAME_DAYS } from "./GameRules.js";
 import { validateBlueprint, embedLegacyPrerequisite } from "./ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
 import { eventBus } from "./EventBus.js";
+import { selectWorkEntries } from "./GameMode.js";
 
 const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
@@ -206,7 +207,7 @@ class ScheduleData {
       const key = `${day}:${time}:${queueId}`;
       if (this.fired.has(key)) continue;
       this.fired.add(key);
-      const sourceEntries = this.slots.get(key) || [];
+      const sourceEntries = selectWorkEntries(this.slots.get(key) || [], queueId);
       const entries = sourceEntries
         .filter((entry) => {
           if (queueId === "social" && !this.matchesPrerequisite(entry.blueprint || entry.dialogueTree, entry.insertPrerequisite)) return false;

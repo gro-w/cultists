@@ -24,15 +24,6 @@
             },
             "outputs": {}
           },
-          "expiry": {
-            "id": "expiry",
-            "type": "scheduleExpiry",
-            "inputs": {
-              "expires": true,
-              "expiresAt": 2879
-            },
-            "outputs": {}
-          },
           "choice": {
             "id": "choice",
             "type": "choice",
@@ -45,11 +36,12 @@
             "options": [
               {
                 "label": "我还是刷题好了。",
-                "next": "study_set"
+                "next": "choice_op0",
+                "id": "choice-option-0"
               },
               {
                 "label": "【卡卡送】要不要来一起打桌游！",
-                "next": "game_start",
+                "next": "choice_op1",
                 "condition": {
                   "any": [
                     {
@@ -74,7 +66,8 @@
                       }
                     }
                   ]
-                }
+                },
+                "id": "choice-option-1"
               }
             ]
           },
@@ -395,9 +388,133 @@
               "value": true
             },
             "outputs": {}
+          },
+          "scheduleExpiry": {
+            "id": "scheduleExpiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 2879
+            },
+            "outputs": {}
+          },
+          "__invite_get_40": {
+            "id": "__invite_get_40",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 40
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_40": {
+            "id": "__invite_cmp_40",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_41": {
+            "id": "__invite_get_41",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 41
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_41": {
+            "id": "__invite_cmp_41",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_42": {
+            "id": "__invite_get_42",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 42
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_42": {
+            "id": "__invite_cmp_42",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_any_01": {
+            "id": "__invite_any_01",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
+          },
+          "__invite_any": {
+            "id": "__invite_any",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
           }
         },
         "connections": [
+          {
+            "fromNodeId": "__invite_get_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_40",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_41",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_42",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any_01",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any",
+            "fromPort": "value",
+            "toNodeId": "prerequisite",
+            "toPort": "condition"
+          },
           {
             "fromNodeId": "start",
             "fromPort": "flowOut",
@@ -405,15 +522,9 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "study_set",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "study_set",
             "fromPort": "flowOut",
-            "toNodeId": "study_set_2",
+            "toNodeId": "study_time",
             "toPort": "flowIn"
           },
           {
@@ -423,21 +534,9 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "study_end",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "game_start",
             "fromPort": "flowOut",
-            "toNodeId": "activity_set",
+            "toNodeId": "line_0",
             "toPort": "flowIn"
           },
           {
@@ -455,17 +554,17 @@
           {
             "fromNodeId": "line_2",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_3",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_3",
-            "fromPort": "flowOut",
             "toNodeId": "line_3",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
             "fromPort": "flowOut",
             "toNodeId": "line_4",
             "toPort": "flowIn"
@@ -479,17 +578,17 @@
           {
             "fromNodeId": "line_5",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_6",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_6",
-            "fromPort": "flowOut",
             "toNodeId": "line_6",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
             "fromPort": "flowOut",
             "toNodeId": "line_7",
             "toPort": "flowIn"
@@ -503,17 +602,17 @@
           {
             "fromNodeId": "line_8",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_9",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_9",
-            "fromPort": "flowOut",
             "toNodeId": "line_9",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_9",
             "fromPort": "flowOut",
             "toNodeId": "line_10",
             "toPort": "flowIn"
@@ -527,17 +626,17 @@
           {
             "fromNodeId": "line_11",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_12",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_12",
-            "fromPort": "flowOut",
             "toNodeId": "line_12",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_12",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_12",
             "fromPort": "flowOut",
             "toNodeId": "line_13",
             "toPort": "flowIn"
@@ -551,17 +650,17 @@
           {
             "fromNodeId": "line_14",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_15",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_15",
-            "fromPort": "flowOut",
             "toNodeId": "line_15",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_15",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_15",
             "fromPort": "flowOut",
             "toNodeId": "line_16",
             "toPort": "flowIn"
@@ -575,17 +674,17 @@
           {
             "fromNodeId": "line_17",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_18",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_18",
-            "fromPort": "flowOut",
             "toNodeId": "line_18",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_18",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_18",
             "fromPort": "flowOut",
             "toNodeId": "line_19",
             "toPort": "flowIn"
@@ -599,31 +698,49 @@
           {
             "fromNodeId": "line_20",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_21",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_21",
-            "fromPort": "flowOut",
             "toNodeId": "line_21",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_21",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "game_time_21",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_21",
+            "fromPort": "flowOut",
+            "toNodeId": "study_set_2",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "study_set_2",
             "fromPort": "flowOut",
-            "toNodeId": "study_time",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_san",
+            "fromPort": "flowOut",
+            "toNodeId": "study_end",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "activity_set",
             "fromPort": "flowOut",
-            "toNodeId": "line_0",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]
@@ -653,15 +770,6 @@
             },
             "outputs": {}
           },
-          "expiry": {
-            "id": "expiry",
-            "type": "scheduleExpiry",
-            "inputs": {
-              "expires": true,
-              "expiresAt": 4319
-            },
-            "outputs": {}
-          },
           "choice": {
             "id": "choice",
             "type": "choice",
@@ -674,11 +782,12 @@
             "options": [
               {
                 "label": "我还是刷题好了。",
-                "next": "study_set"
+                "next": "choice_op0",
+                "id": "choice-option-0"
               },
               {
                 "label": "【冰冷的TA醒来之前】今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~",
-                "next": "game_start",
+                "next": "choice_op1",
                 "condition": {
                   "any": [
                     {
@@ -703,7 +812,8 @@
                       }
                     }
                   ]
-                }
+                },
+                "id": "choice-option-1"
               }
             ]
           },
@@ -1003,19 +1113,143 @@
               "value": true
             },
             "outputs": {}
+          },
+          "scheduleExpiry": {
+            "id": "scheduleExpiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 4319
+            },
+            "outputs": {}
+          },
+          "__invite_get_40": {
+            "id": "__invite_get_40",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 40
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_40": {
+            "id": "__invite_cmp_40",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_41": {
+            "id": "__invite_get_41",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 41
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_41": {
+            "id": "__invite_cmp_41",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_42": {
+            "id": "__invite_get_42",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 42
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_42": {
+            "id": "__invite_cmp_42",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_any_01": {
+            "id": "__invite_any_01",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
+          },
+          "__invite_any": {
+            "id": "__invite_any",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
           }
         },
         "connections": [
           {
+            "fromNodeId": "day1_activity",
+            "fromPort": "value",
+            "toNodeId": "day2_intro_branch",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "__invite_get_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_40",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_41",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_42",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any_01",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any",
+            "fromPort": "value",
+            "toNodeId": "prerequisite",
+            "toPort": "condition"
+          },
+          {
             "fromNodeId": "start",
             "fromPort": "flowOut",
             "toNodeId": "choice",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "study_set",
             "toPort": "flowIn"
           },
           {
@@ -1031,28 +1265,16 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "study_end",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
             "fromNodeId": "game_start",
             "fromPort": "flowOut",
-            "toNodeId": "activity_set",
+            "toNodeId": "day2_intro_branch",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "day1_activity",
-            "fromPort": "value",
-            "toNodeId": "day2_intro_branch",
-            "toPort": "condition"
+            "fromNodeId": "day2_intro_branch",
+            "fromPort": "false",
+            "toNodeId": "day2_extra",
+            "toPort": "flowIn"
           },
           {
             "fromNodeId": "day2_intro_branch",
@@ -1081,17 +1303,17 @@
           {
             "fromNodeId": "line_2",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_3",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_3",
-            "fromPort": "flowOut",
             "toNodeId": "line_3",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
             "fromPort": "flowOut",
             "toNodeId": "line_4",
             "toPort": "flowIn"
@@ -1105,17 +1327,17 @@
           {
             "fromNodeId": "line_5",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_6",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_6",
-            "fromPort": "flowOut",
             "toNodeId": "line_6",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
             "fromPort": "flowOut",
             "toNodeId": "line_7",
             "toPort": "flowIn"
@@ -1129,17 +1351,17 @@
           {
             "fromNodeId": "line_8",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_9",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_9",
-            "fromPort": "flowOut",
             "toNodeId": "line_9",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_9",
             "fromPort": "flowOut",
             "toNodeId": "line_10",
             "toPort": "flowIn"
@@ -1153,17 +1375,17 @@
           {
             "fromNodeId": "line_11",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_12",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_12",
-            "fromPort": "flowOut",
             "toNodeId": "line_12",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_12",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_12",
             "fromPort": "flowOut",
             "toNodeId": "line_13",
             "toPort": "flowIn"
@@ -1177,17 +1399,17 @@
           {
             "fromNodeId": "line_14",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_15",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_15",
-            "fromPort": "flowOut",
             "toNodeId": "line_15",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_15",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_15",
             "fromPort": "flowOut",
             "toNodeId": "line_16",
             "toPort": "flowIn"
@@ -1201,25 +1423,43 @@
           {
             "fromNodeId": "line_17",
             "fromPort": "flowOut",
-            "toNodeId": "game_time_18",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_18",
-            "fromPort": "flowOut",
             "toNodeId": "line_18",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "line_18",
             "fromPort": "flowOut",
-            "toNodeId": "end",
+            "toNodeId": "game_time_18",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_18",
+            "fromPort": "flowOut",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_san",
+            "fromPort": "flowOut",
+            "toNodeId": "study_end",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "activity_set",
             "fromPort": "flowOut",
-            "toNodeId": "day2_intro_branch",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]
@@ -1249,15 +1489,6 @@
             },
             "outputs": {}
           },
-          "expiry": {
-            "id": "expiry",
-            "type": "scheduleExpiry",
-            "inputs": {
-              "expires": true,
-              "expiresAt": 5759
-            },
-            "outputs": {}
-          },
           "choice": {
             "id": "choice",
             "type": "choice",
@@ -1270,11 +1501,12 @@
             "options": [
               {
                 "label": "我还是刷题好了。",
-                "next": "study_set"
+                "next": "choice_op0",
+                "id": "choice-option-0"
               },
               {
                 "label": "【虹色的门与杀人鬼的钥匙】来玩来玩，《虹色的门与杀人鬼的钥匙》。",
-                "next": "game_start",
+                "next": "choice_op1",
                 "condition": {
                   "any": [
                     {
@@ -1299,7 +1531,8 @@
                       }
                     }
                   ]
-                }
+                },
+                "id": "choice-option-1"
               }
             ]
           },
@@ -1669,183 +1902,85 @@
               "text": "又是个恐怖游戏？"
             },
             "outputs": {}
+          },
+          "scheduleExpiry": {
+            "id": "scheduleExpiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 5759
+            },
+            "outputs": {}
+          },
+          "__invite_get_40": {
+            "id": "__invite_get_40",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 40
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_40": {
+            "id": "__invite_cmp_40",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_41": {
+            "id": "__invite_get_41",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 41
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_41": {
+            "id": "__invite_cmp_41",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_42": {
+            "id": "__invite_get_42",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 42
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_42": {
+            "id": "__invite_cmp_42",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_any_01": {
+            "id": "__invite_any_01",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
+          },
+          "__invite_any": {
+            "id": "__invite_any",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
           }
         },
         "connections": [
-          {
-            "fromNodeId": "start",
-            "fromPort": "flowOut",
-            "toNodeId": "choice",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "study_set",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_set",
-            "fromPort": "flowOut",
-            "toNodeId": "study_time",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_time",
-            "fromPort": "flowOut",
-            "toNodeId": "study_san",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "study_end",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_start",
-            "fromPort": "flowOut",
-            "toNodeId": "activity_set",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_0",
-            "fromPort": "flowOut",
-            "toNodeId": "line_1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_1",
-            "fromPort": "flowOut",
-            "toNodeId": "line_2",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_2",
-            "fromPort": "flowOut",
-            "toNodeId": "game_time_3",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_3",
-            "fromPort": "flowOut",
-            "toNodeId": "line_3",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_3",
-            "fromPort": "flowOut",
-            "toNodeId": "line_4",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_4",
-            "fromPort": "flowOut",
-            "toNodeId": "line_5",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_5",
-            "fromPort": "flowOut",
-            "toNodeId": "game_time_6",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_6",
-            "fromPort": "flowOut",
-            "toNodeId": "line_6",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_6",
-            "fromPort": "flowOut",
-            "toNodeId": "line_7",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_7",
-            "fromPort": "flowOut",
-            "toNodeId": "line_8",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_8",
-            "fromPort": "flowOut",
-            "toNodeId": "game_time_9",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_9",
-            "fromPort": "flowOut",
-            "toNodeId": "line_9",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_9",
-            "fromPort": "flowOut",
-            "toNodeId": "line_10",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_10",
-            "fromPort": "flowOut",
-            "toNodeId": "line_11",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_11",
-            "fromPort": "flowOut",
-            "toNodeId": "game_time_12",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_12",
-            "fromPort": "flowOut",
-            "toNodeId": "line_12",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_12",
-            "fromPort": "flowOut",
-            "toNodeId": "line_13",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_13",
-            "fromPort": "flowOut",
-            "toNodeId": "line_14",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_14",
-            "fromPort": "flowOut",
-            "toNodeId": "game_time_15",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_15",
-            "fromPort": "flowOut",
-            "toNodeId": "line_15",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_15",
-            "fromPort": "flowOut",
-            "toNodeId": "line_16",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_16",
-            "fromPort": "flowOut",
-            "toNodeId": "line_17",
-            "toPort": "flowIn"
-          },
           {
             "fromNodeId": "check_0",
             "fromPort": "value",
@@ -1865,39 +2000,213 @@
             "toPort": "condition"
           },
           {
-            "fromNodeId": "check_branch_0",
-            "fromPort": "true",
-            "toNodeId": "check_branch_1",
+            "fromNodeId": "__invite_get_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_40",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_41",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_42",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any_01",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any",
+            "fromPort": "value",
+            "toNodeId": "prerequisite",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "choice",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_0",
-            "fromPort": "false",
-            "toNodeId": "streak_end",
+            "fromNodeId": "study_set",
+            "fromPort": "flowOut",
+            "toNodeId": "study_time",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_1",
-            "fromPort": "true",
-            "toNodeId": "check_branch_2",
+            "fromNodeId": "study_time",
+            "fromPort": "flowOut",
+            "toNodeId": "study_san",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_1",
-            "fromPort": "false",
-            "toNodeId": "streak_end",
+            "fromNodeId": "game_start",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_2",
-            "fromPort": "true",
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_7",
+            "fromPort": "flowOut",
+            "toNodeId": "line_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_8",
+            "fromPort": "flowOut",
+            "toNodeId": "line_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_10",
+            "fromPort": "flowOut",
+            "toNodeId": "line_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_11",
+            "fromPort": "flowOut",
+            "toNodeId": "line_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_12",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_12",
+            "fromPort": "flowOut",
+            "toNodeId": "line_13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_13",
+            "fromPort": "flowOut",
+            "toNodeId": "line_14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_14",
+            "fromPort": "flowOut",
+            "toNodeId": "line_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_15",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_15",
+            "fromPort": "flowOut",
+            "toNodeId": "line_16",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_16",
+            "fromPort": "flowOut",
+            "toNodeId": "line_17",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_17",
+            "fromPort": "flowOut",
             "toNodeId": "streak_text1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "check_branch_2",
-            "fromPort": "false",
-            "toNodeId": "streak_end",
             "toPort": "flowIn"
           },
           {
@@ -1927,19 +2236,49 @@
           {
             "fromNodeId": "suspicion",
             "fromPort": "flowOut",
-            "toNodeId": "streak_end",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "activity_set",
-            "fromPort": "flowOut",
-            "toNodeId": "previous_activity_branch",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_17",
-            "fromPort": "flowOut",
             "toNodeId": "check_branch_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "false",
+            "toNodeId": "check_branch_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "true",
+            "toNodeId": "check_branch_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "false",
+            "toNodeId": "check_branch_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "true",
+            "toNodeId": "check_branch_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "false",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "true",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "previous_activity_branch",
+            "fromPort": "false",
+            "toNodeId": "previous_activity_line",
             "toPort": "flowIn"
           },
           {
@@ -1949,15 +2288,33 @@
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "previous_activity_branch",
-            "fromPort": "false",
-            "toNodeId": "line_0",
+            "fromNodeId": "previous_activity_line",
+            "fromPort": "flowOut",
+            "toNodeId": "streak_end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "previous_activity_line",
+            "fromNodeId": "study_san",
             "fromPort": "flowOut",
-            "toNodeId": "line_0",
+            "toNodeId": "study_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "activity_set",
+            "fromPort": "flowOut",
+            "toNodeId": "previous_activity_branch",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]
@@ -1987,15 +2344,6 @@
             },
             "outputs": {}
           },
-          "expiry": {
-            "id": "expiry",
-            "type": "scheduleExpiry",
-            "inputs": {
-              "expires": true,
-              "expiresAt": 7199
-            },
-            "outputs": {}
-          },
           "choice": {
             "id": "choice",
             "type": "choice",
@@ -2008,11 +2356,12 @@
             "options": [
               {
                 "label": "我还是刷题好了。",
-                "next": "study_set"
+                "next": "choice_op0",
+                "id": "choice-option-0"
               },
               {
                 "label": "【山中小黑屋】快来玩！少了我们你的生活该多么沉闷无趣啊~",
-                "next": "game_start",
+                "next": "choice_op1",
                 "condition": {
                   "any": [
                     {
@@ -2037,7 +2386,8 @@
                       }
                     }
                   ]
-                }
+                },
+                "id": "choice-option-1"
               }
             ]
           },
@@ -2205,12 +2555,6 @@
             },
             "outputs": {}
           },
-          "streak_end": {
-            "id": "streak_end",
-            "type": "scheduleEnd",
-            "inputs": {},
-            "outputs": {}
-          },
           "check_0": {
             "id": "check_0",
             "type": "getGlobal",
@@ -2275,99 +2619,91 @@
               "value": true
             },
             "outputs": {}
+          },
+          "scheduleExpiry": {
+            "id": "scheduleExpiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 7199
+            },
+            "outputs": {}
+          },
+          "__invite_get_40": {
+            "id": "__invite_get_40",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 40
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_40": {
+            "id": "__invite_cmp_40",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_41": {
+            "id": "__invite_get_41",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 41
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_41": {
+            "id": "__invite_cmp_41",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_get_42": {
+            "id": "__invite_get_42",
+            "type": "getGlobal",
+            "inputs": {
+              "variableId": 42
+            },
+            "outputs": {}
+          },
+          "__invite_cmp_42": {
+            "id": "__invite_cmp_42",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "gte",
+              "right": 50
+            },
+            "outputs": {}
+          },
+          "__invite_any_01": {
+            "id": "__invite_any_01",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
+          },
+          "__invite_any": {
+            "id": "__invite_any",
+            "type": "arithmetic",
+            "inputs": {
+              "operator": "or"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
           }
         },
         "connections": [
-          {
-            "fromNodeId": "start",
-            "fromPort": "flowOut",
-            "toNodeId": "choice",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option0",
-            "toNodeId": "study_set",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_set",
-            "fromPort": "flowOut",
-            "toNodeId": "study_time",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_time",
-            "fromPort": "flowOut",
-            "toNodeId": "study_san",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "study_san",
-            "fromPort": "flowOut",
-            "toNodeId": "study_end",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "choice",
-            "fromPort": "option1",
-            "toNodeId": "game_start",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_start",
-            "fromPort": "flowOut",
-            "toNodeId": "activity_set",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_0",
-            "fromPort": "flowOut",
-            "toNodeId": "line_1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_1",
-            "fromPort": "flowOut",
-            "toNodeId": "line_2",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_2",
-            "fromPort": "flowOut",
-            "toNodeId": "game_time_3",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_3",
-            "fromPort": "flowOut",
-            "toNodeId": "line_3",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_3",
-            "fromPort": "flowOut",
-            "toNodeId": "line_4",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_4",
-            "fromPort": "flowOut",
-            "toNodeId": "line_5",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "line_5",
-            "fromPort": "flowOut",
-            "toNodeId": "game_time_6",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "game_time_6",
-            "fromPort": "flowOut",
-            "toNodeId": "line_6",
-            "toPort": "flowIn"
-          },
           {
             "fromNodeId": "check_0",
             "fromPort": "value",
@@ -2393,51 +2729,129 @@
             "toPort": "condition"
           },
           {
-            "fromNodeId": "check_branch_0",
-            "fromPort": "true",
-            "toNodeId": "check_branch_1",
+            "fromNodeId": "__invite_get_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_40",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_41",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_get_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_cmp_42",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_40",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_41",
+            "fromPort": "value",
+            "toNodeId": "__invite_any_01",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any_01",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "left"
+          },
+          {
+            "fromNodeId": "__invite_cmp_42",
+            "fromPort": "value",
+            "toNodeId": "__invite_any",
+            "toPort": "right"
+          },
+          {
+            "fromNodeId": "__invite_any",
+            "fromPort": "value",
+            "toNodeId": "prerequisite",
+            "toPort": "condition"
+          },
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "choice",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_0",
-            "fromPort": "false",
-            "toNodeId": "streak_end",
+            "fromNodeId": "study_set",
+            "fromPort": "flowOut",
+            "toNodeId": "study_time",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_1",
-            "fromPort": "true",
-            "toNodeId": "check_branch_2",
+            "fromNodeId": "study_time",
+            "fromPort": "flowOut",
+            "toNodeId": "study_san",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_1",
-            "fromPort": "false",
-            "toNodeId": "streak_end",
+            "fromNodeId": "game_start",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_2",
-            "fromPort": "true",
-            "toNodeId": "check_branch_3",
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_2",
-            "fromPort": "false",
-            "toNodeId": "streak_end",
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "check_branch_3",
-            "fromPort": "true",
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "game_time_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "game_time_6",
+            "fromPort": "flowOut",
             "toNodeId": "streak_text1",
-            "toPort": "flowIn"
-          },
-          {
-            "fromNodeId": "check_branch_3",
-            "fromPort": "false",
-            "toNodeId": "streak_end",
             "toPort": "flowIn"
           },
           {
@@ -2467,19 +2881,79 @@
           {
             "fromNodeId": "suspicion",
             "fromPort": "flowOut",
-            "toNodeId": "streak_end",
+            "toNodeId": "check_branch_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "false",
+            "toNodeId": "check_branch_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_0",
+            "fromPort": "true",
+            "toNodeId": "check_branch_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "false",
+            "toNodeId": "check_branch_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_1",
+            "fromPort": "true",
+            "toNodeId": "check_branch_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "false",
+            "toNodeId": "check_branch_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_2",
+            "fromPort": "true",
+            "toNodeId": "check_branch_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_3",
+            "fromPort": "false",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "check_branch_3",
+            "fromPort": "true",
+            "toNodeId": "activity_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "study_san",
+            "fromPort": "flowOut",
+            "toNodeId": "study_end",
             "toPort": "flowIn"
           },
           {
             "fromNodeId": "activity_set",
             "fromPort": "flowOut",
-            "toNodeId": "line_0",
+            "toNodeId": "end",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "line_6",
-            "fromPort": "flowOut",
-            "toNodeId": "check_branch_0",
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "study_set",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "game_start",
             "toPort": "flowIn"
           }
         ]

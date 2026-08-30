@@ -3,6 +3,10 @@ import fs from "node:fs";
 
 const root = new URL("../", import.meta.url);
 const read = (name) => JSON.parse(fs.readFileSync(new URL(`data/zh-hans/${name}`, root), "utf8"));
+const dormMode = fs.readFileSync(new URL("js/desktop/DormMode.js", root), "utf8");
+assert.match(dormMode, /socialQueue\.getPending\(\)\s*\.filter\(\(item\) => !\(item\.payload\?\.npcId \|\| item\.payload\?\.actorId\)/, "dorm must render NPC-less social schedules");
+assert.match(dormMode, /_showScheduleDialogue\(definition, item\)/, "activity button must reuse the schedule dialogue runner");
+assert.match(dormMode, /eventBus\.on\("schedule:appended"/, "dorm must refresh after a schedule is inserted");
 const social = read("socialpub.json").entries;
 const activities = social.filter((entry) => entry.id.startsWith("dorm_activity_day"));
 assert.equal(activities.length, 4, "four weekday dorm activities expected");
@@ -43,7 +47,7 @@ for (const [day, file] of [[1, "social01b.json"], [2, "social02b.json"], [3, "so
 }
 const day5 = read("social05a.json").entries;
 assert.equal(day5.length, 1);
-assert.equal(day5[0].id, "dorm_hotpot_day5");
+assert.equal(day5[0].id, "dorm_activity_day5");
 assert.ok(Object.values(day5[0].blueprint.nodes).some((node) => node.type === "scheduleEnd"));
 const globals = read("global_variables.json");
 for (const id of [104, 105, 106, 107, 109, 110, 111, 112, 113]) assert.ok(globals.some((entry) => entry.id === id), `missing global ${id}`);

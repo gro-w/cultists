@@ -1,3 +1,533 @@
 {
-  "entries": []
+  "displayName": "第6天社交·08:00",
+  "entries": [
+    {
+      "id": "social06a_ajie_chat",
+      "type": "other",
+      "npcId": "ajie",
+      "name": "阿杰",
+      "avatar": "🐶",
+      "displayName": "闲聊池",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "line_0": {
+            "id": "line_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "老盯着我看干嘛？"
+            },
+            "outputs": {}
+          },
+          "line_1": {
+            "id": "line_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "现在你好点了吗？"
+            },
+            "outputs": {}
+          },
+          "line_2": {
+            "id": "line_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "挺好的，为什么这么问？"
+            },
+            "outputs": {}
+          },
+          "time_2": {
+            "id": "time_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_3": {
+            "id": "line_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "昨天我们一起去吃火锅，你突然发癔症……吓了我们一跳。"
+            },
+            "outputs": {}
+          },
+          "line_4": {
+            "id": "line_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "有吗？"
+            },
+            "outputs": {}
+          },
+          "line_5": {
+            "id": "line_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "……那就好。"
+            },
+            "outputs": {}
+          },
+          "time_5": {
+            "id": "time_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_6": {
+            "id": "line_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "到底什么意思？怎么不说清楚？"
+            },
+            "outputs": {}
+          },
+          "line_7": {
+            "id": "line_7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "明天你就要值夜班了吧？"
+            },
+            "outputs": {}
+          },
+          "line_8": {
+            "id": "line_8",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "对啊，怎么了？"
+            },
+            "outputs": {}
+          },
+          "time_8": {
+            "id": "time_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_9": {
+            "id": "line_9",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你害怕吗？晚上住院部的走廊可是没有尽头的哦……"
+            },
+            "outputs": {}
+          },
+          "line_10": {
+            "id": "line_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "别想吓唬我。"
+            },
+            "outputs": {}
+          },
+          "line_11": {
+            "id": "line_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "看来真的好了……"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 10079
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "time_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_2",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "time_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_5",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_7",
+            "fromPort": "flowOut",
+            "toNodeId": "line_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_8",
+            "fromPort": "flowOut",
+            "toNodeId": "time_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_8",
+            "fromPort": "flowOut",
+            "toNodeId": "line_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "line_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_10",
+            "fromPort": "flowOut",
+            "toNodeId": "line_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_11",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      },
+      "condition": {
+        "globalVariables": {
+          "id": 100,
+          "op": "eq",
+          "value": true
+        }
+      }
+    },
+    {
+      "id": "social06a_awei_chat",
+      "type": "other",
+      "npcId": "awei",
+      "name": "阿伟",
+      "avatar": "👓",
+      "displayName": "闲聊池",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "line_0": {
+            "id": "line_0",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "没有猿道耳机的生活空虚吗？"
+            },
+            "outputs": {}
+          },
+          "line_1": {
+            "id": "line_1",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "对。不过也没什么。空虚就是常态。"
+            },
+            "outputs": {}
+          },
+          "line_2": {
+            "id": "line_2",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "后悔吗？为了一起去吃火锅退掉耳机。"
+            },
+            "outputs": {}
+          },
+          "time_2": {
+            "id": "time_2",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_3": {
+            "id": "line_3",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "本来就是要退掉的，何谈后悔。但是……"
+            },
+            "outputs": {}
+          },
+          "line_4": {
+            "id": "line_4",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "但是什么？"
+            },
+            "outputs": {}
+          },
+          "line_5": {
+            "id": "line_5",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "但是有点后悔和你一起去吃火锅……"
+            },
+            "outputs": {}
+          },
+          "time_5": {
+            "id": "time_5",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_6": {
+            "id": "line_6",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "为什么？你换口味了吗？"
+            },
+            "outputs": {}
+          },
+          "line_7": {
+            "id": "line_7",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "算了，当我没说。明天你就要值夜班了，是不是？"
+            },
+            "outputs": {}
+          },
+          "line_8": {
+            "id": "line_8",
+            "type": "text",
+            "inputs": {
+              "speaker": "主控",
+              "text": "是啊，我还有点期待呢。"
+            },
+            "outputs": {}
+          },
+          "time_8": {
+            "id": "time_8",
+            "type": "consumeTime",
+            "inputs": {
+              "minutes": 20
+            },
+            "outputs": {}
+          },
+          "line_9": {
+            "id": "line_9",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "哈哈，那祝你明天夜班一切顺利吧。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          },
+          "prerequisite": {
+            "id": "prerequisite",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "expiry": {
+            "id": "expiry",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": true,
+              "expiresAt": 10079
+            },
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "line_0",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_0",
+            "fromPort": "flowOut",
+            "toNodeId": "line_1",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_1",
+            "fromPort": "flowOut",
+            "toNodeId": "line_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_2",
+            "fromPort": "flowOut",
+            "toNodeId": "time_2",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_2",
+            "fromPort": "flowOut",
+            "toNodeId": "line_3",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_3",
+            "fromPort": "flowOut",
+            "toNodeId": "line_4",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_4",
+            "fromPort": "flowOut",
+            "toNodeId": "line_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_5",
+            "fromPort": "flowOut",
+            "toNodeId": "time_5",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_5",
+            "fromPort": "flowOut",
+            "toNodeId": "line_6",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_6",
+            "fromPort": "flowOut",
+            "toNodeId": "line_7",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_7",
+            "fromPort": "flowOut",
+            "toNodeId": "line_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_8",
+            "fromPort": "flowOut",
+            "toNodeId": "time_8",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "time_8",
+            "fromPort": "flowOut",
+            "toNodeId": "line_9",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_9",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      },
+      "condition": {
+        "globalVariables": {
+          "id": 101,
+          "op": "eq",
+          "value": true
+        }
+      }
+    }
+  ]
 }

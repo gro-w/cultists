@@ -18,6 +18,13 @@
   background: #000;
 }
 
+/* The global CG overlay is z-index 2150. Ending dialogue and portraits must
+   remain above it; CG is a visual background and must never block Continue
+   or choice buttons. */
+.ending-screen-overlay {
+  z-index: 2400;
+}
+
 .main-menu-overlay.hidden,
 .ending-screen-overlay.hidden {
   display: none;
@@ -230,9 +237,9 @@
 /* ---- Ending Screen ---- */
 
 .ending-gal-screen { position:relative; width:100vw; height:100vh; overflow:hidden; background:#080808; color:#fff; }
-.ending-gal-scene, .ending-gal-cg { position:absolute; inset:0; }
-.ending-gal-cg { background-position:center; background-repeat:no-repeat; background-size:cover; filter:brightness(.72); }
-.ending-gal-character { position:absolute; bottom:17vh; height:68vh; width:34vw; display:flex; align-items:flex-end; justify-content:center; opacity:.55; transition:opacity .15s, filter .15s; filter:brightness(.65) saturate(.8); pointer-events:none; }
+.ending-gal-scene { position:absolute; inset:0; z-index:1; pointer-events:none; }
+.ending-gal-cg { position:absolute; inset:0; z-index:0; background-position:center; background-repeat:no-repeat; background-size:cover; filter:brightness(.72); pointer-events:none; }
+.ending-gal-character { position:absolute; z-index:2; bottom:17vh; height:68vh; width:34vw; display:flex; align-items:flex-end; justify-content:center; opacity:.55; transition:opacity .15s, filter .15s; filter:brightness(.65) saturate(.8); pointer-events:none; }
 .ending-gal-character.ending-gal-active { opacity:1; filter:brightness(1) saturate(1); }
 .ending-gal-player { left:3vw; }
 .ending-gal-npc { right:3vw; }
@@ -241,7 +248,7 @@
 
 .ending-screen-panel {
   position: absolute;
-  z-index: 3;
+  z-index: 10;
   left: 50%;
   bottom: 3vh;
   transform: translateX(-50%);

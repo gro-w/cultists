@@ -95,7 +95,22 @@ Social 日期日程条目所在的完整蓝图必须有且只有一个 `prerequi
 
 ### 技能与 NPC 数值 ID
 
-`skills.json` 的每个技能和 `npcs.json` 的每个 NPC 必须包含从 `0` 开始、范围为 `0..19` 且不重复的 `numericid`。该 ID 是稳定的数值映射，不随数组排序变化：技能 `numericid=n` 使用公共变量 `20+n`；NPC `numericid=n` 使用公共变量 `40+n` 保存好感度、使用 `60+n` 保存 SAN。公共变量 `3` 是 NPC 不稳定 SAN 阈值，`4` 是 NPC 下线 SAN 阈值；NPC 状态规则文件及其专用编辑器已移除。
+`skills.json` 的每个技能和 `npcs.json` 的每个 NPC 必须包含从 0 开始、范围为 `0..19` 且不重复的 `numericid`。该 ID 是稳定的数值映射，不随数组排序变化：技能 `numericid=n` 使用公共变量 `20+n`；NPC `numericid=n` 使用公共变量 `40+n` 保存好感度、使用 `60+n` 保存 NPC SAN。公共变量 `3` 是 NPC 不稳定 SAN 阈值，`4` 是 NPC 下线 SAN 阈值；NPC 状态规则文件及其专用编辑器已移除。
+
+### NPC 结局专用立绘
+
+NPC 可选用与 SAN 无关的结局专用立绘变体：
+
+```json
+{
+  "id": "binbin",
+  "endingPortraits": [
+    { "endingId": "异常结局", "imageData": "data:image/png;base64,..." }
+  ]
+}
+```
+
+结局播放时，`EndingScreen` 按当前结局的稳定 `id` 精确匹配 `endingPortraits[].endingId`。匹配且存在 `imageData` 时优先使用该图片；没有匹配项时回退到普通 `portraits` 立绘。结局专用立绘不参与 SAN 区间选择，也不改变 NPC 的运行时状态。开发人员模式的 NPC 管理器支持添加、删除、填写结局 ID 和上传图片。
 
 条件可写在对话节点、选项、日程条目、特殊事件、道具和结局中：
 

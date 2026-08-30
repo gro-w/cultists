@@ -17,6 +17,7 @@ import { endingManager } from "./EndingManager.js";
 import { onboardingManager } from "./OnboardingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 import { turtleSoupManager } from "./TurtleSoupManager.js";
+import { itemEffectHistory } from "./ItemEffectHistory.js";
 
 // v17 = v16 plus TurtleSoup branch state.
 // v18 = v17 plus the active ending ID and priority.
@@ -24,7 +25,8 @@ import { turtleSoupManager } from "./TurtleSoupManager.js";
 // v20 = v19 plus resumable medical incidents in workQueue.
 // v21 = v20 plus the migration of medical money ownership to global variable 2.
 // v22 = v21 plus fixed complaint/riot arrival times.
-const SAVE_FORMAT_VERSION = 22;
+// v23 = v22 plus persisted item/object effect history.
+const SAVE_FORMAT_VERSION = 23;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -139,6 +141,7 @@ class SaveManager {
       cg: cgManager.snapshot(),
       onboarding: onboardingManager.snapshot(),
       turtleSoup: turtleSoupManager.snapshot(),
+      itemEffectHistory: itemEffectHistory.snapshot(),
     };
     return Uint8Array.from([SAVE_FORMAT_VERSION, ...new TextEncoder().encode(JSON.stringify(payload))]);
   }
@@ -202,6 +205,7 @@ class SaveManager {
       cgManager.restore(payload.cg || {});
       onboardingManager.restore(payload.onboarding || {});
       turtleSoupManager.restore(payload.turtleSoup || {});
+      itemEffectHistory.restore(payload.itemEffectHistory || []);
       scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
       this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     } finally {

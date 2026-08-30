@@ -85,6 +85,7 @@ export function validateBlueprint(raw) {
     if ((isFlowNode(node.type) || node.type === "segmentBranch") && node.type !== "scheduleEnd") {
       const hasNext = blueprint.connections.some((connection) => connection.fromNodeId === id && portKind(getScheduleNodePort(node.type, connection.fromPort, "output", node)) === "flow")
         || Boolean(node.next)
+        || Boolean(node.normalNext || node.abnormalNext)
         || (node.type === "choice" && (node.options || []).some((option) => option.next));
       if (!hasNext) errors.push(`流程终点 ${id} 必须是日程结束节点`);
     }

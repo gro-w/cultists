@@ -559,6 +559,14 @@ export class DeveloperMode {
           </label>
           <button type="button" class="win95-btn dev-btn" data-dev-action="remove-portrait-${index}-${pi}" style="font-size:11px">✕</button>
         </div>`).join("");
+      const endingPortraits = (npc.endingPortraits || []).map((p, pi) => `
+        <div class="dev-portrait-row" data-ending-portrait-row="${index}-${pi}">
+          <span style="font-size:11px;color:#aaa">结局变体 ${pi + 1}</span>
+          <label style="font-size:11px">结局 ID <input data-p-ending-id value="${esc(p.endingId || "")}" placeholder="例如：异常结局" style="width:110px;border:2px inset #eee;min-height:20px;padding:1px 3px;font-size:11px"></label>
+          ${p.imageData ? `<img src="${esc(p.imageData)}" alt="结局立绘预览" style="height:60px;object-fit:contain;border:1px solid #555;vertical-align:middle;margin:0 4px">` : `<span style="font-size:11px;color:#888">（未上传）</span>`}
+          <label style="font-size:11px;cursor:pointer;background:#3a3050;color:#e0d8f0;padding:2px 6px;border:2px outset #6a58a0">📁 上传<input type="file" accept="image/*" data-ending-portrait-upload="${index}-${pi}" style="display:none"></label>
+          <button type="button" class="win95-btn dev-btn" data-dev-action="remove-ending-portrait-${index}-${pi}" style="font-size:11px">✕</button>
+        </div>`).join("");
       return `<div class="dev-ded-card" data-npc-row="${index}" style="margin-bottom:10px">
         <div class="dev-ded-card-title">
           <b>${esc(npc.name || "(未命名)")} <code style="font-size:11px">${esc(npc.id)}</code></b>
@@ -577,6 +585,8 @@ export class DeveloperMode {
           <button type="button" class="win95-btn dev-btn" style="font-size:11px;margin-left:6px" data-dev-action="add-portrait-${index}">＋ 添加变体</button>
         </div>
         ${portraits || '<p style="font-size:11px;color:#aaa;margin:0 0 4px">暂无立绘。点击「添加变体」上传。</p>'}
+        <div style="margin:8px 0 4px"><strong style="font-size:12px">结局专用立绘</strong> <span style="font-size:11px;color:#aaa">（不受 SAN 影响；结局 ID 精确匹配，未匹配时回退普通立绘）</span><button type="button" class="win95-btn dev-btn" style="font-size:11px;margin-left:6px" data-dev-action="add-ending-portrait-${index}">＋ 添加结局变体</button></div>
+        ${endingPortraits || '<p style="font-size:11px;color:#aaa;margin:0 0 4px">暂无结局专用立绘。</p>'}
       </div>`;
     };
     this.panel(`<section class="dev-section"><h3>NPC 列表</h3>
@@ -615,6 +625,33 @@ export class DeveloperMode {
         reader.readAsDataURL(file);
       });
     });
+    this.root.querySelectorAll("[data-ending-portrait-upload]").forEach((input) => {
+      input.addEventListener("change", (event) => {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+          this.setStatus("结局立绘上传失败：请选择图片文件。", true);
+          return;
+        }
+        const [npcIdx, portIdx] = input.dataset.endingPortraitUpload.split("-").map(Number);
+        this._syncNpcFormToDoc();
+        const doc = this.docs.get("npcs.json");
+        if (!doc?.npcs?.[npcIdx]?.endingPortraits?.[portIdx]) {
+          this.setStatus("结局立绘上传失败：找不到对应的立绘变体。", true);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = async () => {
+          doc.npcs[npcIdx].endingPortraits[portIdx].imageData = String(reader.result || "");
+          this.docs.set("npcs.json", doc);
+          this.setStatus(`结局立绘已上传：${file.name}`);
+          await this.showNpcs();
+        };
+        reader.onerror = () => this.setStatus(`结局立绘读取失败：${file.name}`, true);
+        reader.readAsDataURL(file);
+      });
+    });
   }
 
   _syncNpcFormToDoc() {
@@ -641,6 +678,10 @@ export class DeveloperMode {
           imageData: previous.imageData || "",
         };
       });
+      npc.endingPortraits = Array.from(card.querySelectorAll("[data-ending-portrait-row]")).map((row, portIdx) => ({
+        endingId: row.querySelector("[data-p-ending-id]")?.value.trim() || "",
+        imageData: npc.endingPortraits?.[portIdx]?.imageData || "",
+      }));
     });
   }
 
@@ -884,8 +925,28 @@ export class DeveloperMode {
     }
     if (action === "trigger-ending") {
       const id = this.root.querySelector("[data-ending-id]")?.value;
-      endingManager.trigger(id);
-      this.setStatus(endingManager.isEnded ? `已触发结局：${id}。` : "结局未触发（可能已有结局或 ID 无效）。");
+      await endingManager.load();
+      await scheduleData.init();
+      const ending = endingManager.defs.get(id);
+      const source = scheduleData.catalog("special").find((entry) => {
+        const blueprint = normalizeBlueprint(entry.definition?.blueprint || entry.definition?.dialogueTree);
+        return Object.values(blueprint?.nodes || {}).some((node) => (
+          node.type === "ending" && String(node.inputs?.endingId || "") === String(id)
+        ));
+      });
+      if (!ending) {
+        this.setStatus(`无法触发结局：未知结局 ID ${id}。`, true);
+      } else if (!source?.definition) {
+        this.setStatus(`无法触发结局：未找到引发 ${id} 的特殊事件。`, true);
+      } else {
+        endingManager.reset();
+        eventBus.emit("ending:debug-event-requested", {
+          endingId: id,
+          ending,
+          event: source.definition,
+        });
+        this.setStatus(`已从引发事件“${source.id}”开始播放结局：${id}。`);
+      }
       return this.showMedicalEnding();
     }
     if (action === "apply-runtime-variables") {
@@ -930,6 +991,11 @@ export class DeveloperMode {
       const cards = Array.from(this.root.querySelectorAll("[data-npc-row]"));
       const ids = cards.map((c) => c.querySelector("[data-npc-id]").value.trim());
       if (ids.some((id) => !id) || new Set(ids).size !== ids.length) { this.setStatus("NPC 保存失败：ID 不能为空且不能重复。", true); return; }
+      const hasDuplicateEndingId = cards.some((card) => {
+        const endingIds = Array.from(card.querySelectorAll("[data-p-ending-id]"), (input) => input.value.trim()).filter(Boolean);
+        return new Set(endingIds).size !== endingIds.length;
+      });
+      if (hasDuplicateEndingId) { this.setStatus("NPC 保存失败：同一 NPC 的结局立绘 ID 不能重复。", true); return; }
       doc.npcs = cards.map((card, ci) => {
         const portraits = Array.from(card.querySelectorAll("[data-portrait-row]")).map((row) => {
           const sanMin = row.querySelector("[data-p-san-min]").value;
@@ -944,6 +1010,14 @@ export class DeveloperMode {
             imageData: existing.imageData || "",
           };
         });
+        const endingPortraits = Array.from(card.querySelectorAll("[data-ending-portrait-row]")).map((row) => {
+          const rowIndex = Number(row.dataset.endingPortraitRow?.split("-")[1]);
+          const existing = doc.npcs?.[ci]?.endingPortraits?.[rowIndex] || {};
+          return {
+            endingId: row.querySelector("[data-p-ending-id]").value.trim(),
+            imageData: existing.imageData || "",
+          };
+        });
         return {
           id: card.querySelector("[data-npc-id]").value.trim(),
           name: card.querySelector("[data-npc-name]").value,
@@ -951,6 +1025,7 @@ export class DeveloperMode {
           initialFavorability: Math.max(0, Math.min(100, Number(card.querySelector("[data-npc-favor]").value) || 0)),
           initialSan: Math.max(0, Math.min(100, Number(card.querySelector("[data-npc-san]").value) || 0)),
           portraits,
+          endingPortraits,
         };
       });
       this.docs.set("npcs.json", doc);
@@ -971,6 +1046,26 @@ export class DeveloperMode {
       this._syncNpcFormToDoc();
       const doc = await this.loadDoc("npcs.json");
       doc.npcs?.[Number(removePortrait[1])]?.portraits?.splice(Number(removePortrait[2]), 1);
+      this.docs.set("npcs.json", doc);
+      return this.showNpcs();
+    }
+    const addEndingPortrait = action.match(/^add-ending-portrait-(\d+)$/);
+    if (addEndingPortrait) {
+      this._syncNpcFormToDoc();
+      const doc = await this.loadDoc("npcs.json");
+      const npc = doc.npcs?.[Number(addEndingPortrait[1])];
+      if (npc) {
+        if (!npc.endingPortraits) npc.endingPortraits = [];
+        npc.endingPortraits.push({ endingId: "", imageData: "" });
+        this.docs.set("npcs.json", doc);
+      }
+      return this.showNpcs();
+    }
+    const removeEndingPortrait = action.match(/^remove-ending-portrait-(\d+)-(\d+)$/);
+    if (removeEndingPortrait) {
+      this._syncNpcFormToDoc();
+      const doc = await this.loadDoc("npcs.json");
+      doc.npcs?.[Number(removeEndingPortrait[1])]?.endingPortraits?.splice(Number(removeEndingPortrait[2]), 1);
       this.docs.set("npcs.json", doc);
       return this.showNpcs();
     }

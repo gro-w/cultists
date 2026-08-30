@@ -18,8 +18,27 @@ export default class EndingScreen {
     this.rootEl = rootEl;
     this._runToken = 0;
     this._eventOffs = [];
-    endingManager.onEnding((def) => this.show(def));
+    this._debugEventEndingId = null;
+    endingManager.onEnding((nextDef) => {
+      if (this._debugEventEndingId === String(nextDef.id)) {
+        this._debugEventEndingId = null;
+        return;
+      }
+      this.show(nextDef);
+    });
     endingManager.onReset(() => this.hide());
+    eventBus.on("ending:debug-event-requested", ({ endingId, ending, event }) => {
+      if (!endingId || !ending || !event) return;
+      this._debugEventEndingId = String(endingId);
+      this.show({
+        ...event,
+        ...ending,
+        id: ending.id,
+        blueprintScheduleId: event.id,
+        blueprint: event.blueprint,
+        dialogueTree: event.dialogueTree,
+      });
+    });
   }
 
   show(def) {
@@ -28,7 +47,7 @@ export default class EndingScreen {
       <div class="ending-gal-screen">
         <div class="ending-gal-scene">
           <div class="ending-gal-cg"></div>
-          <div class="ending-gal-character ending-gal-player" data-ending-speaker="player"><div class="ending-gal-avatar">🧑</div></div>
+          <div class="ending-gal-character ending-gal-player" data-ending-speaker="player"><img class="ending-gal-portrait" src="data/assets/player_portrait.png" alt="主控" draggable="false"></div>
           <div class="ending-gal-character ending-gal-npc" data-ending-speaker="binbin"></div>
         </div>
         <div class="ending-screen-panel">
@@ -55,7 +74,10 @@ export default class EndingScreen {
     dataLoader.loadJSON("npcs.json").then((data) => {
       if (token !== this._runToken) return;
       const npc = (data.npcs || []).find((item) => item.id === "binbin");
-      const portrait = (npc?.portraits || []).find((item) => item.imageData);
+      const endingPortrait = (npc?.endingPortraits || []).find(
+        (item) => item.endingId === def.id && item.imageData,
+      );
+      const portrait = endingPortrait || (npc?.portraits || []).find((item) => item.imageData);
       if (portrait) {
         npcEl.innerHTML = `<img class="ending-gal-portrait" src="${portrait.imageData}" alt="彬彬" draggable="false">`;
       }

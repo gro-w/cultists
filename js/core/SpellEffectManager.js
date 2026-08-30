@@ -3,6 +3,7 @@ import { gameState } from "./GameState.js";
 import { endingManager } from "./EndingManager.js";
 import { socialQueue } from "./ScheduleQueue.js";
 import { specialEventManager } from "./SpecialEventManager.js";
+import { itemEffectHistory } from "./ItemEffectHistory.js";
 
 /**
  * Data-driven consequences of successfully casting a learned spell.
@@ -11,7 +12,6 @@ import { specialEventManager } from "./SpecialEventManager.js";
  */
 class SpellEffectManager {
   constructor() {
-    this._sealActivated = false;
     this._wakeSanityZero = false;
     this._sleepEventId = null;
     this._subscribed = false;
@@ -36,15 +36,18 @@ class SpellEffectManager {
     const effect = spell?.effect || {};
     switch (effect.type) {
       case "domination":
-        if (context.eventId === "追逐" && context.choiceId === "cast_domination") {
-          endingManager.trigger(effect.chaseEnding || "异常结局");
+        if (["追逐", "追逐事件"].includes(context.eventId) && context.choiceId === "cast_domination") {
+          return { branch: "abnormal" };
         }
         break;
       case "seal_activation":
-        this._sealActivated = true;
-        if (context.eventId === "追逐" && context.choiceId === "use_talisman" && this._sealActivated) {
-          endingManager.trigger(effect.chaseEnding || "异常结局");
+        if (["追逐", "追逐事件"].includes(context.eventId) && context.choiceId === "use_talisman") {
+          const targetItemId = context.targetItemId || context.target || "swastika";
+          const wasApplied = itemEffectHistory.has(targetItemId, "seal_activation");
+          itemEffectHistory.record(targetItemId, "seal_activation");
+          return { branch: wasApplied ? "abnormal" : "normal" };
         }
+        if (context.targetItemId || context.target) itemEffectHistory.record(context.targetItemId || context.target, "seal_activation");
         break;
       case "disease":
         if (context.target === "self") {
@@ -81,7 +84,6 @@ class SpellEffectManager {
   }
 
   resetTransientState() {
-    this._sealActivated = false;
     this._wakeSanityZero = false;
     this._sleepEventId = null;
   }

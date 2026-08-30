@@ -10,11 +10,16 @@ import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 import { validateBlueprint, embedLegacyPrerequisite } from "./ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
+import { eventBus } from "./EventBus.js";
 
 const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
   { suffix: "b", time: 16 * 60 },
 ];
+
+function inRange(value, min, max) {
+  return (min == null || value >= Number(min)) && (max == null || value <= Number(max));
+}
 
 class ScheduleData {
   constructor() {
@@ -27,6 +32,9 @@ class ScheduleData {
     this.pendingAdds = [];
     this.lastAbsoluteMinute = null;
     this._initPromise = null;
+    this._autoSpecialEventOff = eventBus.on("game:sanity_changed", () => {
+      if (this._initPromise) this._appendAutoSpecialEvents();
+    });
   }
 
   async init() {
@@ -93,6 +101,28 @@ class ScheduleData {
     this.initializeAt(gameState.day, gameState.clockMinutes);
   }
 
+  _appendAutoSpecialEvents() {
+    for (const event of specialEventManager.events) {
+      if (!event?.autoTrigger || event.queueId && event.queueId !== "social") continue;
+      if (event.phase !== "day" || !inRange(gameState.day, event.startDay, event.endDay)) continue;
+      const condition = event.condition || event.globalVariableCondition;
+      const matchesSanity = condition?.id === 1
+        ? this._matchesValue(gameState.sanity, condition)
+        : globalVariableManager.matches(condition);
+      if (!matchesSanity || socialQueue.countBySchedule(event.id) > 0) continue;
+      socialQueue.append([{
+        ...event,
+        scheduleId: event.id,
+        receivedDay: gameState.day,
+        receivedTime: gameState.clockMinutes,
+        receivedPhase: gameState.phase,
+        status: "unresolved",
+        currentNodeId: event.blueprint?.startNodeId || null,
+        transcript: [],
+      }]);
+    }
+  }
+
   _indexExternalEntries(entries, defaultQueueId, category = "calendar", sourceFile = undefined) {
     (entries || []).forEach((entry, entryIndex) => {
       if (!entry || typeof entry.id !== "string" || !entry.id.trim()) return;
@@ -121,6 +151,7 @@ class ScheduleData {
     const target = Number(day) * 1440 + Number(clockMinutes);
     this._appendThrough(target);
     this.lastAbsoluteMinute = target;
+    this._appendAutoSpecialEvents();
   }
 
   restoreAt(day, clockMinutes) {
@@ -135,6 +166,7 @@ class ScheduleData {
     }
     this.lastAbsoluteMinute = target;
     this._expireInstances(target);
+    this._appendAutoSpecialEvents();
   }
 
   advanceTo(day, clockMinutes) {
@@ -146,6 +178,7 @@ class ScheduleData {
     this._appendThrough(target);
     this._appendScheduledThrough(target);
     this._expireInstances(target);
+    this._appendAutoSpecialEvents();
     this.lastAbsoluteMinute = target;
   }
 

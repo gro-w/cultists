@@ -214,16 +214,18 @@ export class ScheduleRunner {
           choiceId: get("choiceId", ""),
         });
         if (!result.ok) throw new Error(result.message);
+        if (result.branch && node[`${result.branch}Next`]) return { next: node[`${result.branch}Next`] };
         return {};
       }
       case "spellEffect": {
         const spell = spellManager.all().find((item) => item.id === get("spellId", ""));
         if (!spell) throw new Error("Unknown learned spell");
-        spellEffectManager.handleCast(spell, {
+        const result = spellEffectManager.handleCast(spell, {
           target: get("target", ""),
           eventId: get("eventId", this.definition.id),
           choiceId: get("choiceId", ""),
         });
+        if (result?.branch && node[`${result.branch}Next`]) return { next: node[`${result.branch}Next`] };
         return {};
       }
       default: throw new Error(`Unsupported flow node: ${node.type}`);
@@ -256,7 +258,9 @@ export class ScheduleRunner {
       _branchIndex: index,
       label: storedOptions[index]?.label || storedOptions[index]?.text || node.inputs?.[`label${index}`] || `选项${index + 1}`,
     }))
-      .filter((option) => globalVariableManager.matches(option.condition || option.globalVariableCondition));
+      .filter((option) => globalVariableManager.matches(option.condition || option.globalVariableCondition))
+      .filter((option) => !option.requiredItemId || itemManager.count(String(option.requiredItemId)) > 0)
+      .filter((option) => !option.requiredSpellId || spellManager.all().some((spell) => spell.id === String(option.requiredSpellId)));
     options.forEach((option) => {
       const index = option._branchIndex;
       const button = document.createElement("button");

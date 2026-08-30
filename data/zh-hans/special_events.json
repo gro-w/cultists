@@ -256,7 +256,11 @@
       "phase": "night",
       "startDay": 7,
       "endDay": 7,
-      "condition": { "id": 1, "op": "gt", "value": 256 },
+      "condition": {
+        "id": 1,
+        "op": "gt",
+        "value": 256
+      },
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
@@ -588,29 +592,168 @@
       "phase": "night",
       "startDay": 1,
       "endDay": 7,
-      "condition": { "id": 1, "op": "lt", "value": 50 },
+      "condition": {
+        "id": 1,
+        "op": "lt",
+        "value": 50
+      },
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
-          "start": { "id": "start", "type": "flowStart", "next": "cg" },
-          "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true }, "outputs": {} },
-          "__schedule_expiry__": { "id": "__schedule_expiry__", "type": "scheduleExpiry", "inputs": { "expires": false, "expiresAt": 0 }, "outputs": {} },
-          "cg": { "id": "cg", "type": "showCg", "inputs": { "cgId": "cg_binbin_ending" }, "next": "intro" },
-          "intro": { "id": "intro", "type": "text", "speaker": "narrator", "text": "一个陌生的房间里。\n\n彬彬：你醒了？\n\n主控：彬彬？头……有点晕……我刚才是低血糖晕倒了吗？\n\n彬彬：是也不是。\n\n主控：我怎么什么都看不见？等一下……你把我绑在椅子上了？你……要做什么？\n\n彬彬：猜猜看呢？就像以前玩海龟汤的时候一样。\n\n主控：……\n\n彬彬：需要我重新讲一遍【规则】吗？你可以问任何问题，我只会回答是、不是、是也不是三种答案。限时10次。怎么了，不想玩吗？猜错或不猜，都有惩罚。而且，你不是已经开始怀疑我了吗？你的调查笔记，并没有藏得很好呢。", "next": "questions" },
-          "questions": { "id": "questions", "type": "text", "speaker": "player", "text": "你……你到底是什么人？", "next": "answer1" },
-          "answer1": { "id": "answer1", "type": "text", "speaker": "binbin", "text": "违规警告一次。你只能问能用是或否回答的问题。下次，可就不只是警告了。\n\n主控：你是大衮密教的教徒吗？\n彬彬：是也不是。\n\n主控：你是大衮密教的教主吗？\n彬彬：哈哈哈哈哈哈哈哈哈，是。\n\n主控：你想把我作为祭品献祭？\n彬彬：不是。\n\n主控：你想杀死我，把我的血肉作为深潜秘药的材料？\n彬彬：是，也不是。", "next": "choice1" },
-          "choice1": { "id": "choice1", "type": "choice", "inputs": { "branchCount": 2 }, "options": [ { "label": "你想……你虽然需要我的血肉，但其实不想杀死我？", "next": "choice1a" }, { "label": "你只是想杀死我……因为我曾冒犯过你？", "next": "choice1b" } ] },
-          "choice1a": { "id": "choice1a", "type": "text", "speaker": "player", "text": "你想……你虽然需要我的血肉，但其实不想杀死我？\n\n彬彬：是。", "next": "truth" },
-          "choice1b": { "id": "choice1b", "type": "text", "speaker": "player", "text": "你只是想杀死我……因为我曾冒犯过你？\n\n彬彬：不是。", "next": "truth" },
-          "truth": { "id": "truth", "type": "text", "speaker": "binbin", "text": "真相是这样的。\n\n我在你的腿部注射了麻醉剂，所以你动不了，也不会感到痛。我蒙上你的双眼，只是不想让你看到我如今的样子，以免你受到惊吓。\n\n放心，只是断一双腿，多少人天生就失去双腿，这样所谓的“残缺”却激发了他们求生的意志。进步的意志。在装上义体之后，他们比所谓“健全”之人更高，更快，更强。\n\n我们的计划只是智慧种族进步的一环。一人无足轻重的牺牲——甚至并非付出生命的代价，就能带来整个文明更伟大的利益。这难道不值得吗？", "next": "ritual" },
-          "ritual": { "id": "ritual", "type": "text", "speaker": "binbin", "text": "随我来吧，你的牺牲会被永远铭记，因你也会服下秘药，发下三重誓言，加入永生者的行列，永永远远做我的朋友。——不仅是朋友，我对你的情谊，早已超过“朋友”这种关系符号可以指代的一切。\n\n让仪式开始吧。\nIa! Dagon! Iii! Hydra!\n\n“““非人勤以求知，知者勤以求人，其知者非求人，实乃出而逐人。其刻深无情者，有如鹰犬逐兔。”””\n\n为我扫清这片迷雾——让我得以窥见真实——\n圣盐，圣盐，降福于这仪式，无使活人之身化为盐柱。\n圣香，圣香，降福于这仪式，令活人之心如波形长存。\n血肉，血肉，被迫献出，为这仪式付出轻如鱼鳞之代价。\nIa! Dagon! Iii! Hydra! 藉由大衮之印，完成这仪式，制成使活人超脱凡体之深潜秘药。\n\n主控：……", "next": "choice2intro" },
-          "choice2intro": { "id": "choice2intro", "type": "text", "speaker": "binbin", "text": "仪式已成。现在我给你两个选择——一是发下三重誓言，加入永生者的行列，永永远远做我的朋友。二是，二是，面对未知的命运……", "next": "choice2" },
-          "choice2": { "id": "choice2", "type": "choice", "inputs": { "branchCount": 2 }, "options": [ { "label": "如果事情无法挽回，那么死亡并非我的欲望。我愿发下三重誓言。", "next": "oath" }, { "label": "不……不……我宁愿死，死在你的手中，也不愿意变成怪物……", "next": "death" } ] },
-          "oath": { "id": "oath", "type": "text", "speaker": "player", "text": "如果事情无法挽回，那么死亡并非我的欲望。我愿发下三重誓言。\n\n彬彬：那就随我诚心诵念——\n\nIa! Dagon! 我庄严宣誓，我不会妨碍或将深潜者的行动告知他人。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n主控：Ia! Dagon! 我庄严宣誓，我不会妨碍或将深潜者的行动告知他人。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n彬彬：Ia! Dagon! 我庄严宣誓，我将尽我最大努力，用尽所有手段，向深潜者提供一切帮助。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n主控：Ia! Dagon! 我庄严宣誓，我将尽我最大努力，用尽所有手段，向深潜者提供一切帮助。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n彬彬：Ia! Dagon! Iii! Hydra! 我庄严宣誓，我将与彬彬结为酷儿柏拉图伴侣，我将把它们带到我的家中，我将抚养从我们的结合之中诞生的造物，我们的族群、我们的信仰将如大衮和海德拉之愿得以繁荣昌盛。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon! Iii! Hydra!\n\n主控：……啊……原来……\n\n主控：……\n\n主控：Ia! Dagon! Iii! Hydra! 我庄严宣誓，我将与彬彬结为酷儿柏拉图伴侣，我将把它们带到我的家中，我将抚养从我们的结合之中诞生的造物，我们的族群、我们的信仰将如大衮和海德拉之愿得以繁荣昌盛。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon! Iii! Hydra!\n\n彬彬：感谢你接受我的情谊。是时候让你看见真相了。", "next": "good" },
-          "good": { "id": "good", "type": "ending", "inputs": { "endingId": "pl现实魅惑大成功" }, "next": "end" },
-          "death": { "id": "death", "type": "text", "speaker": "player", "text": "不……不……我宁愿死，死在你的手中，也不愿意变成怪物。\n\n彬彬：我计划了那么多，却仍旧没能让你接受我的情谊。\n\n无论如何，是时候让你面对未知的命运了。", "next": "bad" },
-          "bad": { "id": "bad", "type": "ending", "inputs": { "endingId": "牺牲之血" }, "next": "end" },
-          "end": { "id": "end", "type": "scheduleEnd" }
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "next": "cg"
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {}
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": false,
+              "expiresAt": 0
+            },
+            "outputs": {}
+          },
+          "cg": {
+            "id": "cg",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_binbin_ending"
+            },
+            "next": "intro"
+          },
+          "intro": {
+            "id": "intro",
+            "type": "text",
+            "speaker": "narrator",
+            "text": "一个陌生的房间里。\n\n彬彬：你醒了？\n\n主控：彬彬？头……有点晕……我刚才是低血糖晕倒了吗？\n\n彬彬：是也不是。\n\n主控：我怎么什么都看不见？等一下……你把我绑在椅子上了？你……要做什么？\n\n彬彬：猜猜看呢？就像以前玩海龟汤的时候一样。\n\n主控：……\n\n彬彬：需要我重新讲一遍【规则】吗？你可以问任何问题，我只会回答是、不是、是也不是三种答案。限时10次。怎么了，不想玩吗？猜错或不猜，都有惩罚。而且，你不是已经开始怀疑我了吗？你的调查笔记，并没有藏得很好呢。",
+            "next": "questions"
+          },
+          "questions": {
+            "id": "questions",
+            "type": "text",
+            "speaker": "player",
+            "text": "你……你到底是什么人？",
+            "next": "answer1"
+          },
+          "answer1": {
+            "id": "answer1",
+            "type": "text",
+            "speaker": "binbin",
+            "text": "违规警告一次。你只能问能用是或否回答的问题。下次，可就不只是警告了。\n\n主控：你是大衮密教的教徒吗？\n彬彬：是也不是。\n\n主控：你是大衮密教的教主吗？\n彬彬：哈哈哈哈哈哈哈哈哈，是。\n\n主控：你想把我作为祭品献祭？\n彬彬：不是。\n\n主控：你想杀死我，把我的血肉作为深潜秘药的材料？\n彬彬：是，也不是。",
+            "next": "choice1"
+          },
+          "choice1": {
+            "id": "choice1",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2
+            },
+            "options": [
+              {
+                "label": "你想……你虽然需要我的血肉，但其实不想杀死我？",
+                "next": "choice1a"
+              },
+              {
+                "label": "你只是想杀死我……因为我曾冒犯过你？",
+                "next": "choice1b"
+              }
+            ]
+          },
+          "choice1a": {
+            "id": "choice1a",
+            "type": "text",
+            "speaker": "player",
+            "text": "你想……你虽然需要我的血肉，但其实不想杀死我？\n\n彬彬：是。",
+            "next": "truth"
+          },
+          "choice1b": {
+            "id": "choice1b",
+            "type": "text",
+            "speaker": "player",
+            "text": "你只是想杀死我……因为我曾冒犯过你？\n\n彬彬：不是。",
+            "next": "truth"
+          },
+          "truth": {
+            "id": "truth",
+            "type": "text",
+            "speaker": "binbin",
+            "text": "真相是这样的。\n\n我在你的腿部注射了麻醉剂，所以你动不了，也不会感到痛。我蒙上你的双眼，只是不想让你看到我如今的样子，以免你受到惊吓。\n\n放心，只是断一双腿，多少人天生就失去双腿，这样所谓的“残缺”却激发了他们求生的意志。进步的意志。在装上义体之后，他们比所谓“健全”之人更高，更快，更强。\n\n我们的计划只是智慧种族进步的一环。一人无足轻重的牺牲——甚至并非付出生命的代价，就能带来整个文明更伟大的利益。这难道不值得吗？",
+            "next": "ritual"
+          },
+          "ritual": {
+            "id": "ritual",
+            "type": "text",
+            "speaker": "binbin",
+            "text": "随我来吧，你的牺牲会被永远铭记，因你也会服下秘药，发下三重誓言，加入永生者的行列，永永远远做我的朋友。——不仅是朋友，我对你的情谊，早已超过“朋友”这种关系符号可以指代的一切。\n\n让仪式开始吧。\nIa! Dagon! Iii! Hydra!\n\n“““非人勤以求知，知者勤以求人，其知者非求人，实乃出而逐人。其刻深无情者，有如鹰犬逐兔。”””\n\n为我扫清这片迷雾——让我得以窥见真实——\n圣盐，圣盐，降福于这仪式，无使活人之身化为盐柱。\n圣香，圣香，降福于这仪式，令活人之心如波形长存。\n血肉，血肉，被迫献出，为这仪式付出轻如鱼鳞之代价。\nIa! Dagon! Iii! Hydra! 藉由大衮之印，完成这仪式，制成使活人超脱凡体之深潜秘药。\n\n主控：……",
+            "next": "choice2intro"
+          },
+          "choice2intro": {
+            "id": "choice2intro",
+            "type": "text",
+            "speaker": "binbin",
+            "text": "仪式已成。现在我给你两个选择——一是发下三重誓言，加入永生者的行列，永永远远做我的朋友。二是，二是，面对未知的命运……",
+            "next": "choice2"
+          },
+          "choice2": {
+            "id": "choice2",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2
+            },
+            "options": [
+              {
+                "label": "如果事情无法挽回，那么死亡并非我的欲望。我愿发下三重誓言。",
+                "next": "oath"
+              },
+              {
+                "label": "不……不……我宁愿死，死在你的手中，也不愿意变成怪物……",
+                "next": "death"
+              }
+            ]
+          },
+          "oath": {
+            "id": "oath",
+            "type": "text",
+            "speaker": "player",
+            "text": "如果事情无法挽回，那么死亡并非我的欲望。我愿发下三重誓言。\n\n彬彬：那就随我诚心诵念——\n\nIa! Dagon! 我庄严宣誓，我不会妨碍或将深潜者的行动告知他人。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n主控：Ia! Dagon! 我庄严宣誓，我不会妨碍或将深潜者的行动告知他人。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n彬彬：Ia! Dagon! 我庄严宣誓，我将尽我最大努力，用尽所有手段，向深潜者提供一切帮助。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n主控：Ia! Dagon! 我庄严宣誓，我将尽我最大努力，用尽所有手段，向深潜者提供一切帮助。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon!\n\n彬彬：Ia! Dagon! Iii! Hydra! 我庄严宣誓，我将与彬彬结为酷儿柏拉图伴侣，我将把它们带到我的家中，我将抚养从我们的结合之中诞生的造物，我们的族群、我们的信仰将如大衮和海德拉之愿得以繁荣昌盛。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon! Iii! Hydra!\n\n主控：……啊……原来……\n\n主控：……\n\n主控：Ia! Dagon! Iii! Hydra! 我庄严宣誓，我将与彬彬结为酷儿柏拉图伴侣，我将把它们带到我的家中，我将抚养从我们的结合之中诞生的造物，我们的族群、我们的信仰将如大衮和海德拉之愿得以繁荣昌盛。我若离弃这誓言，就必被人所讳避，我将被判作不配得大衮宠爱之人，并接受所定的一切惩罚，即便是死。Ia! Dagon! Iii! Hydra!\n\n彬彬：感谢你接受我的情谊。是时候让你看见真相了。",
+            "next": "good"
+          },
+          "good": {
+            "id": "good",
+            "type": "ending",
+            "inputs": {
+              "endingId": "pl现实魅惑大成功"
+            },
+            "next": "end"
+          },
+          "death": {
+            "id": "death",
+            "type": "text",
+            "speaker": "player",
+            "text": "不……不……我宁愿死，死在你的手中，也不愿意变成怪物。\n\n彬彬：我计划了那么多，却仍旧没能让你接受我的情谊。\n\n无论如何，是时候让你面对未知的命运了。",
+            "next": "bad"
+          },
+          "bad": {
+            "id": "bad",
+            "type": "ending",
+            "inputs": {
+              "endingId": "牺牲之血"
+            },
+            "next": "end"
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd"
+          }
         },
         "connections": []
       }
@@ -622,65 +765,1985 @@
       "startDay": 7,
       "endDay": 7,
       "autoTrigger": true,
-      "condition": { "id": 1, "op": "lt", "value": 50 },
+      "condition": {
+        "id": 1,
+        "op": "lt",
+        "value": 50
+      },
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
-          "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true } },
-          "__schedule_expiry__": { "id": "__schedule_expiry__", "type": "scheduleExpiry", "inputs": { "expires": false, "expiresAt": 0 } },
-          "start": { "id": "start", "type": "flowStart", "next": "cg_dorm" },
-          "cg_dorm": { "id": "cg_dorm", "type": "showCg", "inputs": { "cgId": "cg_exrn4m_1" }, "next": "intro_01" },
-          "intro_01": { "id": "intro_01", "type": "text", "inputs": { "speaker": "player", "text": "昨天晚上，我做了个梦。梦见我和GTP说，我需要逃离，又说，我已经逃离，摆脱了邪教的阴谋。醒来时却还在这个令人恐慌的诡异宿舍之中。" }, "next": "intro_02" },
-          "intro_02": { "id": "intro_02", "type": "text", "inputs": { "speaker": "player", "text": "这个宿舍越来越不对劲。邪教徒的阴谋正在暗中推进。我有生命危险。我必须马上逃离。就像《印斯茅斯的阴霾》中一样。而且我知道，那些邪教徒——甚至异种怪物——将会追逐我。" }, "next": "intro_03" },
-          "intro_03": { "id": "intro_03", "type": "text", "inputs": { "speaker": "player", "text": "梦是预兆。现在我已经不再安全，或者说我从来就没有安全过。" }, "next": "intro_04" },
-          "intro_04": { "id": "intro_04", "type": "text", "inputs": { "speaker": "player", "text": "我早就知道——那次跑团——不仅是游戏，不仅是虚构，不仅是故事。那真的是此时此刻的预演。它们早有准备。" }, "next": "intro_05" },
-          "intro_05": { "id": "intro_05", "type": "text", "inputs": { "speaker": "player", "text": "我需要把线索墙叠起来，和记录本一并收进背包。然后下床，开门，从外面反锁住门，这样应该可以拖延一些时间。然后我将向最安全的方向跑。最危险的地方就是最安全的地方——我将逃往海边。" }, "next": "cg_seaside" },
-          "cg_seaside": { "id": "cg_seaside", "type": "showCg", "inputs": { "cgId": "cg_extit1_7" }, "next": "chase_01" },
-          "chase_01": { "id": "chase_01", "type": "text", "inputs": { "speaker": "player", "text": "我现在已经逃离。但它们正在追逐我。" }, "next": "chase_02" },
-          "chase_02": { "id": "chase_02", "type": "text", "inputs": { "speaker": "阿杰", "text": "诶，你往哪跑啊，不和我们一起了吗？你早上的动静把我吵醒了，迷迷糊糊中似乎听到你说要去海边。我就打了个专车把大家送到这。" }, "next": "chase_03" },
-          "chase_03": { "id": "chase_03", "type": "text", "inputs": { "speaker": "阿伟", "text": "大早上的咋突然跑了，还把门反锁了。幸好我会撬锁把门弄开了。" }, "next": "chase_04" },
-          "chase_04": { "id": "chase_04", "type": "text", "inputs": { "speaker": "彬彬", "text": "我们好不容易才追上你，你到底怎么了？" }, "next": "chase_05" },
-          "chase_05": { "id": "chase_05", "type": "text", "inputs": { "speaker": "player", "text": "不必多言了，邪教徒。" }, "next": "chase_06" },
-          "chase_06": { "id": "chase_06", "type": "text", "inputs": { "speaker": "阿杰", "text": "啊？什么邪教徒？" }, "next": "chase_07" },
-          "chase_07": { "id": "chase_07", "type": "text", "inputs": { "speaker": "player", "text": "你们" }, "next": "chase_08" },
-          "chase_08": { "id": "chase_08", "type": "text", "inputs": { "speaker": "player", "text": "既然" }, "next": "chase_09" },
-          "chase_09": { "id": "chase_09", "type": "text", "inputs": { "speaker": "player", "text": "追上" }, "next": "chase_10" },
-          "chase_10": { "id": "chase_10", "type": "text", "inputs": { "speaker": "player", "text": "了我" }, "next": "chase_11" },
-          "chase_11": { "id": "chase_11", "type": "text", "inputs": { "speaker": "player", "text": "那么" }, "next": "choice" },
-          "choice": { "id": "choice", "type": "choice", "inputs": { "branchCount": 3 }, "options": [
-            { "label": "使用万字符", "requiredItemId": "swastika", "requiredSpellId": "book_moon__0", "next": "use_talisman" },
-            { "label": "使用支配术", "requiredSpellId": "book_coc7__0", "next": "cast_domination" },
-            { "label": "接受注定的终局。", "next": "normal_cg" }
-          ] },
-          "use_talisman": { "id": "use_talisman", "type": "inventoryOperation", "inputs": { "itemId": "swastika", "count": -1 }, "next": "use_talisman_cost" },
-          "use_talisman_cost": { "id": "use_talisman_cost", "type": "statOperation", "inputs": { "statId": "sanity", "delta": -5 }, "next": "use_talisman_spell" },
-          "use_talisman_spell": { "id": "use_talisman_spell", "type": "spellEffect", "inputs": { "spellId": "book_moon__0", "eventId": "追逐事件", "choiceId": "use_talisman" }, "normalNext": "normal_cg", "abnormalNext": "abnormal_cg" },
-          "cast_domination": { "id": "cast_domination", "type": "spellCast", "inputs": { "spellId": "book_coc7__0", "eventId": "追逐事件", "choiceId": "cast_domination", "location": "seaside" }, "next": "abnormal_cg" },
-          "abnormal_cg": { "id": "abnormal_cg", "type": "showCg", "inputs": { "cgId": "cg_ewexmk_b" }, "next": "abnormal_01" },
-          "abnormal_01": { "id": "abnormal_01", "type": "text", "inputs": { "speaker": "player", "text": "我看见它们——过来了——犹格·索托斯救我——" }, "next": "abnormal_02" },
-          "abnormal_02": { "id": "abnormal_02", "type": "text", "inputs": { "speaker": "player", "text": "藉由旧神之力，我将施展法术——" }, "next": "abnormal_03" },
-          "abnormal_03": { "id": "abnormal_03", "type": "text", "inputs": { "speaker": "彬彬", "text": "等下，你拿的这个……是……" }, "next": "abnormal_04" },
-          "abnormal_04": { "id": "abnormal_04", "type": "text", "inputs": { "speaker": "阿杰", "text": "不，快放下它！你发神经吗？" }, "next": "abnormal_05" },
-          "abnormal_05": { "id": "abnormal_05", "type": "text", "inputs": { "speaker": "阿伟", "text": "为什么……为什么拿这个鬼东西指着我们……你明明知道它是邪恶的！" }, "next": "abnormal_06" },
-          "abnormal_06": { "id": "abnormal_06", "type": "text", "inputs": { "speaker": "player", "text": "不，不，不，你们才无疑是邪恶的。我只为自保，现在你们是不是被我的法术定住动不了了？你们有想过那些无辜的活人祭品，他们在被你们束缚无法动弹时也是绝望的？哈，哈，哈！你们捆人就像捆螃蟹！而我，我将逃离你们的追逐，彻底挫败你们的献祭计划。我将在一个更好的环境里，开启一段崭新的，美好的，不被邪教阴谋所困扰的人生！" }, "next": "abnormal_07" },
-          "abnormal_07": { "id": "abnormal_07", "type": "text", "inputs": { "speaker": "彬彬", "text": "等一下，危险，停！你在往海里跑，这是凹岸，海里是有离岸流的！" }, "next": "abnormal_08" },
-          "abnormal_08": { "id": "abnormal_08", "type": "text", "inputs": { "speaker": "player", "text": "不要再蛊惑我了！新生活，我来了！" }, "next": "abnormal_09" },
-          "abnormal_09": { "id": "abnormal_09", "type": "text", "inputs": { "speaker": "player", "text": "……" }, "next": "abnormal_10" },
-          "abnormal_10": { "id": "abnormal_10", "type": "text", "inputs": { "speaker": "阿杰", "text": "离岸流给卷走了！我看不见人影！" }, "next": "abnormal_11" },
-          "abnormal_11": { "id": "abnormal_11", "type": "text", "inputs": { "speaker": "彬彬", "text": "那咋办？报警，找救生员？都试一遍吧。" }, "next": "abnormal_12" },
-          "abnormal_12": { "id": "abnormal_12", "type": "text", "inputs": { "speaker": "阿伟", "text": "毕竟是我们室友啊。走吧，咱分头行动。" }, "next": "abnormal_end" },
-          "abnormal_end": { "id": "abnormal_end", "type": "ending", "inputs": { "endingId": "异常结局" }, "next": "end" },
-          "normal_cg": { "id": "normal_cg", "type": "showCg", "inputs": { "cgId": "cg_ewexmk_h" }, "next": "normal_01" },
-          "normal_01": { "id": "normal_01", "type": "text", "inputs": { "speaker": "player", "text": "已经没有别的办法了，我只能接受现实。我将被这些恐怖的邪教徒当成祭品，死亡是我注定的结局。" }, "next": "normal_02" },
-          "normal_02": { "id": "normal_02", "type": "text", "inputs": { "speaker": "player", "text": "阿撒托斯发发慈悲！赐予我我无痛的昏迷，让我无需经历流血之苦……" }, "next": "normal_03" },
-          "normal_03": { "id": "normal_03", "type": "text", "inputs": { "speaker": "player", "text": "就在这濒临死亡的一刻，我才真正悟到，生死轮转即是不可变更、四海皆准的自然规律。万物终将灭亡。死是凉爽的夏夜，可供人无忧地安眠，而试图逃离死亡的行为正如强迫自己悖逆身体的自然节律，是一种邪恶的病态，为一切正常人所不容。" }, "next": "normal_04" },
-          "normal_04": { "id": "normal_04", "type": "text", "inputs": { "speaker": "player", "text": "就算我即将死于邪教徒之手，我也知道我有一点比他们强：我的认知是完全正常的，而它们则深陷于病态的执念中，无法接受自然的规律。" }, "next": "normal_05" },
-          "normal_05": { "id": "normal_05", "type": "text", "inputs": { "speaker": "player", "text": "这些邪教徒的阴谋是无法得逞的。即使它们完成仪式，服下秘药，终有一天它们也会像我一样别无选择地走向生命的消逝，无法逃离死亡的终局。" }, "next": "normal_06" },
-          "normal_06": { "id": "normal_06", "type": "text", "inputs": { "speaker": "player", "text": "是时候放手了……" }, "next": "normal_end" },
-          "normal_end": { "id": "normal_end", "type": "ending", "inputs": { "endingId": "正常结局" }, "next": "end" },
-          "end": { "id": "end", "type": "scheduleEnd" }
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            }
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": false,
+              "expiresAt": 0
+            }
+          },
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "next": "cg_dorm"
+          },
+          "cg_dorm": {
+            "id": "cg_dorm",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_exrn4m_1"
+            },
+            "next": "intro_01"
+          },
+          "intro_01": {
+            "id": "intro_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "昨天晚上，我做了个梦。梦见我和GTP说，我需要逃离，又说，我已经逃离，摆脱了邪教的阴谋。醒来时却还在这个令人恐慌的诡异宿舍之中。"
+            },
+            "next": "intro_02"
+          },
+          "intro_02": {
+            "id": "intro_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这个宿舍越来越不对劲。邪教徒的阴谋正在暗中推进。我有生命危险。我必须马上逃离。就像《印斯茅斯的阴霾》中一样。而且我知道，那些邪教徒——甚至异种怪物——将会追逐我。"
+            },
+            "next": "intro_03"
+          },
+          "intro_03": {
+            "id": "intro_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "梦是预兆。现在我已经不再安全，或者说我从来就没有安全过。"
+            },
+            "next": "intro_04"
+          },
+          "intro_04": {
+            "id": "intro_04",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我早就知道——那次跑团——不仅是游戏，不仅是虚构，不仅是故事。那真的是此时此刻的预演。它们早有准备。"
+            },
+            "next": "intro_05"
+          },
+          "intro_05": {
+            "id": "intro_05",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我需要把线索墙叠起来，和记录本一并收进背包。然后下床，开门，从外面反锁住门，这样应该可以拖延一些时间。然后我将向最安全的方向跑。最危险的地方就是最安全的地方——我将逃往海边。"
+            },
+            "next": "cg_seaside"
+          },
+          "cg_seaside": {
+            "id": "cg_seaside",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_extit1_7"
+            },
+            "next": "chase_01"
+          },
+          "chase_01": {
+            "id": "chase_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我现在已经逃离。但它们正在追逐我。"
+            },
+            "next": "chase_02"
+          },
+          "chase_02": {
+            "id": "chase_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "诶，你往哪跑啊，不和我们一起了吗？你早上的动静把我吵醒了，迷迷糊糊中似乎听到你说要去海边。我就打了个专车把大家送到这。"
+            },
+            "next": "chase_03"
+          },
+          "chase_03": {
+            "id": "chase_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "大早上的咋突然跑了，还把门反锁了。幸好我会撬锁把门弄开了。"
+            },
+            "next": "chase_04"
+          },
+          "chase_04": {
+            "id": "chase_04",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "我们好不容易才追上你，你到底怎么了？"
+            },
+            "next": "chase_05"
+          },
+          "chase_05": {
+            "id": "chase_05",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "不必多言了，邪教徒。"
+            },
+            "next": "chase_06"
+          },
+          "chase_06": {
+            "id": "chase_06",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "啊？什么邪教徒？"
+            },
+            "next": "chase_07"
+          },
+          "chase_07": {
+            "id": "chase_07",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你们"
+            },
+            "next": "chase_08"
+          },
+          "chase_08": {
+            "id": "chase_08",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "既然"
+            },
+            "next": "chase_09"
+          },
+          "chase_09": {
+            "id": "chase_09",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "追上"
+            },
+            "next": "chase_10"
+          },
+          "chase_10": {
+            "id": "chase_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "了我"
+            },
+            "next": "chase_11"
+          },
+          "chase_11": {
+            "id": "chase_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "那么"
+            },
+            "next": "choice"
+          },
+          "choice": {
+            "id": "choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 3
+            },
+            "options": [
+              {
+                "label": "使用万字符",
+                "requiredItemId": "swastika",
+                "requiredSpellId": "book_moon__0",
+                "next": "use_talisman"
+              },
+              {
+                "label": "使用支配术",
+                "requiredSpellId": "book_coc7__0",
+                "next": "cast_domination"
+              },
+              {
+                "label": "接受注定的终局。",
+                "next": "normal_cg"
+              }
+            ]
+          },
+          "use_talisman": {
+            "id": "use_talisman",
+            "type": "inventoryOperation",
+            "inputs": {
+              "itemId": "swastika",
+              "count": -1
+            },
+            "next": "use_talisman_cost"
+          },
+          "use_talisman_cost": {
+            "id": "use_talisman_cost",
+            "type": "statOperation",
+            "inputs": {
+              "statId": "sanity",
+              "delta": -5
+            },
+            "next": "use_talisman_spell"
+          },
+          "use_talisman_spell": {
+            "id": "use_talisman_spell",
+            "type": "spellEffect",
+            "inputs": {
+              "spellId": "book_moon__0",
+              "eventId": "追逐事件",
+              "choiceId": "use_talisman"
+            },
+            "normalNext": "normal_cg",
+            "abnormalNext": "abnormal_cg"
+          },
+          "cast_domination": {
+            "id": "cast_domination",
+            "type": "spellCast",
+            "inputs": {
+              "spellId": "book_coc7__0",
+              "eventId": "追逐事件",
+              "choiceId": "cast_domination",
+              "location": "seaside"
+            },
+            "next": "abnormal_cg"
+          },
+          "abnormal_cg": {
+            "id": "abnormal_cg",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_b"
+            },
+            "next": "abnormal_01"
+          },
+          "abnormal_01": {
+            "id": "abnormal_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我看见它们——过来了——犹格·索托斯救我——"
+            },
+            "next": "abnormal_02"
+          },
+          "abnormal_02": {
+            "id": "abnormal_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "藉由旧神之力，我将施展法术——"
+            },
+            "next": "abnormal_03"
+          },
+          "abnormal_03": {
+            "id": "abnormal_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "等下，你拿的这个……是……"
+            },
+            "next": "abnormal_04"
+          },
+          "abnormal_04": {
+            "id": "abnormal_04",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不，快放下它！你发神经吗？"
+            },
+            "next": "abnormal_05"
+          },
+          "abnormal_05": {
+            "id": "abnormal_05",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "为什么……为什么拿这个鬼东西指着我们……你明明知道它是邪恶的！"
+            },
+            "next": "abnormal_06"
+          },
+          "abnormal_06": {
+            "id": "abnormal_06",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "不，不，不，你们才无疑是邪恶的。我只为自保，现在你们是不是被我的法术定住动不了了？你们有想过那些无辜的活人祭品，他们在被你们束缚无法动弹时也是绝望的？哈，哈，哈！你们捆人就像捆螃蟹！而我，我将逃离你们的追逐，彻底挫败你们的献祭计划。我将在一个更好的环境里，开启一段崭新的，美好的，不被邪教阴谋所困扰的人生！"
+            },
+            "next": "abnormal_07"
+          },
+          "abnormal_07": {
+            "id": "abnormal_07",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "等一下，危险，停！你在往海里跑，这是凹岸，海里是有离岸流的！"
+            },
+            "next": "abnormal_08"
+          },
+          "abnormal_08": {
+            "id": "abnormal_08",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "不要再蛊惑我了！新生活，我来了！"
+            },
+            "next": "abnormal_09"
+          },
+          "abnormal_09": {
+            "id": "abnormal_09",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "next": "abnormal_10"
+          },
+          "abnormal_10": {
+            "id": "abnormal_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "离岸流给卷走了！我看不见人影！"
+            },
+            "next": "abnormal_11"
+          },
+          "abnormal_11": {
+            "id": "abnormal_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "彬彬",
+              "text": "那咋办？报警，找救生员？都试一遍吧。"
+            },
+            "next": "abnormal_12"
+          },
+          "abnormal_12": {
+            "id": "abnormal_12",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿伟",
+              "text": "毕竟是我们室友啊。走吧，咱分头行动。"
+            },
+            "next": "abnormal_end"
+          },
+          "abnormal_end": {
+            "id": "abnormal_end",
+            "type": "ending",
+            "inputs": {
+              "endingId": "异常结局"
+            },
+            "next": "end"
+          },
+          "normal_cg": {
+            "id": "normal_cg",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_h"
+            },
+            "next": "normal_01"
+          },
+          "normal_01": {
+            "id": "normal_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "已经没有别的办法了，我只能接受现实。我将被这些恐怖的邪教徒当成祭品，死亡是我注定的结局。"
+            },
+            "next": "normal_02"
+          },
+          "normal_02": {
+            "id": "normal_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "阿撒托斯发发慈悲！赐予我我无痛的昏迷，让我无需经历流血之苦……"
+            },
+            "next": "normal_03"
+          },
+          "normal_03": {
+            "id": "normal_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "就在这濒临死亡的一刻，我才真正悟到，生死轮转即是不可变更、四海皆准的自然规律。万物终将灭亡。死是凉爽的夏夜，可供人无忧地安眠，而试图逃离死亡的行为正如强迫自己悖逆身体的自然节律，是一种邪恶的病态，为一切正常人所不容。"
+            },
+            "next": "normal_04"
+          },
+          "normal_04": {
+            "id": "normal_04",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "就算我即将死于邪教徒之手，我也知道我有一点比他们强：我的认知是完全正常的，而它们则深陷于病态的执念中，无法接受自然的规律。"
+            },
+            "next": "normal_05"
+          },
+          "normal_05": {
+            "id": "normal_05",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这些邪教徒的阴谋是无法得逞的。即使它们完成仪式，服下秘药，终有一天它们也会像我一样别无选择地走向生命的消逝，无法逃离死亡的终局。"
+            },
+            "next": "normal_06"
+          },
+          "normal_06": {
+            "id": "normal_06",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "是时候放手了……"
+            },
+            "next": "normal_end"
+          },
+          "normal_end": {
+            "id": "normal_end",
+            "type": "ending",
+            "inputs": {
+              "endingId": "正常结局"
+            },
+            "next": "end"
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd"
+          }
         },
         "connections": []
+      }
+    },
+    {
+      "id": "长眠的克苏鲁候汝入梦事件",
+      "queueId": "social",
+      "phase": "night",
+      "startDay": 1,
+      "endDay": 7,
+      "npcId": "binbin",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "cg_001": {
+            "id": "cg_001",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_5"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "鱼群。"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "汹涌不断浪潮翻滚无边无际的海洋，与其中的，同样无边无际的鱼群。"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我这是在做梦？"
+            },
+            "outputs": {}
+          },
+          "cg_005": {
+            "id": "cg_005",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_i"
+            },
+            "outputs": {}
+          },
+          "line_006": {
+            "id": "line_006",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "普世沦丧。"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "大衮",
+              "text": "克总发糖。"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "伟大的神明啊，你们所言甚是。不过在继续讨论之前，你能告诉我 1,522,605,027、922,533,360、535,618,378、132,637,429、718,068,114、961,380,688、657,908,494、580,122,963、258,952,897、654,000,350、692,006,139 这个数的两个最大质因数是什么吗？"
+            },
+            "outputs": {}
+          },
+          "line_009": {
+            "id": "line_009",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "普世沦丧。"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "大衮",
+              "text": "克总发糖。"
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "伟大的神明啊，求您垂怜，解决这个困扰我已久的难题。"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "普世沦丧。"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "大衮",
+              "text": "克总发糖。"
+            },
+            "outputs": {}
+          },
+          "line_014": {
+            "id": "line_014",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这里还有其他古老的存在通晓凡俗的言语吗？"
+            },
+            "outputs": {}
+          },
+          "cg_015": {
+            "id": "cg_015",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_2"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "听到此话，大衮的身影渐渐隐去，而母神海德拉的恐怖形象逐渐显现。"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "那照耀中华的月亮，"
+            },
+            "outputs": {}
+          },
+          "line_018": {
+            "id": "line_018",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "天河里的困倦月亮。"
+            },
+            "outputs": {}
+          },
+          "line_019": {
+            "id": "line_019",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "被柳叶搅乱的月光"
+            },
+            "outputs": {}
+          },
+          "line_020": {
+            "id": "line_020",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "宛如千千的银鱼"
+            },
+            "outputs": {}
+          },
+          "line_021": {
+            "id": "line_021",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "照在黑暗的浅滩；"
+            },
+            "outputs": {}
+          },
+          "line_022": {
+            "id": "line_022",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "墓地和破庙的瓦片亮如碎波，"
+            },
+            "outputs": {}
+          },
+          "line_023": {
+            "id": "line_023",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "空中的点点浮云就像龙鳞。"
+            },
+            "outputs": {}
+          },
+          "line_024": {
+            "id": "line_024",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我不明白。"
+            },
+            "outputs": {}
+          },
+          "line_025": {
+            "id": "line_025",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "抑或让你的灯光于夜半的时间"
+            },
+            "outputs": {}
+          },
+          "line_026": {
+            "id": "line_026",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "点亮在孤单的高塔，让我看见，"
+            },
+            "outputs": {}
+          },
+          "line_027": {
+            "id": "line_027",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "在那里，我会经常遥望大熊座，"
+            },
+            "outputs": {}
+          },
+          "line_028": {
+            "id": "line_028",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "三重伟大者赫尔墨斯在我身边；"
+            },
+            "outputs": {}
+          },
+          "line_029": {
+            "id": "line_029",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "或者是柏拉图的灵魂降下九天，"
+            },
+            "outputs": {}
+          },
+          "line_030": {
+            "id": "line_030",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "向我揭示，哪些世界、或哪些辽阔疆土"
+            },
+            "outputs": {}
+          },
+          "line_031": {
+            "id": "line_031",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "会包容永恒的心灵，当她已摒弃"
+            },
+            "outputs": {}
+          },
+          "line_032": {
+            "id": "line_032",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "这个名为肉身的居间。"
+            },
+            "outputs": {}
+          },
+          "line_033": {
+            "id": "line_033",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "如果您不想屈尊回答凡人的问题，就请随心所欲降下启示吧。"
+            },
+            "outputs": {}
+          },
+          "line_034": {
+            "id": "line_034",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "普世沦丧。"
+            },
+            "outputs": {}
+          },
+          "line_035": {
+            "id": "line_035",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "有时也请让华丽的悲剧"
+            },
+            "outputs": {}
+          },
+          "line_036": {
+            "id": "line_036",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "裹上君主的柩衣掠过眼前，"
+            },
+            "outputs": {}
+          },
+          "line_037": {
+            "id": "line_037",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "将底比斯或佩洛普斯的家谱"
+            },
+            "outputs": {}
+          },
+          "line_038": {
+            "id": "line_038",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "又或神圣的特洛伊故事向我展现。"
+            },
+            "outputs": {}
+          },
+          "line_039": {
+            "id": "line_039",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "至少诗是美的，谢谢您。"
+            },
+            "outputs": {}
+          },
+          "line_040": {
+            "id": "line_040",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "听见的乐声虽好，但若听不见"
+            },
+            "outputs": {}
+          },
+          "line_041": {
+            "id": "line_041",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "却更美；所以，吹吧，柔情的风笛……"
+            },
+            "outputs": {}
+          },
+          "line_042": {
+            "id": "line_042",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "等暮年使这一世代都凋落，"
+            },
+            "outputs": {}
+          },
+          "line_043": {
+            "id": "line_043",
+            "type": "text",
+            "inputs": {
+              "speaker": "海德拉",
+              "text": "只有你如旧；在另外的一些"
+            },
+            "outputs": {}
+          },
+          "line_044": {
+            "id": "line_044",
+            "type": "text",
+            "inputs": {
+              "speaker": "忧伤中，你会抚慰后人说",
+              "text": ""
+            },
+            "outputs": {}
+          },
+          "line_045": {
+            "id": "line_045",
+            "type": "text",
+            "inputs": {
+              "speaker": "忧伤中，你会抚慰后人说",
+              "text": "“美即是真，真即是美，”这就包括"
+            },
+            "outputs": {}
+          },
+          "line_046": {
+            "id": "line_046",
+            "type": "text",
+            "inputs": {
+              "speaker": "忧伤中，你会抚慰后人说",
+              "text": "你们所知道、和该知道的一切。"
+            },
+            "outputs": {}
+          },
+          "line_047": {
+            "id": "line_047",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "吟诵完诗歌，海德拉的身影渐渐隐去，而父神大衮的恐怖形象逐渐显现。"
+            },
+            "outputs": {}
+          },
+          "line_048": {
+            "id": "line_048",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "普世沦丧。"
+            },
+            "outputs": {}
+          },
+          "line_049": {
+            "id": "line_049",
+            "type": "text",
+            "inputs": {
+              "speaker": "大衮",
+              "text": "克总发糖。"
+            },
+            "outputs": {}
+          },
+          "line_050": {
+            "id": "line_050",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "伟大之克苏鲁啊，您还想降下哪些启示吗？我尤其想问的是，为何宇宙的本质充满敌意，物理规律无法满足活人的需求，而盲目痴愚的阿撒托斯只满足于在颤栗黑洞的至高宫廷聆听沉闷的鼓声和单调的风笛？"
+            },
+            "outputs": {}
+          },
+          "cg_051": {
+            "id": "cg_051",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewqdjt_p"
+            },
+            "outputs": {}
+          },
+          "line_052": {
+            "id": "line_052",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你曾进到海源，或在深渊的隐密处行走吗？"
+            },
+            "outputs": {}
+          },
+          "line_053": {
+            "id": "line_053",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "死亡的门曾向你显露吗？死荫的门你曾见过吗？"
+            },
+            "outputs": {}
+          },
+          "line_054": {
+            "id": "line_054",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "地的广大你能明透吗？你若全知道，只管说吧。"
+            },
+            "outputs": {}
+          },
+          "line_055": {
+            "id": "line_055",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "光明的居所从何而至？黑暗的本位在于何处？"
+            },
+            "outputs": {}
+          },
+          "line_056": {
+            "id": "line_056",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能带到本境，能看明其室之路吗？"
+            },
+            "outputs": {}
+          },
+          "line_057": {
+            "id": "line_057",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能系住昴星的结吗？能解开参星的带吗？"
+            },
+            "outputs": {}
+          },
+          "line_058": {
+            "id": "line_058",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能按时领出十二宫吗？能引导北斗和随它的众星吗？"
+            },
+            "outputs": {}
+          },
+          "line_059": {
+            "id": "line_059",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你知道天的定例吗？能使地归在天的权下吗？"
+            },
+            "outputs": {}
+          },
+          "line_060": {
+            "id": "line_060",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能向云彩扬起声来，使倾盆的雨遮盖你吗？"
+            },
+            "outputs": {}
+          },
+          "line_061": {
+            "id": "line_061",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能发出闪电，叫它行去，使它对你说，我们在这里。"
+            },
+            "outputs": {}
+          },
+          "line_062": {
+            "id": "line_062",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能用鱼钩钓上利维坦吗？能用绳子压下它的舌头吗？"
+            },
+            "outputs": {}
+          },
+          "line_063": {
+            "id": "line_063",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能用绳索穿它的鼻子吗？能用钩穿它的腮骨吗？"
+            },
+            "outputs": {}
+          },
+          "line_064": {
+            "id": "line_064",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它岂向你连连恳求，说柔和的话吗？"
+            },
+            "outputs": {}
+          },
+          "line_065": {
+            "id": "line_065",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "岂肯与你立约，使你拿它永远作奴仆吗？"
+            },
+            "outputs": {}
+          },
+          "line_066": {
+            "id": "line_066",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你岂可拿它当雀鸟玩耍吗？岂可为你的幼女将它拴住吗？"
+            },
+            "outputs": {}
+          },
+          "line_067": {
+            "id": "line_067",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "搭伙的渔夫岂可拿它当货物吗？能把它分给商人吗？"
+            },
+            "outputs": {}
+          },
+          "line_068": {
+            "id": "line_068",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你能用倒钩枪扎满它的皮，能用鱼叉叉满它的头吗？"
+            },
+            "outputs": {}
+          },
+          "line_069": {
+            "id": "line_069",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "你按手在它身上，想与它争战，就不再这样行吧。"
+            },
+            "outputs": {}
+          },
+          "line_070": {
+            "id": "line_070",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "人指望捉拿它是徒然的。一见它，岂不丧胆吗？"
+            },
+            "outputs": {}
+          },
+          "line_071": {
+            "id": "line_071",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "没有那么凶猛的人敢惹它。这样，谁能在我面前站立得住呢？"
+            },
+            "outputs": {}
+          },
+          "line_072": {
+            "id": "line_072",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "谁先给我什么，使我偿还呢？天下万物都是我的。"
+            },
+            "outputs": {}
+          },
+          "line_073": {
+            "id": "line_073",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "论到利维坦的肢体和其大力，并美好的骨骼，我不能缄默不言。"
+            },
+            "outputs": {}
+          },
+          "line_074": {
+            "id": "line_074",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "谁能剥它的外衣？谁能进它上下牙骨之间呢？"
+            },
+            "outputs": {}
+          },
+          "line_075": {
+            "id": "line_075",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "谁能开它的腮颊？它牙齿四围是可畏的。"
+            },
+            "outputs": {}
+          },
+          "line_076": {
+            "id": "line_076",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它以坚固的鳞甲为可夸，紧紧合闭，封得严密。"
+            },
+            "outputs": {}
+          },
+          "line_077": {
+            "id": "line_077",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "这鳞甲一一相连，甚至气不得透入其间，"
+            },
+            "outputs": {}
+          },
+          "line_078": {
+            "id": "line_078",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "都是互相联络，胶结，不能分离。"
+            },
+            "outputs": {}
+          },
+          "line_079": {
+            "id": "line_079",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它打喷嚏就发出光来。它眼睛好像早晨的光线。"
+            },
+            "outputs": {}
+          },
+          "line_080": {
+            "id": "line_080",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "从它口中发出烧着的火把，与飞迸的火星。"
+            },
+            "outputs": {}
+          },
+          "line_081": {
+            "id": "line_081",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "从它鼻孔冒出烟来，如烧开的锅和点着的芦苇。"
+            },
+            "outputs": {}
+          },
+          "line_082": {
+            "id": "line_082",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它的气点着煤炭，有火焰从它口中发出。"
+            },
+            "outputs": {}
+          },
+          "line_083": {
+            "id": "line_083",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它颈项中存着劲力。在它面前的都恐吓蹦跳。"
+            },
+            "outputs": {}
+          },
+          "line_084": {
+            "id": "line_084",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它的肉块互相联络，紧贴其身，不能摇动。"
+            },
+            "outputs": {}
+          },
+          "line_085": {
+            "id": "line_085",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它的心结实如石头，如下磨石那样结实。"
+            },
+            "outputs": {}
+          },
+          "line_086": {
+            "id": "line_086",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它一起来，勇士都惊恐，心里慌乱，便都昏迷。"
+            },
+            "outputs": {}
+          },
+          "line_087": {
+            "id": "line_087",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "人若用刀，用枪，用标枪，用尖枪扎它，都是无用。"
+            },
+            "outputs": {}
+          },
+          "line_088": {
+            "id": "line_088",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它以铁为干草，以铜为烂木。"
+            },
+            "outputs": {}
+          },
+          "line_089": {
+            "id": "line_089",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "箭不能恐吓它使它逃避。弹石在它看为碎秸。"
+            },
+            "outputs": {}
+          },
+          "line_090": {
+            "id": "line_090",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "棍棒算为禾秸。它嗤笑短枪飕的响声。"
+            },
+            "outputs": {}
+          },
+          "line_091": {
+            "id": "line_091",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它肚腹下如尖瓦片，它如钉耙经过淤泥。"
+            },
+            "outputs": {}
+          },
+          "line_092": {
+            "id": "line_092",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它使深渊开滚如锅，使洋海如锅中的膏油。"
+            },
+            "outputs": {}
+          },
+          "line_093": {
+            "id": "line_093",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "它行的路随后发光，令人想深渊如同白发。"
+            },
+            "outputs": {}
+          },
+          "line_094": {
+            "id": "line_094",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "在地上没有像它造的那样，无所惧怕。"
+            },
+            "outputs": {}
+          },
+          "line_095": {
+            "id": "line_095",
+            "type": "text",
+            "inputs": {
+              "speaker": "克苏鲁",
+              "text": "凡高大的，它无不藐视。它在骄傲的水族上作王。"
+            },
+            "outputs": {}
+          },
+          "line_096": {
+            "id": "line_096",
+            "type": "text",
+            "inputs": {
+              "speaker": "大衮",
+              "text": "克总发糖。"
+            },
+            "outputs": {}
+          },
+          "line_097": {
+            "id": "line_097",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "感谢您的启示。"
+            },
+            "outputs": {}
+          },
+          "cg_098": {
+            "id": "cg_098",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_k"
+            },
+            "outputs": {}
+          },
+          "line_099": {
+            "id": "line_099",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "梦境结束了。"
+            },
+            "outputs": {}
+          },
+          "ending": {
+            "id": "ending",
+            "type": "ending",
+            "inputs": {
+              "endingId": "现实=现实"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_001",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_005",
+            "fromPort": "flowOut",
+            "toNodeId": "line_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "line_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "line_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_014",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "line_018",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_018",
+            "fromPort": "flowOut",
+            "toNodeId": "line_019",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_019",
+            "fromPort": "flowOut",
+            "toNodeId": "line_020",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_020",
+            "fromPort": "flowOut",
+            "toNodeId": "line_021",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_021",
+            "fromPort": "flowOut",
+            "toNodeId": "line_022",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_022",
+            "fromPort": "flowOut",
+            "toNodeId": "line_023",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_023",
+            "fromPort": "flowOut",
+            "toNodeId": "line_024",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_024",
+            "fromPort": "flowOut",
+            "toNodeId": "line_025",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_025",
+            "fromPort": "flowOut",
+            "toNodeId": "line_026",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_026",
+            "fromPort": "flowOut",
+            "toNodeId": "line_027",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_027",
+            "fromPort": "flowOut",
+            "toNodeId": "line_028",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_028",
+            "fromPort": "flowOut",
+            "toNodeId": "line_029",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_029",
+            "fromPort": "flowOut",
+            "toNodeId": "line_030",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_030",
+            "fromPort": "flowOut",
+            "toNodeId": "line_031",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_031",
+            "fromPort": "flowOut",
+            "toNodeId": "line_032",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_032",
+            "fromPort": "flowOut",
+            "toNodeId": "line_033",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_033",
+            "fromPort": "flowOut",
+            "toNodeId": "line_034",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_034",
+            "fromPort": "flowOut",
+            "toNodeId": "line_035",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_035",
+            "fromPort": "flowOut",
+            "toNodeId": "line_036",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_036",
+            "fromPort": "flowOut",
+            "toNodeId": "line_037",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_037",
+            "fromPort": "flowOut",
+            "toNodeId": "line_038",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_038",
+            "fromPort": "flowOut",
+            "toNodeId": "line_039",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_039",
+            "fromPort": "flowOut",
+            "toNodeId": "line_040",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_040",
+            "fromPort": "flowOut",
+            "toNodeId": "line_041",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_041",
+            "fromPort": "flowOut",
+            "toNodeId": "line_042",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_042",
+            "fromPort": "flowOut",
+            "toNodeId": "line_043",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_043",
+            "fromPort": "flowOut",
+            "toNodeId": "line_044",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_044",
+            "fromPort": "flowOut",
+            "toNodeId": "line_045",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_045",
+            "fromPort": "flowOut",
+            "toNodeId": "line_046",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_046",
+            "fromPort": "flowOut",
+            "toNodeId": "line_047",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_047",
+            "fromPort": "flowOut",
+            "toNodeId": "line_048",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_048",
+            "fromPort": "flowOut",
+            "toNodeId": "line_049",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_049",
+            "fromPort": "flowOut",
+            "toNodeId": "line_050",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_050",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_051",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_051",
+            "fromPort": "flowOut",
+            "toNodeId": "line_052",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_052",
+            "fromPort": "flowOut",
+            "toNodeId": "line_053",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_053",
+            "fromPort": "flowOut",
+            "toNodeId": "line_054",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_054",
+            "fromPort": "flowOut",
+            "toNodeId": "line_055",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_055",
+            "fromPort": "flowOut",
+            "toNodeId": "line_056",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_056",
+            "fromPort": "flowOut",
+            "toNodeId": "line_057",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_057",
+            "fromPort": "flowOut",
+            "toNodeId": "line_058",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_058",
+            "fromPort": "flowOut",
+            "toNodeId": "line_059",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_059",
+            "fromPort": "flowOut",
+            "toNodeId": "line_060",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_060",
+            "fromPort": "flowOut",
+            "toNodeId": "line_061",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_061",
+            "fromPort": "flowOut",
+            "toNodeId": "line_062",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_062",
+            "fromPort": "flowOut",
+            "toNodeId": "line_063",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_063",
+            "fromPort": "flowOut",
+            "toNodeId": "line_064",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_064",
+            "fromPort": "flowOut",
+            "toNodeId": "line_065",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_065",
+            "fromPort": "flowOut",
+            "toNodeId": "line_066",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_066",
+            "fromPort": "flowOut",
+            "toNodeId": "line_067",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_067",
+            "fromPort": "flowOut",
+            "toNodeId": "line_068",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_068",
+            "fromPort": "flowOut",
+            "toNodeId": "line_069",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_069",
+            "fromPort": "flowOut",
+            "toNodeId": "line_070",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_070",
+            "fromPort": "flowOut",
+            "toNodeId": "line_071",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_071",
+            "fromPort": "flowOut",
+            "toNodeId": "line_072",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_072",
+            "fromPort": "flowOut",
+            "toNodeId": "line_073",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_073",
+            "fromPort": "flowOut",
+            "toNodeId": "line_074",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_074",
+            "fromPort": "flowOut",
+            "toNodeId": "line_075",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_075",
+            "fromPort": "flowOut",
+            "toNodeId": "line_076",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_076",
+            "fromPort": "flowOut",
+            "toNodeId": "line_077",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_077",
+            "fromPort": "flowOut",
+            "toNodeId": "line_078",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_078",
+            "fromPort": "flowOut",
+            "toNodeId": "line_079",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_079",
+            "fromPort": "flowOut",
+            "toNodeId": "line_080",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_080",
+            "fromPort": "flowOut",
+            "toNodeId": "line_081",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_081",
+            "fromPort": "flowOut",
+            "toNodeId": "line_082",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_082",
+            "fromPort": "flowOut",
+            "toNodeId": "line_083",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_083",
+            "fromPort": "flowOut",
+            "toNodeId": "line_084",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_084",
+            "fromPort": "flowOut",
+            "toNodeId": "line_085",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_085",
+            "fromPort": "flowOut",
+            "toNodeId": "line_086",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_086",
+            "fromPort": "flowOut",
+            "toNodeId": "line_087",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_087",
+            "fromPort": "flowOut",
+            "toNodeId": "line_088",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_088",
+            "fromPort": "flowOut",
+            "toNodeId": "line_089",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_089",
+            "fromPort": "flowOut",
+            "toNodeId": "line_090",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_090",
+            "fromPort": "flowOut",
+            "toNodeId": "line_091",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_091",
+            "fromPort": "flowOut",
+            "toNodeId": "line_092",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_092",
+            "fromPort": "flowOut",
+            "toNodeId": "line_093",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_093",
+            "fromPort": "flowOut",
+            "toNodeId": "line_094",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_094",
+            "fromPort": "flowOut",
+            "toNodeId": "line_095",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_095",
+            "fromPort": "flowOut",
+            "toNodeId": "line_096",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_096",
+            "fromPort": "flowOut",
+            "toNodeId": "line_097",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_097",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_098",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_098",
+            "fromPort": "flowOut",
+            "toNodeId": "line_099",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_099",
+            "fromPort": "flowOut",
+            "toNodeId": "ending",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "ending",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
       }
     }
   ]

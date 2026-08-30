@@ -10,91 +10,851 @@
       "blueprint": {
         "startNodeId": "start",
         "nodes": {
-          "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {} },
-          "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true }, "outputs": {}, "x": 80, "y": 280 },
-          "__schedule_expiry__": { "id": "__schedule_expiry__", "type": "scheduleExpiry", "inputs": { "expires": false, "expiresAt": 0 }, "outputs": {}, "x": 80, "y": 400 },
-          "intro_01": { "id": "intro_01", "type": "text", "inputs": { "speaker": "player", "text": "你们的乐队，名字是叫“赞”是吧，似乎要在六道口黑暗学术bar首演了？" } },
-          "intro_02": { "id": "intro_02", "type": "text", "inputs": { "speaker": "awei", "text": "对啊，我最近一直在练这个万年氢能旅馆的《永生的岩户城人》。（一阵劲爆的吉他扫弦）" } },
-          "intro_03": { "id": "intro_03", "type": "text", "inputs": { "speaker": "player", "text": "岩户城，那不是我老家吗？" } },
-          "intro_04": { "id": "intro_04", "type": "text", "inputs": { "speaker": "awei", "text": "傍晚溜点辖办~关掉药厂的易伤" } },
-          "intro_05": { "id": "intro_05", "type": "text", "inputs": { "speaker": "player", "text": "咱们在医院实习，何尝不是一种药厂。" } },
-          "intro_06": { "id": "intro_06", "type": "text", "inputs": { "speaker": "awei", "text": "棋子在澳洲~我取合剂瓶配酒~" } },
-          "intro_07": { "id": "intro_07", "type": "text", "inputs": { "speaker": "player", "text": "还是别喝酒，伤肝。" } },
-          "intro_08": { "id": "intro_08", "type": "text", "inputs": { "speaker": "awei", "text": "如此圣火三十年~制导弹杀崩他~" } },
-          "intro_09": { "id": "intro_09", "type": "text", "inputs": { "speaker": "player", "text": "大厦是豆腐渣工程吧。" } },
-          "intro_10": { "id": "intro_10", "type": "text", "inputs": { "speaker": "awei", "text": "用藏身处的黑案啊~淹没心急的的警官~" } },
-          "intro_11": { "id": "intro_11", "type": "text", "inputs": { "speaker": "awei", "text": "核备时打服众~兵帮少年焙香我~" } },
-          "intro_12": { "id": "intro_12", "type": "text", "inputs": { "speaker": "player", "text": "师大附中啊，遥远的回忆了。" } },
-          "intro_13": { "id": "intro_13", "type": "text", "inputs": { "speaker": "awei", "text": "沉没的诸事~巫法移开的礁石" } },
-          "intro_14": { "id": "intro_14", "type": "text", "inputs": { "speaker": "player", "text": "可不是嘛，往家里打电话都限时。电话那儿贴了个“少聊一分，提高一分，提高一分，干掉千人”的横幅。" } },
-          "intro_15": { "id": "intro_15", "type": "text", "inputs": { "speaker": "awei", "text": "圣火在惊魇你~制导弹杀崩他~" } },
-          "choice": { "id": "choice", "type": "choice", "inputs": { "branchCount": 2, "label0": "喂喂，你有没有听我说话？", "label1": "哎呀真好听，岩户城人可能会被杀死，但摇滚不死。" }, "options": [ { "label": "喂喂，你有没有听我说话？" }, { "label": "哎呀真好听，岩户城人可能会被杀死，但摇滚不死。" } ] },
-          "choice_1_01": { "id": "choice_1_01", "type": "text", "inputs": { "speaker": "awei", "text": "你也妹听我唱歌啊！总之要不要来吧，听我们演奏。" } },
-          "choice_1_02": { "id": "choice_1_02", "type": "text", "inputs": { "speaker": "player", "text": "正有此意。" } },
-          "choice_2_01": { "id": "choice_2_01", "type": "text", "inputs": { "speaker": "awei", "text": "你懂我。" } },
-          "choice_2_02": { "id": "choice_2_02", "type": "text", "inputs": { "speaker": "player", "text": "首演的时候，要不要我捧场？" } },
-          "choice_2_03": { "id": "choice_2_03", "type": "text", "inputs": { "speaker": "awei", "text": "呵呵，我一定不会让你失望哒！（一阵劲爆的吉他扫弦）" } },
-          "concert_cg": { "id": "concert_cg", "type": "showCg", "inputs": { "cgId": "cg_awei_band_ending" } },
-          "concert_01": { "id": "concert_01", "type": "text", "inputs": { "speaker": "awei", "text": "亿万匹拓疆的蛙~在祂滔海中奔跑~（一阵劲爆的吉他尾杀）" } },
-          "concert_02": { "id": "concert_02", "type": "text", "inputs": { "speaker": "narrator", "text": "喔喔喔喔喔喔！咿呀！咿呀！" } },
-          "concert_03": { "id": "concert_03", "type": "text", "inputs": { "speaker": "player", "text": "咿呀！" } },
-          "concert_04": { "id": "concert_04", "type": "text", "inputs": { "speaker": "awei", "text": "谢谢！" } },
-          "concert_05": { "id": "concert_05", "type": "text", "inputs": { "speaker": "awei", "text": "这次我要特别感谢我的一位朋友。" } },
-          "concert_06": { "id": "concert_06", "type": "text", "inputs": { "speaker": "narrator", "text": "那一人是谁？" } },
-          "concert_07": { "id": "concert_07", "type": "text", "inputs": { "speaker": "awei", "text": "这位朋友，在我最穷困的时候不忘鼓励我哀兵必胜，在我最辉煌的时刻也不忘提醒我骄兵必败！" } },
-          "concert_08": { "id": "concert_08", "type": "text", "inputs": { "speaker": "awei", "text": "没有这位朋友支持我努力走下去，就没有我今日的监听级发烧耳机，也没有我们即将在流媒体上架的歌曲的HiFi音质。" } },
-          "concert_09": { "id": "concert_09", "type": "text", "inputs": { "speaker": "awei", "text": "好Homie，你在我心中的地位，堪比让赛博坦陆逊反败为胜的夷陵山脉最后一道山梁，在演唱结束时，让我们为这个残酷世界里的最后一道善良，点“赞”！我们要组一辈子少年乐队！谢谢。" } },
-          "concert_end": { "id": "concert_end", "type": "endCg", "inputs": {} },
-          "after_01": { "id": "after_01", "type": "text", "inputs": { "speaker": "player", "text": "唱得不错，还有……特别感谢，你的特别感谢。" } },
-          "after_02": { "id": "after_02", "type": "text", "inputs": { "speaker": "player", "text": "我很久没被人这样夸过了。" } },
-          "after_03": { "id": "after_03", "type": "text", "inputs": { "speaker": "awei", "text": "无所谓，我会出手。" } },
-          "after_04": { "id": "after_04", "type": "text", "inputs": { "speaker": "awei", "text": "往后余生，就由我一人，夸你，“赞”你，稳稳地接住你。", "onShow": { "ending": "组一辈子少年乐队！" } } },
-          "end": { "id": "end", "type": "scheduleEnd", "inputs": {}, "outputs": {} }
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "__prerequisite__": {
+            "id": "__prerequisite__",
+            "type": "prerequisite",
+            "inputs": {
+              "condition": true
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 280
+          },
+          "__schedule_expiry__": {
+            "id": "__schedule_expiry__",
+            "type": "scheduleExpiry",
+            "inputs": {
+              "expires": false,
+              "expiresAt": 0
+            },
+            "outputs": {},
+            "x": 80,
+            "y": 400
+          },
+          "intro_01": {
+            "id": "intro_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你们的乐队，名字是叫“赞”是吧，似乎要在六道口黑暗学术bar首演了？"
+            }
+          },
+          "intro_02": {
+            "id": "intro_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "对啊，我最近一直在练这个万年氢能旅馆的《永生的岩户城人》。（一阵劲爆的吉他扫弦）"
+            }
+          },
+          "intro_03": {
+            "id": "intro_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "岩户城，那不是我老家吗？"
+            }
+          },
+          "intro_04": {
+            "id": "intro_04",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "傍晚溜点辖办~关掉药厂的易伤"
+            }
+          },
+          "intro_05": {
+            "id": "intro_05",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "咱们在医院实习，何尝不是一种药厂。"
+            }
+          },
+          "intro_06": {
+            "id": "intro_06",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "棋子在澳洲~我取合剂瓶配酒~"
+            }
+          },
+          "intro_07": {
+            "id": "intro_07",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "还是别喝酒，伤肝。"
+            }
+          },
+          "intro_08": {
+            "id": "intro_08",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "如此圣火三十年~制导弹杀崩他~"
+            }
+          },
+          "intro_09": {
+            "id": "intro_09",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "大厦是豆腐渣工程吧。"
+            }
+          },
+          "intro_10": {
+            "id": "intro_10",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "用藏身处的黑案啊~淹没心急的的警官~"
+            }
+          },
+          "intro_11": {
+            "id": "intro_11",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "核备时打服众~兵帮少年焙香我~"
+            }
+          },
+          "intro_12": {
+            "id": "intro_12",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "师大附中啊，遥远的回忆了。"
+            }
+          },
+          "intro_13": {
+            "id": "intro_13",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "沉没的诸事~巫法移开的礁石"
+            }
+          },
+          "intro_14": {
+            "id": "intro_14",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "可不是嘛，往家里打电话都限时。电话那儿贴了个“少聊一分，提高一分，提高一分，干掉千人”的横幅。"
+            }
+          },
+          "intro_15": {
+            "id": "intro_15",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "圣火在惊魇你~制导弹杀崩他~"
+            }
+          },
+          "choice": {
+            "id": "choice",
+            "type": "choice",
+            "inputs": {
+              "branchCount": 2,
+              "label0": "喂喂，你有没有听我说话？",
+              "label1": "哎呀真好听，岩户城人可能会被杀死，但摇滚不死。"
+            },
+            "options": [
+              {
+                "label": "喂喂，你有没有听我说话？"
+              },
+              {
+                "label": "哎呀真好听，岩户城人可能会被杀死，但摇滚不死。"
+              }
+            ]
+          },
+          "choice_1_01": {
+            "id": "choice_1_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "你也妹听我唱歌啊！总之要不要来吧，听我们演奏。"
+            }
+          },
+          "choice_1_02": {
+            "id": "choice_1_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "正有此意。"
+            }
+          },
+          "choice_2_01": {
+            "id": "choice_2_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "你懂我。"
+            }
+          },
+          "choice_2_02": {
+            "id": "choice_2_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "首演的时候，要不要我捧场？"
+            }
+          },
+          "choice_2_03": {
+            "id": "choice_2_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "呵呵，我一定不会让你失望哒！（一阵劲爆的吉他扫弦）"
+            }
+          },
+          "concert_cg": {
+            "id": "concert_cg",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_awei_band_ending"
+            }
+          },
+          "concert_01": {
+            "id": "concert_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "亿万匹拓疆的蛙~在祂滔海中奔跑~（一阵劲爆的吉他尾杀）"
+            }
+          },
+          "concert_02": {
+            "id": "concert_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "喔喔喔喔喔喔！咿呀！咿呀！"
+            }
+          },
+          "concert_03": {
+            "id": "concert_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "咿呀！"
+            }
+          },
+          "concert_04": {
+            "id": "concert_04",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "谢谢！"
+            }
+          },
+          "concert_05": {
+            "id": "concert_05",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "这次我要特别感谢我的一位朋友。"
+            }
+          },
+          "concert_06": {
+            "id": "concert_06",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "那一人是谁？"
+            }
+          },
+          "concert_07": {
+            "id": "concert_07",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "这位朋友，在我最穷困的时候不忘鼓励我哀兵必胜，在我最辉煌的时刻也不忘提醒我骄兵必败！"
+            }
+          },
+          "concert_08": {
+            "id": "concert_08",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "没有这位朋友支持我努力走下去，就没有我今日的监听级发烧耳机，也没有我们即将在流媒体上架的歌曲的HiFi音质。"
+            }
+          },
+          "concert_09": {
+            "id": "concert_09",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "好Homie，你在我心中的地位，堪比让赛博坦陆逊反败为胜的夷陵山脉最后一道山梁，在演唱结束时，让我们为这个残酷世界里的最后一道善良，点“赞”！我们要组一辈子少年乐队！谢谢。"
+            }
+          },
+          "concert_end": {
+            "id": "concert_end",
+            "type": "endCg",
+            "inputs": {}
+          },
+          "after_01": {
+            "id": "after_01",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "唱得不错，还有……特别感谢，你的特别感谢。"
+            }
+          },
+          "after_02": {
+            "id": "after_02",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我很久没被人这样夸过了。"
+            }
+          },
+          "after_03": {
+            "id": "after_03",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "无所谓，我会出手。"
+            }
+          },
+          "after_04": {
+            "id": "after_04",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "往后余生，就由我一人，夸你，“赞”你，稳稳地接住你。",
+              "onShow": {
+                "ending": "组一辈子少年乐队！"
+              }
+            }
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
         },
         "connections": [
-          { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "intro_01", "toPort": "flowIn" },
-          { "fromNodeId": "intro_01", "fromPort": "flowOut", "toNodeId": "intro_02", "toPort": "flowIn" },
-          { "fromNodeId": "intro_02", "fromPort": "flowOut", "toNodeId": "intro_03", "toPort": "flowIn" },
-          { "fromNodeId": "intro_03", "fromPort": "flowOut", "toNodeId": "intro_04", "toPort": "flowIn" },
-          { "fromNodeId": "intro_04", "fromPort": "flowOut", "toNodeId": "intro_05", "toPort": "flowIn" },
-          { "fromNodeId": "intro_05", "fromPort": "flowOut", "toNodeId": "intro_06", "toPort": "flowIn" },
-          { "fromNodeId": "intro_06", "fromPort": "flowOut", "toNodeId": "intro_07", "toPort": "flowIn" },
-          { "fromNodeId": "intro_07", "fromPort": "flowOut", "toNodeId": "intro_08", "toPort": "flowIn" },
-          { "fromNodeId": "intro_08", "fromPort": "flowOut", "toNodeId": "intro_09", "toPort": "flowIn" },
-          { "fromNodeId": "intro_09", "fromPort": "flowOut", "toNodeId": "intro_10", "toPort": "flowIn" },
-          { "fromNodeId": "intro_10", "fromPort": "flowOut", "toNodeId": "intro_11", "toPort": "flowIn" },
-          { "fromNodeId": "intro_11", "fromPort": "flowOut", "toNodeId": "intro_12", "toPort": "flowIn" },
-          { "fromNodeId": "intro_12", "fromPort": "flowOut", "toNodeId": "intro_13", "toPort": "flowIn" },
-          { "fromNodeId": "intro_13", "fromPort": "flowOut", "toNodeId": "intro_14", "toPort": "flowIn" },
-          { "fromNodeId": "intro_14", "fromPort": "flowOut", "toNodeId": "intro_15", "toPort": "flowIn" },
-          { "fromNodeId": "intro_15", "fromPort": "flowOut", "toNodeId": "choice", "toPort": "flowIn" },
-          { "fromNodeId": "choice", "fromPort": "option0", "toNodeId": "choice_1_01", "toPort": "flowIn" },
-          { "fromNodeId": "choice", "fromPort": "option1", "toNodeId": "choice_2_01", "toPort": "flowIn" },
-          { "fromNodeId": "choice_1_01", "fromPort": "flowOut", "toNodeId": "choice_1_02", "toPort": "flowIn" },
-          { "fromNodeId": "choice_1_02", "fromPort": "flowOut", "toNodeId": "concert_cg", "toPort": "flowIn" },
-          { "fromNodeId": "choice_2_01", "fromPort": "flowOut", "toNodeId": "choice_2_02", "toPort": "flowIn" },
-          { "fromNodeId": "choice_2_02", "fromPort": "flowOut", "toNodeId": "choice_2_03", "toPort": "flowIn" },
-          { "fromNodeId": "choice_2_03", "fromPort": "flowOut", "toNodeId": "concert_cg", "toPort": "flowIn" },
-          { "fromNodeId": "concert_cg", "fromPort": "flowOut", "toNodeId": "concert_01", "toPort": "flowIn" },
-          { "fromNodeId": "concert_01", "fromPort": "flowOut", "toNodeId": "concert_02", "toPort": "flowIn" },
-          { "fromNodeId": "concert_02", "fromPort": "flowOut", "toNodeId": "concert_03", "toPort": "flowIn" },
-          { "fromNodeId": "concert_03", "fromPort": "flowOut", "toNodeId": "concert_04", "toPort": "flowIn" },
-          { "fromNodeId": "concert_04", "fromPort": "flowOut", "toNodeId": "concert_05", "toPort": "flowIn" },
-          { "fromNodeId": "concert_05", "fromPort": "flowOut", "toNodeId": "concert_06", "toPort": "flowIn" },
-          { "fromNodeId": "concert_06", "fromPort": "flowOut", "toNodeId": "concert_07", "toPort": "flowIn" },
-          { "fromNodeId": "concert_07", "fromPort": "flowOut", "toNodeId": "concert_08", "toPort": "flowIn" },
-          { "fromNodeId": "concert_08", "fromPort": "flowOut", "toNodeId": "concert_09", "toPort": "flowIn" },
-          { "fromNodeId": "concert_09", "fromPort": "flowOut", "toNodeId": "concert_end", "toPort": "flowIn" },
-          { "fromNodeId": "concert_end", "fromPort": "flowOut", "toNodeId": "after_01", "toPort": "flowIn" },
-          { "fromNodeId": "after_01", "fromPort": "flowOut", "toNodeId": "after_02", "toPort": "flowIn" },
-          { "fromNodeId": "after_02", "fromPort": "flowOut", "toNodeId": "after_03", "toPort": "flowIn" },
-          { "fromNodeId": "after_03", "fromPort": "flowOut", "toNodeId": "after_04", "toPort": "flowIn" },
-          { "fromNodeId": "after_04", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_01",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_01",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_02",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_02",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_03",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_03",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_04",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_04",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_05",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_05",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_06",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_06",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_07",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_07",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_08",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_08",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_09",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_09",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_10",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_10",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_11",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_11",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_12",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_12",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_13",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_13",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_14",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_14",
+            "fromPort": "flowOut",
+            "toNodeId": "intro_15",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "intro_15",
+            "fromPort": "flowOut",
+            "toNodeId": "choice",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option0",
+            "toNodeId": "choice_1_01",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice",
+            "fromPort": "option1",
+            "toNodeId": "choice_2_01",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_1_01",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_1_02",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_1_02",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_cg",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_2_01",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_2_02",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_2_02",
+            "fromPort": "flowOut",
+            "toNodeId": "choice_2_03",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "choice_2_03",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_cg",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_cg",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_01",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_01",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_02",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_02",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_03",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_03",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_04",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_04",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_05",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_05",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_06",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_06",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_07",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_07",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_08",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_08",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_09",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_09",
+            "fromPort": "flowOut",
+            "toNodeId": "concert_end",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "concert_end",
+            "fromPort": "flowOut",
+            "toNodeId": "after_01",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_01",
+            "fromPort": "flowOut",
+            "toNodeId": "after_02",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_02",
+            "fromPort": "flowOut",
+            "toNodeId": "after_03",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_03",
+            "fromPort": "flowOut",
+            "toNodeId": "after_04",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "after_04",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
         ]
       }
     },
     {
-      "id": "游戏王の福利"
+      "id": "游戏王の福利",
+      "title": "游戏王の福利",
+      "displayName": "好结局（阿杰线）：游戏王の福利",
+      "text": "你和阿杰一起拍摄了女装福利视频。",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "cg_001": {
+            "id": "cg_001",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_exrzfp_5"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "刚才阿杰约我去漫展，说会给我一个惊喜，还叫我带上相机。是什么惊喜呢？"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "某种礼物？有趣的活动？"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "不管了，先坐地铁去漫展那里。"
+            },
+            "outputs": {}
+          },
+          "cg_005": {
+            "id": "cg_005",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_1"
+            },
+            "outputs": {}
+          },
+          "line_006": {
+            "id": "line_006",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "Surprise！我是始终面带微笑潜行到你身边的混沌(少女)，奈亚拉托提普向你问好~"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "啊……啊？玩这么大？"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "那咋了，cos是up主家常事。因为那个端游玩家从夯到拉锐评手游的视频我已经万粉了。今天本来约了摄影师，拍女装福利视频，但他临时有事来不了了。你不是也会一点摄影吗？来帮我拍点场照和视频，我请你吃火锅。"
+            },
+            "outputs": {}
+          },
+          "line_009": {
+            "id": "line_009",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "好呀，正好我好久没拍过，手有点生了。"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "喂喂喂，你这靠谱吗？"
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "放心吧，包在我身上。"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "如果他们知道我是……可能反而不会求着我女装了。"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "嗯，那你说，为啥up主都要拍女装福利视频呢？或者说，女装为什么可以作为福利呢？"
+            },
+            "outputs": {}
+          },
+          "line_014": {
+            "id": "line_014",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "不知道啊，别人都拍，我也跟着拍了。我的高赞评论里还有嬷嬷呢。"
+            },
+            "outputs": {}
+          },
+          "line_015": {
+            "id": "line_015",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "是啊。Homie你好香，我有嬷欲爽。"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "是啊，吃什么。"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "吃八万个馒头！"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_001",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_005",
+            "fromPort": "flowOut",
+            "toNodeId": "line_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "line_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "line_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_014",
+            "fromPort": "flowOut",
+            "toNodeId": "line_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
     },
     {
       "id": "pl现实魅惑大成功",
@@ -104,10 +864,887 @@
       "blueprintScheduleId": "彬彬献祭事件"
     },
     {
-      "id": "摇滚不死"
+      "id": "摇滚不死",
+      "title": "摇滚不死",
+      "displayName": "坏结局（阿伟线）：摇滚不死",
+      "text": "你没能逃离阿伟的摇滚与献祭。",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "cg_001": {
+            "id": "cg_001",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_exrzfp_5"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你们的乐队，名字是叫“赞”是吧，似乎要在六道口黑暗学术bar首演了？"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "对啊，我最近一直在练这个万年氢能旅馆的《永生的岩户城人》。（一阵亵渎的拨弦异声）"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "药□不死！"
+            },
+            "outputs": {}
+          },
+          "line_005": {
+            "id": "line_005",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "宰八九鬼胎~疯狂的人命尚长"
+            },
+            "outputs": {}
+          },
+          "line_006": {
+            "id": "line_006",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "用一张邪咒~买一磅血浆~"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "保卫祂的圣火~直到R’lyeh崩塌~"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这渎神的音乐，不谐的旋律，让我心神不宁。"
+            },
+            "outputs": {}
+          },
+          "line_009": {
+            "id": "line_009",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "可以不要再唱了吗？"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "为什么？你难道不想听吗？"
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "请到现场听我们演奏吧。如果不想听的话，可能会后悔哦！"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "outputs": {}
+          },
+          "cg_014": {
+            "id": "cg_014",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_l"
+            },
+            "outputs": {}
+          },
+          "line_015": {
+            "id": "line_015",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "夜幕覆盖华北平原~幽深尽头祂的脸~"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "海底尸堆腹中~冰封少年北向卧~"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "沉没的诸事~巫法移开的礁石~"
+            },
+            "outputs": {}
+          },
+          "line_018": {
+            "id": "line_018",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": ""
+            },
+            "outputs": {}
+          },
+          "line_019": {
+            "id": "line_019",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "圣火在惊魇你~直到R’lyeh崩塌~"
+            },
+            "outputs": {}
+          },
+          "line_020": {
+            "id": "line_020",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "亿万匹拓疆的蛙~在祂滔海中奔跑~（一阵亵渎的拨弦异声）"
+            },
+            "outputs": {}
+          },
+          "line_021": {
+            "id": "line_021",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "喔喔喔喔喔喔！咿呀！咿呀！"
+            },
+            "outputs": {}
+          },
+          "line_022": {
+            "id": "line_022",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "outputs": {}
+          },
+          "line_023": {
+            "id": "line_023",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "谢谢！"
+            },
+            "outputs": {}
+          },
+          "line_024": {
+            "id": "line_024",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "这次我要特别感谢我的一位朋友。没有这位朋友支持我努力走下去，就没有我今日的监听□□□□□□□□□□诡计□□□□□□□□□焚烧□□□□□十字架颂歌□□□□□□□□□□□□□□□海之阴鸷□□□□□□□"
+            },
+            "outputs": {}
+          },
+          "line_025": {
+            "id": "line_025",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我听出来了——这是久已失传的埃里克·赞之曲！"
+            },
+            "outputs": {}
+          },
+          "line_026": {
+            "id": "line_026",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "他们是冲我来的！他们是冲我来的！他们要献祭我！他们要分食我！我才是深潜秘药的材料！"
+            },
+            "outputs": {}
+          },
+          "line_027": {
+            "id": "line_027",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "现在立刻外跑迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯"
+            },
+            "outputs": {}
+          },
+          "line_028": {
+            "id": "line_028",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "迯□掉了。"
+            },
+            "outputs": {}
+          },
+          "line_029": {
+            "id": "line_029",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "它□你□后。"
+            },
+            "outputs": {}
+          },
+          "line_030": {
+            "id": "line_030",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "诶？你怎么跑了？不要跑啊！"
+            },
+            "outputs": {}
+          },
+          "line_031": {
+            "id": "line_031",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "不是说好了来□我的手眼吗？"
+            },
+            "outputs": {}
+          },
+          "line_032": {
+            "id": "line_032",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "外外外外外外外外外外外外外外外外外外外外外外外"
+            },
+            "outputs": {}
+          },
+          "line_033": {
+            "id": "line_033",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "死死死死死死死死死死死死死死死死死死死死死死死"
+            },
+            "outputs": {}
+          },
+          "line_034": {
+            "id": "line_034",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "不要跑啊！不要跑啊！不要跑啊！不要跑啊！和我一起啊！和我一起啊！和我一起啊！和我一起啊！"
+            },
+            "outputs": {}
+          },
+          "line_035": {
+            "id": "line_035",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "飤"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_001",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "line_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_005",
+            "fromPort": "flowOut",
+            "toNodeId": "line_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "line_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_014",
+            "fromPort": "flowOut",
+            "toNodeId": "line_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "line_018",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_018",
+            "fromPort": "flowOut",
+            "toNodeId": "line_019",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_019",
+            "fromPort": "flowOut",
+            "toNodeId": "line_020",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_020",
+            "fromPort": "flowOut",
+            "toNodeId": "line_021",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_021",
+            "fromPort": "flowOut",
+            "toNodeId": "line_022",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_022",
+            "fromPort": "flowOut",
+            "toNodeId": "line_023",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_023",
+            "fromPort": "flowOut",
+            "toNodeId": "line_024",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_024",
+            "fromPort": "flowOut",
+            "toNodeId": "line_025",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_025",
+            "fromPort": "flowOut",
+            "toNodeId": "line_026",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_026",
+            "fromPort": "flowOut",
+            "toNodeId": "line_027",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_027",
+            "fromPort": "flowOut",
+            "toNodeId": "line_028",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_028",
+            "fromPort": "flowOut",
+            "toNodeId": "line_029",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_029",
+            "fromPort": "flowOut",
+            "toNodeId": "line_030",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_030",
+            "fromPort": "flowOut",
+            "toNodeId": "line_031",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_031",
+            "fromPort": "flowOut",
+            "toNodeId": "line_032",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_032",
+            "fromPort": "flowOut",
+            "toNodeId": "line_033",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_033",
+            "fromPort": "flowOut",
+            "toNodeId": "line_034",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_034",
+            "fromPort": "flowOut",
+            "toNodeId": "line_035",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_035",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
     },
     {
-      "id": "混沌一瞥"
+      "id": "混沌一瞥",
+      "title": "无尽玩笑",
+      "displayName": "坏结局（阿杰线）：无尽玩笑",
+      "text": "你看见了阿杰的真实面目。",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "cg_001": {
+            "id": "cg_001",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_exrn4m_1"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "刚才阿杰约我去漫展，说会给我一个惊喜，还叫我带上相机。是什么惊喜呢？"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "总觉得有些不安。但是，现在它们越来越怀疑我了。这可能是我找出真相的最后一次机会了。"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "不管了，先坐地铁去漫展那里。"
+            },
+            "outputs": {}
+          },
+          "line_005": {
+            "id": "line_005",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这真的值得吗？"
+            },
+            "outputs": {}
+          },
+          "cg_006": {
+            "id": "cg_006",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_3"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "Surprise！我是始终面带微笑潜行到你身边的混沌(少女)，奈亚拉托提普向你问好~"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "啊……啊？"
+            },
+            "outputs": {}
+          },
+          "line_009": {
+            "id": "line_009",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "你怎么了？感觉……魂不守舍的。是害怕了吗？"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……你是……"
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "害怕我？"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "根本没认出来我的形象？"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "还是说……你已经认出我了，但是却故意不承认呢？"
+            },
+            "outputs": {}
+          },
+          "line_014": {
+            "id": "line_014",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "因为眼前所见过于【混沌】，你产生了反射性的羞耻与逃避本能。彻底僵住了呢。看到了真实的我——看到了全部的真相——却欺骗自己没有看到。还是不愿意接受我呢。"
+            },
+            "outputs": {}
+          },
+          "line_015": {
+            "id": "line_015",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "奈亚拉托提普……"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "正是在下。"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈——"
+            },
+            "outputs": {}
+          },
+          "line_018": {
+            "id": "line_018",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "祂喉中扯出一声尖厉的，令人疯狂的非人长笑。"
+            },
+            "outputs": {}
+          },
+          "line_019": {
+            "id": "line_019",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "原来是祂。我知道，我一直都知道，我看到了，却欺骗自己没有看到。祂就是邪教计划的幕后黑手——与深潜者做了不可告人的交易——或者祂根本没打算帮它们，只是想拿我取乐……笑的正是我自己。"
+            },
+            "outputs": {}
+          },
+          "line_020": {
+            "id": "line_020",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "怎么不说话了？喂喂，你，疯了吗？疯了就不好笑了哦。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_001",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "line_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_005",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "line_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "line_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_014",
+            "fromPort": "flowOut",
+            "toNodeId": "line_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "line_018",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_018",
+            "fromPort": "flowOut",
+            "toNodeId": "line_019",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_019",
+            "fromPort": "flowOut",
+            "toNodeId": "line_020",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_020",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
     },
     {
       "id": "牺牲之血",
@@ -200,13 +1837,1140 @@
       }
     },
     {
-      "id": "蹈海"
+      "id": "蹈海",
+      "title": "蹈海",
+      "displayName": "坏结局：蹈海",
+      "text": "你接受了鱼群与海洋的终局。",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "cg_001": {
+            "id": "cg_001",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_5"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "鱼群。"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "汹涌不断浪潮翻滚无边无际的海洋，与其中的，同样无边无际的鱼群。"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "那些微小的，非人的，异质的脊椎动物与无脊椎动物，从来就是那高居于食物链顶端的存在——人类的盘中美馔。当然也是他们动物朋友与其他生物界同伴的食粮。"
+            },
+            "outputs": {}
+          },
+          "line_005": {
+            "id": "line_005",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "但让我们回到人类——对人类而言，它们从来就是不值得同情的，如果给予它们哪怕最微末的同情的话，那宇宙的精华、万物的灵长就会失去一切自诩的圣性，而泯然于众造物。"
+            },
+            "outputs": {}
+          },
+          "line_006": {
+            "id": "line_006",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "所以不妨假设，假设这种在上古者之眼的注视下年轻胜过新星的所谓“传统”，是天经地义，是自然规律。"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "哦，你要知道，鱼虾是有大脑的。"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "信不信由你——它们会感到痛觉。"
+            },
+            "outputs": {}
+          },
+          "cg_009": {
+            "id": "cg_009",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_6"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "从盲目痴愚的阿撒托斯说起（从那个无可名状的创世之梦开始，宇宙将永远冷漠，直到诡异的万古）——一直到原始浓汤里诞生的巨神乌波·萨斯拉——再到那臃肿的札特瓜的怪形，和无名的巨蟹神，就是那称为世界之癌的——日光之下并无新事："
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "万物终将受苦——这恰好促成了某种复制单位在时空中的扩散。或者反过来说也一样，这是个循环。"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "Ia! 旧日支配者昔在，今在，永在！但阿尔-哈兹莱德又曾说过，在诡异的万古中就连死亡也会消逝。"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "outputs": {}
+          },
+          "line_014": {
+            "id": "line_014",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "祸哉！我灭亡了。因为它们已来复仇。它们来报复我——它们的食客。"
+            },
+            "outputs": {}
+          },
+          "cg_015": {
+            "id": "cg_015",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_4"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "接受这一切吧。温和顺从地走进这片鱼群，正如鱼群游进罗网，万物的灵长达观地走进坟墓。"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "别无他选。只能接受。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_001",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "line_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_005",
+            "fromPort": "flowOut",
+            "toNodeId": "line_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "line_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_014",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
     },
     {
       "id": "万物终亡"
     },
     {
-      "id": "现实=现实"
+      "id": "现实=现实",
+      "title": "现实=现实",
+      "displayName": "真结局：现实=现实",
+      "text": "你终于看见了现实。",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "line_001": {
+            "id": "line_001",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "世界似乎变得不同了。"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这几天一直扰乱我心神的幻觉，似乎有所消退。那些近乎后印象派油画的鲜明彩色“滤镜”已经不再，眼中的景象也回归平凡。"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "让我回到宿舍看看，那个越来越诡异的地方是否也恢复了正常。"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "这些物品里并没有邪教的痕迹。难道我对邪教阴谋的记忆真是一场妄想？"
+            },
+            "outputs": {}
+          },
+          "line_005": {
+            "id": "line_005",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "不过我似乎发现了一些别的东西。"
+            },
+            "outputs": {}
+          },
+          "line_006": {
+            "id": "line_006",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "老铁们，要不要一起吃火锅？"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "行啊，gogogo出发喽！"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "嗯，我现在没什么胃口，到那单点个饮料吧。"
+            },
+            "outputs": {}
+          },
+          "line_009": {
+            "id": "line_009",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "室友们的相貌也回归了正常，对话也并没什么可疑之处。"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "可以，咱们走，吃完AA。"
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "锅里的是什么……"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "真相。现实世界的真相。"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "谁能知道，是什么痛苦的幻想创造出这些果实的呢？该不是看管金苹果园的赫斯珀里得斯三姐妹在波利尼西亚果园中培植出来的吧！奇怪的是，这些果实都象活的一样，仿佛是在混沌初开时创造出来的，当时任何事物还都没有固定的形体，丰实肥硕，散发着浓郁的热带气息，好象具有一种独特的忧郁的感情。它们是被施展了魔法的果子，任何人尝了就能打开通向不知道哪些灵魂秘密的门扉，就可以走进幻境的神秘宫殿。它们孕育着无法预知的危险，咬一口就可能把一个人变成野兽，但也说不定变成神灵。一切健康的、正常的东西，淳朴人们所有的一切美好的情谊、朴素的欢乐都远远地避开了它们；但它们又具有莫大的诱惑力，就象伊甸园中能分辨善恶的智慧果一样，能把人带进未知的境界。"
+            },
+            "outputs": {}
+          },
+          "line_014": {
+            "id": "line_014",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我似乎记得，我刷社交媒体时了解过工厂化养殖的情况，我其实知道这是什么。但为了维持和“正常人”一样的认知，刻意将其压到了记忆深处。"
+            },
+            "outputs": {}
+          },
+          "line_015": {
+            "id": "line_015",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "妄想是一种慰藉，它将不可见转变为可见，将不可控转变为可控。而真正无可名状，令人无法理解，或者虽然可以管窥，却无法凭个人之力改变的现实往往才是最恐怖的。"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我……有点吃不下了。"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "没事，这顿算我请你的。"
+            },
+            "outputs": {}
+          },
+          "line_018": {
+            "id": "line_018",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "没事，我帮你吃。"
+            },
+            "outputs": {}
+          },
+          "line_019": {
+            "id": "line_019",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "你最近精神状态一直不太好，是不是快考试了压力太大？可以去海边散散心。"
+            },
+            "outputs": {}
+          },
+          "line_020": {
+            "id": "line_020",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……我想自己一个人去海边走走。"
+            },
+            "outputs": {}
+          },
+          "cg_021": {
+            "id": "cg_021",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_5"
+            },
+            "outputs": {}
+          },
+          "line_022": {
+            "id": "line_022",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "那么，如果不是妄想的话，我究竟看到了什么？"
+            },
+            "outputs": {}
+          },
+          "line_023": {
+            "id": "line_023",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "鱼群。"
+            },
+            "outputs": {}
+          },
+          "line_024": {
+            "id": "line_024",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "汹涌不断浪潮翻滚无边无际的海洋，与其中的，同样无边无际的鱼群。"
+            },
+            "outputs": {}
+          },
+          "line_025": {
+            "id": "line_025",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "那些微小的，非人的，异质的脊椎动物与无脊椎动物，从来就是那高居于食物链顶端的存在——人类的盘中美馔。当然也是他们动物朋友与其他生物界同伴的食粮。"
+            },
+            "outputs": {}
+          },
+          "line_026": {
+            "id": "line_026",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "但让我们回到人类——对人类而言，它们从来就是不值得同情的，如果给予它们哪怕最微末的同情的话，那宇宙的精华、万物的灵长就会失去一切自诩的圣性，而泯然于众造物。"
+            },
+            "outputs": {}
+          },
+          "line_027": {
+            "id": "line_027",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "所以不妨假设，假设这种在上古者之眼的注视下年轻胜过新星的所谓“传统”，是天经地义，是自然规律。"
+            },
+            "outputs": {}
+          },
+          "line_028": {
+            "id": "line_028",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "哦，你要知道，鱼虾是有大脑的。"
+            },
+            "outputs": {}
+          },
+          "line_029": {
+            "id": "line_029",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "信不信由你——它们会感到痛觉。"
+            },
+            "outputs": {}
+          },
+          "cg_030": {
+            "id": "cg_030",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_6"
+            },
+            "outputs": {}
+          },
+          "line_031": {
+            "id": "line_031",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "从盲目痴愚的阿撒托斯说起（从那个无可名状的创世之梦开始，宇宙将永远冷漠，直到诡异的万古）——一直到原始浓汤里诞生的巨神乌波·萨斯拉——再到那臃肿的札特瓜的怪形，和无名的巨蟹神，就是那称为世界之癌的——日光之下并无新事："
+            },
+            "outputs": {}
+          },
+          "line_032": {
+            "id": "line_032",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "万物终将受苦——这恰好促成了某种复制单位在时空中的扩散。或者反过来说也一样，这是个循环。"
+            },
+            "outputs": {}
+          },
+          "line_033": {
+            "id": "line_033",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "Ia! 旧日支配者昔在，今在，永在！但阿尔-哈兹莱德又曾说过，在诡异的万古中就连死亡也会消逝。"
+            },
+            "outputs": {}
+          },
+          "line_034": {
+            "id": "line_034",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "outputs": {}
+          },
+          "cg_035": {
+            "id": "cg_035",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_i"
+            },
+            "outputs": {}
+          },
+          "line_036": {
+            "id": "line_036",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "但是，请容许我们再纵容一次人类这个伟大而渺小，无知而博识，邪恶而圣洁的种族特有的傲慢，将目光转向此时、此地、此人。"
+            },
+            "outputs": {}
+          },
+          "line_037": {
+            "id": "line_037",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我想起来了。我想起了很多事。"
+            },
+            "outputs": {}
+          },
+          "line_038": {
+            "id": "line_038",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "那个早已成年的QQ群友，却面临被毫无资质、虐待成性的戒网瘾学校强制抓走的危险。"
+            },
+            "outputs": {}
+          },
+          "line_039": {
+            "id": "line_039",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "彬彬认识的那些性少数网友也是这样，当陷入贫困时，连基本的庇护所都只能依靠社群里自发形成的草根公益组织。"
+            },
+            "outputs": {}
+          },
+          "line_040": {
+            "id": "line_040",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "还有我自己的事。高中时，我们向家人打电话是限时的。电话那里挂着“少聊一分，提高一分，提高一分，干掉千人”的标语。我们从早上六点学到晚上十一点，高三的时候没有休息日，寒假只放十天左右。那时我们的宿舍，人均面积不如牢房大。我曾经认为那是正常的。刷题成为我唯一能证明自己有某种资格的方法。但是到底是什么资格，值得亿万人为此拼命竞争内卷？"
+            },
+            "outputs": {}
+          },
+          "line_041": {
+            "id": "line_041",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "不仅是高中，从上学起，从识字起，我的生活就局限在了两点一线，只有学习是值得认可的，而玩耍是不务正业。"
+            },
+            "outputs": {}
+          },
+          "line_042": {
+            "id": "line_042",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "可就算这样，我学得还是不够。如果我从小学习的范围足够广、足够深，我就会知道现实和妄想之间的区别——并且学会【清晰】地运用思维——我就会知道不该沉溺于妄想，哪怕妄想的对象是“正常生活”，是最大多数人平凡日常的生活。"
+            },
+            "outputs": {}
+          },
+          "cg_043": {
+            "id": "cg_043",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_h"
+            },
+            "outputs": {}
+          },
+          "line_044": {
+            "id": "line_044",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我错过了一些比“正常生活”更加奇异而美好的事。"
+            },
+            "outputs": {}
+          },
+          "line_045": {
+            "id": "line_045",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "似乎整个世界在遇到“正常”这个词时卡住了。我不知道为什么会这样，结构性问题？可结构在哪里呢？我不知道我能做什么。而且我曾经认为那是正常的。"
+            },
+            "outputs": {}
+          },
+          "line_046": {
+            "id": "line_046",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "还有那些烂梗，我说出口的那一刻，其实早就知道它会冒犯别人。"
+            },
+            "outputs": {}
+          },
+          "line_047": {
+            "id": "line_047",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "可是，为什么停不下来呢？"
+            },
+            "outputs": {}
+          },
+          "line_048": {
+            "id": "line_048",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "为什么呢？"
+            },
+            "outputs": {}
+          },
+          "line_049": {
+            "id": "line_049",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "outputs": {}
+          },
+          "cg_050": {
+            "id": "cg_050",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_o"
+            },
+            "outputs": {}
+          },
+          "line_051": {
+            "id": "line_051",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "我不知道那究竟是什么，但它确实叫我不能平静。它给我一种印象，仿佛我正坐在一间空荡荡的屋子隔壁，我知道那间屋子是空的，但不知为什么，我又觉得里面有一个人，叫我惊恐万状。"
+            },
+            "outputs": {}
+          },
+          "line_052": {
+            "id": "line_052",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你责骂你自己吧；你知道这只不过是你的神经在作祟——但是，但是……过一小会儿，你就再也不能抗拒那紧紧捕捉住你的恐惧了。你被握在一种无形的恐怖的掌心里，无法逃脱。"
+            },
+            "outputs": {}
+          },
+          "line_053": {
+            "id": "line_053",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "看看海水吧。你将看到——"
+            },
+            "outputs": {}
+          },
+          "cg_054": {
+            "id": "cg_054",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_5"
+            },
+            "outputs": {}
+          },
+          "line_055": {
+            "id": "line_055",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "大自然，既崇高又冷漠，既美丽又残忍……它使你感到空间的无限和时间的永恒，叫你产生一种畏惧的感觉。…… 我仿佛看到它们都有了灵魂，都各自有一个秘密，仿佛它们的灵魂和秘密眼看就要被我抓到手里，但又总是被它们逃脱掉。那些颜色都是我熟悉的颜色，可是又有所不同；它们都具有自己的独特的重要性。而那些赤身裸体的男男女女，他们既都是尘寰的、是他们揉捏而成的尘土，又都是神灵。人的最原始的天性赤裸裸地呈现在你眼前，你看到的时候不由得感到恐惧，因为你看到的是你自己。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "line_001",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "line_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_005",
+            "fromPort": "flowOut",
+            "toNodeId": "line_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "line_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "line_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_014",
+            "fromPort": "flowOut",
+            "toNodeId": "line_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "line_018",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_018",
+            "fromPort": "flowOut",
+            "toNodeId": "line_019",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_019",
+            "fromPort": "flowOut",
+            "toNodeId": "line_020",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_020",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_021",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_021",
+            "fromPort": "flowOut",
+            "toNodeId": "line_022",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_022",
+            "fromPort": "flowOut",
+            "toNodeId": "line_023",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_023",
+            "fromPort": "flowOut",
+            "toNodeId": "line_024",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_024",
+            "fromPort": "flowOut",
+            "toNodeId": "line_025",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_025",
+            "fromPort": "flowOut",
+            "toNodeId": "line_026",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_026",
+            "fromPort": "flowOut",
+            "toNodeId": "line_027",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_027",
+            "fromPort": "flowOut",
+            "toNodeId": "line_028",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_028",
+            "fromPort": "flowOut",
+            "toNodeId": "line_029",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_029",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_030",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_030",
+            "fromPort": "flowOut",
+            "toNodeId": "line_031",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_031",
+            "fromPort": "flowOut",
+            "toNodeId": "line_032",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_032",
+            "fromPort": "flowOut",
+            "toNodeId": "line_033",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_033",
+            "fromPort": "flowOut",
+            "toNodeId": "line_034",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_034",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_035",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_035",
+            "fromPort": "flowOut",
+            "toNodeId": "line_036",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_036",
+            "fromPort": "flowOut",
+            "toNodeId": "line_037",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_037",
+            "fromPort": "flowOut",
+            "toNodeId": "line_038",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_038",
+            "fromPort": "flowOut",
+            "toNodeId": "line_039",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_039",
+            "fromPort": "flowOut",
+            "toNodeId": "line_040",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_040",
+            "fromPort": "flowOut",
+            "toNodeId": "line_041",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_041",
+            "fromPort": "flowOut",
+            "toNodeId": "line_042",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_042",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_043",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_043",
+            "fromPort": "flowOut",
+            "toNodeId": "line_044",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_044",
+            "fromPort": "flowOut",
+            "toNodeId": "line_045",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_045",
+            "fromPort": "flowOut",
+            "toNodeId": "line_046",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_046",
+            "fromPort": "flowOut",
+            "toNodeId": "line_047",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_047",
+            "fromPort": "flowOut",
+            "toNodeId": "line_048",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_048",
+            "fromPort": "flowOut",
+            "toNodeId": "line_049",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_049",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_050",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_050",
+            "fromPort": "flowOut",
+            "toNodeId": "line_051",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_051",
+            "fromPort": "flowOut",
+            "toNodeId": "line_052",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_052",
+            "fromPort": "flowOut",
+            "toNodeId": "line_053",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_053",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_054",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_054",
+            "fromPort": "flowOut",
+            "toNodeId": "line_055",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_055",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      }
     },
     {
       "id": "自杀结局",
@@ -226,12 +2990,164 @@
             "inputs": {},
             "outputs": {}
           },
-          "text": {
-            "id": "text",
+          "cg_001": {
+            "id": "cg_001",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ey7w5j_8"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
             "type": "text",
             "inputs": {
-              "speaker": "narrator",
-              "text": "欢迎来到医院。至少这里暂时没人要求你解释发生了什么。"
+              "speaker": "binbin",
+              "text": "你醒了？"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "彬彬？头……有点晕……我刚才是低血糖晕倒了吗？"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "是也不是。"
+            },
+            "outputs": {}
+          },
+          "line_005": {
+            "id": "line_005",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "等一下……我在哪里？你……要做什么？"
+            },
+            "outputs": {}
+          },
+          "line_006": {
+            "id": "line_006",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "你们这些邪教徒，不准备演了？是不是现在要把我献祭给你们不可名状的神？"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "傻孩子，你怕是发神经了，说什么胡话呢。"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "是啊是啊，你最近一直精神状态不对劲。"
+            },
+            "outputs": {}
+          },
+          "line_009": {
+            "id": "line_009",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "可能是刷题刷疯了。"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "而且你半夜翻我们东西，我们也注意到了，不知道是不是梦游。"
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "梦游的话感觉有点危险啊。"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "你的调查笔记，并没有藏得很好呢。我都看到了，但是其实我们真不是邪教徒……"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "医者不能自医，你可能治着治着病，就把自己搞精神病了。"
+            },
+            "outputs": {}
+          },
+          "line_014": {
+            "id": "line_014",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "然后刚才你在宿舍突然晕倒了。总之我们三个决定打120把你送到医院，住院治疗。"
+            },
+            "outputs": {}
+          },
+          "line_015": {
+            "id": "line_015",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "别骗我，我是清醒的！你们才是疯子，邪教徒！……"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "额，主任，总之就是这么个情况。您……看着办吧。"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "总之是把他送过来了。我们几个才疏学浅，治他的精神病还得需要专业团队。"
+            },
+            "outputs": {}
+          },
+          "line_018": {
+            "id": "line_018",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "吃人的书！血祭的证据！所有线索都对上了，GTP说我是对的，你们骗不了我……"
             },
             "outputs": {}
           },
@@ -240,38 +3156,495 @@
             "type": "scheduleEnd",
             "inputs": {},
             "outputs": {}
-          },
-          "__prerequisite__": {
-            "id": "__prerequisite__",
-            "type": "prerequisite",
-            "inputs": {
-              "condition": true
-            },
-            "outputs": {},
-            "x": 80,
-            "y": 240
-          },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
-            "inputs": {
-              "expires": false,
-              "expiresAt": 0
-            },
-            "outputs": {},
-            "x": 80,
-            "y": 360
           }
         },
         "connections": [
           {
             "fromNodeId": "start",
             "fromPort": "flowOut",
-            "toNodeId": "text",
+            "toNodeId": "cg_001",
             "toPort": "flowIn"
           },
           {
-            "fromNodeId": "text",
+            "fromNodeId": "cg_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "line_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_005",
+            "fromPort": "flowOut",
+            "toNodeId": "line_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "line_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "line_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_014",
+            "fromPort": "flowOut",
+            "toNodeId": "line_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "line_018",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_018",
+            "fromPort": "flowOut",
+            "toNodeId": "end",
+            "toPort": "flowIn"
+          }
+        ]
+      },
+      "text": "你被送进医院接受治疗。"
+    },
+    {
+      "id": "凡俗",
+      "title": "凡俗",
+      "displayName": "好结局：凡俗",
+      "text": "宿舍里充满了快活的空气。",
+      "blueprint": {
+        "startNodeId": "start",
+        "nodes": {
+          "start": {
+            "id": "start",
+            "type": "flowStart",
+            "inputs": {},
+            "outputs": {}
+          },
+          "cg_001": {
+            "id": "cg_001",
+            "type": "showCg",
+            "inputs": {
+              "cgId": "cg_ewexmk_d"
+            },
+            "outputs": {}
+          },
+          "line_002": {
+            "id": "line_002",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "真是充实的一周。"
+            },
+            "outputs": {}
+          },
+          "line_003": {
+            "id": "line_003",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "虽然发生了些奇怪的事，但似乎并没有什么影响。也许只是我疑神疑鬼，虚惊一场。"
+            },
+            "outputs": {}
+          },
+          "line_004": {
+            "id": "line_004",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "过几天就要执业医师考试了，我得多刷点题。"
+            },
+            "outputs": {}
+          },
+          "line_005": {
+            "id": "line_005",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "……"
+            },
+            "outputs": {}
+          },
+          "line_006": {
+            "id": "line_006",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "嗨害嗨，今天想不想吃火锅啊？"
+            },
+            "outputs": {}
+          },
+          "line_007": {
+            "id": "line_007",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "额，你们都不复习的吗？"
+            },
+            "outputs": {}
+          },
+          "line_008": {
+            "id": "line_008",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "可是涮肉好好吃。"
+            },
+            "outputs": {}
+          },
+          "line_009": {
+            "id": "line_009",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "嗯嗯，猩红果实为引，动物尸片为祭，确实好吃。"
+            },
+            "outputs": {}
+          },
+          "line_010": {
+            "id": "line_010",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "哎哎，你别吓我。"
+            },
+            "outputs": {}
+          },
+          "line_011": {
+            "id": "line_011",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "这个彬彬就是逊啦。"
+            },
+            "outputs": {}
+          },
+          "line_012": {
+            "id": "line_012",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "牢kp发力了。说实话，我前几天真怀疑你们……算了不说了"
+            },
+            "outputs": {}
+          },
+          "line_013": {
+            "id": "line_013",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "所以你们真不想吃火锅？"
+            },
+            "outputs": {}
+          },
+          "line_014": {
+            "id": "line_014",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "杰哥不要，我也得复习呢。"
+            },
+            "outputs": {}
+          },
+          "line_015": {
+            "id": "line_015",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "那要不这样，咱考完试再一起去吃？"
+            },
+            "outputs": {}
+          },
+          "line_016": {
+            "id": "line_016",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "嗯……要么咱现在一起去图书馆自习吧。"
+            },
+            "outputs": {}
+          },
+          "line_017": {
+            "id": "line_017",
+            "type": "text",
+            "inputs": {
+              "speaker": "player",
+              "text": "同意。这个宿舍的环境，还是有点让人静不下心。"
+            },
+            "outputs": {}
+          },
+          "line_018": {
+            "id": "line_018",
+            "type": "text",
+            "inputs": {
+              "speaker": "阿杰",
+              "text": "gogogo出发喽！"
+            },
+            "outputs": {}
+          },
+          "line_019": {
+            "id": "line_019",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "学就学，不学的是gay！"
+            },
+            "outputs": {}
+          },
+          "line_020": {
+            "id": "line_020",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "我都说了，别当我面玩这种烂梗……"
+            },
+            "outputs": {}
+          },
+          "line_021": {
+            "id": "line_021",
+            "type": "text",
+            "inputs": {
+              "speaker": "awei",
+              "text": "老大我错了。"
+            },
+            "outputs": {}
+          },
+          "line_022": {
+            "id": "line_022",
+            "type": "text",
+            "inputs": {
+              "speaker": "binbin",
+              "text": "算了，知错能改，善莫大焉，本教主宽宏大量，这次原谅你们，下次可就不一定喽。"
+            },
+            "outputs": {}
+          },
+          "line_023": {
+            "id": "line_023",
+            "type": "text",
+            "inputs": {
+              "speaker": "narrator",
+              "text": "宿舍里充满了快活的空气。"
+            },
+            "outputs": {}
+          },
+          "end": {
+            "id": "end",
+            "type": "scheduleEnd",
+            "inputs": {},
+            "outputs": {}
+          }
+        },
+        "connections": [
+          {
+            "fromNodeId": "start",
+            "fromPort": "flowOut",
+            "toNodeId": "cg_001",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "cg_001",
+            "fromPort": "flowOut",
+            "toNodeId": "line_002",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_002",
+            "fromPort": "flowOut",
+            "toNodeId": "line_003",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_003",
+            "fromPort": "flowOut",
+            "toNodeId": "line_004",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_004",
+            "fromPort": "flowOut",
+            "toNodeId": "line_005",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_005",
+            "fromPort": "flowOut",
+            "toNodeId": "line_006",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_006",
+            "fromPort": "flowOut",
+            "toNodeId": "line_007",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_007",
+            "fromPort": "flowOut",
+            "toNodeId": "line_008",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_008",
+            "fromPort": "flowOut",
+            "toNodeId": "line_009",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_009",
+            "fromPort": "flowOut",
+            "toNodeId": "line_010",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_010",
+            "fromPort": "flowOut",
+            "toNodeId": "line_011",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_011",
+            "fromPort": "flowOut",
+            "toNodeId": "line_012",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_012",
+            "fromPort": "flowOut",
+            "toNodeId": "line_013",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_013",
+            "fromPort": "flowOut",
+            "toNodeId": "line_014",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_014",
+            "fromPort": "flowOut",
+            "toNodeId": "line_015",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_015",
+            "fromPort": "flowOut",
+            "toNodeId": "line_016",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_016",
+            "fromPort": "flowOut",
+            "toNodeId": "line_017",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_017",
+            "fromPort": "flowOut",
+            "toNodeId": "line_018",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_018",
+            "fromPort": "flowOut",
+            "toNodeId": "line_019",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_019",
+            "fromPort": "flowOut",
+            "toNodeId": "line_020",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_020",
+            "fromPort": "flowOut",
+            "toNodeId": "line_021",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_021",
+            "fromPort": "flowOut",
+            "toNodeId": "line_022",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_022",
+            "fromPort": "flowOut",
+            "toNodeId": "line_023",
+            "toPort": "flowIn"
+          },
+          {
+            "fromNodeId": "line_023",
             "fromPort": "flowOut",
             "toNodeId": "end",
             "toPort": "flowIn"

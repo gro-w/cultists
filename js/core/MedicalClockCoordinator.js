@@ -8,7 +8,9 @@ class MedicalClockCoordinator {
   constructor() {
     this._processing = false;
     this._unsubscribeTime = eventBus.on("time:changed", () => this.processDue());
-    this._unsubscribeSettlement = eventBus.on("day:settled", (result) => this.settleDay(result));
+    this._unsubscribeSettlement = eventBus.on("day:settled", (result) => {
+      result.medical = this.settleDay(result);
+    });
   }
 
   processDue() {

@@ -18,7 +18,7 @@ import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
-import "./core/ItemActivityRuntime.js"; // side-effect: executes item-owned activities
+import "./core/ActivityTriggerRouter.js"; // routes domain activity requests
 import "./core/SocialActivityPolicy.js"; // side-effect: social completion consequences
 import { mainActivityRuntime } from "./core/MainActivityRuntime.js";
 

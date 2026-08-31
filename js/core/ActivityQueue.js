@@ -4,6 +4,11 @@ import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
 const globalSequenceByActivity = new Map();
 const VALID_STATUSES = new Set(["unresolved", "resolved"]);
 
+function cloneData(value) {
+  if (value == null) return value;
+  return JSON.parse(JSON.stringify(value));
+}
+
 class ActivityQueue {
   constructor(queueId, options = {}) {
     this.queueId = queueId;
@@ -24,7 +29,7 @@ class ActivityQueue {
         ...entry,
         queueId: this.queueId,
         activityId,
-        payload: entry.payload || entry,
+        payload: cloneData(entry.payload || entry),
         instanceId: entry.instanceId || `${activityId}:${sequence + 1}`,
         status: entry.status === "resolved" || entry.status === "completed" ? "resolved" : "unresolved",
         currentNodeId: entry.currentNodeId || entry.payload?.currentNodeId || entry.payload?.blueprint?.startNodeId || entry.payload?.startNodeId || null,
@@ -114,6 +119,10 @@ class ActivityQueue {
       if (!entry.payload || typeof entry.payload !== "object" || Array.isArray(entry.payload)) throw new Error("Invalid activity definition payload");
       if (entry.currentNodeId != null && typeof entry.currentNodeId !== "string") throw new Error("Invalid activity current node");
       if (!Array.isArray(entry.transcript)) throw new Error("Invalid activity transcript");
+      if (entry.executedNodeIds !== undefined
+        && (!Array.isArray(entry.executedNodeIds) || entry.executedNodeIds.some((id) => typeof id !== "string"))) {
+        throw new Error("Invalid executed activity nodes");
+      }
       seen.add(entry.instanceId);
       return { ...entry, queueId: this.queueId, executedNodeIds: Array.isArray(entry.executedNodeIds) ? [...entry.executedNodeIds] : [], transcript: [...entry.transcript] };
     });

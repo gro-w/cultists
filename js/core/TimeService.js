@@ -2,6 +2,7 @@ import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 import "./ActivityClockCoordinator.js";
+import "./MedicalClockCoordinator.js";
 
 
 const ACTION_INTERVAL_MINUTES = 20;

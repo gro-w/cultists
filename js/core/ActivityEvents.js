@@ -4,6 +4,7 @@ export const ACTIVITY_EVENTS = Object.freeze({
   resolved: "activity:resolved",
   completed: "activity:completed",
   triggered: "activity:triggered",
+  requested: "activity:requested",
   image: "activity:image",
   cg: "activity:cg",
   endCg: "activity:end_cg",

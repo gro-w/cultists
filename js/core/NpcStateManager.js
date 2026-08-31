@@ -3,6 +3,7 @@ import { dataLoader } from "./DataLoader.js";
 import { itemManager } from "./ItemManager.js";
 import { mainQueue } from "./ActivityQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
+import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
 
 function clamp(value) {
   return Math.max(0, Math.min(256, Number(value) || 0));
@@ -132,7 +133,7 @@ class NpcStateManager {
       action: "offline",
       status: "unresolved",
     };
-    eventBus.emit("activity:triggered", {
+    eventBus.emit(ACTIVITY_EVENTS.requested, {
       source: "npc",
       actorId,
       action: "offline",

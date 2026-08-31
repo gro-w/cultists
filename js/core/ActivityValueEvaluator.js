@@ -41,6 +41,10 @@ export class ActivityValueEvaluator {
     return result;
   }
 
+  invalidate() {
+    this.cache.clear();
+  }
+
   readInput(nodeId, name, fallback = undefined) {
     const node = this.blueprint.nodes?.[nodeId];
     const connection = (this.blueprint.connections || []).find((item) => item.toNodeId === nodeId && item.toPort === name);

@@ -43,6 +43,30 @@ class ActivityExecutionService {
     return queue?.complete(instanceId) || false;
   }
 
+  get(instanceId) {
+    return this.runners.get(instanceId) || null;
+  }
+
+  pause(instanceId) {
+    return this.get(instanceId)?.pause() || false;
+  }
+
+  resume(instanceId) {
+    return this.get(instanceId)?.resume() || false;
+  }
+
+  cancel(instanceId) {
+    const runner = this.runners.get(instanceId);
+    if (!runner) return false;
+    runner.cancel();
+    this.runners.delete(instanceId);
+    return true;
+  }
+
+  checkpoint(queue, instanceId, patch = {}) {
+    return queue?.updateInstance(instanceId, patch) || false;
+  }
+
   beginRestore() {
     this.restoring = true;
     this.runners.forEach((runner) => runner.cancel());

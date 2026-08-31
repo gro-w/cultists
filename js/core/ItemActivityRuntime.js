@@ -87,9 +87,5 @@ export function runItemActivity(payload = {}) {
 }
 
 export const itemActivityRuntime = {
-  subscribe() {
-    return eventBus.on("activity:triggered", runItemActivity);
-  },
+  run: runItemActivity,
 };
-
-itemActivityRuntime.subscribe();

@@ -1,5 +1,6 @@
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
+import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
 
 /**
  * SpellManager — singleton holding the protagonist's learned spells.
@@ -84,7 +85,7 @@ class SpellManager {
       this.seasideCastDay = gameState.day;
       eventBus.emit("spells:changed", this.snapshot());
     }
-    eventBus.emit("activity:triggered", {
+    eventBus.emit(ACTIVITY_EVENTS.requested, {
       source: "spell",
       spell,
       action: "use",

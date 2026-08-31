@@ -1,4 +1,5 @@
 import { eventBus } from "./EventBus.js";
+import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
@@ -111,7 +112,7 @@ class ItemManager {
 
   _emitItemActivity(id, action, context = {}) {
     const blueprint = this.activityFor(id, action);
-    eventBus.emit("activity:triggered", { source: "item", itemId: id, action, activityId: `${id}:${action}`, blueprint, context });
+    eventBus.emit(ACTIVITY_EVENTS.requested, { source: "item", itemId: id, action, activityId: `${id}:${action}`, blueprint, context });
   }
 
   /** Replace the whole inventory (used by SaveManager when restoring a save). */

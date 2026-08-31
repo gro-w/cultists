@@ -18,6 +18,7 @@ const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
   { suffix: "b", time: 16 * 60 },
 ];
+let temporarySequence = 0;
 
 function inRange(value, min, max) {
   return (min == null || value >= Number(min)) && (max == null || value <= Number(max));
@@ -428,7 +429,7 @@ class ActivityData {
     const day = Number.isInteger(received.day) ? received.day : gameState.day;
     const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
     const targetQueueId = queueId || "main";
-    const activityId = `temporary:${Date.now()}`;
+    const activityId = `temporary:${++temporarySequence}`;
     const [instance] = this.queue(targetQueueId).append({
       activityId,
       payload: { id: activityId, blueprint: JSON.parse(JSON.stringify(blueprint)) },

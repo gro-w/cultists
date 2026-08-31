@@ -23,7 +23,7 @@ function inputValue(blueprint, node, name, evaluator, fallback) {
 
 function nextFlow(blueprint, node, port = "flowOut") {
   const connection = (blueprint.connections || []).find((item) => item.fromNodeId === node.id && item.fromPort === port);
-  return connection?.toNodeId || node.next || null;
+  return connection ? connection.toNodeId : (port === "flowOut" ? node.next || null : null);
 }
 
 function nextDynamicFlow(blueprint, node, port) {
@@ -31,6 +31,10 @@ function nextDynamicFlow(blueprint, node, port) {
   if (selected) return selected.toNodeId;
   const fallback = (blueprint.connections || []).find((item) => item.fromNodeId === node.id && item.fromPort === "default");
   return fallback?.toNodeId || null;
+}
+
+function hasFlowConnection(blueprint, node, port) {
+  return (blueprint.connections || []).some((item) => item.fromNodeId === node.id && item.fromPort === port);
 }
 
 export class ActivityRunner {
@@ -57,6 +61,7 @@ export class ActivityRunner {
     this._waitUntilUnsubscribers = [];
     this._waitUntilEvaluating = false;
     this._cancelled = false;
+    this._paused = false;
     this.evaluator = new ActivityValueEvaluator(this.blueprint, {
       activityStatus: (instanceId) => this._activityStatus(instanceId),
       activityInstanceCount: (activityId) => this._activityInstanceCount(activityId),
@@ -67,6 +72,7 @@ export class ActivityRunner {
 
   start(nodeId = this.instance.currentNodeId || this.blueprint.startNodeId) {
     if (this._cancelled) return { ok: false, cancelled: true };
+    if (this._paused) return { ok: false, paused: true };
     if (this.instance.status === "resolved") {
       this._renderTranscript();
       return { ok: true, readOnly: true };
@@ -76,7 +82,7 @@ export class ActivityRunner {
   }
 
   _run(nodeId) {
-    if (this._cancelled) return;
+    if (this._cancelled || this._paused) return;
     let current = nodeId;
     let guard = 0;
     while (current && guard++ < 1000) {
@@ -102,7 +108,7 @@ export class ActivityRunner {
         return;
       }
       if (result?.wait) {
-        const next = result.next || nextFlow(this.blueprint, node);
+        const next = Object.prototype.hasOwnProperty.call(result, "next") ? result.next : nextFlow(this.blueprint, node);
         this.instance.executedNodeIds.push(node.id);
         this.instance.currentNodeId = next || null;
         this.onCheckpoint(this.instance);
@@ -114,7 +120,9 @@ export class ActivityRunner {
         return;
       }
       if (result?.stop) return;
-      current = result?.next || nextFlow(this.blueprint, node);
+      current = result && Object.prototype.hasOwnProperty.call(result, "next")
+        ? result.next
+        : nextFlow(this.blueprint, node);
       this.instance.executedNodeIds.push(node.id);
       this.instance.currentNodeId = current || null;
       this.onCheckpoint(this.instance);
@@ -184,11 +192,11 @@ export class ActivityRunner {
         return {};
       }
       case "insertActivity": {
-        this.effects.insertActivity(get("activityId"), get("addTime"), get("queue"), {
+        const result = this.effects.insertActivity(get("activityId"), get("addTime"), get("queue"), {
           respectPrerequisite: get("respectPrerequisite", true),
           protectFromExpiry: get("protectFromExpiry", false),
         });
-        if (!result.ok) throw new Error(`Insert activity failed: ${result.reason}`);
+        if (result && result.ok === false) throw new Error(`Insert activity failed: ${result.reason}`);
         return {};
       }
       case "showCg": eventBus.emit(ACTIVITY_EVENTS.cg, { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
@@ -303,8 +311,9 @@ export class ActivityRunner {
         this.optionsEl.innerHTML = "";
         // Typed blueprint connections are authoritative. Legacy option.next
         // values may refer to pre-migration node IDs that no longer exist.
-        const next = nextDynamicFlow(this.blueprint, node, `option${index}`)
-          || option.next || option.target;
+        const next = hasFlowConnection(this.blueprint, node, `option${index}`)
+          ? nextDynamicFlow(this.blueprint, node, `option${index}`)
+          : (option.next || option.target || null);
         this.instance.executedNodeIds.push(node.id);
         this.instance.currentNodeId = next || null;
         this.onCheckpoint(this.instance);
@@ -371,7 +380,10 @@ export class ActivityRunner {
       if (this._waitUntilEvaluating || this.instance.status === "resolved") return;
       this._waitUntilEvaluating = true;
       try {
-        if (this.blueprint.nodes?.[nodeId]) this._run(nodeId);
+        if (this.blueprint.nodes?.[nodeId]) {
+          this.evaluator.invalidate();
+          this._run(nodeId);
+        }
       } finally {
         this._waitUntilEvaluating = false;
       }
@@ -388,6 +400,19 @@ export class ActivityRunner {
     this._cancelled = true;
     this._clearWaitUntil();
     if (this.optionsEl) this.optionsEl.innerHTML = "";
+  }
+
+  pause() {
+    if (this._cancelled || this.instance.status === "resolved") return false;
+    this._paused = true;
+    return true;
+  }
+
+  resume() {
+    if (this._cancelled || this.instance.status === "resolved") return false;
+    this._paused = false;
+    this._run(this.instance.waitingNodeId || this.instance.currentNodeId || this.blueprint.startNodeId);
+    return true;
   }
 
   _activityStatus(instanceId) {

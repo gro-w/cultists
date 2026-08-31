@@ -1073,12 +1073,15 @@ export class DevDialogueEditorTab {
       for (let index = 0; index < count; index += 1) valueInputs.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
     if (node.type === 'segmentBranch') {
-      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount))
-        ? Number(node.inputs.branchCount)
-        : Math.max(1, ...(connections
-          .filter(item => item.fromNodeId === node.id && item.fromPort?.startsWith('segment'))
-          .map(item => Number(item.fromPort.slice(7)) + 1)
-          .filter(Number.isFinite))));
+      const connectedSegments = connections
+        .filter(item => item.fromNodeId === node.id && item.fromPort?.startsWith('segment'))
+        .map(item => Number(item.fromPort.slice(7)) + 1)
+        .filter(Number.isFinite);
+      const configuredCount = Number(node.inputs?.branchCount);
+      const inferredCount = connectedSegments.length ? Math.max(...connectedSegments) : 1;
+      const count = Number.isInteger(configuredCount)
+        ? Math.max(1, Math.min(32, configuredCount))
+        : Math.max(1, Math.min(32, inferredCount));
       for (let index = 1; index <= count; index += 1) valueInputs.push({ name: `boundary${index}`, kind: 'value', type: 'number' });
     }
     const html=valueInputs.map(port => {

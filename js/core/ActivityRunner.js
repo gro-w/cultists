@@ -132,7 +132,10 @@ export class ActivityRunner {
   }
 
   _execute(node) {
-    const get = (name, fallback) => inputValue(this.blueprint, node, name, this.evaluator, fallback);
+    const get = (name, fallback) => inputValue(this.blueprint, node, name, this.evaluator,
+      Object.prototype.hasOwnProperty.call(this.definition.inputValues || {}, name)
+        ? this.definition.inputValues[name]
+        : fallback);
     if (node.onShow && node.type !== "statOperation") {
       applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
     }
@@ -210,6 +213,27 @@ export class ActivityRunner {
           displayReceiverManager.dispatch(displayTo, payload);
           eventBus.emit(ACTIVITY_EVENTS.image, payload);
         }
+        return {};
+      }
+      case "uiSetText": {
+        this.effects.uiSetText(String(get("widgetId", "")), String(get("value", "")));
+        return {};
+      }
+      case "uiSetValue": {
+        this.effects.uiSetValue(String(get("widgetId", "")), get("value", ""));
+        return {};
+      }
+      case "uiSetOptions": {
+        this.effects.uiSetOptions(String(get("widgetId", "")), get("options", []));
+        return {};
+      }
+      case "hisRefresh": this.effects.hisRefresh?.(String(get("query", ""))); return {};
+      case "hisSelectPatient": this.effects.hisSelectPatient?.(String(get("patientId", ""))); return {};
+      case "hisRenderDiagnosis": this.effects.hisRenderDiagnosis?.(); return {};
+      case "hisRenderPrescription": this.effects.hisRenderPrescription?.(); return {};
+      case "hisSubmit": {
+        const result = this.effects.hisSubmit?.(String(get("diagnosisId", "")), get("medicineIds", []));
+        if (result) this.instance.result = result;
         return {};
       }
       case "segmentBranch": {

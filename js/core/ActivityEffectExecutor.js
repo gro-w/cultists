@@ -6,6 +6,7 @@ import { modifyStatValue } from "./ActivityValueAccess.js";
 import { spellManager } from "./SpellManager.js";
 import { spellEffectManager } from "./SpellEffectManager.js";
 import { endingManager } from "./EndingManager.js";
+import { medicalCaseManager } from "./MedicalCaseManager.js";
 
 /** Domain-side operations used by ActivityRunner, kept out of flow traversal. */
 export class ActivityEffectExecutor {
@@ -49,6 +50,12 @@ export class ActivityEffectExecutor {
   }
 
   ending(endingId) { endingManager.trigger(endingId); }
+
+  submitMedical(patient, diagnosis, medicineIds) {
+    const result = medicalCaseManager.submit({ patient, diagnosis, medicineIds });
+    if (!result.ok) throw new Error(`Medical submission failed: ${result.reason}`);
+    return result;
+  }
 }
 
 export const activityEffectExecutor = new ActivityEffectExecutor();

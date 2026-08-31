@@ -1,0 +1,8 @@
+[
+  {
+    "id": "his_custom",
+    "title": "自定义 HIS 原型",
+    "icon": "🏥",
+    "file": "app_his_custom.json"
+  }
+]

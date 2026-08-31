@@ -283,5 +283,54 @@
 .dev-cg-preview { min-height:40px; display:flex; align-items:center; }
 .dev-cg-thumb { max-height:120px; max-width:100%; object-fit:contain; border:1px solid #aaa; cursor:zoom-in; }
 .dev-cg-no-img { color:#aaa; font-size:11px; font-style:italic; }
+
+/* custom window manager/layout editor */
+.dev-cwm-root, .dev-cw-root { display:flex; flex-direction:column; min-height:0; height:100%; gap:6px; }
+.dev-cwm-toolbar, .dev-cw-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:5px; padding-bottom:6px; border-bottom:1px solid #808080; }
+.dev-cwm-toolbar span, .dev-cw-file { margin-left:auto; color:#555; font-size:11px; }
+.dev-cwm-help, .dev-cw-help, .dev-cw-note { color:#555; font-size:11px; margin:2px 0; }
+.dev-cwm-list { display:grid; gap:5px; overflow:auto; }
+.dev-cwm-row { display:flex; align-items:center; gap:7px; padding:6px; background:#fff; border:1px solid #808080; cursor:default; }
+.dev-cwm-row:hover { background:#d8e8ff; }
+.dev-cwm-row strong { min-width:150px; color:#000080; }
+.dev-cwm-row small { flex:1; color:#555; font:11px var(--w95-font); }
+.dev-cwm-icon { font-size:22px; }
+.dev-cwm-empty, .dev-cw-empty { color:#777; padding:14px; }
+.dev-cw-main { display:flex; flex:1; min-height:0; overflow:hidden; gap:6px; }
+.dev-cw-sidebar, .dev-cw-inspector { width:205px; min-width:180px; overflow:auto; padding:6px; background:#d4d0c8; border:1px solid #808080; box-sizing:border-box; }
+.dev-cw-sidebar h4, .dev-cw-inspector h4, .dev-cw-inspector h5 { margin:3px 0 6px; color:#000080; }
+.dev-cw-sidebar label, .dev-cw-inspector label { display:flex; flex-direction:column; gap:2px; margin:5px 0; font-size:11px; }
+.dev-cw-sidebar input, .dev-cw-inspector input, .dev-cw-inspector select { min-height:22px; box-sizing:border-box; border:2px inset #eee; }
+.dev-cw-widget-list { display:grid; gap:3px; }
+.dev-cw-widget-row { padding:4px; border:1px solid transparent; cursor:pointer; font-size:11px; }
+.dev-cw-widget-row:hover, .dev-cw-widget-row.active { background:#000080; color:#fff; }
+.dev-cw-widget-row small { display:block; opacity:.75; }
+.dev-cw-canvas-wrap { flex:1; min-width:0; overflow:auto; background:#808080; padding:12px; }
+.dev-cw-canvas { position:relative; flex:none; border:2px inset #eee; box-shadow:1px 1px #fff; overflow:hidden; }
+.dev-cw-widget { position:absolute; box-sizing:border-box; padding:5px; border:1px solid #777; background:#eee; cursor:move; overflow:hidden; user-select:none; touch-action:none; }
+.dev-cw-widget.selected { outline:2px solid #000080; z-index:2; }
+.dev-cw-widget > input, .dev-cw-widget > textarea, .dev-cw-widget > select { width:100%; height:100%; box-sizing:border-box; pointer-events:none; }
+.dev-cw-widget > button { pointer-events:none; }
+.dev-cw-widget-badge { position:absolute; right:2px; bottom:1px; color:#666; font-size:9px; opacity:.7; }
+.dev-cw-his-preview { display:flex; gap:6px; height:100%; overflow:visible; }
+.dev-cw-his-preview > .dev-cw-widget { position:static; box-sizing:border-box; }
+.dev-cw-his-preview > [data-cw-widget="patient-list"] { width:140px; flex:0 0 140px; display:flex; flex-direction:column; gap:4px; padding:6px; background:#fff; }
+.dev-cw-his-main { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
+.dev-cw-his-main > .dev-cw-widget { position:static; box-sizing:border-box; }
+.dev-cw-his-main > [data-cw-widget="medical-incidents"] { padding:0; border:0; background:transparent; }
+.dev-cw-his-main > [data-cw-widget="dialogue"],
+.dev-cw-his-main > [data-cw-widget="prescription"] { flex:1; min-height:60px; padding:6px; background:#fff; overflow:auto; }
+.dev-cw-his-main > [data-cw-widget="diagnosis-panel"] { flex-shrink:0; padding:6px; background:#fff; }
+.dev-cw-his-preview .dev-cw-widget[data-cw-widget] .dev-cw-widget { position:static; width:auto; height:auto; margin:4px 0; }
+.dev-cw-his-preview .diagnosis-row { display:flex; align-items:center; gap:4px; margin:4px 0; }
+.dev-cw-his-preview .diagnosis-row label { width:42px; flex-shrink:0; }
+.dev-cw-his-preview .diagnosis-row .dev-cw-widget { flex:1; min-width:0; }
+.dev-cw-his-preview .his-prescription-row { display:flex; align-items:center; gap:4px; margin:4px 0; }
+.dev-cw-his-preview .his-prescription-row .dev-cw-widget { flex:1; min-width:0; }
+.dev-cw-his-preview .his-prescription-row > button { flex:0 0 24px; min-width:24px; padding:1px 4px; }
+.dev-cw-event-row { display:flex; align-items:end; gap:3px; }
+.dev-cw-event-row label { flex:1; }
+.dev-cw-event-row .dev-btn { white-space:nowrap; }
+.dev-cw-geometry { display:grid; grid-template-columns:1fr 1fr; gap:3px 6px; }
 /* DEV-TOOLS:END */
 

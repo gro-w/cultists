@@ -46,6 +46,7 @@ import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
 import { launchCalendarApp } from "./apps/CalendarApp.js";
 import { launchTurtleSoup } from "./apps/TurtleSoupApp.js";
+import { launchCustomWindowApp } from "./apps/CustomWindowApp.js";
 import { turtleSoupManager } from "./core/TurtleSoupManager.js";
 // DEV-TOOLS:START
 import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
@@ -114,6 +115,7 @@ let locationScene = null;
 
 const APP_REGISTRY = [
   { id: "his", label: () => i18n.t("apps.his", "HIS 医疗系统"), icon: "🏥", launch: () => launchHISApp() },
+  { id: "his_custom", label: "自定义 HIS 原型", icon: "🏥", launch: () => launchCustomWindowApp("his_custom") },
   { id: "social", label: () => i18n.t("apps.social", "夜聊 Messenger"), icon: "💬", launch: () => launchSocialApp() },
   { id: "chatgtp", label: () => i18n.t("apps.chatgtp", "ChatGTP"), icon: "🤖", launch: () => launchChatGTPApp() },
   { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },

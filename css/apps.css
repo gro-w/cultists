@@ -36,6 +36,32 @@
 /* ---------------------------------------------------------------------- */
 /* HIS App                                                                 */
 /* ---------------------------------------------------------------------- */
+.custom-window-app { height: 100%; overflow: auto; padding: 8px; box-sizing: border-box; background: #c0c0c0; color: #111; font: 13px var(--w95-font); }
+.custom-window-canvas { position: relative; min-width: 260px; min-height: 160px; border: 2px inset #eee; box-shadow: 1px 1px #fff; overflow: hidden; }
+.custom-window-widget { position: absolute; box-sizing: border-box; padding: 4px; }
+.custom-window-app.app-his { padding: 0; overflow: visible; }
+.custom-window-app.app-his .custom-window-canvas { min-width: 0; min-height: 0; overflow: visible; }
+.custom-window-app.app-his .his-layout { display: flex; gap: 6px; height: 100%; }
+.custom-window-app.app-his .custom-window-widget { position: static; box-sizing: border-box; }
+.custom-window-app.app-his .custom-window-widget.his-patient-list { display: flex; flex-direction: column; gap: 4px; }
+.custom-window-app.app-his .custom-window-widget.his-dialogue,
+.custom-window-app.app-his .custom-window-widget.his-diagnosis,
+.custom-window-app.app-his .custom-window-widget.his-prescription { padding: 6px; overflow: auto; }
+.custom-window-app.app-his .custom-window-widget.his-patient-list { padding: 6px; overflow: auto; }
+.custom-window-app.app-his .custom-window-widget.his-diagnosis { flex-shrink: 0; }
+.custom-window-app.app-his .his-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.custom-window-app.app-his .his-main > .his-dialogue,
+.custom-window-app.app-his .his-main > .his-prescription { flex: 1; min-height: 60px; }
+.custom-window-app.app-his .his-diagnosis > select { display: block; width: 100%; margin: 4px 0; }
+.custom-window-app.app-his .his-prescription > select { display: block; width: 100%; margin: 4px 0; }
+.custom-window-app.app-his .custom-window-widget.his-medical-incidents { padding: 0; }
+.custom-window-button { border: 2px outset #eee; background: #d4d0c8; cursor: pointer; }
+.custom-window-button:active { border-style: inset; }
+.custom-window-input { border: 2px inset #eee; background: #fff; }
+.custom-window-check { display: flex; align-items: center; gap: 4px; }
+.custom-window-image { display: flex; align-items: center; justify-content: center; background: #ddd; border: 1px solid #888; }
+.custom-window-status { min-height: 18px; margin-top: 5px; color: #444; }
+
 .his-layout {
   display: flex;
   gap: 6px;

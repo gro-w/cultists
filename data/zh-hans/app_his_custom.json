@@ -1,0 +1,100 @@
+{
+  "version": 2,
+  "id": "his_custom",
+  "title": "HIS 医疗系统",
+  "icon": "🏥",
+  "width": 640,
+  "height": 460,
+  "background": "#d4d0c8",
+  "layout": "his",
+  "widgets": [
+    { "id": "patient-list", "type": "list", "x": 0, "y": 0, "width": 140, "height": 460, "text": "候诊病人", "cssClass": "his-patient-list panel-inset", "onSelect": "his-select-patient" },
+    { "id": "medical-incidents", "type": "panel", "x": 0, "y": 0, "width": 488, "height": 28, "text": "", "cssClass": "his-medical-incidents" },
+    { "id": "dialogue", "type": "panel", "x": 0, "y": 0, "width": 488, "height": 190, "text": "请先选择左侧病人", "cssClass": "his-dialogue panel-inset" },
+    { "id": "diagnosis-panel", "type": "panel", "x": 0, "y": 0, "width": 488, "height": 82, "text": "诊断", "cssClass": "his-diagnosis panel-inset" },
+    { "id": "diagnosis-category", "type": "select", "x": 0, "y": 0, "width": 210, "height": 30, "text": "诊断分类", "cssClass": "diagnosis-category", "onChange": "his-filter-diagnosis" },
+    { "id": "diagnosis", "type": "select", "x": 0, "y": 0, "width": 218, "height": 30, "text": "诊断", "cssClass": "diagnosis-select" },
+    { "id": "prescription", "type": "panel", "x": 0, "y": 0, "width": 488, "height": 136, "text": "处方", "cssClass": "his-prescription panel-inset" },
+    { "id": "medicine-1", "type": "select", "x": 0, "y": 0, "width": 250, "height": 24, "text": "药品" },
+    { "id": "submit", "type": "button", "x": 0, "y": 0, "width": 178, "height": 34, "text": "提交诊断与处方", "onClick": "his-submit" }
+  ],
+  "blueprints": {
+    "his-initialize": {
+      "event": "onCreate", "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {} },
+        "refresh": { "id": "refresh", "type": "hisRefresh", "inputs": { "query": "" }, "outputs": {} },
+        "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true }, "outputs": {} },
+        "__activity_expiry__": { "id": "__activity_expiry__", "type": "activityExpiry", "inputs": { "expires": false, "expiresAt": 0 }, "outputs": {} },
+        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "outputs": {} }
+      },
+      "connections": [
+        { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "refresh", "toPort": "flowIn" },
+        { "fromNodeId": "refresh", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      ]
+    },
+    "his-search": {
+      "event": "onChange", "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {} },
+        "refresh": { "id": "refresh", "type": "hisRefresh", "inputs": {}, "outputs": {} },
+        "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true }, "outputs": {} },
+        "__activity_expiry__": { "id": "__activity_expiry__", "type": "activityExpiry", "inputs": { "expires": false, "expiresAt": 0 }, "outputs": {} },
+        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "outputs": {} }
+      },
+      "connections": [
+        { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "refresh", "toPort": "flowIn" },
+        { "fromNodeId": "refresh", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      ]
+    },
+    "his-select-patient": {
+      "event": "onSelect", "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {} },
+        "select": { "id": "select", "type": "hisSelectPatient", "inputs": {}, "outputs": {} },
+        "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true }, "outputs": {} },
+        "__activity_expiry__": { "id": "__activity_expiry__", "type": "activityExpiry", "inputs": { "expires": false, "expiresAt": 0 }, "outputs": {} },
+        "diagnosis": { "id": "diagnosis", "type": "hisRenderDiagnosis", "inputs": {}, "outputs": {} },
+        "prescription": { "id": "prescription", "type": "hisRenderPrescription", "inputs": {}, "outputs": {} },
+        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "outputs": {} }
+      },
+      "connections": [
+        { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "select", "toPort": "flowIn" },
+        { "fromNodeId": "select", "fromPort": "flowOut", "toNodeId": "diagnosis", "toPort": "flowIn" },
+        { "fromNodeId": "diagnosis", "fromPort": "flowOut", "toNodeId": "prescription", "toPort": "flowIn" },
+        { "fromNodeId": "prescription", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      ]
+    },
+    "his-filter-diagnosis": {
+      "event": "onChange", "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {} },
+        "render": { "id": "render", "type": "hisRenderDiagnosis", "inputs": {}, "outputs": {} },
+        "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true }, "outputs": {} },
+        "__activity_expiry__": { "id": "__activity_expiry__", "type": "activityExpiry", "inputs": { "expires": false, "expiresAt": 0 }, "outputs": {} },
+        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "outputs": {} }
+      },
+      "connections": [
+        { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "render", "toPort": "flowIn" },
+        { "fromNodeId": "render", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      ]
+    },
+    "his-submit": {
+      "event": "onClick", "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "inputs": {}, "outputs": {} },
+        "submit": { "id": "submit", "type": "hisSubmit", "inputs": {}, "outputs": {} },
+        "__prerequisite__": { "id": "__prerequisite__", "type": "prerequisite", "inputs": { "condition": true }, "outputs": {} },
+        "__activity_expiry__": { "id": "__activity_expiry__", "type": "activityExpiry", "inputs": { "expires": false, "expiresAt": 0 }, "outputs": {} },
+        "time": { "id": "time", "type": "consumeTime", "inputs": { "minutes": 20 }, "outputs": {} },
+        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "outputs": {} }
+      },
+      "connections": [
+        { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "submit", "toPort": "flowIn" },
+        { "fromNodeId": "submit", "fromPort": "flowOut", "toNodeId": "time", "toPort": "flowIn" },
+        { "fromNodeId": "time", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      ]
+    }
+  },
+  "onCreate": "his-initialize"
+}

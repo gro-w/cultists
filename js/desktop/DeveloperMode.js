@@ -29,6 +29,7 @@ import { DevDormComputerTab } from "./DevDormComputerTab.js";
 import { DevCGEditorTab } from "./DevCGEditorTab.js";
 import { DevTurtleSoupEditorTab } from "./DevTurtleSoupEditorTab.js";
 import { DEDICATED_EDITOR_CLASSES } from "./DevDedicatedDataEditors.js";
+import { DevCustomWindowManager } from "./DevCustomWindowEditor.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
@@ -106,7 +107,7 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._turtleSoupEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._turtleSoupEditorTab = null; this._structuredEditorTab = null; this._customWindowManager = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
     const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "activity:appended", "activity:changed", "activity:resolved", "activity:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset", "npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored"];
     events.forEach((event) => this._runtimeUnsubs.push(eventBus.on(event, () => this._queueRuntimeRefresh())));
@@ -129,6 +130,7 @@ export class DeveloperMode {
     const dataIcons = [
       ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["公共变量定义", "🔢", "tab-global-variables"],
       ["物品与法术编辑器", "📦", "tab-item-editor"], ["活动编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
+      ["自定义窗口管理器", "🪟", "tab-custom-windows"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
     const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC状态", "👤", "tab-npc-state"], ["活动与队列", "📋", "tab-activities"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
@@ -218,7 +220,7 @@ export class DeveloperMode {
     const editor = new DeveloperMode(root, win, false);
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
-    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-turtle-soup": "showTurtleSoupEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-activities": "showActivities", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
+    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-turtle-soup": "showTurtleSoupEditor", "tab-custom-windows": "showCustomWindows", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-activities": "showActivities", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
     if (methods[action]) {
       editor._unmountEditorTabs();
       Promise.resolve(editor[methods[action]]()).catch((error) => editor.setStatus(`加载失败：${error.message}`, true));
@@ -286,6 +288,13 @@ export class DeveloperMode {
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dialogueEditorTab.html();
     this.bindPanel();
     this._dialogueEditorTab.mount(this.root.querySelector(".dev-de-root"));
+  }
+
+  async showCustomWindows() {
+    this._unmountEditorTabs();
+    this._setPanelKind("data");
+    this._customWindowManager = new DevCustomWindowManager(this);
+    await this._customWindowManager.mount(this.root.querySelector("[data-dev-panel]"));
   }
 
   showBgmEditor() {

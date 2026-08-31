@@ -234,7 +234,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -458,9 +458,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 5760
@@ -498,9 +498,9 @@
           },
           "insert_dorm_activity": {
             "id": "insert_dorm_activity",
-            "type": "insertSchedule",
+            "type": "insertActivity",
             "inputs": {
-              "scheduleId": "dorm_activity_day3",
+              "activityId": "dorm_activity_day3",
               "queue": "social",
               "respectPrerequisite": true,
               "protectFromExpiry": false,
@@ -513,9 +513,9 @@
           },
           "activity_count": {
             "id": "activity_count",
-            "type": "getScheduleInstanceCount",
+            "type": "getActivityInstanceCount",
             "inputs": {
-              "scheduleId": "dorm_activity_day3"
+              "activityId": "dorm_activity_day3"
             },
             "outputs": {}
           },
@@ -1061,7 +1061,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -1249,9 +1249,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 5760
@@ -1289,9 +1289,9 @@
           },
           "insert_dorm_activity": {
             "id": "insert_dorm_activity",
-            "type": "insertSchedule",
+            "type": "insertActivity",
             "inputs": {
-              "scheduleId": "dorm_activity_day3",
+              "activityId": "dorm_activity_day3",
               "queue": "social",
               "respectPrerequisite": true,
               "protectFromExpiry": false,
@@ -1304,9 +1304,9 @@
           },
           "activity_count": {
             "id": "activity_count",
-            "type": "getScheduleInstanceCount",
+            "type": "getActivityInstanceCount",
             "inputs": {
-              "scheduleId": "dorm_activity_day3"
+              "activityId": "dorm_activity_day3"
             },
             "outputs": {}
           },
@@ -1834,7 +1834,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -2022,9 +2022,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 5760
@@ -2091,9 +2091,9 @@
           },
           "insert_dorm_activity": {
             "id": "insert_dorm_activity",
-            "type": "insertSchedule",
+            "type": "insertActivity",
             "inputs": {
-              "scheduleId": "dorm_activity_day3",
+              "activityId": "dorm_activity_day3",
               "queue": "social",
               "respectPrerequisite": true,
               "protectFromExpiry": false,
@@ -2106,9 +2106,9 @@
           },
           "activity_count": {
             "id": "activity_count",
-            "type": "getScheduleInstanceCount",
+            "type": "getActivityInstanceCount",
             "inputs": {
-              "scheduleId": "dorm_activity_day3"
+              "activityId": "dorm_activity_day3"
             },
             "outputs": {}
           },
@@ -2675,7 +2675,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -2872,9 +2872,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 5760
@@ -2921,9 +2921,9 @@
           },
           "insert_dorm_activity": {
             "id": "insert_dorm_activity",
-            "type": "insertSchedule",
+            "type": "insertActivity",
             "inputs": {
-              "scheduleId": "dorm_activity_day3",
+              "activityId": "dorm_activity_day3",
               "queue": "social",
               "respectPrerequisite": true,
               "protectFromExpiry": false,
@@ -2936,9 +2936,9 @@
           },
           "activity_count": {
             "id": "activity_count",
-            "type": "getScheduleInstanceCount",
+            "type": "getActivityInstanceCount",
             "inputs": {
-              "scheduleId": "dorm_activity_day3"
+              "activityId": "dorm_activity_day3"
             },
             "outputs": {}
           },

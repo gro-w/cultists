@@ -1,9 +1,9 @@
 import { eventBus } from "./EventBus.js";
-import { mainQueue } from "./ScheduleQueue.js";
-import { createScheduleRunner } from "./ScheduleRunner.js";
+import { mainQueue } from "./ActivityQueue.js";
+import { createActivityRunner } from "./ActivityRunner.js";
 
-/** Execute only main entries explicitly owned by the main scheduler. */
-class MainScheduleRuntime {
+/** Execute only main entries explicitly owned by the main activityRunner. */
+class MainActivityRuntime {
   constructor() {
     this._initPromise = null;
     this._unsubscribe = null;
@@ -13,7 +13,7 @@ class MainScheduleRuntime {
   async init() {
     if (!this._initPromise) {
       this._initPromise = Promise.resolve().then(() => {
-        this._unsubscribe = eventBus.on("schedule:appended", (payload) => {
+        this._unsubscribe = eventBus.on("activity:appended", (payload) => {
           if (payload?.queueId !== "main") return;
           (payload.entries || []).filter((entry) => entry.autoRun).forEach((entry) => this.run(entry));
         });
@@ -28,7 +28,7 @@ class MainScheduleRuntime {
     this._running.add(entry.instanceId);
     const finish = () => this._running.delete(entry.instanceId);
     try {
-      const runner = createScheduleRunner({
+      const runner = createActivityRunner({
         definition: entry.payload || entry,
         instance: entry,
         appId: "main",
@@ -39,10 +39,10 @@ class MainScheduleRuntime {
       if (entry.status === "resolved") finish();
     } catch (error) {
       finish();
-      console.error(`[MainScheduleRuntime] Failed to execute ${entry.scheduleId}:`, error);
+      console.error(`[MainActivityRuntime] Failed to execute ${entry.activityId}:`, error);
     }
   }
 }
 
-export const mainScheduleRuntime = new MainScheduleRuntime();
-export default MainScheduleRuntime;
+export const mainActivityRuntime = new MainActivityRuntime();
+export default MainActivityRuntime;

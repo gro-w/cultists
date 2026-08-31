@@ -6,7 +6,7 @@ import { bgmManager } from "./core/BgmManager.js";
 import { confirmDialog } from "./core/ConfirmDialog.js";
 import { itemManager } from "./core/ItemManager.js";
 import { saveManager } from "./core/SaveManager.js";
-import { scheduleData } from "./core/ScheduleData.js";
+import { activityData } from "./core/ActivityData.js";
 import { endingManager } from "./core/EndingManager.js";
 import { i18n } from "./core/I18n.js";
 import { dataLoader } from "./core/DataLoader.js";
@@ -18,8 +18,8 @@ import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
-import "./core/ItemScheduleRuntime.js"; // side-effect: executes item-owned schedules
-import { mainScheduleRuntime } from "./core/MainScheduleRuntime.js";
+import "./core/ItemActivityRuntime.js"; // side-effect: executes item-owned activities
+import { mainActivityRuntime } from "./core/MainActivityRuntime.js";
 
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
 import { globalVariableManager } from "./core/GlobalVariableManager.js";
@@ -70,7 +70,7 @@ developerModeEnabled = isDeveloperModeSearch();
  * All apps are always visible on the desktop and in the Start menu, and are
  * always launchable regardless of the current day/night phase. HIS and the
  * Social app instead vary *what content* they show based on the current
- * day + phase (see their own data-driven schedules).
+ * day + phase (see their own data-driven activities).
  *
  * Boot flow: an XP-style Main Menu overlay is shown first; saves are loaded
  * from files selected by the player rather than from the URL.
@@ -140,7 +140,7 @@ function boot() {
   windowManager.mount(windowLayer);
   audioManager.mount();
   bgmManager.mount();
-  cgManager.mount(); // subscribe to schedule:cg / schedule:end_cg events
+  cgManager.mount(); // subscribe to activity:cg / activity:end_cg events
   onboardingManager.init();
   const tutorialOverlay = new TutorialOverlay(document.getElementById("tutorial-overlay"));
   spellEffectManager.mount();
@@ -192,10 +192,10 @@ function boot() {
   saveManager.registerLaunchers(launcherMap);
 
 
-  // Start main schedule execution only after save restoration has replaced
+  // Start main activity execution only after save restoration has replaced
   // the preloaded queue snapshot, so a waiting runner never survives against
   // an obsolete queue entry object.
-  mainScheduleRuntime.init().catch((err) => console.error("[Cultists] Failed to initialize main schedules:", err));
+  mainActivityRuntime.init().catch((err) => console.error("[Cultists] Failed to initialize main activities:", err));
 
 
   console.info(
@@ -204,7 +204,7 @@ function boot() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Preload item/schedule/ending defs + the canonical index tables
+  // Preload item/activity/ending defs + the canonical index tables
   // SaveManager needs before any UI is shown. UI strings load first since several of the
   // preloaded modules (Settings, Notebook...) read i18n.t() during render.
   const language = settingsManager.language;
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     i18n.setLanguage(language),
     i18n.loadLanguages(),
     itemManager.load(),
-    scheduleData.init(),
+    activityData.init(),
 
     endingManager.load(),
     saveManager.init(),

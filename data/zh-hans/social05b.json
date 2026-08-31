@@ -206,7 +206,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -220,7 +220,7 @@
           },
           "expiry": {
             "id": "expiry",
-            "type": "scheduleExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 8639
@@ -581,7 +581,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -595,7 +595,7 @@
           },
           "expiry": {
             "id": "expiry",
-            "type": "scheduleExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 8639
@@ -995,7 +995,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -1009,7 +1009,7 @@
           },
           "expiry": {
             "id": "expiry",
-            "type": "scheduleExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 8639
@@ -1435,7 +1435,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -1449,7 +1449,7 @@
           },
           "expiry": {
             "id": "expiry",
-            "type": "scheduleExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 8639

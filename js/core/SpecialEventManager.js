@@ -13,7 +13,7 @@ function inRange(value, min, max) {
 
 /**
  * SpecialEventManager - resolves NPC events that temporarily replace the
- * matching actor in a normal day-phase schedule. Events are data-only and
+ * matching actor in a normal day-phase activity. Events are data-only and
  * become active when their day/phase and NPC value conditions all match.
  *
  * Event shape:
@@ -61,9 +61,9 @@ class SpecialEventManager {
     return this.events.find((event) => this.matches(event, day, phase, actor)) || null;
   }
 
-  /** Return a fresh schedule copy with matching NPC actors replaced. */
-  apply(schedule, day, phase) {
-    const result = clone(schedule) || {};
+  /** Return a fresh activity copy with matching NPC actors replaced. */
+  apply(activity, day, phase) {
+    const result = clone(activity) || {};
     ["patients", "contacts"].forEach((listKey) => {
       result[listKey] = (result[listKey] || []).map((actor) => {
         const npc = this.npc(actor.npcId);

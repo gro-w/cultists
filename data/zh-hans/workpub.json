@@ -123,7 +123,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 100,
@@ -139,9 +139,9 @@
             "x": 100,
             "y": 100
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -767,7 +767,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 100,
@@ -783,9 +783,9 @@
             "x": 100,
             "y": 100
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0

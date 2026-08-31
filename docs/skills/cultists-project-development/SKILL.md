@@ -8,7 +8,7 @@ platforms: [windows, macos, linux]
 metadata:
   hermes:
     tags: [Cultists, game, architecture, data, blueprint, save, verification]
-    related_skills: [game-schedule-patient-dialogue]
+    related_skills: [game-activity-patient-dialogue]
 ---
 
 # Cultists 项目二次开发 Skill
@@ -20,17 +20,17 @@ metadata:
 ## When to Use
 
 - 开始任何本项目的二次开发、bug 修复、数据制作或架构修改；
-- 修改 `GameState`、时间、日程、对话、NPC、物品、存档、开发工具或发布脚本；
+- 修改 `GameState`、时间、活动、对话、NPC、物品、存档、开发工具或发布脚本；
 - 将剧本、事件、患者问诊或物品行为转换为 JSON/蓝图；
 - 修改桌面窗口、任务栏、宿舍模式或应用入口；
 - 需要判断某个状态字段、队列、数据文件或事件是否可以删除。
 
-专项剧本转换可继续加载 `docs/skills/game-schedule-patient-dialogue/SKILL.md` 和 `docs/SKILL-SCRIPT-TO-SCHEDULE-BLUEPRINT.md`。本技能优先规定项目全局边界和验证纪律。
+专项剧本转换可继续加载 `docs/skills/game-activity-patient-dialogue/SKILL.md` 和 `docs/SKILL-SCRIPT-TO-ACTIVITY-BLUEPRINT.md`。本技能优先规定项目全局边界和验证纪律。
 
 ## Non-negotiable behavior
 
 1. 修改前先读取 `AGENTS.md`、相关文档、目标模块、数据 schema、调用点和事件订阅；不要凭文件名猜接口。
-2. 先追踪权威 owner，再修改调用方。时间由 `TimeService`，公共变量由 `GlobalVariableManager`，队列由 `ScheduleQueue`，日程执行由 `ScheduleRunner`，存档由 `SaveManager` 负责。
+2. 先追踪权威 owner，再修改调用方。时间由 `TimeService`，公共变量由 `GlobalVariableManager`，队列由 `ActivityQueue`，活动执行由 `ActivityRunner`，存档由 `SaveManager` 负责。
 3. 不要为了让一个调用“能跑”而新增第二套状态、时间、存档或副作用路径。
 4. 内容放数据，通用行为放代码；不要把角色名、对白、关键词、物品效果或剧情条件硬编码到应用 UI。
 5. 修改已有文件使用 `patch`；创建完整的新文件使用 `write_file`。保持 LF 换行，只触碰任务范围。
@@ -45,7 +45,7 @@ metadata:
 首次接触仓库时按以下顺序使用 `read_file`、`search_files` 和 `terminal`：
 
 1. 读取根目录 `AGENTS.md`；
-2. 读取 `README.md`、`docs/ARCHITECTURE.md`、`docs/DATA-SCHEMAS.md`、`docs/SCHEDULE-BLUEPRINTS.md`；
+2. 读取 `README.md`、`docs/ARCHITECTURE.md`、`docs/DATA-SCHEMAS.md`、`docs/ACTIVITY-BLUEPRINTS.md`；
 3. 检查 `git status --short`、当前分支和最近改动，不依赖会话开始时的快照；
 4. 根据任务搜索符号定义和全部调用点，而不是只打开一个同名文件；
 5. 确认语言目录、目标数据文件、加载器和发布脚本；
@@ -54,10 +54,10 @@ metadata:
 项目入口是 `index.html`。主要代码区域包括：
 
 - `js/main.js`：启动、桌面、任务栏、应用 launcher 和宿舍模式协调；
-- `js/core/`：状态、时间、队列、日程、数据加载、存档、公共变量、NPC 和事件基础设施；
+- `js/core/`：状态、时间、队列、活动、数据加载、存档、公共变量、NPC 和事件基础设施；
 - `js/apps/`：Social、HIS、ChatGTP 等应用层；
 - `js/desktop/`：宿舍、开发工具、桌面窗口和调试器；
-- `data/<lang>/`：语言相关的剧情、角色、日程、关键词、物品、结局和规则；
+- `data/<lang>/`：语言相关的剧情、角色、活动、关键词、物品、结局和规则；
 - `css/`：玩家 UI 和开发人员模式样式；
 - `publish.js`：从源代码生成玩家版 `publish/`。
 
@@ -97,26 +97,26 @@ metadata:
 - 初始状态是第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`；实际代码若已改变，先以代码和数据为准并更新文档。
 - 工作窗口严格是 `[08:00, 16:00)`；天文白昼 `[06:00, 18:00)`，二者不能混用。
 - 普通成功行动默认推进 20 分钟；不能用 `Date`、`getHours()`、浏览器 timer 或系统时间控制游戏时钟。
-- 任何玩家可见的计时操作必须先创建日程实例，再由 `ScheduleRunner` 或对应 runtime 执行。
+- 任何玩家可见的计时操作必须先创建活动实例，再由 `ActivityRunner` 或对应 runtime 执行。
 - `consumeTime` 通过 `TimeService.advanceBy()` 推进游戏时间；不要在 App 点击处理器中直接追加同等时间作为隐藏副作用。
-- 在恰好 `16:00` 时，状态边界、phase、duty、location 和日程加载必须保持一致；不要只更新时钟。
-- 下班/睡觉的阻塞规则来自 `ScheduleData` 的 pending batch；不要通过 UI 绕过普通阻塞，除非功能明确是开发调试器行为。
+- 在恰好 `16:00` 时，状态边界、phase、duty、location 和活动加载必须保持一致；不要只更新时钟。
+- 下班/睡觉的阻塞规则来自 `ActivityData` 的 pending batch；不要通过 UI 绕过普通阻塞，除非功能明确是开发调试器行为。
 - 午夜到次日 `08:00` 只结算一次睡眠、医疗、收入支出和睡眠债；不要在多个监听器重复结算。
 - 睡眠阈值和 SAN 规则必须读取 `data/<lang>/time_rules.json` 及 `TimeService` 的实际逻辑。
 
-修改时间边界、行动费用、睡眠规则或状态字段时，必须检查所有 App、快捷入口、存档恢复、日程运行器和事件订阅。
+修改时间边界、行动费用、睡眠规则或状态字段时，必须检查所有 App、快捷入口、存档恢复、活动运行器和事件订阅。
 
-## Queue and schedule architecture
+## Queue and activity architecture
 
 当前队列是三个独立队列：
 
-- `workQueue`：工作/HIS 类日程；
+- `workQueue`：工作/HIS 类活动；
 - `socialQueue`：下班、宿舍和 Social NPC 对话；
 - `mainQueue`：非阻塞初始化、公共主流程以及迁移后的 ChatGTP 查询等。
 
 项目不再使用独立的 `chatgtpQueue`。ChatGTP 应用本身仍然是有效功能；删除专用队列不等于删除 `ChatGTPApp`、ChatGTP SAN、问答数据或窗口注册。修改队列时必须同时检查导出、校验、路由、运行器统计、调试器、存档 payload、恢复逻辑、文档和 `publish/`。
 
-队列实例是执行和恢复的权威身份，不能把界面联系人 ID 或 transcript 当作新实例。实例至少可能包含：稳定 `scheduleId`、`instanceId`、`status`、`currentNodeId`、`executedNodeIds`、`transcript` 和 payload。新增实例、checkpoint、resolve、restore 必须通过队列 owner 的公开 API。
+队列实例是执行和恢复的权威身份，不能把界面联系人 ID 或 transcript 当作新实例。实例至少可能包含：稳定 `activityId`、`instanceId`、`status`、`currentNodeId`、`executedNodeIds`、`transcript` 和 payload。新增实例、checkpoint、resolve、restore 必须通过队列 owner 的公开 API。
 
 宿舍/下班 NPC 对话属于 `socialQueue`：
 
@@ -125,7 +125,7 @@ metadata:
 3. 不因点击一个已经 resolved 的视觉 actor 就无条件创建新实例；
 4. 找不到 pending 实例时显示无新对话，并保持队列长度不变；
 5. checkpoint 和完成标记更新精确的 `instanceId`；
-6. `mainQueue` 仅用于初始化和明确的 main 日程。
+6. `mainQueue` 仅用于初始化和明确的 main 活动。
 
 ## Data and content rules
 
@@ -136,7 +136,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 常见数据文件包括：
 
 - `npcs.json`、`skills.json`：角色和技能 roster；
-- `workXXa/b.json`、`socialXXa/b.json`：日期/阶段日程；
+- `workXXa/b.json`、`socialXXa/b.json`：日期/阶段活动；
 - `workpub.json`、`socialpub.json`：公共 Work/Social 定义；
 - `maininit.json`、`mainpub.json`：主流程初始化和公共定义；
 - `keywords.json`、`chatgtp_qa.json`：关键词和问答；
@@ -155,7 +155,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 
 ## Blueprint authoring
 
-蓝图的权威资料是 `docs/SCHEDULE-BLUEPRINTS.md`，实际节点以 `js/core/ScheduleNodeRegistry.js` 为准，验证以 `ScheduleBlueprint.js` 为准，执行以 `ScheduleRunner.js` 和 `ScheduleValueEvaluator.js` 为准。
+蓝图的权威资料是 `docs/ACTIVITY-BLUEPRINTS.md`，实际节点以 `js/core/ActivityNodeRegistry.js` 为准，验证以 `ActivityBlueprint.js` 为准，执行以 `ActivityRunner.js` 和 `ActivityValueEvaluator.js` 为准。
 
 新蓝图使用：
 
@@ -170,16 +170,16 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 必须满足：
 
 - 一个 `flowStart`，`startNodeId` 指向它；
-- 至少一个 `scheduleEnd`；
+- 至少一个 `activityEnd`；
 - 节点映射键等于节点对象的 `id`；
 - 流程连接是 `fromNodeId/fromPort → toNodeId/toPort`；
 - 数值连接也使用类型化连接，但求值从目标输入反向查找上游；
 - `choice.branchCount`、`labelN`、选项记录和 `optionN` 连接一致；
-- 所有可达分支最终到达 `scheduleEnd`；
+- 所有可达分支最终到达 `activityEnd`；
 - 注册节点、端口和字段之外不要发明自定义运行语义；
 - 不要把新内容写成旧式 `dialogueTree`，除非任务明确是兼容迁移。
 
-常用节点：`flowStart`、`text`、`choice`、`branch`、`waitUntil`、`segmentBranch`、`consumeTime`、`setGlobal`、`statOperation`、`inventoryOperation`、`insertSchedule`、`showCg`、`showImage`、`spellOperation`、`prerequisite`、`scheduleExpiry` 和 `scheduleEnd`。
+常用节点：`flowStart`、`text`、`choice`、`branch`、`waitUntil`、`segmentBranch`、`consumeTime`、`setGlobal`、`statOperation`、`inventoryOperation`、`insertActivity`、`showCg`、`showImage`、`spellOperation`、`prerequisite`、`activityExpiry` 和 `activityEnd`。
 
 每行玩家可见对白都应是可达的 `text` 节点。选项后的好感度、怀疑度、物品和属性改变必须通过显式操作节点连接；不要把新效果藏进废弃的 `options[].effects` 或仅供编辑器显示的字段。
 
@@ -190,7 +190,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 如果一段 NPC 对话目标约为 240 分钟，通常可使用约 12 个 `consumeTime(20)` 节点，但不能把它们：
 
 - 合并成末尾的 `consumeTime(240)`；
-- 连续堆在 `scheduleEnd` 前；
+- 连续堆在 `activityEnd` 前；
 - 全部集中在最前面的共同流程。
 
 应把时间节点贯穿整条流程：前段共同对白、中段对白、选项分支后的对白和后段对白都可以放置。最后一句对白不应直接接时间节点再结束。按所有可达路径计算最小、最大和平均成本；不同分支因对白长度产生小幅浮动可以接受，但不能漏掉整段时间成本。还要结合 NPC 睡眠时间和 Social/Dorm 可用性检查：仅比较“NPC 数量 × 单次成本”是不够的。
@@ -272,9 +272,9 @@ node --check publish/js/main.js
 - 连接两端节点存在；
 - 端口符合 registry；
 - 所有可达节点被覆盖；
-- 所有路径都到 `scheduleEnd`；
+- 所有路径都到 `activityEnd`；
 - 对每条路径统计 `consumeTime.inputs.minutes`；
-- 节点 ID 的重复检查按单个蓝图进行，日程条目 ID 才按项目范围检查。
+- 节点 ID 的重复检查按单个蓝图进行，活动条目 ID 才按项目范围检查。
 
 ### Source/data probes
 

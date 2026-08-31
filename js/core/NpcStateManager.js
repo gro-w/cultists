@@ -1,7 +1,7 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { itemManager } from "./ItemManager.js";
-import { mainQueue } from "./ScheduleQueue.js";
+import { mainQueue } from "./ActivityQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 
 function clamp(value) {
@@ -98,7 +98,7 @@ class NpcStateManager {
     return !this.isOffline(actorId) && this.get(actorId) < this._distressedThreshold();
   }
 
-  /** Adjust an actor's SAN. Crossing the threshold creates one offline schedule. */
+  /** Adjust an actor's SAN. Crossing the threshold creates one offline activity. */
   modify(actorId, delta) {
     if (!actorId || !delta) return;
     const next = clamp(this.get(actorId) + delta);
@@ -126,13 +126,13 @@ class NpcStateManager {
     const consequence = NPC_OFFLINE_CONSEQUENCE;
     const entry = {
       id: `npc-offline:${actorId}`,
-      scheduleId: `npc-offline:${actorId}`,
+      activityId: `npc-offline:${actorId}`,
       blueprint: consequence.blueprint,
       actorId,
       action: "offline",
       status: "unresolved",
     };
-    eventBus.emit("schedule:triggered", {
+    eventBus.emit("activity:triggered", {
       source: "npc",
       actorId,
       action: "offline",

@@ -4,11 +4,11 @@ import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 
-import { scheduleData } from "../core/ScheduleData.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { activityData } from "../core/ActivityData.js";
+import { createActivityRunner } from "../core/ActivityRunner.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
-import { socialQueue } from "../core/ScheduleQueue.js";
+import { socialQueue } from "../core/ActivityQueue.js";
 
 const dialogueKeywordIds = (tree) => {
   if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
@@ -22,15 +22,15 @@ const dialogueKeywordIds = (tree) => {
  * SocialApp - Social media style chat client.
  * Always accessible, but the contact/conversation content varies by the
  * current in-game day/phase (data-driven via `data/dayXXa.json` /
- * `data/dayXXb.json`, resolved through ScheduleData).
+ * `data/dayXXb.json`, resolved through ActivityData).
  *
- * Dialogue tree walking is shared with HISApp via the schedule
+ * Dialogue tree walking is shared with HISApp via the activity
  * runner. A contact whose own SAN
  * (NpcStateManager) has dropped to "offline" goes silent for the rest of
  * the game.
  */
 export async function launchSocialApp() {
-  await scheduleData.init();
+  await activityData.init();
 
   const root = document.createElement("div");
   root.className = "app-social";
@@ -59,7 +59,7 @@ export async function launchSocialApp() {
     }）</h4>`;
     if (entry.note) {
       const note = document.createElement("p");
-      note.className = "his-schedule-note";
+      note.className = "his-activity-note";
       note.textContent = entry.note;
       contactListEl.appendChild(note);
     }
@@ -78,7 +78,7 @@ export async function launchSocialApp() {
       if (nextGroupKey !== groupKey) {
         groupKey = nextGroupKey;
         const group = document.createElement("h5");
-        group.className = "schedule-group-heading";
+        group.className = "activity-group-heading";
         group.textContent = `第${contact.receivedDay}天 · ${contact.receivedTime === 480 ? "白班" : "夜班"} · ${String(Math.floor(contact.receivedTime / 60)).padStart(2, "0")}:${String(contact.receivedTime % 60).padStart(2, "0")}`;
         contactListEl.appendChild(group);
       }
@@ -112,7 +112,7 @@ export async function launchSocialApp() {
     }
     if (npcStateManager.isDistressed(npcId)) {
       const warn = document.createElement("p");
-      warn.className = "his-schedule-note npc-distress-warning";
+      warn.className = "his-activity-note npc-distress-warning";
       warn.textContent = "⚠️ 对方的语气最近变得异常低落，回复也断断续续。";
       chatEl.appendChild(warn);
     }
@@ -134,10 +134,10 @@ export async function launchSocialApp() {
     }
 
     if (!contact.queueEntry) {
-      bubblesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      bubblesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为活动蓝图。）</p>";
       return;
     }
-    const runner = createScheduleRunner({
+    const runner = createActivityRunner({
       definition: contact,
       instance: contact.queueEntry,
       appendLine: (speaker, label, text) => appendBubble(speaker === "npc" ? "npc" : "me", text),
@@ -153,7 +153,7 @@ export async function launchSocialApp() {
   }
 
   async function renderCurrentEntry() {
-    await scheduleData.init();
+    await activityData.init();
     const contacts = socialQueue.getAll().map((item) => ({
       ...item.payload,
       id: item.instanceId,

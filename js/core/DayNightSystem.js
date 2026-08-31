@@ -1,7 +1,7 @@
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
 import { calendarData } from "./CalendarData.js";
-import { scheduleData } from "./ScheduleData.js";
+import { activityData } from "./ActivityData.js";
 import { endingManager } from "./EndingManager.js";
 import { timeService } from "./TimeService.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
@@ -58,7 +58,7 @@ class DayNightSystem {
 
     if (gameState.duty === "on-duty") {
       if (!restToday && inWorkWindow) {
-        if (scheduleData.hasPendingBatch("work", gameState.day, 8 * 60)) {
+        if (activityData.hasPendingBatch("work", gameState.day, 8 * 60)) {
           return { ok: false, reason: "unfinishedWork", batch: "a" };
         }
         this._setTime(gameState.day, 16 * 60);
@@ -82,10 +82,10 @@ class DayNightSystem {
 
     const target = this._nextEightOClock();
     const targetIsRest = this.isRestDay(target.day);
-    if (scheduleData.hasPendingBatch("work", gameState.day, 16 * 60)) {
+    if (activityData.hasPendingBatch("work", gameState.day, 16 * 60)) {
       return { ok: false, reason: "unfinishedWork", batch: "b" };
     }
-    if (scheduleData.isFinalPhase(gameState.day, gameState.phase) && !targetIsRest) {
+    if (activityData.isFinalPhase(gameState.day, gameState.phase) && !targetIsRest) {
       endingManager.resolveFinalEnding();
       return gameState.phase;
     }

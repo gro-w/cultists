@@ -5,15 +5,15 @@ import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 
-import { scheduleData } from "../core/ScheduleData.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { activityData } from "../core/ActivityData.js";
+import { createActivityRunner } from "../core/ActivityRunner.js";
 
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
 import { OUTCOME_LABELS } from "../core/DiceCheck.js";
-import { workQueue } from "../core/ScheduleQueue.js";
-import { mainQueue } from "../core/ScheduleQueue.js";
-import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
+import { workQueue } from "../core/ActivityQueue.js";
+import { mainQueue } from "../core/ActivityQueue.js";
+import { runItemActivity } from "../core/ItemActivityRuntime.js";
 
 const dialogueKeywordIds = (tree) => {
   if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
@@ -27,17 +27,17 @@ const dialogueKeywordIds = (tree) => {
  * HISApp - Hospital Information System.
  * Always accessible, but the patient list & dialogue content varies by the
  * current in-game day/phase (data-driven via `data/dayXXa.json` /
- * `data/dayXXb.json`, resolved through ScheduleData). Flow: pick a patient
+ * `data/dayXXb.json`, resolved through ActivityData). Flow: pick a patient
  * -> read dialogue one line at a time, choosing options that branch the
  * conversation (click highlighted keywords to collect them) -> choose a
  * diagnosis -> prescribe medicines from the configured list.
  *
- * Dialogue tree walking is shared with SocialApp via the schedule
+ * Dialogue tree walking is shared with SocialApp via the activity
  * runner. A patient whose own SAN
  * (NpcStateManager) has dropped to "offline" can no longer be talked to.
  */
 export async function launchHISApp() {
-  await scheduleData.init();
+  await activityData.init();
   const [medicines] = await Promise.all([
     dataLoader.loadJSON("medicines.json"),
     medicalCaseManager.load(),
@@ -86,7 +86,7 @@ export async function launchHISApp() {
     }）</h4>`;
     if (entry.note) {
       const note = document.createElement("p");
-      note.className = "his-schedule-note";
+      note.className = "his-activity-note";
       note.textContent = entry.note;
       patientListEl.appendChild(note);
     }
@@ -111,7 +111,7 @@ export async function launchHISApp() {
       if (nextGroupKey !== groupKey) {
         groupKey = nextGroupKey;
         const group = document.createElement("h5");
-        group.className = "schedule-group-heading";
+        group.className = "activity-group-heading";
         group.textContent = `第${patient.receivedDay}天 · ${patient.receivedTime === 480 ? "白班" : "夜班"} · ${String(Math.floor(patient.receivedTime / 60)).padStart(2, "0")}:${String(patient.receivedTime % 60).padStart(2, "0")}`;
         patientListEl.appendChild(group);
       }
@@ -167,7 +167,7 @@ export async function launchHISApp() {
       p.innerHTML = `<strong>${speakerLabel}:</strong> ${text}`;
       linesEl.replaceChildren(p);
     };
-    createScheduleRunner({
+    createActivityRunner({
       definition: incident,
       instance: incident,
       appendLine,
@@ -214,10 +214,10 @@ export async function launchHISApp() {
     }
 
     if (!patient.queueEntry) {
-      linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为活动蓝图。）</p>";
       return keywordAvailable;
     }
-    const runner = createScheduleRunner({
+    const runner = createActivityRunner({
       definition: patient,
       instance: patient.queueEntry,
       appendLine,
@@ -387,12 +387,12 @@ export async function launchHISApp() {
         .filter(Boolean)
         .slice(0, 5);
       const instance = mainQueue.append([{
-        scheduleId: "medical:submit",
+        activityId: "medical:submit",
         status: "unresolved",
         transcript: [],
       }])[0];
       try {
-        runItemSchedule({
+        runItemActivity({
           source: "medical",
           action: "submit",
           instance,
@@ -416,7 +416,7 @@ export async function launchHISApp() {
   }
 
   async function renderCurrentEntry() {
-    await scheduleData.init();
+    await activityData.init();
     const patients = workQueue.getAll()
       .filter((item) => item.payload?.type === "his" || item.payload?.patient || item.payload?.correctDiagnosisId)
       .map((item) => ({ ...item.payload?.patient || item.payload, id: item.instanceId, queueInstanceId: item.instanceId, queueStatus: item.status, receivedDay: item.receivedDay, receivedTime: item.receivedTime, queueEntry: item }));
@@ -452,7 +452,7 @@ export async function launchHISApp() {
   const offDayNight = eventBus.on("daynight:changed", renderCurrentEntry);
 
   const offNpcState = eventBus.on("npc:offline", renderCurrentEntry);
-  const offSchedule = eventBus.on("schedule:appended", ({ queueId }) => {
+  const offActivity = eventBus.on("activity:appended", ({ queueId }) => {
     if (queueId === "work") renderCurrentEntry();
   });
   const offIncident = eventBus.on("medical:incident", renderMedicalIncidents);
@@ -471,7 +471,7 @@ export async function launchHISApp() {
       offDayNight();
 
       offNpcState();
-      offSchedule();
+      offActivity();
       offIncident();
       offGameState();
     },

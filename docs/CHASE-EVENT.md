@@ -2,7 +2,7 @@
 
 ## 1. 功能概述
 
-“追逐事件”是一个接入现有日程、蓝图、法术、CG 和结局系统的特殊事件，不使用独立 Demo 或 UI 硬编码剧情。
+“追逐事件”是一个接入现有活动、蓝图、法术、CG 和结局系统的特殊事件，不使用独立 Demo 或 UI 硬编码剧情。
 
 事件稳定 ID：`追逐事件`
 
@@ -22,11 +22,11 @@
 }
 ```
 
-含义：第 7 天白天，主角 SAN 严格低于 50 时触发。SAN 等于 50 不满足条件。事件使用现有特殊事件和一次性日程机制，避免普通地点刷新、页面刷新或重复状态更新造成重复入队。
+含义：第 7 天白天，主角 SAN 严格低于 50 时触发。SAN 等于 50 不满足条件。事件使用现有特殊事件和一次性活动机制，避免普通地点刷新、页面刷新或重复状态更新造成重复入队。
 
 ## 3. 蓝图流程
 
-事件蓝图的 `startNodeId` 为 `start`，所有剧情都由 `ScheduleRunner` 执行。
+事件蓝图的 `startNodeId` 为 `start`，所有剧情都由 `ActivityRunner` 执行。
 
 ```text
 start
@@ -43,7 +43,7 @@ start
        │         ├─ 未有历史施放记录 -> 正常 CG -> 正常结局对白
        │         └─ 已有历史施放记录 -> 异常 CG -> 异常结局对白
        ├─ 使用支配术
-       │    -> spellCast：支配术异步日程
+       │    -> spellCast：支配术异步活动
        │    -> 异常 CG -> 异常结局对白
        └─ 接受注定的终局
             -> 正常 CG -> 正常结局对白
@@ -63,8 +63,8 @@ start
 ### 使用支配术
 
 - `requiredSpellId: "book_coc7__0"`：必须已经习得支配术。
-- 使用 `spellCast`，由现有法术使用日程处理成本和施法事件。
-- 不能依赖 `SpellManager.cast()` 的即时返回值判断最终效果；法术施放是异步日程，蓝图在正式施放日程之后继续进入异常路线。
+- 使用 `spellCast`，由现有法术使用活动处理成本和施法事件。
+- 不能依赖 `SpellManager.cast()` 的即时返回值判断最终效果；法术施放是异步活动，蓝图在正式施放活动之后继续进入异常路线。
 
 ### 历史状态
 
@@ -81,7 +81,7 @@ start
 | 异常路线 | 蹈海3 | `cg_ewexmk_b` |
 | 正常路线 | 正常 | `cg_ewexmk_h` |
 
-当前四个 CG 均有实际 `imageData`。CG 的显示和结束由 `CGManager` 接收 `ScheduleRunner` 发出的 `schedule:cg` / `schedule:end_cg` 事件处理。
+当前四个 CG 均有实际 `imageData`。CG 的显示和结束由 `CGManager` 接收 `ActivityRunner` 发出的 `activity:cg` / `activity:end_cg` 事件处理。
 
 ## 6. 结局
 
@@ -94,9 +94,9 @@ start
   - 显示名：`异常结局：被未知的力量吞没`
   - 结尾描述：试图用禁忌力量逃离追逐，却被疯狂与海流吞没。
 
-蓝图终点使用 `ending` 节点调用 `EndingManager`，随后以 `scheduleEnd` 结束，不由 UI 私自切换结局标题。
+蓝图终点使用 `ending` 节点调用 `EndingManager`，随后以 `activityEnd` 结束，不由 UI 私自切换结局标题。
 
-结局界面 `EndingScreen` 会从结局蓝图的真实 `startNodeId` 创建 `mainQueue` 日程实例并播放，支持逐行对白、CG 背景、底部对话框、主控左侧和 NPC 右侧立绘。多行旧文本会在 UI 边界按换行拆成单独对白；一次 Continue 只推进一行。
+结局界面 `EndingScreen` 会从结局蓝图的真实 `startNodeId` 创建 `mainQueue` 活动实例并播放，支持逐行对白、CG 背景、底部对话框、主控左侧和 NPC 右侧立绘。多行旧文本会在 UI 边界按换行拆成单独对白；一次 Continue 只推进一行。
 
 ## 7. NPC 结局专用立绘
 
@@ -139,7 +139,7 @@ NPC 普通立绘仍使用 `portraits` 的 SAN 区间选择。新增可选字段 
 | `data/zh-hans/endings.json` | 正常/异常结局定义和最终描述 |
 | `data/zh-hans/cg.json` | CG 标签、稳定 ID 和图片数据 |
 | `data/zh-hans/npcs.json` | NPC 普通 SAN 立绘和结局专用立绘数据 |
-| `js/core/ScheduleRunner.js` | 选项条件、法术节点和蓝图执行 |
+| `js/core/ActivityRunner.js` | 选项条件、法术节点和蓝图执行 |
 | `js/core/SpellEffectManager.js` | 旧印/支配术效果及历史状态分流 |
 | `js/desktop/EndingScreen.js` | 结局蓝图播放、逐行显示和结局立绘选择 |
 | `js/desktop/DeveloperMode.js` | NPC 立绘与结局专用立绘编辑器 |
@@ -156,7 +156,7 @@ CHASE_BLUEPRINT_OK nodes=47 all_reachable=1 trigger=day7_sanity_lt50 choices=3 c
 并已通过：
 
 ```text
-node --check js/core/ScheduleRunner.js
+node --check js/core/ActivityRunner.js
 node --check js/core/SpellEffectManager.js
 node --check js/core/EndingScreen.js
 node --check js/desktop/DeveloperMode.js

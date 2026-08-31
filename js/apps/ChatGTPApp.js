@@ -5,8 +5,8 @@ import { keywordManager } from "../core/KeywordManager.js";
 import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
-import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
-import { mainQueue } from "../core/ScheduleQueue.js";
+import { runItemActivity } from "../core/ItemActivityRuntime.js";
+import { mainQueue } from "../core/ActivityQueue.js";
 
 
 import { settingsManager, NOTEBOOK_SORT_MODES } from "../core/SettingsManager.js";
@@ -404,7 +404,7 @@ export async function launchChatGTPApp(options = {}) {
   function ask(queryText, labels) {
     if (!queryText) return;
     const instance = mainQueue.append([{
-      scheduleId: "chatgtp:query",
+      activityId: "chatgtp:query",
       status: "unresolved",
       transcript: [],
     }])[0];
@@ -413,7 +413,7 @@ export async function launchChatGTPApp(options = {}) {
     if (npcStateManager.isDistressed(CHATGTP_ACTOR_ID) && entry && !entry.corruptedSameAsNormal) {
       answer = entry.corruptedAnswer || entry.answer || FALLBACK_ANSWER;
     }
-    runItemSchedule({
+    runItemActivity({
       source: "chatgtp",
       action: "query",
       queueId: "main",

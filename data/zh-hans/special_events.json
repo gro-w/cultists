@@ -58,7 +58,7 @@
           },
           "n_0vk.kv": {
             "id": "n_0vk.kv",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {
               "speaker": "player",
               "text": ""
@@ -77,9 +77,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -150,7 +150,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd"
+            "type": "activityEnd"
           },
           "__prerequisite__": {
             "id": "__prerequisite__",
@@ -162,9 +162,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -210,7 +210,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd"
+            "type": "activityEnd"
           },
           "__prerequisite__": {
             "id": "__prerequisite__",
@@ -222,9 +222,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -353,7 +353,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd"
+            "type": "activityEnd"
           },
           "__prerequisite__": {
             "id": "__prerequisite__",
@@ -365,9 +365,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -477,7 +477,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd"
+            "type": "activityEnd"
           },
           "__prerequisite__": {
             "id": "__prerequisite__",
@@ -489,9 +489,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -546,7 +546,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd"
+            "type": "activityEnd"
           },
           "__prerequisite__": {
             "id": "__prerequisite__",
@@ -558,9 +558,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -613,9 +613,9 @@
             },
             "outputs": {}
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -752,7 +752,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd"
+            "type": "activityEnd"
           }
         },
         "connections": []
@@ -780,9 +780,9 @@
               "condition": true
             }
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -1213,7 +1213,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd"
+            "type": "activityEnd"
           }
         },
         "connections": []
@@ -2131,7 +2131,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           }

@@ -27,9 +27,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -436,7 +436,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 10540,
@@ -878,7 +878,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 5440,
@@ -894,9 +894,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -1024,7 +1024,7 @@
       "title": "pl现实魅惑大成功",
       "displayName": "好结局（彬彬线）：pl现实魅惑大成功",
       "text": "你接受了彬彬的情谊，加入了永生者的行列。",
-      "blueprintScheduleId": "彬彬献祭事件",
+      "blueprintActivityId": "彬彬献祭事件",
       "blueprint": {
         "nodes": {
           "start": {
@@ -1399,7 +1399,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 80,
@@ -1415,9 +1415,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -2036,7 +2036,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 10840,
@@ -2052,9 +2052,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -2520,7 +2520,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 6340,
@@ -2536,9 +2536,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -2684,7 +2684,7 @@
       "title": "面对未知的命运",
       "displayName": "坏结局（彬彬线）：面对未知的命运",
       "text": "你拒绝成为怪物，独自面对未知的命运。",
-      "blueprintScheduleId": "彬彬献祭事件",
+      "blueprintActivityId": "彬彬献祭事件",
       "blueprint": {
         "nodes": {
           "start": {
@@ -3136,7 +3136,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 12340,
@@ -3152,9 +3152,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -3508,7 +3508,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2440,
@@ -3524,9 +3524,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -3748,7 +3748,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 4240,
@@ -3764,9 +3764,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -3890,7 +3890,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 80,
@@ -3906,9 +3906,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -4139,7 +4139,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 5440,
@@ -4155,9 +4155,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -4305,7 +4305,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 80,
@@ -4321,9 +4321,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -4969,7 +4969,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 16840,
@@ -4985,9 +4985,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -5365,7 +5365,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 80,
@@ -5381,9 +5381,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -5624,7 +5624,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 5740,
@@ -5640,9 +5640,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -6041,7 +6041,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 7240,
@@ -6057,9 +6057,9 @@
             "x": 40,
             "y": 205
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0

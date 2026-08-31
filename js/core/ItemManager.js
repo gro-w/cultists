@@ -16,7 +16,7 @@ import { keywordManager } from "./KeywordManager.js";
  *     consumable: boolean,   // removed from inventory after a successful use
  *     usable: boolean,       // whether "使用" is available at all
  *     useCondition: { requires: [{ itemId, count }] },  // optional
- *     schedules: { investigate, use, obtain, lose }, // item-owned blueprints
+ *     activities: { investigate, use, obtain, lose }, // item-owned blueprints
  *     failMessage, successMessage
  *   }
  */
@@ -80,7 +80,7 @@ class ItemManager {
   add(id, count = 1) {
     this._addRaw(id, count);
     eventBus.emit("items:changed", this.snapshot());
-    this._emitItemSchedule(id, "obtain", { count });
+    this._emitItemActivity(id, "obtain", { count });
   }
 
   remove(id, count = 1) {
@@ -89,13 +89,13 @@ class ItemManager {
     if (next <= 0) this.inventory.delete(id);
     else this.inventory.set(id, next);
     eventBus.emit("items:changed", this.snapshot());
-    this._emitItemSchedule(id, "lose", { count });
+    this._emitItemActivity(id, "lose", { count });
   }
 
-  scheduleFor(id, action) {
+  activityFor(id, action) {
     const def = this.defs.get(id);
-    const schedules = def?.schedules || def?.scheduleTable || {};
-    const blueprint = schedules[action] || null;
+    const activities = def?.activities || def?.activityTable || {};
+    const blueprint = activities[action] || null;
     if (!blueprint || action !== "investigate") return blueprint;
     const nodes = blueprint.nodes || {};
     if (nodes.san?.type !== "segmentBranch") return blueprint;
@@ -109,9 +109,9 @@ class ItemManager {
     return copy;
   }
 
-  _emitItemSchedule(id, action, context = {}) {
-    const blueprint = this.scheduleFor(id, action);
-    eventBus.emit("schedule:triggered", { source: "item", itemId: id, action, scheduleId: `${id}:${action}`, blueprint, context });
+  _emitItemActivity(id, action, context = {}) {
+    const blueprint = this.activityFor(id, action);
+    eventBus.emit("activity:triggered", { source: "item", itemId: id, action, activityId: `${id}:${action}`, blueprint, context });
   }
 
   /** Replace the whole inventory (used by SaveManager when restoring a save). */
@@ -134,7 +134,7 @@ class ItemManager {
     const def = this.defs.get(id);
     if (!def) return null;
     let result = null;
-    this._emitItemSchedule(id, "investigate", { onInspection: (inspection) => { result = inspection; } });
+    this._emitItemActivity(id, "investigate", { onInspection: (inspection) => { result = inspection; } });
     return result;
   }
 
@@ -212,8 +212,8 @@ class ItemManager {
     const result = { ok: true, message: def.successMessage || `使用了${displayName}。` };
     // Let EndingManager (and anything else) react to a successful item use
     // without ItemManager needing to import it directly.
-    // The item-owned schedule is now the sole effect/time execution owner.
-    this._emitItemSchedule(id, "use");
+    // The item-owned activity is now the sole effect/time execution owner.
+    this._emitItemActivity(id, "use");
 
     // 书籍法术学习：0 < SAN ≤ 50 时使用书籍触发，游戏层负责展示学习界面
     if (def.isBook && def.spells && def.spells.length > 0) {

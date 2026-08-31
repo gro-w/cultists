@@ -1,30 +1,30 @@
 import { eventBus } from "./EventBus.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 
-const globalSequenceBySchedule = new Map();
+const globalSequenceByActivity = new Map();
 const VALID_STATUSES = new Set(["unresolved", "resolved"]);
 
-class ScheduleQueue {
+class ActivityQueue {
   constructor(queueId, options = {}) {
     this.queueId = queueId;
     this.singleCurrent = Boolean(options.singleCurrent);
     this.nonBlocking = Boolean(options.nonBlocking);
     this.entries = [];
-    this.sequenceBySchedule = new Map();
+    this.sequenceByActivity = new Map();
   }
 
   append(entries = []) {
     const batch = Array.isArray(entries) ? entries : [entries];
     const added = batch.map((entry) => {
-      const scheduleId = entry.scheduleId || entry.payload?.scheduleId || entry.id || entry.payload?.id;
-      const sequence = Math.max(this.sequenceBySchedule.get(scheduleId) || 0, globalSequenceBySchedule.get(scheduleId) || 0);
-      this.sequenceBySchedule.set(scheduleId, sequence + 1);
-      globalSequenceBySchedule.set(scheduleId, sequence + 1);
+      const activityId = entry.activityId || entry.payload?.activityId || entry.id || entry.payload?.id;
+      const sequence = Math.max(this.sequenceByActivity.get(activityId) || 0, globalSequenceByActivity.get(activityId) || 0);
+      this.sequenceByActivity.set(activityId, sequence + 1);
+      globalSequenceByActivity.set(activityId, sequence + 1);
       return {
         ...entry,
-        scheduleId,
+        activityId,
         payload: entry.payload || entry,
-        instanceId: entry.instanceId || `${scheduleId}:${sequence + 1}`,
+        instanceId: entry.instanceId || `${activityId}:${sequence + 1}`,
         status: entry.status === "resolved" || entry.status === "completed" ? "resolved" : "unresolved",
         currentNodeId: entry.currentNodeId || entry.payload?.currentNodeId || entry.payload?.blueprint?.startNodeId || entry.payload?.startNodeId || null,
         executedNodeIds: Array.isArray(entry.executedNodeIds) ? [...entry.executedNodeIds] : [],
@@ -32,7 +32,7 @@ class ScheduleQueue {
       };
     });
     this.entries.push(...added);
-    if (added.length) eventBus.emit("schedule:appended", { queueId: this.queueId, entries: added });
+    if (added.length) eventBus.emit("activity:appended", { queueId: this.queueId, entries: added });
     return added;
   }
 
@@ -44,7 +44,7 @@ class ScheduleQueue {
       const variableId = { ajie: 100, awei: 101 }[entry.payload?.npcId || entry.npcId];
       if (variableId !== undefined && globalVariableManager.definition(variableId)) globalVariableManager.set(variableId, true);
     }
-    eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
+    eventBus.emit("activity:changed", { queueId: this.queueId, entry });
     return true;
   }
 
@@ -53,7 +53,7 @@ class ScheduleQueue {
     if (!entry || entry.status !== "unresolved") return false;
     entry.status = "resolved";
     entry.resolutionReason = "expired";
-    eventBus.emit("schedule:changed", { queueId: this.queueId, entry, expired: true });
+    eventBus.emit("activity:changed", { queueId: this.queueId, entry, expired: true });
     return true;
   }
 
@@ -61,7 +61,7 @@ class ScheduleQueue {
     const entry = this.entries.find((item) => item.instanceId === instanceId);
     if (!entry) return false;
     Object.assign(entry, patch);
-    eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
+    eventBus.emit("activity:changed", { queueId: this.queueId, entry });
     return true;
   }
 
@@ -70,17 +70,17 @@ class ScheduleQueue {
     return entry ? { ...entry, transcript: [...(entry.transcript || [])] } : null;
   }
 
-  countBySchedule(scheduleId) {
-    return this.entries.filter((entry) => entry.scheduleId === scheduleId).length;
+  countByActivity(activityId) {
+    return this.entries.filter((entry) => entry.activityId === activityId).length;
   }
 
   statusOf(instanceId) {
     return this.entries.find((item) => item.instanceId === instanceId)?.status || "nonexistent";
   }
 
-  hasCompletedId(scheduleId) {
+  hasCompletedId(activityId) {
     return this.entries.some((entry) =>
-      entry.status === "resolved" && entry.scheduleId === scheduleId
+      entry.status === "resolved" && entry.activityId === activityId
     );
   }
 
@@ -103,29 +103,29 @@ class ScheduleQueue {
   }
 
   restore(entries = []) {
-    if (!Array.isArray(entries)) throw new Error("Invalid schedule queue snapshot");
+    if (!Array.isArray(entries)) throw new Error("Invalid activity queue snapshot");
     const seen = new Set();
     this.entries = entries.map((entry) => {
-      if (!entry || typeof entry !== "object" || typeof entry.scheduleId !== "string" || !entry.scheduleId) {
-        throw new Error("Invalid schedule instance");
+      if (!entry || typeof entry !== "object" || typeof entry.activityId !== "string" || !entry.activityId) {
+        throw new Error("Invalid activity instance");
       }
       if (typeof entry.instanceId !== "string" || !entry.instanceId || seen.has(entry.instanceId)) {
-        throw new Error("Invalid or duplicate schedule instance ID");
+        throw new Error("Invalid or duplicate activity instance ID");
       }
-      if (!VALID_STATUSES.has(entry.status)) throw new Error("Invalid schedule instance status");
-      if (!Array.isArray(entry.transcript)) throw new Error("Invalid schedule transcript");
+      if (!VALID_STATUSES.has(entry.status)) throw new Error("Invalid activity instance status");
+      if (!Array.isArray(entry.transcript)) throw new Error("Invalid activity transcript");
       seen.add(entry.instanceId);
       return { ...entry, queueId: this.queueId, executedNodeIds: Array.isArray(entry.executedNodeIds) ? [...entry.executedNodeIds] : [], transcript: [...entry.transcript] };
     });
-    this.sequenceBySchedule = new Map();
+    this.sequenceByActivity = new Map();
     this.entries.forEach((entry) => {
-      const scheduleId = entry.scheduleId || entry.payload?.scheduleId || entry.id || entry.payload?.id;
+      const activityId = entry.activityId || entry.payload?.activityId || entry.id || entry.payload?.id;
       const match = String(entry.instanceId || "").match(/:(\d+)$/);
       const next = match ? Number(match[1]) : 0;
-      this.sequenceBySchedule.set(scheduleId, Math.max(this.sequenceBySchedule.get(scheduleId) || 0, next));
-      globalSequenceBySchedule.set(scheduleId, Math.max(globalSequenceBySchedule.get(scheduleId) || 0, next));
+      this.sequenceByActivity.set(activityId, Math.max(this.sequenceByActivity.get(activityId) || 0, next));
+      globalSequenceByActivity.set(activityId, Math.max(globalSequenceByActivity.get(activityId) || 0, next));
     });
-    eventBus.emit("schedule:changed", { queueId: this.queueId });
+    eventBus.emit("activity:changed", { queueId: this.queueId });
   }
 
   snapshot() {
@@ -140,7 +140,7 @@ class ScheduleQueue {
   }
 }
 
-export const workQueue = new ScheduleQueue("work");
-export const socialQueue = new ScheduleQueue("social");
-export const mainQueue = new ScheduleQueue("main", { nonBlocking: true });
-export default ScheduleQueue;
+export const workQueue = new ActivityQueue("work");
+export const socialQueue = new ActivityQueue("social");
+export const mainQueue = new ActivityQueue("main", { nonBlocking: true });
+export default ActivityQueue;

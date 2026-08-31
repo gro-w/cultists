@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { validateBlueprint } from "../js/core/ScheduleBlueprint.js";
+import { validateBlueprint } from "../js/core/ActivityBlueprint.js";
 
 const root = "data/zh-hans";
 const read = (file) => JSON.parse(fs.readFileSync(`${root}/${file}`, "utf8"));
@@ -54,8 +54,8 @@ for (const e of all) {
   const result = validateBlueprint(e.blueprint);
   assert.equal(result.ok, true, `${e.id}: ${result.errors?.join("; ")}`);
   assert.equal(control(e, "prerequisite").outputs && Object.keys(control(e, "prerequisite").outputs).length, 0);
-  assert.equal(control(e, "scheduleExpiry").outputs && Object.keys(control(e, "scheduleExpiry").outputs).length, 0);
-  assert.equal(control(e, "scheduleExpiry").inputs.expires, true);
+  assert.equal(control(e, "activityExpiry").outputs && Object.keys(control(e, "activityExpiry").outputs).length, 0);
+  assert.equal(control(e, "activityExpiry").inputs.expires, true);
 }
 gateSources(entry("social02a_ajie_chat"), 100);
 gateSources(entry("social02a_awei_chat"), 101);

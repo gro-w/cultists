@@ -1,10 +1,10 @@
-import { normalizeBlueprint, validateBlueprint } from "./ScheduleBlueprint.js";
-import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
+import { normalizeBlueprint, validateBlueprint } from "./ActivityBlueprint.js";
+import { ActivityValueEvaluator } from "./ActivityValueEvaluator.js";
 import { timeService } from "./TimeService.js";
-import { scheduleData } from "./ScheduleData.js";
+import { activityData } from "./ActivityData.js";
 import { itemManager } from "./ItemManager.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
-import { modifyStatValue } from "./ScheduleValueAccess.js";
+import { modifyStatValue } from "./ActivityValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
@@ -27,8 +27,8 @@ function nextFlow(blueprint, node, port = "flowOut") {
   return connection?.toNodeId || node.next || null;
 }
 
-export class ScheduleRunner {
-  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, onItemInspection = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
+export class ActivityRunner {
+  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, onItemInspection = () => {}, appId = "activity", readOnly = false, random = Math.random } = {}) {
     this.definition = definition || {};
     this.instance = instance || { status: "unresolved", transcript: [] };
     if (this.instance.status === "pending" || this.instance.status === "completed") this.instance.status = this.instance.status === "completed" ? "resolved" : "unresolved";
@@ -44,9 +44,9 @@ export class ScheduleRunner {
     this.readOnly = readOnly || this.instance.status === "resolved";
     this._waitUntilUnsubscribers = [];
     this._waitUntilEvaluating = false;
-    this.evaluator = new ScheduleValueEvaluator(this.blueprint, {
-      scheduleStatus: (instanceId) => this._scheduleStatus(instanceId),
-      scheduleInstanceCount: (scheduleId) => this._scheduleInstanceCount(scheduleId),
+    this.evaluator = new ActivityValueEvaluator(this.blueprint, {
+      activityStatus: (instanceId) => this._activityStatus(instanceId),
+      activityInstanceCount: (activityId) => this._activityInstanceCount(activityId),
     });
     const validation = validateBlueprint(this.blueprint);
     if (!validation.ok) throw new Error(validation.errors.join("；"));
@@ -68,7 +68,7 @@ export class ScheduleRunner {
       const node = this.blueprint.nodes?.[current];
       if (!node) throw new Error(`Unknown flow node: ${current}`);
       if (!globalVariableManager.matches(node.condition || node.globalVariableCondition)) {
-        this.appendLine("npc", String(this.definition.name || this.definition.id || "日程"), "（当前条件不满足，无法继续。）");
+        this.appendLine("npc", String(this.definition.name || this.definition.id || "活动"), "（当前条件不满足，无法继续。）");
         this._resolve();
         return;
       }
@@ -104,7 +104,7 @@ export class ScheduleRunner {
       this.instance.currentNodeId = current || null;
       this.onCheckpoint(this.instance);
     }
-    if (guard >= 1000) throw new Error("Schedule flow exceeded 1000 nodes");
+    if (guard >= 1000) throw new Error("Activity flow exceeded 1000 nodes");
     this._resolve();
   }
 
@@ -115,12 +115,12 @@ export class ScheduleRunner {
     }
     switch (node.type) {
       case "flowStart": return {};
-      case "scheduleEnd": this._resolve(); return { stop: true };
+      case "activityEnd": this._resolve(); return { stop: true };
       case "text": {
         const speaker = get("speaker", node.speaker || "npc");
         const text = String(get("text", node.text || ""));
         this._record({ type: "text", speaker, text });
-        if (this.definition.kind === "medicalIncident") this.instance.lastScheduleText = text;
+        if (this.definition.kind === "medicalIncident") this.instance.lastActivityText = text;
         this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
         if (this.definition.action === "investigate" && Array.isArray(node.keywordIds)) {
           this._emitInspection(node, text);
@@ -160,20 +160,20 @@ export class ScheduleRunner {
         else globalVariableManager.set(id, get("value"));
         return {};
       }
-      case "insertSchedule": {
-        const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"), {
+      case "insertActivity": {
+        const result = activityData.addActivity(get("activityId"), get("addTime"), get("queue"), {
           respectPrerequisite: get("respectPrerequisite", true),
           protectFromExpiry: get("protectFromExpiry", false),
         });
-        if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
+        if (!result.ok) throw new Error(`Insert activity failed: ${result.reason}`);
         return {};
       }
-      case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
-      case "endCg":  eventBus.emit("schedule:end_cg", { instanceId: this.instance.instanceId }); return {};
+      case "showCg": eventBus.emit("activity:cg", { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
+      case "endCg":  eventBus.emit("activity:end_cg", { instanceId: this.instance.instanceId }); return {};
       case "showImage": {
         const image = String(get("image", ""));
         this.instance.inspectionImage = image || null;
-        if (image) eventBus.emit("schedule:image", { image, itemId: this.definition.itemId, instanceId: this.instance.instanceId });
+        if (image) eventBus.emit("activity:image", { image, itemId: this.definition.itemId, instanceId: this.instance.instanceId });
         return {};
       }
       case "segmentBranch": {
@@ -333,8 +333,8 @@ export class ScheduleRunner {
     this.instance.currentNodeId = null;
     this.onCheckpoint(this.instance);
     this.onComplete(this.instance);
-    eventBus.emit("schedule:resolved", { appId: this.appId, instance: this.instance });
-    eventBus.emit("schedule:completed", { appId: this.appId, instance: this.instance });
+    eventBus.emit("activity:resolved", { appId: this.appId, instance: this.instance });
+    eventBus.emit("activity:completed", { appId: this.appId, instance: this.instance });
   }
 
   _subscribeWaitUntil(nodeId) {
@@ -342,7 +342,7 @@ export class ScheduleRunner {
     const events = [
       "gamestate:changed", "global-variable:changed", "global-variables:changed",
       "items:changed", "npcState:changed", "favorability:changed", "time:changed",
-      "daynight:changed", "schedule:changed", "schedule:appended", "spells:changed",
+      "daynight:changed", "activity:changed", "activity:appended", "spells:changed",
     ];
     const retry = () => {
       if (this._waitUntilEvaluating || this.instance.status === "resolved") return;
@@ -360,17 +360,17 @@ export class ScheduleRunner {
     this._waitUntilUnsubscribers.splice(0).forEach((unsubscribe) => unsubscribe());
   }
 
-  _scheduleStatus(instanceId) {
+  _activityStatus(instanceId) {
     const queues = ["work", "social", "main"];
-    const status = queues.map((id) => scheduleData.queue(id).statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
+    const status = queues.map((id) => activityData.queue(id).statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
     return STATUS[status] ?? STATUS.nonexistent;
   }
 
-  _scheduleInstanceCount(scheduleId) {
-    return ["work", "social", "main"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
+  _activityInstanceCount(activityId) {
+    return ["work", "social", "main"].reduce((total, queueId) => total + activityData.queue(queueId).countByActivity(activityId), 0);
   }
 }
 
-export function createScheduleRunner(options) { return new ScheduleRunner(options); }
-export { STATUS as SCHEDULE_STATUS };
-export default ScheduleRunner;
+export function createActivityRunner(options) { return new ActivityRunner(options); }
+export { STATUS as ACTIVITY_STATUS };
+export default ActivityRunner;

@@ -9,7 +9,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -21,7 +21,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -44,9 +44,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -91,9 +91,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -104,7 +104,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -132,7 +132,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -144,7 +144,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -169,9 +169,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -209,7 +209,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -247,9 +247,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -291,7 +291,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -303,7 +303,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -380,9 +380,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -472,7 +472,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -484,7 +484,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -509,9 +509,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -556,9 +556,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -569,7 +569,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -597,7 +597,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -609,7 +609,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -632,9 +632,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -672,7 +672,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -710,9 +710,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -754,7 +754,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -766,7 +766,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -789,9 +789,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -829,7 +829,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -867,9 +867,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -911,7 +911,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -923,7 +923,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -1000,9 +1000,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -1094,7 +1094,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -1124,9 +1124,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -1162,7 +1162,7 @@
       "pickable": false,
       "worldCount": 1,
       "locations": [],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -1174,7 +1174,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -1197,9 +1197,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -1244,9 +1244,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -1257,7 +1257,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -1329,7 +1329,7 @@
             "type": "disease",
             "selfEnding": "自杀结局"
           },
-          "schedules": {}
+          "activities": {}
         }
       ],
       "bookContents": [
@@ -1341,7 +1341,7 @@
         "不能想了。\n\n四千年来时时吃人的地方，今天才明白，我也在其中混了多年；大哥正管着家务，妹子恰恰死了，他未必不和在饭菜里，暗暗给我们吃。\n\n我未必无意之中，不吃了我妹子的几片肉，现在也轮到我自己，……\n\n有了四千年吃人履历的我，当初虽然不知道，现在明白，难见真的人！\n\n没有吃过人的孩子，或者还有？\n\n救救孩子……"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -1353,7 +1353,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -1563,9 +1563,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -1759,7 +1759,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -1775,9 +1775,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -1852,7 +1852,7 @@
             "wakeSanity": 0,
             "sleepEvent": "长眠的克苏鲁候汝入梦"
           },
-          "schedules": {}
+          "activities": {}
         }
       ],
       "bookContents": [
@@ -1862,7 +1862,7 @@
         "它们都是吃了一种药变成这样的。"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -1874,7 +1874,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -2051,9 +2051,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -2223,7 +2223,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -2239,9 +2239,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -2274,7 +2274,7 @@
         "ajie_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -2286,7 +2286,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -2401,9 +2401,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -2532,9 +2532,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -2545,7 +2545,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -2599,7 +2599,7 @@
         "ajie_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -2611,7 +2611,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -2724,9 +2724,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -2855,9 +2855,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -2868,7 +2868,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -2962,7 +2962,7 @@
             "type": "seal_activation",
             "chaseEnding": "异常结局"
           },
-          "schedules": {}
+          "activities": {}
         }
       ],
       "bookContents": [
@@ -2974,7 +2974,7 @@
         "谁能知道，是什么痛苦的幻想创造出这些果实的呢？该不是看管金苹果园的赫斯珀里得斯三姐妹在波利尼西亚果园中培植出来的吧！奇怪的是，这些果实都象活的一样，仿佛是在混沌初开时创造出来的，当时任何事物还都没有固定的形体，丰实肥硕，散发着浓郁的热带气息，好象具有一种独特的忧郁的感情。它们是被施展了魔法的果子，任何人尝了就能打开通向不知道哪些灵魂秘密的门扉，就可以走进幻境的神秘宫殿。它们孕育着无法预知的危险，咬一口就可能把一个人变成野兽，但也说不定变成神灵。一切健康的、正常的东西，淳朴人们所有的一切美好的情谊、朴素的欢乐都远远地避开了它们；但它们又具有莫大的诱惑力，就象伊甸园中能分辨善恶的智慧果一样，能把人带进未知的境界。"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -2986,7 +2986,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -3099,9 +3099,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -3229,7 +3229,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -3245,9 +3245,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -3280,7 +3280,7 @@
         "awei_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -3292,7 +3292,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -3404,9 +3404,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -3535,9 +3535,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -3548,7 +3548,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -3602,7 +3602,7 @@
         "awei_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -3614,7 +3614,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -3729,9 +3729,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -3860,9 +3860,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -3873,7 +3873,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -3927,7 +3927,7 @@
         "awei_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -3939,7 +3939,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -4052,9 +4052,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -4183,9 +4183,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -4196,7 +4196,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -4292,7 +4292,7 @@
             "ending": "蹈海",
             "sanThreshold": 30
           },
-          "schedules": {}
+          "activities": {}
         }
       ],
       "bookContents": [
@@ -4307,7 +4307,7 @@
         "我要计划帮助表弟从康顿市的疯人院里逃出来，然后一同回到被奇迹笼罩着的印斯茅斯。我们将游到海中那块若隐若现的礁石边，然后下潜进黑色的深渊里，进入耸立着无数立柱、雄伟壮丽的伊哈斯雷。此后，我们将在奇迹与荣光的围绕下，永远生活在那片深潜者的栖身之地里。"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -4319,7 +4319,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -4440,9 +4440,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -4570,7 +4570,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -4586,9 +4586,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -4661,7 +4661,7 @@
             "type": "domination",
             "chaseEnding": "异常结局"
           },
-          "schedules": {}
+          "activities": {}
         }
       ],
       "bookContents": [
@@ -4670,7 +4670,7 @@
         "“不要认为人类是地球上最古老和最后的支配者，也不要认为在地球上行走的全是寻常可见的生命和形体。古神们昔在，今在，永在。”"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -4682,7 +4682,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -4795,9 +4795,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -4925,7 +4925,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -4941,9 +4941,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -4976,7 +4976,7 @@
         "binbin_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -4988,7 +4988,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -5100,9 +5100,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -5231,9 +5231,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -5244,7 +5244,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -5298,7 +5298,7 @@
         "binbin_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -5310,7 +5310,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -5423,9 +5423,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -5554,9 +5554,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -5567,7 +5567,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -5622,7 +5622,7 @@
       ],
       "isBook": true,
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -5634,7 +5634,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -5834,9 +5834,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -6013,9 +6013,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -6026,7 +6026,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -6080,7 +6080,7 @@
         "fridge"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -6092,7 +6092,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -6203,9 +6203,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -6334,9 +6334,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -6347,7 +6347,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -6401,7 +6401,7 @@
         "fridge"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -6413,7 +6413,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -6525,9 +6525,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -6656,9 +6656,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -6669,7 +6669,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -6723,7 +6723,7 @@
         "fridge"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -6735,7 +6735,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -6838,9 +6838,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -6969,9 +6969,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -6982,7 +6982,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -7036,7 +7036,7 @@
         "fridge"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -7048,7 +7048,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -7155,9 +7155,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -7286,9 +7286,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -7299,7 +7299,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -7353,7 +7353,7 @@
         "binbin_desk"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -7365,7 +7365,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -7477,9 +7477,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -7608,9 +7608,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -7621,7 +7621,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -7674,7 +7674,7 @@
       "locations": [
         "hospital"
       ],
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -7686,7 +7686,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -7789,9 +7789,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -7913,7 +7913,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 420,
@@ -7932,9 +7932,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -7989,7 +7989,7 @@
         "restaurant"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -8001,7 +8001,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -8102,9 +8102,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -8233,9 +8233,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -8246,7 +8246,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,
@@ -8281,7 +8281,7 @@
         "restaurant"
       ],
       "pickable": false,
-      "schedules": {
+      "activities": {
         "investigate": {
           "startNodeId": "start",
           "nodes": {
@@ -8293,7 +8293,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {}
             },
@@ -8394,9 +8394,9 @@
               "x": 80,
               "y": 240
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "inputs": {
                 "expires": false,
                 "expiresAt": 0
@@ -8525,9 +8525,9 @@
               },
               "outputs": {}
             },
-            "__schedule_expiry__": {
-              "id": "__schedule_expiry__",
-              "type": "scheduleExpiry",
+            "__activity_expiry__": {
+              "id": "__activity_expiry__",
+              "type": "activityExpiry",
               "x": 80,
               "y": 360,
               "inputs": {
@@ -8538,7 +8538,7 @@
             },
             "end": {
               "id": "end",
-              "type": "scheduleEnd",
+              "type": "activityEnd",
               "inputs": {},
               "outputs": {},
               "x": 280,

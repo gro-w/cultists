@@ -1,13 +1,13 @@
-import { validateBlueprint, embedLegacyPrerequisite } from "../js/core/ScheduleBlueprint.js";
-import { ScheduleValueEvaluator } from "../js/core/ScheduleValueEvaluator.js";
-import { getScheduleNodeDefinition, getScheduleNodePort } from "../js/core/ScheduleNodeRegistry.js";
+import { validateBlueprint, embedLegacyPrerequisite } from "../js/core/ActivityBlueprint.js";
+import { ActivityValueEvaluator } from "../js/core/ActivityValueEvaluator.js";
+import { getActivityNodeDefinition, getActivityNodePort } from "../js/core/ActivityNodeRegistry.js";
 
-for (const type of ["prerequisite", "scheduleExpiry"]) {
-  const definition = getScheduleNodeDefinition(type);
+for (const type of ["prerequisite", "activityExpiry"]) {
+  const definition = getActivityNodeDefinition(type);
   if (definition.flowInputs?.length || definition.flowOutputs?.length || definition.valueOutputs?.length) {
     throw new Error(`${type} unexpectedly exposes an output/input flow port`);
   }
-  if (getScheduleNodePort(type, "value", "output") || getScheduleNodePort(type, "flowOut", "output")) {
+  if (getActivityNodePort(type, "value", "output") || getActivityNodePort(type, "flowOut", "output")) {
     throw new Error(`${type} unexpectedly exposes an output port`);
   }
 }
@@ -16,8 +16,8 @@ const blueprint = {
   startNodeId: "start",
   nodes: {
     start: { id: "start", type: "flowStart", inputs: {}, outputs: {} },
-    end: { id: "end", type: "scheduleEnd", inputs: {}, outputs: {} },
-    expiry: { id: "expiry", type: "scheduleExpiry", inputs: { expires: false, expiresAt: 0 }, outputs: {} },
+    end: { id: "end", type: "activityEnd", inputs: {}, outputs: {} },
+    expiry: { id: "expiry", type: "activityExpiry", inputs: { expires: false, expiresAt: 0 }, outputs: {} },
     publicVariable: { id: "publicVariable", type: "getGlobal", inputs: { variableId: 100 }, outputs: {} },
     gate: { id: "gate", type: "prerequisite", inputs: {}, outputs: {} },
   },
@@ -28,7 +28,7 @@ const blueprint = {
 };
 const checked = validateBlueprint(blueprint);
 if (!checked.ok) throw new Error(checked.errors.join("; "));
-const result = (value) => new ScheduleValueEvaluator(checked.blueprint, {
+const result = (value) => new ActivityValueEvaluator(checked.blueprint, {
   globalVariableManager: { get: () => value },
 }).readInput("gate", "condition", false) === true;
 if (result(true) !== true || result(false) !== false || result(1) !== false) {

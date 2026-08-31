@@ -41,6 +41,6 @@ export function modifyStatValue(statId, delta) {
   throw new Error(`Unknown stat: ${statId}`);
 }
 
-export function getScheduleValueContext() {
+export function getActivityValueContext() {
   return { gameState, itemManager, globalVariableManager, npcStateManager, favorabilityManager, timeService };
 }

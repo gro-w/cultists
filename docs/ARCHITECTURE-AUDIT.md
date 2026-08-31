@@ -9,8 +9,8 @@
 | 状态域 | 所有者 | 重要变量 | 当前调试器 |
 | --- | --- | --- | --- |
 | 游戏时间与模式 | `GameState` / `TimeService` | `day`、`clockMinutes`、`phase`、`duty`、`location`、`phaseMinutes`、`sleepHistory`、`insufficientSleepStreak`、`energy`、`mental`、`physical`、`satiety`、`recoverableMentalLoss` | 时间与读档 |
-| 工作/社交/ChatGTP/主要流程 | `ScheduleQueue` | `workQueue`、`socialQueue`、`mainQueue` 的全部实例：`scheduleId`、`instanceId`、`status`、`payload`、接收时间、transcript 及实例扩展字段 | 无专用队列调试器 |
-| 日程来源与动态追加 | `ScheduleData` | `fired`、`pendingAdds`、`lastAbsoluteMinute`、动态日程请求及其目标队列 | 无 |
+| 工作/社交/ChatGTP/主要流程 | `ActivityQueue` | `workQueue`、`socialQueue`、`mainQueue` 的全部实例：`activityId`、`instanceId`、`status`、`payload`、接收时间、transcript 及实例扩展字段 | 无专用队列调试器 |
+| 活动来源与动态追加 | `ActivityData` | `fired`、`pendingAdds`、`lastAbsoluteMinute`、动态活动请求及其目标队列 | 无 |
 | 玩家背包 | `ItemManager` | 物品 ID 与持有数量 | 玩家与资源 |
 | 场景物品摆放 | `ItemPlacementManager` | 每个 placement 的 `placed` 状态 | 世界与场景 |
 | 关键词笔记本 | `KeywordManager` | 已收集关键词 ID、`collectedDay`；定义注册表为静态数据 | 玩家与资源（只读） |
@@ -42,7 +42,7 @@
 11. **`globalVariables`**：每个公共变量的 `id` 与当前 `value`。
 12. **`windows`**：打开窗口的 `appId`、`x`、`y`。
 13. **`spells`**：已学习法术完整对象数组。
-14. **`scheduledAdds`**：动态日程的 `scheduleId`、`addTime`、可选 `queueId`。
+14. **`queuedAdds`**：动态活动的 `activityId`、`addTime`、可选 `queueId`。
 15. **`favorability`**：NPC 好感度值和 `hadPositive`。
 16. **`itemPlacements`**：场景物品的 `placed` 状态。
 
@@ -89,7 +89,7 @@
 - NPC 与 ChatGTP 的 SAN。
 - NPC 离线状态。
 - 三名核心角色的好感度。
-它现在以“NPC状态”为入口；对话进度与状态由日程实例及其队列调试信息管理。
+它现在以“NPC状态”为入口；对话进度与状态由活动实例及其队列调试信息管理。
 
 ### 玩家与资源
 
@@ -103,7 +103,7 @@
 
 它覆盖 `GameState` 和 `ItemManager.inventory`，场景物品由“世界与场景”负责。
 
-### 日程与队列、世界与场景、医疗与结局
+### 活动与队列、世界与场景、医疗与结局
 
 三个新增入口分别覆盖三个队列及实例状态、场景物品/公共变量当前值，以及 HIS 医疗账目/提交和结局锁定状态。
 
@@ -111,7 +111,7 @@
 
 以下状态仍没有独立入口，或仅以只读方式呈现在组合调试器中：
 
-1. `ScheduleData.fired`、`pendingAdds`、`lastAbsoluteMinute` 尚未在“日程与队列”中单独展示。
+1. `ActivityData.fired`、`pendingAdds`、`lastAbsoluteMinute` 尚未在“活动与队列”中单独展示。
 2. `KeywordManager` 和 `SpellManager` 当前只读展示，尚未提供独立的运行时增删控件。
 3. `FavorabilityManager.hadPositive` 尚未单独展示，但已随 NPC 与对话调试器和当前 v16 存档覆盖。
 4. `BgmManager` 的对话栈和结局 BGM 层（通常属于表现层，不建议优先开放）。
@@ -127,12 +127,12 @@
 - 存档文件载入与当前存档下载。
 - 强制下班、阶段边界和最终阶段观察。
 
-### B. 日程与队列
+### B. 活动与队列
 
 新增一个运行时调试器，统一观察但分栏显示：
 
 - `workQueue`、`socialQueue`、`mainQueue`。
-- 每个实例的 `instanceId`、`scheduleId`、状态、收到时间和 transcript。
+- 每个实例的 `instanceId`、`activityId`、状态、收到时间和 transcript。
 - 标记 resolved、重放/清除单个实例、查看 `pendingAdds`。
 
 清除和重放必须明确标记为开发操作，不能绕过正常执行器；优先提供只读观察，修改操作应使用实例 ID。
@@ -185,8 +185,8 @@
 
 存档缺口和基础调试器分组已经完成；后续工作不应再按旧的 v12 存档计划执行。当前仍适合优先处理的项目是：
 
-1. 在“日程与队列”中补充 `ScheduleData.fired`、`pendingAdds` 和
+1. 在“活动与队列”中补充 `ActivityData.fired`、`pendingAdds` 和
    `lastAbsoluteMinute` 的只读观察（如调试需求仍然存在）。
 2. 为关键 owner 补充确定性的 save round-trip 和队列恢复探针，特别是
-   CG 状态、动态日程与对话 checkpoint。
+   CG 状态、动态活动与对话 checkpoint。
 3. 视表现层调试需求增加 BGM 栈、窗口 z 顺序和 DataLoader 缓存的只读诊断。

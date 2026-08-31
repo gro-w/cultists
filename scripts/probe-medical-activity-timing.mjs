@@ -12,4 +12,4 @@ assert.equal(medicalCaseManager.processDue(2, 480).map(({ type }) => type).join(
 medicalCaseManager.submissions.get("complaint").processed = true;
 assert.equal(medicalCaseManager.processDue(7, 959).length, 0);
 assert.equal(medicalCaseManager.processDue(7, 960).map(({ type }) => type).join(), "riot");
-console.log("medical schedule timing probe: ok");
+console.log("medical activity timing probe: ok");

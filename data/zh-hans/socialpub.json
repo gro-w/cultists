@@ -99,7 +99,7 @@
           },
           "study_end": {
             "id": "study_end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -367,7 +367,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -389,9 +389,9 @@
             },
             "outputs": {}
           },
-          "scheduleExpiry": {
-            "id": "scheduleExpiry",
-            "type": "scheduleExpiry",
+          "activityExpiry": {
+            "id": "activityExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 2879
@@ -845,7 +845,7 @@
           },
           "study_end": {
             "id": "study_end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -1101,7 +1101,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -1114,9 +1114,9 @@
             },
             "outputs": {}
           },
-          "scheduleExpiry": {
-            "id": "scheduleExpiry",
-            "type": "scheduleExpiry",
+          "activityExpiry": {
+            "id": "activityExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 4319
@@ -1564,7 +1564,7 @@
           },
           "study_end": {
             "id": "study_end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -1825,7 +1825,7 @@
           },
           "streak_end": {
             "id": "streak_end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -1903,9 +1903,9 @@
             },
             "outputs": {}
           },
-          "scheduleExpiry": {
-            "id": "scheduleExpiry",
-            "type": "scheduleExpiry",
+          "activityExpiry": {
+            "id": "activityExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 5759
@@ -2419,7 +2419,7 @@
           },
           "study_end": {
             "id": "study_end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -2620,9 +2620,9 @@
             },
             "outputs": {}
           },
-          "scheduleExpiry": {
-            "id": "scheduleExpiry",
-            "type": "scheduleExpiry",
+          "activityExpiry": {
+            "id": "activityExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 7199
@@ -2698,7 +2698,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           }

@@ -1,7 +1,7 @@
 import { dataLoader } from "./DataLoader.js";
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
-import { mainQueue, socialQueue } from "./ScheduleQueue.js";
+import { mainQueue, socialQueue } from "./ActivityQueue.js";
 import { specialEventManager } from "./SpecialEventManager.js";
 import { cgManager } from "./CGManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
@@ -71,7 +71,7 @@ class TurtleSoupManager {
     const question = puzzle.questions.find((entry) => entry.question_id === questionId);
     if (!question || !ANSWERS[question.answer]) return { ok: false, reason: "unknownQuestion" };
     const entry = { day: gameState.day, question_id: question.question_id, question_text: question.text, answer: question.answer };
-    const instance = mainQueue.append([{ scheduleId: `turtle-soup:question:${this.state.puzzleId}:${gameState.day}:${questionId}`, payload: { type: "turtleSoupQuestion", questionId }, transcript: [] }])[0];
+    const instance = mainQueue.append([{ activityId: `turtle-soup:question:${this.state.puzzleId}:${gameState.day}:${questionId}`, payload: { type: "turtleSoupQuestion", questionId }, transcript: [] }])[0];
     mainQueue.complete(instance.instanceId);
     this.state.history.push(entry);
     this.state.questionCount += 1;
@@ -133,8 +133,8 @@ class TurtleSoupManager {
 
   _queueEvent(eventId) {
     const definition = specialEventManager.events.find((event) => event.id === eventId);
-    if (!definition || socialQueue.getPending().some((entry) => entry.scheduleId === eventId)) return;
-    socialQueue.append([{ ...definition, scheduleId: eventId, receivedDay: gameState.day, receivedTime: gameState.clockMinutes }]);
+    if (!definition || socialQueue.getPending().some((entry) => entry.activityId === eventId)) return;
+    socialQueue.append([{ ...definition, activityId: eventId, receivedDay: gameState.day, receivedTime: gameState.clockMinutes }]);
   }
 
   snapshot() { return JSON.parse(JSON.stringify(this.state)); }

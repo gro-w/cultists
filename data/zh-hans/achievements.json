@@ -284,7 +284,7 @@
       "hidden": false,
       "icon": "📚",
       "trigger": { "event": "game:text_read", "condition": { "allRead": true } },
-      "todo": "触发条件：需要 ScheduleData 提供 totalNodeCount，由 AchievementManager 与 readNodeIds 的大小比对"
+      "todo": "触发条件：需要 ActivityData 提供 totalNodeCount，由 AchievementManager 与 readNodeIds 的大小比对"
     }
   ],
   "categories": {

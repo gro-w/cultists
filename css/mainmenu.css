@@ -280,7 +280,7 @@
   opacity: 0.92;
 }
 
-.ending-schedule-status {
+.ending-activity-status {
   position: absolute;
   bottom: calc(100% + 8px);
   color: #9cffb8;
@@ -288,7 +288,7 @@
   opacity: 0.8;
 }
 
-.ending-schedule-log {
+.ending-activity-log {
   width: 100%;
   min-height: 88px;
   max-height: 24vh;
@@ -315,7 +315,7 @@
   margin-right: 10px;
 }
 
-.ending-schedule-options {
+.ending-activity-options {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -323,8 +323,8 @@
   justify-content: flex-end;
 }
 
-.ending-schedule-options .dialogue-continue,
-.ending-schedule-options button {
+.ending-activity-options .dialogue-continue,
+.ending-activity-options button {
   min-width: 110px;
   padding: 8px 18px;
   font-size: 14px;

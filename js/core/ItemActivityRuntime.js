@@ -1,6 +1,6 @@
 import { eventBus } from "./EventBus.js";
-import { createScheduleRunner } from "./ScheduleRunner.js";
-import { mainQueue } from "./ScheduleQueue.js";
+import { createActivityRunner } from "./ActivityRunner.js";
+import { mainQueue } from "./ActivityQueue.js";
 import { timeService } from "./TimeService.js";
 import { gameState } from "./GameState.js";
 import { itemManager } from "./ItemManager.js";
@@ -12,10 +12,10 @@ import { medicalCaseManager } from "./MedicalCaseManager.js";
 let sequence = 0;
 
 function definitionFor(payload) {
-  const scheduleId = payload.scheduleId || payload.blueprint?.id || `${payload.source || "item"}:${payload.itemId || payload.actorId || "unknown"}:${payload.action || "event"}`;
+  const activityId = payload.activityId || payload.blueprint?.id || `${payload.source || "item"}:${payload.itemId || payload.actorId || "unknown"}:${payload.action || "event"}`;
   return {
     ...payload.blueprint,
-    id: scheduleId,
+    id: activityId,
     blueprint: payload.blueprint,
     itemId: payload.itemId,
     actorId: payload.actorId,
@@ -39,12 +39,12 @@ function applyEffect(effect = {}) {
   return result;
 }
 
-/** Execute item-owned schedules immediately in the non-blocking main queue. */
-export function runItemSchedule(payload = {}) {
+/** Execute item-owned activities immediately in the non-blocking main queue. */
+export function runItemActivity(payload = {}) {
   const definition = definitionFor(payload);
   const instanceId = `${definition.id}:${++sequence}`;
   const queue = mainQueue;
-  let instance = payload.instance || { instanceId, scheduleId: definition.id, status: "unresolved", transcript: [] };
+  let instance = payload.instance || { instanceId, activityId: definition.id, status: "unresolved", transcript: [] };
   // A producer may pass a pre-created instance (for example a ChatGTP query),
   // but every runtime execution must still be represented in its queue. NPC
   // threshold transitions use this path without pre-appending an instance.
@@ -65,7 +65,7 @@ export function runItemSchedule(payload = {}) {
     payload.context?.onComplete?.({ ...instance, result: effectResult });
     return { ok: true, instance };
   }
-  const runner = createScheduleRunner({
+  const runner = createActivityRunner({
     definition,
     instance,
     appId: "item",
@@ -80,10 +80,10 @@ export function runItemSchedule(payload = {}) {
   return runner.start();
 }
 
-export const itemScheduleRuntime = {
+export const itemActivityRuntime = {
   subscribe() {
-    return eventBus.on("schedule:triggered", runItemSchedule);
+    return eventBus.on("activity:triggered", runItemActivity);
   },
 };
 
-itemScheduleRuntime.subscribe();
+itemActivityRuntime.subscribe();

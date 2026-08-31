@@ -361,7 +361,7 @@ export class DevBgmEditorTab {
         if (n?.onShow?.bgm?.bgmId === bgmId) count++;
       });
     };
-    Object.values(project.schedules || {}).forEach((sched) =>
+    Object.values(project.activities || {}).forEach((sched) =>
       (sched.entries || []).forEach((e) => scanCtx(e.dialogueTree))
     );
     Object.values(project.events || {}).forEach(scanCtx);
@@ -385,10 +385,10 @@ export class DevBgmEditorTab {
     const refs = [];
     const proj = this._dev._dialogueEditorTab?.project;
     if (proj) {
-      Object.entries(proj.schedules || {}).forEach(([key, sched]) =>
+      Object.entries(proj.activities || {}).forEach(([key, sched]) =>
         (sched.entries || []).forEach((e, ei) => {
           const r = (e.dialogueTree ? BgmManager.scanDialogueTree(e.dialogueTree) : []).filter((x) => x.bgmId === bgmId);
-          r.forEach((x) => refs.push(`日程 ${key} 条目#${ei + 1} 节点 ${x.nodeId}`));
+          r.forEach((x) => refs.push(`活动 ${key} 条目#${ei + 1} 节点 ${x.nodeId}`));
         })
       );
       Object.entries(proj.events || {}).forEach(([id, ctx]) => {

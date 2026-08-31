@@ -1,8 +1,8 @@
-# 剧本到日程蓝图技能
+# 剧本到活动蓝图技能
 
 ## 目标
 
-本技能用于把一段自然语言剧本转换为本项目可运行、可保存、可恢复、可验证的对象式日程蓝图。它面向不了解本项目历史上下文的 agent，因此所有关键契约都必须从仓库当前代码和文档确认，不能依赖角色名称、文件名或旧对话记忆推断。
+本技能用于把一段自然语言剧本转换为本项目可运行、可保存、可恢复、可验证的对象式活动蓝图。它面向不了解本项目历史上下文的 agent，因此所有关键契约都必须从仓库当前代码和文档确认，不能依赖角色名称、文件名或旧对话记忆推断。
 
 本技能覆盖：
 
@@ -12,7 +12,7 @@
 - 设计自然、分散且可验证的 `consumeTime` 时间推进；
 - 对所有分支进行拓扑、语义和内容完整性验证。
 
-本技能不允许绕过 `ScheduleRunner`、直接调用 `TimeService`、把剧情效果硬编码到应用层，或用“JSON 能解析”代替蓝图验证。
+本技能不允许绕过 `ActivityRunner`、直接调用 `TimeService`、把剧情效果硬编码到应用层，或用“JSON 能解析”代替蓝图验证。
 
 ## 适用时机
 
@@ -21,7 +21,7 @@
 - 一段 NPC 对话剧本；
 - 多个选项和好感度/怀疑度结果；
 - “如果满足某条件”“否则”“第二天再次访问”等剧情条件；
-- 需要把内容放入某个日期和阶段的 Social/Work 日程文件；
+- 需要把内容放入某个日期和阶段的 Social/Work 活动文件；
 - 需要让对话消耗游戏时间或限制同晚互动次数；
 
 应加载并执行本技能。
@@ -31,13 +31,13 @@
 在修改前使用 `read_file` 和 `search_files` 读取：
 
 1. `AGENTS.md`：项目边界、时间单位、数据规则、验证要求；
-2. `docs/SCHEDULE-BLUEPRINTS.md`：蓝图顶层结构、节点端口、连接方向和运行时语义；
-3. `docs/DATA-SCHEMAS.md`：日程文件和条目结构；
-4. `js/core/ScheduleNodeRegistry.js`：当前真正注册的节点和端口；
-5. `js/core/ScheduleBlueprint.js`：当前校验规则；
-6. `js/core/ScheduleRunner.js`：节点执行语义；
-7. `js/core/ScheduleValueEvaluator.js`：数值输入和条件求值；
-8. 目标语言目录中同类的现有日程文件；
+2. `docs/ACTIVITY-BLUEPRINTS.md`：蓝图顶层结构、节点端口、连接方向和运行时语义；
+3. `docs/DATA-SCHEMAS.md`：活动文件和条目结构；
+4. `js/core/ActivityNodeRegistry.js`：当前真正注册的节点和端口；
+5. `js/core/ActivityBlueprint.js`：当前校验规则；
+6. `js/core/ActivityRunner.js`：节点执行语义；
+7. `js/core/ActivityValueEvaluator.js`：数值输入和条件求值；
+8. 目标语言目录中同类的现有活动文件；
 9. 角色 roster（通常是 `data/<lang>/npcs.json` 或实际项目对应文件），确认稳定 `npcId`；
 10. 目标文件的所有调用点和加载路径，确认该文件的 `a/b`、日期、phase 和队列含义。
 
@@ -45,9 +45,9 @@
 
 ## 核心契约
 
-### 日程条目
+### 活动条目
 
-日程条目的 `id` 是稳定持久化 ID，必须在语言目录加载的全部日程文件中唯一。NPC 必须保存稳定 `npcId`；显示名、头像、立绘路径只属于展示元数据。
+活动条目的 `id` 是稳定持久化 ID，必须在语言目录加载的全部活动文件中唯一。NPC 必须保存稳定 `npcId`；显示名、头像、立绘路径只属于展示元数据。
 
 Social 条目通常类似：
 
@@ -80,12 +80,12 @@ Social 条目通常类似：
 必须满足：
 
 - `startNodeId` 指向唯一的 `flowStart`；
-- 至少有一个 `scheduleEnd`；
+- 至少有一个 `activityEnd`；
 - 节点映射键与节点对象的 `id` 相同；
 - 流程连接使用 `fromNodeId/fromPort → toNodeId/toPort`；
 - 流程端口不能与数值端口混连；
 - `choice` 的 `branchCount`、`labelN`、选项连接数量一致；
-- 每个可达节点最终都能到达 `scheduleEnd`；
+- 每个可达节点最终都能到达 `activityEnd`；
 - 不能留下孤立节点、越界选项端口、失效连接或循环；
 - 新内容使用对象式蓝图，不把旧 `dialogueTree` 当作新数据模板。
 
@@ -110,7 +110,7 @@ Social 条目通常类似：
 
 | 字段 | 内容 |
 | --- | --- |
-| 日程 ID | 稳定且全局唯一 |
+| 活动 ID | 稳定且全局唯一 |
 | 文件 | 例如 `social01b.json` |
 | NPC ID | 从 roster 确认的稳定 ID |
 | 入口条件 | 仅使用真实存在的条件 |
@@ -119,14 +119,14 @@ Social 条目通常类似：
 | 分支对白 | 每个选项下的完整对白 |
 | 副作用 | 变量、数值、物品、关键词或结局 |
 | 汇合点 | 分支何处重新合并 |
-| 结束 | 到哪个 `scheduleEnd` |
-| 时间目标 | 该日程的平均时间成本 |
+| 结束 | 到哪个 `activityEnd` |
+| 时间目标 | 该活动的平均时间成本 |
 
 保留剧本原文的对白文字、选项顺序和重复语气。不要为了“简化 JSON”删除会影响剧情、关键词或分支识别的对白。
 
 ### 第 2 步：检查目标文件并防止重复
 
-使用 `read_file` 读取目标文件完整内容，使用 `search_files` 搜索日程 ID。加载当前 JSON 后按稳定 ID reconcile：
+使用 `read_file` 读取目标文件完整内容，使用 `search_files` 搜索活动 ID。加载当前 JSON 后按稳定 ID reconcile：
 
 - 已存在且明确要求修改：按 ID 修改；
 - 不存在：追加新条目；
@@ -134,7 +134,7 @@ Social 条目通常类似：
 - 不要假定上一次失败的生成没有写入文件；
 - 所有文件使用 LF 换行。
 
-完成后，验证当前语言目录以及项目要求扫描的所有语言日程 ID 唯一。节点 ID 只需在**单个蓝图内部**唯一；不同蓝图重复使用 `start`、`end`、`n1` 等节点 ID 是合法的，不能用跨蓝图全局集合误报错误。
+完成后，验证当前语言目录以及项目要求扫描的所有语言活动 ID 唯一。节点 ID 只需在**单个蓝图内部**唯一；不同蓝图重复使用 `start`、`end`、`n1` 等节点 ID 是合法的，不能用跨蓝图全局集合误报错误。
 
 ### 第 3 步：把对白转换为 text 节点
 
@@ -225,7 +225,7 @@ flowStart
       ├→ 分支 A → 副作用 A ┐
       └→ 分支 B → 副作用 B ┘
   → 共同后续对白或时间节点
-  → scheduleEnd
+  → activityEnd
 ```
 
 ### 第 6 步：设计时间成本
@@ -251,7 +251,7 @@ flowStart
 - 第一个选项后的分支对白中有一部分；
 - 中段继续对白后有一部分；
 - 后段对白接近结束但仍有剧情内容时有一部分；
-- 最后一句对白之后不要直接接时间节点再到 `scheduleEnd`。
+- 最后一句对白之后不要直接接时间节点再到 `activityEnd`。
 
 时间节点应放在对白节点之后或合理的剧情动作之后，让玩家看到“聊了一会儿，时间过去 20 分钟”的节奏。不要把时间节点插入会让一句对白在语义上被切断的位置。
 
@@ -259,13 +259,13 @@ flowStart
 
 对每个蓝图：
 
-1. 枚举从 `startNodeId` 到每个 `scheduleEnd` 的可达路径；
+1. 枚举从 `startNodeId` 到每个 `activityEnd` 的可达路径；
 2. 收集每条路径上的对白节点和分支结构；
 3. 设定目标时间，例如 240 分钟，即约 12 个 20 分钟单位；
 4. 按整张图的拓扑/对白顺序选择分布点，而不是只选择共同前缀；
 5. 优先每个对白位置最多插入一个时间节点；只有短蓝图不够 12 个位置时，才在少数剧情段安排两个相邻节点；
 6. 对不同分支允许小幅浮动，但必须计算每条路径的节点数和平均值；
-7. 禁止 `consumeTime → scheduleEnd` 作为最后一跳；
+7. 禁止 `consumeTime → activityEnd` 作为最后一跳；
 8. 若某条路径明显少于目标，优先在该路径中段增加节点，不要全部补到末尾。
 
 目标不是机械地让每条路径完全相等，而是让玩家体验均匀、各选法平均接近目标。验证时应同时报告：路径数量、最小/最大/平均分钟数、时间节点位置分布。
@@ -310,11 +310,11 @@ flowStart
 6. 连接端口存在且类型匹配；
 7. `startNodeId` 指向 `flowStart`；
 8. 所有节点从起点可达；
-9. 所有可达流程路径可到达 `scheduleEnd`；
+9. 所有可达流程路径可到达 `activityEnd`；
 10. 每个 `choice.branchCount` 与标签/选项/有效分支端口一致；
 11. 所有分支副作用节点可达且只执行一次；
 12. 所有 `consumeTime.minutes` 为明确的合法值；
-13. 不存在末尾直接连接 `scheduleEnd` 的时间节点；
+13. 不存在末尾直接连接 `activityEnd` 的时间节点；
 14. 目标时间节点在整个流程中有多个不同的前置对白来源。
 
 ### 内容覆盖验证
@@ -355,7 +355,7 @@ pathMinutes = sum(consumeTime.inputs.minutes)
 
 - 时间节点都是独立的 20 分钟节点；
 - 节点分布在多个对白阶段；
-- 末尾不是 `consumeTime → scheduleEnd`；
+- 末尾不是 `consumeTime → activityEnd`；
 - 路径耗时落在设计目标的合理范围；
 - 分支差异是对白长度导致的可解释浮动，而不是某个分支漏了整段时间成本；
 - 若使用 240 分钟目标，平均路径耗时应接近 240 分钟；允许的上下限必须在任务中明确，而不是验证失败后临时放宽。
@@ -372,9 +372,9 @@ git diff --check
 如果修改了运行时代码，还要执行相关文件的：
 
 ```bash
-node --check js/core/ScheduleNodeRegistry.js
-node --check js/core/ScheduleBlueprint.js
-node --check js/core/ScheduleRunner.js
+node --check js/core/ActivityNodeRegistry.js
+node --check js/core/ActivityBlueprint.js
+node --check js/core/ActivityRunner.js
 ```
 
 不要主动进行浏览器 UI 验证，除非用户明确要求或给出必须复现的步骤；静态验证和浏览器验证的结论必须分开报告。
@@ -409,13 +409,13 @@ node --check js/core/ScheduleRunner.js
 
 症状：`start`、`end`、`n1` 在不同蓝图重复，探针错误报告重复 ID。
 
-修复：节点 ID 的唯一范围是单个蓝图；日程条目 ID 才需要在项目规定范围内全局唯一。
+修复：节点 ID 的唯一范围是单个蓝图；活动条目 ID 才需要在项目规定范围内全局唯一。
 
 ### 6. 只给一条分支连到结束
 
 症状：某个选项正常，另一个选项点击后卡住或直接失败。
 
-修复：从每个动态 `optionN` 出口开始单独追踪到 `scheduleEnd`，并验证所有分支副作用。
+修复：从每个动态 `optionN` 出口开始单独追踪到 `activityEnd`，并验证所有分支副作用。
 
 ### 7. 为自然语言条件发明变量
 
@@ -427,13 +427,13 @@ node --check js/core/ScheduleRunner.js
 
 症状：点击 NPC 时直接调用 `timeService.advanceBy()`，导致保存、恢复、队列和蓝图语义不一致。
 
-修复：创建或复用日程实例，让 `ScheduleRunner` 执行 `consumeTime`；应用层只负责入口、展示和实例生命周期。
+修复：创建或复用活动实例，让 `ActivityRunner` 执行 `consumeTime`；应用层只负责入口、展示和实例生命周期。
 
 ### 9. 批量生成留下重复条目
 
-症状：`ScheduleData` 预加载时报 `Duplicate schedule id`，整个游戏启动失败。
+症状：`ActivityData` 预加载时报 `Duplicate activity id`，整个游戏启动失败。
 
-修复：写入前按稳定 ID reconcile；写入后扫描所有目标日程文件的 ID 唯一性；不要假设失败脚本没有部分写入。
+修复：写入前按稳定 ID reconcile；写入后扫描所有目标活动文件的 ID 唯一性；不要假设失败脚本没有部分写入。
 
 ### 10. 把选项效果藏在兼容字段
 
@@ -446,7 +446,7 @@ node --check js/core/ScheduleRunner.js
 完成后以中文报告：
 
 1. 修改了哪些文件；
-2. 新增/修改了多少日程条目；
+2. 新增/修改了多少活动条目；
 3. 剧本中的哪些条件、分支、副作用已映射；
 4. 时间节点的设计目标、实际路径最小/最大/平均耗时；
 5. 运行了哪些验证命令及真实结果；

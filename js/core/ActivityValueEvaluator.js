@@ -1,5 +1,5 @@
-import { getScheduleNodeDefinition } from "./ScheduleNodeRegistry.js";
-import { getScheduleValueContext } from "./ScheduleValueAccess.js";
+import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
+import { getActivityValueContext } from "./ActivityValueAccess.js";
 
 function valueOf(input, evaluate) {
   if (input && typeof input === "object" && input.nodeId) return evaluate(input.nodeId, input.port || "value");
@@ -8,10 +8,10 @@ function valueOf(input, evaluate) {
 
 function bool(value) { return Boolean(value); }
 
-export class ScheduleValueEvaluator {
+export class ActivityValueEvaluator {
   constructor(blueprint, context = {}) {
     this.blueprint = blueprint;
-    this.context = { ...getScheduleValueContext(), ...context };
+    this.context = { ...getActivityValueContext(), ...context };
     this.cache = new Map();
     this.stack = new Set();
   }
@@ -22,7 +22,7 @@ export class ScheduleValueEvaluator {
     if (this.stack.has(key)) throw new Error(`Circular value dependency at ${key}`);
     const node = this.blueprint.nodes?.[nodeId];
     if (!node) throw new Error(`Unknown value node: ${nodeId}`);
-    const definition = getScheduleNodeDefinition(node.type);
+    const definition = getActivityNodeDefinition(node.type);
     if (!definition?.valueOutputs?.some((output) => output.name === port)) throw new Error(`Node ${nodeId} has no value output ${port}`);
     this.stack.add(key);
     const read = (name, fallback = undefined) => this.readInput(nodeId, name, fallback);
@@ -31,8 +31,8 @@ export class ScheduleValueEvaluator {
       case "arithmetic": result = this._arithmetic(read("operator", "+"), read("left", 0), read("right", 0)); break;
       case "getGlobal": result = this.context.globalVariableManager.get(read("variableId")); break;
       case "getInventory": result = this.context.itemManager.count(read("itemId")); break;
-      case "getScheduleStatus": result = this.context.scheduleStatus ? this.context.scheduleStatus(read("instanceId")) : 0; break;
-      case "getScheduleInstanceCount": result = this.context.scheduleInstanceCount ? this.context.scheduleInstanceCount(read("scheduleId")) : 0; break;
+      case "getActivityStatus": result = this.context.activityStatus ? this.context.activityStatus(read("instanceId")) : 0; break;
+      case "getActivityInstanceCount": result = this.context.activityInstanceCount ? this.context.activityInstanceCount(read("activityId")) : 0; break;
       case "getGameTime": result = this.context.gameState.day * 1440 + this.context.gameState.clockMinutes; break;
       default: throw new Error(`Node ${node.type} is not a value node`);
     }
@@ -71,4 +71,4 @@ export class ScheduleValueEvaluator {
   }
 }
 
-export default ScheduleValueEvaluator;
+export default ActivityValueEvaluator;

@@ -291,7 +291,7 @@
           },
           "end": {
             "id": "end",
-            "type": "scheduleEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {}
           },
@@ -303,9 +303,9 @@
             },
             "outputs": {}
           },
-          "scheduleExpiry": {
-            "id": "scheduleExpiry",
-            "type": "scheduleExpiry",
+          "activityExpiry": {
+            "id": "activityExpiry",
+            "type": "activityExpiry",
             "inputs": {
               "expires": true,
               "expiresAt": 8639

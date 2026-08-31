@@ -233,9 +233,9 @@
             "x": 2510,
             "y": 220
           },
-          "scheduleEnd": {
-            "id": "scheduleEnd",
-            "type": "scheduleEnd",
+          "activityEnd": {
+            "id": "activityEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2760,
@@ -251,9 +251,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -393,7 +393,7 @@
           {
             "fromNodeId": "time_closing",
             "fromPort": "flowOut",
-            "toNodeId": "scheduleEnd",
+            "toNodeId": "activityEnd",
             "toPort": "flowIn"
           }
         ]
@@ -550,9 +550,9 @@
             "x": 1760,
             "y": 260
           },
-          "scheduleEnd": {
-            "id": "scheduleEnd",
-            "type": "scheduleEnd",
+          "activityEnd": {
+            "id": "activityEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2010,
@@ -568,9 +568,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -662,7 +662,7 @@
           {
             "fromNodeId": "time_closing",
             "fromPort": "flowOut",
-            "toNodeId": "scheduleEnd",
+            "toNodeId": "activityEnd",
             "toPort": "flowIn"
           }
         ]
@@ -819,9 +819,9 @@
             "x": 1760,
             "y": 260
           },
-          "scheduleEnd": {
-            "id": "scheduleEnd",
-            "type": "scheduleEnd",
+          "activityEnd": {
+            "id": "activityEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2010,
@@ -837,9 +837,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -931,7 +931,7 @@
           {
             "fromNodeId": "time_closing",
             "fromPort": "flowOut",
-            "toNodeId": "scheduleEnd",
+            "toNodeId": "activityEnd",
             "toPort": "flowIn"
           }
         ]
@@ -1088,9 +1088,9 @@
             "x": 1760,
             "y": 260
           },
-          "scheduleEnd": {
-            "id": "scheduleEnd",
-            "type": "scheduleEnd",
+          "activityEnd": {
+            "id": "activityEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2010,
@@ -1106,9 +1106,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -1200,7 +1200,7 @@
           {
             "fromNodeId": "time_closing",
             "fromPort": "flowOut",
-            "toNodeId": "scheduleEnd",
+            "toNodeId": "activityEnd",
             "toPort": "flowIn"
           }
         ]
@@ -1357,9 +1357,9 @@
             "x": 1760,
             "y": 260
           },
-          "scheduleEnd": {
-            "id": "scheduleEnd",
-            "type": "scheduleEnd",
+          "activityEnd": {
+            "id": "activityEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2010,
@@ -1375,9 +1375,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -1469,7 +1469,7 @@
           {
             "fromNodeId": "time_closing",
             "fromPort": "flowOut",
-            "toNodeId": "scheduleEnd",
+            "toNodeId": "activityEnd",
             "toPort": "flowIn"
           }
         ]
@@ -1626,9 +1626,9 @@
             "x": 1760,
             "y": 260
           },
-          "scheduleEnd": {
-            "id": "scheduleEnd",
-            "type": "scheduleEnd",
+          "activityEnd": {
+            "id": "activityEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2010,
@@ -1644,9 +1644,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -1738,7 +1738,7 @@
           {
             "fromNodeId": "time_closing",
             "fromPort": "flowOut",
-            "toNodeId": "scheduleEnd",
+            "toNodeId": "activityEnd",
             "toPort": "flowIn"
           }
         ]
@@ -1895,9 +1895,9 @@
             "x": 1760,
             "y": 260
           },
-          "scheduleEnd": {
-            "id": "scheduleEnd",
-            "type": "scheduleEnd",
+          "activityEnd": {
+            "id": "activityEnd",
+            "type": "activityEnd",
             "inputs": {},
             "outputs": {},
             "x": 2010,
@@ -1913,9 +1913,9 @@
             "x": 80,
             "y": 240
           },
-          "__schedule_expiry__": {
-            "id": "__schedule_expiry__",
-            "type": "scheduleExpiry",
+          "__activity_expiry__": {
+            "id": "__activity_expiry__",
+            "type": "activityExpiry",
             "inputs": {
               "expires": false,
               "expiresAt": 0
@@ -2007,7 +2007,7 @@
           {
             "fromNodeId": "time_closing",
             "fromPort": "flowOut",
-            "toNodeId": "scheduleEnd",
+            "toNodeId": "activityEnd",
             "toPort": "flowIn"
           }
         ]

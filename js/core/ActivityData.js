@@ -4,12 +4,12 @@ import { favorabilityManager } from "./FavorabilityManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { calendarData } from "./CalendarData.js";
 import { gameState } from "./GameState.js";
-import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
+import { workQueue, socialQueue, mainQueue } from "./ActivityQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
-import { validateBlueprint, embedLegacyPrerequisite } from "./ScheduleBlueprint.js";
-import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
+import { validateBlueprint, embedLegacyPrerequisite } from "./ActivityBlueprint.js";
+import { ActivityValueEvaluator } from "./ActivityValueEvaluator.js";
 import { eventBus } from "./EventBus.js";
 import { selectWorkEntries } from "./GameMode.js";
 
@@ -22,13 +22,13 @@ function inRange(value, min, max) {
   return (min == null || value >= Number(min)) && (max == null || value <= Number(max));
 }
 
-class ScheduleData {
+class ActivityData {
   constructor() {
     this.totalDays = MAX_GAME_DAYS;
     this.slots = new Map();
     this.fired = new Set();
-    this.scheduleById = new Map();
-    this.scheduleCatalog = new Map();
+    this.activityById = new Map();
+    this.activityCatalog = new Map();
     this.publicEntries = new Map();
     this.pendingAdds = [];
     this.lastAbsoluteMinute = null;
@@ -94,8 +94,8 @@ class ScheduleData {
       },
     })), "social", "ending", "endings");
     for (const def of itemManager.defs.values()) {
-      Object.values(def.schedules || def.scheduleTable || {}).forEach((schedule) => {
-        const entries = Array.isArray(schedule?.entries) ? schedule.entries : [schedule];
+      Object.values(def.activities || def.activityTable || {}).forEach((activity) => {
+        const entries = Array.isArray(activity?.entries) ? activity.entries : [activity];
         this._indexExternalEntries(entries.filter((entry) => entry && entry.id), "main", "embedded");
       });
     }
@@ -110,10 +110,10 @@ class ScheduleData {
       const matchesSanity = condition?.id === 1
         ? this._matchesValue(gameState.sanity, condition)
         : globalVariableManager.matches(condition);
-      if (!matchesSanity || socialQueue.countBySchedule(event.id) > 0) continue;
+      if (!matchesSanity || socialQueue.countByActivity(event.id) > 0) continue;
       socialQueue.append([{
         ...event,
-        scheduleId: event.id,
+        activityId: event.id,
         receivedDay: gameState.day,
         receivedTime: gameState.clockMinutes,
         receivedPhase: gameState.phase,
@@ -127,21 +127,21 @@ class ScheduleData {
   _indexExternalEntries(entries, defaultQueueId, category = "calendar", sourceFile = undefined) {
     (entries || []).forEach((entry, entryIndex) => {
       if (!entry || typeof entry.id !== "string" || !entry.id.trim()) return;
-      if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
+      if (this.activityById.has(entry.id)) throw new Error(`Duplicate activity id: ${entry.id}`);
       const definition = { ...entry, queueId: entry.queueId || defaultQueueId };
-      this.scheduleById.set(entry.id, definition);
-      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId: definition.queueId, sourceFile, entryIndex });
+      this.activityById.set(entry.id, definition);
+      this.activityCatalog.set(entry.id, { id: entry.id, category, queueId: definition.queueId, sourceFile, entryIndex });
     });
   }
 
   _indexEntries(entries, queueId, category = "calendar", sourceFile = undefined) {
     entries.forEach((entry, entryIndex) => {
       if (!entry || typeof entry.id !== "string" || !entry.id.trim()) {
-        throw new Error(`Schedule entry in ${queueId} needs a stable string id`);
+        throw new Error(`Activity entry in ${queueId} needs a stable string id`);
       }
-      if (this.scheduleById.has(entry.id)) throw new Error(`Duplicate schedule id: ${entry.id}`);
-      this.scheduleById.set(entry.id, { ...entry, queueId });
-      this.scheduleCatalog.set(entry.id, { id: entry.id, category, queueId, sourceFile, entryIndex });
+      if (this.activityById.has(entry.id)) throw new Error(`Duplicate activity id: ${entry.id}`);
+      this.activityById.set(entry.id, { ...entry, queueId });
+      this.activityCatalog.set(entry.id, { id: entry.id, category, queueId, sourceFile, entryIndex });
     });
   }
 
@@ -177,7 +177,7 @@ class ScheduleData {
       return;
     }
     this._appendThrough(target);
-    this._appendScheduledThrough(target);
+    this._appendQueuedThrough(target);
     this._expireInstances(target);
     this._appendAutoSpecialEvents();
     this.lastAbsoluteMinute = target;
@@ -212,18 +212,18 @@ class ScheduleData {
         .filter((entry) => {
           if (queueId === "social" && !this.matchesPrerequisite(entry.blueprint || entry.dialogueTree, entry.insertPrerequisite)) return false;
           if (!this.matchesPrerequisites(entry.prerequisites || entry.condition || entry.globalVariableCondition)) return false;
-          // special and ending schedules are one-shot: skip if already queued (any status).
-          const cat = this.scheduleCatalog.get(entry.scheduleId || entry.id)?.category;
+          // special and ending activities are one-shot: skip if already queued (any status).
+          const cat = this.activityCatalog.get(entry.activityId || entry.id)?.category;
           if (cat === "special" || cat === "ending") {
-            const sid = entry.scheduleId || entry.id;
+            const sid = entry.activityId || entry.id;
             const q = queueId === "work" ? workQueue : socialQueue;
-            if (q.countBySchedule(sid) > 0) return false;
+            if (q.countByActivity(sid) > 0) return false;
           }
           return true;
         })
         .map((entry) => ({
           ...entry,
-          scheduleId: entry.scheduleId || entry.id,
+          activityId: entry.activityId || entry.id,
           receivedDay: day,
           receivedTime: time,
           receivedPhase: time === 8 * 60 ? "day" : "night",
@@ -239,8 +239,8 @@ class ScheduleData {
   }
 
   enqueueMedicalIncident({ submission, type }) {
-    const scheduleId = type === "riot" ? "medical_riot_work" : "medical_complaint_work";
-    const template = this.publicEntries.get("work")?.find((entry) => entry.id === scheduleId);
+    const activityId = type === "riot" ? "medical_riot_work" : "medical_complaint_work";
+    const template = this.publicEntries.get("work")?.find((entry) => entry.id === activityId);
     if (!template) return { ok: false, reason: "missingMedicalIncidentTemplate" };
     const entry = JSON.parse(JSON.stringify(template));
     entry.kind = "medicalIncident";
@@ -249,9 +249,9 @@ class ScheduleData {
     entry.receivedDay = submission.dueDay;
     entry.receivedTime = submission.dueTime ?? (type === "riot" ? 16 * 60 : 8 * 60);
     entry.receivedPhase = entry.receivedTime >= 16 * 60 ? "night" : "day";
-    entry.scheduleId = `${template.id}:${submission.patientId}`;
+    entry.activityId = `${template.id}:${submission.patientId}`;
     workQueue.append([entry]);
-    return { ok: true, scheduleId: entry.scheduleId };
+    return { ok: true, activityId: entry.activityId };
   }
 
   matchesPrerequisite(rawBlueprint, legacyPrerequisite = null) {
@@ -265,7 +265,7 @@ class ScheduleData {
     try {
       const prerequisite = Object.values(validation.blueprint.nodes).find((node) => node.type === "prerequisite");
       if (!prerequisite) return true;
-      return new ScheduleValueEvaluator(validation.blueprint).readInput(prerequisite.id, "condition", false) === true;
+      return new ActivityValueEvaluator(validation.blueprint).readInput(prerequisite.id, "condition", false) === true;
     } catch (error) {
       console.warn("Skipped social prerequisite evaluation:", error);
       return false;
@@ -276,26 +276,26 @@ class ScheduleData {
     for (const queue of [workQueue, socialQueue, mainQueue]) {
       for (const instance of queue.getPending()) {
         const blueprint = instance.payload?.blueprint || instance.blueprint || instance.payload?.dialogueTree || instance.dialogueTree;
-        const node = Object.values(blueprint?.nodes || {}).find((candidate) => candidate.type === "scheduleExpiry");
+        const node = Object.values(blueprint?.nodes || {}).find((candidate) => candidate.type === "activityExpiry");
         if (!node || instance.protectFromExpiry === true || instance.payload?.protectFromExpiry === true) continue;
         try {
-          const evaluator = new ScheduleValueEvaluator(blueprint);
+          const evaluator = new ActivityValueEvaluator(blueprint);
           if (evaluator.readInput(node.id, "expires", false) !== true) continue;
           const expiresAt = Number(evaluator.readInput(node.id, "expiresAt", NaN));
           if (Number.isFinite(expiresAt) && target > expiresAt) queue.expire(instance.instanceId);
         } catch (error) {
-          console.warn("Skipped schedule expiration evaluation:", error);
+          console.warn("Skipped activity expiration evaluation:", error);
         }
       }
     }
   }
 
-  _appendScheduledThrough(target) {
+  _appendQueuedThrough(target) {
     const ready = this.pendingAdds.filter((request) => request.addTime <= target);
     this.pendingAdds = this.pendingAdds.filter((request) => request.addTime > target);
     ready.sort((a, b) => a.addTime - b.addTime);
     ready.forEach((request) => {
-      const definition = this.scheduleById.get(request.scheduleId);
+      const definition = this.activityById.get(request.activityId);
       if (!definition) return;
       if (request.respectPrerequisite !== false
         && ((definition.blueprint || definition.dialogueTree || definition.insertPrerequisite)
@@ -303,14 +303,14 @@ class ScheduleData {
           || !this.matchesPrerequisites(definition.prerequisites || definition.condition))) return;
       const day = Math.floor(request.addTime / 1440);
       const time = request.addTime % 1440;
-      const entry = { ...definition, scheduleId: definition.id, receivedDay: day, receivedTime: time,
+      const entry = { ...definition, activityId: definition.id, receivedDay: day, receivedTime: time,
         receivedPhase: time < 16 * 60 ? "day" : "night",
         ...(request.protectFromExpiry === true ? { protectFromExpiry: true } : {}) };
       delete entry.queueId;
       const targetQueueId = request.queueId || definition.queueId;
       if (targetQueueId === "main") entry.autoRun = true;
       this.queue(targetQueueId).append([entry]);
-      this._applyScheduleOperations(entry);
+      this._applyActivityOperations(entry);
     });
   }
 
@@ -319,7 +319,7 @@ class ScheduleData {
     if (Array.isArray(condition)) return condition.every((item) => this.matchesPrerequisites(item));
     if (condition.all) return condition.all.every((item) => this.matchesPrerequisites(item));
     if (condition.any) return condition.any.some((item) => this.matchesPrerequisites(item));
-    if (condition.scheduleCompleted !== undefined) return workQueue.hasCompletedId(condition.scheduleCompleted) || socialQueue.hasCompletedId(condition.scheduleCompleted);
+    if (condition.activityCompleted !== undefined) return workQueue.hasCompletedId(condition.activityCompleted) || socialQueue.hasCompletedId(condition.activityCompleted);
     if (condition.globalVariables) return globalVariableManager.matches(condition.globalVariables);
     if (condition.protagonist) return this._matchesValue(gameState[condition.protagonist.stat], condition.protagonist);
     if (condition.npc) {
@@ -348,17 +348,17 @@ class ScheduleData {
     return false;
   }
 
-  _applyScheduleOperations(entry) {
+  _applyActivityOperations(entry) {
     const effects = entry?.operations ? entry : (entry?.effects || entry?.onAdd || {});
     const operations = [
       ...(Array.isArray(effects.operations) ? effects.operations : []),
-      ...(effects.addSchedule ? (Array.isArray(effects.addSchedule) ? effects.addSchedule : [effects.addSchedule]) : []),
+      ...(effects.addActivity ? (Array.isArray(effects.addActivity) ? effects.addActivity : [effects.addActivity]) : []),
     ];
     operations.forEach((operation) => {
-      if (operation?.type === "addSchedule" || operation?.scheduleId) {
+      if (operation?.type === "addActivity" || operation?.activityId) {
         const addTime = operation.addTime ?? (Number.isInteger(Number(operation.day)) && Number.isInteger(Number(operation.time))
           ? Number(operation.day) * 1440 + Number(operation.time) : undefined);
-        this.addSchedule(operation.scheduleId, addTime, operation.queueId || operation.queue, {
+        this.addActivity(operation.activityId, addTime, operation.queueId || operation.queue, {
           respectPrerequisite: operation.respectPrerequisite,
           protectFromExpiry: operation.protectFromExpiry,
         });
@@ -366,22 +366,22 @@ class ScheduleData {
     });
   }
 
-  addSchedule(scheduleId, addTime, queueId = undefined, options = {}) {
-    const definition = this.scheduleById.get(scheduleId);
-    if (!definition) return { ok: false, reason: "unknownSchedule" };
+  addActivity(activityId, addTime, queueId = undefined, options = {}) {
+    const definition = this.activityById.get(activityId);
+    if (!definition) return { ok: false, reason: "unknownActivity" };
     const target = Number(addTime);
     const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
     if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
     if (queueId !== undefined && !["work", "social", "main"].includes(queueId)) return { ok: false, reason: "invalidQueue" };
     const request = {
-      scheduleId,
+      activityId,
       addTime: target,
       ...(queueId ? { queueId } : {}),
       respectPrerequisite: options.respectPrerequisite !== false,
       protectFromExpiry: options.protectFromExpiry === true,
     };
     this.pendingAdds.push(request);
-    if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
+    if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendQueuedThrough(this.lastAbsoluteMinute);
     return { ok: true, request };
   }
 
@@ -389,28 +389,28 @@ class ScheduleData {
     return { work: workQueue, social: socialQueue, main: mainQueue }[queueId] || mainQueue;
   }
 
-  definition(scheduleId) {
-    return this.scheduleById.get(scheduleId) || null;
+  definition(activityId) {
+    return this.activityById.get(activityId) || null;
   }
 
   catalog(category = undefined) {
-    return [...this.scheduleCatalog.values()]
+    return [...this.activityCatalog.values()]
       .filter((entry) => !category || entry.category === category)
-      .map((entry) => ({ ...entry, definition: this.scheduleById.get(entry.id) }))
+      .map((entry) => ({ ...entry, definition: this.activityById.get(entry.id) }))
       .filter((entry) => entry.definition)
       .sort((a, b) => a.id.localeCompare(b.id));
   }
 
-  async createInstance(scheduleId, queueId = undefined, received = {}) {
+  async createInstance(activityId, queueId = undefined, received = {}) {
     await this.init();
-    const definition = this.scheduleById.get(scheduleId);
-    if (!definition) return { ok: false, reason: "unknownSchedule" };
+    const definition = this.activityById.get(activityId);
+    if (!definition) return { ok: false, reason: "unknownActivity" };
     const targetQueueId = queueId || definition.queueId || "main";
     const day = Number.isInteger(received.day) ? received.day : gameState.day;
     const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
     const entry = {
       ...JSON.parse(JSON.stringify(definition)),
-      scheduleId,
+      activityId,
       receivedDay: day,
       receivedTime: time,
       receivedPhase: time < 16 * 60 ? "day" : "night",
@@ -427,10 +427,10 @@ class ScheduleData {
     const day = Number.isInteger(received.day) ? received.day : gameState.day;
     const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
     const targetQueueId = queueId || "main";
-    const scheduleId = `temporary:${Date.now()}`;
+    const activityId = `temporary:${Date.now()}`;
     const [instance] = this.queue(targetQueueId).append({
-      scheduleId,
-      payload: { id: scheduleId, blueprint: JSON.parse(JSON.stringify(blueprint)) },
+      activityId,
+      payload: { id: activityId, blueprint: JSON.parse(JSON.stringify(blueprint)) },
       receivedDay: day,
       receivedTime: time,
       receivedPhase: time < 16 * 60 ? "day" : "night",
@@ -468,13 +468,13 @@ class ScheduleData {
     return entries;
   }
 
-  snapshotScheduled() {
+  snapshotQueued() {
     return this.pendingAdds.map((entry) => ({ ...entry }));
   }
 
-  restoreScheduled(entries = []) {
+  restoreQueued(entries = []) {
     this.pendingAdds = Array.isArray(entries)
-      ? entries.filter((entry) => this.scheduleById.has(entry?.scheduleId)).map((entry) => ({ ...entry }))
+      ? entries.filter((entry) => this.activityById.has(entry?.activityId)).map((entry) => ({ ...entry }))
       : [];
   }
 
@@ -500,5 +500,5 @@ class ScheduleData {
   }
 }
 
-export const scheduleData = new ScheduleData();
-export default ScheduleData;
+export const activityData = new ActivityData();
+export default ActivityData;

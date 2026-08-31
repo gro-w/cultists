@@ -2,14 +2,14 @@ import { endingManager } from "../core/EndingManager.js";
 import { i18n } from "../core/I18n.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { eventBus } from "../core/EventBus.js";
-import { scheduleData } from "../core/ScheduleData.js";
-import { mainQueue } from "../core/ScheduleQueue.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { activityData } from "../core/ActivityData.js";
+import { mainQueue } from "../core/ActivityQueue.js";
+import { createActivityRunner } from "../core/ActivityRunner.js";
 
 /**
  * EndingScreen - full-page overlay shown when EndingManager fires any
  * ending (event/item/stat/time-triggered). Blueprint-backed endings are
- * executed through the normal main queue and ScheduleRunner before the
+ * executed through the normal main queue and ActivityRunner before the
  * final title card is shown. Legacy title-only endings keep the old card.
  */
 export default class EndingScreen {
@@ -34,7 +34,7 @@ export default class EndingScreen {
         ...event,
         ...ending,
         id: ending.id,
-        blueprintScheduleId: event.id,
+        blueprintActivityId: event.id,
         blueprint: event.blueprint,
         dialogueTree: event.dialogueTree,
       });
@@ -53,9 +53,9 @@ export default class EndingScreen {
         <div class="ending-screen-panel">
           <div class="ending-screen-icon">${def.icon || "🌑"}</div>
           <h2 class="ending-screen-title">${def.title || ""}</h2>
-          <div class="ending-schedule-status">正在加载结局日程……</div>
-          <div class="ending-schedule-log" aria-live="polite"></div>
-          <div class="dialogue-options ending-schedule-options"></div>
+          <div class="ending-activity-status">正在加载结局活动……</div>
+          <div class="ending-activity-log" aria-live="polite"></div>
+          <div class="dialogue-options ending-activity-options"></div>
           <div class="ending-final hidden">
             <p class="ending-screen-text"></p>
             <button type="button" class="crt-btn ending-screen-btn">
@@ -112,12 +112,12 @@ export default class EndingScreen {
       playerEl.classList.toggle("ending-gal-active", speaker === "player");
       npcEl.classList.toggle("ending-gal-active", speaker !== "player" && speaker !== "narrator");
     };
-    const optionsEl = this.rootEl.querySelector(".ending-schedule-options");
+    const optionsEl = this.rootEl.querySelector(".ending-activity-options");
     optionsEl.addEventListener("click", continueCapture, true);
     const finish = () => {
       if (token !== this._runToken) return;
       const finalEl = this.rootEl.querySelector(".ending-final");
-      const statusEl = this.rootEl.querySelector(".ending-schedule-status");
+      const statusEl = this.rootEl.querySelector(".ending-activity-status");
       if (statusEl) statusEl.remove();
       if (finalEl) {
         finalEl.querySelector(".ending-screen-text").textContent = def.text || "";
@@ -128,23 +128,23 @@ export default class EndingScreen {
       }
     };
 
-    const playbackScheduleId = def.blueprintScheduleId || def.id;
+    const playbackActivityId = def.blueprintActivityId || def.id;
     const playbackDefinition = def.blueprint || def.dialogueTree
       ? def
-      : scheduleData.definition(playbackScheduleId);
+      : activityData.definition(playbackActivityId);
     if (!(playbackDefinition?.blueprint || playbackDefinition?.dialogueTree)) {
       finish();
       return;
     }
 
-    const logEl = this.rootEl.querySelector(".ending-schedule-log");
-    const statusEl = this.rootEl.querySelector(".ending-schedule-status");
+    const logEl = this.rootEl.querySelector(".ending-activity-log");
+    const statusEl = this.rootEl.querySelector(".ending-activity-status");
     const appendLine = (speaker, label, text) => {
       if (token !== this._runToken) return;
       if (pendingLines.length === 0) logEl.replaceChildren();
       const speakerLabels = { player: "主控", awei: "阿伟", binbin: "彬彬", narrator: "旁白" };
       const speakerIds = { 主控: "player", 彬彬: "binbin", 旁白: "narrator" };
-      const fallbackSpeaker = speakerLabels[speaker] || label || speaker || "日程";
+      const fallbackSpeaker = speakerLabels[speaker] || label || speaker || "活动";
       String(text ?? "").split(/\r?\n/).forEach((rawLine) => {
         const content = rawLine.trim();
         if (!content) return;
@@ -158,15 +158,15 @@ export default class EndingScreen {
       });
     };
 
-    scheduleData.createInstance(playbackScheduleId, "main").then(({ ok, instance, reason }) => {
+    activityData.createInstance(playbackActivityId, "main").then(({ ok, instance, reason }) => {
       if (token !== this._runToken) return;
-      if (!ok || !instance) throw new Error(`无法创建结局日程：${reason || "unknown"}`);
+      if (!ok || !instance) throw new Error(`无法创建结局活动：${reason || "unknown"}`);
       instance.currentNodeId = playbackDefinition.blueprint?.startNodeId
         || playbackDefinition.startNodeId
         || null;
       instance.executedNodeIds = [];
       instance.transcript = [];
-      const runner = createScheduleRunner({
+      const runner = createActivityRunner({
         definition: playbackDefinition,
         instance,
         appendLine,
@@ -175,7 +175,7 @@ export default class EndingScreen {
         onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
         onComplete: (next) => {
           mainQueue.complete(next.instanceId);
-          if (statusEl) statusEl.textContent = "结局日程已完成";
+          if (statusEl) statusEl.textContent = "结局活动已完成";
           finish();
         },
       });
@@ -183,7 +183,7 @@ export default class EndingScreen {
     }).catch((error) => {
       if (token !== this._runToken) return;
       console.error("[EndingScreen] Failed to execute ending blueprint:", error);
-      if (statusEl) statusEl.textContent = "结局日程执行失败，已显示结局结果";
+      if (statusEl) statusEl.textContent = "结局活动执行失败，已显示结局结果";
       finish();
     });
   }

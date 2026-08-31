@@ -1,13 +1,13 @@
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
 import { endingManager } from "./EndingManager.js";
-import { socialQueue } from "./ScheduleQueue.js";
+import { socialQueue } from "./ActivityQueue.js";
 import { specialEventManager } from "./SpecialEventManager.js";
 import { itemEffectHistory } from "./ItemEffectHistory.js";
 
 /**
  * Data-driven consequences of successfully casting a learned spell.
- * The cast cost is applied by ItemScheduleRuntime before this listener runs.
+ * The cast cost is applied by ItemActivityRuntime before this listener runs.
  * Context is supplied by a spell-cast node or a future UI target selector.
  */
 class SpellEffectManager {
@@ -78,8 +78,8 @@ class SpellEffectManager {
       eventBus.emit("spell:event-requested", { eventId });
       return;
     }
-    const existing = socialQueue.getPending().some((entry) => entry.scheduleId === eventId);
-    if (!existing) socialQueue.append([{ ...event, scheduleId: eventId, receivedDay: gameState.day, receivedTime: gameState.clockMinutes }]);
+    const existing = socialQueue.getPending().some((entry) => entry.activityId === eventId);
+    if (!existing) socialQueue.append([{ ...event, activityId: eventId, receivedDay: gameState.day, receivedTime: gameState.clockMinutes }]);
     eventBus.emit("spell:event-requested", { eventId });
   }
 

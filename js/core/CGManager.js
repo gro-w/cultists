@@ -8,8 +8,8 @@ import { dataLoader } from "./DataLoader.js";
  *   { "cgs": [{ "id": string, "label": string, "imageData": string }] }
  *
  * EventBus events consumed:
- *   schedule:cg  { cgId, instanceId }
- *     - Emitted by ScheduleRunner when a showCg node executes.
+ *   activity:cg  { cgId, instanceId }
+ *     - Emitted by ActivityRunner when a showCg node executes.
  *     - cgId === ""  means end-CG (clear current CG).
  *
  * EventBus events emitted:
@@ -52,16 +52,16 @@ class CGManager {
       this.end();
     };
     window.addEventListener("keydown", this._keyHandler);
-    // ScheduleRunner emits schedule:cg for showCg nodes.
-    eventBus.on("schedule:cg", ({ cgId }) => {
+    // ActivityRunner emits activity:cg for showCg nodes.
+    eventBus.on("activity:cg", ({ cgId }) => {
       if (!cgId || cgId === "") {
         this.end();
       } else {
         this.show(cgId);
       }
     });
-    // ScheduleRunner emits schedule:cg with cgId="" from endCg nodes.
-    eventBus.on("schedule:end_cg", () => this.end());
+    // ActivityRunner emits activity:cg with cgId="" from endCg nodes.
+    eventBus.on("activity:end_cg", () => this.end());
   }
 
   // ── public API ─────────────────────────────────────────────────────────────

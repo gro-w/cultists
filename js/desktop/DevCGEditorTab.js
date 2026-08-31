@@ -127,7 +127,7 @@ export class DevCGEditorTab {
         <button type="button" class="win95-btn dev-btn" data-cg-action="write">🖊 写入磁盘</button>
       </div>
       <p style="font-size:11px;color:#aaa;margin:4px 0 8px">
-        在此管理游戏内 CG 背景图。日程编辑器里用 <code>showCg</code>（显示 CG）和 <code>endCg</code>（结束 CG）节点触发。
+        在此管理游戏内 CG 背景图。活动编辑器里用 <code>showCg</code>（显示 CG）和 <code>endCg</code>（结束 CG）节点触发。
         CG 激活时物品层不可交互。
       </p>
       <div id="dev-cg-list">${rows || "<p style='color:#aaa;font-size:12px'>暂无 CG，点击「添加 CG」。</p>"}</div>`;

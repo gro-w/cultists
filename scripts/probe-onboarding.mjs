@@ -18,7 +18,7 @@ class ProbeBus {
 const bus = new ProbeBus();
 const onboarding = new OnboardingManager(bus);
 onboarding.init();
-assert.equal(bus.count(), 14, "init registers mapped event listeners plus day/night and contextual hints");
+assert.equal(bus.count(), 16, "init registers mapped event listeners plus day/night and contextual hints");
 onboarding.startNewGame();
 assert.deepEqual(onboarding.snapshot().milestones, ["desktop_seen"]);
 assert.equal(onboarding.recommendedGoal(), "打开 HIS");

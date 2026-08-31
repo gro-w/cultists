@@ -8,7 +8,7 @@ const flowOut = (name = "flowOut") => ({ name, kind: FLOW, type: null });
 
 const definitions = {
   flowStart: { label: "流程起始", flowOutputs: [flowOut()] },
-  scheduleEnd: { label: "日程结束", flowInputs: [flowIn()] },
+  activityEnd: { label: "活动结束", flowInputs: [flowIn()] },
   text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string")] },
   choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("branchCount", VALUE, "number")] },
   randomBranch: { label: "随机分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("n", VALUE, "number")] },
@@ -19,7 +19,7 @@ const definitions = {
   consumeTime: { label: "消耗时间", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("minutes", VALUE, "number")] },
   setGlobal: { label: "操作公共变量", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("variableId"), input("value"), input("delta", VALUE, "number")] },
   ending: { label: "触发结局", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("endingId", VALUE, "string")] },
-  insertSchedule: { label: "插入日程", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("scheduleId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string"), input("respectPrerequisite", VALUE, "bool"), input("protectFromExpiry", VALUE, "bool")] },
+  insertActivity: { label: "插入活动", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("activityId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string"), input("respectPrerequisite", VALUE, "bool"), input("protectFromExpiry", VALUE, "bool")] },
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   endCg:  { label: "结束 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
   showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },
@@ -32,22 +32,22 @@ const definitions = {
   arithmetic: { label: "运算", valueInputs: [input("operator", VALUE, "string"), input("left"), input("right")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   getGlobal: { label: "公共变量取值", valueInputs: [input("variableId")], valueOutputs: [{ name: "value", kind: VALUE, type: ANY }] },
   prerequisite: { label: "先决条件", valueInputs: [input("condition", VALUE, "bool")] },
-  scheduleExpiry: { label: "日程过期", valueInputs: [input("expires", VALUE, "bool"), input("expiresAt", VALUE, "number")] },
+  activityExpiry: { label: "活动过期", valueInputs: [input("expires", VALUE, "bool"), input("expiresAt", VALUE, "number")] },
   getInventory: { label: "背包取值", valueInputs: [input("itemId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
 
-  getScheduleStatus: { label: "日程状态", valueInputs: [input("instanceId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
-  getScheduleInstanceCount: { label: "日程实例数量", valueInputs: [input("scheduleId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
+  getActivityStatus: { label: "活动状态", valueInputs: [input("instanceId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
+  getActivityInstanceCount: { label: "活动实例数量", valueInputs: [input("activityId", VALUE, "string")], valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
   getGameTime: { label: "当前游戏时间", valueOutputs: [{ name: "value", kind: VALUE, type: "number" }] },
 };
 
-export const SCHEDULE_NODE_TYPES = Object.freeze(Object.keys(definitions));
+export const ACTIVITY_NODE_TYPES = Object.freeze(Object.keys(definitions));
 
-export function getScheduleNodeDefinition(type) {
+export function getActivityNodeDefinition(type) {
   return definitions[type] || null;
 }
 
-export function getScheduleNodePort(type, portName, direction, node = null) {
-  const def = getScheduleNodeDefinition(type);
+export function getActivityNodePort(type, portName, direction, node = null) {
+  const def = getActivityNodeDefinition(type);
   if (!def) return null;
   if (type === "segmentBranch") {
     const match = /^(segment|boundary)(\d+)$/.exec(portName);
@@ -84,12 +84,12 @@ export function getScheduleNodePort(type, portName, direction, node = null) {
 }
 
 export function isFlowNode(type) {
-  const def = getScheduleNodeDefinition(type);
+  const def = getActivityNodeDefinition(type);
   return Boolean(def && (def.flowInputs?.length || def.flowOutputs?.length));
 }
 
 export function isValueNode(type) {
-  const def = getScheduleNodeDefinition(type);
+  const def = getActivityNodeDefinition(type);
   return Boolean(def && def.valueOutputs?.length);
 }
 

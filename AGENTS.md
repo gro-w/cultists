@@ -80,8 +80,8 @@ export default ExampleManager;
 - 初始为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`。
 - 工作窗口严格是 `[08:00, 16:00)`；天文白昼 `[06:00, 18:00)`，两者不可混用。
 - 普通成功行动默认推进 20 分钟；不要使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
-- 所有玩家可见的计时操作（ChatGTP 查询、HIS 提交、物品调查/使用、法术学习/施放）必须先创建日程实例，再由 `ScheduleRunner` 或 `ItemScheduleRuntime` 执行；副作用和时间推进不得由 App 直接调用。
-- 法术学习日程的顺序固定为“`consumeTime(240)` → `spellOperation` 调整已学习状态”。NPC 离线也必须通过 realtime 日程完成状态切换及后果。
+- 所有玩家可见的计时操作（ChatGTP 查询、HIS 提交、物品调查/使用、法术学习/施放）必须先创建活动实例，再由 `ActivityRunner` 或 `ItemActivityRuntime` 执行；副作用和时间推进不得由 App 直接调用。
+- 法术学习活动的顺序固定为“`consumeTime(240)` → `spellOperation` 调整已学习状态”。NPC 离线也必须通过 realtime 活动完成状态切换及后果。
 - phase、duty、location 是独立字段；存档恢复时必须保持派生关系一致。
 - 工作/夜班未完成的当前批次分别阻塞下班/睡觉；`entries: []` 是显式空批次，不是缺失数据。
 - 午夜增加游戏日期；到次日 `08:00` 只结算一次睡眠、医疗、收入支出和睡眠债。
@@ -114,7 +114,7 @@ CSS/HTML 使用相应注释形式。开发入口必须严格判断 `?dev`，不�
 
 ## 存档规则
 
-当前 `SaveManager` 格式为 v16，保存游戏状态、TimeService、工作/社交/主要三个队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、结局、公共变量、法术、动态日程、CG 和窗口布局。对话进度与状态由日程实例负责，不再单独保存。改变 payload 或编码布局时要评估是否提升版本；旧版本不应静默迁移。新增可恢复窗口时，将 appId 追加到 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
+- 当前 `SaveManager` 格式为 v24，保存游戏状态、TimeService、工作/社交/主要三个队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、结局、公共变量、法术、动态活动、CG 和窗口布局。对话进度与状态由活动实例负责，不再单独保存。改变 payload 或编码布局时要评估是否提升版本；旧版本不应静默迁移。新增可恢复窗口时，将 appId 追加到 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
 
 ## 修改、验证和发布
 

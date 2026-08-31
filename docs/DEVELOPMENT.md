@@ -36,7 +36,7 @@ node dev-server.js --port 8001 --lang zh-hans
 
 ## 开发人员模式
 
-源码中严格的 `?dev` 查询串会启用一个独立的“开发人员模式”窗口。窗口上半部是**数据库 App**，下半部是中性的**调试器**；数据库图标中，关键词、ChatGTP 问答、NPC 列表、公共变量定义、日程、BGM、位置和电脑内容使用中性颜色表示较为成熟，其余专用编辑器使用蓝色表示仍在开发。两部分都以桌面图标列出入口，双击图标会在新窗口打开对应编辑器或运行时工具。通用 JSON 编辑器已经移除。数据库 App 修改数据定义，调试器不写入静态数据库文件。
+源码中严格的 `?dev` 查询串会启用一个独立的“开发人员模式”窗口。窗口上半部是**数据库 App**，下半部是中性的**调试器**；数据库图标中，关键词、ChatGTP 问答、NPC 列表、公共变量定义、活动、BGM、位置和电脑内容使用中性颜色表示较为成熟，其余专用编辑器使用蓝色表示仍在开发。两部分都以桌面图标列出入口，双击图标会在新窗口打开对应编辑器或运行时工具。通用 JSON 编辑器已经移除。数据库 App 修改数据定义，调试器不写入静态数据库文件。
 
 - 「保存到内存」只改变当前页面运行时数据。
 - 各专用编辑器的「下载」导出其对应 JSON 文件。
@@ -46,15 +46,15 @@ node dev-server.js --port 8001 --lang zh-hans
 
 新增开发工具代码必须放在 `// DEV-TOOLS:START` / `// DEV-TOOLS:END`（或对应 CSS/HTML 注释）之间，以便 `publish.js` 删除。
 
-### 日程编辑器工作台
+### 活动编辑器工作台
 
-「日程编辑器」首页是一个大画面，包含四张独立日程表：Social 日期日程表、Work 日期日程表、公共日程表和其他日程表。前两张表分别列出日期 Social/Work 文件；公共日程表使用下拉框选择 `socialpub.json`、`workpub.json` 或 `mainpub.json`；其他日程表使用下拉框选择 `endings.json`、`special_events.json` 或 `maininit.json`。每张表都有编辑按钮及「从当前游戏读取」「从文件读取」「导出 JSON」「写入磁盘」四类文件级操作，每次只处理一个 JSON 文件。空日程也可以打开蓝图编辑器，之后通过「＋ 日程条目」新建条目。编辑按钮会通过 `WindowManager` 打开填满窗口的独立蓝图子窗口；子窗口可以同时打开多个，并且左侧只列出当前文件中的条目。蓝图窗口顶部同样只有四个单文件操作按钮，不提供项目级新建、保存或载入；未选中节点时可编辑当前日程 ID 和 `displayName`（显示名称）。
+「活动编辑器」首页是一个大画面，包含四张独立活动表：Social 日期活动表、Work 日期活动表、公共活动表和其他活动表。前两张表分别列出日期 Social/Work 文件；公共活动表使用下拉框选择 `socialpub.json`、`workpub.json` 或 `mainpub.json`；其他活动表使用下拉框选择 `endings.json`、`special_events.json` 或 `maininit.json`。每张表都有编辑按钮及「从当前游戏读取」「从文件读取」「导出 JSON」「写入磁盘」四类文件级操作，每次只处理一个 JSON 文件。空活动也可以打开蓝图编辑器，之后通过「＋ 活动条目」新建条目。编辑按钮会通过 `WindowManager` 打开填满窗口的独立蓝图子窗口；子窗口可以同时打开多个，并且左侧只列出当前文件中的条目。蓝图窗口顶部同样只有四个单文件操作按钮，不提供项目级新建、保存或载入；未选中节点时可编辑当前活动 ID 和 `displayName`（显示名称）。
 
 ## 修改流程
 
 1. 先读 `AGENTS.md`、相关模块、数据 schema 和所有调用点。
-2. 保持职责归属：全局状态放核心单例，跨模块通知用 `EventBus`，内容放 JSON；所有普通计时操作先创建日程实例，由 `ScheduleRunner`/`ItemScheduleRuntime` 执行。
-3. 不要在 App 中直接调用 `TimeService.advanceBy()`，不要在日程创建前调用 `SpellManager.learn()`、`MedicalCaseManager.submit()` 或写入 NPC offline 状态。法术学习必须是“240 分钟 `consumeTime` → `spellOperation`”，NPC 离线必须是 realtime 日程。
+2. 保持职责归属：全局状态放核心单例，跨模块通知用 `EventBus`，内容放 JSON；所有普通计时操作先创建活动实例，由 `ActivityRunner`/`ItemActivityRuntime` 执行。
+3. 不要在 App 中直接调用 `TimeService.advanceBy()`，不要在活动创建前调用 `SpellManager.learn()`、`MedicalCaseManager.submit()` 或写入 NPC offline 状态。法术学习必须是“240 分钟 `consumeTime` → `spellOperation`”，NPC 离线必须是 realtime 活动。
 4. 所有文本文件使用 LF；不读取、不提交凭据和 `.env` 文件。
 5. 不添加构建工具、框架或依赖，除非先讨论。
 6. 修改后执行静态检查：
@@ -75,7 +75,7 @@ git diff --check
 
 ## 存档注意事项
 
-`SaveManager.js` 当前格式为 v16，payload 包括游戏状态、TimeService、工作/社交/主要三个队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、结局锁定、公共变量、法术、动态日程、CG 和窗口布局。对话进度与状态由日程实例负责，不再单独保存。任何 payload 结构或编码布局改变都要评估版本兼容性。旧版本不会自动迁移。新增可恢复窗口时，要把 `appId` 追加到 `WINDOW_APP_IDS`，并注册 launcher。
+`SaveManager.js` 当前格式为 v16，payload 包括游戏状态、TimeService、工作/社交/主要三个队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、结局锁定、公共变量、法术、动态活动、CG 和窗口布局。对话进度与状态由活动实例负责，不再单独保存。任何 payload 结构或编码布局改变都要评估版本兼容性。旧版本不会自动迁移。新增可恢复窗口时，要把 `appId` 追加到 `WINDOW_APP_IDS`，并注册 launcher。
 
 ## 发布玩家版本
 

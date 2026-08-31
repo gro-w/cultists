@@ -2,13 +2,13 @@ import { gameState } from "./GameState.js";
 import { keywordManager } from "./KeywordManager.js";
 import { itemManager } from "./ItemManager.js";
 import { windowManager } from "./WindowManager.js";
-import { scheduleData } from "./ScheduleData.js";
+import { activityData } from "./ActivityData.js";
 import { timeService } from "./TimeService.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { spellManager } from "./SpellManager.js";
 import { itemPlacementManager } from "./ItemPlacementManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
-import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
+import { workQueue, socialQueue, mainQueue } from "./ActivityQueue.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
 
@@ -26,7 +26,8 @@ import { itemEffectHistory } from "./ItemEffectHistory.js";
 // v21 = v20 plus the migration of medical money ownership to global variable 2.
 // v22 = v21 plus fixed complaint/riot arrival times.
 // v23 = v22 plus persisted item/object effect history.
-const SAVE_FORMAT_VERSION = 23;
+// v24 = v23 plus the activity schema migration.
+const SAVE_FORMAT_VERSION = 24;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -41,7 +42,7 @@ function base64UrlDecode(str) {
 }
 
 /**
- * SaveManager packs the complete v22 game state into a version-prefixed JSON
+ * SaveManager packs the complete v24 game state into a version-prefixed JSON
  * payload and exports the bytes as a downloaded file. Loading reverses the
  * process from a user-selected File object.
  */
@@ -68,7 +69,7 @@ class SaveManager {
   }
 
   async _doInit() {
-    await Promise.all([scheduleData.init(), globalVariableManager.init(), keywordManager.load(), itemManager.load(), npcStateManager.load(), itemPlacementManager.load(), medicalCaseManager.load()]);
+    await Promise.all([activityData.init(), globalVariableManager.init(), keywordManager.load(), itemManager.load(), npcStateManager.load(), itemPlacementManager.load(), medicalCaseManager.load()]);
 
     this.itemIds = itemManager.allDefIds();
     this.placementIds = itemPlacementManager.all().map((placement) => placement.id);
@@ -134,7 +135,7 @@ class SaveManager {
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
       spells: spellManager.all(),
       spellUsage: spellManager.usageSnapshot(),
-      scheduledAdds: scheduleData.snapshotScheduled(),
+      queuedAdds: activityData.snapshotQueued(),
       favorability: favorabilityManager.snapshot(),
       itemPlacements: itemPlacementManager.snapshot(),
       ending: endingManager.snapshot(),
@@ -186,7 +187,7 @@ class SaveManager {
       workQueue.restore(payload.workQueue);
       socialQueue.restore(payload.socialQueue);
       mainQueue.restore(payload.mainQueue || []);
-      scheduleData.restoreScheduled(payload.scheduledAdds || []);
+      activityData.restoreQueued(payload.queuedAdds || []);
       keywordManager.restoreCollected(payload.keywords || []);
       itemManager.restoreInventory(payload.inventory || []);
       spellManager.restore(payload.spells || []);
@@ -207,7 +208,7 @@ class SaveManager {
       onboardingManager.restore(payload.onboarding || {});
       turtleSoupManager.restore(payload.turtleSoup || {});
       itemEffectHistory.restore(payload.itemEffectHistory || []);
-      scheduleData.restoreAt(gameState.day, gameState.clockMinutes);
+      activityData.restoreAt(gameState.day, gameState.clockMinutes);
       this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     } finally {
       endingManager.endRestore();

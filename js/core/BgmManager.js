@@ -11,7 +11,7 @@ const FADE_MS = 400;
  * Priority (highest wins):
  *   4  ending    — set when ending:triggered fires and the ending def carries bgmId
  *   3  dialogue  — pushed/popped via onShow.bgm { action, bgmId }
- *   2  schedule  — best-matching defaultRule for current day + phase
+ *   2  activity  — best-matching defaultRule for current day + phase
  *   1  (none)    — fallback: "stop" | "continue" per bgm.json
  *
  * A single <audio> element is reused.  Switching fades: old → silence → new.
@@ -81,7 +81,7 @@ class BgmManager {
       }
     });
 
-    // Schedule layer: re-evaluate whenever day or phase changes
+    // Activity layer: re-evaluate whenever day or phase changes
     eventBus.on("gamestate:changed", () => this._resolveAndPlay());
     eventBus.on("daynight:changed",  () => this._resolveAndPlay());
 

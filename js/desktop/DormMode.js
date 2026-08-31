@@ -2,14 +2,14 @@ import { eventBus } from "../core/EventBus.js";
 import { dataLoader } from "../core/DataLoader.js";
 import { gameState } from "../core/GameState.js";
 import { timeService } from "../core/TimeService.js";
-import { scheduleData } from "../core/ScheduleData.js";
+import { activityData } from "../core/ActivityData.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
-import { socialQueue } from "../core/ScheduleQueue.js";
+import { createActivityRunner } from "../core/ActivityRunner.js";
+import { socialQueue } from "../core/ActivityQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
 import { renderInspectResult } from "../core/InspectFormat.js";
@@ -45,7 +45,7 @@ export default class DormMode {
     this._compTabInit = {};
     this._transitionTimer = null;
     this._dormSanOff = null;
-    this._socialScheduleOff = null;
+    this._socialActivityOff = null;
     this._npcsData = null;
     this._cgOverlay = null;     // global #cg-overlay element
     this._cgOff = [];           // EventBus unsub functions
@@ -63,8 +63,8 @@ export default class DormMode {
     this._updateDormBg();
     if (this._dormSanOff) this._dormSanOff();
     this._dormSanOff = eventBus.on("game:sanity_changed", () => this._updateDormBg());
-    if (this._socialScheduleOff) this._socialScheduleOff();
-    this._socialScheduleOff = eventBus.on("schedule:appended", ({ queueId }) => {
+    if (this._socialActivityOff) this._socialActivityOff();
+    this._socialActivityOff = eventBus.on("activity:appended", ({ queueId }) => {
       if (queueId === "social" && !this.root.classList.contains("hidden")) this._renderScene();
     });
     // Wire CG overlay (the global #cg-overlay element handles both dorm and location views)
@@ -200,7 +200,7 @@ export default class DormMode {
 
     // ── NPC buttons in the strip ───────────────────────────────────────────
     const listKey = gameState.phase === "day" ? "patients" : "contacts";
-    this.entry = await scheduleData.load(gameState.day, gameState.phase);
+    this.entry = await activityData.load(gameState.day, gameState.phase);
     const actors = this.entry?.[listKey] || [];
 
     const npcMap = new Map();
@@ -209,7 +209,7 @@ export default class DormMode {
       if (["ajie", "awei", "binbin"].includes(npcId)) npcMap.set(npcId, actor);
     });
     // Binbin's turtle-soup entrance is a night-only dorm action, so it must
-    // remain available even when the nightly contact schedule omits him.
+    // remain available even when the nightly contact activity omits him.
     if (gameState.phase === "night" && !npcMap.has("binbin")) {
       const binbin = this._npcsData?.npcs?.find((npc) => npc.id === "binbin");
       if (binbin) npcMap.set("binbin", binbin);
@@ -248,7 +248,7 @@ export default class DormMode {
     });
 
     // Blueprint-driven social activities have no NPC owner.  Expose them as
-    // ordinary pending social schedules instead of trying to route them
+    // ordinary pending social activities instead of trying to route them
     // through a roommate portrait.
     socialQueue.getPending()
       .filter((item) => !(item.payload?.npcId || item.payload?.actorId) && item.payload?.blueprint)
@@ -256,10 +256,10 @@ export default class DormMode {
         const definition = item.payload;
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "win95-btn bevel-out dorm-schedule-btn";
+        btn.className = "win95-btn bevel-out dorm-activity-btn";
         btn.textContent = definition.name || definition.id || "集体活动";
         btn.title = definition.name || definition.id || "集体活动";
-        btn.addEventListener("click", () => this._showScheduleDialogue(definition, item));
+        btn.addEventListener("click", () => this._showActivityDialogue(definition, item));
         this._npcStrip.appendChild(btn);
       });
 
@@ -915,13 +915,13 @@ export default class DormMode {
     }
     const definition = pending.payload || actor;
     if (!definition.blueprint) {
-      lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为活动蓝图。）</p>";
       return;
     }
-    this._showScheduleDialogue(definition, pending, keywordDefs, { lines, options, npcId });
+    this._showActivityDialogue(definition, pending, keywordDefs, { lines, options, npcId });
   }
 
-  _showScheduleDialogue(definition, pending, keywordDefs = {}, context = {}) {
+  _showActivityDialogue(definition, pending, keywordDefs = {}, context = {}) {
     const lines = context.lines || document.createElement("div");
     const options = context.options || document.createElement("div");
     if (!context.lines) {
@@ -936,7 +936,7 @@ export default class DormMode {
         `宿舍-${definition.name || definition.id || "活动"}`,
       );
     const npcId = context.npcId || definition.npcId || definition.actorId || definition.id;
-    const runner = createScheduleRunner({
+    const runner = createActivityRunner({
       definition,
       instance: pending,
       appendLine: (speaker, label, text) => {

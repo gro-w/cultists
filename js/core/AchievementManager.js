@@ -465,7 +465,7 @@ class AchievementManager {
   /**
    * Check whether all dialogue nodes tracked in the game have been read.
    * "All nodes" means every node id that has ever been emitted via
-   * `game:text_read`; we rely on ScheduleData having loaded all day files.
+   * `game:text_read`; we rely on ActivityData having loaded all day files.
    * For now this compares against a separate `_totalNodeCount` which callers
    * can set via `setTotalNodeCount()`.
    */
@@ -475,7 +475,7 @@ class AchievementManager {
   }
 
   /**
-   * Called by main.js (or wherever ScheduleData finishes loading) to tell the
+   * Called by main.js (or wherever ActivityData finishes loading) to tell the
    * achievement manager the total number of unique dialogue nodes in the game,
    * so it can resolve the "all_texts_read" achievement.
    * @param {number} count

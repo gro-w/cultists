@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 globalThis.localStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
-const { createScheduleRunner } = await import("../js/core/ScheduleRunner.js");
-const { socialQueue } = await import("../js/core/ScheduleQueue.js");
+const { createActivityRunner } = await import("../js/core/ActivityRunner.js");
+const { socialQueue } = await import("../js/core/ActivityQueue.js");
 const { globalVariableManager } = await import("../js/core/GlobalVariableManager.js");
 const { gameState } = await import("../js/core/GameState.js");
 const { timeService } = await import("../js/core/TimeService.js");
@@ -36,10 +36,10 @@ for (const definition of definitions) {
   gameState.restore({ day, clockMinutes: 16 * 60, phase: "night", duty: "off-duty", location: "dorm", sanity: 100, roommateSuspicion: 0 });
   timeService.startPhase("night", 0);
   socialQueue.restore([]);
-  const instance = socialQueue.append([{ ...structuredClone(definition), scheduleId: `${definition.id}:probe` }])[0];
+  const instance = socialQueue.append([{ ...structuredClone(definition), activityId: `${definition.id}:probe` }])[0];
   const optionsEl = new Element("div");
   const lines = [];
-  const runner = createScheduleRunner({
+  const runner = createActivityRunner({
     definition: instance,
     instance,
     optionsEl,
@@ -67,9 +67,9 @@ for (const definition of definitions.filter((entry) => entry.id !== "dorm_activi
   gameState.restore({ day, clockMinutes: 16 * 60, phase: "night", duty: "off-duty", location: "dorm", sanity: 100, roommateSuspicion: 0 });
   timeService.startPhase("night", 0);
   socialQueue.restore([]);
-  const instance = socialQueue.append([{ ...structuredClone(definition), scheduleId: `${definition.id}:study-probe` }])[0];
+  const instance = socialQueue.append([{ ...structuredClone(definition), activityId: `${definition.id}:study-probe` }])[0];
   const optionsEl = new Element("div");
-  const runner = createScheduleRunner({ definition: instance, instance, optionsEl,
+  const runner = createActivityRunner({ definition: instance, instance, optionsEl,
     appendLine: () => {}, onCheckpoint: (current) => socialQueue.updateInstance(current.instanceId, current),
     onComplete: (current) => socialQueue.complete(current.instanceId) });
   runner.start();

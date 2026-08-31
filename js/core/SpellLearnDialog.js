@@ -1,8 +1,8 @@
 import { windowManager } from "./WindowManager.js";
 import { eventBus } from "./EventBus.js";
 import { spellManager } from "./SpellManager.js";
-import { mainQueue } from "./ScheduleQueue.js";
-import { createScheduleRunner } from "./ScheduleRunner.js";
+import { mainQueue } from "./ActivityQueue.js";
+import { createActivityRunner } from "./ActivityRunner.js";
 
 /**
  * SpellLearnDialog — subscribes to the "book:learnSpell" event emitted by
@@ -10,7 +10,7 @@ import { createScheduleRunner } from "./ScheduleRunner.js";
  *
  * Opens a Win95-style window listing the spells in that book. For each spell
  * the player can click "学习" to learn it; learning a spell:
- *   1. Creates a main schedule instance.
+ *   1. Creates a main activity instance.
  *   2. Consumes 240 minutes.
  *   3. Executes a spellOperation node that changes learned-spell state.
  *
@@ -78,11 +78,11 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             spellIndex: idx,
           };
           const instance = mainQueue.append([{
-            scheduleId: `spell-learn:${spell.id}`,
+            activityId: `spell-learn:${spell.id}`,
             status: "unresolved",
             transcript: [],
           }])[0];
-          const runner = createScheduleRunner({
+          const runner = createActivityRunner({
             definition: {
               id: `spell-learn:${spell.id}`,
               blueprint: {
@@ -91,7 +91,7 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
                   start: { id: "start", type: "flowStart" },
                   wait: { id: "wait", type: "consumeTime", inputs: { minutes: spell.learnTimeMinutes || 240 } },
                   learn: { id: "learn", type: "spellOperation", spell },
-                  end: { id: "end", type: "scheduleEnd" },
+                  end: { id: "end", type: "activityEnd" },
                 },
                 connections: [
                   { fromNodeId: "start", fromPort: "flowOut", toNodeId: "wait", toPort: "flowIn" },

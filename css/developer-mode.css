@@ -206,19 +206,19 @@
 .dev-de-port-chip.value { background:#dff5e5; }
 .dev-de-no-ports { color:#999; font-size:11px; }
 
-/* schedule editor workspace */
-.dev-schedule-workspace { display:flex; flex-direction:column; height:100%; min-height:0; }
-.dev-schedule-title { color:#000080; font-size:14px; padding:3px 8px 3px 0; }
-.dev-schedule-help { color:#555; font-size:11px; align-self:center; margin-left:auto; }
-.dev-schedule-tables { flex:1; min-height:0; overflow:auto; display:grid; grid-template-columns:repeat(2,minmax(320px,1fr)); gap:10px; padding:10px 2px; background:#f0f0f8; }
-.dev-schedule-table { padding:10px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
-.dev-schedule-table h3 { margin:0 0 9px; color:#000080; font-size:14px; }
-.dev-schedule-picker, .dev-schedule-new, .dev-schedule-actions { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
-.dev-schedule-picker select { flex:1; min-width:150px; min-height:25px; border:2px inset #eee; }
-.dev-schedule-new input { flex:1; min-width:150px; min-height:21px; border:2px inset #eee; padding:2px 4px; }
-.dev-schedule-actions { border-top:1px solid #aaa; padding-top:7px; }
-.dev-schedule-actions .dev-btn { flex:1; min-width:125px; }
-@media (max-width:720px) { .dev-schedule-tables { grid-template-columns:1fr; } .dev-schedule-help { display:none; } }
+/* activity editor workspace */
+.dev-activity-workspace { display:flex; flex-direction:column; height:100%; min-height:0; }
+.dev-activity-title { color:#000080; font-size:14px; padding:3px 8px 3px 0; }
+.dev-activity-help { color:#555; font-size:11px; align-self:center; margin-left:auto; }
+.dev-activity-tables { flex:1; min-height:0; overflow:auto; display:grid; grid-template-columns:repeat(2,minmax(320px,1fr)); gap:10px; padding:10px 2px; background:#f0f0f8; }
+.dev-activity-table { padding:10px; background:#d4d0c8; border:1px solid #808080; box-shadow:inset 1px 1px #fff; }
+.dev-activity-table h3 { margin:0 0 9px; color:#000080; font-size:14px; }
+.dev-activity-picker, .dev-activity-new, .dev-activity-actions { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
+.dev-activity-picker select { flex:1; min-width:150px; min-height:25px; border:2px inset #eee; }
+.dev-activity-new input { flex:1; min-width:150px; min-height:21px; border:2px inset #eee; padding:2px 4px; }
+.dev-activity-actions { border-top:1px solid #aaa; padding-top:7px; }
+.dev-activity-actions .dev-btn { flex:1; min-width:125px; }
+@media (max-width:720px) { .dev-activity-tables { grid-template-columns:1fr; } .dev-activity-help { display:none; } }
 
 /* right-side node editor panel */
 .dev-de-editor { width:260px; min-width:220px; flex-shrink:0; border-left:1px solid #808080; display:flex; flex-direction:column; overflow:hidden; background:#d4d0c8; }

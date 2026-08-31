@@ -1,20 +1,20 @@
-# 日程蓝图语法与节点参考
+# 活动蓝图语法与节点参考
 
-本文档描述当前项目实际实现的对象式日程蓝图。节点定义以
-`js/core/ScheduleNodeRegistry.js` 为准；校验规则以
-`js/core/ScheduleBlueprint.js` 为准；运行时行为以
-`js/core/ScheduleRunner.js` 和 `js/core/ScheduleValueEvaluator.js` 为准。
+本文档描述当前项目实际实现的对象式活动蓝图。节点定义以
+`js/core/ActivityNodeRegistry.js` 为准；校验规则以
+`js/core/ActivityBlueprint.js` 为准；运行时行为以
+`js/core/ActivityRunner.js` 和 `js/core/ActivityValueEvaluator.js` 为准。
 如果本文档与代码不一致，应先修正文档或代码的契约，不要依赖未注册的
 节点、端口或字段。
 
 ## 1. 蓝图是什么
 
-蓝图是一个有向图，由流程节点、数值节点和两种类型的连接组成。普通日程
+蓝图是一个有向图，由流程节点、数值节点和两种类型的连接组成。普通活动
 文件的一个条目通常把蓝图放在 `blueprint` 字段；物品等宿主对象则把蓝图
-放在 `schedules.investigate`、`schedules.use`、`schedules.obtain` 或
-`schedules.lose` 中。
+放在 `activities.investigate`、`activities.use`、`activities.obtain` 或
+`activities.lose` 中。
 
-历史数据中的 `dialogueTree` 仅在兼容迁移边界读取；新日程条目必须使用
+历史数据中的 `dialogueTree` 仅在兼容迁移边界读取；新活动条目必须使用
 `blueprint`。
 
 最小蓝图如下：
@@ -31,7 +31,7 @@
     },
     "end": {
       "id": "end",
-      "type": "scheduleEnd",
+      "type": "activityEnd",
       "inputs": {},
       "outputs": {}
     }
@@ -164,7 +164,7 @@
 "globalVariableCondition": { "...": "..." }
 ```
 
-运行器在进入节点前检查条件；条件不满足时结束当前日程。`text` 等显示节点
+运行器在进入节点前检查条件；条件不满足时结束当前活动。`text` 等显示节点
 还可以使用：
 
 ```json
@@ -183,7 +183,7 @@
 | 类型 | 类别 | 作用 |
 | --- | --- | --- |
 | `flowStart` | 流程 | 流程入口 |
-| `scheduleEnd` | 流程 | 结束日程 |
+| `activityEnd` | 流程 | 结束活动 |
 | `text` | 流程/显示 | 显示一行文字并等待继续 |
 | `choice` | 流程/交互 | 显示选项并按选择分支 |
 | `randomBranch` | 流程 | 按 `n` 随机选择一个流程分支 |
@@ -193,7 +193,7 @@
 | `consumeTime` | 流程/状态 | 推进游戏时间 |
 | `setGlobal` | 流程/状态 | 设置公共变量 |
 | `ending` | 流程/效果 | 触发指定结局 |
-| `insertSchedule` | 流程/状态 | 向日程队列插入日程；可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`） |
+| `insertActivity` | 流程/状态 | 向活动队列插入活动；可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`） |
 | `showCg` | 流程/显示 | 发出显示 CG 事件 |
 | `endCg` | 流程/显示 | 结束当前 CG 显示 |
 | `showImage` | 流程/显示 | 发出显示图片事件 |
@@ -204,19 +204,19 @@
 | `arithmetic` | 数值 | 执行运算并输出值 |
 | `getGlobal` | 数值 | 读取公共变量 |
 | `getInventory` | 数值 | 读取背包数量 |
-| `getScheduleStatus` | 数值 | 读取日程实例状态 |
-| `getScheduleInstanceCount` | 数值 | 读取日程实例数量 |
+| `getActivityStatus` | 数值 | 读取活动实例状态 |
+| `getActivityInstanceCount` | 数值 | 读取活动实例数量 |
 | `getGameTime` | 数值 | 读取当前游戏绝对分钟 |
 | `prerequisite` | 控制 | 必须存在且只能有一个的先决条件节点；无输出引脚，仅接收 `condition`，输入为 `true` 才允许 Social 条目插入 |
-| `scheduleExpiry` | 控制 | 必须存在且只能有一个的日程过期节点；无输出引脚，仅接收 `expires` 和 `expiresAt`；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
+| `activityExpiry` | 控制 | 必须存在且只能有一个的活动过期节点；无输出引脚，仅接收 `expires` 和 `expiresAt`；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
 
 ### 4.12 Social 插入先决条件
 
-Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点没有任何输出引脚，也不得包含流程引脚，只能接收 `condition` 数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
+Social 日期活动表条目所在的完整蓝图必须包含且只能有一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点没有任何输出引脚，也不得包含流程引脚，只能接收 `condition` 数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `activityEnd`。
 
-### 4.13 日程过期
+### 4.13 活动过期
 
-完整蓝图必须包含且只能有一个 `scheduleExpiry` 节点。节点没有任何输出引脚，也没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。新建模板默认将 `expires` 固定为 `false`；`expires` 不是严格的 `true` 时实例不会过期，启用后统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
+完整蓝图必须包含且只能有一个 `activityExpiry` 节点。节点没有任何输出引脚，也没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。新建模板默认将 `expires` 固定为 `false`；`expires` 不是严格的 `true` 时实例不会过期，启用后统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
 
 例如，读取“昨天是否与阿杰对话”的公共变量：
 
@@ -244,11 +244,11 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 作用：蓝图唯一入口；
 - 语义：从 `startNodeId` 开始执行，不产生副作用。
 
-### 4.2 `scheduleEnd`：日程结束
+### 4.2 `activityEnd`：活动结束
 
 - 输入：`flowIn`（流程）；
 - 输出：无；
-- 作用：结束当前日程实例；
+- 作用：结束当前活动实例；
 - 语义：设置实例为已解决，清除 `currentNodeId`，触发完成/解决事件。
   如果配置了 `onShow`，结束前仍可应用其显示效果。
 
@@ -260,7 +260,7 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 常用字段：`speaker`、`text`、`onShow`、`keywordIds`；物品调查蓝图可在结果
   文本节点上使用 `keywordIds`，由运行器统一收集关键词并回调调查结果；
 - 作用：显示一行文字；
-- 语义：记录文本到日程实例 transcript，调用界面回调，然后等待玩家继续。
+- 语义：记录文本到活动实例 transcript，调用界面回调，然后等待玩家继续。
   没有界面选项容器的实时/无头调用会自动继续。
 
 示例：
@@ -310,7 +310,7 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 运行器使用注入的随机源均匀选择一个输出，并记录本次选择的 `count` 与
   `index` 到实例的 `lastRandomBranch`；
 - 节点没有任何数值输出，不能作为数值来源；
-- 每个输出都必须连接到后继流程，后继路径最终必须到达 `scheduleEnd`。
+- 每个输出都必须连接到后继流程，后继路径最终必须到达 `activityEnd`。
 
 例如 `n=3` 时，节点必须提供并连接 `flowOut0`、`flowOut1`、`flowOut2`。
 编辑器修改 `n` 时会移除超出新数量的输出连线。
@@ -328,10 +328,10 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
 - 值输入：`condition`（布尔值）；
-- 作用：在条件满足前暂停当前日程实例；
+- 作用：在条件满足前暂停当前活动实例；
 - 语义：条件为 `false` 时保留当前节点并阻塞，不执行下游节点；当输入值
   变为 `true` 时结束阻塞，节点只完成一次并沿 `flowOut` 继续。条件来自
-  公共变量、主角数值、背包、日程状态等会发出状态变化事件的值时，运行器
+  公共变量、主角数值、背包、活动状态等会发出状态变化事件的值时，运行器
   会在相关状态变化后重新求值。该节点不消耗游戏时间。
 
 ### 4.7 `diceCheck`：骰子检定
@@ -367,27 +367,27 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 作用：调用 `GlobalVariableManager.set()` 设置公共变量，或调用 `modify()` 应用数字增量；
 - 语义：值的类型和变量 ID 必须符合公共变量定义。
 
-### 4.10 `insertSchedule`：插入日程
+### 4.10 `insertActivity`：插入活动
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
-- 值输入：`scheduleId`（字符串）、`addTime`（数字）、`queue`（字符串）、`respectPrerequisite`（布尔，默认 `true`）、`protectFromExpiry`（布尔，默认 `false`）；
-- 作用：调用 `ScheduleData.addSchedule()` 向指定队列追加日程；
-- 语义：插入失败会终止当前节点执行并报告原因。`respectPrerequisite=false` 时忽略目标蓝图的先决条件并直接创建实例；`protectFromExpiry=true` 时实例不会被目标蓝图的 `scheduleExpiry` 节点过期。队列应使用项目支持的日程队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
+- 值输入：`activityId`（字符串）、`addTime`（数字）、`queue`（字符串）、`respectPrerequisite`（布尔，默认 `true`）、`protectFromExpiry`（布尔，默认 `false`）；
+- 作用：调用 `ActivityData.addActivity()` 向指定队列追加活动；
+- 语义：插入失败会终止当前节点执行并报告原因。`respectPrerequisite=false` 时忽略目标蓝图的先决条件并直接创建实例；`protectFromExpiry=true` 时实例不会被目标蓝图的 `activityExpiry` 节点过期。队列应使用项目支持的活动队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
 
 ### 4.11 `showCg`：显示 CG
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
 - 值输入：`cgId`（字符串）；
-- 作用：发出 `schedule:cg` 事件；
-- 语义：事件携带 `cgId` 和当前日程实例 ID；实际图片/界面由订阅者处理。
+- 作用：发出 `activity:cg` 事件；
+- 语义：事件携带 `cgId` 和当前活动实例 ID；实际图片/界面由订阅者处理。
 
 ### 4.12 `endCg`：结束 CG
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
-- 作用：发出 `schedule:end_cg`，由 CG 管理器结束当前 CG 并转发 `cg:end` 事件；
+- 作用：发出 `activity:end_cg`，由 CG 管理器结束当前 CG 并转发 `cg:end` 事件；
 - 语义：不推进游戏时间。
 
 ### 4.13 `showImage`：显示图片
@@ -395,7 +395,7 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
 - 值输入：`image`（字符串）；
-- 作用：发出 `schedule:image` 事件并保存当前调查图片；
+- 作用：发出 `activity:image` 事件并保存当前调查图片；
 - 语义：图片应是资源路径字符串，不是 Base64。空字符串表示清除本次图片。
 
 ### 4.14 `segmentBranch`：分段分支
@@ -545,18 +545,18 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 5.5 `getScheduleStatus`：日程状态
+### 5.5 `getActivityStatus`：活动状态
 
 - 输出：`value`（数字）；
 - 值输入：`instanceId`（字符串）；
-- 作用：读取日程实例状态。运行时状态数字映射为：`unresolved/pending=1`、
+- 作用：读取活动实例状态。运行时状态数字映射为：`unresolved/pending=1`、
   `resolved/completed=2`、不存在为 `0`。
 
-### 5.6 `getScheduleInstanceCount`：日程实例数量
+### 5.6 `getActivityInstanceCount`：活动实例数量
 
 - 输出：`value`（数字）；
-- 值输入：`scheduleId`（字符串）；
-- 作用：统计三个队列中该日程 ID 的实例数量。
+- 值输入：`activityId`（字符串）；
+- 作用：统计三个队列中该活动 ID 的实例数量。
 
 ### 5.7 `getGameTime`：当前游戏时间
 
@@ -571,19 +571,19 @@ segment2: 0 < value <= 30
 
 条件由公共变量管理器解释，支持单条件、`all`、`any` 和比较操作
 `eq`、`neq`、`gt`、`gte`、`lt`、`lte`。条件失败不会执行节点后续副作用，当前
-日程直接解决。
+活动直接解决。
 
 ### 6.2 使用物品
 
 使用物品先由 `ItemManager` 检查物品存在、`usable`、数量条件、SAN 条件和
-公共变量条件；检查成功后只触发 `schedules.use`。蓝图自身负责成功后的操作：
+公共变量条件；检查成功后只触发 `activities.use`。蓝图自身负责成功后的操作：
 
 ```text
 flowStart
   → inventoryOperation（count=-1，移除消耗品）
   → statOperation（例如 satiety +6）
   → consumeTime（若该使用动作有明确时间成本）
-  → scheduleEnd
+  → activityEnd
 ```
 
 不要在同一个使用蓝图中同时保留旧的直接效果字段和节点副作用。
@@ -600,7 +600,7 @@ flowStart
   → text（调查文本，可选 inspection 元数据）
   → statOperation / inventoryOperation / setGlobal（可选）
   → consumeTime
-  → scheduleEnd
+  → activityEnd
 ```
 
 数值读取节点与 `segmentBranch.value` 或 `diceCheck.n` 之间必须是正式的 value 连接，不能只
@@ -611,7 +611,7 @@ flowStart
 法术学习的状态变更必须发生在时间消耗之后：
 
 ```text
-flowStart → consumeTime(240) → spellOperation → scheduleEnd
+flowStart → consumeTime(240) → spellOperation → activityEnd
 ```
 
 ### 6.5 分支汇合与公共副作用
@@ -621,7 +621,7 @@ flowStart → consumeTime(240) → spellOperation → scheduleEnd
 
 ```text
 segment0 ─┐
-segment1 ─┼→ consumeTime → scheduleEnd
+segment1 ─┼→ consumeTime → activityEnd
 segment2 ─┘
 ```
 
@@ -633,7 +633,7 @@ segment2 ─┘
 
 - 恰好一个 `flowStart`；
 - `startNodeId` 存在且指向 `flowStart`；
-- 至少一个 `scheduleEnd`；
+- 至少一个 `activityEnd`；
 - 所有注册节点的映射键和 `id` 一致；
 - 所有流程节点可从起点到达；
 - 每个非结束流程节点至少有一个流程后继；
@@ -658,26 +658,26 @@ segment2 ─┘
 
 ## 8. 编辑器与运行时约定
 
-蓝图编辑器必须从 `ScheduleNodeRegistry` 生成端口和输入控件；不要在编辑器
+蓝图编辑器必须从 `ActivityNodeRegistry` 生成端口和输入控件；不要在编辑器
 中另行硬编码节点端口。保存时应保留节点 ID、连接方向、动态端口数据和坐标。
 
-运行时的权威执行身份是队列中的日程实例，而不是界面 transcript。普通、临时
-和实时日程都应经过相应的队列和 `ScheduleRunner` 路径；物品调查/使用使用
-`mainQueue`。应用层负责创建/触发日程和展示结果，不应绕过蓝图直接推进时间
+运行时的权威执行身份是队列中的活动实例，而不是界面 transcript。普通、临时
+和实时活动都应经过相应的队列和 `ActivityRunner` 路径；物品调查/使用使用
+`mainQueue`。应用层负责创建/触发活动和展示结果，不应绕过蓝图直接推进时间
 或重复应用效果。
 
-`data/<lang>/maininit.json` 是主要日程初始化表，格式为 `{ "entries": [] }`。
+`data/<lang>/maininit.json` 是主要活动初始化表，格式为 `{ "entries": [] }`。
 游戏加载数据后会把其中每个条目作为 `mainQueue` 的初始实例加入；启动时由
-`MainScheduleRuntime` 统一创建 `ScheduleRunner` 执行。`data/<lang>/mainpub.json` 注册主要公共日程定义；通过 `insertSchedule`
-插入 `queue="main"` 的日程也由同一运行时执行。需要等待游戏状态变化时，应使用
+`MainActivityRuntime` 统一创建 `ActivityRunner` 执行。`data/<lang>/mainpub.json` 注册主要公共活动定义；通过 `insertActivity`
+插入 `queue="main"` 的活动也由同一运行时执行。需要等待游戏状态变化时，应使用
 `waitUntil` 连接通用取值节点，不要在应用层增加专用时间或成就监听器。
 
 蓝图变更后至少运行：
 
 ```bash
-node --check js/core/ScheduleNodeRegistry.js
-node --check js/core/ScheduleBlueprint.js
-node --check js/core/ScheduleRunner.js
+node --check js/core/ActivityNodeRegistry.js
+node --check js/core/ActivityBlueprint.js
+node --check js/core/ActivityRunner.js
 ```
 
 并验证所有 JSON、所有蓝图拓扑、动态端口连接和玩家发布边界。

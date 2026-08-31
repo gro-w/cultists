@@ -9,7 +9,7 @@
 `js/main.js` 是组成根，负责：
 
 1. 从 `SettingsManager` 读取语言并配置 `DataLoader`。
-2. 并行预加载 i18n、物品、日程、结局、存档索引、技能、时间规则、NPC、成就、医疗和公共变量。
+2. 并行预加载 i18n、物品、活动、结局、存档索引、技能、时间规则、NPC、成就、医疗和公共变量。
 3. 注册 `APP_REGISTRY`，由 `Desktop` 和 `Taskbar` 共同渲染桌面图标、开始菜单和任务栏。
 4. 挂载 `WindowManager`、`DormMode`、通知、结局界面和成就提示。
 5. 启动时显示主菜单；存档通过文件下载/选择载入；严格为 `?dev` 时启用开发人员模式。
@@ -24,18 +24,18 @@
 | `GameState` | 日期、绝对游戏时钟、昼夜 phase、duty/location、精力、SAN、体力、饱腹 |
 | `DayNightSystem` | 上班、下班、睡眠、工作日/休息日和最终阶段切换 |
 | `TimeService` | 唯一普通游戏时间推进、跨日和阶段结算 |
-| `ScheduleData` | 加载 work/social 日程，并按时间点追加批次 |
-| `ScheduleQueue` | 独立的 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
+| `ActivityData` | 加载 work/social 活动，并按时间点追加批次 |
+| `ActivityQueue` | 独立的 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
 | `ItemManager` | 物品定义、背包、调查、使用条件和使用效果 |
 | `ItemPlacementManager` | 场景中的条件物品摆放、拾取和放回 |
 | `GlobalVariableManager` | 数据定义的 bool/number/decimal/string 公共变量、条件和效果 |
 | `SpellManager` | 已学习法术、法术施放和法术状态事件 |
 | `KeywordManager` | 关键词注册、收集、来源和笔记本数据 |
-| `ScheduleRunner` | HIS/Social 对话及所有对象式日程蓝图执行器 |
+| `ActivityRunner` | HIS/Social 对话及所有对象式活动蓝图执行器 |
 | `DialogueEffects` | 对话显示时的物品、NPC、好感度、结局、变量和游戏事件效果 |
 | `EndingManager` | 事件、对话、物品、属性阈值和最终阶段结局 |
 | `SaveManager` | v16 存档文件编码/恢复、窗口布局、队列实例和所有持久状态 |
-| `DeveloperMode` | 仅源码开发版中的时间与读档、玩家与资源、NPC与对话、日程/世界/医疗调试器、JSON/内容编辑和日程蓝图编辑 |
+| `DeveloperMode` | 仅源码开发版中的时间与读档、玩家与资源、NPC与对话、活动/世界/医疗调试器、JSON/内容编辑和活动蓝图编辑 |
 
 典型事件流：
 
@@ -47,24 +47,24 @@
   -> 其他核心单例和已打开窗口
 ```
 
-常见事件包括：`gamestate:changed`、`time:changed`、`daynight:changed`、`schedule:triggered`、`schedule:resolved`、`schedule:completed`、`item:inspected`、`item:used`、`spells:changed`、`spell:cast`、`global-variable:changed`、`global-variables:changed`、`ending:triggered`。
+常见事件包括：`gamestate:changed`、`time:changed`、`daynight:changed`、`activity:triggered`、`activity:resolved`、`activity:completed`、`item:inspected`、`item:used`、`spells:changed`、`spell:cast`、`global-variable:changed`、`global-variables:changed`、`ending:triggered`。
 
-## 统一日程执行边界
+## 统一活动执行边界
 
-日程实例是所有普通计时操作和可持久化副作用的唯一执行身份。应用只创建实例、提供展示回调，不直接推进时间或提交状态：
+活动实例是所有普通计时操作和可持久化副作用的唯一执行身份。应用只创建实例、提供展示回调，不直接推进时间或提交状态：
 
 | 操作 | 队列 | 执行顺序 |
 | --- | --- | --- |
-| HIS/Social 对话 | `workQueue` / `socialQueue` / `mainQueue` | `ScheduleRunner` 执行蓝图节点、对话效果和 `consumeTime` |
+| HIS/Social 对话 | `workQueue` / `socialQueue` / `mainQueue` | `ActivityRunner` 执行蓝图节点、对话效果和 `consumeTime` |
 | ChatGTP 关键词查询 | `mainQueue` | 扣 NPC SAN、推进 20 分钟、提交回答 |
-| 物品调查/使用、法术施放 | `mainQueue` | `ItemScheduleRuntime` 执行效果、时间和完成事件 |
+| 物品调查/使用、法术施放 | `mainQueue` | `ItemActivityRuntime` 执行效果、时间和完成事件 |
 | HIS 诊断提交 | `mainQueue` | 提交医疗记录、推进 20 分钟、完成实例 |
 | 法术学习 | `mainQueue` | `consumeTime(240)` 后执行 `spellOperation` |
 | NPC 离线 | `mainQueue` | 执行离线状态转换和 `offlineConsequence` |
 
 `TimeService` 是唯一的普通时间推进 owner。睡眠、醒来、下班、跨日、日结和最终结局是显式系统边界；其中医疗到期只在 `TimeService` 的醒来路径调用 `MedicalCaseManager.processDue()`，医疗管理器不得再通过 `daynight:changed` 自行执行该逻辑。EventBus listener 若改变状态或消耗时间，必须视为执行器审计，不能当作被动通知。
 
-法术学习的状态变更不得发生在创建日程之前：学习按钮只构造 spell 数据并创建蓝图，蓝图先消耗 240 分钟，随后由 `spellOperation` 调用 `SpellManager.learn()`。NPC SAN 跨过离线阈值时只登记 pending 状态并创建一个带 instance ID 的 realtime 日程；只有该日程执行到离线节点时才加入 `offlineActors` 并发出离线通知。
+法术学习的状态变更不得发生在创建活动之前：学习按钮只构造 spell 数据并创建蓝图，蓝图先消耗 240 分钟，随后由 `spellOperation` 调用 `SpellManager.learn()`。NPC SAN 跨过离线阈值时只登记 pending 状态并创建一个带 instance ID 的 realtime 活动；只有该活动执行到离线节点时才加入 `offlineActors` 并发出离线通知。
 
 ## 游戏时间与状态机
 

@@ -19,6 +19,6 @@ for (const file of fs.readdirSync("data/zh-hans")) {
   }
 }
 
-const scheduleData = fs.readFileSync("js/core/ScheduleData.js", "utf8");
-assert.match(scheduleData, /selectWorkEntries\(this\.slots\.get\(key\) \|\| \[\], queueId\)/);
+const activityData = fs.readFileSync("js/core/ActivityData.js", "utf8");
+assert.match(activityData, /selectWorkEntries\(this\.slots\.get\(key\) \|\| \[\], queueId\)/);
 console.log("easy mode probe: ok");

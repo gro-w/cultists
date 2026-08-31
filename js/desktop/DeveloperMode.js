@@ -1,7 +1,7 @@
 // DEV-TOOLS:START
 import { windowManager } from "../core/WindowManager.js";
 import DataLoader, { dataLoader, detectDevServer, writeJSONToDisk } from "../core/DataLoader.js";
-import { scheduleData } from "../core/ScheduleData.js";
+import { activityData } from "../core/ActivityData.js";
 import { MAX_GAME_DAYS } from "../core/GameRules.js";
 import { saveManager } from "../core/SaveManager.js";
 import { gameState } from "../core/GameState.js";
@@ -19,8 +19,8 @@ import { endingManager } from "../core/EndingManager.js";
 import { spellManager } from "../core/SpellManager.js";
 import { keywordManager } from "../core/KeywordManager.js";
 import { achievementManager } from "../core/AchievementManager.js";
-import { workQueue, socialQueue, mainQueue } from "../core/ScheduleQueue.js";
-import { normalizeBlueprint } from "../core/ScheduleBlueprint.js";
+import { workQueue, socialQueue, mainQueue } from "../core/ActivityQueue.js";
+import { normalizeBlueprint } from "../core/ActivityBlueprint.js";
 import { DevItemEditorTab } from "./DevItemEditorTab.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
 import { DevBgmEditorTab } from "./DevBgmEditorTab.js";
@@ -32,7 +32,7 @@ import { DEDICATED_EDITOR_CLASSES } from "./DevDedicatedDataEditors.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
-const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, scheduleData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
+const DAY_FILES = () => Array.from({ length: Math.min(MAX_GAME_DAYS, activityData.totalDays) }, (_, i) => ["work", "social"].flatMap((queue) => [`${queue}${String(i + 1).padStart(2, "0")}a.json`, `${queue}${String(i + 1).padStart(2, "0")}b.json`])).flat();
 
 const QA_PAGE_SIZE = 50;
 let developerModeInstanceId = 0;
@@ -41,7 +41,7 @@ const GLOBAL_VARIABLE_VISIBILITY = {
   meaningful: "不看没有意义的系统公共变量",
   all: "不隐藏系统公共变量",
 };
-const SCHEDULE_CATEGORIES = { calendar: "日历日程", public: "公共日程", special: "特殊事件日程", ending: "结局日程", embedded: "物品与法术内嵌日程" };
+const ACTIVITY_CATEGORIES = { calendar: "日历活动", public: "公共活动", special: "特殊事件活动", ending: "结局活动", embedded: "物品与法术内嵌活动" };
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",
   "disease-category": "疾病类别",
@@ -70,22 +70,22 @@ const DEV_EDITOR_ICONS = {
   "tab-cg-editor": "🖼️", "tab-keywords": "🔑", "tab-chatgtp": "🤖", "tab-npcs": "👥", "tab-global-variables": "🔢",
   "tab-item-editor": "📦", "tab-dialogue-editor": "📅", "tab-bgm-editor": "🎵", "tab-location-editor": "📍",
   "tab-dorm-computer": "💻", "tab-turtle-soup": "🐢", "tab-state": "🕒", "tab-npc-state": "👤", "tab-inventory": "🎒",
-  "tab-schedules": "📋", "tab-world": "🌐", "tab-medical-ending": "⚕️",
+  "tab-activities": "📋", "tab-world": "🌐", "tab-medical-ending": "⚕️",
 };
 function downloadJson(fileName, value) { const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: "application/json;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = fileName; anchor.click(); URL.revokeObjectURL(url); }
 function clockParts() { const total = dayNightSystem.currentClockMinutes(); return { total, hour: Math.floor(total / 60), minute: total % 60 }; }
 function phaseForClock(total) { const normalized = ((total % 1440) + 1440) % 1440; return normalized >= 480 && normalized < 960 ? { phase: "day", phaseMinutes: normalized - 480 } : { phase: "night", phaseMinutes: normalized >= 960 ? normalized - 960 : normalized + 480 }; }
-function scheduleNodeContent(node) {
+function activityNodeContent(node) {
   if (!node) return "";
   if (node.type === "text") return node.inputs?.text ?? node.text ?? "";
   if (node.type === "choice") return "选项节点";
-  if (node.type === "scheduleEnd") return "日程结束";
+  if (node.type === "activityEnd") return "活动结束";
   if (node.type === "flowStart") return "流程开始";
   return node.label || node.type || "流程节点";
 }
-function scheduleNodeOptions(entry) {
+function activityNodeOptions(entry) {
   const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry);
-  return Object.values(blueprint.nodes || {}).map((node) => `<option value="${esc(node.id)}" ${node.id === (entry.currentNodeId || blueprint.startNodeId) ? "selected" : ""}>${esc(node.id)}：${esc(scheduleNodeContent(node))}</option>`).join("");
+  return Object.values(blueprint.nodes || {}).map((node) => `<option value="${esc(node.id)}" ${node.id === (entry.currentNodeId || blueprint.startNodeId) ? "selected" : ""}>${esc(node.id)}：${esc(activityNodeContent(node))}</option>`).join("");
 }
 
 export function launchDatabaseApp() {
@@ -108,7 +108,7 @@ export const launchDeveloperMode = launchDatabaseApp;
 export class DeveloperMode {
   constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._turtleSoupEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
-    const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset", "npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored"];
+    const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "activity:appended", "activity:changed", "activity:resolved", "activity:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset", "npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored"];
     events.forEach((event) => this._runtimeUnsubs.push(eventBus.on(event, () => this._queueRuntimeRefresh())));
     this.win?.element?.addEventListener("remove", () => {
       this._runtimeUnsubs.forEach((unsubscribe) => unsubscribe());
@@ -128,10 +128,10 @@ export class DeveloperMode {
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
       ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["公共变量定义", "🔢", "tab-global-variables"],
-      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
+      ["物品与法术编辑器", "📦", "tab-item-editor"], ["活动编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
-    const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC状态", "👤", "tab-npc-state"], ["日程与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
+    const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC状态", "👤", "tab-npc-state"], ["活动与队列", "📋", "tab-activities"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
     this.root.innerHTML = `<section class="dev-app-section dev-database-section"><div class="dev-app-heading"><strong>数据库 App</strong><span>静态数据编辑器。蓝色表示仍在开发，灰色表示较为成熟；双击图标在新窗口打开。</span></div><div class="dev-app-grid">${dataIcons.map(([label, glyph, action]) => icon(label, glyph, action, matureActions.has(action) ? "mature" : "data")).join("")}</div></section><section class="dev-app-section dev-debugger-section"><div class="dev-app-heading dev-runtime-heading"><strong>调试器</strong><span>观察或修改当前游戏运行时变量。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${runtimeIcons.map(([label, glyph, action]) => icon(label, glyph, action, "runtime")).join("")}</div></section><div class="dev-status" data-dev-status>开发人员模式就绪。</div>`;
     this.bindPanel();
   }
@@ -182,22 +182,22 @@ export class DeveloperMode {
       el.dataset.devBound = "1";
       el.addEventListener("dblclick", () => this.handle(el.dataset.devDblclick, el));
     });
-    this.root.querySelectorAll("[data-open-schedule]").forEach((el) => {
-      el.addEventListener("click", () => this.openScheduleEditor(el.dataset.openSchedule));
+    this.root.querySelectorAll("[data-open-activity]").forEach((el) => {
+      el.addEventListener("click", () => this.openActivityEditor(el.dataset.openActivity));
     });
     this.root.querySelectorAll("[data-open-item]").forEach((el) => {
       el.addEventListener("click", () => this.openItemEditor(el.dataset.openItem));
     });
   }
 
-  openScheduleEditor(scheduleId) {
-    const entry = scheduleData.catalog().find((candidate) => candidate.id === scheduleId);
-    if (!entry) return this.setStatus(`找不到日程定义：${scheduleId}`, true);
-    const type = entry.category === "special" ? "event" : entry.category === "ending" ? "ending" : "schedule";
-    const id = type === "schedule" ? entry.sourceFile : scheduleId;
+  openActivityEditor(activityId) {
+    const entry = activityData.catalog().find((candidate) => candidate.id === activityId);
+    if (!entry) return this.setStatus(`找不到活动定义：${activityId}`, true);
+    const type = entry.category === "special" ? "event" : entry.category === "ending" ? "ending" : "activity";
+    const id = type === "activity" ? entry.sourceFile : activityId;
     const host = document.createElement("div");
     const child = new DevDialogueEditorTab(this, { workspace: true, initialCtx: { type, id, entryIndex: entry.entryIndex || 0 } });
-    const win = windowManager.createWindow({ title: `蓝图编辑器 · ${scheduleId}`, icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
+    const win = windowManager.createWindow({ title: `蓝图编辑器 · ${activityId}`, icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
     win.el?.classList.add("dev-blueprint-window");
     host.innerHTML = child.html(); child.mount(host.querySelector(".dev-de-root"));
   }
@@ -218,7 +218,7 @@ export class DeveloperMode {
     const editor = new DeveloperMode(root, win, false);
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
-    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-turtle-soup": "showTurtleSoupEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
+    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-turtle-soup": "showTurtleSoupEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-activities": "showActivities", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
     if (methods[action]) {
       editor._unmountEditorTabs();
       Promise.resolve(editor[methods[action]]()).catch((error) => editor.setStatus(`加载失败：${error.message}`, true));
@@ -227,16 +227,16 @@ export class DeveloperMode {
     const structured = action.match(/^tab-structured-(.+)$/);
     if (structured) return editor.showStructuredEditor(structured[1]);
   }
-  openTemporaryScheduleEditor(queueId = undefined) {
+  openTemporaryActivityEditor(queueId = undefined) {
     const host = document.createElement("div");
     const child = new DevDialogueEditorTab(this, { workspace: false, temporaryScope: {
       onSave: (blueprint) => {
-        const result = scheduleData.createTemporaryInstance(blueprint, queueId);
-        this.setStatus(result.ok ? `临时日程已插入 ${result.queueId} 队列。` : "临时日程插入失败。", !result.ok);
+        const result = activityData.createTemporaryInstance(blueprint, queueId);
+        this.setStatus(result.ok ? `临时活动已插入 ${result.queueId} 队列。` : "临时活动插入失败。", !result.ok);
         return result;
       },
     } });
-    const win = windowManager.createWindow({ title: "临时日程编辑器", icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
+    const win = windowManager.createWindow({ title: "临时活动编辑器", icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
     win.el?.classList.add("dev-blueprint-window");
     host.innerHTML = child.html(); child.mount(host.querySelector(".dev-de-root"));
     win.el?.addEventListener("remove", () => child.unmount(), { once: true });
@@ -375,7 +375,7 @@ export class DeveloperMode {
     this._activeRuntimeMethod = "showNpcState";
     const actors = [{ id: "chatgtp", name: "ChatGTP", favorability: null }, ...npcStateManager.npcs.map((npc) => ({ id: npc.id, name: npc.name, favorability: favorabilityManager.get(npc.id) }))];
     const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="256" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="256" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 状态</h3><p>通过 NPC 状态和好感度所有者 API 修改运行时值；日程实例负责对话进度与状态。</p><table class="dev-table"><thead><tr><th>角色</th><th>SAN</th><th>好感度</th><th>当前状态</th></tr></thead><tbody>${rows}</tbody></table><label><input data-force-offline type="checkbox"> 将 SAN 不高于离线阈值的角色强制设为离线</label><div>${button("应用 NPC 状态", "apply-npc-state")}</div></section>`, "data");
+    this.panel(`<section class="dev-section"><h3>NPC 状态</h3><p>通过 NPC 状态和好感度所有者 API 修改运行时值；活动实例负责对话进度与状态。</p><table class="dev-table"><thead><tr><th>角色</th><th>SAN</th><th>好感度</th><th>当前状态</th></tr></thead><tbody>${rows}</tbody></table><label><input data-force-offline type="checkbox"> 将 SAN 不高于离线阈值的角色强制设为离线</label><div>${button("应用 NPC 状态", "apply-npc-state")}</div></section>`, "data");
   }
 
   showInventory() {
@@ -396,19 +396,19 @@ export class DeveloperMode {
       </tbody></table></section><section class="dev-section"><h3>已学习法术</h3><ul>${learned}</ul><h3>已收集关键词</h3><ul>${keywords}</ul></section>`);
   }
 
-  async showSchedules() {
-    this._activeRuntimeMethod = "showSchedules";
-    await scheduleData.init();
-    const category = this._scheduleCatalogCategory || "calendar";
-    const catalog = scheduleData.catalog(category);
-    const categoryOptions = Object.entries(SCHEDULE_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
-    const scheduleOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
-    const queueOptions = [["", "默认（按日程定义；临时日程默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
+  async showActivities() {
+    this._activeRuntimeMethod = "showActivities";
+    await activityData.init();
+    const category = this._activityCatalogCategory || "calendar";
+    const catalog = activityData.catalog(category);
+    const categoryOptions = Object.entries(ACTIVITY_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
+    const activityOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
+    const queueOptions = [["", "默认（按活动定义；临时活动默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
     const queues = [["main", mainQueue], ["work", workQueue], ["social", socialQueue]];
-    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-schedule="${esc(entry.scheduleId)}">${esc(entry.scheduleId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
-    const scheduled = scheduleData.snapshotScheduled();
-    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示主要、工作和社交三个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 main 主要队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
-    this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });
+    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>活动</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-activity-jump="${esc(entry.instanceId)}">${activityNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-activity="${esc(entry.activityId)}">${esc(entry.activityId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(activityNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
+    const queued = activityData.snapshotQueued();
+    this.panel(`<section class="dev-section"><h3>活动与队列</h3><p>显示主要、工作和社交三个独立队列及活动实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-activity-create"><strong>插入新建活动实例</strong><label>活动表 <select data-activity-category>${categoryOptions}</select></label><label>活动 <select data-activity-definition>${activityOptions || "<option value=\"\">（该类别暂无活动）</option>"}</select></label><label>目标队列 <select data-activity-queue>${queueOptions}</select></label>${button("新建", "create-activity-instance")} ${button("插入临时活动", "insert-temporary-activity")}</div><p>选择“默认”时使用活动定义所属队列；临时活动没有所属定义，默认进入 main 主要队列。ActivityData：已触发时段 ${activityData.fired?.size || 0}；待追加活动 ${queued.length}；最近绝对分钟 ${activityData.lastAbsoluteMinute ?? "无"}</p><ul>${queued.map((entry) => `<li><code>${esc(entry.activityId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加活动</li>"}</ul></section>${sections}`);
+    this.root.querySelector("[data-activity-category]")?.addEventListener("change", (event) => { this._activityCatalogCategory = event.target.value; this.showActivities(); });
   }
 
   async showWorld() {
@@ -870,32 +870,32 @@ export class DeveloperMode {
       this.setStatus("玩家属性已应用。");
       return this.showInventory();
     }
-    if (action === "create-schedule-instance") {
-      const scheduleId = this.root.querySelector("[data-schedule-definition]")?.value;
-      const queueId = this.root.querySelector("[data-schedule-queue]")?.value || undefined;
-      const result = await scheduleData.createInstance(scheduleId, queueId);
-      this.setStatus(result.ok ? `日程实例 ${result.instance.instanceId} 已插入 ${result.queueId} 队列。` : `新建日程失败：${result.reason}`, !result.ok);
-      return this.showSchedules();
+    if (action === "create-activity-instance") {
+      const activityId = this.root.querySelector("[data-activity-definition]")?.value;
+      const queueId = this.root.querySelector("[data-activity-queue]")?.value || undefined;
+      const result = await activityData.createInstance(activityId, queueId);
+      this.setStatus(result.ok ? `活动实例 ${result.instance.instanceId} 已插入 ${result.queueId} 队列。` : `新建活动失败：${result.reason}`, !result.ok);
+      return this.showActivities();
     }
-    if (action === "insert-temporary-schedule") {
-      const queueId = this.root.querySelector("[data-schedule-queue]")?.value || undefined;
-      return this.openTemporaryScheduleEditor(queueId);
+    if (action === "insert-temporary-activity") {
+      const queueId = this.root.querySelector("[data-activity-queue]")?.value || undefined;
+      return this.openTemporaryActivityEditor(queueId);
     }
     const queueAction = action.match(/^(resolve|reopen)-queue-(main|work|social)-(.+)$/);
     if (queueAction) {
       const queues = { main: mainQueue, work: workQueue, social: socialQueue };
       const queue = queues[queueAction[2]];
       const ok = queue.updateInstance(queueAction[3], { status: queueAction[1] === "resolve" ? "resolved" : "unresolved" });
-      this.setStatus(ok ? "日程实例状态已更新。" : "未找到日程实例。", !ok);
-      return this.showSchedules();
+      this.setStatus(ok ? "活动实例状态已更新。" : "未找到活动实例。", !ok);
+      return this.showActivities();
     }
     const jumpAction = action.match(/^jump-queue-(main|work|social)-(.+)$/);
     if (jumpAction) {
       const queueId = jumpAction[1];
       const instanceId = jumpAction[2];
       const queue = { main: mainQueue, work: workQueue, social: socialQueue }[queueId];
-      const select = Array.from(this.root.querySelectorAll("[data-schedule-jump]"))
-        .find((element) => element.dataset.scheduleJump === instanceId);
+      const select = Array.from(this.root.querySelectorAll("[data-activity-jump]"))
+        .find((element) => element.dataset.activityJump === instanceId);
       const entry = queue.getInstance(instanceId);
       const nodeId = select?.value;
       const blueprint = entry ? normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry) : null;
@@ -904,8 +904,8 @@ export class DeveloperMode {
           currentNodeId: nodeId,
           executedNodeIds: (entry.executedNodeIds || []).filter((id) => id !== nodeId),
         }));
-      this.setStatus(ok ? `日程实例已强制跳转到节点 ${nodeId}。` : "强制跳转失败：实例或流程节点无效。", !ok);
-      return this.showSchedules();
+      this.setStatus(ok ? `活动实例已强制跳转到节点 ${nodeId}。` : "强制跳转失败：实例或流程节点无效。", !ok);
+      return this.showActivities();
     }
     const placementAction = action.match(/^toggle-placement-(.+)$/);
     if (placementAction) {
@@ -927,9 +927,9 @@ export class DeveloperMode {
     if (action === "trigger-ending") {
       const id = this.root.querySelector("[data-ending-id]")?.value;
       await endingManager.load();
-      await scheduleData.init();
+      await activityData.init();
       const ending = endingManager.defs.get(id);
-      const source = scheduleData.catalog("special").find((entry) => {
+      const source = activityData.catalog("special").find((entry) => {
         const blueprint = normalizeBlueprint(entry.definition?.blueprint || entry.definition?.dialogueTree);
         return Object.values(blueprint?.nodes || {}).some((node) => (
           node.type === "ending" && String(node.inputs?.endingId || "") === String(id)

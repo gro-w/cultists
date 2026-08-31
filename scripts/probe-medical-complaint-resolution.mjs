@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 globalThis.localStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
-const { createScheduleRunner } = await import("../js/core/ScheduleRunner.js");
-const { workQueue } = await import("../js/core/ScheduleQueue.js");
+const { createActivityRunner } = await import("../js/core/ActivityRunner.js");
+const { workQueue } = await import("../js/core/ActivityQueue.js");
 const { globalVariableManager } = await import("../js/core/GlobalVariableManager.js");
 
 const data = JSON.parse(fs.readFileSync("data/zh-hans/workpub.json", "utf8"));
@@ -33,11 +33,11 @@ const instance = workQueue.append([{
   incidentType: "complaint",
   receivedDay: 2,
   receivedTime: 480,
-  scheduleId: "medical_complaint_work:probe",
+  activityId: "medical_complaint_work:probe",
 }])[0];
 const optionsEl = new Element("div");
 const lines = [];
-const runner = createScheduleRunner({
+const runner = createActivityRunner({
   definition: instance,
   instance,
   optionsEl,

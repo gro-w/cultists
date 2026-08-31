@@ -2,7 +2,7 @@
 import { dataLoader } from "../core/DataLoader.js";
 import { locationSystem } from "../core/LocationSystem.js";
 import { DevDialogueEditorTab } from "./DevDialogueEditorTab.js";
-import { createEmptyBlueprint } from "../core/ScheduleBlueprint.js";
+import { createEmptyBlueprint } from "../core/ActivityBlueprint.js";
 
 /**
  * DevItemEditorTab — item-editor.html/js ported into the DeveloperMode panel.
@@ -70,7 +70,7 @@ export class DevItemEditorTab {
       id:this._uid(), defaultName:'', worldCount:1, inspectText:'', inspectTimeAdvance:0,
       revealKeywordIds:[], locations:[], pickable:false, usable:false, consumable:false, isBook:false,
       useCondition:{sanMin:0,sanMax:0},
-      schedules:{},
+      activities:{},
       sanVariants:v,
       bookContents:[], spells:[],
     };
@@ -155,17 +155,17 @@ export class DevItemEditorTab {
           <button type="button" class="win95-btn dev-btn" onclick="_ie._addKwTag()">添加</button>
         </div>
       </div>
-      <div class="dev-section dev-ie-sec"><h3>🔎 调查日程</h3><p style="font-size:11px;color:#888">直接编辑当前物品的 investigate 内嵌日程；保存蓝图后会写回物品草稿。</p>
+      <div class="dev-section dev-ie-sec"><h3>🔎 调查活动</h3><p style="font-size:11px;color:#888">直接编辑当前物品的 investigate 内嵌活动；保存蓝图后会写回物品草稿。</p>
         <div id="ie-investigate-editor" class="dev-ie-investigate-editor"></div>
       </div>
-      <div class="dev-section dev-ie-sec" id="ie-sec-use" style="display:none"><h3>⚡ 使用日程</h3>
-        <p style="font-size:11px;color:#888">直接编辑当前物品的 use 内嵌日程；保存蓝图后会写回物品草稿。</p>
+      <div class="dev-section dev-ie-sec" id="ie-sec-use" style="display:none"><h3>⚡ 使用活动</h3>
+        <p style="font-size:11px;color:#888">直接编辑当前物品的 use 内嵌活动；保存蓝图后会写回物品草稿。</p>
         <div class="dev-ie-row">
           <div class="dev-ie-field" style="flex:0"><label>SAN 最低（0=不限）</label><input type="number" id="f-sanMin" value="0" min="0" max="100" style="width:70px" oninput="_ie._setDirty()"></div>
           <div class="dev-ie-field" style="flex:0"><label>SAN 最高（0=不限）</label><input type="number" id="f-sanMax" value="0" min="0" max="100" style="width:70px" oninput="_ie._setDirty()"></div>
           <div style="flex:1;padding-top:18px;font-size:11px;color:#888">书籍填 1/50 表示仅 0&lt;SAN≤50 时可用</div>
         </div>
-        <div id="ie-use-editor" class="dev-ie-item-schedule-editor"></div>
+        <div id="ie-use-editor" class="dev-ie-item-activity-editor"></div>
       </div>
       <div class="dev-section dev-ie-sec" id="ie-sec-book" style="display:none"><h3>📖 书籍内容</h3>
         <div id="ie-book-entries"></div>
@@ -278,15 +278,15 @@ export class DevItemEditorTab {
     this.dirty = true; if (field === 'name') this._renderSpellList();
   }
 
-  _defaultSchedule() {
+  _defaultActivity() {
     const blueprint = createEmptyBlueprint();
-    blueprint.nodes.end = { id: 'end', type: 'scheduleEnd', inputs: {}, outputs: {}, x: 280, y: 80 };
+    blueprint.nodes.end = { id: 'end', type: 'activityEnd', inputs: {}, outputs: {}, x: 280, y: 80 };
     blueprint.connections.push({ fromNodeId: 'start', fromPort: 'flowOut', toNodeId: 'end', toPort: 'flowIn' });
     return blueprint;
   }
 
-  _defaultInvestigateSchedule() {
-    return this._defaultSchedule();
+  _defaultInvestigateActivity() {
+    return this._defaultActivity();
   }
 
   _unmountInvestigateEditor() {
@@ -298,31 +298,31 @@ export class DevItemEditorTab {
     this._useEditorHost = null;
   }
 
-  _mountItemScheduleEditor(item, action) {
+  _mountItemActivityEditor(item, action) {
     const host = this._el(action === 'investigate' ? 'ie-investigate-editor' : 'ie-use-editor');
     const editorKey = action === 'investigate' ? '_investigateEditor' : '_useEditor';
     const hostKey = action === 'investigate' ? '_investigateEditorHost' : '_useEditorHost';
     if (!host || !item) return;
     if (this[hostKey] === item && this[editorKey]) return;
     if (this[editorKey]) this[editorKey].unmount();
-    item.schedules ||= {};
-    item.schedules[action] ||= this._defaultSchedule();
+    item.activities ||= {};
+    item.activities[action] ||= this._defaultActivity();
     const project = {
       version: 2, totalDays: 1, customVars: [],
-      schedules: { embedded: { displayName: action, entries: [{
+      activities: { embedded: { displayName: action, entries: [{
         id: action, name: action,
-        dialogueTree: JSON.parse(JSON.stringify(item.schedules[action])),
+        dialogueTree: JSON.parse(JSON.stringify(item.activities[action])),
       }] } },
       events: {}, endings: {}, eventFileDoc: { events: [] }, endingFileDoc: { endings: [] },
     };
     const editor = new DevDialogueEditorTab(this._dev, {
       workspace: false,
       project,
-      initialCtx: { type: 'schedule', id: 'embedded', entryIndex: 0 },
+      initialCtx: { type: 'activity', id: 'embedded', entryIndex: 0 },
       embeddedScope: {
         title: `${item.defaultName || item.id} · ${action}`,
         onSave: (blueprint) => {
-          item.schedules[action] = JSON.parse(JSON.stringify(blueprint));
+          item.activities[action] = JSON.parse(JSON.stringify(blueprint));
           this.dirty = true;
           this._persist();
         },
@@ -335,8 +335,8 @@ export class DevItemEditorTab {
     this[hostKey] = item;
   }
 
-  _mountInvestigateEditor(item) { this._mountItemScheduleEditor(item, 'investigate'); }
-  _mountUseEditor(item) { this._mountItemScheduleEditor(item, 'use'); }
+  _mountInvestigateEditor(item) { this._mountItemActivityEditor(item, 'investigate'); }
+  _mountUseEditor(item) { this._mountItemActivityEditor(item, 'use'); }
 
   unmount() {
     this._unmountInvestigateEditor();
@@ -609,8 +609,8 @@ export class DevItemEditorTab {
     it.usable=this._vc('f-usable'); it.consumable=this._vc('f-consumable'); it.isBook=this._vc('f-isBook');
     it.inspectTimeAdvance=this._vi('f-inspectTimeAdv');
     it.useCondition={sanMin:this._vi('f-sanMin'),sanMax:this._vi('f-sanMax')};
-    it.schedules ||= {};
-    it.schedules.use ||= this._defaultSchedule();
+    it.activities ||= {};
+    it.activities.use ||= this._defaultActivity();
     this.currentId=it.id; this.dirty=false; this._persist();
     if(!silent){const sm=this._el('ie-save-msg');if(sm){sm.textContent='✓ 已保存';setTimeout(()=>{sm.textContent='';},2000);}}
     this._renderList();
@@ -685,7 +685,7 @@ export class DevItemEditorTab {
   // ── format converters ─────────────────────────────────────────────────────
   _toGame(it) {
     // Spread rawGame first so unmanaged fields (inspectCheck, inspectOutcomes,
-    // Legacy use-effect fields are intentionally omitted; effects now live in schedules.use.
+    // Legacy use-effect fields are intentionally omitted; effects now live in activities.use.
     const out = it._rawGame ? {...it._rawGame} : {};
     // Overwrite every managed field unconditionally, and delete it when cleared.
     out.id=it.id; out.name=it.defaultName; out.consumable=it.consumable;
@@ -710,20 +710,20 @@ export class DevItemEditorTab {
     if(it.isBook) out.isBook=true; else delete out.isBook;
     if(it.bookContents&&it.bookContents.length) out.bookContents=it.bookContents; else delete out.bookContents;
     if(it.spells&&it.spells.length) out.spells=it.spells.filter(s=>s.name).map(s=>{ const spell={...s,name:s.name,description:s.description||'',learnTimeMinutes:Number(s.learnTimeMinutes||240),castSanCost:Number(s.castSanCost||5)}; return spell; }); else delete out.spells;
-    if(it.schedules && Object.keys(it.schedules).length) {
-      out.schedules=JSON.parse(JSON.stringify(it.schedules));
-      const resultNode=out.schedules.investigate?.nodes?.["band6:result"];
+    if(it.activities && Object.keys(it.activities).length) {
+      out.activities=JSON.parse(JSON.stringify(it.activities));
+      const resultNode=out.activities.investigate?.nodes?.["band6:result"];
       const san0Text=it.sanVariants['=0']?.description;
       if(resultNode && san0Text) resultNode.inputs ||= {}, resultNode.inputs.text=san0Text;
       _IE_BANDS.forEach((b,index)=>{
-        const imageNode=out.schedules.investigate?.nodes?.[`band${index}:image`];
+        const imageNode=out.activities.investigate?.nodes?.[`band${index}:image`];
         const image=it.sanVariants[b.key]?.image;
         if(imageNode && image) imageNode.inputs ||= {}, imageNode.inputs.image=image;
       });
-      const normalImage=out.schedules.investigate?.nodes?.['band0:image']?.inputs?.image;
-      const zeroImage=out.schedules.investigate?.nodes?.['band6:image'];
+      const normalImage=out.activities.investigate?.nodes?.['band0:image']?.inputs?.image;
+      const zeroImage=out.activities.investigate?.nodes?.['band6:image'];
       if(normalImage && zeroImage) zeroImage.inputs ||= {}, zeroImage.inputs.image=normalImage;
-    } else delete out.schedules;
+    } else delete out.activities;
     delete out.useEffect; delete out.successMessage; delete out.failMessage;
     return out;
   }
@@ -736,13 +736,13 @@ export class DevItemEditorTab {
     it.inspectTimeAdvance=g.inspectTimeAdvance||0; it.isBook=!!g.isBook;
     it.useCondition={sanMin:(g.useCondition&&g.useCondition.sanMin)||0,sanMax:(g.useCondition&&g.useCondition.sanMax)||0};
     it.bookContents=g.bookContents||[];
-    it.spells=(g.spells||[]).map(s=>({ ...s, name:s.name||'', description:s.description||'', learnTimeMinutes:Number(s.learnTimeMinutes||240), castSanCost:Number(s.castSanCost||5), schedules:s.schedules ? JSON.parse(JSON.stringify(s.schedules)) : {} }));
-    it.schedules=g.schedules ? JSON.parse(JSON.stringify(g.schedules)) : {};
+    it.spells=(g.spells||[]).map(s=>({ ...s, name:s.name||'', description:s.description||'', learnTimeMinutes:Number(s.learnTimeMinutes||240), castSanCost:Number(s.castSanCost||5), activities:s.activities ? JSON.parse(JSON.stringify(s.activities)) : {} }));
+    it.activities=g.activities ? JSON.parse(JSON.stringify(g.activities)) : {};
     it.revealKeywordIds=g.revealKeywordIds||[];
-    const san0Result=it.schedules.investigate?.nodes?.["band6:result"]?.inputs?.text;
+    const san0Result=it.activities.investigate?.nodes?.["band6:result"]?.inputs?.text;
     if(san0Result !== undefined) it.sanVariants['=0'].description=String(san0Result);
     _IE_BANDS.forEach((b,index)=>{
-      const image=it.schedules.investigate?.nodes?.[`band${index}:image`]?.inputs?.image;
+      const image=it.activities.investigate?.nodes?.[`band${index}:image`]?.inputs?.image;
       if(image !== undefined && !it.sanVariants[b.key].image) it.sanVariants[b.key].image=String(image);
     });
     if(it.sanVariants['>90'].image) it.sanVariants['=0'].image=it.sanVariants['>90'].image;

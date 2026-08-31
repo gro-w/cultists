@@ -4,7 +4,7 @@ import { npcStateManager } from "./NpcStateManager.js";
 
 import { eventBus } from "./EventBus.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
-import { applyScheduleOperations } from "./ScheduleOperations.js";
+import { applyActivityOperations } from "./ActivityOperations.js";
 import { bgmManager } from "./BgmManager.js";
 
 /**
@@ -28,7 +28,7 @@ import { bgmManager } from "./BgmManager.js";
  */
 /**
  * Supported fields are grantItems, removeItems, ending, npcSanChange,
- * gameEvent, global variables, schedule operations, and BGM effects.
+ * gameEvent, global variables, activity operations, and BGM effects.
  */
 export function applyDialogueOnShow(node, actorId) {
   const onShow = node && node.onShow;
@@ -46,7 +46,7 @@ export function applyDialogueOnShow(node, actorId) {
     eventBus.emit(onShow.gameEvent, onShow.gameEventPayload || {});
   }
   globalVariableManager.applyEffects(onShow.globalVariables || onShow.globalVariableChanges);
-  applyScheduleOperations(onShow);
+  applyActivityOperations(onShow);
 
   // BGM layer: onShow.bgm = { action: "play"|"restore"|"stop", bgmId?: string }
   const bgm = onShow.bgm;

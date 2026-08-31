@@ -43,6 +43,18 @@ class ActivityExecutionService {
     return queue?.complete(instanceId) || false;
   }
 
+  executeImmediate({ queue, instance, execute, onComplete = () => {} } = {}) {
+    if (this.restoring || !queue || !instance?.instanceId || typeof execute !== "function") return null;
+    if (queue.statusOf(instance.instanceId) === "nonexistent") [instance] = queue.append([instance]);
+    else instance = queue.getInstance(instance.instanceId) || instance;
+    if (instance.status === "resolved") return instance;
+    const result = execute(instance);
+    queue.complete(instance.instanceId);
+    const resolved = queue.getInstance(instance.instanceId) || { ...instance, status: "resolved" };
+    onComplete(resolved, result);
+    return resolved;
+  }
+
   get(instanceId) {
     return this.runners.get(instanceId) || null;
   }

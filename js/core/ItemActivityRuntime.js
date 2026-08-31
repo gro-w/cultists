@@ -55,16 +55,22 @@ export function runItemActivity(payload = {}) {
     instance = queue.getInstance(instance.instanceId) || instance;
   }
   if (!payload.blueprint) {
-    const effect = payload.context?.effect || payload.effect || {};
-    const effectResult = applyEffect(effect);
-    timeService.advanceBy(Number(payload.context?.timeMinutes || payload.context?.effect?.timeAdvance || payload.timeMinutes || 0));
-    if (payload.source === "spell" && (payload.action === "use" || payload.action === "cast")) {
-      eventBus.emit("spell:cast", { spell: payload.context?.spell || payload.spell, context: payload.context || {} });
-    }
-    if (payload.source === "npc") eventBus.emit("npc:offline", { actorId: payload.actorId });
-    queue.complete(instance.instanceId);
-    payload.context?.onComplete?.({ ...instance, result: effectResult });
-    return { ok: true, instance };
+    const resolved = activityExecutionService.executeImmediate({
+      queue,
+      instance,
+      execute: () => {
+        const effect = payload.context?.effect || payload.effect || {};
+        const effectResult = applyEffect(effect);
+        timeService.advanceBy(Number(payload.context?.timeMinutes || payload.context?.effect?.timeAdvance || payload.timeMinutes || 0));
+        if (payload.source === "spell" && (payload.action === "use" || payload.action === "cast")) {
+          eventBus.emit("spell:cast", { spell: payload.context?.spell || payload.spell, context: payload.context || {} });
+        }
+        if (payload.source === "npc") eventBus.emit("npc:offline", { actorId: payload.actorId });
+        return effectResult;
+      },
+      onComplete: (next, result) => payload.context?.onComplete?.({ ...next, result }),
+    });
+    return resolved ? { ok: true, instance: resolved } : { ok: false, reason: "activity execution unavailable" };
   }
   const offDisplay = displayReceiverManager.register("item-inspection", ({ type, image }) => {
     if (type === "image" && image) instance.inspectionImage = image;

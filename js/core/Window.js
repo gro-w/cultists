@@ -67,7 +67,16 @@ export default class Win95Window {
         <button type="button" data-window-command="close">关闭(C)</button>
       </div>
       <div class="win95-window-body"></div>
-      ${this.resizable ? '<div class="win95-window-resize-handle"></div>' : ""}
+      ${this.resizable ? `
+        <div class="win95-window-resize-handle win95-resize-n" data-resize="n"></div>
+        <div class="win95-window-resize-handle win95-resize-ne" data-resize="ne"></div>
+        <div class="win95-window-resize-handle win95-resize-e" data-resize="e"></div>
+        <div class="win95-window-resize-handle win95-resize-se" data-resize="se"></div>
+        <div class="win95-window-resize-handle win95-resize-s" data-resize="s"></div>
+        <div class="win95-window-resize-handle win95-resize-sw" data-resize="sw"></div>
+        <div class="win95-window-resize-handle win95-resize-w" data-resize="w"></div>
+        <div class="win95-window-resize-handle win95-resize-nw" data-resize="nw"></div>
+      ` : ""}
     `;
 
     el.querySelector(".win95-titlebar-text").textContent = this.title;
@@ -151,8 +160,8 @@ export default class Win95Window {
       if (!dragging) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      this.el.style.left = `${Math.max(0, originLeft + dx)}px`;
-      this.el.style.top = `${Math.max(0, originTop + dy)}px`;
+      this.el.style.left = `${this._clampLeft(originLeft + dx)}px`;
+      this.el.style.top = `${this._clampTop(originTop + dy)}px`;
     };
     const onMouseUp = () => {
       dragging = false;
@@ -178,38 +187,99 @@ export default class Win95Window {
   }
 
   _bindResize() {
-    const handle = this.el.querySelector(".win95-window-resize-handle");
-    if (!handle) return;
-    let startX = 0;
-    let startY = 0;
-    let startW = 0;
-    let startH = 0;
-    let resizing = false;
+    const handles = this.el.querySelectorAll(".win95-window-resize-handle");
+    if (!handles.length) return;
+    handles.forEach((handle) => {
+      let startX = 0;
+      let startY = 0;
+      let startLeft = 0;
+      let startTop = 0;
+      let startW = 0;
+      let startH = 0;
+      let resizing = false;
+      const direction = handle.dataset.resize;
 
-    const onMouseMove = (e) => {
-      if (!resizing) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      this.el.style.width = `${Math.max(240, startW + dx)}px`;
-      this.el.style.height = `${Math.max(140, startH + dy)}px`;
-    };
-    const onMouseUp = () => {
-      resizing = false;
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-    };
+      const onMouseMove = (e) => {
+        if (!resizing) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        let width = startW;
+        let height = startH;
+        let left = startLeft;
+        let top = startTop;
 
-    handle.addEventListener("mousedown", (e) => {
-      e.stopPropagation();
-      resizing = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      startW = this.el.offsetWidth;
-      startH = this.el.offsetHeight;
-      this.focus();
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("mouseup", onMouseUp);
+        if (direction.includes("e")) width = Math.max(260, startW + dx);
+        if (direction.includes("s")) height = Math.max(160, startH + dy);
+        if (direction.includes("w")) {
+          width = Math.max(260, startW - dx);
+          left = startLeft + (startW - width);
+        }
+        if (direction.includes("n")) {
+          height = Math.max(160, startH - dy);
+          top = startTop + (startH - height);
+        }
+
+        this.el.style.left = `${this._clampLeft(left)}px`;
+        this.el.style.top = `${this._clampTop(top)}px`;
+        this.el.style.width = `${width}px`;
+        this.el.style.height = `${height}px`;
+      };
+      const onMouseUp = () => {
+        resizing = false;
+        this.el.classList.remove("resizing");
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("mouseup", onMouseUp);
+      };
+
+      handle.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        resizing = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = this.el.offsetLeft;
+        startTop = this.el.offsetTop;
+        startW = this.el.offsetWidth;
+        startH = this.el.offsetHeight;
+        this.el.classList.add("resizing");
+        this.focus();
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("mouseup", onMouseUp);
+      });
     });
+  }
+
+  _clampLeft(left) {
+    return Math.max(-(this.el.offsetWidth - 48), left);
+  }
+
+  _desktopBottom() {
+    const taskbar = document.querySelector(".taskbar");
+    const taskbarHeight = taskbar?.getBoundingClientRect().height || 0;
+    return Math.max(0, window.innerHeight - taskbarHeight);
+  }
+
+  _clampTop(top) {
+    const titlebarHeight = this.titlebarEl?.offsetHeight || 20;
+    const maxTop = Math.max(0, this._desktopBottom() - titlebarHeight);
+    return Math.min(maxTop, Math.max(0, top));
+  }
+
+  _ensureVisible() {
+    const viewportWidth = window.innerWidth;
+    const desktopBottom = this._desktopBottom();
+    const left = this.el.offsetLeft;
+    const top = this.el.offsetTop;
+    const right = left + this.el.offsetWidth;
+    const bottom = top + this.el.offsetHeight;
+    const completelyOutside = right <= 0 || left >= viewportWidth || bottom <= 0;
+    const completelyBehindTaskbar = top >= desktopBottom;
+    if (completelyOutside || completelyBehindTaskbar) {
+      this.el.style.left = "60px";
+      this.el.style.top = "40px";
+    } else {
+      this.el.style.top = `${this._clampTop(top)}px`;
+    }
   }
 
   focus() {
@@ -222,7 +292,8 @@ export default class Win95Window {
 
   toggleMinimize() {
     this.minimized = !this.minimized;
-    this.el.style.display = this.minimized ? "none" : "flex";
+    if (this.minimized) this.el.style.display = "none";
+    else this.restore();
   }
 
   toggleMaximize() {
@@ -259,17 +330,20 @@ export default class Win95Window {
     const button = this.el.querySelector(".win95-max");
     button.title = "最大化";
     button.setAttribute("aria-label", "最大化");
+    this._ensureVisible();
   }
 
   restore() {
     this.minimized = false;
     this.el.style.display = "flex";
+    this._ensureVisible();
   }
 
   /** Reposition the window (used when restoring a save's window layout). */
   moveTo(x, y) {
-    this.el.style.left = `${Math.max(0, x)}px`;
+    this.el.style.left = `${this._clampLeft(x)}px`;
     this.el.style.top = `${Math.max(0, y)}px`;
+    this._ensureVisible();
   }
 
   close() {

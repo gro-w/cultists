@@ -29,6 +29,7 @@
               "id": "plain:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "你的医师执业资格证书，证明你有资格在医院独立接诊。看起来必须妥善保管。"
               },
               "outputs": {},
@@ -152,6 +153,7 @@
               "id": "plain:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一把生了锈的[[old_key_clue|旧钥匙]]，边缘还留着划痕，不知道能打开什么。"
               },
               "outputs": {},
@@ -319,6 +321,7 @@
               "id": "criticalSuccess:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "你借着窗外的光仔细端详木盒的缝隙，隐约看清了里面除了硬物之外，还压着一张折起的[[mystery_note|纸片]]——不用打开锁也能猜到些什么了。"
               },
               "outputs": {},
@@ -330,6 +333,7 @@
               "id": "success:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个上了锁的木盒，摇一摇里面似乎有东西碰撞的声响。也许有钥匙能打开它。"
               },
               "outputs": {},
@@ -339,6 +343,7 @@
               "id": "failure:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "你翻来覆去看了半天，除了锁孔上的划痕，看不出更多东西。"
               },
               "outputs": {},
@@ -348,6 +353,7 @@
               "id": "criticalFailure:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "你凑得太近，木盒边缘一根倒刺扎进了指腹，吓得手一抖差点没摔了它。"
               },
               "outputs": {},
@@ -492,6 +498,7 @@
               "id": "plain:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "盒子已经打开了，里面只剩下一些灰尘和一张[[mystery_note|看不清字迹的纸片]]。"
               },
               "outputs": {},
@@ -617,6 +624,7 @@
               "id": "plain:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "便利店买的三明治，看起来还算新鲜，可以填填肚子。"
               },
               "outputs": {},
@@ -774,6 +782,7 @@
               "id": "plain:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "食堂阿姨特意多打的一整份套餐，分量大得惊人，吃完可能会撑到走不动路。"
               },
               "outputs": {},
@@ -939,6 +948,7 @@
               "id": "criticalSuccess:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "凑近对光看了看沉淀物和颜色，你几乎可以断定这不是能喝的东西——是[[strange_liquid|不明液体]]，绝对不能尝试。"
               },
               "outputs": {},
@@ -950,6 +960,7 @@
               "id": "success:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一小瓶来源不明的液体，气味刺鼻，说明书也没有，喝下去后果难以预料。"
               },
               "outputs": {},
@@ -959,6 +970,7 @@
               "id": "failure:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "你对着瓶口闻了闻，只觉得一股说不清的怪味，看不出更多线索。"
               },
               "outputs": {},
@@ -968,6 +980,7 @@
               "id": "criticalFailure:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "凑得太近，刺鼻的气味直冲鼻腔，你被熏得眼泪直流，一阵反胃。"
               },
               "outputs": {},
@@ -1182,6 +1195,7 @@
               "id": "plain:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "同事情绪崩溃请假后留下的一堆未处理事务，全都压在了你一个人身上。走廊里有人低声提起[[night_shift_rumor|夜班传闻]]，你没心思去听。"
               },
               "outputs": {},
@@ -1385,6 +1399,7 @@
               "id": "band0:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_nahan_90_58e0c48144f6.jpg"
               },
               "outputs": {}
@@ -1393,6 +1408,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰喜欢中国文学，总是翻看这本鲁迅的小说集。"
               },
               "outputs": {},
@@ -1410,6 +1426,7 @@
               "id": "band1:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_nahan_70_90_58e0c48144f6.jpg"
               },
               "outputs": {}
@@ -1418,6 +1435,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰喜欢中国文学，总是翻看这本鲁迅的小说集。"
               },
               "outputs": {},
@@ -1427,6 +1445,7 @@
               "id": "band2:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_nahan_50_70_33d406c8077c.jpg"
               },
               "outputs": {}
@@ -1435,6 +1454,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰总是翻看这本奇怪的书，它印刷极其模糊，比起字更像描述神秘法术的符号。"
               },
               "outputs": {},
@@ -1455,6 +1475,7 @@
               "id": "band3:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_nahan_30_50_90cc2136c4e4.jpg"
               },
               "outputs": {}
@@ -1463,6 +1484,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰总是翻看这本奇怪的书，它印刷极其模糊，比起字更像描述神秘法术的符号。传闻说其中记载了导致疾病的法术。"
               },
               "outputs": {},
@@ -1484,6 +1506,7 @@
               "id": "band4:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_nahan_15_30_90cc2136c4e4.jpg"
               },
               "outputs": {}
@@ -1492,6 +1515,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "看来这本书只有阿杰能看懂其中文字，其他人看了，只会显示一片模糊。传闻说其中记载了导致疾病的法术。"
               },
               "outputs": {},
@@ -1512,6 +1536,7 @@
               "id": "band5:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_nahan_0_15_90cc2136c4e4.jpg"
               },
               "outputs": {}
@@ -1520,6 +1545,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "医院……为什么它们要来医院实习……我都明白了……这是炼制深潜秘药的必备条件！"
               },
               "outputs": {},
@@ -1540,6 +1566,7 @@
               "id": "band6:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_nahan_90_58e0c48144f6.jpg"
               },
               "outputs": {}
@@ -1548,6 +1575,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰喜欢中国文学，总是翻看这本鲁迅的小说集。"
               },
               "outputs": {},
@@ -1906,6 +1934,7 @@
               "id": "band0:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_wangxb_90_f20fc5e6966c.jpg"
               },
               "outputs": {}
@@ -1914,6 +1943,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰喜欢中国文学，总是翻看这本王小波的小说集。"
               },
               "outputs": {},
@@ -1931,6 +1961,7 @@
               "id": "band1:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_wangxb_70_90_f20fc5e6966c.jpg"
               },
               "outputs": {}
@@ -1939,6 +1970,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰喜欢中国文学，总是翻看这本王小波的小说集。其中有一篇《绿毛水怪》似乎磨损程度明显高于其他章节。难道……"
               },
               "outputs": {},
@@ -1948,6 +1980,7 @@
               "id": "band2:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_wangxb_50_70_f20fc5e6966c.jpg"
               },
               "outputs": {}
@@ -1956,6 +1989,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "蝙蝠的翅膀靠趾骨来支撑……三叉戟、铜盔与短剑……像鱼又像人的绿色水怪……这样的描述很难不令人感到恐惧。"
               },
               "outputs": {},
@@ -1969,6 +2003,7 @@
               "id": "band3:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_wangxb_30_50_f20fc5e6966c.jpg"
               },
               "outputs": {}
@@ -1977,6 +2012,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "它们都是吃了一种药变成这样的。"
               },
               "outputs": {},
@@ -1988,6 +2024,7 @@
               "id": "band4:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_wangxb_15_30_1bef75d29e4a.jpg"
               },
               "outputs": {}
@@ -1996,6 +2033,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "拉莱耶、深潜者、大衮、海德拉、星之眷族、以及伟大的克苏鲁……对上了，都对上了……它们要用深潜秘药同化全人类！"
               },
               "outputs": {},
@@ -2011,6 +2049,7 @@
               "id": "band5:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_wangxb_0_15_1bef75d29e4a.jpg"
               },
               "outputs": {}
@@ -2019,6 +2058,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
               },
               "outputs": {},
@@ -2028,6 +2068,7 @@
               "id": "band6:image",
               "type": "showImage",
               "inputs": {
+                "displayTo": "item-inspection",
                 "image": "data/assets/item_book_wangxb_90_f20fc5e6966c.jpg"
               },
               "outputs": {}
@@ -2036,6 +2077,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿杰喜欢中国文学，总是翻看这本王小波的小说集。"
               },
               "outputs": {},
@@ -2318,6 +2360,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的雕像，散发着说不清的气息。可能是跑团道具，但淘宝识图没有识别出来。"
               },
               "outputs": {},
@@ -2330,6 +2373,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的雕像，散发着说不清的气息。它真的只是跑团道具吗？"
               },
               "outputs": {},
@@ -2342,6 +2386,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。"
               },
               "outputs": {},
@@ -2353,6 +2398,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。"
               },
               "outputs": {},
@@ -2364,6 +2410,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个用于完成邪教献祭仪式的雕像，似乎描绘着伟大之克苏鲁的形象。"
               },
               "outputs": {},
@@ -2377,6 +2424,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
               },
               "outputs": {},
@@ -2386,6 +2434,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -2643,6 +2692,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的倒五芒星项链，为什么他们三个戴同款？难道是……"
               },
               "outputs": {},
@@ -2654,6 +2704,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这个项链似乎是用一种奇怪的合金制成。"
               },
               "outputs": {},
@@ -2665,6 +2716,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "我明白了，倒五芒星与异教一向相关，这是邪教成员互认身份的象征符号。"
               },
               "outputs": {},
@@ -2676,6 +2728,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "五芒星是所罗门王魔法书中记载的召唤法阵形象……"
               },
               "outputs": {},
@@ -2688,6 +2741,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "大衮是所罗门七十二魔神之一，五芒星是所罗门王魔法书中记载的召唤法阵形象……它们就是大衮密教！"
               },
               "outputs": {},
@@ -2700,6 +2754,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一切都对上了！我明白了！我￥%WFDaTE"
               },
               "outputs": {},
@@ -2709,6 +2764,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -3018,6 +3074,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "阿伟这小子自以为是小众文艺青年，其实看的也不过是这种烂大街的书，整个一嘉豪。"
               },
               "outputs": {},
@@ -3035,6 +3092,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "文笔也没网上说的那么牛，而且这男主抛妻弃子的，能是好人吗？"
               },
               "outputs": {},
@@ -3044,6 +3102,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这个男主像是被邪教洗脑了一样，不会真有关系吧？"
               },
               "outputs": {},
@@ -3055,6 +3114,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "真的是表面上那个故事吗？真的吗？离奇的剧情，诡异的文风，描述着令人感到猥亵的水果静物……"
               },
               "outputs": {},
@@ -3064,6 +3124,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "我明白了，此书描写的是伟大之克苏鲁的一个侧面，长眠的祂候汝入梦，并在梦境中引导艺术家走向疯狂……"
               },
               "outputs": {},
@@ -3075,6 +3136,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
               },
               "outputs": {},
@@ -3084,6 +3146,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -3324,6 +3387,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个摇滚音乐剧的海报，阿伟常常哼唱其中的歌曲。"
               },
               "outputs": {},
@@ -3333,6 +3397,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个摇滚音乐剧的海报，阿伟常常哼唱其中的歌曲。"
               },
               "outputs": {},
@@ -3342,6 +3407,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这个音乐剧海报中人物的姿势与神态，似乎暗示着他处于痛苦之中，如同一场献祭仪式。"
               },
               "outputs": {},
@@ -3353,6 +3419,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "邪教徒举行活人献祭仪式时拍下的照片，血腥的场面让人汗毛倒竖。"
               },
               "outputs": {},
@@ -3365,6 +3432,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "大衮密教的仪式实录。如宰羊一般，在仪式完成后，邪教徒会分食祭品的血与肉——吃人。这血肉就是深潜秘药的成分，若无一种生命的献祭则无另一种生命的延续……"
               },
               "outputs": {},
@@ -3378,6 +3446,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "四千年来时时吃人的地方，今天才明白……"
               },
               "outputs": {},
@@ -3389,6 +3458,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -3646,6 +3716,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的雕像，散发着说不清的气息。可能是跑团道具，但淘宝识图没有识别出来。"
               },
               "outputs": {},
@@ -3658,6 +3729,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的雕像，散发着说不清的气息。它真的只是跑团道具吗？"
               },
               "outputs": {},
@@ -3670,6 +3742,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。"
               },
               "outputs": {},
@@ -3681,6 +3754,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。"
               },
               "outputs": {},
@@ -3692,6 +3766,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个用于完成邪教献祭仪式的雕像，似乎描绘着伟大之克苏鲁的形象。"
               },
               "outputs": {},
@@ -3705,6 +3780,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
               },
               "outputs": {},
@@ -3714,6 +3790,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -3971,6 +4048,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的倒五芒星项链，为什么他们三个戴同款？难道是……"
               },
               "outputs": {},
@@ -3982,6 +4060,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这个项链似乎是用一种奇怪的合金制成。"
               },
               "outputs": {},
@@ -3993,6 +4072,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "我明白了，倒五芒星与异教一向相关，这是邪教成员互认身份的象征符号。"
               },
               "outputs": {},
@@ -4004,6 +4084,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "五芒星是所罗门王魔法书中记载的召唤法阵形象……"
               },
               "outputs": {},
@@ -4016,6 +4097,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "大衮是所罗门七十二魔神之一，五芒星是所罗门王魔法书中记载的召唤法阵形象……它们就是大衮密教！"
               },
               "outputs": {},
@@ -4028,6 +4110,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一切都对上了！我明白了！我￥%WFDaTE"
               },
               "outputs": {},
@@ -4037,6 +4120,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -4351,6 +4435,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一篇洛夫克拉夫特的小说，被彬彬单独打印出来。"
               },
               "outputs": {},
@@ -4371,6 +4456,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "彬彬为什么要单独打印这篇令人惊骇的恐怖小说？这里潜藏着什么秘密？"
               },
               "outputs": {},
@@ -4380,6 +4466,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "彬彬把它当作跑团模组的素材，不，这不仅是跑团……"
               },
               "outputs": {},
@@ -4391,6 +4478,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这是一部关于克苏鲁神话中深潜者的研究著作，也包括描述克苏鲁、大衮等亵渎存在的内容。"
               },
               "outputs": {},
@@ -4404,6 +4492,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这一切都不仅是虚构的小说……不仅是跑团模组……这是一场预演……邪教徒就要开始献祭了。伟大之克苏鲁在长眠中呼唤吾等。"
               },
               "outputs": {},
@@ -4416,6 +4505,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
               },
               "outputs": {},
@@ -4425,6 +4515,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -4714,6 +4805,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "彬彬视若珍宝的跑团规则书。"
               },
               "outputs": {},
@@ -4731,6 +4823,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "它真的只是规则书吗？"
               },
               "outputs": {},
@@ -4740,6 +4833,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "规则？不，这是法则，宇宙真实的法则……"
               },
               "outputs": {},
@@ -4749,6 +4843,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "包罗万象的克苏鲁神话大典，当然会在大衮密教的总部有一份副本。盐、香料、活人祭品的血肉……这些材料是用于什么仪式的？"
               },
               "outputs": {},
@@ -4760,6 +4855,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这里记载的咒文和仪式太过艰深，无法完全理解，更别提使用，但是我现在明白了，盐、香料、活人祭品的血肉——其中明明地写有深潜秘药的配方！"
               },
               "outputs": {},
@@ -4771,6 +4867,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
               },
               "outputs": {},
@@ -4780,6 +4877,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -5020,6 +5118,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的雕像，散发着说不清的气息。可能是跑团道具，但淘宝识图没有识别出来。"
               },
               "outputs": {},
@@ -5032,6 +5131,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -5041,6 +5141,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。"
               },
               "outputs": {},
@@ -5052,6 +5153,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个和邪教相关的雕像，畸形的外观透露着一种难以名状的险恶。"
               },
               "outputs": {},
@@ -5063,6 +5165,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个用于完成邪教献祭仪式的雕像，似乎描绘着伟大之克苏鲁的形象。"
               },
               "outputs": {},
@@ -5076,6 +5179,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn！"
               },
               "outputs": {},
@@ -5085,6 +5189,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -5342,6 +5447,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个奇怪的倒五芒星项链，为什么他们三个戴同款？难道是……"
               },
               "outputs": {},
@@ -5353,6 +5459,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这个项链似乎是用一种奇怪的合金制成。"
               },
               "outputs": {},
@@ -5364,6 +5471,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "我明白了，倒五芒星与异教一向相关，这是邪教成员互认身份的象征符号。"
               },
               "outputs": {},
@@ -5375,6 +5483,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "五芒星是所罗门王魔法书中记载的召唤法阵形象……"
               },
               "outputs": {},
@@ -5387,6 +5496,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "大衮是所罗门七十二魔神之一，五芒星是所罗门王魔法书中记载的召唤法阵形象……它们就是大衮密教！"
               },
               "outputs": {},
@@ -5399,6 +5509,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一切都对上了！我明白了！我￥%WFDaTE"
               },
               "outputs": {},
@@ -5408,6 +5519,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -5666,6 +5778,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷点题。"
               },
               "outputs": {},
@@ -5696,6 +5809,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷点题。"
               },
               "outputs": {},
@@ -5718,6 +5832,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷点题。"
               },
               "outputs": {},
@@ -5740,6 +5855,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去"
               },
               "outputs": {},
@@ -5762,6 +5878,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷刷刷刷刷刷刷刷刷刷刷尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂"
               },
               "outputs": {},
@@ -5784,6 +5901,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "《内科学》《外科学》《病理学》《生理学》……这些厚实的课本整齐地摆在书架上，发出奇异的召唤，让你忍不住去刷刷刷刷刷刷刷刷刷刷刷尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂尸刂"
               },
               "outputs": {},
@@ -5806,6 +5924,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -6124,6 +6243,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "宿舍里不让用小锅做菜，为什么有一份冻肉？"
               },
               "outputs": {},
@@ -6135,6 +6255,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "为什么为什么为什么"
               },
               "outputs": {},
@@ -6144,6 +6265,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "不知从何物尸体上切割而来的肉块。"
               },
               "outputs": {},
@@ -6155,6 +6277,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "肌肉细胞肌肉组织脂肪组织结缔组织谁的身体肌肉组织好吃！香啊！造谁的身体啊！狂炫小火谁的身体锅！"
               },
               "outputs": {},
@@ -6166,6 +6289,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "大衮密教在活人献祭之后，像宰羊一样从其身体上割下肉块，用作深潜秘药的材料。"
               },
               "outputs": {},
@@ -6179,6 +6303,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "像宰羊一样。"
               },
               "outputs": {},
@@ -6188,6 +6313,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -6445,6 +6571,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一瓶番茄酱，似乎是用其他空瓶子重新灌装的。"
               },
               "outputs": {},
@@ -6457,6 +6584,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "为什么要重新灌装呢？原来的瓶子出了什么问题吗？"
               },
               "outputs": {},
@@ -6466,6 +6594,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一瓶可疑的红色液体，不知道是什么成分。"
               },
               "outputs": {},
@@ -6477,6 +6606,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "血"
               },
               "outputs": {},
@@ -6488,6 +6618,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "大衮密教在活人献祭之后，像宰羊一样割开其血管收集血液，用作深潜秘药的材料。"
               },
               "outputs": {},
@@ -6501,6 +6632,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜鱼羊鲜"
               },
               "outputs": {},
@@ -6510,6 +6642,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -6767,6 +6900,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "上面印着飞天意面神教的logo。"
               },
               "outputs": {},
@@ -6778,6 +6912,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "上面印着飞天意面神教的logo，没听说过意面还有教，难道是一种邪教？"
               },
               "outputs": {},
@@ -6787,6 +6922,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "某种邪教奉为神圣的食物。"
               },
               "outputs": {},
@@ -6796,6 +6932,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "某种邪教奉为神圣的食物，但似乎不是大衮密教本身的崇拜对象。"
               },
               "outputs": {},
@@ -6805,6 +6942,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "某种邪教奉为神圣的食物，但似乎不是大衮密教本身的崇拜对象。"
               },
               "outputs": {},
@@ -6814,6 +6952,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "圣洁！圣洁！圣洁！"
               },
               "outputs": {},
@@ -6823,6 +6962,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "上面印着飞天意面神教的logo。"
               },
               "outputs": {},
@@ -7080,6 +7220,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "三袋普通的盐。"
               },
               "outputs": {},
@@ -7091,6 +7232,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "为什么要买这么多盐……"
               },
               "outputs": {},
@@ -7100,6 +7242,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "这真的是盐吗？"
               },
               "outputs": {},
@@ -7109,6 +7252,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "用盐画五芒星法阵，可以用于召唤仪式。"
               },
               "outputs": {},
@@ -7120,6 +7264,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "不，这根本不是什么简单的仪式——这是深潜秘药的成分。"
               },
               "outputs": {},
@@ -7131,6 +7276,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "无使活人之身化盐柱"
               },
               "outputs": {},
@@ -7140,6 +7286,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -7397,6 +7544,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "气味有些奇怪的香薰，彬彬说这叫水生调。"
               },
               "outputs": {},
@@ -7409,6 +7557,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一直散发出萦绕不去的海水味。"
               },
               "outputs": {},
@@ -7420,6 +7569,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "近在咫尺之海。"
               },
               "outputs": {},
@@ -7431,6 +7581,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "香料是各种魔法仪式的必备材料。"
               },
               "outputs": {},
@@ -7442,6 +7593,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "不，这根本不是什么简单的仪式——这是深潜秘药的成分。"
               },
               "outputs": {},
@@ -7453,6 +7605,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "令活人之心如波形长存"
               },
               "outputs": {},
@@ -7462,6 +7615,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -7718,6 +7872,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个患者康复后赠送的物品，说是祖传的开光宝物。材质只是普通的金属，看起来不像商周的，像上周的。"
               },
               "outputs": {},
@@ -7727,6 +7882,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个患者康复后赠送的物品，说是祖传的开光宝物。"
               },
               "outputs": {},
@@ -7736,6 +7892,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一个患者康复后赠送的物品，说是祖传的开光宝物。论材质和工艺，一看就是古董货。"
               },
               "outputs": {},
@@ -7745,6 +7902,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一位贵人赠送的法器，可以抵御□□□。"
               },
               "outputs": {},
@@ -7754,6 +7912,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "一位贵人赠送的法器，可以抵御深潜者。"
               },
               "outputs": {},
@@ -7765,6 +7924,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "唯一的希望。"
               },
               "outputs": {},
@@ -7774,6 +7934,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -8033,6 +8194,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "香啊！造啊！狂炫小火锅啊！"
               },
               "outputs": {},
@@ -8042,6 +8204,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "好吃吗？值得吗？真的要吃这么多吗？"
               },
               "outputs": {},
@@ -8051,6 +8214,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "动物尸体切切薄薄片，放进沸腾的油锅里涮上几秒，喷喷香！喷喷香！"
               },
               "outputs": {},
@@ -8060,6 +8224,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "肌肉细胞肌肉组织脂肪组织结缔组织谁的身体肌肉组织好吃！香啊！造谁的身体啊！狂炫小火谁的身体锅！"
               },
               "outputs": {},
@@ -8069,6 +8234,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "长眠于腹中"
               },
               "outputs": {},
@@ -8078,6 +8244,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "迯"
               },
               "outputs": {},
@@ -8087,6 +8254,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},
@@ -8325,6 +8493,7 @@
               "id": "band0:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "金钱肚，血豆腐，鱿鱼须，羊眼球，海带结，腌猪肉，烫脑花，西红柿。"
               },
               "outputs": {},
@@ -8334,6 +8503,7 @@
               "id": "band1:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "破碎的内脏，凝固的鲜血，缠绕的触手，无神的眼珠，扭曲的植物，干瘪的肢体，残缺的大脑，猩红的果实。"
               },
               "outputs": {},
@@ -8343,6 +8513,7 @@
               "id": "band2:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "破碎的内脏，凝固的鲜血，缠绕的触手，无神的眼珠，扭曲的植物，干瘪的肢体，残缺的大脑，猩红的果实。"
               },
               "outputs": {},
@@ -8352,6 +8523,7 @@
               "id": "band3:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "碎脏凝血腕足涸眼曲藻干肢残脑血实"
               },
               "outputs": {},
@@ -8361,6 +8533,7 @@
               "id": "band4:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "碎脏凝血腕足涸眼曲藻干肢残脑血实碎脏凝血腕足涸眼曲藻干肢残脑血实碎脏凝血腕足涸眼曲藻干肢残脑血实碎脏凝血腕足涸眼曲藻干肢残脑血实"
               },
               "outputs": {},
@@ -8370,6 +8543,7 @@
               "id": "band5:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "脏血腕眼藻肢脑实迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯"
               },
               "outputs": {},
@@ -8379,6 +8553,7 @@
               "id": "band6:result",
               "type": "text",
               "inputs": {
+                "displayTo": "item-inspection",
                 "text": "（没有更多可以查看的信息。）"
               },
               "outputs": {},

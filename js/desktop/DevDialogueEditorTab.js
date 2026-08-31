@@ -93,7 +93,7 @@ export class DevDialogueEditorTab {
       const activity = this.project.activities?.[id];
       const entry = activity?.entries?.[this.currentCtx.entryIndex];
       if (this._prerequisiteScope) return entry?.insertPrerequisite || null;
-      const blueprint = embedLegacyPrerequisite(entry?.blueprint || entry?.dialogueTree || null, entry?.insertPrerequisite);
+      const blueprint = embedLegacyPrerequisite(entry?.blueprint || null, entry?.insertPrerequisite);
       if (entry && blueprint) { entry.blueprint = blueprint; delete entry.insertPrerequisite; }
       return blueprint;
     }
@@ -102,7 +102,7 @@ export class DevDialogueEditorTab {
     return null;
   }
   _emptyNode(x=100,y=100) {
-    return {id:this._uid('n'),type:'text',inputs:{speaker:'player',text:''},outputs:{},x,y};
+    return {id:this._uid('n'),type:'text',inputs:{speaker:'player',text:'',displayTo:'dorm-bottom'},outputs:{},x,y};
   }
   _emptyOpt() { return {id:this._uid('opt'),label:'',next:null,effects:{},conditions:[]}; }
   _emptyCtx() { return createEmptyBlueprint(); }
@@ -156,7 +156,7 @@ export class DevDialogueEditorTab {
     Object.entries(project.days || {}).forEach(([oldId, ctx]) => {
       const match = /^day(\d\d)([ab])$/.exec(oldId);
       if (!match) return;
-      activities[`social${match[1]}${match[2]}`] = { entries: [{ id: `${oldId}_entry`, type: 'other', name: oldId, avatar: '🙂', dialogueTree: ctx }] };
+      activities[`social${match[1]}${match[2]}`] = { entries: [{ id: `${oldId}_entry`, type: 'other', name: oldId, avatar: '🙂', blueprint: this._normalizeGameTree(ctx) }] };
     });
     return { ...project, version: 2, activities, days: undefined };
   }
@@ -174,7 +174,7 @@ export class DevDialogueEditorTab {
     }
     if (this._temporaryScope) {
       const id = "__temporary_activity__";
-      this.project.activities[id] = { displayName: "临时活动", entries: [{ id: "temporary_entry", type: "other", name: "临时活动", dialogueTree: this._temporaryScope.blueprint || this._temporaryBlueprint() }] };
+      this.project.activities[id] = { displayName: "临时活动", entries: [{ id: "temporary_entry", type: "other", name: "临时活动", blueprint: this._temporaryScope.blueprint || this._temporaryBlueprint() }] };
       this.currentCtx = { type: "activity", id, entryIndex: 0 };
     }
     this.loadedActivityFiles = new Set(this._sharedProject ? Object.keys(this.project.activities || {}) : []);
@@ -220,7 +220,7 @@ export class DevDialogueEditorTab {
   _temporaryBlueprint() {
     return { startNodeId: "start", nodes: {
       start: { id: "start", type: "flowStart", inputs: {}, outputs: {}, x: 80, y: 80 },
-      text: { id: "text", type: "text", inputs: { speaker: "narrator", text: "" }, outputs: {}, x: 320, y: 80 },
+      text: { id: "text", type: "text", inputs: { speaker: "narrator", text: "", displayTo: "dorm-bottom" }, outputs: {}, x: 320, y: 80 },
       end: { id: "end", type: "activityEnd", inputs: {}, outputs: {}, x: 560, y: 80 },
       __prerequisite__: { id: "__prerequisite__", type: "prerequisite", inputs: { condition: true }, outputs: {}, x: 80, y: 240 },
       __activity_expiry__: { id: "__activity_expiry__", type: "activityExpiry", inputs: { expires: false, expiresAt: 0 }, outputs: {}, x: 80, y: 360 },
@@ -402,7 +402,7 @@ export class DevDialogueEditorTab {
       this.project.endingFileDoc = data; this.project.endings = Object.fromEntries(data.endings.map(entry => [entry.id, this._normalizeGameTree(entry.blueprint || entry.dialogueTree)])); this.loadedMetaFiles.add('endings.json'); this._workspaceSelections.other = 'endings';
     } else {
       if (!Array.isArray(data.entries)) throw new Error(`${fileName} 缺少 entries 数组`);
-      this.project.activities[base] = { ...data, entries: data.entries.map(entry => ({ ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree) })) };
+      this.project.activities[base] = { ...data, entries: data.entries.map(entry => ({ ...entry, blueprint: this._normalizeGameTree(entry.blueprint || entry.dialogueTree), dialogueTree: undefined })) };
       this.loadedActivityFiles.add(base); this._workspaceSelections[kind] = base;
       if (kind === 'other') this._workspaceSelections.other = base;
       if (kind === 'public') this._workspaceSelections.public = base;
@@ -434,7 +434,7 @@ export class DevDialogueEditorTab {
     const file = ev.target.files?.[0], type = ev.target.dataset.wsType; ev.target.value = ''; if (!file || !type) return;
     const reader = new FileReader(); reader.onload = () => { try { const data = JSON.parse(reader.result);
       if (type === 'special' || type === 'ending') { const key = type === 'special' ? 'events' : 'endings'; if (!Array.isArray(data[key])) throw new Error(`${key} 必须是数组`); const target = type === 'special' ? this.project.events : this.project.endings; if (type === 'special') this.project.eventFileDoc = data; else this.project.endingFileDoc = data; data[key].forEach(entry => { if (!entry?.id) throw new Error('条目缺少 id'); target[entry.id] = this._normalizeGameTree(entry.blueprint || entry.dialogueTree); }); this.loadedMetaFiles.add(type === 'special' ? 'special_events.json' : 'endings.json'); }
-      else { if (!Array.isArray(data.entries)) throw new Error('活动文件缺少 entries 数组'); const id = this._workspaceSelections[type]; this.project.activities[id] = { ...data, entries: data.entries.map(entry => ({ ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree) })) }; this.loadedActivityFiles.add(id); }
+      else { if (!Array.isArray(data.entries)) throw new Error('活动文件缺少 entries 数组'); const id = this._workspaceSelections[type]; this.project.activities[id] = { ...data, entries: data.entries.map(entry => ({ ...entry, blueprint: this._normalizeGameTree(entry.blueprint || entry.dialogueTree), dialogueTree: undefined })) }; this.loadedActivityFiles.add(id); }
       this._saveLS(); this._renderWorkspace(); this._st(`已读取 ${file.name}`);
     } catch (error) { this._st(`读取失败：${error.message}`, true); } }; reader.readAsText(file, 'utf-8');
   }
@@ -548,7 +548,7 @@ export class DevDialogueEditorTab {
  const isWork = this.currentCtx.id.startsWith('work');
  const entry = { id: `${isWork ? 'patient' : 'contact'}_${Date.now().toString(36).slice(-5)}`,
    ...(isWork ? { name: '新患者', age: 0 } : { type: 'other', name: '新联系人', avatar: '🙂' }),
-   dialogueTree: this._emptyCtx() };
+   blueprint: this._emptyCtx() };
  activity.entries.push(entry);
  this.loadedActivityFiles.add(this.currentCtx.id);
  this._saveLS();
@@ -603,7 +603,7 @@ export class DevDialogueEditorTab {
     if (type === 'ending') clone.title = clone.displayName || `${clone.title || clone.id} 副本`;
     else clone.name = clone.displayName || `${clone.name || clone.id} 副本`;
     if (isActivity) {
-      clone.dialogueTree = this._cloneBlueprintValue(source.dialogueTree || this._emptyCtx());
+      clone.blueprint = this._cloneBlueprintValue(source.blueprint || this._emptyCtx());
       collection.push(clone);
       this.loadedActivityFiles.add(this.currentCtx.id);
       this._saveLS();
@@ -679,7 +679,13 @@ export class DevDialogueEditorTab {
   _portsFor(node, direction) {
     const def = getActivityNodeDefinition(node.type || 'text') || {};
     const ports = direction === 'input' ? [...(def.flowInputs || []), ...(def.valueInputs || [])] : [...(def.flowOutputs || []), ...(def.valueOutputs || [])];
-    const choiceCount = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : (node.options || []).length));
+    const data = this._ctxData();
+    const connectedCount = (prefix) => Math.max(0, ...(data?.connections || [])
+      .filter(connection => connection.fromNodeId === node.id && connection.fromPort?.startsWith(prefix))
+      .map(connection => Number(connection.fromPort.slice(prefix.length)) + 1)
+      .filter(Number.isFinite));
+    const choiceCount = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount))
+      ? Number(node.inputs.branchCount) : Math.max((node.options || []).length, connectedCount('option'))));
     if (node.type === 'choice' && direction === 'output') {
       for (let index = 0; index < choiceCount; index += 1) ports.push({ name: `option${index}`, kind: 'flow', type: null });
     }
@@ -687,12 +693,13 @@ export class DevDialogueEditorTab {
       for (let index = 0; index < choiceCount; index += 1) ports.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
     if (node.type === 'randomBranch' && direction === 'output') {
-      const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.n)) ? Number(node.inputs.n) : 0));
+      const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.n)) ? Number(node.inputs.n) : connectedCount('flowOut')));
       for (let index = 0; index < count; index += 1) ports.push({ name: `flowOut${index}`, kind: 'flow', type: null });
     }
     if (node.type === 'segmentBranch') {
-      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
-      if (direction === 'output') return [{ name: 'segment0', kind: 'flow', type: null }, ...Array.from({ length: count - 1 }, (_, index) => ({ name: `segment${index + 1}`, kind: 'flow', type: null }))];
+      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount))
+        ? Number(node.inputs.branchCount) : connectedCount('segment')));
+      if (direction === 'output') return [{ name: 'default', kind: 'flow', type: null }, { name: 'segment0', kind: 'flow', type: null }, ...Array.from({ length: count - 1 }, (_, index) => ({ name: `segment${index + 1}`, kind: 'flow', type: null }))];
       return [
         { name: 'flowIn', kind: 'flow', type: null },
         { name: 'value', kind: 'value', type: 'number' },
@@ -707,7 +714,7 @@ export class DevDialogueEditorTab {
     return this._portsFor(node, direction).map((port, index) =>
       `<div class="dev-de-port-row ${direction === 'input' ? 'input' : 'output'}" style="top:${38 + index * 19}px">
         ${direction === 'input' ? `<span class="dev-de-port-pin" data-node-id="${this._e(node.id)}" data-port="${this._e(port.name)}" data-kind="${port.kind}" data-direction="input" title="${port.kind === 'flow' ? '流程输入' : '数值输入'}"></span>` : ''}
-        <span class="dev-de-port-label">${this._e(port.name)}</span>
+        <span class="dev-de-port-label">${this._e(port.name === 'default' ? '默认流程输出' : port.name)}</span>
         ${direction === 'output' ? `<span class="dev-de-port-pin" data-node-id="${this._e(node.id)}" data-port="${this._e(port.name)}" data-kind="${port.kind}" data-direction="output" title="${port.kind === 'flow' ? '流程输出' : '数值输出'}"></span>` : ''}
       </div>`).join('');
   }
@@ -1013,6 +1020,7 @@ export class DevDialogueEditorTab {
       itemId: (itemManager.defs ? Array.from(itemManager.defs.values()) : this.gameItems).map(item => [item.id, item.name || item.id]),
       activityId: Array.from(activityData.activityById?.keys?.() || []).map(id => [id, id]),
       instanceId: Array.from(activityData.activityById?.keys?.() || []).map(id => [id, id]),
+      displayTo: [['his-app', 'HIS 医疗系统'], ['dorm-bottom', '宿舍场景底栏'], ['ending-screen', '结局界面'], ['item-inspection', '物品调查面板']],
     }[port.name];
     return choices?.length ? choices : null;
   }
@@ -1031,7 +1039,7 @@ export class DevDialogueEditorTab {
     el.innerHTML=outputs.length ? outputs.map(output=>{
       const connection=(data.connections||[]).find(item=>item.fromNodeId===node.id && item.fromPort===output.name);
       const current=connection ? `${connection.toNodeId}::${connection.toPort}` : '';
-      return `<div class="dev-de-output-row"><label>${this._e(output.name)}</label><select onchange="_de._saveFlowTarget('${this._e(output.name)}',this.value)"><option value="">（结束）</option>${targets.filter(item=>item.nodeId!==node.id).map(item=>`<option value="${this._e(`${item.nodeId}::${item.port}`)}"${current===`${item.nodeId}::${item.port}`?' selected':''}>${this._e(item.label)}</option>`).join('')}</select></div>`;
+      return `<div class="dev-de-output-row"><label>${this._e(output.name === 'default' ? '默认流程输出' : output.name)}</label><select onchange="_de._saveFlowTarget('${this._e(output.name)}',this.value)"><option value="">（结束）</option>${targets.filter(item=>item.nodeId!==node.id).map(item=>`<option value="${this._e(`${item.nodeId}::${item.port}`)}"${current===`${item.nodeId}::${item.port}`?' selected':''}>${this._e(item.label)}</option>`).join('')}</select></div>`;
     }).join('') : '<div class="dev-de-no-ports">此节点没有流程输出</div>';
   }
 
@@ -1056,11 +1064,21 @@ export class DevDialogueEditorTab {
     const connections=data.connections || [];
     const valueInputs = [...(def.valueInputs || [])];
     if (node.type === 'choice') {
-      const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : (node.options || []).length));
+      const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount))
+        ? Number(node.inputs.branchCount)
+        : Math.max(node.options?.length || 0, ...(connections
+          .filter(item => item.fromNodeId === node.id && item.fromPort?.startsWith('option'))
+          .map(item => Number(item.fromPort.slice(6)) + 1)
+          .filter(Number.isFinite)))));
       for (let index = 0; index < count; index += 1) valueInputs.push({ name: `label${index}`, kind: 'value', type: 'string' });
     }
     if (node.type === 'segmentBranch') {
-      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount)) ? Number(node.inputs.branchCount) : 1));
+      const count = Math.max(1, Math.min(32, Number.isInteger(Number(node.inputs?.branchCount))
+        ? Number(node.inputs.branchCount)
+        : Math.max(1, ...(connections
+          .filter(item => item.fromNodeId === node.id && item.fromPort?.startsWith('segment'))
+          .map(item => Number(item.fromPort.slice(7)) + 1)
+          .filter(Number.isFinite))));
       for (let index = 1; index <= count; index += 1) valueInputs.push({ name: `boundary${index}`, kind: 'value', type: 'number' });
     }
     const html=valueInputs.map(port => {
@@ -1101,13 +1119,15 @@ export class DevDialogueEditorTab {
   }
 
   _syncChoiceOptions(node) {
+    const dynamic = node.inputs?.branchCount && typeof node.inputs.branchCount === 'object';
+    if (dynamic) return;
     const count = Math.max(0, Math.min(32, Number(node.inputs?.branchCount) || 0));
     node.options ||= [];
     while (node.options.length < count) node.options.push(this._emptyOpt());
     if (node.options.length > count) node.options.length = count;
     Object.keys(node.inputs || {}).filter(name => /^label\d+$/.test(name) && Number(name.slice(5)) >= count).forEach(name => delete node.inputs[name]);
     const data = this._ctxData();
-    if (data) data.connections = (data.connections || []).filter((connection) => {
+    if (data && !dynamic) data.connections = (data.connections || []).filter((connection) => {
       const removedOutput = connection.fromNodeId === node.id && connection.fromPort?.startsWith('option') && Number(connection.fromPort.slice(6)) >= count;
       const removedInput = connection.toNodeId === node.id && connection.toPort?.startsWith('label') && Number(connection.toPort.slice(5)) >= count;
       return !removedOutput && !removedInput;
@@ -1115,6 +1135,7 @@ export class DevDialogueEditorTab {
   }
 
   _syncSegmentPorts(node) {
+    if (node.inputs?.branchCount && typeof node.inputs.branchCount === 'object') return;
     const count = Math.max(1, Math.min(32, Math.floor(Number(node.inputs?.branchCount) || 1)));
     node.inputs ||= {};
     for (let index = 0; index <= count; index += 1) if (!Object.prototype.hasOwnProperty.call(node.inputs, `boundary${index}`)) node.inputs[`boundary${index}`] = 0;
@@ -1128,6 +1149,7 @@ export class DevDialogueEditorTab {
   }
 
   _syncRandomBranchPorts(node) {
+    if (node.inputs?.n && typeof node.inputs.n === 'object') return;
     const count = Math.max(0, Math.min(32, Number.isInteger(Number(node.inputs?.n)) ? Number(node.inputs.n) : 0));
     const data = this._ctxData();
     if (data) data.connections = (data.connections || []).filter((connection) => {
@@ -1467,7 +1489,8 @@ export class DevDialogueEditorTab {
           throw new Error(`${name}.json 的 entries 必须全部是 JSON 对象`);
         }
         this.project.activities[name] = { ...data, entries: data.entries.map((entry) => ({
-          ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
+          ...entry, blueprint: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
+          dialogueTree: undefined,
         })) };
         this.loadedActivityFiles.add(name);
       }));
@@ -1507,7 +1530,8 @@ export class DevDialogueEditorTab {
           const name = f.name.replace(/\.json$/,'');
           if (/^(work|social)\d{2}[ab]$/.test(name) && Array.isArray(d.entries)) {
             this.project.activities[name] = { ...d, entries: d.entries.map((entry) => ({
-              ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
+              ...entry, blueprint: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
+              dialogueTree: undefined,
             })) };
             this.loadedActivityFiles.add(name);
           } else {
@@ -1515,7 +1539,8 @@ export class DevDialogueEditorTab {
           if (/^day\d{2}[ab]$/.test(name) && (d.contacts || d.patients)) {
             const target = `social${name.slice(3)}`;
             this.project.activities[target] = { entries: (d.contacts || d.patients || []).map((entry) => ({
-              ...entry, dialogueTree: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
+              ...entry, blueprint: this._normalizeGameTree(entry.blueprint || entry.dialogueTree),
+              dialogueTree: undefined,
             })) };
             this.loadedActivityFiles.add(target);
           }
@@ -1574,7 +1599,7 @@ export class DevDialogueEditorTab {
     return { ...activity, entries: (activity?.entries || []).map((entry) => {
       const { day, time, ...out } = entry;
       delete out.dialogueTree;
-      out.blueprint = this._ctxToBlueprint(entry.dialogueTree);
+      out.blueprint = this._ctxToBlueprint(entry.blueprint);
       return out;
     }) };
   }

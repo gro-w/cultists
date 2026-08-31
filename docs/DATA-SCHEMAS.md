@@ -12,6 +12,10 @@
 
 ## 活动文件
 
+活动蓝图中的显示节点使用 `inputs.displayTo` 选择展示接收器。可用目标及
+其界面分别见 `ACTIVITY-BLUEPRINTS.md` 的显示目标表；不要用活动所在队列
+代替该字段。
+
 当前使用工作、社交和主要三个独立队列；ChatGTP 查询使用非阻塞的 `mainQueue`，不再有专用 ChatGTP 队列。工作/社交活动每天两个时间点追加，公共活动不会自动追加；`maininit.json` 中的活动则在游戏启动时一次性加入主要活动队列：
 
 ```text
@@ -174,13 +178,15 @@ NPC 可选用与 SAN 无关的结局专用立绘变体：
 
 当前注册的节点包括：`flowStart`、`activityEnd`、`text`、`choice`、`randomBranch`、`branch`、`waitUntil`、`diceCheck`、`segmentBranch`、`consumeTime`、`setGlobal`、`ending`、`insertActivity`、`showCg`、`showImage`、`inventoryOperation`、`statOperation`、`spellOperation`、`arithmetic`、`getGlobal`、`getInventory`、`getActivityStatus`、`getActivityInstanceCount`、`getGameTime`。
 
+`choice`、`randomBranch` 和 `segmentBranch` 的动态流程输出都固定包含稳定端口 `default`（默认流程输出）；动态数量可以来自值连接（例如公共变量 5 号）。运行时先使用命中的明确分支，只有明确分支没有连接时才使用 `default`。
+
 `consumeTime` 是一个流程节点，包含 `flowIn`、`flowOut` 和数值输入 `minutes`。它按输入值通过 `TimeService`/`GameState` 推进确定性的游戏时间，并触发现有的阶段、活动和结算检查点；20 分钟是普通行动的约定单位，蓝图运行器本身不把 `minutes` 强制限制为 20 的倍数。数值输入可以连接运算或取值节点。完整节点语法见 [`ACTIVITY-BLUEPRINTS.md`](./ACTIVITY-BLUEPRINTS.md)。
 
 ### 时间规则文件
 
 每种语言目录可以提供 `time_rules.json`，供 `TimeService` 读取阶段结算参数：`day.workMinutes`、`night.nightMinutes`、`fullSleepMinutes`、`insufficientSleepMinutes`、`sanRecoveryPerSleepHour`、`threeDaySleepDebtSanLoss` 和 `sanLossPerLateNightAction`。旧的 `action_budget.json`、`dialogueLimit`、`inspectLimit` 和按行动计数的预算字段已删除；不要在新数据中恢复这些字段。
 
-`spellOperation` 是一个流程节点，使用节点上的 `spell` 对象调用 `SpellManager.learn()`。法术学习蓝图必须把 `consumeTime(240)` 放在 `spellOperation` 之前；创建蓝图前不得调用 `spellManager.learn()`。
+`spellOperation` 是一个流程节点，使用节点上的 `spell` 对象调用 `SpellManager.applyLearn()`。法术学习蓝图必须把 `consumeTime(240)` 放在 `spellOperation` 之前；创建蓝图前不得调用 `spellManager.applyLearn()`。
 
 活动队列中的实例使用 `${activityId}:${sequence}` 作为稳定实例 ID，并保存 `status`、`currentNodeId` 和 `transcript`。已完成实例可以重复打开并只读查看历史文本，但不会再次执行节点或重新选择。
 

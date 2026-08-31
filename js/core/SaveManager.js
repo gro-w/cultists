@@ -18,6 +18,7 @@ import { onboardingManager } from "./OnboardingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 import { turtleSoupManager } from "./TurtleSoupManager.js";
 import { itemEffectHistory } from "./ItemEffectHistory.js";
+import { mainActivityRuntime } from "./MainActivityRuntime.js";
 
 // v17 = v16 plus TurtleSoup branch state.
 // v18 = v17 plus the active ending ID and priority.
@@ -102,6 +103,7 @@ class SaveManager {
       return true;
     } catch (err) {
       endingManager.endRestore();
+      mainActivityRuntime.endRestore();
       console.error("[SaveManager] Failed to load save string:", err);
       return false;
     }
@@ -115,6 +117,7 @@ class SaveManager {
       return true;
     } catch (err) {
       endingManager.endRestore();
+      mainActivityRuntime.endRestore();
       console.error("[SaveManager] Failed to load save file:", err);
       return false;
     }
@@ -176,6 +179,7 @@ class SaveManager {
       throw new Error("Save belongs to an unsupported game day");
     }
     endingManager.beginRestore();
+    mainActivityRuntime.beginRestore();
     try {
       const globalVariables = payload.globalVariables || [];
       const hasGlobalVariable = (id) => globalVariables.some((entry) => Number(entry.id) === id);
@@ -212,6 +216,7 @@ class SaveManager {
       this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     } finally {
       endingManager.endRestore();
+      mainActivityRuntime.endRestore();
     }
     return;
   }

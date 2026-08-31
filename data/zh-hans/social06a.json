@@ -21,6 +21,7 @@
             "id": "line_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "老盯着我看干嘛？"
             },
@@ -30,6 +31,7 @@
             "id": "line_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "现在你好点了吗？"
             },
@@ -39,6 +41,7 @@
             "id": "line_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "挺好的，为什么这么问？"
             },
@@ -56,6 +59,7 @@
             "id": "line_3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "昨天我们一起去吃火锅，你突然发癔症……吓了我们一跳。"
             },
@@ -65,6 +69,7 @@
             "id": "line_4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "有吗？"
             },
@@ -74,6 +79,7 @@
             "id": "line_5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "……那就好。"
             },
@@ -91,6 +97,7 @@
             "id": "line_6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "到底什么意思？怎么不说清楚？"
             },
@@ -100,6 +107,7 @@
             "id": "line_7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "明天你就要值夜班了吧？"
             },
@@ -109,6 +117,7 @@
             "id": "line_8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "对啊，怎么了？"
             },
@@ -126,6 +135,7 @@
             "id": "line_9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "你害怕吗？晚上住院部的走廊可是没有尽头的哦……"
             },
@@ -135,6 +145,7 @@
             "id": "line_10",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "别想吓唬我。"
             },
@@ -144,6 +155,7 @@
             "id": "line_11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "看来真的好了……"
             },
@@ -300,6 +312,7 @@
             "id": "line_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "没有猿道耳机的生活空虚吗？"
             },
@@ -309,6 +322,7 @@
             "id": "line_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "对。不过也没什么。空虚就是常态。"
             },
@@ -318,6 +332,7 @@
             "id": "line_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "后悔吗？为了一起去吃火锅退掉耳机。"
             },
@@ -335,6 +350,7 @@
             "id": "line_3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "本来就是要退掉的，何谈后悔。但是……"
             },
@@ -344,6 +360,7 @@
             "id": "line_4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "但是什么？"
             },
@@ -353,6 +370,7 @@
             "id": "line_5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "但是有点后悔和你一起去吃火锅……"
             },
@@ -370,6 +388,7 @@
             "id": "line_6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "为什么？你换口味了吗？"
             },
@@ -379,6 +398,7 @@
             "id": "line_7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "算了，当我没说。明天你就要值夜班了，是不是？"
             },
@@ -388,6 +408,7 @@
             "id": "line_8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "是啊，我还有点期待呢。"
             },
@@ -405,6 +426,7 @@
             "id": "line_9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "哈哈，那祝你明天夜班一切顺利吧。"
             },

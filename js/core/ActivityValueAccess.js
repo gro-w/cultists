@@ -3,7 +3,7 @@ import { itemManager } from "./ItemManager.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { favorabilityManager } from "./FavorabilityManager.js";
-import { timeService } from "./TimeService.js";
+
 import { skillManager } from "./SkillManager.js";
 
 const GAME_STATS = new Set(["sanity", "mental", "roommateSuspicion"]);
@@ -13,7 +13,8 @@ export function getStatValue(statId) {
   if (GAME_STATS.has(id)) return gameState[id];
   if (id.startsWith("npcSan:")) return npcStateManager.get(id.slice(7));
   if (id.startsWith("favorability:")) return favorabilityManager.get(id.slice(14));
-  if (id === "timeService:phaseMinutes") return timeService.phaseMinutes;
+  // Time is injected by the runner when a flow needs the service-specific
+  // phase counter; keeping this accessor dependency-free avoids a core cycle.
   if (id === "gameTime") return gameState.getGameTime();
   if (skillManager.values.has(id)) return skillManager.get(id);
   return undefined;
@@ -42,5 +43,5 @@ export function modifyStatValue(statId, delta) {
 }
 
 export function getActivityValueContext() {
-  return { gameState, itemManager, globalVariableManager, npcStateManager, favorabilityManager, timeService };
+  return { gameState, itemManager, globalVariableManager, npcStateManager, favorabilityManager };
 }

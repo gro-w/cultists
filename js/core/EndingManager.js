@@ -3,6 +3,7 @@ import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
 
 import { globalVariableManager } from "./GlobalVariableManager.js";
+import { itemManager } from "./ItemManager.js";
 
 /**
  * EndingManager - singleton resolving every path that can end the game,

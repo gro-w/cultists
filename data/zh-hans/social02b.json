@@ -20,6 +20,7 @@
             "id": "line",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "阿杰：下班了！今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~"
             },

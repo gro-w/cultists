@@ -4,7 +4,8 @@ import { dataLoader } from "../core/DataLoader.js";
 import { eventBus } from "../core/EventBus.js";
 import { activityData } from "../core/ActivityData.js";
 import { mainQueue } from "../core/ActivityQueue.js";
-import { createActivityRunner } from "../core/ActivityRunner.js";
+import { activityExecutionService } from "../core/ActivityExecutionService.js";
+import { displayReceiverManager } from "../core/DisplayReceiverManager.js";
 
 /**
  * EndingScreen - full-page overlay shown when EndingManager fires any
@@ -166,20 +167,21 @@ export default class EndingScreen {
         || null;
       instance.executedNodeIds = [];
       instance.transcript = [];
-      const runner = createActivityRunner({
+      const offDisplay = displayReceiverManager.register("ending-screen", ({ speaker, label, text }) => appendLine(speaker, label, text));
+      activityExecutionService.run({
+        queue: mainQueue,
         definition: playbackDefinition,
         instance,
         appendLine,
         optionsEl,
         appId: "ending",
-        onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
         onComplete: (next) => {
+          offDisplay();
           mainQueue.complete(next.instanceId);
           if (statusEl) statusEl.textContent = "结局活动已完成";
           finish();
         },
       });
-      runner.start();
     }).catch((error) => {
       if (token !== this._runToken) return;
       console.error("[EndingScreen] Failed to execute ending blueprint:", error);

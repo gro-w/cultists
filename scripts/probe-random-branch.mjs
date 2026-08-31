@@ -35,7 +35,7 @@ assert.ok(ACTIVITY_NODE_TYPES.includes("randomBranch"));
 assert.deepEqual(getActivityNodeDefinition("randomBranch"), {
   label: "随机分支",
   flowInputs: [{ name: "flowIn", kind: "flow", type: null }],
-  flowOutputs: [],
+  flowOutputs: [{ name: "default", kind: "flow", type: null }],
   valueInputs: [{ name: "n", kind: "value", type: "number" }],
 });
 const randomNode = { id: "random", type: "randomBranch", inputs: { n: 3 }, outputs: {} };

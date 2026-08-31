@@ -2,7 +2,7 @@ import { windowManager } from "./WindowManager.js";
 import { eventBus } from "./EventBus.js";
 import { spellManager } from "./SpellManager.js";
 import { mainQueue } from "./ActivityQueue.js";
-import { createActivityRunner } from "./ActivityRunner.js";
+import { activityExecutionService } from "./ActivityExecutionService.js";
 
 /**
  * SpellLearnDialog — subscribes to the "book:learnSpell" event emitted by
@@ -82,7 +82,8 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             status: "unresolved",
             transcript: [],
           }])[0];
-          const runner = createActivityRunner({
+          activityExecutionService.run({
+            queue: mainQueue,
             definition: {
               id: `spell-learn:${spell.id}`,
               blueprint: {
@@ -102,10 +103,8 @@ function openLearnWindow({ id: bookId, bookName, spells }) {
             },
             instance,
             appId: "spell-learn",
-            onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
             onComplete: () => mainQueue.complete(instance.instanceId),
           });
-          runner.start();
           rebuildList();
         });
       }

@@ -115,6 +115,7 @@
             "id": "line_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "今天我们来玩《卡卡送》吧，一款互相割据来占领更多地盘的桌游。"
             },
@@ -124,6 +125,7 @@
             "id": "line_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "是零和博弈吗？"
             },
@@ -133,6 +135,7 @@
             "id": "line_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "看我一统四国。"
             },
@@ -142,6 +145,7 @@
             "id": "line_3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "等一下，我需要看完全部规则和攻略才能开始玩。"
             },
@@ -159,6 +163,7 @@
             "id": "line_4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我们又不赌钱，玩儿而已，认真就没意思了。"
             },
@@ -168,6 +173,7 @@
             "id": "line_5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "放轻松，不会的我教你。"
             },
@@ -177,6 +183,7 @@
             "id": "line_6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "别让阿伟久等，他一会儿还要去打工赚钱养耳机。"
             },
@@ -194,6 +201,7 @@
             "id": "line_7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "不行，等等，我再看最后一眼……"
             },
@@ -203,6 +211,7 @@
             "id": "line_8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "快快藏好主控手机。"
             },
@@ -212,6 +221,7 @@
             "id": "line_9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "旁白",
               "text": "*游戏进行中"
             },
@@ -229,6 +239,7 @@
             "id": "line_10",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "这是谁的人在我地盘上？"
             },
@@ -238,6 +249,7 @@
             "id": "line_11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "我的。"
             },
@@ -247,6 +259,7 @@
             "id": "line_12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "他也挡住我的路了。我的城堡围不起来了。"
             },
@@ -264,6 +277,7 @@
             "id": "line_13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "你的策略是什么？"
             },
@@ -273,6 +287,7 @@
             "id": "line_14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "只要让你们都没法赢，我就不会输了，不是吗？"
             },
@@ -282,6 +297,7 @@
             "id": "line_15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "原来是搅屎棍流。"
             },
@@ -299,6 +315,7 @@
             "id": "line_16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "你觉得你能防住我们全部吗？"
             },
@@ -308,6 +325,7 @@
             "id": "line_17",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "这是我最有可能立于不败之地的办法了，因为一开始我没把握好节奏，晚于你们一步，建自己的城堡已经不可能了。"
             },
@@ -317,6 +335,7 @@
             "id": "line_18",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "不试试怎么知道？你这一上来就放弃了啊。"
             },
@@ -334,6 +353,7 @@
             "id": "line_19",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "对。只有这样，我才不会被打倒。"
             },
@@ -343,6 +363,7 @@
             "id": "line_20",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "对未知的恐惧只会招来更多未知。"
             },
@@ -352,6 +373,7 @@
             "id": "line_21",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "我不在乎。"
             },
@@ -875,6 +897,7 @@
             "id": "day2_extra",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "又是个恐怖游戏？"
             },
@@ -884,6 +907,7 @@
             "id": "line_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "今天玩什么？"
             },
@@ -893,6 +917,7 @@
             "id": "line_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "一个我淘来的小众桌游，你们肯定会喜欢的。"
             },
@@ -902,6 +927,7 @@
             "id": "line_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "“一边调查犯人，一边调和防腐剂处理尸体……”怎么是关于尸体的游戏？"
             },
@@ -911,6 +937,7 @@
             "id": "line_3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "你不喜欢吗？多刺激啊。"
             },
@@ -928,6 +955,7 @@
             "id": "line_4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "……不喜欢。"
             },
@@ -937,6 +965,7 @@
             "id": "line_5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "我来发牌了，身份牌可不要让别人看到哦~"
             },
@@ -946,6 +975,7 @@
             "id": "line_6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "旁白",
               "text": "*游戏进行中"
             },
@@ -963,6 +993,7 @@
             "id": "line_7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "大家都是希望能够调和成功的好人呢……"
             },
@@ -972,6 +1003,7 @@
             "id": "line_8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "是吗？我看不一定。"
             },
@@ -981,6 +1013,7 @@
             "id": "line_9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "你们为什么都质疑我？我不是……但有人是叛徒。"
             },
@@ -998,6 +1031,7 @@
             "id": "line_10",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "我们中有叛徒？这个人不是我。"
             },
@@ -1007,6 +1041,7 @@
             "id": "line_11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "也不是我。"
             },
@@ -1016,6 +1051,7 @@
             "id": "line_12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "嘘嘘，不能透露身份。"
             },
@@ -1033,6 +1069,7 @@
             "id": "line_13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "到了揭露谜底的时候了——"
             },
@@ -1042,6 +1079,7 @@
             "id": "line_14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "你们三个居然都是坏人！只有我真的在调和防腐药剂！"
             },
@@ -1051,6 +1089,7 @@
             "id": "line_15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "抱歉呢主控，看来尸体会无可避免地腐烂了呢。"
             },
@@ -1068,6 +1107,7 @@
             "id": "line_16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "真正的犯人也没有抓到。"
             },
@@ -1077,6 +1117,7 @@
             "id": "line_17",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "运气不好啊优等生。"
             },
@@ -1086,6 +1127,7 @@
             "id": "line_18",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "……以后不想再玩这种输了会做噩梦的游戏了。"
             },
@@ -1580,6 +1622,7 @@
             "id": "line_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "这是什么？"
             },
@@ -1589,6 +1632,7 @@
             "id": "line_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "“当我醒来的时候……躺在黑色迷宫的地面上，失去了近期的记忆……同行的人中隐藏着一名嗜血的‘杀人鬼’……”"
             },
@@ -1598,6 +1642,7 @@
             "id": "line_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "听起来很刺激。"
             },
@@ -1607,6 +1652,7 @@
             "id": "line_3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "快来快来。"
             },
@@ -1624,6 +1670,7 @@
             "id": "line_4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "旁白",
               "text": "*游戏进行中"
             },
@@ -1633,6 +1680,7 @@
             "id": "line_5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "旁白",
               "text": "*游戏结束"
             },
@@ -1642,6 +1690,7 @@
             "id": "line_6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "原来杀人魔是你。"
             },
@@ -1659,6 +1708,7 @@
             "id": "line_7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "我死在你手里了，主控。鲜血直流的死状呢。"
             },
@@ -1668,6 +1718,7 @@
             "id": "line_8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "不要再说下去了。"
             },
@@ -1677,6 +1728,7 @@
             "id": "line_9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "你伪装得太好我们都没认出来——成功卧底杀死所有人得感觉很爽吧。"
             },
@@ -1694,6 +1746,7 @@
             "id": "line_10",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "我不知道自己是杀人魔，也不想当杀人魔……一切都不是我的本意。"
             },
@@ -1703,6 +1756,7 @@
             "id": "line_11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "杀人魔都会这么说。"
             },
@@ -1712,6 +1766,7 @@
             "id": "line_12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "实际上是在暗爽吧。"
             },
@@ -1729,6 +1784,7 @@
             "id": "line_13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "再开一局？"
             },
@@ -1738,6 +1794,7 @@
             "id": "line_14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "不要再说了！我不玩了，你们都要当杀人魔杀我——我不想被杀死，我不要被杀死……"
             },
@@ -1747,6 +1804,7 @@
             "id": "line_15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "这么入戏？"
             },
@@ -1764,6 +1822,7 @@
             "id": "line_16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "小心今晚睡下去醒来就失去全部记忆躺在一个红房间里……"
             },
@@ -1773,6 +1832,7 @@
             "id": "line_17",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "不要逗这个可怜人了，放他去刷题吧。"
             },
@@ -1782,6 +1842,7 @@
             "id": "streak_text1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "你都多久不跟我们一起玩了？"
             },
@@ -1791,6 +1852,7 @@
             "id": "streak_text2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "三天了。提高一分，干掉千人；在这三天里，我已经干掉了……大约五千人。"
             },
@@ -1800,6 +1862,7 @@
             "id": "streak_text3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "他居然计数。"
             },
@@ -1809,6 +1872,7 @@
             "id": "streak_text4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "这个精神状态已经很危险了。"
             },
@@ -1898,6 +1962,7 @@
             "id": "previous_activity_line",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "又是个恐怖游戏？"
             },
@@ -2435,6 +2500,7 @@
             "id": "line_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "今天我们来到山中一栋荒废已久的小黑屋里……"
             },
@@ -2444,6 +2510,7 @@
             "id": "line_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "潮湿的雾气，蒸腾的鬼气，月亮照映之下的摇滚之魂在歌唱……"
             },
@@ -2453,6 +2520,7 @@
             "id": "line_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "自己人别开腔。"
             },
@@ -2462,6 +2530,7 @@
             "id": "line_3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "谁挑的游戏？果然我该去刷题的。"
             },
@@ -2479,6 +2548,7 @@
             "id": "line_4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "怎么会呢，你该天天都加入我们相亲相爱的宿舍集体活动。"
             },
@@ -2488,6 +2558,7 @@
             "id": "line_5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "有人会玩吗？有人会我就不看攻略了"
             },
@@ -2497,6 +2568,7 @@
             "id": "line_6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "我玩过。"
             },
@@ -2514,6 +2586,7 @@
             "id": "streak_text1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "你都多久不跟我们一起玩了？"
             },
@@ -2523,6 +2596,7 @@
             "id": "streak_text2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "三天了。提高一分，干掉千人；在这三天里，我已经干掉了……大约五千人。"
             },
@@ -2532,6 +2606,7 @@
             "id": "streak_text3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "他居然计数。"
             },
@@ -2541,6 +2616,7 @@
             "id": "streak_text4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "这个精神状态已经很危险了。"
             },

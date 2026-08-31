@@ -19,6 +19,7 @@ import { achievementManager } from "./core/AchievementManager.js";
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
 import "./core/ItemActivityRuntime.js"; // side-effect: executes item-owned activities
+import "./core/SocialActivityPolicy.js"; // side-effect: social completion consequences
 import { mainActivityRuntime } from "./core/MainActivityRuntime.js";
 
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
@@ -241,8 +242,9 @@ document.addEventListener("DOMContentLoaded", () => {
       boot();
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
    onNewGame: () => {
-     window.history.replaceState(null, "", window.location.pathname);
-     onboardingManager.startNewGame();
+    window.history.replaceState(null, "", window.location.pathname);
+    onboardingManager.startNewGame();
+    mainActivityRuntime.activate();
         },
         onLoadSaveFile: async (file) => {
           const ok = await saveManager.loadFromFile(file);
@@ -252,6 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
               icon: "⚠️",
             });
           }
+          else mainActivityRuntime.activate();
           return ok;
         },
       });
@@ -259,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // DEV-TOOLS:START
         if (developerMode) {
           mainMenu.hide();
+          mainActivityRuntime.activate();
           launchDeveloperMode();
         } else
         // DEV-TOOLS:END

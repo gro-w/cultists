@@ -5,6 +5,7 @@ import { npcStateManager } from "./NpcStateManager.js";
 import { calendarData } from "./CalendarData.js";
 import { gameState } from "./GameState.js";
 import { workQueue, socialQueue, mainQueue } from "./ActivityQueue.js";
+import { activityQueueRegistry } from "./ActivityQueueRegistry.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
@@ -273,7 +274,7 @@ class ActivityData {
   }
 
   _expireInstances(target) {
-    for (const queue of [workQueue, socialQueue, mainQueue]) {
+    for (const queue of activityQueueRegistry.all()) {
       for (const instance of queue.getPending()) {
         const blueprint = instance.payload?.blueprint || instance.blueprint || instance.payload?.dialogueTree || instance.dialogueTree;
         const node = Object.values(blueprint?.nodes || {}).find((candidate) => candidate.type === "activityExpiry");
@@ -372,7 +373,7 @@ class ActivityData {
     const target = Number(addTime);
     const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
     if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
-    if (queueId !== undefined && !["work", "social", "main"].includes(queueId)) return { ok: false, reason: "invalidQueue" };
+    if (queueId !== undefined && !activityQueueRegistry.has(queueId)) return { ok: false, reason: "invalidQueue" };
     const request = {
       activityId,
       addTime: target,
@@ -386,7 +387,7 @@ class ActivityData {
   }
 
   queue(queueId) {
-    return { work: workQueue, social: socialQueue, main: mainQueue }[queueId] || mainQueue;
+    return activityQueueRegistry.get(queueId);
   }
 
   definition(activityId) {

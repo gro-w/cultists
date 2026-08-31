@@ -8,7 +8,7 @@ import { npcStateManager } from "../core/NpcStateManager.js";
 import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
-import { createActivityRunner } from "../core/ActivityRunner.js";
+import { activityExecutionService } from "../core/ActivityExecutionService.js";
 import { socialQueue } from "../core/ActivityQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
@@ -16,6 +16,7 @@ import { renderInspectResult } from "../core/InspectFormat.js";
 import { checkSkill, OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { locationSystem } from "../core/LocationSystem.js";
 import { cgManager } from "../core/CGManager.js";
+import { displayReceiverManager } from "../core/DisplayReceiverManager.js";
 
 const roommateImage = (npcId) => ({
   ajie: "data/assets/char_ajie_01.png",
@@ -936,7 +937,14 @@ export default class DormMode {
         `宿舍-${definition.name || definition.id || "活动"}`,
       );
     const npcId = context.npcId || definition.npcId || definition.actorId || definition.id;
-    const runner = createActivityRunner({
+    const offDisplay = displayReceiverManager.register("dorm-bottom", ({ speaker, label, text }) => {
+      const line = document.createElement("p");
+      line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, resolvedKeywordDefs)}`;
+      lines.replaceChildren(line);
+      keywordManager.bindHighlights(line, resolvedKeywordDefs);
+    });
+    activityExecutionService.run({
+      queue: socialQueue,
       definition,
       instance: pending,
       appendLine: (speaker, label, text) => {
@@ -947,13 +955,12 @@ export default class DormMode {
       },
       optionsEl: options,
       appId: "dorm",
-      onCheckpoint: (next) => socialQueue.updateInstance(pending.instanceId, next),
       onComplete: () => {
+        offDisplay();
         socialQueue.complete(pending.instanceId);
         if (context.npcId) eventBus.emit("dorm:interaction", { npcId });
       },
     });
-    runner.start();
   }
 
   // ── Bed / sleep ─────────────────────────────────────────────────────────────

@@ -58,8 +58,9 @@ export function validateBlueprint(raw) {
     if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
     if (node.type === "randomBranch" && Object.prototype.hasOwnProperty.call(node.inputs || {}, "n")) {
       const count = node.inputs.n;
-      if (!Number.isSafeInteger(count) || count < 1 || count > 32) errors.push(`随机分支 ${id} 的 n 必须是 1–32 的整数`);
-      else for (let index = 0; index < count; index += 1) {
+      const dynamic = count && typeof count === "object";
+      if (!dynamic && (!Number.isSafeInteger(count) || count < 1 || count > 32)) errors.push(`随机分支 ${id} 的 n 必须是 1–32 的整数`);
+      else if (!dynamic) for (let index = 0; index < count; index += 1) {
         if (!blueprint.connections.some((connection) => connection.fromNodeId === id && connection.fromPort === `flowOut${index}`)) errors.push(`随机分支 ${id} 的 flowOut${index} 未连接`);
       }
     }
@@ -170,7 +171,7 @@ export function migrateDialogueTree(tree) {
   const connections = [];
   Object.entries(source.nodes || {}).forEach(([id, node]) => {
     const textId = `text:${id}`;
-    nodes[textId] = { ...node, id: textId, type: "text", inputs: { speaker: node.speaker || "npc", text: node.text || "" }, outputs: {} };
+    nodes[textId] = { ...node, id: textId, type: "text", inputs: { speaker: node.speaker || "npc", text: node.text || "", displayTo: node.displayTo || node.inputs?.displayTo || "dorm-bottom" }, outputs: {} };
     if (id === source.start) connections.push({ fromNodeId: "start", fromPort: "flowOut", toNodeId: textId, toPort: "flowIn" });
     const options = Array.isArray(node.options) ? node.options : [];
     if (options.length) {

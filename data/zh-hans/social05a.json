@@ -21,6 +21,7 @@
             "id": "line_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "之前我们来吃的时候锅底里有这些东西吗？？"
             },
@@ -30,6 +31,7 @@
             "id": "line_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "怎么了，味道不对？它家香料发霉了？"
             },
@@ -39,6 +41,7 @@
             "id": "line_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "不是，你们看，红红的……"
             },
@@ -56,6 +59,7 @@
             "id": "line_3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "因为是麻辣牛油锅啦笨蛋。"
             },
@@ -65,6 +69,7 @@
             "id": "line_4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "还是说你之前一直是色盲？"
             },
@@ -74,6 +79,7 @@
             "id": "line_5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "你们先别吃了，不太对劲！"
             },
@@ -91,6 +97,7 @@
             "id": "line_6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "有什么屁快放，一会儿我的牛肚就老了。"
             },
@@ -100,6 +107,7 @@
             "id": "line_7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "……不对劲，不对劲，你夹的不是牛肚，是……是一根手指！"
             },
@@ -109,6 +117,7 @@
             "id": "line_8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "主控，我的手指拿着筷子呢。"
             },
@@ -126,6 +135,7 @@
             "id": "line_9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "那一盘里装的是什么东西？怎么都看着我？"
             },
@@ -135,6 +145,7 @@
             "id": "line_10",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "按理来说，香菇在下锅还是活的，如果它有视力的话确实可能在盯着你看。"
             },
@@ -144,6 +155,7 @@
             "id": "line_11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "而我很怀疑这一点。"
             },
@@ -161,6 +173,7 @@
             "id": "line_12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "那不是香菇，那是绝对不是香菇！刚摘下来的，还没被冻坏的……它们正盯着我看！"
             },
@@ -170,6 +183,7 @@
             "id": "line_13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "你什么时候接受的万物有灵论？大二将怀孕的小鼠开膛破肚之后吗？"
             },
@@ -179,6 +193,7 @@
             "id": "line_14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "我不记得我们有修菌菇学。如果香菇不算药物的话。"
             },
@@ -196,6 +211,7 @@
             "id": "line_15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "听我说……锅里滚动的不是牛油，是人油，我在外科实习的时候闻到过这个味道，你们都闻不出来吗？？"
             },
@@ -205,6 +221,7 @@
             "id": "line_16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "服务员！这边帮我们拿点热水。"
             },
@@ -214,6 +231,7 @@
             "id": "line_17",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "你们真的察觉不出来吗？我不信！！为什么要骗我？"
             },
@@ -231,6 +249,7 @@
             "id": "line_18",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我说主控最近压力大吧。"
             },
@@ -240,6 +259,7 @@
             "id": "line_19",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "彬彬",
               "text": "乖，要不还是送你去医院吧。"
             },
@@ -249,6 +269,7 @@
             "id": "line_20",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "不对劲，一切都不对劲，你们有什么瞒着我，你们不想让我知道，因为你们也是*它*的一份子……只有这一个解释！"
             },
@@ -266,6 +287,7 @@
             "id": "line_21",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "主控好像怔住了。Ta嘴巴一张一合的，已经在口式呼吸了。"
             },
@@ -275,6 +297,7 @@
             "id": "line_22",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "没想到这么严重，我们快走吧。"
             },
@@ -284,6 +307,7 @@
             "id": "line_23",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "主控",
               "text": "（尖叫）不要碰我，不要碰我——"
             },

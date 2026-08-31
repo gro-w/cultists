@@ -20,6 +20,7 @@
             "id": "line",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "阿杰：下班后别一个人闷着，快来参加我们的宿舍集体活动吧~"
             },

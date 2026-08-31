@@ -20,6 +20,7 @@
             "id": "n1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "来开黑，今天玩《第二十四人格》。"
             },
@@ -29,6 +30,7 @@
             "id": "n2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "我在做一个测评手游的视频，今天测《第二十四人格》这个手游，我想听听你的意见。"
             },
@@ -38,6 +40,7 @@
             "id": "n3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "第二十四人格？"
             },
@@ -47,6 +50,7 @@
             "id": "n4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "前23个我都收集好了，就差第24个。"
             },
@@ -56,6 +60,7 @@
             "id": "n5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "第24个是什么？"
             },
@@ -65,6 +70,7 @@
             "id": "n6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "不，不重要。你可以去游戏里抽奖，有一个叫“三重馈赠”的栏目，点开就送卡。这活动名字听起来像发誓似的。"
             },
@@ -74,6 +80,7 @@
             "id": "n7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "等我查查攻略……"
             },
@@ -83,6 +90,7 @@
             "id": "n8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "别查。"
             },
@@ -92,6 +100,7 @@
             "id": "n9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "那我看看评分。"
             },
@@ -101,6 +110,7 @@
             "id": "n10",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "别人的观点会腐蚀你的脑子。"
             },
@@ -137,6 +147,7 @@
             "id": "n12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "其实这也是我的观点。"
             },
@@ -146,6 +157,7 @@
             "id": "n13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "什么意思？"
             },
@@ -155,6 +167,7 @@
             "id": "n14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "没什么意思，快抽卡。"
             },
@@ -173,6 +186,7 @@
             "id": "n15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "长满结晶的大脑么，很难下嘴啊……"
             },
@@ -182,6 +196,7 @@
             "id": "n16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "你说我吗？"
             },
@@ -191,6 +206,7 @@
             "id": "n17",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "哈哈，开玩笑的。"
             },
@@ -200,6 +216,7 @@
             "id": "n18",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "诶，我进大厅了。"
             },
@@ -209,6 +226,7 @@
             "id": "n19",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "我也在这儿。"
             },
@@ -218,6 +236,7 @@
             "id": "n20",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "这里怎么有两个人？其中一个是我，另一个不认识。"
             },
@@ -227,6 +246,7 @@
             "id": "n21",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "不就该是两个人吗？我和你。"
             },
@@ -269,6 +289,7 @@
             "id": "choice_final_25_0_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "想什么呢？恍恍惚惚的。"
             },
@@ -278,6 +299,7 @@
             "id": "choice_final_25_0_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "总觉得哪里怪怪的……"
             },
@@ -287,6 +309,7 @@
             "id": "choice_final_25_0_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "神经太敏感了吧，总是想赢想赢的。"
             },
@@ -305,6 +328,7 @@
             "id": "choice_final_25_1_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "说什么呢你？"
             },
@@ -314,6 +338,7 @@
             "id": "choice_final_25_1_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "有两个我？另一个我是谁？还是说你在搞我？"
             },
@@ -323,6 +348,7 @@
             "id": "choice_final_25_1_2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "哈哈，被你发现了。"
             },
@@ -892,6 +918,7 @@
             "id": "n1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "要不要帮我测评个游戏？"
             },
@@ -901,6 +928,7 @@
             "id": "n2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "可以啊，什么游戏？"
             },
@@ -910,6 +938,7 @@
             "id": "n3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "《第二十四人格》。"
             },
@@ -919,6 +948,7 @@
             "id": "n4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "怎么测？"
             },
@@ -928,6 +958,7 @@
             "id": "n5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "什么都不要看，直接玩，玩完告诉我感想。"
             },
@@ -937,6 +968,7 @@
             "id": "n6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "评分都不能看吗……"
             },
@@ -946,6 +978,7 @@
             "id": "n7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "不能看。进去抽个卡，“三重馈赠”。 这活动名字听起来像发誓似的。"
             },
@@ -982,6 +1015,7 @@
             "id": "n9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "其实这也是我的观点。"
             },
@@ -991,6 +1025,7 @@
             "id": "n10",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "什么意思？"
             },
@@ -1000,6 +1035,7 @@
             "id": "n11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "没什么意思，快抽卡。"
             },
@@ -1018,6 +1054,7 @@
             "id": "n12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "长满结晶的大脑么，很难下嘴啊……"
             },
@@ -1027,6 +1064,7 @@
             "id": "n13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "你说我吗？"
             },
@@ -1036,6 +1074,7 @@
             "id": "n14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "说的火锅，刚才我联想到了上次咱们去火锅店吃的猪脑。"
             },
@@ -1045,6 +1084,7 @@
             "id": "n15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "没抽到我想要的，要不还是氪一下。"
             },
@@ -1054,6 +1094,7 @@
             "id": "n16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "充钱就像上供，只能得到保底作为神的恩赐，无法买到你心爱的那张卡……我是说游戏之神。"
             },
@@ -1096,6 +1137,7 @@
             "id": "choice_final_20_0_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "神不在乎。"
             },
@@ -1114,6 +1156,7 @@
             "id": "choice_final_20_1_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "那你就做好准备为游戏之神奉献全部吧。"
             },
@@ -1629,6 +1672,7 @@
             "id": "n1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我需要你帮我下决心……"
             },
@@ -1638,6 +1682,7 @@
             "id": "n2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我买了个新耳机，你知道我，这个耳机我喜欢很久了。正好这次打折，我咬咬牙就买了，千金难买心头好。"
             },
@@ -1647,6 +1692,7 @@
             "id": "n3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "后天就要到尾款期限了。"
             },
@@ -1656,6 +1702,7 @@
             "id": "n4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "你想留它吗？"
             },
@@ -1665,6 +1712,7 @@
             "id": "n5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "有些事情是由不得我的。全都由不得我。想让事情按我想的那样发展只是一种幻觉罢了。"
             },
@@ -1674,6 +1722,7 @@
             "id": "n6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "还差多少钱？"
             },
@@ -1683,6 +1732,7 @@
             "id": "n7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "还差五千。"
             },
@@ -1692,6 +1742,7 @@
             "id": "n8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "这么多？我只有一千八，可以借给你。"
             },
@@ -1701,6 +1752,7 @@
             "id": "n9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "虽然还是不够……不过谢谢你。"
             },
@@ -1737,6 +1789,7 @@
             "id": "n11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "你知道阿杰的，从来不会借钱给别人。至于彬彬……"
             },
@@ -1746,6 +1799,7 @@
             "id": "n12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "怎么了？"
             },
@@ -1755,6 +1809,7 @@
             "id": "n13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "说不好，或许是我的错觉。"
             },
@@ -1764,6 +1819,7 @@
             "id": "n14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "你最近总疑神疑鬼的，《月之暗面》到底给你带来了什么……"
             },
@@ -1782,6 +1838,7 @@
             "id": "n15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "说到这儿，我还是总能从这首歌里听到那段声音……它越来越清晰了。"
             },
@@ -1791,6 +1848,7 @@
             "id": "n16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "你要不要听听？"
             },
@@ -1800,6 +1858,7 @@
             "id": "n17",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "好，我听听看。"
             },
@@ -1809,6 +1868,7 @@
             "id": "n18",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "*一段有些模糊的白噪音*"
             },
@@ -1818,6 +1878,7 @@
             "id": "n19",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "说的是什么？"
             },
@@ -1827,6 +1888,7 @@
             "id": "n20",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "好像是怎么给自己开刀做手术的内容。"
             },
@@ -1869,6 +1931,7 @@
             "id": "choice_final_24_0_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "一点都不好笑。"
             },
@@ -1887,6 +1950,7 @@
             "id": "choice_final_24_1_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "魔怔人是你吧，我从来不刷题。"
             },
@@ -2479,6 +2543,7 @@
             "id": "n1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我想跟你商量个事。"
             },
@@ -2488,6 +2553,7 @@
             "id": "n2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "什么事？关于耳机吗？"
             },
@@ -2497,6 +2563,7 @@
             "id": "n3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我在想要不要退了。"
             },
@@ -2506,6 +2573,7 @@
             "id": "n4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "怎么了，是尾款还是那段声音？"
             },
@@ -2515,6 +2583,7 @@
             "id": "n5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "尾款……"
             },
@@ -2524,6 +2593,7 @@
             "id": "n6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "还差多少？"
             },
@@ -2533,6 +2603,7 @@
             "id": "n7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "一些。"
             },
@@ -2542,6 +2613,7 @@
             "id": "n8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "我借你点钱也还不起吗？"
             },
@@ -2551,6 +2623,7 @@
             "id": "n9",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "肯定还得起，不过是最近手头紧一点。"
             },
@@ -2587,6 +2660,7 @@
             "id": "n11",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我都问了。"
             },
@@ -2596,6 +2670,7 @@
             "id": "n12",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "怎么了？不肯借？"
             },
@@ -2605,6 +2680,7 @@
             "id": "n13",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "当然愿意借我，我什么人缘。"
             },
@@ -2614,6 +2690,7 @@
             "id": "n14",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "你从前都不借钱的，《月之暗面》到底给你带来了什么……"
             },
@@ -2632,6 +2709,7 @@
             "id": "n15",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "说到这儿，我还是总能从这首歌里听到那段声音……它越来越清晰了。"
             },
@@ -2641,6 +2719,7 @@
             "id": "n16",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "你要不要听听？"
             },
@@ -2650,6 +2729,7 @@
             "id": "n17",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "好，我听听看。"
             },
@@ -2659,6 +2739,7 @@
             "id": "n18",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "*一段有些模糊的白噪音*"
             },
@@ -2668,6 +2749,7 @@
             "id": "n19",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "说的是什么？"
             },
@@ -2710,6 +2792,7 @@
             "id": "choice_final_23_0_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "一些……开刀做手术的东西。"
             },
@@ -2719,6 +2802,7 @@
             "id": "choice_final_23_0_1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "你是不是压力太大把两个音频搞混了？"
             },
@@ -2737,6 +2821,7 @@
             "id": "choice_final_23_1_0",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "真好笑。"
             },

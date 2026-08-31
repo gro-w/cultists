@@ -5,7 +5,7 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 
 import { activityData } from "../core/ActivityData.js";
-import { createActivityRunner } from "../core/ActivityRunner.js";
+import { activityExecutionService } from "../core/ActivityExecutionService.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { socialQueue } from "../core/ActivityQueue.js";
@@ -137,19 +137,17 @@ export async function launchSocialApp() {
       bubblesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为活动蓝图。）</p>";
       return;
     }
-    const runner = createActivityRunner({
+    activityExecutionService.run({
+      queue: socialQueue,
       definition: contact,
       instance: contact.queueEntry,
       appendLine: (speaker, label, text) => appendBubble(speaker === "npc" ? "npc" : "me", text),
       optionsEl,
       appId: "social",
-      onCheckpoint: (instance) => {
-        return socialQueue.updateInstance(instance.instanceId, instance);
-      },
       onComplete: (instance) => socialQueue.complete(instance.instanceId),
     });
 
-    runner.start();
+
   }
 
   async function renderCurrentEntry() {

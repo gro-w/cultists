@@ -22,6 +22,7 @@
             "id": "greeting",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "回来了？工作累吗？"
             },
@@ -33,6 +34,7 @@
             "id": "reply_tired",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "挺累的。"
             },
@@ -44,6 +46,7 @@
             "id": "comfort",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "累就对了，舒服是留给死人的……哦不，留给神的。"
             },
@@ -55,6 +58,7 @@
             "id": "question",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "什么意思？"
             },
@@ -66,6 +70,7 @@
             "id": "deflect",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "没什么。最近阿伟买了新耳机，他估计又要吃土了。"
             },
@@ -77,6 +82,7 @@
             "id": "reply_record",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "他不才还完那张限量唱片的尾款吗？"
             },
@@ -88,6 +94,7 @@
             "id": "gossip",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "对啊。你看他黑眼圈那么重，估计是没忍住买了，买完又后悔。你要不要借他点钱？"
             },
@@ -99,6 +106,7 @@
             "id": "reply_maybe",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "……我有机会问问他。"
             },
@@ -424,6 +432,7 @@
             "id": "n1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "你晚饭吃什么？"
             },
@@ -435,6 +444,7 @@
             "id": "n2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "没想好呢。"
             },
@@ -446,6 +456,7 @@
             "id": "n3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "我去食堂看看有没有剩饭。"
             },
@@ -457,6 +468,7 @@
             "id": "n4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "……剩饭也要花钱吧。"
             },
@@ -468,6 +480,7 @@
             "id": "n5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "能省则省了。话说，你觉不觉得屋里越来越潮了？"
             },
@@ -502,6 +515,7 @@
             "id": "n7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "看来不止我一个人这么觉得。"
             },
@@ -524,6 +538,7 @@
             "id": "n8",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "难道这也是我的错觉？我真该多睡点了……"
             },

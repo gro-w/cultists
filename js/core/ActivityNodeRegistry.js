@@ -1,6 +1,7 @@
 const FLOW = "flow";
 const VALUE = "value";
 const ANY = "any";
+export const DEFAULT_FLOW_OUTPUT = "default";
 
 const input = (name, kind = VALUE, type = ANY) => ({ name, kind, type });
 const flowIn = () => input("flowIn", FLOW, null);
@@ -9,9 +10,9 @@ const flowOut = (name = "flowOut") => ({ name, kind: FLOW, type: null });
 const definitions = {
   flowStart: { label: "流程起始", flowOutputs: [flowOut()] },
   activityEnd: { label: "活动结束", flowInputs: [flowIn()] },
-  text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string")] },
-  choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("branchCount", VALUE, "number")] },
-  randomBranch: { label: "随机分支", flowInputs: [flowIn()], flowOutputs: [], valueInputs: [input("n", VALUE, "number")] },
+  text: { label: "显示文字", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("speaker"), input("text", VALUE, "string"), input("displayTo", VALUE, "string")] },
+  choice: { label: "点击分支", flowInputs: [flowIn()], flowOutputs: [flowOut(DEFAULT_FLOW_OUTPUT)], valueInputs: [input("branchCount", VALUE, "number")] },
+  randomBranch: { label: "随机分支", flowInputs: [flowIn()], flowOutputs: [flowOut(DEFAULT_FLOW_OUTPUT)], valueInputs: [input("n", VALUE, "number")] },
   branch: { label: "逻辑分支", flowInputs: [flowIn()], flowOutputs: [flowOut("false"), flowOut("true")], valueInputs: [input("condition")] },
   waitUntil: { label: "阻塞直到", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("condition", VALUE, "bool")] },
   diceCheck: { label: "骰子检定", flowInputs: [flowIn()], flowOutputs: [flowOut("largeSuccess"), flowOut("success"), flowOut("failure"), flowOut("largeFailure")], valueInputs: [input("n", VALUE, "number")] },
@@ -22,8 +23,8 @@ const definitions = {
   insertActivity: { label: "插入活动", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("activityId", VALUE, "string"), input("addTime", VALUE, "number"), input("queue", VALUE, "string"), input("respectPrerequisite", VALUE, "bool"), input("protectFromExpiry", VALUE, "bool")] },
   showCg: { label: "显示 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("cgId", VALUE, "string")] },
   endCg:  { label: "结束 CG", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
-  showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string")] },
-  segmentBranch: { label: "分段分支", flowInputs: [flowIn()], flowOutputs: [flowOut("segment0")], valueInputs: [input("value", VALUE, "number"), input("branchCount", VALUE, "number"), input("boundary0", VALUE, "number")] },
+  showImage: { label: "显示图片", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("image", VALUE, "string"), input("displayTo", VALUE, "string")] },
+  segmentBranch: { label: "分段分支", flowInputs: [flowIn()], flowOutputs: [flowOut(DEFAULT_FLOW_OUTPUT), flowOut("segment0")], valueInputs: [input("value", VALUE, "number"), input("branchCount", VALUE, "number"), input("boundary0", VALUE, "number")] },
   inventoryOperation: { label: "操作背包", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("itemId", VALUE, "string"), input("count", VALUE, "number")] },
   statOperation: { label: "操作主角数值", flowInputs: [flowIn()], flowOutputs: [flowOut()], valueInputs: [input("statId", VALUE, "string"), input("delta", VALUE, "number")] },
   spellOperation: { label: "调整法术状态", flowInputs: [flowIn()], flowOutputs: [flowOut()] },
@@ -50,16 +51,20 @@ export function getActivityNodePort(type, portName, direction, node = null) {
   const def = getActivityNodeDefinition(type);
   if (!def) return null;
   if (type === "segmentBranch") {
+    if (portName === DEFAULT_FLOW_OUTPUT && direction === "output") return { name: portName, kind: FLOW, type: null };
     const match = /^(segment|boundary)(\d+)$/.exec(portName);
     if (match) {
       const index = Number(match[2]);
       const count = Number.isInteger(Number(node?.inputs?.branchCount))
         ? Math.max(1, Math.min(32, Number(node.inputs.branchCount)))
-        : 1;
+        : index + 1;
       if (match[1] === "segment" && direction === "output" && index < count) return { name: portName, kind: FLOW, type: null };
       if (match[1] === "boundary" && direction === "input" && index <= count) return { name: portName, kind: VALUE, type: "number" };
       return null;
     }
+  }
+  if (type === "randomBranch" && portName === DEFAULT_FLOW_OUTPUT && direction === "output") {
+    return { name: portName, kind: FLOW, type: null };
   }
   if (type === "randomBranch" && /^flowOut\d+$/.test(portName)) {
     const index = Number(portName.slice("flowOut".length));
@@ -68,11 +73,14 @@ export function getActivityNodePort(type, portName, direction, node = null) {
       : index + 1;
     return index >= 0 && index < count ? { name: portName, kind: FLOW, type: null } : null;
   }
+  if (type === "choice" && portName === DEFAULT_FLOW_OUTPUT && direction === "output") {
+    return { name: portName, kind: FLOW, type: null };
+  }
   if (type === "choice" && /^(option|label)\d+$/.test(portName)) {
     const index = Number(portName.replace(/\D/g, ''));
     const count = node && Number.isInteger(Number(node.inputs?.branchCount))
       ? Math.max(0, Math.min(32, Number(node.inputs.branchCount)))
-      : (node?.options?.length ?? index + 1);
+      : (node?.inputs?.branchCount && typeof node.inputs.branchCount === "object" ? index + 1 : (node?.options?.length ?? index + 1));
     if (index >= count) return null;
     if (direction === "output" && portName.startsWith("option")) return { name: portName, kind: FLOW, type: null };
     if (direction === "input" && portName.startsWith("label")) return { name: portName, kind: VALUE, type: "string" };

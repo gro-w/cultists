@@ -3,19 +3,25 @@
  * instance's Blueprint (plan §13 Phase 2). Kept generic: the only node
  * types understood here are the ones in ActivityNodeRegistry.js.
  *
+ * There is no dedicated "loop" node type: a loop is just an ordinary flow
+ * cycle - one of a `branch` node's outputs is wired back to a node earlier
+ * in the same flow, and the branch's own condition (backed by a variable a
+ * loop-body `setVariable` updates each pass) is what eventually breaks the
+ * cycle. `MAX_STEPS` below is the only safety net against a cycle that
+ * never breaks.
+ *
  * Resume semantics: one-shot side-effecting nodes (`setVariable`,
  * `consumeTime`) are tracked in `instance.executedNodeIds` and skipped if
  * revisited after a save/restore mid-flow, exactly like the equivalent
  * "already executed" guard in the legacy engine's ActivityRunner. Decision
- * nodes (`branch`, `loop`, `blockUntil`) always re-evaluate so they pick up
- * `instance.loopState`/variable changes correctly on resume.
+ * nodes (`branch`, `blockUntil`) always re-evaluate so they pick up
+ * variable changes correctly on resume.
  */
 const ONE_SHOT_NODE_TYPES = new Set(["setVariable", "consumeTime"]);
 const MAX_STEPS = 1000;
 
 function nextFlow(blueprint, node, port = "flowOut") {
-  const connection = blueprint.connections.find((item) => item.fromNodeId === node.id && item.fromPort === port);
-  return connection ? connection.toNodeId : null;
+  return node.next?.[port]?.nodeId ?? null;
 }
 
 /**
@@ -69,16 +75,16 @@ function applyArithmetic(operator, left, right) {
 
 /**
  * Resolve one node's value input: a wired connection from another node's
- * value output takes precedence (evaluated lazily), then the legacy
- * `{variable: name}` literal shorthand, then a plain literal, then
- * `fallback`.
+ * value output takes precedence (evaluated lazily, following the node's
+ * `inputs[name] = { nodeId, port }` upstream link - "数值只记录上家的链
+ * 表"), then the legacy `{variable: name}` literal shorthand, then a plain
+ * literal, then `fallback`.
  */
 function resolveInput(blueprint, node, name, variableStore, fallback, stack = new Set()) {
-  const connection = blueprint.connections.find((item) => item.toNodeId === node.id && item.toPort === name);
-  if (connection) return evaluateValueOutput(blueprint, connection.fromNodeId, connection.fromPort, variableStore, stack);
   const raw = node.inputs ? node.inputs[name] : undefined;
-  if (raw && typeof raw === "object" && !Array.isArray(raw) && "variable" in raw) {
-    return variableStore.get(raw.variable);
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    if ("nodeId" in raw) return evaluateValueOutput(blueprint, raw.nodeId, raw.port || "value", variableStore, stack);
+    if ("variable" in raw) return variableStore.get(raw.variable);
   }
   return raw === undefined ? fallback : raw;
 }
@@ -129,15 +135,6 @@ export function createActivityRunner({
       case "branch": {
         const condition = Boolean(resolveInput(blueprint, node, "condition", variableStore, false));
         return { next: nextFlow(blueprint, node, condition ? "true" : "false") };
-      }
-      case "loop": {
-        const times = Number(resolveInput(blueprint, node, "times", variableStore, 0));
-        const count = instance.loopState[node.id] || 0;
-        if (count < times) {
-          instance.loopState[node.id] = count + 1;
-          return { next: nextFlow(blueprint, node, "body") };
-        }
-        return { next: nextFlow(blueprint, node, "done") };
       }
       case "blockUntil": {
         const key = resolveInput(blueprint, node, "key", variableStore);

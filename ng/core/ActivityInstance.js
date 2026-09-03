@@ -15,7 +15,6 @@ export function createActivityInstance({ instanceId, activityId, queueId, curren
     currentNodeId,
     waitingNodeId: null,
     executedNodeIds: [],
-    loopState: {},
   };
 }
 

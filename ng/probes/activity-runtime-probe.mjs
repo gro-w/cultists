@@ -23,6 +23,12 @@ const defaultDefinition = {
   },
 };
 
+// "loop" is no longer a dedicated node type (plan item 1): a loop is just an
+// ordinary flow cycle - a branch's flow output wired back to a node earlier
+// in the same flow, broken by the branch's own condition. Here
+// `loopBranch` cycles back to itself via `incCounter` while `counter < 3`
+// (evaluated by the `counterLT3` arithmetic value node), running the loop
+// body exactly 3 times before falling through to `eligibleBranch`.
 const combinedDefinition = {
   id: "combined",
   blueprint: {
@@ -30,10 +36,11 @@ const combinedDefinition = {
     nodes: {
       start: { id: "start", type: "flowStart", inputs: {} },
       initCounter: { id: "initCounter", type: "setVariable", inputs: { key: "counter", value: 0 } },
-      loop: { id: "loop", type: "loop", inputs: { times: 3 } },
+      counterLT3: { id: "counterLT3", type: "arithmetic", inputs: { operator: "<", left: { variable: "counter" }, right: 3 } },
+      loopBranch: { id: "loopBranch", type: "branch", inputs: { condition: { nodeId: "counterLT3", port: "value" } } },
       incCounter: { id: "incCounter", type: "setVariable", inputs: { key: "counter", delta: 1 } },
       setEligible: { id: "setEligible", type: "setVariable", inputs: { key: "eligible", value: true } },
-      branch: { id: "branch", type: "branch", inputs: { condition: { variable: "eligible" } } },
+      eligibleBranch: { id: "eligibleBranch", type: "branch", inputs: { condition: { variable: "eligible" } } },
       consume: { id: "consume", type: "consumeTime", inputs: { minutes: 20 } },
       wait: { id: "wait", type: "blockUntil", inputs: { key: "approved", equals: true } },
       endTrue: { id: "endTrue", type: "activityEnd", inputs: {} },
@@ -41,13 +48,15 @@ const combinedDefinition = {
     },
     connections: [
       { fromNodeId: "start", fromPort: "flowOut", toNodeId: "initCounter", toPort: "flowIn" },
-      { fromNodeId: "initCounter", fromPort: "flowOut", toNodeId: "loop", toPort: "flowIn" },
-      { fromNodeId: "loop", fromPort: "body", toNodeId: "incCounter", toPort: "flowIn" },
-      { fromNodeId: "incCounter", fromPort: "flowOut", toNodeId: "loop", toPort: "flowIn" },
-      { fromNodeId: "loop", fromPort: "done", toNodeId: "setEligible", toPort: "flowIn" },
-      { fromNodeId: "setEligible", fromPort: "flowOut", toNodeId: "branch", toPort: "flowIn" },
-      { fromNodeId: "branch", fromPort: "true", toNodeId: "consume", toPort: "flowIn" },
-      { fromNodeId: "branch", fromPort: "false", toNodeId: "endFalse", toPort: "flowIn" },
+      { fromNodeId: "initCounter", fromPort: "flowOut", toNodeId: "loopBranch", toPort: "flowIn" },
+      // The loop body: while counter < 3, increment and cycle back to loopBranch.
+      { fromNodeId: "loopBranch", fromPort: "true", toNodeId: "incCounter", toPort: "flowIn" },
+      { fromNodeId: "incCounter", fromPort: "flowOut", toNodeId: "loopBranch", toPort: "flowIn" },
+      // Loop exits (counter reached 3) into the rest of the original scenario.
+      { fromNodeId: "loopBranch", fromPort: "false", toNodeId: "setEligible", toPort: "flowIn" },
+      { fromNodeId: "setEligible", fromPort: "flowOut", toNodeId: "eligibleBranch", toPort: "flowIn" },
+      { fromNodeId: "eligibleBranch", fromPort: "true", toNodeId: "consume", toPort: "flowIn" },
+      { fromNodeId: "eligibleBranch", fromPort: "false", toNodeId: "endFalse", toPort: "flowIn" },
       { fromNodeId: "consume", fromPort: "flowOut", toNodeId: "wait", toPort: "flowIn" },
       { fromNodeId: "wait", fromPort: "flowOut", toNodeId: "endTrue", toPort: "flowIn" },
     ],

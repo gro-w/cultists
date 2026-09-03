@@ -47,7 +47,8 @@ const sourceBlueprint = {
   const reloaded = createActivityEditorModel({ activityId: "demo", blueprint: exported });
 
   assert.deepEqual(reloaded.listNodes().sort((a, b) => a.id.localeCompare(b.id)), exported_sorted(exported.nodes));
-  assert.deepEqual(reloaded.listConnections(), exported.connections);
+  const sortConnections = (list) => [...list].sort((a, b) => a.id.localeCompare(b.id));
+  assert.deepEqual(sortConnections(reloaded.listConnections()), sortConnections(editor.listConnections()));
   assert.equal(reloaded.getNode("setValue").x, 250);
   assert.equal(reloaded.getNode("setValue").y, 90);
   assert.equal(reloaded.startNodeId, exported.startNodeId);
@@ -144,7 +145,7 @@ const sourceBlueprint = {
   // stale literal on that input port.
   const wire = editor.connect("getVar", "value", "math", "left");
   assert.equal(wire.ok, true, `value-to-value connect should succeed: ${wire.error}`);
-  assert.equal(editor.getNode("math").inputs.left, undefined, "wiring an input must clear its previous literal value");
+  assert.deepEqual(editor.getNode("math").inputs.left, { nodeId: "getVar", port: "value" }, "wiring an input must replace its previous literal value with the new wire");
 
   // Rewiring the same input target replaces the old connection instead of
   // creating a second edge into the same port.
@@ -170,6 +171,44 @@ const sourceBlueprint = {
   assert.ok(byId.branch.x < byId.endTrue.x && byId.branch.x < byId.endFalse.x, "branch must be laid out left of its two flow targets");
   // The two nodes sharing a rank (endTrue/endFalse) must not overlap vertically.
   assert.notEqual(byId.endTrue.y, byId.endFalse.y, "same-rank nodes must be stacked in distinct rows");
+}
+
+// --- Scenario 6: deleteSelected removes every selected node in one history
+// step and clears dangling next/inputs references left in survivors --------
+{
+  const editor = createActivityEditorModel({ activityId: "demo", blueprint: sourceBlueprint });
+  editor.selectOnly("setValue");
+  editor.toggleSelect("end");
+  const removed = editor.deleteSelected();
+  assert.equal(removed, true);
+  assert.equal(editor.listNodes().length, 1, "only start should remain");
+  assert.equal(editor.getNode("start").next.flowOut, undefined, "dangling next pointing at a deleted node must be cleared");
+  assert.deepEqual(editor.getSelection(), []);
+
+  assert.equal(editor.undo(), true);
+  assert.equal(editor.listNodes().length, 3, "undo must restore the deleted nodes and their wiring");
+}
+
+// --- Scenario 7: copySelected/pasteNodes clones selected nodes with fresh
+// ids, preserves internal wiring, strips wiring to nodes outside the copy,
+// offsets position, and selects the pasted nodes -----------------------------
+{
+  const editor = createActivityEditorModel({ activityId: "demo", blueprint: sourceBlueprint });
+  editor.selectOnly("start");
+  editor.toggleSelect("setValue");
+  const clipboard = editor.copySelected();
+  assert.equal(clipboard.nodes.length, 2);
+
+  const pasted = editor.pasteNodes(clipboard, { x: 10, y: 10 });
+  assert.equal(pasted.length, 2);
+  assert.equal(editor.listNodes().length, 5, "original 3 nodes plus 2 pasted");
+  assert.deepEqual(editor.getSelection().sort(), pasted.map((n) => n.id).sort(), "pasted nodes become the new selection");
+
+  const pastedStart = pasted.find((n) => n.type === "flowStart");
+  const pastedSetValue = pasted.find((n) => n.type === "setVariable");
+  assert.equal(pastedStart.x, 40 + 10, "pasted node position must be offset from the copied source");
+  assert.equal(pastedStart.next.flowOut.nodeId, pastedSetValue.id, "internal wiring between copied nodes must be remapped to the new ids, not the originals");
+  assert.notEqual(pastedStart.id, "start", "pasted nodes must get brand-new ids");
 }
 
 console.log("activity-editor-probe: all scenarios passed");

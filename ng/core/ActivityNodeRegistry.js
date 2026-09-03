@@ -28,12 +28,6 @@ const definitions = {
     flowOutputs: [flowOut("true"), flowOut("false")],
     valueInputs: [valueIn("condition", "bool")],
   },
-  loop: {
-    label: "循环",
-    flowInputs: [flowIn()],
-    flowOutputs: [flowOut("body"), flowOut("done")],
-    valueInputs: [valueIn("times", "number")],
-  },
   blockUntil: {
     label: "阻塞直到",
     flowInputs: [flowIn()],

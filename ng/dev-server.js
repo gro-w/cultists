@@ -18,7 +18,10 @@
  *
  * API surface (all under /api/):
  *   POST /api/file?f=<name> → validates JSON body, then atomically
- *                             overwrites ng/data/<name> (must already exist)
+ *                             writes ng/data/<name>, creating it (and any
+ *                             missing parent directories under data/) if it
+ *                             does not already exist, or overwriting it
+ *                             atomically if it does.
  */
 
 "use strict";
@@ -80,7 +83,7 @@ function serveStatic(req, res, pathname) {
 function handleApi(req, res, pathname, query) {
   if (pathname === "/api/file" && req.method === "POST") {
     const filePath = resolveDataFile(query.f);
-    if (!filePath || !fs.existsSync(filePath)) {
+    if (!filePath) {
       return send(res, 400, JSON.stringify({ error: "invalid or unknown file name" }));
     }
     let body = "";
@@ -91,12 +94,15 @@ function handleApi(req, res, pathname, query) {
       } catch {
         return send(res, 400, JSON.stringify({ error: "invalid JSON" }));
       }
-      const tmpPath = `${filePath}.tmp`;
-      fs.writeFile(tmpPath, body, (writeErr) => {
-        if (writeErr) return send(res, 500, JSON.stringify({ error: "write failed" }));
-        fs.rename(tmpPath, filePath, (renameErr) => {
-          if (renameErr) return send(res, 500, JSON.stringify({ error: "write failed" }));
-          send(res, 200, JSON.stringify({ ok: true }));
+      fs.mkdir(path.dirname(filePath), { recursive: true }, (mkdirErr) => {
+        if (mkdirErr) return send(res, 500, JSON.stringify({ error: "write failed" }));
+        const tmpPath = `${filePath}.tmp`;
+        fs.writeFile(tmpPath, body, (writeErr) => {
+          if (writeErr) return send(res, 500, JSON.stringify({ error: "write failed" }));
+          fs.rename(tmpPath, filePath, (renameErr) => {
+            if (renameErr) return send(res, 500, JSON.stringify({ error: "write failed" }));
+            send(res, 200, JSON.stringify({ ok: true }));
+          });
         });
       });
     });

@@ -1,3 +1,4 @@
 [
-  { "id": "example", "label": "示例窗口", "glyph": "🗔", "windowId": "example" }
+  { "id": "example", "label": "示例窗口", "glyph": "🗔", "windowId": "example" },
+  { "id": "off-duty", "label": "下班", "glyph": "🌙", "activityId": "off-duty-open" }
 ]

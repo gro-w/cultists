@@ -1,4 +1,5 @@
 import { PointerInteraction } from "./PointerInteraction.js";
+import { renderWindowRoot } from "../core/WidgetLayoutRenderer.js";
 
 const RESIZE_HANDLES = ["n", "ne", "e", "se", "s", "sw", "w", "nw"];
 
@@ -14,15 +15,17 @@ export class WindowFrame {
    * @param {import('../core/EventBus.js').default} eventBus
    * @param {{instanceId:string,windowId:string,title:string,resizable:boolean}} state
    * @param {HTMLElement|string} [body] - element or HTML string for the window body
+   * @param {object} [root] - widget tree (plan §7.1); when given it is rendered via
+   *   the same `renderWindowRoot()` the editor preview uses, and `body` is ignored
    */
-  constructor(windowManager, eventBus, state, body) {
+  constructor(windowManager, eventBus, state, body, root) {
     this.windowManager = windowManager;
     this.eventBus = eventBus;
     this.instanceId = state.instanceId;
     this._unsubscribers = [];
     this._drag = new PointerInteraction();
     this._resize = new PointerInteraction();
-    this._buildDom(state, body);
+    this._buildDom(state, body, root);
     this._bindControls();
     this._bindDrag();
     if (state.resizable) this._bindResize();
@@ -30,7 +33,7 @@ export class WindowFrame {
     this._render(this.windowManager.get(this.instanceId));
   }
 
-  _buildDom(state, body) {
+  _buildDom(state, body, root) {
     const el = document.createElement("div");
     el.className = "ng-window bevel-out";
     el.id = state.instanceId;
@@ -58,7 +61,12 @@ export class WindowFrame {
     `;
     el.querySelector(".ng-title").textContent = state.title;
     const bodyEl = el.querySelector(".ng-body");
-    if (typeof body === "string") bodyEl.innerHTML = body;
+    if (root) {
+      // Runtime and the WYSIWYG editor preview must render the exact same
+      // widget tree with the exact same renderer (plan §7.1).
+      const { el: rootEl } = renderWindowRoot(root, {});
+      bodyEl.appendChild(rootEl);
+    } else if (typeof body === "string") bodyEl.innerHTML = body;
     else if (body instanceof HTMLElement) bodyEl.appendChild(body);
 
     this.el = el;
@@ -131,7 +139,7 @@ export class WindowFrame {
     this.titlebarEl.addEventListener("pointerdown", (e) => {
       if (e.target.closest("button") || e.target.closest(".ng-titlebar-icon")) return;
       const state = this.windowManager.get(this.instanceId);
-      if (!state || state.maximized) return;
+      if (!state || state.maximized || state.fullscreen) return;
       const startX = e.clientX;
       const startY = e.clientY;
       const originX = state.x;
@@ -155,7 +163,7 @@ export class WindowFrame {
         e.preventDefault();
         e.stopPropagation();
         const state = this.windowManager.get(this.instanceId);
-        if (!state || state.maximized) return;
+        if (!state || state.maximized || state.fullscreen) return;
         const startX = e.clientX;
         const startY = e.clientY;
         const startW = state.width;
@@ -223,7 +231,11 @@ export class WindowFrame {
     this.el.style.zIndex = String(state.zIndex);
     this.el.classList.toggle("minimized", state.minimized);
     this.el.classList.toggle("maximized", state.maximized);
-    if (!state.maximized) {
+    this.el.classList.toggle("ng-window-fullscreen", Boolean(state.fullscreen));
+    if (state.fullscreen) {
+      // CSS `.ng-window-fullscreen` covers the whole viewport (and the
+      // taskbar) via `position: fixed; inset: 0`, so no inline geometry.
+    } else if (!state.maximized) {
       this.el.style.left = `${state.x}px`;
       this.el.style.top = `${state.y}px`;
       this.el.style.width = `${state.width}px`;

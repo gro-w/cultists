@@ -11,13 +11,13 @@
  * never breaks.
  *
  * Resume semantics: one-shot side-effecting nodes (`setVariable`,
- * `consumeTime`) are tracked in `instance.executedNodeIds` and skipped if
+ * `consumeTime`, `openWindow`) are tracked in `instance.executedNodeIds` and skipped if
  * revisited after a save/restore mid-flow, exactly like the equivalent
  * "already executed" guard in the legacy engine's ActivityRunner. Decision
  * nodes (`branch`, `blockUntil`) always re-evaluate so they pick up
  * variable changes correctly on resume.
  */
-const ONE_SHOT_NODE_TYPES = new Set(["setVariable", "consumeTime"]);
+const ONE_SHOT_NODE_TYPES = new Set(["setVariable", "consumeTime", "openWindow"]);
 const MAX_STEPS = 1000;
 
 function nextFlow(blueprint, node, port = "flowOut") {
@@ -95,6 +95,7 @@ export function createActivityRunner({
   variableStore,
   eventBus,
   timeGateway = () => {},
+  windowGateway = () => {},
   onCheckpoint = () => {},
   onComplete = () => {},
 } = {}) {
@@ -145,6 +146,11 @@ export function createActivityRunner({
       case "consumeTime": {
         const minutes = Number(resolveInput(blueprint, node, "minutes", variableStore, 0));
         timeGateway(minutes, instance, node);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "openWindow": {
+        const windowId = resolveInput(blueprint, node, "windowId", variableStore);
+        windowGateway(windowId, instance, node);
         return { next: nextFlow(blueprint, node) };
       }
       default:

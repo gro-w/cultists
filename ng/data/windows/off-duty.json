@@ -1,0 +1,23 @@
+{
+  "id": "off-duty",
+  "title": "下班模式",
+  "icon": "🌙",
+  "mode": "window",
+  "fullscreen": true,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 12,
+    "padding": 24,
+    "align": "center",
+    "justify": "center",
+    "children": [
+      { "widgetId": "off-duty-title", "type": "label", "className": "ng-off-duty-title", "text": "下班模式" },
+      { "widgetId": "off-duty-hint", "type": "label", "text": "点击右上角关闭按钮结束休息，返回桌面。" }
+    ]
+  },
+  "events": { "onCreate": null, "onDestroy": null }
+}

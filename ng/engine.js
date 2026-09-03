@@ -42,6 +42,23 @@ export async function bootstrap(rootEl) {
   const activityQueueRegistry = new ActivityQueueRegistry();
   const activityExecutionService = new ActivityExecutionService(eventBus);
 
+  /** Runs an Activity by id on the given queue (default "main"), wired with the shared gameClock/windowManager gateways. */
+  function runActivity(activityId, queueId = "main") {
+    const queue = activityQueueRegistry.get(queueId);
+    const definition = activityDefinitionStore.get(activityId);
+    if (!queue || !definition) return null;
+    const instance = queue.append({ activityId });
+    return activityExecutionService.run({
+      queue,
+      definition,
+      instance,
+      variableStore,
+      timeGateway: (minutes) => gameClock.advance(minutes),
+      windowGateway: (windowId) => shell.openWindow(windowId),
+    });
+  }
+  shell.runActivity = runActivity;
+
   if (Array.isArray(engineConfig.activityLists)) {
     for (const listFile of engineConfig.activityLists) {
       const listResponse = await fetch(`data/activity-lists/${listFile}`);
@@ -61,13 +78,8 @@ export async function bootstrap(rootEl) {
   shell.mountIcons(icons);
 
   if (engineConfig.defaultActivity) {
-    const { queueId, activityId } = engineConfig.defaultActivity;
-    const queue = activityQueueRegistry.get(queueId);
-    const definition = activityDefinitionStore.get(activityId);
-    if (queue && definition) {
-      const instance = queue.append({ activityId });
-      activityExecutionService.run({ queue, definition, instance, variableStore, timeGateway: (minutes) => gameClock.advance(minutes) });
-    }
+    const { activityId, queueId } = engineConfig.defaultActivity;
+    runActivity(activityId, queueId);
   }
 
   eventBus.emit("engine:ready", {});

@@ -250,4 +250,56 @@ function makeEngine(definitions) {
   assert.equal(instance.executedNodeIds.includes("initThreshold"), true);
 }
 
+// --- Scenario: openWindow node calls windowGateway once and does not
+// re-fire on resume (plan §7.4 "打开窗口本身不推进时间"; one-shot like consumeTime) --
+{
+  const openWindowDefinition = {
+    id: "openWindowActivity",
+    blueprint: {
+      startNodeId: "start",
+      nodes: {
+        start: { id: "start", type: "flowStart", inputs: {} },
+        open: { id: "open", type: "openWindow", inputs: { windowId: "off-duty" } },
+        consume: { id: "consume", type: "consumeTime", inputs: { minutes: 20 } },
+        wait: { id: "wait", type: "blockUntil", inputs: { key: "leftWindow", equals: true } },
+        end: { id: "end", type: "activityEnd", inputs: {} },
+      },
+      connections: [
+        { fromNodeId: "start", fromPort: "flowOut", toNodeId: "open", toPort: "flowIn" },
+        { fromNodeId: "open", fromPort: "flowOut", toNodeId: "consume", toPort: "flowIn" },
+        { fromNodeId: "consume", fromPort: "flowOut", toNodeId: "wait", toPort: "flowIn" },
+        { fromNodeId: "wait", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
+      ],
+    },
+  };
+  const engine = makeEngine([openWindowDefinition]);
+  const queue = engine.activityQueueRegistry.get("main");
+  const instance = queue.append({ activityId: "openWindowActivity" });
+  const openedWindowIds = [];
+  engine.activityExecutionService.run({
+    queue,
+    definition: engine.activityDefinitionStore.get("openWindowActivity"),
+    instance,
+    variableStore: engine.variableStore,
+    windowGateway: (windowId) => openedWindowIds.push(windowId),
+  });
+  assert.deepEqual(openedWindowIds, ["off-duty"]);
+  assert.equal(queue.get(instance.instanceId).waitingNodeId, "wait");
+
+  // Resume (e.g. after save/reload): openWindow must not be called again.
+  const snapshot = engine.activityQueueRegistry.snapshot();
+  const restoredEngine = makeEngine([openWindowDefinition]);
+  restoredEngine.activityQueueRegistry.restore(snapshot);
+  const restoredQueue = restoredEngine.activityQueueRegistry.get("main");
+  const restoredInstance = restoredQueue.get(instance.instanceId);
+  restoredEngine.activityExecutionService.run({
+    queue: restoredQueue,
+    definition: restoredEngine.activityDefinitionStore.get("openWindowActivity"),
+    instance: restoredInstance,
+    variableStore: restoredEngine.variableStore,
+    windowGateway: (windowId) => openedWindowIds.push(windowId),
+  });
+  assert.deepEqual(openedWindowIds, ["off-duty"], "openWindow must not re-fire on resume");
+}
+
 console.log("activity-runtime-probe: all scenarios passed");

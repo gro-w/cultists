@@ -1,7 +1,7 @@
 {
   "name": "cultists-ng",
   "version": "0.1.0-phase1",
-  "windowManifest": ["example.json"],
+  "windowManifest": ["example.json", "off-duty.json"],
   "desktopIcons": "desktop-icons.json",
   "activityLists": ["default.json"],
   "defaultActivity": { "queueId": "main", "activityId": "default" }

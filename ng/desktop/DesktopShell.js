@@ -62,9 +62,20 @@ export class DesktopShell {
     this.eventBus.on("window:closed", ({ instanceId }) => this._unmountFrame(instanceId));
   }
 
-  /** Render desktop icon placeholders; double-click opens the bound window definition. */
+  /**
+   * Render desktop icon placeholders. Double-click either opens the bound
+   * window definition directly, or - if the icon declares `activityId`
+   * instead - runs that Activity through `runActivity` (plan §7.4: the
+   * off-duty icon does not call `openWindow` itself; it routes through a
+   * blueprint that opens the window and then advances time). Full
+   * icon/blueprint-routing schema and drag/reorder are Phase 5 work; this is
+   * just the minimal hook Phase 4's off-duty example needs.
+   */
   mountIcons(icons) {
-    renderDesktopIcons(this.iconsEl, icons, (icon) => this.openWindow(icon.windowId));
+    renderDesktopIcons(this.iconsEl, icons, (icon) => {
+      if (icon.activityId) this.runActivity?.(icon.activityId);
+      else this.openWindow(icon.windowId);
+    });
   }
 
   openWindow(windowId) {
@@ -77,7 +88,7 @@ export class DesktopShell {
     const state = this.windowManager.get(instanceId);
     if (!state) return;
     const definition = this.windowDefinitionStore.get(state.windowId);
-    const frame = new WindowFrame(this.windowManager, this.eventBus, state, definition?.body);
+    const frame = new WindowFrame(this.windowManager, this.eventBus, state, definition?.body, definition?.root);
     this.frames.set(instanceId, frame);
     this.windowLayerEl.appendChild(frame.el);
   }

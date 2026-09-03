@@ -71,7 +71,7 @@ export class WindowManager {
    * is focused and restored instead of creating a duplicate.
    */
   open(definition) {
-    const { windowId: explicitWindowId, id, title, icon, resizable = true, singleInstance = true } = definition;
+    const { windowId: explicitWindowId, id, title, icon, resizable = true, singleInstance = true, fullscreen = false } = definition;
     const windowId = explicitWindowId || id;
     if (singleInstance) {
       const existing = this.getByWindowId(windowId);
@@ -82,14 +82,24 @@ export class WindowManager {
       }
     }
 
+    const viewport = this.getViewport();
     const saved = this.getSavedGeometry(windowId);
-    const geometry = this._clampSize({
-      x: saved?.x ?? definition.x ?? 60,
-      y: saved?.y ?? definition.y ?? 40,
-      width: saved?.width ?? definition.width ?? 480,
-      height: saved?.height ?? definition.height ?? 360,
-    });
-    const clampedPosition = this._clampPosition(geometry.x, geometry.y, geometry.width);
+    const geometry = fullscreen
+      // Fullscreen only changes runtime geometry/z-index policy (plan §7.4);
+      // it is still a perfectly normal window state otherwise.
+      ? this._clampSize({
+          x: 0,
+          y: 0,
+          width: Number.isFinite(viewport.width) ? viewport.width : (definition.width ?? 480),
+          height: Number.isFinite(viewport.height) ? viewport.height : (definition.height ?? 360),
+        })
+      : this._clampSize({
+          x: saved?.x ?? definition.x ?? 60,
+          y: saved?.y ?? definition.y ?? 40,
+          width: saved?.width ?? definition.width ?? 480,
+          height: saved?.height ?? definition.height ?? 360,
+        });
+    const clampedPosition = fullscreen ? { x: 0, y: 0 } : this._clampPosition(geometry.x, geometry.y, geometry.width);
 
     const instanceId = `win-${++_instanceIdCounter}`;
     const state = {
@@ -97,7 +107,8 @@ export class WindowManager {
       windowId,
       title: title || "Untitled",
       icon: icon || null,
-      resizable,
+      resizable: fullscreen ? false : resizable,
+      fullscreen: Boolean(fullscreen),
       minimized: false,
       maximized: false,
       normalBounds: null,

@@ -177,4 +177,28 @@ function memoryStorage() {
   assert.equal(wm.getByWindowId("example")?.instanceId, state.instanceId);
 }
 
+// --- fullscreen windows (plan §7.4): geometry snaps to the full viewport,
+// they are not resizable, and drag/resize are no-ops -------------------------
+{
+  const bus = new EventBus();
+  const viewport = { width: 1024, height: 738 };
+  const wm = new WindowManager(bus, { storage: memoryStorage(), getViewport: () => viewport });
+  const state = wm.open({ id: "off-duty", title: "下班模式", fullscreen: true, width: 480, height: 320 });
+  assert.equal(state.fullscreen, true);
+  assert.equal(state.resizable, false);
+  assert.deepEqual({ x: state.x, y: state.y, width: state.width, height: state.height }, { x: 0, y: 0, width: 1024, height: 738 });
+
+  // Dragging/resizing a fullscreen window is meaningless; moveTo/resize still
+  // work at the WindowManager layer (WindowFrame is what actually gates the
+  // gesture via `state.fullscreen`), but geometry stays sane either way.
+  wm.moveTo(state.instanceId, 999, 999);
+  const moved = wm.get(state.instanceId);
+  assert.ok(Number.isFinite(moved.x) && Number.isFinite(moved.y));
+
+  // Opening the same fullscreen window twice (singleInstance) must still
+  // just focus/return the existing instance, never spawn a second one.
+  const reopened = wm.open({ id: "off-duty", title: "下班模式", fullscreen: true });
+  assert.equal(reopened.instanceId, state.instanceId);
+}
+
 console.log("ng window-manager probe: ok");

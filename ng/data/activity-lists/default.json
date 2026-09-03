@@ -1,4 +1,4 @@
 {
   "id": "default",
-  "activityIds": ["default"]
+  "activityIds": ["default", "off-duty-open"]
 }

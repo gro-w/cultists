@@ -3,10 +3,14 @@ import { createActivityListManagerModel } from "./ActivityListManagerModel.js";
 import { ActivityListManagerView } from "./ActivityListManagerView.js";
 import { ActivityEditorView } from "./ActivityEditorView.js";
 import { ActivityDebuggerView } from "./ActivityDebuggerView.js";
+import { WindowDefinitionManagerView } from "./WindowDefinitionManagerView.js";
+import { WindowEditorView } from "./WindowEditorView.js";
 
 const LIST_MANAGER_WINDOW_ID = "dev-activity-list-manager";
 const DEBUGGER_WINDOW_ID = "dev-activity-debugger";
+const WINDOW_MANAGER_WINDOW_ID = "dev-window-definition-manager";
 let editorWindowSeq = 0;
+let windowEditorWindowSeq = 0;
 
 /**
  * DeveloperMode - top-level controller wired into ng/engine.js only when
@@ -69,10 +73,43 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
     body: debuggerView.el,
   });
 
+  function openWindowEditor(definition) {
+    const windowId = `dev-window-editor-${definition.id}-${windowEditorWindowSeq++}`;
+    const view = new WindowEditorView({
+      definition,
+      dataFileName: `windows/${definition.id}.json`,
+      onSaveToMemory: (updated) => windowDefinitionStore.register(updated),
+    });
+    const editorDefinition = windowDefinitionStore.register({
+      id: windowId,
+      title: `窗口编辑器 - ${definition.id}`,
+      icon: "🪟",
+      width: 900,
+      height: 560,
+      resizable: true,
+      singleInstance: true,
+      body: view.el,
+    });
+    windowManager.open(editorDefinition);
+  }
+
+  const windowManagerView = new WindowDefinitionManagerView(windowDefinitionStore.list(), { openEditor: openWindowEditor });
+  windowDefinitionStore.register({
+    id: WINDOW_MANAGER_WINDOW_ID,
+    title: "自定义窗口编辑器",
+    icon: "🪟",
+    width: 480,
+    height: 360,
+    resizable: true,
+    singleInstance: true,
+    body: windowManagerView.el,
+  });
+
   return {
     model,
     openListManager: () => windowManager.open(windowDefinitionStore.get(LIST_MANAGER_WINDOW_ID)),
     openDebugger: () => windowManager.open(windowDefinitionStore.get(DEBUGGER_WINDOW_ID)),
+    openWindowManager: () => windowManager.open(windowDefinitionStore.get(WINDOW_MANAGER_WINDOW_ID)),
   };
 }
 
@@ -101,6 +138,7 @@ export function buildDeveloperDesktopIcons() {
   return [
     { windowId: LIST_MANAGER_WINDOW_ID, glyph: "🛠", label: "Activity 管理器" },
     { windowId: DEBUGGER_WINDOW_ID, glyph: "🐞", label: "活动调试器" },
+    { windowId: WINDOW_MANAGER_WINDOW_ID, glyph: "🪟", label: "窗口编辑器" },
   ];
 }
 

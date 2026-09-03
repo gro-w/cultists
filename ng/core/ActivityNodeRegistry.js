@@ -40,6 +40,16 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("minutes", "number")],
   },
+  // Generic window-kernel action (not domain logic - windows/WindowManager
+  // are core engine concepts per plan §4/§7). Lets a blueprint (e.g. a
+  // desktop icon's) open a window definition by id and then keep going,
+  // e.g. into a consumeTime node - see plan §7.4's "下班" example flow.
+  openWindow: {
+    label: "打开窗口",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("windowId", "string")],
+  },
   // Pure value nodes: no flow ports at all. They are never flow-stepped by
   // the ActivityRunner; instead they are evaluated on demand whenever
   // another node's value input is wired to one of their value outputs

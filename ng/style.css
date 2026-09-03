@@ -149,6 +149,16 @@ button {
   display: none;
 }
 
+/* Fullscreen custom windows (plan §7.4): covers desktop, normal windows and
+   the taskbar, but is otherwise a perfectly ordinary window instance. */
+.ng-window.ng-window-fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 2000;
+}
+
 .ng-titlebar {
   display: flex;
   align-items: center;
@@ -249,6 +259,31 @@ button {
   border-left: 1px solid var(--w95-gray-darker);
   border-right: 1px solid var(--w95-white);
   border-bottom: 1px solid var(--w95-white);
+}
+
+/* Shared widget renderer (ng/core/WidgetLayoutRenderer.js): consumed
+   verbatim by both the runtime WindowFrame body and the WYSIWYG editor
+   preview (plan §7.1), so these rules are NOT inside a DEV-TOOLS block. */
+.ng-widget {
+  min-width: 0;
+}
+
+.ng-widget-container {
+  border: 1px dashed transparent;
+}
+
+.ng-widget-label {
+  font-size: 12px;
+}
+
+.ng-widget-progress-bar {
+  height: 100%;
+  background: var(--w95-blue);
+}
+
+.ng-widget-list-item {
+  font-size: 11px;
+  padding: 1px 0;
 }
 
 .ng-panel h1 {
@@ -748,6 +783,83 @@ button {
   padding: 2px 4px;
   text-align: left;
   font-size: 11px;
+}
+
+/* Custom window WYSIWYG editor (plan §7.3): the preview pane below reuses
+   the runtime widget renderer's own .ng-widget-* classes, so nothing
+   editor-specific is styled onto the widgets themselves. */
+.ng-window-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  outline: none;
+}
+
+.ng-window-editor-add-type {
+  font-size: 11px;
+}
+
+.ng-window-editor-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.ng-window-editor-structure {
+  width: 200px;
+  overflow: auto;
+  border-right: 1px solid var(--w95-gray-dark);
+  flex-shrink: 0;
+  background: var(--w95-gray-light);
+}
+
+.ng-window-editor-structure-row {
+  padding: 2px 4px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ng-window-editor-structure-row:hover {
+  background: rgba(0, 0, 128, 0.1);
+}
+
+.ng-window-editor-structure-row.selected {
+  background: var(--w95-blue);
+  color: var(--w95-white);
+}
+
+.ng-window-editor-preview {
+  flex: 1 1 auto;
+  overflow: auto;
+  background: #f0f0f8;
+  padding: 12px;
+}
+
+.ng-window-editor-inspector {
+  width: 220px;
+  overflow: auto;
+  border-left: 1px solid var(--w95-gray-dark);
+  flex-shrink: 0;
+  padding: 6px;
+}
+
+.ng-window-editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+.ng-editor-empty {
+  font-size: 11px;
+  color: var(--w95-gray-dark);
+  padding: 8px;
+}
+
+.ng-window-editor-preview .ng-widget-container {
+  border-color: var(--w95-gray-dark);
 }
 
 /* DEV-TOOLS:END */

@@ -1,6 +1,7 @@
 import { WindowFrame } from "./WindowFrame.js";
 import { Taskbar } from "./Taskbar.js";
 import { renderDesktopIcons } from "./DesktopIcon.js";
+import { GAME_CLOCK_EVENTS } from "../core/GameClock.js";
 
 /**
  * DesktopShell - presentation-only root: desktop background, icon layer,
@@ -13,12 +14,14 @@ export class DesktopShell {
    * @param {import('../core/WindowDefinitionStore.js').WindowDefinitionStore} windowDefinitionStore
    * @param {import('../core/EventBus.js').default} eventBus
    * @param {HTMLElement} rootEl
+   * @param {import('../core/GameClock.js').GameClock} [gameClock]
    */
-  constructor(windowManager, windowDefinitionStore, eventBus, rootEl) {
+  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock) {
     this.windowManager = windowManager;
     this.windowDefinitionStore = windowDefinitionStore;
     this.eventBus = eventBus;
     this.rootEl = rootEl;
+    this.gameClock = gameClock || null;
     this.frames = new Map(); // instanceId -> WindowFrame
     this._buildDom();
     this._bindEvents();
@@ -38,21 +41,20 @@ export class DesktopShell {
     this.taskbar = new Taskbar(this.windowManager, this.eventBus, this.rootEl.querySelector(".taskbar"));
   }
 
-  /** Real wall-clock display only (plan §4.1: never drives game time/phase); shown until a later phase's TimeService takes over. */
+  /** Renders the in-game clock (plan §4.1: never system time/timers); updates only when GameClock actually advances. */
   _startClock() {
-    const update = () => {
-      const now = new Date();
-      const hh = String(now.getHours()).padStart(2, "0");
-      const mm = String(now.getMinutes()).padStart(2, "0");
-      this.taskbar.setClockText(`${hh}:${mm}`);
+    const render = () => {
+      this.taskbar.setClockText(this.gameClock ? this.gameClock.formatClock() : "");
     };
-    update();
-    this._clockTimer = setInterval(update, 15000);
+    render();
+    if (this.gameClock) {
+      this._unsubscribeClock = this.eventBus.on(GAME_CLOCK_EVENTS.changed, render);
+    }
   }
 
   dispose() {
-    if (this._clockTimer) clearInterval(this._clockTimer);
-    this._clockTimer = null;
+    if (this._unsubscribeClock) this._unsubscribeClock();
+    this._unsubscribeClock = null;
   }
 
   _bindEvents() {

@@ -6,6 +6,7 @@ import { VariableStore } from "./core/VariableStore.js";
 import { ActivityDefinitionStore } from "./core/ActivityDefinitionStore.js";
 import { ActivityQueueRegistry } from "./core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "./core/ActivityExecutionService.js";
+import { GameClock } from "./core/GameClock.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -32,7 +33,9 @@ export async function bootstrap(rootEl) {
   const iconsResponse = await fetch(`data/${engineConfig.desktopIcons}`);
   const icons = await iconsResponse.json();
 
-  const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl);
+  const gameClock = new GameClock(eventBus);
+
+  const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock);
 
   const variableStore = new VariableStore(eventBus);
   const activityDefinitionStore = new ActivityDefinitionStore();
@@ -63,7 +66,7 @@ export async function bootstrap(rootEl) {
     const definition = activityDefinitionStore.get(activityId);
     if (queue && definition) {
       const instance = queue.append({ activityId });
-      activityExecutionService.run({ queue, definition, instance, variableStore });
+      activityExecutionService.run({ queue, definition, instance, variableStore, timeGateway: (minutes) => gameClock.advance(minutes) });
     }
   }
 
@@ -77,6 +80,7 @@ export async function bootstrap(rootEl) {
     activityDefinitionStore,
     activityQueueRegistry,
     activityExecutionService,
+    gameClock,
   };
 }
 

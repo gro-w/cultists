@@ -1,0 +1,3 @@
+[
+  {"id":100,"name":"示例初始化完成","type":"smallInteger","defaultValue":0,"min":0,"max":255,"persistent":true}
+]

@@ -1,0 +1,15 @@
+{
+  "id": "default",
+  "displayName": "默认初始化",
+  "version": 1,
+  "entry": "start",
+  "nodes": [
+    {"id":"start","type":"start","x":80,"y":60,"data":{}},
+    {"id":"set-demo","type":"setVariable","x":300,"y":60,"data":{"variableId":100,"value":1}},
+    {"id":"end","type":"end","x":520,"y":60,"data":{}}
+  ],
+  "connections": [
+    {"id":"edge-1","from":{"node":"start","port":"next"},"to":{"node":"set-demo","port":"in"}},
+    {"id":"edge-2","from":{"node":"set-demo","port":"next"},"to":{"node":"end","port":"in"}}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "engineName": "cultists",
+  "engineVersion": "0.1.0",
+  "initialClock": "08:00",
+  "activities": ["default", "item-use-example", "medical-demo"],
+  "windows": ["off-duty-demo"],
+  "desktopIcons": []
+}

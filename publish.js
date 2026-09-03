@@ -37,7 +37,7 @@ function copyTree(source, destination) {
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
     // Documentation and agent instructions are not player assets and may
     // intentionally mention development-only tools or markers.
-    if ([".git", "publish", "publish.js", "dev-server.js", "node_modules", ".hermes", "AGENTS.md", "README.md", "docs"].includes(entry.name)) continue;
+    if ([".git", "publish", "publish.js", "dev-server.js", "editors", "node_modules", ".hermes", "AGENTS.md", "README.md", "docs"].includes(entry.name)) continue;
     const from = path.join(source, entry.name);
     const to = path.join(destination, entry.name);
     if (entry.isDirectory()) {

@@ -1,0 +1,9 @@
+export class ActivityNodeRegistry {
+  constructor() { this.nodes = new Map(); }
+  register(type, definition) { if (this.nodes.has(type)) throw new Error(`Duplicate node type: ${type}`); this.nodes.set(type, { type, flowIn: [], flowOut: [], valueIn: [], valueOut: [], ...definition }); return this; }
+  get(type) { const node = this.nodes.get(type); if (!node) throw new Error(`Unknown flow node: ${type}`); return node; }
+  has(type) { return this.nodes.has(type); }
+  list() { return [...this.nodes.values()]; }
+}
+export function createDefaultNodeRegistry() { const registry = new ActivityNodeRegistry();
+  registry.register("start", { flowOut: ["next"] }).register("end", { flowIn: ["in"] }).register("sequence", { flowIn: ["in"], flowOut: ["next"] }).register("branch", { flowIn: ["in"], valueIn: ["condition"], flowOut: ["true", "false"] }).register("loop", { flowIn: ["in"], valueIn: ["condition"], flowOut: ["body", "done"] }).register("delay", { flowIn: ["in"], flowOut: ["next"], effect: "delay" }).register("blockUntil", { flowIn: ["in"], valueIn: ["condition"], flowOut: ["next"], wait: true }).register("consumeTime", { flowIn: ["in"], flowOut: ["next"], valueIn: ["minutes"], effect: "consumeTime" }).register("setVariable", { flowIn: ["in"], flowOut: ["next"], valueIn: ["value"], effect: "setVariable" }).register("getVariable", { valueOut: ["value"] }).register("showText", { flowIn: ["in"], flowOut: ["next"], valueIn: ["text"], presentation: "text" }).register("showChoice", { flowIn: ["in"], flowOut: ["next"], presentation: "choice" }).register("openWindow", { flowIn: ["in"], flowOut: ["next"], effect: "openWindow" }).register("closeWindow", { flowIn: ["in"], flowOut: ["next"], effect: "closeWindow" }).register("emitEvent", { flowIn: ["in"], flowOut: ["next"], effect: "emitEvent" }).register("return", { flowIn: ["in"] }); return registry; }

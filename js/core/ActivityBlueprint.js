@@ -171,7 +171,7 @@ export function migrateDialogueTree(tree) {
   const connections = [];
   Object.entries(source.nodes || {}).forEach(([id, node]) => {
     const textId = `text:${id}`;
-    nodes[textId] = { ...node, id: textId, type: "text", inputs: { speaker: node.speaker || "npc", text: node.text || "", displayTo: node.displayTo || node.inputs?.displayTo || "dorm-bottom" }, outputs: {} };
+    nodes[textId] = { ...node, id: textId, type: "text", inputs: { speaker: node.speaker || "npc", text: node.text || "", ...(node.displayTo || node.inputs?.displayTo ? { displayTo: node.displayTo || node.inputs.displayTo } : {}) }, outputs: {} };
     if (id === source.start) connections.push({ fromNodeId: "start", fromPort: "flowOut", toNodeId: textId, toPort: "flowIn" });
     const options = Array.isArray(node.options) ? node.options : [];
     if (options.length) {

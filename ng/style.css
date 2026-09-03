@@ -695,4 +695,15 @@ button {
   margin-bottom: 6px;
 }
 
+.ng-editor-inspector-wired {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 4px;
+  background: #e0ffe0;
+  border: 1px solid #008000;
+  color: #004000;
+  font-size: 11px;
+  width: fit-content;
+}
+
 /* DEV-TOOLS:END */

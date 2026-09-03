@@ -191,4 +191,54 @@ function makeEngine(definitions) {
   assert.equal(queue.complete(instance.instanceId), false, "queue.complete on a resolved instance is a no-op");
 }
 
+// --- Scenario 5: value-port wiring - arithmetic + getVariable feed a branch's
+// condition via connections instead of a literal/`{variable}` input --------
+{
+  const valueWiredDefinition = {
+    id: "valueWired",
+    blueprint: {
+      startNodeId: "start",
+      nodes: {
+        start: { id: "start", type: "flowStart", inputs: {} },
+        initThreshold: { id: "initThreshold", type: "setVariable", inputs: { key: "threshold", value: 10 } },
+        getThreshold: { id: "getThreshold", type: "getVariable", inputs: { key: "threshold" } },
+        addBonus: { id: "addBonus", type: "arithmetic", inputs: { operator: "+", right: 5 } },
+        compare: { id: "compare", type: "arithmetic", inputs: { operator: ">", right: 12 } },
+        branch: { id: "branch", type: "branch", inputs: {} },
+        endTrue: { id: "endTrue", type: "activityEnd", inputs: {} },
+        endFalse: { id: "endFalse", type: "activityEnd", inputs: {} },
+      },
+      connections: [
+        { fromNodeId: "start", fromPort: "flowOut", toNodeId: "initThreshold", toPort: "flowIn" },
+        { fromNodeId: "initThreshold", fromPort: "flowOut", toNodeId: "branch", toPort: "flowIn" },
+        // addBonus.left <- getThreshold.value (chained value node)
+        { fromNodeId: "getThreshold", fromPort: "value", toNodeId: "addBonus", toPort: "left" },
+        // compare.left <- addBonus.value (threshold(10) + 5 = 15)
+        { fromNodeId: "addBonus", fromPort: "value", toNodeId: "compare", toPort: "left" },
+        // branch.condition <- compare.value (15 > 12 => true)
+        { fromNodeId: "compare", fromPort: "value", toNodeId: "branch", toPort: "condition" },
+        { fromNodeId: "branch", fromPort: "true", toNodeId: "endTrue", toPort: "flowIn" },
+        { fromNodeId: "branch", fromPort: "false", toNodeId: "endFalse", toPort: "flowIn" },
+      ],
+    },
+  };
+  const { ok, errors } = validateBlueprint(valueWiredDefinition.blueprint);
+  assert.equal(ok, true, `value-wired blueprint should validate: ${errors.join(", ")}`);
+
+  const engine = makeEngine([valueWiredDefinition]);
+  const queue = engine.activityQueueRegistry.get("main");
+  const instance = queue.append({ activityId: "valueWired" });
+  engine.activityExecutionService.run({
+    queue,
+    definition: engine.activityDefinitionStore.get("valueWired"),
+    instance,
+    variableStore: engine.variableStore,
+  });
+  assert.equal(queue.get(instance.instanceId).status, "resolved");
+  // The chained value graph (getVariable -> arithmetic -> arithmetic -> branch)
+  // must have evaluated to true: (10 + 5) > 12, so the flow must reach endTrue.
+  assert.equal(instance.currentNodeId, "endTrue");
+  assert.equal(instance.executedNodeIds.includes("initThreshold"), true);
+}
+
 console.log("activity-runtime-probe: all scenarios passed");

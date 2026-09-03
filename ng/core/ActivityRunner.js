@@ -18,7 +18,64 @@ function nextFlow(blueprint, node, port = "flowOut") {
   return connection ? connection.toNodeId : null;
 }
 
-function resolveInput(node, name, variableStore, fallback) {
+/**
+ * Evaluate a pure value node's output on demand (plan §6.2 value-port
+ * wiring). Value nodes (e.g. `arithmetic`, `getVariable`) are never
+ * flow-stepped by `run()`; they are pulled lazily whenever a flow node's
+ * value input is wired to one of their outputs, recursing through chained
+ * value nodes. `stack` guards against circular wiring.
+ */
+function evaluateValueOutput(blueprint, nodeId, portName, variableStore, stack) {
+  const key = `${nodeId}:${portName}`;
+  if (stack.has(key)) throw new Error(`Circular value dependency at ${key}`);
+  const node = blueprint.nodes[nodeId];
+  if (!node) throw new Error(`Unknown value node: ${nodeId}`);
+  stack.add(key);
+  const read = (name, fallback) => resolveInput(blueprint, node, name, variableStore, fallback, stack);
+  let result;
+  switch (node.type) {
+    case "arithmetic":
+      result = applyArithmetic(read("operator", "+"), read("left", 0), read("right", 0));
+      break;
+    case "getVariable":
+      result = variableStore.get(read("key"));
+      break;
+    default:
+      throw new Error(`Node ${node.type} does not produce a value output`);
+  }
+  stack.delete(key);
+  return result;
+}
+
+function applyArithmetic(operator, left, right) {
+  switch (operator) {
+    case "+": return Number(left) + Number(right);
+    case "-": return Number(left) - Number(right);
+    case "*": return Number(left) * Number(right);
+    case "/": if (Number(right) === 0) throw new Error("Division by zero"); return Number(left) / Number(right);
+    case "%": if (Number(right) === 0) throw new Error("Division by zero"); return Number(left) % Number(right);
+    case "and": return Boolean(left) && Boolean(right);
+    case "or": return Boolean(left) || Boolean(right);
+    case "xor": return Boolean(left) !== Boolean(right);
+    case ">": return left > right;
+    case ">=": return left >= right;
+    case "<": return left < right;
+    case "<=": return left <= right;
+    case "=": return left === right;
+    case "not": return !Boolean(left);
+    default: throw new Error(`Unknown arithmetic operator: ${operator}`);
+  }
+}
+
+/**
+ * Resolve one node's value input: a wired connection from another node's
+ * value output takes precedence (evaluated lazily), then the legacy
+ * `{variable: name}` literal shorthand, then a plain literal, then
+ * `fallback`.
+ */
+function resolveInput(blueprint, node, name, variableStore, fallback, stack = new Set()) {
+  const connection = blueprint.connections.find((item) => item.toNodeId === node.id && item.toPort === name);
+  if (connection) return evaluateValueOutput(blueprint, connection.fromNodeId, connection.fromPort, variableStore, stack);
   const raw = node.inputs ? node.inputs[name] : undefined;
   if (raw && typeof raw === "object" && !Array.isArray(raw) && "variable" in raw) {
     return variableStore.get(raw.variable);
@@ -61,20 +118,20 @@ export function createActivityRunner({
         finish("completed");
         return { stop: true };
       case "setVariable": {
-        const key = resolveInput(node, "key", variableStore);
+        const key = resolveInput(blueprint, node, "key", variableStore);
         if (Object.prototype.hasOwnProperty.call(node.inputs || {}, "delta")) {
-          variableStore.delta(key, resolveInput(node, "delta", variableStore, 0));
+          variableStore.delta(key, resolveInput(blueprint, node, "delta", variableStore, 0));
         } else {
-          variableStore.set(key, resolveInput(node, "value", variableStore));
+          variableStore.set(key, resolveInput(blueprint, node, "value", variableStore));
         }
         return { next: nextFlow(blueprint, node) };
       }
       case "branch": {
-        const condition = Boolean(resolveInput(node, "condition", variableStore, false));
+        const condition = Boolean(resolveInput(blueprint, node, "condition", variableStore, false));
         return { next: nextFlow(blueprint, node, condition ? "true" : "false") };
       }
       case "loop": {
-        const times = Number(resolveInput(node, "times", variableStore, 0));
+        const times = Number(resolveInput(blueprint, node, "times", variableStore, 0));
         const count = instance.loopState[node.id] || 0;
         if (count < times) {
           instance.loopState[node.id] = count + 1;
@@ -83,13 +140,13 @@ export function createActivityRunner({
         return { next: nextFlow(blueprint, node, "done") };
       }
       case "blockUntil": {
-        const key = resolveInput(node, "key", variableStore);
-        const expected = resolveInput(node, "equals", variableStore, true);
+        const key = resolveInput(blueprint, node, "key", variableStore);
+        const expected = resolveInput(blueprint, node, "equals", variableStore, true);
         if (variableStore.get(key) === expected) return { next: nextFlow(blueprint, node) };
         return { wait: true };
       }
       case "consumeTime": {
-        const minutes = Number(resolveInput(node, "minutes", variableStore, 0));
+        const minutes = Number(resolveInput(blueprint, node, "minutes", variableStore, 0));
         timeGateway(minutes, instance, node);
         return { next: nextFlow(blueprint, node) };
       }

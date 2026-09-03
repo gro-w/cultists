@@ -1,6 +1,6 @@
 // DEV-TOOLS:START
 import { PointerInteraction } from "../desktop/PointerInteraction.js";
-import { ACTIVITY_NODE_TYPES, getActivityNodeDefinition } from "../core/ActivityNodeRegistry.js";
+import { ACTIVITY_NODE_TYPES, getActivityNodeDefinition, listActivityNodePorts } from "../core/ActivityNodeRegistry.js";
 import { createActivityEditorModel } from "./ActivityEditorModel.js";
 import { downloadTextFile, writeDataFile } from "./devApi.js";
 
@@ -47,6 +47,7 @@ export class ActivityEditorView {
         <button type="button" data-action="undo" title="撤销">撤销</button>
         <button type="button" data-action="redo" title="重做">重做</button>
         <button type="button" data-action="validate" title="校验">校验</button>
+        <button type="button" data-action="auto-layout" title="自动排布">自动排布</button>
         <button type="button" data-action="save" title="保存到内存">保存到内存</button>
         <button type="button" data-action="download" title="下载 JSON">下载</button>
         <button type="button" data-action="write-disk" title="写入磁盘">写入磁盘</button>
@@ -122,6 +123,10 @@ export class ActivityEditorView {
       this._setStatus(result.ok ? "校验通过" : `校验失败: ${result.errors.join("；")}`, !result.ok);
     });
     this.el.querySelector('[data-action="save"]').addEventListener("click", () => this._save());
+    this.el.querySelector('[data-action="auto-layout"]').addEventListener("click", () => {
+      this.model.autoLayout();
+      this.render();
+    });
     this.el.querySelector('[data-action="download"]').addEventListener("click", () => {
       downloadTextFile(`${this.model.activityId || "activity"}.json`, this.model.toDownloadPayload());
     });
@@ -357,9 +362,12 @@ export class ActivityEditorView {
     for (const node of nodes) {
       let el = this.canvasEl.querySelector(`.ng-editor-node[data-node-id="${cssEscape(node.id)}"]`);
       const definition = getActivityNodeDefinition(node.type);
-      const flowInputs = definition?.flowInputs || [];
-      const flowOutputs = definition?.flowOutputs || [];
-      const portRows = Math.max(flowInputs.length, flowOutputs.length);
+      // Flow ports and value ports are both rendered as connectable pins
+      // (plan §6.2 value-port wiring); value ports get a distinct pin color
+      // via the `data-port-kind="value"` CSS hook.
+      const inputPorts = listActivityNodePorts(node.type, "input");
+      const outputPorts = listActivityNodePorts(node.type, "output");
+      const portRows = Math.max(inputPorts.length, outputPorts.length);
       const isStart = node.id === this.model.startNodeId;
       if (!el) {
         el = document.createElement("div");
@@ -385,8 +393,8 @@ export class ActivityEditorView {
       el.querySelector(".ng-editor-node-badge").textContent = node.type;
       const inputsLayer = el.querySelector(".ng-editor-port-layer.inputs");
       const outputsLayer = el.querySelector(".ng-editor-port-layer.outputs");
-      inputsLayer.innerHTML = flowInputs.map((port, index) => this._portRowMarkup(port, "input", index)).join("");
-      outputsLayer.innerHTML = flowOutputs.map((port, index) => this._portRowMarkup(port, "output", index)).join("");
+      inputsLayer.innerHTML = inputPorts.map((port, index) => this._portRowMarkup(port, "input", index)).join("");
+      outputsLayer.innerHTML = outputPorts.map((port, index) => this._portRowMarkup(port, "output", index)).join("");
     }
   }
 
@@ -412,9 +420,8 @@ export class ActivityEditorView {
     const outputIndex = new Map();
     const inputIndex = new Map();
     nodes.forEach((node) => {
-      const definition = getActivityNodeDefinition(node.type);
-      (definition?.flowOutputs || []).forEach((port, index) => outputIndex.set(`${node.id}:${port.name}`, index));
-      (definition?.flowInputs || []).forEach((port, index) => inputIndex.set(`${node.id}:${port.name}`, index));
+      listActivityNodePorts(node.type, "output").forEach((port, index) => outputIndex.set(`${node.id}:${port.name}`, index));
+      listActivityNodePorts(node.type, "input").forEach((port, index) => inputIndex.set(`${node.id}:${port.name}`, index));
     });
     for (const connection of connections) {
       const from = this._portPosition(connection.fromNodeId, "output", outputIndex.get(`${connection.fromNodeId}:${connection.fromPort}`) || 0);
@@ -448,20 +455,36 @@ export class ActivityEditorView {
     for (const valuePort of definition?.valueInputs || []) {
       const row = document.createElement("label");
       row.className = "ng-editor-inspector-row";
-      const value = node.inputs?.[valuePort.name];
       row.innerHTML = `<span>${valuePort.name}</span>`;
-      const input = document.createElement("input");
-      input.type = "text";
-      input.value = value === undefined ? "" : JSON.stringify(value);
-      input.addEventListener("change", () => {
-        try {
-          node.inputs[valuePort.name] = input.value === "" ? undefined : JSON.parse(input.value);
-        } catch {
-          node.inputs[valuePort.name] = input.value;
-        }
-        this._renderNodes();
-      });
-      row.appendChild(input);
+      const connection = this.model.listConnections().find((c) => c.toNodeId === node.id && c.toPort === valuePort.name);
+      if (connection) {
+        const wired = document.createElement("span");
+        wired.className = "ng-editor-inspector-wired";
+        wired.textContent = `🔗 ${connection.fromNodeId}.${connection.fromPort}`;
+        row.appendChild(wired);
+        const unlink = document.createElement("button");
+        unlink.type = "button";
+        unlink.textContent = "断开";
+        unlink.addEventListener("click", () => {
+          this.model.disconnect(connection.id);
+          this.render();
+        });
+        row.appendChild(unlink);
+      } else {
+        const value = node.inputs?.[valuePort.name];
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = value === undefined ? "" : JSON.stringify(value);
+        input.addEventListener("change", () => {
+          try {
+            node.inputs[valuePort.name] = input.value === "" ? undefined : JSON.parse(input.value);
+          } catch {
+            node.inputs[valuePort.name] = input.value;
+          }
+          this._renderNodes();
+        });
+        row.appendChild(input);
+      }
       this.inspectorEl.appendChild(row);
     }
     const deleteButton = document.createElement("button");

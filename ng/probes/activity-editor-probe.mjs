@@ -117,4 +117,59 @@ const sourceBlueprint = {
   assert.equal(manager.getActivity("social-greeting"), null);
 }
 
+// --- Scenario 5: value-port connect()/disconnect() through the editor, plus
+// autoLayout() producing a valid non-overlapping rank/row assignment --------
+{
+  const editor = createActivityEditorModel({
+    activityId: "value-demo",
+    blueprint: {
+      startNodeId: "start",
+      nodes: {
+        start: { id: "start", type: "flowStart", x: 0, y: 0, inputs: {} },
+        getVar: { id: "getVar", type: "getVariable", x: 0, y: 0, inputs: { key: "threshold" } },
+        math: { id: "math", type: "arithmetic", x: 0, y: 0, inputs: { operator: "+", right: 5, left: 1 } },
+        branch: { id: "branch", type: "branch", x: 0, y: 0, inputs: {} },
+        endTrue: { id: "endTrue", type: "activityEnd", x: 0, y: 0, inputs: {} },
+        endFalse: { id: "endFalse", type: "activityEnd", x: 0, y: 0, inputs: {} },
+      },
+      connections: [
+        { id: "e1", fromNodeId: "start", fromPort: "flowOut", toNodeId: "branch", toPort: "flowIn" },
+        { id: "e2", fromNodeId: "branch", fromPort: "true", toNodeId: "endTrue", toPort: "flowIn" },
+        { id: "e3", fromNodeId: "branch", fromPort: "false", toNodeId: "endFalse", toPort: "flowIn" },
+      ],
+    },
+  });
+
+  // A value output can wire into a value input, and doing so must clear any
+  // stale literal on that input port.
+  const wire = editor.connect("getVar", "value", "math", "left");
+  assert.equal(wire.ok, true, `value-to-value connect should succeed: ${wire.error}`);
+  assert.equal(editor.getNode("math").inputs.left, undefined, "wiring an input must clear its previous literal value");
+
+  // Rewiring the same input target replaces the old connection instead of
+  // creating a second edge into the same port.
+  const rewire = editor.connect("getVar", "value", "math", "left");
+  assert.equal(editor.listConnections().filter((c) => c.toNodeId === "math" && c.toPort === "left").length, 1);
+  assert.equal(rewire.ok, true);
+
+  // A flow port cannot connect to a value port and vice versa.
+  const mismatched = editor.connect("start", "flowOut", "math", "left");
+  assert.equal(mismatched.ok, false, "flow output must not connect to a value input");
+
+  editor.disconnect(editor.listConnections().find((c) => c.toNodeId === "math" && c.toPort === "left").id);
+  assert.equal(editor.listConnections().some((c) => c.toNodeId === "math" && c.toPort === "left"), false);
+
+  const changed = editor.autoLayout();
+  assert.equal(changed, true);
+  const positions = editor.listNodes().map((node) => ({ id: node.id, x: node.x, y: node.y }));
+  // start (rank 0) must sit strictly left of branch (rank 1), which must sit
+  // strictly left of endTrue/endFalse (rank 2) - the whole point of the
+  // layered auto-layout.
+  const byId = Object.fromEntries(positions.map((p) => [p.id, p]));
+  assert.ok(byId.start.x < byId.branch.x, "flowStart must be laid out left of the nodes it flows into");
+  assert.ok(byId.branch.x < byId.endTrue.x && byId.branch.x < byId.endFalse.x, "branch must be laid out left of its two flow targets");
+  // The two nodes sharing a rank (endTrue/endFalse) must not overlap vertically.
+  assert.notEqual(byId.endTrue.y, byId.endFalse.y, "same-rank nodes must be stacked in distinct rows");
+}
+
 console.log("activity-editor-probe: all scenarios passed");

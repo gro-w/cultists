@@ -1,6 +1,6 @@
 // DEV-TOOLS:START
 import { normalizeBlueprint, validateBlueprint } from "../core/ActivityValidator.js";
-import { getActivityNodeDefinition, findFlowPort, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
+import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
 
 /**
  * ActivityEditorModel - DOM-independent state for one Activity editor
@@ -122,17 +122,19 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
     return selection.has(id);
   }
 
-  /** Attempt a flow connection; rejects incompatible/unknown ports instead of throwing, per §6.3. */
+  /** Attempt a connection (flow or value); rejects incompatible/unknown ports instead of throwing, per §6.3. Rewiring a target input replaces any existing wire into that same port, since an input port can only be fed by one source at a time. */
   function connect(fromNodeId, fromPort, toNodeId, toPort) {
     const fromNode = current.nodes[fromNodeId];
     const toNode = current.nodes[toNodeId];
     if (!fromNode || !toNode) return { ok: false, error: "未知节点" };
-    const sourcePort = findFlowPort(fromNode.type, "output", fromPort);
-    const targetPort = findFlowPort(toNode.type, "input", toPort);
+    const sourcePort = getActivityNodePort(fromNode.type, "output", fromPort);
+    const targetPort = getActivityNodePort(toNode.type, "input", toPort);
     if (!sourcePort) return { ok: false, error: `节点 ${fromNodeId} 没有输出端口 ${fromPort}` };
     if (!targetPort) return { ok: false, error: `节点 ${toNodeId} 没有输入端口 ${toPort}` };
     if (!arePortsCompatible(sourcePort, targetPort)) return { ok: false, error: "端口类型不兼容" };
     pushHistory();
+    current.connections = current.connections.filter((c) => !(c.toNodeId === toNodeId && c.toPort === toPort));
+    if (targetPort.kind === "value" && toNode.inputs) delete toNode.inputs[toPort];
     const id = `edge-${++_connectionSeq}`;
     current.connections.push({ id, fromNodeId, fromPort, toNodeId, toPort });
     return { ok: true, id };
@@ -143,6 +145,78 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
     pushHistory();
     current.connections = current.connections.filter((c) => c.id !== connectionId);
     return current.connections.length !== before;
+  }
+
+  /**
+   * Layered/barycenter auto-layout ("自动排布"), ported from the legacy
+   * engine's DevDialogueEditorTab._autoLayout(). Purely graph-generic: it
+   * only reads `current.connections`/`current.nodes` and writes `x`/`y`, so
+   * it carries no domain-specific logic and works for any node types.
+   */
+  function autoLayout() {
+    const ids = Object.keys(current.nodes);
+    if (!ids.length) return false;
+    pushHistory();
+    const W = 200, H = 120, GAPX = 100, GAPY = 45, PAD = 40;
+    const orderIndex = new Map(ids.map((id, index) => [id, index]));
+    const outgoing = new Map(ids.map((id) => [id, new Set()]));
+    const incoming = new Map(ids.map((id) => [id, new Set()]));
+    for (const connection of current.connections) {
+      const { fromNodeId, toNodeId } = connection;
+      if (!outgoing.has(fromNodeId) || !incoming.has(toNodeId) || fromNodeId === toNodeId) continue;
+      outgoing.get(fromNodeId).add(toNodeId);
+      incoming.get(toNodeId).add(fromNodeId);
+    }
+
+    // Topological ranking (Kahn's algorithm): rank = longest path from any root.
+    const indegree = new Map(ids.map((id) => [id, incoming.get(id).size]));
+    const ranks = new Map(ids.map((id) => [id, 0]));
+    const queue = ids.filter((id) => indegree.get(id) === 0);
+    for (let cursor = 0; cursor < queue.length; cursor += 1) {
+      const id = queue[cursor];
+      for (const target of outgoing.get(id)) {
+        ranks.set(target, Math.max(ranks.get(target), ranks.get(id) + 1));
+        indegree.set(target, indegree.get(target) - 1);
+        if (indegree.get(target) === 0) queue.push(target);
+      }
+    }
+    // Any nodes left with indegree > 0 (a cycle) still have a rank from the
+    // relaxation above; they just never got pushed onto `queue`, which is
+    // fine since we only need `ranks` from here on.
+    const maxRank = Math.max(0, ...ranks.values());
+    const layers = Array.from({ length: maxRank + 1 }, () => []);
+    for (const id of ids) layers[ranks.get(id)].push(id);
+
+    // 4-pass median/barycenter crossing-reduction sweep.
+    const positionMap = () => {
+      const map = new Map();
+      layers.forEach((layer) => layer.forEach((id, index) => map.set(id, index)));
+      return map;
+    };
+    const median = (values) => (values.length ? values[Math.floor((values.length - 1) / 2)] : Number.POSITIVE_INFINITY);
+    const reorder = (layerIndex, useParents) => {
+      const layer = layers[layerIndex];
+      const positions = positionMap();
+      const neighborRank = useParents ? layerIndex - 1 : layerIndex + 1;
+      const neighborsOf = useParents ? incoming : outgoing;
+      layer.sort((left, right) => {
+        const leftMedian = median([...neighborsOf.get(left)].filter((id) => ranks.get(id) === neighborRank).map((id) => positions.get(id)).sort((a, b) => a - b));
+        const rightMedian = median([...neighborsOf.get(right)].filter((id) => ranks.get(id) === neighborRank).map((id) => positions.get(id)).sort((a, b) => a - b));
+        return leftMedian - rightMedian || orderIndex.get(left) - orderIndex.get(right);
+      });
+    };
+    for (let pass = 0; pass < 4; pass += 1) {
+      for (let layerIndex = 1; layerIndex < layers.length; layerIndex += 1) reorder(layerIndex, true);
+      for (let layerIndex = layers.length - 2; layerIndex >= 0; layerIndex -= 1) reorder(layerIndex, false);
+    }
+
+    layers.forEach((layer, rank) => {
+      layer.forEach((id, row) => {
+        current.nodes[id].x = PAD + rank * (W + GAPX);
+        current.nodes[id].y = PAD + row * (H + GAPY);
+      });
+    });
+    return true;
   }
 
   function undo() {
@@ -204,6 +278,7 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
     isSelected,
     connect,
     disconnect,
+    autoLayout,
     undo,
     redo,
     canUndo: () => history.length > 0,

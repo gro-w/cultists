@@ -11,6 +11,7 @@ const VALUE = "value";
 const flowIn = (name = "flowIn") => ({ name, kind: FLOW });
 const flowOut = (name = "flowOut") => ({ name, kind: FLOW });
 const valueIn = (name, type = "any") => ({ name, kind: VALUE, type });
+const valueOut = (name = "value", type = "any") => ({ name, kind: VALUE, type });
 
 const definitions = {
   flowStart: { label: "流程起始", flowOutputs: [flowOut()] },
@@ -45,6 +46,21 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("minutes", "number")],
   },
+  // Pure value nodes: no flow ports at all. They are never flow-stepped by
+  // the ActivityRunner; instead they are evaluated on demand whenever
+  // another node's value input is wired to one of their value outputs
+  // (plan §6.2 value-port wiring). Kept intentionally domain-agnostic
+  // (arithmetic + generic variable read) per §15 风险 F.
+  arithmetic: {
+    label: "运算",
+    valueInputs: [valueIn("operator", "string"), valueIn("left"), valueIn("right")],
+    valueOutputs: [valueOut("value")],
+  },
+  getVariable: {
+    label: "读取变量",
+    valueInputs: [valueIn("key", "string")],
+    valueOutputs: [valueOut("value")],
+  },
 };
 
 export const ACTIVITY_NODE_TYPES = Object.freeze(Object.keys(definitions));
@@ -65,10 +81,28 @@ export function findFlowPort(type, direction, name) {
   return (list || []).find((port) => port.name === name) || null;
 }
 
-/** Find a value-input port descriptor by name, or null. */
-export function findValuePort(type, name) {
+/** Find a value port descriptor (direction "input"|"output") by name, or null. */
+export function findValuePort(type, direction, name) {
   const def = getActivityNodeDefinition(type);
-  return (def?.valueInputs || []).find((port) => port.name === name) || null;
+  const list = direction === "input" ? def?.valueInputs : def?.valueOutputs;
+  return (list || []).find((port) => port.name === name) || null;
+}
+
+/**
+ * Find any port (flow or value, direction "input"|"output") by name. This is
+ * the one lookup the editor + validator should use when a connection could
+ * legally be either kind, since a plain findFlowPort() lookup would silently
+ * report "no such port" for a value port with the same name.
+ */
+export function getActivityNodePort(type, direction, name) {
+  return findFlowPort(type, direction, name) || findValuePort(type, direction, name);
+}
+
+/** All ports of a node in a given direction (flow first, then value), in stable declaration order. Used by the editor to lay out port rows. */
+export function listActivityNodePorts(type, direction) {
+  const def = getActivityNodeDefinition(type);
+  if (!def) return [];
+  return direction === "input" ? [...(def.flowInputs || []), ...(def.valueInputs || [])] : [...(def.flowOutputs || []), ...(def.valueOutputs || [])];
 }
 
 /**

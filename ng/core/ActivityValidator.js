@@ -1,4 +1,4 @@
-import { getActivityNodeDefinition, findFlowPort, arePortsCompatible } from "./ActivityNodeRegistry.js";
+import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "./ActivityNodeRegistry.js";
 
 /**
  * ActivityValidator - Blueprint schema normalization and structural
@@ -57,8 +57,8 @@ export function validateBlueprint(raw) {
     const from = blueprint.nodes[connection.fromNodeId];
     const to = blueprint.nodes[connection.toNodeId];
     if (!from || !to) { errors.push(`连接 ${index} 引用了不存在的节点`); return; }
-    const sourcePort = findFlowPort(from.type, "output", connection.fromPort);
-    const targetPort = findFlowPort(to.type, "input", connection.toPort);
+    const sourcePort = getActivityNodePort(from.type, "output", connection.fromPort);
+    const targetPort = getActivityNodePort(to.type, "input", connection.toPort);
     if (!sourcePort) errors.push(`连接 ${index} 的输出引脚不存在`);
     if (!targetPort) errors.push(`连接 ${index} 的输入引脚不存在`);
     if (sourcePort && targetPort && !arePortsCompatible(sourcePort, targetPort)) {
@@ -73,7 +73,12 @@ export function validateBlueprint(raw) {
     if (reachable.has(id)) continue;
     reachable.add(id);
     blueprint.connections.forEach((connection) => {
-      if (connection.fromNodeId === id) pending.push(connection.toNodeId);
+      // Only flow edges advance flow-reachability; a value-port wire (e.g.
+      // an `arithmetic` node feeding a `branch`'s condition) never makes the
+      // arithmetic node itself part of the flow graph.
+      if (connection.fromNodeId !== id) return;
+      const port = getActivityNodePort(blueprint.nodes[id]?.type, "output", connection.fromPort);
+      if (port?.kind === "flow") pending.push(connection.toNodeId);
     });
   }
   entries.forEach(([id, node]) => {

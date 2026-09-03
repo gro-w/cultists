@@ -22,6 +22,7 @@ export class DesktopShell {
     this.frames = new Map(); // instanceId -> WindowFrame
     this._buildDom();
     this._bindEvents();
+    this._startClock();
   }
 
   _buildDom() {
@@ -35,6 +36,23 @@ export class DesktopShell {
     this.iconsEl = this.rootEl.querySelector(".desktop-icons");
     this.windowLayerEl = this.rootEl.querySelector(".window-layer");
     this.taskbar = new Taskbar(this.windowManager, this.eventBus, this.rootEl.querySelector(".taskbar"));
+  }
+
+  /** Real wall-clock display only (plan §4.1: never drives game time/phase); shown until a later phase's TimeService takes over. */
+  _startClock() {
+    const update = () => {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      this.taskbar.setClockText(`${hh}:${mm}`);
+    };
+    update();
+    this._clockTimer = setInterval(update, 15000);
+  }
+
+  dispose() {
+    if (this._clockTimer) clearInterval(this._clockTimer);
+    this._clockTimer = null;
   }
 
   _bindEvents() {

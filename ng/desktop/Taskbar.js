@@ -43,7 +43,13 @@ export class Taskbar {
       button.type = "button";
       button.className = "taskbar-task bevel-out";
       button.classList.toggle("active", state.instanceId === focusedId && !state.minimized);
-      button.textContent = state.title;
+      const iconSpan = document.createElement("span");
+      iconSpan.className = "taskbar-task-icon";
+      iconSpan.textContent = state.icon || "🗔";
+      const titleSpan = document.createElement("span");
+      titleSpan.className = "taskbar-task-title";
+      titleSpan.textContent = state.title;
+      button.append(iconSpan, titleSpan);
       button.addEventListener("click", () => {
         if (state.minimized || state.instanceId !== focusedId) {
           this.windowManager.restore(state.instanceId);

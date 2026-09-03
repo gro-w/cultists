@@ -37,7 +37,7 @@ export class WindowFrame {
     el.innerHTML = `
       <div class="ng-titlebar">
         <div class="ng-titlebar-title">
-          <span class="ng-titlebar-icon">🗔</span>
+          <span class="ng-titlebar-icon" tabindex="0" role="button" aria-haspopup="true" aria-label="系统菜单">${state.icon || "🗔"}</span>
           <span class="ng-title"></span>
         </div>
         <div class="ng-window-controls">
@@ -45,6 +45,13 @@ export class WindowFrame {
           <button type="button" class="ng-window-control ng-max" title="最大化" aria-label="最大化">□</button>
           <button type="button" class="ng-window-control ng-close" title="关闭" aria-label="关闭">✕</button>
         </div>
+      </div>
+      <div class="ng-system-menu" hidden>
+        <button type="button" class="ng-system-menu-item" data-window-command="restore">还原</button>
+        <button type="button" class="ng-system-menu-item" data-window-command="move">移动</button>
+        <button type="button" class="ng-system-menu-item" data-window-command="minimize">最小化</button>
+        <button type="button" class="ng-system-menu-item" data-window-command="maximize">最大化</button>
+        <button type="button" class="ng-system-menu-item ng-system-menu-close" data-window-command="close">关闭</button>
       </div>
       <div class="ng-body"></div>
       ${state.resizable ? RESIZE_HANDLES.map((dir) => `<div class="ng-resize-handle ng-resize-${dir}" data-resize="${dir}"></div>`).join("") : ""}
@@ -57,6 +64,8 @@ export class WindowFrame {
     this.el = el;
     this.bodyEl = bodyEl;
     this.titlebarEl = el.querySelector(".ng-titlebar");
+    this.iconEl = el.querySelector(".ng-titlebar-icon");
+    this.systemMenuEl = el.querySelector(".ng-system-menu");
   }
 
   _bindControls() {
@@ -73,11 +82,54 @@ export class WindowFrame {
       this.windowManager.toggleMaximize(this.instanceId);
     });
     this.el.addEventListener("pointerdown", () => this.windowManager.focus(this.instanceId));
+    this._bindSystemMenu();
+  }
+
+  _bindSystemMenu() {
+    this.iconEl.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.windowManager.focus(this.instanceId);
+      this.toggleSystemMenu();
+    });
+    this.iconEl.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
+      this.hideSystemMenu();
+      this.windowManager.close(this.instanceId);
+    });
+    this.systemMenuEl.addEventListener("click", (e) => {
+      const button = e.target.closest("[data-window-command]");
+      if (!button) return;
+      e.stopPropagation();
+      this.hideSystemMenu();
+      const command = button.dataset.windowCommand;
+      if (command === "close") this.windowManager.close(this.instanceId);
+      else if (command === "minimize") this.windowManager.minimize(this.instanceId);
+      else if (command === "maximize") this.windowManager.maximize(this.instanceId);
+      else if (command === "restore") this.windowManager.unmaximize(this.instanceId);
+      else if (command === "move") this.windowManager.focus(this.instanceId);
+    });
+    this._onOutsideClick = (e) => {
+      if (!this.systemMenuEl.hidden && !this.el.contains(e.target)) this.hideSystemMenu();
+    };
+    document.addEventListener("click", this._onOutsideClick);
+  }
+
+  toggleSystemMenu() {
+    if (this.systemMenuEl.hidden) this.showSystemMenu();
+    else this.hideSystemMenu();
+  }
+
+  showSystemMenu() {
+    this.systemMenuEl.hidden = false;
+  }
+
+  hideSystemMenu() {
+    this.systemMenuEl.hidden = true;
   }
 
   _bindDrag() {
     this.titlebarEl.addEventListener("pointerdown", (e) => {
-      if (e.target.closest("button")) return;
+      if (e.target.closest("button") || e.target.closest(".ng-titlebar-icon")) return;
       const state = this.windowManager.get(this.instanceId);
       if (!state || state.maximized) return;
       const startX = e.clientX;
@@ -192,6 +244,7 @@ export class WindowFrame {
     this._resize.cancel();
     this._unsubscribers.forEach((unsubscribe) => unsubscribe());
     this._unsubscribers = [];
+    document.removeEventListener("click", this._onOutsideClick);
     this.el.remove();
   }
 }

@@ -176,6 +176,50 @@ button {
   text-overflow: ellipsis;
 }
 
+.ng-titlebar-icon {
+  cursor: pointer;
+  line-height: 1;
+}
+
+.ng-system-menu {
+  position: absolute;
+  top: 20px;
+  left: 2px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 110px;
+  padding: 2px;
+  background: var(--w95-gray);
+  border-top: 1px solid var(--w95-white);
+  border-left: 1px solid var(--w95-white);
+  border-right: 1px solid var(--w95-gray-darker);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.ng-system-menu[hidden] {
+  display: none;
+}
+
+.ng-system-menu-item {
+  text-align: left;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: transparent;
+  border: none;
+}
+
+.ng-system-menu-item:hover {
+  background: var(--w95-blue);
+  color: var(--w95-white);
+}
+
+.ng-system-menu-close {
+  border-top: 1px solid var(--w95-gray-darker);
+  margin-top: 2px;
+}
+
 .ng-window-controls {
   display: flex;
   gap: 2px;
@@ -301,6 +345,17 @@ button {
   border-right: 1px solid var(--w95-white);
   border-bottom: 1px solid var(--w95-white);
   box-shadow: inset 1px 1px 0 var(--w95-gray-dark);
+}
+
+.taskbar-task-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.taskbar-task-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .taskbar-status {

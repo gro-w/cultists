@@ -1,6 +1,7 @@
 {
   "id": "example",
   "title": "示例窗口",
+  "icon": "🗔",
   "x": 80,
   "y": 60,
   "width": 420,

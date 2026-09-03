@@ -123,4 +123,58 @@ function memoryStorage() {
   assert.equal(saved.y, 0, "y=0 survives persistence");
 }
 
+// --- Drag clamping: titlebar can never be fully dragged off-desktop or fully
+// hidden behind the taskbar (viewport 800x600, taskbar excluded already) ----
+{
+  const bus = new EventBus();
+  const viewport = { width: 800, height: 570 }; // 600 - 30px taskbar, matches defaultViewport's convention
+  const wm = new WindowManager(bus, { storage: memoryStorage(), getViewport: () => viewport });
+  const state = wm.open({ windowId: "clamp-test", x: 100, y: 100, width: 300, height: 200 });
+
+  wm.moveTo(state.instanceId, -10000, -10000);
+  let clamped = wm.get(state.instanceId);
+  assert.ok(clamped.x > -300, "left edge keeps at least 48px of titlebar reachable");
+  assert.equal(clamped.y, 0, "top clamps to 0");
+
+  wm.moveTo(state.instanceId, 10000, 10000);
+  clamped = wm.get(state.instanceId);
+  assert.ok(clamped.x < 800, "right edge keeps at least 48px of titlebar reachable");
+  assert.ok(clamped.y <= viewport.height - 20, "titlebar never fully covered by the taskbar");
+
+  // Opening a window near the desktop edge is clamped up front too.
+  const edgeState = wm.open({ windowId: "clamp-open-test", x: -9999, y: 9999, width: 300, height: 200 });
+  assert.ok(edgeState.x > -300);
+  assert.ok(edgeState.y <= viewport.height - 20);
+
+  // Unmaximizing must re-clamp in case the viewport shrank while maximized.
+  wm.moveTo(state.instanceId, 700, 500);
+  wm.maximize(state.instanceId);
+  viewport.width = 400;
+  viewport.height = 300;
+  wm.unmaximize(state.instanceId);
+  const restored = wm.get(state.instanceId);
+  assert.ok(restored.x < 400, "unmaximize re-clamps x to the current viewport");
+  assert.ok(restored.y <= viewport.height - 20, "unmaximize re-clamps y to the current viewport");
+}
+
+// --- icon flows from the window definition through to WindowManager state --
+{
+  const bus = new EventBus();
+  const wm = new WindowManager(bus, { storage: memoryStorage() });
+  const withIcon = wm.open({ windowId: "icon-test", title: "Icon", icon: "📄", width: 300, height: 200 });
+  assert.equal(withIcon.icon, "📄");
+  const withoutIcon = wm.open({ windowId: "no-icon-test", title: "No Icon", width: 300, height: 200 });
+  assert.equal(withoutIcon.icon, null, "icon defaults to null when the definition doesn't provide one");
+}
+
+// --- window definitions using `id` (the WindowDefinitionStore key) instead of
+// an explicit `windowId` field still resolve correctly ----------------------
+{
+  const bus = new EventBus();
+  const wm = new WindowManager(bus, { storage: memoryStorage() });
+  const state = wm.open({ id: "example", title: "示例窗口", width: 300, height: 200 });
+  assert.equal(state.windowId, "example");
+  assert.equal(wm.getByWindowId("example")?.instanceId, state.instanceId);
+}
+
 console.log("ng window-manager probe: ok");

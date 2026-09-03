@@ -14,6 +14,14 @@
 const MIN_WIDTH = 220;
 const MIN_HEIGHT = 140;
 const GEOMETRY_STORAGE_KEY = "cultists-ng-window-geometry";
+const TITLEBAR_HEIGHT = 20;
+const MIN_VISIBLE_MARGIN = 48;
+const TASKBAR_HEIGHT = 30;
+
+function defaultViewport() {
+  if (typeof window === "undefined") return { width: Infinity, height: Infinity };
+  return { width: window.innerWidth, height: Math.max(0, window.innerHeight - TASKBAR_HEIGHT) };
+}
 
 function memoryStorage() {
   const map = new Map();
@@ -28,11 +36,12 @@ let _instanceIdCounter = 0;
 export class WindowManager {
   /**
    * @param {import('./EventBus.js').default} eventBus
-   * @param {{ storage?: { getItem(key:string):string|null, setItem(key:string,value:string):void } }} [options]
+   * @param {{ storage?: { getItem(key:string):string|null, setItem(key:string,value:string):void }, getViewport?: () => {width:number,height:number} }} [options]
    */
   constructor(eventBus, options = {}) {
     this.eventBus = eventBus;
     this.storage = options.storage || (typeof localStorage !== "undefined" ? localStorage : memoryStorage());
+    this.getViewport = options.getViewport || defaultViewport;
     this.windows = new Map(); // instanceId -> window state
     this.geometry = new Map(); // windowId -> saved geometry
     this.zCounter = 10;
@@ -62,7 +71,8 @@ export class WindowManager {
    * is focused and restored instead of creating a duplicate.
    */
   open(definition) {
-    const { windowId, title, resizable = true, singleInstance = true } = definition;
+    const { windowId: explicitWindowId, id, title, icon, resizable = true, singleInstance = true } = definition;
+    const windowId = explicitWindowId || id;
     if (singleInstance) {
       const existing = this.getByWindowId(windowId);
       if (existing) {
@@ -79,18 +89,21 @@ export class WindowManager {
       width: saved?.width ?? definition.width ?? 480,
       height: saved?.height ?? definition.height ?? 360,
     });
+    const clampedPosition = this._clampPosition(geometry.x, geometry.y, geometry.width);
 
     const instanceId = `win-${++_instanceIdCounter}`;
     const state = {
       instanceId,
       windowId,
       title: title || "Untitled",
+      icon: icon || null,
       resizable,
       minimized: false,
       maximized: false,
       normalBounds: null,
       zIndex: 0,
       ...geometry,
+      ...clampedPosition,
     };
     this.windows.set(instanceId, state);
     this.focus(instanceId);
@@ -141,8 +154,9 @@ export class WindowManager {
   moveTo(instanceId, x, y) {
     const state = this.windows.get(instanceId);
     if (!state) return;
-    state.x = Math.round(x);
-    state.y = Math.round(y);
+    const clamped = this._clampPosition(x, y, state.width);
+    state.x = clamped.x;
+    state.y = clamped.y;
     this.eventBus.emit("window:moved", { instanceId, x: state.x, y: state.y });
   }
 
@@ -188,6 +202,9 @@ export class WindowManager {
     const state = this.windows.get(instanceId);
     if (!state || !state.maximized || !state.normalBounds) return;
     Object.assign(state, state.normalBounds);
+    const clamped = this._clampPosition(state.x, state.y, state.width);
+    state.x = clamped.x;
+    state.y = clamped.y;
     state.maximized = false;
     state.normalBounds = null;
     this.eventBus.emit("window:unmaximized", { instanceId });
@@ -220,6 +237,22 @@ export class WindowManager {
       y,
       width: Math.max(MIN_WIDTH, Math.round(Number(width) || MIN_WIDTH)),
       height: Math.max(MIN_HEIGHT, Math.round(Number(height) || MIN_HEIGHT)),
+    };
+  }
+
+  /**
+   * Keep at least MIN_VISIBLE_MARGIN px of the titlebar reachable on every
+   * edge, and never let the taskbar fully cover it vertically (mirrors the
+   * old engine's Win95Window._clampLeft/_clampTop/_ensureVisible behaviour).
+   */
+  _clampPosition(x, y, width) {
+    const viewport = this.getViewport();
+    const minX = Number.isFinite(viewport.width) ? -(width - MIN_VISIBLE_MARGIN) : -Infinity;
+    const maxX = Number.isFinite(viewport.width) ? viewport.width - MIN_VISIBLE_MARGIN : Infinity;
+    const maxY = Number.isFinite(viewport.height) ? Math.max(0, viewport.height - TITLEBAR_HEIGHT) : Infinity;
+    return {
+      x: Math.round(Math.min(Math.max(x, minX), maxX)),
+      y: Math.round(Math.min(Math.max(y, 0), maxY)),
     };
   }
 

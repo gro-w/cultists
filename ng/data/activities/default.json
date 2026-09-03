@@ -1,19 +1,60 @@
 {
   "id": "default",
+  "displayName": "default",
   "blueprint": {
-    "startNodeId": "start",
     "nodes": {
-      "start": { "id": "start", "type": "flowStart", "inputs": {} },
-      "setInitialized": {
-        "id": "setInitialized",
-        "type": "setVariable",
-        "inputs": { "key": "engine.initialized", "value": true }
+      "flowStart-1": {
+        "id": "flowStart-1",
+        "type": "flowStart",
+        "x": 80,
+        "y": 80,
+        "inputs": {}
       },
-      "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+      "consumeTime-2": {
+        "id": "consumeTime-2",
+        "type": "consumeTime",
+        "x": 308,
+        "y": 90,
+        "inputs": {}
+      },
+      "getVariable-3": {
+        "id": "getVariable-3",
+        "type": "getVariable",
+        "x": 82,
+        "y": 223,
+        "inputs": {}
+      },
+      "activityEnd-4": {
+        "id": "activityEnd-4",
+        "type": "activityEnd",
+        "x": 548,
+        "y": 95,
+        "inputs": {}
+      }
     },
     "connections": [
-      { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "setInitialized", "toPort": "flowIn" },
-      { "fromNodeId": "setInitialized", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
-    ]
+      {
+        "id": "edge-1",
+        "fromNodeId": "flowStart-1",
+        "fromPort": "flowOut",
+        "toNodeId": "consumeTime-2",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "getVariable-3",
+        "fromPort": "value",
+        "toNodeId": "consumeTime-2",
+        "toPort": "minutes"
+      },
+      {
+        "id": "edge-3",
+        "fromNodeId": "consumeTime-2",
+        "fromPort": "flowOut",
+        "toNodeId": "activityEnd-4",
+        "toPort": "flowIn"
+      }
+    ],
+    "startNodeId": "flowStart-1"
   }
 }

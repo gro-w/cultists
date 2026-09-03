@@ -33,6 +33,15 @@ export async function bootstrap(rootEl) {
   const icons = await iconsResponse.json();
 
   const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl);
+
+  // DEV-TOOLS:START
+  if (isDevEntry()) {
+    const { initDeveloperMode, buildDeveloperDesktopIcon } = await import("./dev/DeveloperMode.js");
+    await initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore });
+    icons.push(buildDeveloperDesktopIcon());
+  }
+  // DEV-TOOLS:END
+
   shell.mountIcons(icons);
 
   const variableStore = new VariableStore(eventBus);

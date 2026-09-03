@@ -1,8 +1,9 @@
-import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
+import { getActivityNodeDefinition, findFlowPort, arePortsCompatible } from "./ActivityNodeRegistry.js";
 
 /**
  * ActivityValidator - Blueprint schema normalization and structural
- * validation for the generic Activity node set (plan §13 Phase 2).
+ * validation for the generic Activity node set (plan §13 Phase 2, §6.3
+ * editor save-time rules).
  */
 function clone(value) {
   return value == null ? value : JSON.parse(JSON.stringify(value));
@@ -36,6 +37,10 @@ export function validateBlueprint(raw) {
   const ends = entries.filter(([, node]) => node.type === "activityEnd");
   if (!ends.length) errors.push("流程必须至少有一个活动结束节点");
 
+  const connectionIds = blueprint.connections.map((connection) => connection.id).filter(Boolean);
+  const duplicateConnectionIds = connectionIds.filter((id, index) => connectionIds.indexOf(id) !== index);
+  if (duplicateConnectionIds.length) errors.push(`连接 ID 重复: ${[...new Set(duplicateConnectionIds)].join(", ")}`);
+
   for (const [id, node] of entries) {
     if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
     const definition = getActivityNodeDefinition(node.type);
@@ -52,12 +57,13 @@ export function validateBlueprint(raw) {
     const from = blueprint.nodes[connection.fromNodeId];
     const to = blueprint.nodes[connection.toNodeId];
     if (!from || !to) { errors.push(`连接 ${index} 引用了不存在的节点`); return; }
-    const fromDef = getActivityNodeDefinition(from.type);
-    const toDef = getActivityNodeDefinition(to.type);
-    const sourcePort = (fromDef?.flowOutputs || []).find((port) => port.name === connection.fromPort);
-    const targetPort = (toDef?.flowInputs || []).find((port) => port.name === connection.toPort);
+    const sourcePort = findFlowPort(from.type, "output", connection.fromPort);
+    const targetPort = findFlowPort(to.type, "input", connection.toPort);
     if (!sourcePort) errors.push(`连接 ${index} 的输出引脚不存在`);
     if (!targetPort) errors.push(`连接 ${index} 的输入引脚不存在`);
+    if (sourcePort && targetPort && !arePortsCompatible(sourcePort, targetPort)) {
+      errors.push(`连接 ${index} 的端口类型不兼容`);
+    }
   });
 
   const reachable = new Set();

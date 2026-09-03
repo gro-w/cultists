@@ -370,3 +370,222 @@ button {
   border-bottom: 1px solid var(--w95-white);
   font-size: 12px;
 }
+
+/* DEV-TOOLS:START */
+.ng-list-manager {
+  display: flex;
+  height: 100%;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.ng-list-manager-lists,
+.ng-list-manager-activities {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 50%;
+  min-width: 0;
+  overflow: auto;
+}
+
+.ng-list-manager-toolbar {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-bottom: 1px solid var(--w95-gray-dark);
+}
+
+.ng-list-manager-list-items {
+  overflow: auto;
+  flex: 1 1 auto;
+}
+
+.ng-list-manager-list-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 4px 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ng-list-manager-list-item.selected {
+  background: var(--w95-navy, #000080);
+  color: #fff;
+}
+
+.ng-list-manager-list-item.builtin {
+  font-weight: bold;
+}
+
+.ng-list-manager-activity-items {
+  overflow: auto;
+  flex: 1 1 auto;
+}
+
+.ng-list-manager-activity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--w95-gray-dark);
+  flex-wrap: wrap;
+}
+
+.ng-list-manager-activity.selected {
+  background: var(--w95-gray-dark);
+}
+
+.ng-list-manager-activity-name {
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.ng-activity-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ng-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-bottom: 1px solid var(--w95-gray-dark);
+}
+
+.ng-editor-status {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.ng-editor-status-error {
+  color: #a00;
+}
+
+.ng-editor-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.ng-editor-palette {
+  width: 120px;
+  overflow: auto;
+  border-right: 1px solid var(--w95-gray-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px;
+}
+
+.ng-editor-palette-item {
+  text-align: left;
+  font-size: 12px;
+  padding: 3px 4px;
+}
+
+.ng-editor-canvas-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: auto;
+  background: var(--w95-teal, #008080);
+}
+
+.ng-editor-canvas {
+  position: relative;
+  width: 2000px;
+  height: 2000px;
+}
+
+.ng-editor-connections {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2000px;
+  height: 2000px;
+  pointer-events: none;
+}
+
+.ng-editor-connection-path {
+  fill: none;
+  stroke: #ffe;
+  stroke-width: 2;
+}
+
+.ng-editor-node {
+  position: absolute;
+  background: var(--w95-gray);
+  cursor: move;
+  user-select: none;
+  font-size: 12px;
+}
+
+.ng-editor-node.selected {
+  outline: 2px solid #ffcc00;
+}
+
+.ng-editor-node-header {
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--w95-gray-dark);
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ng-editor-node-ports {
+  padding: 2px 0;
+}
+
+.ng-editor-port-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 16px;
+  padding: 0 4px;
+}
+
+.ng-editor-port-output {
+  justify-content: flex-end;
+}
+
+.ng-editor-port-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #333;
+  border: 1px solid #fff;
+  cursor: crosshair;
+}
+
+.ng-editor-box-select {
+  position: absolute;
+  border: 1px dashed #ffcc00;
+  background: rgba(255, 204, 0, 0.15);
+  pointer-events: none;
+}
+
+.ng-editor-inspector {
+  width: 160px;
+  overflow: auto;
+  border-left: 1px solid var(--w95-gray-dark);
+  padding: 4px;
+  font-size: 12px;
+}
+
+.ng-editor-inspector-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.ng-editor-inspector-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+/* DEV-TOOLS:END */

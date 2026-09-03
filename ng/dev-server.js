@@ -2,18 +2,21 @@
 /**
  * dev-server.js — local development server for ng/ (Phase 1).
  *
- * Serves ng/ as static files and exposes a tiny read/write JSON API scoped
- * to ng/data/, for future developer-mode data editors. Binds to 127.0.0.1
- * only — this is a local dev tool, not a production server, and must never
- * be exposed publicly (plan §3.2).
+ * Serves ng/ as static files and exposes a write-only JSON API scoped to
+ * ng/data/, for future developer-mode data editors. Binds to 127.0.0.1 only
+ * — this is a local dev tool, not a production server, and must never be
+ * exposed publicly (plan §3.2).
+ *
+ * The dev server never serves data back out through /api/ — developer-mode
+ * tools must read game data the same way the game itself does (a normal
+ * static fetch() of ng/data/..., e.g. via DataLoader), not through this API.
+ * This API exists purely so a developer can persist edits to disk.
  *
  * Usage:
  *   node dev-server.js [--port 8000]
  *   Then open: http://127.0.0.1:8000/
  *
  * API surface (all under /api/):
- *   GET  /api/files         → JSON array of file names under ng/data/
- *   GET  /api/file?f=<name> → raw JSON text of ng/data/<name>
  *   POST /api/file?f=<name> → validates JSON body, then atomically
  *                             overwrites ng/data/<name> (must already exist)
  */
@@ -58,17 +61,6 @@ function resolveDataFile(name) {
   return resolved;
 }
 
-function listDataFiles(dir, prefix = "") {
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  let files = [];
-  for (const entry of entries) {
-    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
-    if (entry.isDirectory()) files = files.concat(listDataFiles(path.join(dir, entry.name), rel));
-    else if (entry.name.endsWith(".json")) files.push(rel);
-  }
-  return files;
-}
-
 function send(res, status, body, contentType = "application/json; charset=utf-8") {
   res.writeHead(status, { "Content-Type": contentType, "Access-Control-Allow-Origin": "*" });
   res.end(body);
@@ -86,20 +78,6 @@ function serveStatic(req, res, pathname) {
 }
 
 function handleApi(req, res, pathname, query) {
-  if (pathname === "/api/files" && req.method === "GET") {
-    return send(res, 200, JSON.stringify(listDataFiles(DATA_DIR)));
-  }
-
-  if (pathname === "/api/file" && req.method === "GET") {
-    const filePath = resolveDataFile(query.f);
-    if (!filePath) return send(res, 400, JSON.stringify({ error: "invalid file name" }));
-    fs.readFile(filePath, "utf8", (err, data) => {
-      if (err) return send(res, 404, JSON.stringify({ error: "not found" }));
-      send(res, 200, data);
-    });
-    return;
-  }
-
   if (pathname === "/api/file" && req.method === "POST") {
     const filePath = resolveDataFile(query.f);
     if (!filePath || !fs.existsSync(filePath)) {

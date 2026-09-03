@@ -58,4 +58,30 @@ export function isFlowNode(type) {
   return Boolean(def && (def.flowInputs?.length || def.flowOutputs?.length));
 }
 
+/** Find a flow port descriptor (direction "input"|"output") by name, or null. Used by the Activity editor + validator so port lookup logic lives in one place. */
+export function findFlowPort(type, direction, name) {
+  const def = getActivityNodeDefinition(type);
+  const list = direction === "input" ? def?.flowInputs : def?.flowOutputs;
+  return (list || []).find((port) => port.name === name) || null;
+}
+
+/** Find a value-input port descriptor by name, or null. */
+export function findValuePort(type, name) {
+  const def = getActivityNodeDefinition(type);
+  return (def?.valueInputs || []).find((port) => port.name === name) || null;
+}
+
+/**
+ * Two ports are connectable only if their `kind` matches (flow-to-flow,
+ * value-to-value) and, for value ports, their `type` matches unless either
+ * side declares "any". Flow ports carry no `type`, so kind equality alone
+ * is sufficient for them (§6.3 "端口类型兼容").
+ */
+export function arePortsCompatible(portA, portB) {
+  if (!portA || !portB) return false;
+  if (portA.kind !== portB.kind) return false;
+  if (portA.kind === VALUE && portA.type !== "any" && portB.type !== "any" && portA.type !== portB.type) return false;
+  return true;
+}
+
 export default definitions;

@@ -1,0 +1,6 @@
+{
+  "name": "cultists-ng",
+  "version": "0.1.0-phase1",
+  "windowManifest": ["example.json"],
+  "desktopIcons": "desktop-icons.json"
+}

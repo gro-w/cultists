@@ -1,0 +1,317 @@
+/* ==========================================================================
+   ng/ Phase 1 stylesheet - desktop shell & window kernel.
+   Visuals are intentionally borrowed from ../css/win95.css so the new
+   engine looks like the old one (per plan §1.1 / cyanmint's Phase 1 request).
+   ========================================================================== */
+
+@font-face {
+  font-family: "Sarasa Fixed SC";
+  src: url("../data/assets/sarasa-fixed-sc-regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --w95-bg: #008080;
+  --w95-gray: #c0c0c0;
+  --w95-gray-dark: #808080;
+  --w95-gray-darker: #404040;
+  --w95-gray-light: #dfdfdf;
+  --w95-white: #ffffff;
+  --w95-blue: #000080;
+  --w95-blue-light: #1084d0;
+  --w95-font: "Sarasa Fixed SC", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--w95-font);
+  font-size: 13px;
+  background: var(--w95-bg);
+  user-select: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+#ng-root {
+  width: 100%;
+  height: 100%;
+}
+
+.bevel-out {
+  border-top: 1px solid var(--w95-white);
+  border-left: 1px solid var(--w95-white);
+  border-right: 1px solid var(--w95-gray-darker);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  box-shadow: inset 1px 1px 0 var(--w95-gray-light),
+              inset -1px -1px 0 var(--w95-gray-light);
+}
+
+/* -------------------------------------------------------------------------
+   Desktop
+   ------------------------------------------------------------------------- */
+.desktop {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 30px);
+  background: var(--w95-bg);
+  overflow: hidden;
+}
+
+.desktop-icons {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 4px;
+  height: calc(100% - 16px);
+  align-content: flex-start;
+}
+
+.desktop-icon {
+  width: 76px;
+  height: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--w95-white);
+  text-align: center;
+  background: transparent;
+  border: none;
+}
+
+.desktop-icon:focus,
+.desktop-icon:hover {
+  background: rgba(0, 0, 128, 0.4);
+  outline: 1px dotted var(--w95-white);
+}
+
+.desktop-icon .icon-glyph {
+  font-size: 32px;
+  line-height: 32px;
+}
+
+.desktop-icon .icon-label {
+  font-size: 12px;
+  text-shadow: 1px 1px 1px #000;
+  word-break: break-all;
+}
+
+.window-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.window-layer > * {
+  pointer-events: auto;
+}
+
+/* -------------------------------------------------------------------------
+   Window
+   ------------------------------------------------------------------------- */
+.ng-window {
+  position: absolute;
+  min-width: 220px;
+  min-height: 140px;
+  background: var(--w95-gray);
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ng-window.bevel-out {
+  border-top: 2px solid var(--w95-gray-light);
+  border-left: 2px solid var(--w95-gray-light);
+  border-right: 2px solid var(--w95-gray-darker);
+  border-bottom: 2px solid var(--w95-gray-darker);
+}
+
+.ng-window.minimized {
+  display: none;
+}
+
+.ng-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, var(--w95-gray-dark), var(--w95-gray));
+  color: var(--w95-gray-light);
+  padding: 3px 4px;
+  cursor: move;
+  height: 20px;
+}
+
+.ng-window.focused .ng-titlebar {
+  background: linear-gradient(90deg, var(--w95-blue), var(--w95-blue-light));
+  color: var(--w95-white);
+}
+
+.ng-titlebar-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ng-window-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.ng-window-control {
+  width: 16px;
+  height: 14px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+  background: var(--w95-gray);
+  border: 2px outset var(--w95-white);
+}
+
+.ng-window-control:active {
+  border-style: inset;
+}
+
+.ng-body {
+  flex: 1;
+  overflow: auto;
+  background: var(--w95-white);
+  margin-top: 2px;
+  padding: 6px;
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+}
+
+.ng-panel h1 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.ng-panel p {
+  line-height: 1.7;
+  margin: 6px 0;
+}
+
+.ng-resize-handle {
+  position: absolute;
+  z-index: 4;
+}
+.ng-resize-n, .ng-resize-s { left: 8px; right: 8px; height: 6px; cursor: ns-resize; }
+.ng-resize-n { top: -3px; }
+.ng-resize-s { bottom: -3px; }
+.ng-resize-e, .ng-resize-w { top: 8px; bottom: 8px; width: 6px; cursor: ew-resize; }
+.ng-resize-e { right: -3px; }
+.ng-resize-w { left: -3px; }
+.ng-resize-ne, .ng-resize-nw, .ng-resize-se, .ng-resize-sw { width: 12px; height: 12px; }
+.ng-resize-ne { top: -3px; right: -3px; cursor: nesw-resize; }
+.ng-resize-nw { top: -3px; left: -3px; cursor: nwse-resize; }
+.ng-resize-se { right: -3px; bottom: -3px; cursor: nwse-resize; }
+.ng-resize-sw { left: -3px; bottom: -3px; cursor: nesw-resize; }
+
+.ng-window.resizing,
+.ng-window.resizing * {
+  user-select: none;
+}
+
+.ng-window.maximized .ng-resize-handle {
+  display: none;
+}
+
+/* -------------------------------------------------------------------------
+   Taskbar
+   ------------------------------------------------------------------------- */
+.taskbar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background: var(--w95-gray);
+  border-top: 1px solid var(--w95-gray-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  z-index: 1000;
+}
+
+.start-button {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.start-icon {
+  font-size: 14px;
+}
+
+.taskbar-tasks {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.taskbar-task {
+  min-width: 120px;
+  max-width: 180px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  background: var(--w95-gray);
+}
+
+.taskbar-task.active {
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+  box-shadow: inset 1px 1px 0 var(--w95-gray-dark);
+}
+
+.taskbar-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 8px;
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+  font-size: 12px;
+}

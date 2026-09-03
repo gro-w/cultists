@@ -1,6 +1,6 @@
 // DEV-TOOLS:START
 import { PointerInteraction } from "../desktop/PointerInteraction.js";
-import { ACTIVITY_NODE_TYPES, getActivityNodeDefinition, listActivityNodePorts } from "../core/ActivityNodeRegistry.js";
+import { ACTIVITY_NODE_TYPES, getActivityNodeDefinition, listActivityNodePorts, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
 import { createActivityEditorModel } from "./ActivityEditorModel.js";
 import { downloadTextFile, writeDataFile } from "./devApi.js";
 
@@ -46,6 +46,9 @@ export class ActivityEditorView {
       <div class="ng-editor-toolbar">
         <button type="button" data-action="undo" title="撤销">撤销</button>
         <button type="button" data-action="redo" title="重做">重做</button>
+        <button type="button" data-action="copy" title="复制选中 (Ctrl/Cmd+C)">复制</button>
+        <button type="button" data-action="paste" title="粘贴 (Ctrl/Cmd+V)">粘贴</button>
+        <button type="button" data-action="delete-selected" title="删除选中 (Delete)">删除选中</button>
         <button type="button" data-action="validate" title="校验">校验</button>
         <button type="button" data-action="auto-layout" title="自动排布">自动排布</button>
         <button type="button" data-action="save" title="保存到内存">保存到内存</button>
@@ -118,6 +121,20 @@ export class ActivityEditorView {
       this.model.redo();
       this.render();
     });
+    this.el.querySelector('[data-action="copy"]').addEventListener("click", () => {
+      if (!this.model.getSelection().length) return;
+      this._clipboard = this.model.copySelected();
+      this._setStatus(`已复制 ${this._clipboard.nodes.length} 个节点`);
+    });
+    this.el.querySelector('[data-action="paste"]').addEventListener("click", () => {
+      if (!this._clipboard) return;
+      this.model.pasteNodes(this._clipboard);
+      this.render();
+    });
+    this.el.querySelector('[data-action="delete-selected"]').addEventListener("click", () => {
+      this.model.deleteSelected();
+      this.render();
+    });
     this.el.querySelector('[data-action="validate"]').addEventListener("click", () => {
       const result = this.model.validateForSave();
       this._setStatus(result.ok ? "校验通过" : `校验失败: ${result.errors.join("；")}`, !result.ok);
@@ -179,11 +196,19 @@ export class ActivityEditorView {
   _bindKeyboard() {
     this.el.addEventListener("pointerdown", () => this.el.focus());
     this.el.addEventListener("keydown", (e) => {
-      if ((e.key === "Delete" || e.key === "Backspace") && document.activeElement === this.el) {
-        const selection = this.model.getSelection();
-        if (!selection.length) return;
+      if (document.activeElement !== this.el) return;
+      const isModifier = e.ctrlKey || e.metaKey;
+      if ((e.key === "Delete" || e.key === "Backspace") && this.model.getSelection().length) {
         e.preventDefault();
-        selection.forEach((id) => this.model.deleteNode(id));
+        this.model.deleteSelected();
+        this.render();
+      } else if (isModifier && e.key.toLowerCase() === "c" && this.model.getSelection().length) {
+        e.preventDefault();
+        this._clipboard = this.model.copySelected();
+        this._setStatus(`已复制 ${this._clipboard.nodes.length} 个节点`);
+      } else if (isModifier && e.key.toLowerCase() === "v" && this._clipboard) {
+        e.preventDefault();
+        this.model.pasteNodes(this._clipboard);
         this.render();
       }
     });
@@ -442,8 +467,12 @@ export class ActivityEditorView {
   _renderInspector() {
     const selection = this.model.getSelection();
     this.inspectorEl.innerHTML = "";
-    if (selection.length !== 1) {
-      this.inspectorEl.textContent = selection.length ? `已选中 ${selection.length} 个节点` : "未选中节点";
+    if (selection.length === 0) {
+      this._renderActivityMetadata();
+      return;
+    }
+    if (selection.length > 1) {
+      this.inspectorEl.textContent = `已选中 ${selection.length} 个节点`;
       return;
     }
     const node = this.model.getNode(selection[0]);
@@ -452,25 +481,74 @@ export class ActivityEditorView {
     title.className = "ng-editor-inspector-title";
     title.textContent = `${node.id} (${definition?.label || node.type})`;
     this.inspectorEl.appendChild(title);
+
+    // Flow output "下家" dropdowns (old engine _renderFlowOutputs/_saveFlowTarget pattern):
+    // each flow output can point at any flow-input port, or be left unconnected.
+    for (const flowPort of definition?.flowOutputs || []) {
+      const row = document.createElement("label");
+      row.className = "ng-editor-inspector-row";
+      row.innerHTML = `<span>${flowPort.name} →</span>`;
+      const select = document.createElement("select");
+      const currentTarget = node.next?.[flowPort.name];
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = "（未连接）";
+      select.appendChild(emptyOption);
+      for (const target of this._listFlowInputTargets()) {
+        const option = document.createElement("option");
+        option.value = `${target.nodeId}\u0000${target.port}`;
+        option.textContent = `${target.nodeId}.${target.port}`;
+        if (currentTarget?.nodeId === target.nodeId && currentTarget?.port === target.port) option.selected = true;
+        select.appendChild(option);
+      }
+      if (!currentTarget) emptyOption.selected = true;
+      select.addEventListener("change", () => {
+        if (!select.value) {
+          this.model.disconnectFlowOutput(node.id, flowPort.name);
+        } else {
+          const [toNodeId, toPort] = select.value.split("\u0000");
+          const result = this.model.connect(node.id, flowPort.name, toNodeId, toPort);
+          if (!result.ok) this._setStatus(result.error, true);
+        }
+        this.render();
+      });
+      row.appendChild(select);
+      this.inspectorEl.appendChild(row);
+    }
+
+    // Value input "上家" dropdowns (old engine _setInputSource pattern):
+    // each value input is either a constant (editable literal) or wired to
+    // one compatible upstream value output.
     for (const valuePort of definition?.valueInputs || []) {
       const row = document.createElement("label");
       row.className = "ng-editor-inspector-row";
       row.innerHTML = `<span>${valuePort.name}</span>`;
-      const connection = this.model.listConnections().find((c) => c.toNodeId === node.id && c.toPort === valuePort.name);
-      if (connection) {
-        const wired = document.createElement("span");
-        wired.className = "ng-editor-inspector-wired";
-        wired.textContent = `🔗 ${connection.fromNodeId}.${connection.fromPort}`;
-        row.appendChild(wired);
-        const unlink = document.createElement("button");
-        unlink.type = "button";
-        unlink.textContent = "断开";
-        unlink.addEventListener("click", () => {
-          this.model.disconnect(connection.id);
-          this.render();
-        });
-        row.appendChild(unlink);
-      } else {
+      const currentWire = this.model.listConnections().find((c) => c.toNodeId === node.id && c.toPort === valuePort.name);
+      const select = document.createElement("select");
+      const constantOption = document.createElement("option");
+      constantOption.value = "";
+      constantOption.textContent = "常量";
+      select.appendChild(constantOption);
+      for (const source of this._listValueSources(valuePort)) {
+        const option = document.createElement("option");
+        option.value = `${source.nodeId}\u0000${source.port}`;
+        option.textContent = `${source.nodeId}.${source.port}`;
+        if (currentWire && currentWire.fromNodeId === source.nodeId && currentWire.fromPort === source.port) option.selected = true;
+        select.appendChild(option);
+      }
+      if (!currentWire) constantOption.selected = true;
+      select.addEventListener("change", () => {
+        if (!select.value) {
+          this.model.clearValueInput(node.id, valuePort.name);
+        } else {
+          const [fromNodeId, fromPort] = select.value.split("\u0000");
+          const result = this.model.connect(fromNodeId, fromPort, node.id, valuePort.name);
+          if (!result.ok) this._setStatus(result.error, true);
+        }
+        this.render();
+      });
+      row.appendChild(select);
+      if (!currentWire) {
         const value = node.inputs?.[valuePort.name];
         const input = document.createElement("input");
         input.type = "text";
@@ -495,6 +573,61 @@ export class ActivityEditorView {
       this.render();
     });
     this.inspectorEl.appendChild(deleteButton);
+  }
+
+  /** All nodes' flow-input ports, as connect() targets for the flow-output dropdowns above. */
+  _listFlowInputTargets() {
+    const targets = [];
+    for (const candidate of this.model.listNodes()) {
+      for (const port of listActivityNodePorts(candidate.type, "input")) {
+        if (port.kind === "flow") targets.push({ nodeId: candidate.id, port: port.name });
+      }
+    }
+    return targets;
+  }
+
+  /** Every value-output port across all nodes whose port type is compatible with `targetPort`, as connect() sources for a value-input dropdown. */
+  _listValueSources(targetPort) {
+    const sources = [];
+    for (const candidate of this.model.listNodes()) {
+      for (const port of listActivityNodePorts(candidate.type, "output")) {
+        if (port.kind === "value" && arePortsCompatible(port, targetPort)) sources.push({ nodeId: candidate.id, port: port.name });
+      }
+    }
+    return sources;
+  }
+
+  /** No node selected: show the activity's own metadata instead (plan item 2), rather than a bare "未选中节点" placeholder. */
+  _renderActivityMetadata() {
+    const title = document.createElement("div");
+    title.className = "ng-editor-inspector-title";
+    title.textContent = "活动元数据";
+    this.inspectorEl.appendChild(title);
+
+    const nameRow = document.createElement("label");
+    nameRow.className = "ng-editor-inspector-row";
+    nameRow.innerHTML = "<span>displayName</span>";
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.value = this.model.displayName;
+    nameInput.addEventListener("change", () => this.model.setDisplayName(nameInput.value));
+    nameRow.appendChild(nameInput);
+    this.inspectorEl.appendChild(nameRow);
+
+    const idRow = document.createElement("div");
+    idRow.className = "ng-editor-inspector-row";
+    idRow.innerHTML = `<span>activityId</span><span>${this.model.activityId ?? ""}</span>`;
+    this.inspectorEl.appendChild(idRow);
+
+    const startRow = document.createElement("div");
+    startRow.className = "ng-editor-inspector-row";
+    startRow.innerHTML = `<span>startNodeId</span><span>${this.model.startNodeId ?? "（无）"}</span>`;
+    this.inspectorEl.appendChild(startRow);
+
+    const countRow = document.createElement("div");
+    countRow.className = "ng-editor-inspector-row";
+    countRow.innerHTML = `<span>节点数</span><span>${this.model.nodeCount}</span>`;
+    this.inspectorEl.appendChild(countRow);
   }
 
   dispose() {

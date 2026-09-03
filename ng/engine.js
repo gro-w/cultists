@@ -34,16 +34,6 @@ export async function bootstrap(rootEl) {
 
   const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl);
 
-  // DEV-TOOLS:START
-  if (isDevEntry()) {
-    const { initDeveloperMode, buildDeveloperDesktopIcon } = await import("./dev/DeveloperMode.js");
-    await initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore });
-    icons.push(buildDeveloperDesktopIcon());
-  }
-  // DEV-TOOLS:END
-
-  shell.mountIcons(icons);
-
   const variableStore = new VariableStore(eventBus);
   const activityDefinitionStore = new ActivityDefinitionStore();
   const activityQueueRegistry = new ActivityQueueRegistry();
@@ -56,6 +46,16 @@ export async function bootstrap(rootEl) {
       await activityDefinitionStore.loadManifest(list.activityIds, "data/activities/");
     }
   }
+
+  // DEV-TOOLS:START
+  if (isDevEntry()) {
+    const { initDeveloperMode, buildDeveloperDesktopIcons } = await import("./dev/DeveloperMode.js");
+    await initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore, activityQueueRegistry, eventBus });
+    icons.push(...buildDeveloperDesktopIcons());
+  }
+  // DEV-TOOLS:END
+
+  shell.mountIcons(icons);
 
   if (engineConfig.defaultActivity) {
     const { queueId, activityId } = engineConfig.defaultActivity;

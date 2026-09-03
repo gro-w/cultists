@@ -2,8 +2,10 @@
 import { createActivityListManagerModel } from "./ActivityListManagerModel.js";
 import { ActivityListManagerView } from "./ActivityListManagerView.js";
 import { ActivityEditorView } from "./ActivityEditorView.js";
+import { ActivityDebuggerView } from "./ActivityDebuggerView.js";
 
 const LIST_MANAGER_WINDOW_ID = "dev-activity-list-manager";
+const DEBUGGER_WINDOW_ID = "dev-activity-debugger";
 let editorWindowSeq = 0;
 
 /**
@@ -14,7 +16,7 @@ let editorWindowSeq = 0;
  * decision). Writing back to disk is done exclusively via devApi's
  * writeDataFile(), called from the list manager / editor views.
  */
-export async function initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore }) {
+export async function initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore, activityQueueRegistry, eventBus }) {
   const model = createActivityListManagerModel();
   await loadExistingActivities(model, engineConfig);
 
@@ -52,9 +54,25 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
     body: listManagerView.el,
   });
 
+  // The debugger only needs live runtime pieces (queue registry + event
+  // bus), so it's fine to build it even if the caller doesn't pass them in
+  // (e.g. an older bootstrap ordering); it just shows an empty queue list.
+  const debuggerView = new ActivityDebuggerView({ activityQueueRegistry, eventBus });
+  windowDefinitionStore.register({
+    id: DEBUGGER_WINDOW_ID,
+    title: "活动调试器",
+    icon: "🐞",
+    width: 640,
+    height: 420,
+    resizable: true,
+    singleInstance: true,
+    body: debuggerView.el,
+  });
+
   return {
     model,
     openListManager: () => windowManager.open(windowDefinitionStore.get(LIST_MANAGER_WINDOW_ID)),
+    openDebugger: () => windowManager.open(windowDefinitionStore.get(DEBUGGER_WINDOW_ID)),
   };
 }
 
@@ -74,8 +92,16 @@ async function loadExistingActivities(model, engineConfig) {
   }
 }
 
-export function buildDeveloperDesktopIcon() {
-  return { windowId: LIST_MANAGER_WINDOW_ID, glyph: "🛠", label: "开发者工具" };
+/**
+ * Multiple distinct desktop icons for dev mode (plan item 5: "开发人员模式
+ * 里面有多个图标，activity管理器只是其中一个") - the Activity 列表管理器 is
+ * only one of several dev-tool entry points, alongside the Debugger.
+ */
+export function buildDeveloperDesktopIcons() {
+  return [
+    { windowId: LIST_MANAGER_WINDOW_ID, glyph: "🛠", label: "Activity 管理器" },
+    { windowId: DEBUGGER_WINDOW_ID, glyph: "🐞", label: "活动调试器" },
+  ];
 }
 
 export default initDeveloperMode;

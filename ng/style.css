@@ -706,4 +706,48 @@ button {
   width: fit-content;
 }
 
+.ng-activity-debugger {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 12px;
+}
+
+.ng-debugger-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--w95-gray);
+  border-bottom: 1px solid var(--w95-gray-dark);
+}
+
+.ng-debugger-body {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 4px 6px;
+}
+
+.ng-debugger-queue {
+  margin-bottom: 10px;
+}
+
+.ng-debugger-queue-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.ng-debugger-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ng-debugger-table th,
+.ng-debugger-table td {
+  border: 1px solid var(--w95-gray-dark);
+  padding: 2px 4px;
+  text-align: left;
+  font-size: 11px;
+}
+
 /* DEV-TOOLS:END */

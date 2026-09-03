@@ -1,0 +1,19 @@
+{
+  "id": "default",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": { "id": "start", "type": "flowStart", "inputs": {} },
+      "setInitialized": {
+        "id": "setInitialized",
+        "type": "setVariable",
+        "inputs": { "key": "engine.initialized", "value": true }
+      },
+      "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+    },
+    "connections": [
+      { "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "setInitialized", "toPort": "flowIn" },
+      { "fromNodeId": "setInitialized", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+    ]
+  }
+}

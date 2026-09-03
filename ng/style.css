@@ -446,14 +446,30 @@ button {
   display: flex;
   flex-direction: column;
   height: 100%;
+  outline: none;
 }
 
 .ng-editor-toolbar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
-  padding: 4px;
+  padding: 4px 6px;
+  background: var(--w95-gray);
   border-bottom: 1px solid var(--w95-gray-dark);
+}
+
+.ng-editor-zoom-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.ng-editor-zoom-label {
+  min-width: 42px;
+  text-align: center;
+  font-size: 11px;
 }
 
 .ng-editor-status {
@@ -479,25 +495,39 @@ button {
   flex-direction: column;
   gap: 2px;
   padding: 4px;
+  flex-shrink: 0;
 }
 
 .ng-editor-palette-item {
   text-align: left;
-  font-size: 12px;
+  font-size: 11px;
   padding: 3px 4px;
 }
 
-.ng-editor-canvas-wrap {
+/* Canvas visuals mirror the old engine's blueprint editor
+   (js/desktop/DevDialogueEditorTab.js + css/developer-mode.css
+   .dev-de-canvas-container/.dev-de-node/.dev-de-port-pin) so the new
+   editor looks and behaves the same. */
+.ng-editor-canvas-container {
   position: relative;
   flex: 1 1 auto;
   overflow: auto;
-  background: var(--w95-teal, #008080);
+  background: #f0f0f8;
+  cursor: default;
+}
+
+.ng-editor-canvas-content {
+  position: relative;
+  flex: none;
+  width: 2000px;
+  height: 1200px;
+  transform-origin: top left;
 }
 
 .ng-editor-canvas {
   position: relative;
   width: 2000px;
-  height: 2000px;
+  height: 1200px;
 }
 
 .ng-editor-connections {
@@ -505,75 +535,151 @@ button {
   top: 0;
   left: 0;
   width: 2000px;
-  height: 2000px;
+  height: 1200px;
   pointer-events: none;
+  overflow: visible;
 }
 
 .ng-editor-connection-path {
   fill: none;
-  stroke: #ffe;
+  stroke: #b00000;
   stroke-width: 2;
+  marker-end: url(#ng-editor-arrow);
+}
+
+.ng-editor-connection-temp {
+  stroke: #cc6600;
+  stroke-dasharray: 5, 3;
 }
 
 .ng-editor-node {
   position: absolute;
-  background: var(--w95-gray);
-  cursor: move;
+  width: 185px;
+  min-height: 90px;
+  background: #fff;
+  border: 2px outset #ccc;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
   user-select: none;
   font-size: 12px;
 }
 
 .ng-editor-node.selected {
-  outline: 2px solid #ffcc00;
+  border-color: #000080;
+  box-shadow: 0 0 0 2px #000080;
+}
+
+.ng-editor-node.start {
+  border-color: #cc6600;
 }
 
 .ng-editor-node-header {
-  padding: 3px 4px;
-  border-bottom: 1px solid var(--w95-gray-dark);
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ng-editor-node-ports {
-  padding: 2px 0;
-}
-
-.ng-editor-port-row {
+  padding: 3px 6px;
+  background: #000080;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+}
+
+.ng-editor-node-body {
+  padding: 4px 6px;
+  color: #333;
+  line-height: 1.4;
+  min-height: 20px;
+  word-break: break-all;
+}
+
+.ng-editor-node-footer {
+  padding: 2px 6px 4px;
+  display: flex;
   gap: 4px;
-  height: 16px;
-  padding: 0 4px;
+  flex-wrap: wrap;
 }
 
-.ng-editor-port-output {
-  justify-content: flex-end;
+.ng-editor-node-badge {
+  background: #e8e8ff;
+  border: 1px solid #9999cc;
+  border-radius: 3px;
+  font-size: 10px;
+  padding: 1px 4px;
+  color: #333;
 }
 
-.ng-editor-port-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #333;
-  border: 1px solid #fff;
-  cursor: crosshair;
-}
-
-.ng-editor-box-select {
+.ng-editor-port-layer {
   position: absolute;
-  border: 1px dashed #ffcc00;
-  background: rgba(255, 204, 0, 0.15);
+  inset: 0;
   pointer-events: none;
 }
 
+.ng-editor-port-row {
+  position: absolute;
+  height: 17px;
+  line-height: 17px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.ng-editor-port-row.input {
+  justify-content: flex-start;
+}
+
+.ng-editor-port-row.output {
+  justify-content: flex-end;
+}
+
+.ng-editor-port-label {
+  color: #555;
+  font-size: 9px;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ng-editor-port-pin {
+  width: 11px;
+  height: 11px;
+  margin: 0 -7px;
+  border: 2px solid #b00000;
+  border-radius: 50%;
+  background: #ffd0d0;
+  pointer-events: auto;
+  cursor: crosshair;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+.ng-editor-port-pin[data-port-kind="value"] {
+  background: #c8f0d0;
+  border-color: #08752d;
+}
+
+.ng-editor-port-pin:hover {
+  background: #ffcc66 !important;
+  border-color: #cc6600 !important;
+}
+
+.ng-editor-selection-box {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  border: 1px dashed #000080;
+  background: rgba(0, 0, 128, 0.12);
+}
+
 .ng-editor-inspector {
-  width: 160px;
+  width: 180px;
   overflow: auto;
   border-left: 1px solid var(--w95-gray-dark);
   padding: 4px;
   font-size: 12px;
+  background: var(--w95-gray);
+  flex-shrink: 0;
 }
 
 .ng-editor-inspector-title {
@@ -588,4 +694,5 @@ button {
   gap: 2px;
   margin-bottom: 6px;
 }
+
 /* DEV-TOOLS:END */

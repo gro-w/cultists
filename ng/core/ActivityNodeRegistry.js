@@ -50,6 +50,66 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("windowId", "string")],
   },
+  // Generic Activity-queue action (plan §8.3 "desktop.run-activity"):
+  // enqueues and runs another Activity definition on a given queue, without
+  // the caller needing to know anything about that Activity's own flow.
+  runActivity: {
+    label: "运行 Activity",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("activityId", "string"), valueIn("queueId", "string")],
+  },
+  // Generic event-bus action (plan §8.3 "desktop.emit-event"): lets a
+  // blueprint announce a domain-agnostic event other systems can subscribe
+  // to, without baking any specific event name into the engine.
+  emitEvent: {
+    label: "发出事件",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("eventName", "string"), valueIn("payload")],
+  },
+  // Generic database CRUD actions (plan §9.3). Every result is written into
+  // `variableStore` under the node's own `resultVariable` input - the same
+  // "write into a well-known variable, then read it with getVariable/
+  // {variable}" convention already used for widget event values - rather
+  // than inventing a second value-output wiring path for side-effecting
+  // flow nodes.
+  createRecord: {
+    label: "创建记录",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("databaseId", "string"), valueIn("data"), valueIn("resultVariable", "string")],
+  },
+  getRecord: {
+    label: "读取记录",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("databaseId", "string"), valueIn("key"), valueIn("resultVariable", "string")],
+  },
+  updateRecord: {
+    label: "更新记录",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("databaseId", "string"), valueIn("key"), valueIn("patch"), valueIn("resultVariable", "string")],
+  },
+  deleteRecord: {
+    label: "删除记录",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("databaseId", "string"), valueIn("key"), valueIn("resultVariable", "string")],
+  },
+  findRecords: {
+    label: "查找记录",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("databaseId", "string"), valueIn("query"), valueIn("resultVariable", "string")],
+  },
+  countRecords: {
+    label: "统计记录",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("databaseId", "string"), valueIn("query"), valueIn("resultVariable", "string")],
+  },
   // Pure value nodes: no flow ports at all. They are never flow-stepped by
   // the ActivityRunner; instead they are evaluated on demand whenever
   // another node's value input is wired to one of their value outputs

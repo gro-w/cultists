@@ -17,7 +17,10 @@
  * nodes (`branch`, `blockUntil`) always re-evaluate so they pick up
  * variable changes correctly on resume.
  */
-const ONE_SHOT_NODE_TYPES = new Set(["setVariable", "consumeTime", "openWindow"]);
+const ONE_SHOT_NODE_TYPES = new Set([
+  "setVariable", "consumeTime", "openWindow", "runActivity", "emitEvent",
+  "createRecord", "updateRecord", "deleteRecord",
+]);
 const MAX_STEPS = 1000;
 
 function nextFlow(blueprint, node, port = "flowOut") {
@@ -96,6 +99,9 @@ export function createActivityRunner({
   eventBus,
   timeGateway = () => {},
   windowGateway = () => {},
+  activityGateway = () => {},
+  eventGateway = () => {},
+  dbGateway = null,
   onCheckpoint = () => {},
   onComplete = () => {},
 } = {}) {
@@ -151,6 +157,44 @@ export function createActivityRunner({
       case "openWindow": {
         const windowId = resolveInput(blueprint, node, "windowId", variableStore);
         windowGateway(windowId, instance, node);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "runActivity": {
+        const activityId = resolveInput(blueprint, node, "activityId", variableStore);
+        const queueId = resolveInput(blueprint, node, "queueId", variableStore, "main");
+        activityGateway(activityId, queueId, instance, node);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "emitEvent": {
+        const eventName = resolveInput(blueprint, node, "eventName", variableStore);
+        const payload = resolveInput(blueprint, node, "payload", variableStore);
+        eventGateway(eventName, payload, instance, node);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "createRecord":
+      case "getRecord":
+      case "updateRecord":
+      case "deleteRecord":
+      case "findRecords":
+      case "countRecords": {
+        if (!dbGateway) throw new Error(`Node ${node.type} requires a dbGateway`);
+        const databaseId = resolveInput(blueprint, node, "databaseId", variableStore);
+        const resultVariable = resolveInput(blueprint, node, "resultVariable", variableStore);
+        let result;
+        if (node.type === "createRecord") {
+          result = dbGateway.createRecord(databaseId, resolveInput(blueprint, node, "data", variableStore));
+        } else if (node.type === "getRecord") {
+          result = dbGateway.getRecord(databaseId, resolveInput(blueprint, node, "key", variableStore));
+        } else if (node.type === "updateRecord") {
+          result = dbGateway.updateRecord(databaseId, resolveInput(blueprint, node, "key", variableStore), resolveInput(blueprint, node, "patch", variableStore));
+        } else if (node.type === "deleteRecord") {
+          result = dbGateway.deleteRecord(databaseId, resolveInput(blueprint, node, "key", variableStore));
+        } else if (node.type === "findRecords") {
+          result = dbGateway.findRecords(databaseId, resolveInput(blueprint, node, "query", variableStore, {}));
+        } else {
+          result = dbGateway.countRecords(databaseId, resolveInput(blueprint, node, "query", variableStore, {}));
+        }
+        if (resultVariable) variableStore.set(resultVariable, result);
         return { next: nextFlow(blueprint, node) };
       }
       default:

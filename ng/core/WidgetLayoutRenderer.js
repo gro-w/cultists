@@ -26,8 +26,13 @@ function applyContainerStyle(el, node) {
   if (flow === "grid") {
     el.style.display = "grid";
   } else if (flow === "stack") {
-    el.style.display = "grid";
-    el.style.gridTemplateAreas = '"stack"';
+    // "stack" is the one flow whose children have real, editable x/y
+    // geometry (plan §7.3 "拖动窗口/组件到哪里就保存到哪里" for free
+    // placement, as opposed to vertical/horizontal/grid where "对 flex/
+    // grid 容器明确显示哪些 x/y 属性不生效"): children are positioned
+    // absolutely within this container, exactly like a blueprint node on
+    // its canvas.
+    el.style.position = "relative";
   } else {
     el.style.display = "flex";
     el.style.flexDirection = flow === "horizontal" ? "row" : "column";
@@ -45,6 +50,14 @@ function applyContainerStyle(el, node) {
     if (node.maxSize.width != null) el.style.maxWidth = `${node.maxSize.width}px`;
     if (node.maxSize.height != null) el.style.maxHeight = `${node.maxSize.height}px`;
   }
+}
+
+/** In a "stack" container, position a child absolutely at its own x/y (defaulting to 0,0); a no-op for every other flow. */
+function applyStackPosition(childEl, childNode, parentNode) {
+  if (!parentNode || parentNode.type !== "container" || parentNode.flow !== "stack") return;
+  childEl.style.position = "absolute";
+  childEl.style.left = `${Number.isFinite(childNode.x) ? childNode.x : 0}px`;
+  childEl.style.top = `${Number.isFinite(childNode.y) ? childNode.y : 0}px`;
 }
 
 function applyCommonAttrs(el, node, ctx) {
@@ -171,7 +184,9 @@ export function renderWidgetNode(node, ctx = {}) {
     el = document.createElement("div");
     applyContainerStyle(el, node);
     for (const child of node.children || []) {
-      el.appendChild(renderWidgetNode(child, ctx));
+      const childEl = renderWidgetNode(child, ctx);
+      applyStackPosition(childEl, child, node);
+      el.appendChild(childEl);
     }
   } else {
     el = renderLeaf(node, ctx);

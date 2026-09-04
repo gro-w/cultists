@@ -178,21 +178,51 @@ export class WindowEditorView {
 
   /**
    * Drag-to-reposition directly on the rendered preview canvas (plan §7.3
-   * "组件可选中、移动..."), not just the side structure-tree list. Since
-   * containers are real flex/grid (never editor-only absolute positioning,
-   * per "对 flex/grid 容器明确显示哪些 x/y 属性不生效"), "position" here
-   * means a widget's place in the flow order / which container it belongs
-   * to - exactly what `moveWidget(widgetId, parentId, index)` already
-   * expresses, just driven from pointer drops on the canvas instead of the
-   * structure-tree rows.
+   * "组件可选中、移动..." plus the follow-up "组件可以拖动放置到任何位置，
+   * 就像蓝图节点一样，拖到哪里就是哪里"). Two distinct drop behaviours,
+   * chosen by the *target* container's `flow`:
+   * - `stack`: free x/y placement, exactly like a blueprint node on its
+   *   canvas - the widget lands at wherever the pointer released it.
+   * - `vertical`/`horizontal`/`grid`: unchanged flow-order reordering via
+   *   `moveWidget(widgetId, parentId, index)`, since flex/grid containers
+   *   have no meaningful x/y (per "对 flex/grid 容器明确显示哪些 x/y
+   *   属性不生效，不能伪装成可编辑几何").
    */
   _bindPreviewDrag(rootEl, widgetEls) {
     const rootWidgetId = this.model.definition.root.widgetId;
+    let dragOffset = { dx: 0, dy: 0 };
+
+    const dropFreePosition = (containerNode, event) => {
+      const draggedId = event.dataTransfer.getData("text/widget-id");
+      if (!draggedId) return;
+      const draggedEntry = this.model.findWidget(draggedId);
+      if (!draggedEntry || draggedId === containerNode.widgetId) return;
+      if (draggedEntry.parent !== containerNode) {
+        this.model.moveWidget(draggedId, containerNode.widgetId, null);
+      }
+      const containerEl = widgetEls.get(containerNode.widgetId);
+      const rect = containerEl.getBoundingClientRect();
+      const x = Math.max(0, Math.round(event.clientX - rect.left - dragOffset.dx));
+      const y = Math.max(0, Math.round(event.clientY - rect.top - dragOffset.dy));
+      this.model.updateWidgetProps(draggedId, { x, y });
+      this.render();
+    };
+
     const dropOnto = (widgetId, event) => {
       const draggedId = event.dataTransfer.getData("text/widget-id");
       if (!draggedId || draggedId === widgetId) return;
       const targetEntry = this.model.findWidget(widgetId);
       if (!targetEntry) return;
+      // A stack container - or a widget already living inside one - always
+      // resolves to a free x/y drop against that stack container.
+      if (targetEntry.node.type === "container" && targetEntry.node.flow === "stack") {
+        dropFreePosition(targetEntry.node, event);
+        return;
+      }
+      if (targetEntry.parent && targetEntry.parent.flow === "stack") {
+        dropFreePosition(targetEntry.parent, event);
+        return;
+      }
       if (targetEntry.node.type === "container") {
         this.model.moveWidget(draggedId, widgetId, null);
       } else if (targetEntry.parent) {
@@ -209,6 +239,8 @@ export class WindowEditorView {
       el.addEventListener("dragstart", (e) => {
         e.stopPropagation();
         e.dataTransfer.setData("text/widget-id", widgetId);
+        const rect = el.getBoundingClientRect();
+        dragOffset = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
       });
       el.addEventListener("dragover", (e) => {
         e.preventDefault();
@@ -222,14 +254,20 @@ export class WindowEditorView {
     }
     // Dropping on empty canvas space (the root container itself, not a
     // nested widget) appends to the root - mirrors the structure tree's
-    // root row drop target.
+    // root row drop target - or free-positions it if root itself is a
+    // stack container.
     rootEl.addEventListener("dragover", (e) => e.preventDefault());
     rootEl.addEventListener("drop", (e) => {
       if (e.target !== rootEl) return; // a nested widget's own drop handler already ran (and stopped propagation)
       e.preventDefault();
       const draggedId = e.dataTransfer.getData("text/widget-id");
-      if (draggedId) this.model.moveWidget(draggedId, rootWidgetId, null);
-      this.render();
+      if (!draggedId) return;
+      if (this.model.definition.root.flow === "stack") {
+        dropFreePosition(this.model.definition.root, e);
+      } else {
+        this.model.moveWidget(draggedId, rootWidgetId, null);
+        this.render();
+      }
     });
   }
 
@@ -299,7 +337,47 @@ export class WindowEditorView {
       row.appendChild(input);
       this.inspectorEl.appendChild(row);
     }
+    this._renderGeometryInspector(node);
     this._renderEventsInspector(node);
+  }
+
+  /**
+   * x/y is only real, editable geometry when the widget's parent container
+   * is `flow: "stack"` (a free-placement canvas, like a blueprint node) -
+   * every other flow lays widgets out via flex/grid, where x/y do nothing,
+   * so the fields are shown but disabled with an explanatory note instead
+   * of pretending to be live geometry (plan §7.3 "对 flex/grid 容器明确
+   * 显示哪些 x/y 属性不生效，不能伪装成可编辑几何").
+   */
+  _renderGeometryInspector(node) {
+    const entry = this.model.findWidget(node.widgetId);
+    const stackParent = Boolean(entry?.parent && entry.parent.flow === "stack");
+    const section = document.createElement("div");
+    section.className = "ng-window-editor-geometry";
+    section.innerHTML = "<h4>位置 (x/y)</h4>";
+    if (!stackParent) {
+      const note = document.createElement("div");
+      note.className = "ng-editor-empty";
+      note.textContent = entry?.parent ? `父容器 flow="${entry.parent.flow || "vertical"}"，x/y 不生效（仅 stack 容器内可自由拖动定位）` : "根节点没有父容器，x/y 不生效";
+      section.appendChild(note);
+      this.inspectorEl.appendChild(section);
+      return;
+    }
+    for (const key of ["x", "y"]) {
+      const row = document.createElement("label");
+      row.className = "ng-window-editor-field";
+      row.innerHTML = `<span>${key}</span>`;
+      const input = document.createElement("input");
+      input.type = "number";
+      input.value = Number.isFinite(node[key]) ? node[key] : 0;
+      input.addEventListener("input", () => {
+        this.model.updateWidgetProps(node.widgetId, { [key]: Number(input.value) || 0 });
+        this._renderPreview();
+      });
+      row.appendChild(input);
+      section.appendChild(row);
+    }
+    this.inspectorEl.appendChild(section);
   }
 
   /** Which `events[eventName]` blueprints actually fire for a widget type (mirrors WidgetLayoutRenderer's ctx.onEvent call sites). */

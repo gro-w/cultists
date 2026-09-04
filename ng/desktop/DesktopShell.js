@@ -71,18 +71,32 @@ export class DesktopShell {
   }
 
   /**
-   * Render desktop icon placeholders. Double-click either opens the bound
-   * window definition directly, or - if the icon declares `activityId`
-   * instead - runs that Activity through `runActivity` (plan §7.4: the
-   * off-duty icon does not call `openWindow` itself; it routes through a
-   * blueprint that opens the window and then advances time). Full
-   * icon/blueprint-routing schema and drag/reorder are Phase 5 work; this is
-   * just the minimal hook Phase 4's off-duty example needs.
+   * Renders desktop icons from `DesktopIconManager.list()` (plan §8.1/§8.2).
+   * Double-click always routes through `this.runIconBlueprint(icon)`
+   * (assigned post-construction by engine.js, mirroring `runActivity`) -
+   * the icon itself never carries a windowId/activityId shortcut. Reorder
+   * and free-move both mutate `iconManager` then re-render + persist.
    */
-  mountIcons(icons) {
-    renderDesktopIcons(this.iconsEl, icons, (icon) => {
-      if (icon.activityId) this.runActivity?.(icon.activityId);
-      else this.openWindow(icon.windowId);
+  mountIcons(iconManager) {
+    this.iconManager = iconManager;
+    this._renderIcons();
+  }
+
+  _renderIcons() {
+    renderDesktopIcons(this.iconsEl, this.iconManager.list(), {
+      onActivate: (icon) => this.runIconBlueprint?.(icon),
+      onReorder: (iconId, newOrder) => {
+        if (this.iconManager.reorder(iconId, newOrder)) {
+          this._renderIcons();
+          this.onIconsChanged?.();
+        }
+      },
+      onFreeMove: (iconId, x, y) => {
+        if (this.iconManager.setFreePosition(iconId, x, y)) {
+          this._renderIcons();
+          this.onIconsChanged?.();
+        }
+      },
     });
   }
 

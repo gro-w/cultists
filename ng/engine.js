@@ -8,6 +8,10 @@ import { ActivityQueueRegistry } from "./core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "./core/ActivityExecutionService.js";
 import { GameClock } from "./core/GameClock.js";
 import { validateBlueprint } from "./core/ActivityValidator.js";
+import { DesktopIconManager } from "./core/DesktopIconManager.js";
+import { buildBuiltinIconBlueprint } from "./core/BuiltinIconBlueprints.js";
+import { DataStructureManager } from "./core/DataStructureManager.js";
+import { DataStore } from "./core/DataStore.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -36,6 +40,8 @@ export async function bootstrap(rootEl) {
 
   const gameClock = new GameClock(eventBus);
   const variableStore = new VariableStore(eventBus);
+  const dataStructureManager = new DataStructureManager();
+  const dataStore = new DataStore(dataStructureManager);
 
   const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore);
 
@@ -56,6 +62,9 @@ export async function bootstrap(rootEl) {
       variableStore,
       timeGateway: (minutes) => gameClock.advance(minutes),
       windowGateway: (windowId) => shell.openWindow(windowId),
+      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
+      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
+      dbGateway: dataStore,
     });
   }
   shell.runActivity = runActivity;
@@ -83,6 +92,9 @@ export async function bootstrap(rootEl) {
       variableStore,
       timeGateway: (minutes) => gameClock.advance(minutes),
       windowGateway: (id) => shell.openWindow(id),
+      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
+      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
+      dbGateway: dataStore,
     });
   }
 
@@ -126,6 +138,38 @@ export async function bootstrap(rootEl) {
   }
   shell.runWidgetEvent = runWidgetEvent;
 
+  // Desktop icon double-clicks (plan §8.2) resolve to a Blueprint by
+  // `blueprintId` - either one of the built-ins (BuiltinIconBlueprints.js)
+  // or a custom Activity already loaded into activityDefinitionStore -
+  // and run it through the exact same ActivityExecutionService, on its own
+  // non-blocking queue so icon activations never mix with gameplay/window
+  // Activity history.
+  const desktopIconsQueue = activityQueueRegistry.register("desktop-icons", { nonBlocking: true });
+  function runIconBlueprint(icon) {
+    const builtin = buildBuiltinIconBlueprint(icon.blueprintId, icon.inputs || {});
+    if (builtin) {
+      return runInlineBlueprint(desktopIconsQueue, `icon:${icon.iconId}`, builtin, `icon "${icon.iconId}"`);
+    }
+    const definition = activityDefinitionStore.get(icon.blueprintId);
+    if (!definition) {
+      console.error(`Icon "${icon.iconId}" declares unknown blueprintId "${icon.blueprintId}"`);
+      return null;
+    }
+    const instance = desktopIconsQueue.append({ activityId: icon.blueprintId });
+    return activityExecutionService.run({
+      queue: desktopIconsQueue,
+      definition,
+      instance,
+      variableStore,
+      timeGateway: (minutes) => gameClock.advance(minutes),
+      windowGateway: (id) => shell.openWindow(id),
+      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
+      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
+      dbGateway: dataStore,
+    });
+  }
+  shell.runIconBlueprint = runIconBlueprint;
+
   if (Array.isArray(engineConfig.activityLists)) {
     for (const listFile of engineConfig.activityLists) {
       const listResponse = await fetch(`data/activity-lists/${listFile}`);
@@ -134,15 +178,17 @@ export async function bootstrap(rootEl) {
     }
   }
 
+  const iconManager = new DesktopIconManager(icons);
+
   // DEV-TOOLS:START
   if (isDevEntry()) {
     const { initDeveloperMode, buildDeveloperDesktopIcons } = await import("./dev/DeveloperMode.js");
     await initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore, activityQueueRegistry, eventBus, variableStore });
-    icons.push(...buildDeveloperDesktopIcons());
+    buildDeveloperDesktopIcons().forEach((icon) => iconManager.register(icon));
   }
   // DEV-TOOLS:END
 
-  shell.mountIcons(icons);
+  shell.mountIcons(iconManager);
 
   if (engineConfig.defaultActivity) {
     const { activityId, queueId } = engineConfig.defaultActivity;
@@ -160,6 +206,9 @@ export async function bootstrap(rootEl) {
     activityQueueRegistry,
     activityExecutionService,
     gameClock,
+    dataStructureManager,
+    dataStore,
+    iconManager,
   };
 }
 

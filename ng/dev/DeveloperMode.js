@@ -9,6 +9,7 @@ import { WindowEditorView } from "./WindowEditorView.js";
 const LIST_MANAGER_WINDOW_ID = "dev-activity-list-manager";
 const DEBUGGER_WINDOW_ID = "dev-activity-debugger";
 const WINDOW_MANAGER_WINDOW_ID = "dev-window-definition-manager";
+const LAUNCHER_WINDOW_ID = "dev-mode-launcher";
 let editorWindowSeq = 0;
 let windowEditorWindowSeq = 0;
 let widgetEventEditorSeq = 0;
@@ -138,6 +139,37 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
     body: windowManagerView.el,
   });
 
+  // Single desktop-icon entry point (plan follow-up: "把桌面上各个开发人员
+  // 模式图标放在同一个开发人员模式app里面") - every dev sub-tool above is
+  // still its own singleInstance window, just launched from one shared
+  // launcher window instead of one desktop icon each.
+  const launcherEl = document.createElement("div");
+  launcherEl.className = "ng-dev-launcher";
+  launcherEl.innerHTML = `
+    <button type="button" data-tool="list-manager">🛠 Activity 管理器</button>
+    <button type="button" data-tool="debugger">🐞 活动调试器</button>
+    <button type="button" data-tool="window-manager">🪟 窗口编辑器</button>
+  `;
+  launcherEl.querySelector('[data-tool="list-manager"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(LIST_MANAGER_WINDOW_ID));
+  });
+  launcherEl.querySelector('[data-tool="debugger"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(DEBUGGER_WINDOW_ID));
+  });
+  launcherEl.querySelector('[data-tool="window-manager"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(WINDOW_MANAGER_WINDOW_ID));
+  });
+  windowDefinitionStore.register({
+    id: LAUNCHER_WINDOW_ID,
+    title: "开发人员模式",
+    icon: "🛠",
+    width: 280,
+    height: 200,
+    resizable: false,
+    singleInstance: true,
+    body: launcherEl,
+  });
+
   return {
     model,
     openListManager: () => windowManager.open(windowDefinitionStore.get(LIST_MANAGER_WINDOW_ID)),
@@ -163,16 +195,18 @@ async function loadExistingActivities(model, engineConfig) {
 }
 
 /**
- * Multiple distinct desktop icons for dev mode (plan item 5: "开发人员模式
- * 里面有多个图标，activity管理器只是其中一个") - the Activity 列表管理器 is
- * only one of several dev-tool entry points, alongside the Debugger.
+ * A single desktop icon opens the shared dev-mode launcher window, which
+ * in turn opens each individual dev sub-tool (plan follow-up: consolidate
+ * multiple dev-mode desktop icons into one "开发人员模式" app).
  */
 export function buildDeveloperDesktopIcons() {
-  return [
-    { windowId: LIST_MANAGER_WINDOW_ID, glyph: "🛠", label: "Activity 管理器" },
-    { windowId: DEBUGGER_WINDOW_ID, glyph: "🐞", label: "活动调试器" },
-    { windowId: WINDOW_MANAGER_WINDOW_ID, glyph: "🪟", label: "窗口编辑器" },
-  ];
+  return [{
+    iconId: "dev-mode-launcher-icon",
+    glyph: "🛠",
+    label: "开发人员模式",
+    blueprintId: "desktop.open-window",
+    inputs: { windowId: LAUNCHER_WINDOW_ID },
+  }];
 }
 
 export default initDeveloperMode;

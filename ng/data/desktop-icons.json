@@ -1,4 +1,20 @@
 [
-  { "id": "example", "label": "示例窗口", "glyph": "🗔", "windowId": "example" },
-  { "id": "off-duty", "label": "下班", "glyph": "🌙", "activityId": "off-duty-open" }
+  {
+    "iconId": "example",
+    "label": "示例窗口",
+    "glyph": "🗔",
+    "order": 0,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "example" }
+  },
+  {
+    "iconId": "off-duty",
+    "label": "下班",
+    "glyph": "🌙",
+    "order": 1,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.run-activity",
+    "inputs": { "activityId": "off-duty-open" }
+  }
 ]

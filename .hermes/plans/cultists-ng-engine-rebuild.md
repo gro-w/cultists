@@ -664,7 +664,7 @@ logo 支持：
 - 指定双击行为
 - 双击只绑定一个稳定的 blueprint ID 和输入参数；不在图标数据中内联另一套执行器
 - blueprint 可以通过通用节点打开窗口、打开全屏自定义窗口、推进时间、入队 Activity 或发出通用事件
-- 下班图标绑定的 blueprint 至少包含 `openWindow(windowId="off-duty")` 和显式 `consumeTime` 节点
+- 下班图标绑定的 blueprint 通过 `desktop.run-activity` 运行专用的 `off-duty-open` Activity（只执行 `openWindow(windowId="off-duty")`）；`consumeTime` 属于下班窗口自身的 `events.onCreate`（见 §7.4），图标 blueprint 本身不包含 `consumeTime` 节点
 - 图标行为参数通过 schema 校验
 - 只通过稳定 `iconId`、`windowId`、`blueprintId` 引用
 - 桌面与编辑器使用同一位置/布局渲染器

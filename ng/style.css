@@ -115,6 +115,10 @@ button {
   word-break: break-all;
 }
 
+.desktop-icon-free {
+  position: absolute;
+}
+
 .window-layer {
   position: absolute;
   inset: 0;
@@ -863,6 +867,17 @@ button {
   border-top: 1px solid var(--w95-gray-dark);
 }
 
+.ng-window-editor-geometry {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--w95-gray-dark);
+}
+
+.ng-window-editor-geometry h4 {
+  margin: 0 0 4px 0;
+  font-size: 11px;
+}
+
 .ng-window-editor-events h4 {
   margin: 0 0 4px 0;
   font-size: 11px;
@@ -884,6 +899,18 @@ button {
 
 .ng-window-editor-preview .ng-widget-container {
   border-color: var(--w95-gray-dark);
+}
+
+.ng-dev-launcher {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+}
+
+.ng-dev-launcher button {
+  text-align: left;
+  padding: 6px 10px;
 }
 
 /* DEV-TOOLS:END */

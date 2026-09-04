@@ -71,4 +71,17 @@ console.log("desktop-icon-probe: order/position save->restore round-trip passed"
 }
 console.log("desktop-icon-probe: double-click routes only the icon's own blueprint passed");
 
+// --- 5. setBlueprint/unregister (plan §8.2 desktop icon editor) ---------
+{
+  manager.setBlueprint("a", "desktop.run-activity", { activityId: "custom-activity" });
+  const iconA = manager.get("a");
+  assert.equal(iconA.blueprintId, "desktop.run-activity");
+  assert.deepEqual(iconA.inputs, { activityId: "custom-activity" });
+
+  manager.unregister("a");
+  assert.ok(!manager.get("a"), "unregister must remove the icon");
+  assert.deepEqual(manager.list().map((i) => i.iconId), ["c", "b"]);
+}
+console.log("desktop-icon-probe: setBlueprint/unregister scenarios passed");
+
 console.log("desktop-icon-probe: all scenarios passed");

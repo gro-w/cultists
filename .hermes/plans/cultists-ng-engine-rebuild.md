@@ -669,6 +669,12 @@ logo 支持：
 - 只通过稳定 `iconId`、`windowId`、`blueprintId` 引用
 - 桌面与编辑器使用同一位置/布局渲染器
 
+> 实现状态：`ng/dev/DesktopIconEditorView.js` 已实现（新建/删除/上移/下移/
+> 改 label·glyph·position·blueprintId·inputs），直接操作与运行中桌面共享的
+> `DesktopIconManager` 实例，每次编辑立即调用 `refreshIcons()` 预览，另有
+> 「写入磁盘」按钮持久化到 `desktop-icons.json`。从开发人员模式启动器的
+> 「桌面图标编辑器」入口打开。
+
 ### 8.3 内置图标 blueprint
 
 引擎提供一组不可删除的通用桌面行为 blueprint，图标只引用其 ID，不直接调用窗口或时间 API。第一批包括：
@@ -760,6 +766,13 @@ API 需要输入 schema 校验，返回值进入 Activity 局部变量或公共�
 运行时生成 `GeneratedDataEditor`，但生成器只生成配置，不生成重复 JS 文件。编辑器与运行时共享字段 schema、校验器和数据绑定器。
 
 多窗口打开时，每个结构编辑器必须有实例级上下文，不能使用重复全局 DOM ID。
+
+> 实现状态：`ng/dev/DataStructureEditorView.js`（结构 schema 增删字段）与
+> `ng/dev/DatabaseDebuggerView.js`（运行时记录浏览/创建/编辑/删除，始终经
+> `DataStore.createRecord/updateRecord/deleteRecord/findRecords/listDatabases`
+> API）已实现，从开发人员模式启动器的「数据结构管理器」「数据库调试器」入口
+> 打开。`editor` 分组/控件类型/可见性条件驱动的 `GeneratedDataEditor` 仍未
+> 实现，当前数据库调试器对每条记录使用通用 JSON 文本框。
 
 ---
 

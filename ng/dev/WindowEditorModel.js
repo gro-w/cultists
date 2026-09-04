@@ -20,7 +20,7 @@ function cloneValue(value) {
 function defaultWidget(type) {
   const widgetId = `${type}-${++_widgetSeq}`;
   const base = { widgetId, type };
-  if (type === "container") return { ...base, flow: "vertical", gap: 4, padding: 4, children: [] };
+  if (type === "container") return { ...base, flow: "stack", gap: 4, padding: 4, children: [] };
   if (type === "label") return { ...base, text: "文本" };
   if (type === "button") return { ...base, text: "按钮" };
   if (type === "spacer") return base;
@@ -28,7 +28,7 @@ function defaultWidget(type) {
 }
 
 function defaultRoot() {
-  return { widgetId: "root", type: "container", flow: "vertical", gap: 8, padding: 10, children: [] };
+  return { widgetId: "root", type: "container", flow: "stack", gap: 8, padding: 10, children: [] };
 }
 
 export function createWindowEditorModel({ definition } = {}) {

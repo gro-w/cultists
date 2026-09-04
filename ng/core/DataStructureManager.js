@@ -72,6 +72,20 @@ export class DataStructureManager {
     return [...this.structures.values()];
   }
 
+  unregister(id) {
+    return this.structures.delete(id);
+  }
+
+  /** Loads an array of structure definitions (e.g. fetched from data/structures.json) - plan §9.2's "结构 schema" is authored as game data, not engine code. */
+  loadDefinitions(definitions = []) {
+    definitions.forEach((definition) => this.register(definition));
+  }
+
+  /** Plain-array snapshot for save/persist (mirrors `data/structures.json`'s top-level array shape). */
+  toJSON() {
+    return this.list();
+  }
+
   /** Returns a new record with every field present, unset fields filled from `field.default` (or a type-appropriate zero value). */
   applyDefaults(structureId, record = {}) {
     const structure = this.get(structureId);

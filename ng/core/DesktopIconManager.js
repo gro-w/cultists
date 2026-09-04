@@ -83,6 +83,19 @@ export class DesktopIconManager {
     return true;
   }
 
+  /** Updates the icon's declared blueprint reference + inputs (plan §8.2 "指定双击行为"). */
+  setBlueprint(iconId, blueprintId, inputs = {}) {
+    const icon = this.get(iconId);
+    if (!icon) return false;
+    icon.blueprintId = blueprintId;
+    icon.inputs = inputs;
+    return true;
+  }
+
+  unregister(iconId) {
+    return this.icons.delete(iconId);
+  }
+
   toJSON() {
     return this.list();
   }

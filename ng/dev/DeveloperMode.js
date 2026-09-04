@@ -5,10 +5,16 @@ import { ActivityEditorView } from "./ActivityEditorView.js";
 import { ActivityDebuggerView } from "./ActivityDebuggerView.js";
 import { WindowDefinitionManagerView } from "./WindowDefinitionManagerView.js";
 import { WindowEditorView } from "./WindowEditorView.js";
+import { DesktopIconEditorView } from "./DesktopIconEditorView.js";
+import { DataStructureEditorView } from "./DataStructureEditorView.js";
+import { DatabaseDebuggerView } from "./DatabaseDebuggerView.js";
 
 const LIST_MANAGER_WINDOW_ID = "dev-activity-list-manager";
 const DEBUGGER_WINDOW_ID = "dev-activity-debugger";
 const WINDOW_MANAGER_WINDOW_ID = "dev-window-definition-manager";
+const ICON_EDITOR_WINDOW_ID = "dev-desktop-icon-editor";
+const STRUCTURE_MANAGER_WINDOW_ID = "dev-structure-manager";
+const DATABASE_DEBUGGER_WINDOW_ID = "dev-database-debugger";
 const LAUNCHER_WINDOW_ID = "dev-mode-launcher";
 let editorWindowSeq = 0;
 let windowEditorWindowSeq = 0;
@@ -22,7 +28,18 @@ let widgetEventEditorSeq = 0;
  * decision). Writing back to disk is done exclusively via devApi's
  * writeDataFile(), called from the list manager / editor views.
  */
-export async function initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore, activityQueueRegistry, eventBus, variableStore }) {
+export async function initDeveloperMode({
+  engineConfig,
+  windowManager,
+  windowDefinitionStore,
+  activityQueueRegistry,
+  eventBus,
+  variableStore,
+  iconManager,
+  dataStructureManager,
+  dataStore,
+  refreshIcons,
+}) {
   const model = createActivityListManagerModel();
   await loadExistingActivities(model, engineConfig);
 
@@ -139,16 +156,75 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
     body: windowManagerView.el,
   });
 
+  // Desktop icon editor (plan §8.2) - edits the live iconManager shared
+  // with DesktopShell directly, so drag/order/logo/blueprint edits preview
+  // immediately via `refreshIcons`, and persists to desktop-icons.json.
+  const iconEditorView = new DesktopIconEditorView({ iconManager, refreshIcons });
+  windowDefinitionStore.register({
+    id: ICON_EDITOR_WINDOW_ID,
+    title: "桌面图标编辑器",
+    icon: "🖱",
+    width: 640,
+    height: 420,
+    resizable: true,
+    singleInstance: true,
+    body: iconEditorView.el,
+  });
+
+  // Data structure manager (plan §9.2) - visual editor for structures.json,
+  // shared with the live DataStructureManager so a database debugger
+  // opened afterwards immediately sees any schema change.
+  const structureEditorView = new DataStructureEditorView({ dataStructureManager });
+  windowDefinitionStore.register({
+    id: STRUCTURE_MANAGER_WINDOW_ID,
+    title: "数据结构管理器",
+    icon: "🧱",
+    width: 640,
+    height: 420,
+    resizable: true,
+    singleInstance: true,
+    body: structureEditorView.el,
+  });
+
+  // Database debugger (plan §9.3/§9.4) - runtime record browser/editor for
+  // the live DataStore, always going through its createRecord/updateRecord/
+  // deleteRecord API (never a direct Map mutation).
+  const databaseDebuggerView = new DatabaseDebuggerView({ dataStore });
+  windowDefinitionStore.register({
+    id: DATABASE_DEBUGGER_WINDOW_ID,
+    title: "数据库调试器",
+    icon: "🗄",
+    width: 640,
+    height: 420,
+    resizable: true,
+    singleInstance: true,
+    body: databaseDebuggerView.el,
+  });
+
   // Single desktop-icon entry point (plan follow-up: "把桌面上各个开发人员
   // 模式图标放在同一个开发人员模式app里面") - every dev sub-tool above is
   // still its own singleInstance window, just launched from one shared
-  // launcher window instead of one desktop icon each.
+  // launcher window instead of one desktop icon each. The launcher is
+  // split top/bottom (plan follow-up: "开发人员模式窗口分成上下两部分") -
+  // the top half only opens editors for game data (data/**.json: Activity
+  // 列表、窗口定义、桌面图标、数据结构), the bottom half only opens
+  // debuggers for live runtime state (Activity 队列、数据库记录), which
+  // also support modification but never write back to a data file.
   const launcherEl = document.createElement("div");
   launcherEl.className = "ng-dev-launcher";
   launcherEl.innerHTML = `
-    <button type="button" data-tool="list-manager">🛠 Activity 管理器</button>
-    <button type="button" data-tool="debugger">🐞 活动调试器</button>
-    <button type="button" data-tool="window-manager">🪟 窗口编辑器</button>
+    <div class="ng-dev-launcher-section">
+      <h4>游戏数据编辑器</h4>
+      <button type="button" data-tool="list-manager">🛠 Activity 管理器</button>
+      <button type="button" data-tool="window-manager">🪟 窗口编辑器</button>
+      <button type="button" data-tool="icon-editor">🖱 桌面图标编辑器</button>
+      <button type="button" data-tool="structure-manager">🧱 数据结构管理器</button>
+    </div>
+    <div class="ng-dev-launcher-section">
+      <h4>运行时数据调试器</h4>
+      <button type="button" data-tool="debugger">🐞 活动调试器</button>
+      <button type="button" data-tool="database-debugger">🗄 数据库调试器</button>
+    </div>
   `;
   launcherEl.querySelector('[data-tool="list-manager"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(LIST_MANAGER_WINDOW_ID));
@@ -159,13 +235,22 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
   launcherEl.querySelector('[data-tool="window-manager"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(WINDOW_MANAGER_WINDOW_ID));
   });
+  launcherEl.querySelector('[data-tool="icon-editor"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(ICON_EDITOR_WINDOW_ID));
+  });
+  launcherEl.querySelector('[data-tool="structure-manager"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(STRUCTURE_MANAGER_WINDOW_ID));
+  });
+  launcherEl.querySelector('[data-tool="database-debugger"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(DATABASE_DEBUGGER_WINDOW_ID));
+  });
   windowDefinitionStore.register({
     id: LAUNCHER_WINDOW_ID,
     title: "开发人员模式",
     icon: "🛠",
-    width: 280,
-    height: 200,
-    resizable: false,
+    width: 300,
+    height: 420,
+    resizable: true,
     singleInstance: true,
     body: launcherEl,
   });
@@ -175,6 +260,9 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
     openListManager: () => windowManager.open(windowDefinitionStore.get(LIST_MANAGER_WINDOW_ID)),
     openDebugger: () => windowManager.open(windowDefinitionStore.get(DEBUGGER_WINDOW_ID)),
     openWindowManager: () => windowManager.open(windowDefinitionStore.get(WINDOW_MANAGER_WINDOW_ID)),
+    openIconEditor: () => windowManager.open(windowDefinitionStore.get(ICON_EDITOR_WINDOW_ID)),
+    openStructureManager: () => windowManager.open(windowDefinitionStore.get(STRUCTURE_MANAGER_WINDOW_ID)),
+    openDatabaseDebugger: () => windowManager.open(windowDefinitionStore.get(DATABASE_DEBUGGER_WINDOW_ID)),
   };
 }
 

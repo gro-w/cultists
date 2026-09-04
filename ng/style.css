@@ -906,11 +906,43 @@ button {
   flex-direction: column;
   gap: 8px;
   padding: 10px;
+  height: 100%;
+  overflow: auto;
 }
 
 .ng-dev-launcher button {
   text-align: left;
   padding: 6px 10px;
+}
+
+.ng-dev-launcher-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid var(--w95-gray-dark);
+  padding-top: 6px;
+}
+
+.ng-dev-launcher-section:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.ng-dev-launcher-section h4 {
+  margin: 0 0 2px;
+  font-size: 12px;
+}
+
+.ng-database-debugger-records {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  overflow: auto;
+}
+
+.ng-data-structure-fields {
+  overflow: auto;
 }
 
 /* DEV-TOOLS:END */

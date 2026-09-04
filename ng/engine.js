@@ -43,6 +43,15 @@ export async function bootstrap(rootEl) {
   const dataStructureManager = new DataStructureManager();
   const dataStore = new DataStore(dataStructureManager);
 
+  if (engineConfig.structures) {
+    const structuresResponse = await fetch(`data/${engineConfig.structures}`);
+    if (structuresResponse.ok) dataStructureManager.loadDefinitions(await structuresResponse.json());
+  }
+  if (engineConfig.databases) {
+    const databasesResponse = await fetch(`data/${engineConfig.databases}`);
+    if (databasesResponse.ok) dataStore.loadDefinitions(await databasesResponse.json());
+  }
+
   const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore);
 
   const activityDefinitionStore = new ActivityDefinitionStore();
@@ -183,7 +192,18 @@ export async function bootstrap(rootEl) {
   // DEV-TOOLS:START
   if (isDevEntry()) {
     const { initDeveloperMode, buildDeveloperDesktopIcons } = await import("./dev/DeveloperMode.js");
-    await initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore, activityQueueRegistry, eventBus, variableStore });
+    await initDeveloperMode({
+      engineConfig,
+      windowManager,
+      windowDefinitionStore,
+      activityQueueRegistry,
+      eventBus,
+      variableStore,
+      iconManager,
+      dataStructureManager,
+      dataStore,
+      refreshIcons: () => shell.mountIcons(iconManager),
+    });
     buildDeveloperDesktopIcons().forEach((icon) => iconManager.register(icon));
   }
   // DEV-TOOLS:END

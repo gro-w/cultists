@@ -31,6 +31,17 @@ export class DataStore {
     return this.databases.get(databaseId);
   }
 
+  /** Loads an array of database definitions (e.g. fetched from data/databases.json) - plan §9.3's database config is authored as game data. */
+  loadDefinitions(definitions = []) {
+    definitions.forEach((definition) => this.registerDatabase(definition));
+  }
+
+  /** Lists every registered database's own config (not its records) - used by dev-tool database browsers. */
+  listDatabases() {
+    return [...this.databases.values()].map(({ records, ...config }) => ({ ...config, recordCount: records.size }));
+  }
+
+
   _db(databaseId) {
     const db = this.databases.get(databaseId);
     if (!db) throw new Error(`Unknown database: ${databaseId}`);

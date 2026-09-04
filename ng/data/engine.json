@@ -4,5 +4,7 @@
   "windowManifest": ["example.json", "off-duty.json"],
   "desktopIcons": "desktop-icons.json",
   "activityLists": ["default.json"],
+  "structures": "structures.json",
+  "databases": "databases.json",
   "defaultActivity": { "queueId": "main", "activityId": "default" }
 }

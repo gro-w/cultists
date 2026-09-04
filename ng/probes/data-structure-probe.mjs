@@ -62,6 +62,18 @@ structures.register({
   assert.equal(ok, true, "bare array accepts any element type");
 }
 
+{
+  // unregister/loadDefinitions/toJSON round-trip (plan §9.2 structure manager)
+  structures.register({ id: "scratch", fields: [{ id: "id", type: "string", required: true }] });
+  assert.ok(structures.toJSON().some((d) => d.id === "scratch"));
+  structures.unregister("scratch");
+  assert.ok(!structures.toJSON().some((d) => d.id === "scratch"), "unregister must remove the structure");
+
+  const fresh = new DataStructureManager();
+  fresh.loadDefinitions(structures.toJSON());
+  assert.deepEqual(fresh.toJSON(), structures.toJSON(), "loadDefinitions must bulk-register an equivalent snapshot");
+}
+
 console.log("data-structure-probe: DataStructureManager scenarios passed");
 
 // --- 2. DataStore: CRUD, clones, primary-key generation, allowDelete -----
@@ -87,6 +99,19 @@ assert.equal(found.length, 1);
 assert.equal(store.countRecords("items", {}), 2);
 
 console.log("data-structure-probe: DataStore CRUD scenarios passed");
+
+{
+  // listDatabases/loadDefinitions (plan §9.4 database debugger)
+  const listed = store.listDatabases();
+  const itemsMeta = listed.find((d) => d.databaseId === "items");
+  assert.ok(itemsMeta, "listDatabases must include the registered database");
+  assert.equal(itemsMeta.recordCount, 2);
+  assert.equal(itemsMeta.records, undefined, "listDatabases must never expose the live records Map");
+
+  const freshStore = new DataStore(structures);
+  freshStore.loadDefinitions(listed.map(({ recordCount, ...config }) => config));
+  assert.ok(freshStore.listDatabases().some((d) => d.databaseId === "items"), "loadDefinitions must bulk-register databases");
+}
 
 // --- 3. DB Activity nodes end-to-end through the real ActivityRunner ----
 const eventBus = new EventBus();

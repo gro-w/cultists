@@ -121,6 +121,21 @@ export function createActivityListManagerModel() {
     return existed;
   }
 
+  /** Renames an activity's stable id in place (plan follow-up: "蓝图id可以编辑") - keeps its blueprint/displayName/listId/meta, and rewrites every list's `activityIds` membership entry so the rename is invisible to list ordering. */
+  function renameActivity(activityId, newActivityId) {
+    if (!activities.has(activityId)) throw new Error(`Unknown activity: ${activityId}`);
+    if (activityId === newActivityId) return activities.get(activityId);
+    if (activities.has(newActivityId)) throw new Error(`Activity "${newActivityId}" already exists`);
+    const activity = activities.get(activityId);
+    activities.delete(activityId);
+    activity.id = newActivityId;
+    activities.set(newActivityId, activity);
+    for (const list of lists.values()) {
+      list.activityIds = list.activityIds.map((id) => (id === activityId ? newActivityId : id));
+    }
+    return activity;
+  }
+
   function setActivityMeta(activityId, meta = {}) {
     const activity = activities.get(activityId);
     if (!activity) return false;
@@ -169,6 +184,7 @@ export function createActivityListManagerModel() {
     duplicateActivity,
     removeFromList,
     deleteActivityDefinition,
+    renameActivity,
     setActivityMeta,
     getActivity,
     saveActivityBlueprint,

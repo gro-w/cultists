@@ -12,6 +12,8 @@ import { DesktopIconManager } from "./core/DesktopIconManager.js";
 import { buildBuiltinIconBlueprint } from "./core/BuiltinIconBlueprints.js";
 import { DataStructureManager } from "./core/DataStructureManager.js";
 import { DataStore } from "./core/DataStore.js";
+import { PublicVariableManager } from "./core/PublicVariableManager.js";
+import { RuntimeRefResolver } from "./core/RuntimeRefResolver.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -42,6 +44,8 @@ export async function bootstrap(rootEl) {
   const variableStore = new VariableStore(eventBus);
   const dataStructureManager = new DataStructureManager();
   const dataStore = new DataStore(dataStructureManager);
+  const refResolver = new RuntimeRefResolver();
+  const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
 
   if (engineConfig.structures) {
     const structuresResponse = await fetch(`data/${engineConfig.structures}`);
@@ -51,6 +55,18 @@ export async function bootstrap(rootEl) {
     const databasesResponse = await fetch(`data/${engineConfig.databases}`);
     if (databasesResponse.ok) dataStore.loadDefinitions(await databasesResponse.json());
   }
+  if (engineConfig.publicVariables) {
+    const publicVariablesResponse = await fetch(`data/${engineConfig.publicVariables}`);
+    if (publicVariablesResponse.ok) publicVariableManager.loadDefinitions(await publicVariablesResponse.json());
+  }
+
+  // Every structure-backed database record is resolvable as an "object"-typed
+  // public variable's ref via `{objectType:"database:<databaseId>", objectId:<primaryKey>}`
+  // - a generic mechanism (no per-database code), registered once every
+  // database is loaded.
+  dataStore.listDatabases().forEach(({ databaseId }) => {
+    refResolver.register(`database:${databaseId}`, (recordKey) => dataStore.getRecord(databaseId, recordKey));
+  });
 
   const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore);
 
@@ -74,6 +90,7 @@ export async function bootstrap(rootEl) {
       activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
       dbGateway: dataStore,
+      pvGateway: publicVariableManager,
     });
   }
   shell.runActivity = runActivity;
@@ -104,6 +121,7 @@ export async function bootstrap(rootEl) {
       activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
       dbGateway: dataStore,
+      pvGateway: publicVariableManager,
     });
   }
 
@@ -175,6 +193,7 @@ export async function bootstrap(rootEl) {
       activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
       dbGateway: dataStore,
+      pvGateway: publicVariableManager,
     });
   }
   shell.runIconBlueprint = runIconBlueprint;
@@ -202,6 +221,7 @@ export async function bootstrap(rootEl) {
       iconManager,
       dataStructureManager,
       dataStore,
+      publicVariableManager,
       refreshIcons: () => shell.mountIcons(iconManager),
     });
     buildDeveloperDesktopIcons().forEach((icon) => iconManager.register(icon));
@@ -228,6 +248,8 @@ export async function bootstrap(rootEl) {
     gameClock,
     dataStructureManager,
     dataStore,
+    publicVariableManager,
+    refResolver,
     iconManager,
   };
 }

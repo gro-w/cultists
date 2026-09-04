@@ -29,6 +29,11 @@ export class WindowDefinitionStore {
     return [...this._definitions.values()];
   }
 
+  /** Removes a definition (plan follow-up: "自定义窗口管理器也可以+-按钮"). */
+  unregister(id) {
+    return this._definitions.delete(id);
+  }
+
   /**
    * Load every `*.json` file listed in `manifest` (array of file names)
    * from `baseUrl` (default "data/windows/") and register each as a window

@@ -394,8 +394,15 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
     name = nextName;
   }
 
+  /** Renames the activity's own stable id (plan follow-up: "蓝图id可以编辑"). Only mutates the editor's in-memory model; the caller is responsible for reconciling any external registry (list membership, file name, window title) that indexes by the old id. */
+  function setActivityId(nextId) {
+    if (!nextId) throw new Error("activityId 不能为空");
+    activityId = nextId;
+  }
+
   return {
-    activityId,
+    get activityId() { return activityId; },
+    setActivityId,
     get displayName() { return name; },
     setDisplayName,
     addNode,

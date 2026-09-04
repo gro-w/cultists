@@ -179,14 +179,14 @@ export class WindowEditorView {
   /**
    * Drag-to-reposition directly on the rendered preview canvas (plan §7.3
    * "组件可选中、移动..." plus the follow-up "组件可以拖动放置到任何位置，
-   * 就像蓝图节点一样，拖到哪里就是哪里"). Two distinct drop behaviours,
-   * chosen by the *target* container's `flow`:
-   * - `stack`: free x/y placement, exactly like a blueprint node on its
-   *   canvas - the widget lands at wherever the pointer released it.
-   * - `vertical`/`horizontal`/`grid`: unchanged flow-order reordering via
-   *   `moveWidget(widgetId, parentId, index)`, since flex/grid containers
-   *   have no meaningful x/y (per "对 flex/grid 容器明确显示哪些 x/y
-   *   属性不生效，不能伪装成可编辑几何").
+   * 就像蓝图节点一样，拖到哪里就是哪里" / "而不是只能拖动排序"). Dropping a
+   * widget onto any container always free-positions it at the exact drop
+   * point, auto-converting that container's `flow` to `"stack"` first if
+   * it wasn't already (a container keeps its declared `vertical`/
+   * `horizontal`/`grid` flex/grid layout until a developer actually drags
+   * something into/within it in the editor, at which point it becomes an
+   * explicit free-position canvas - this never happens on its own at
+   * runtime, only as a result of an editor drag gesture).
    */
   _bindPreviewDrag(rootEl, widgetEls) {
     const rootWidgetId = this.model.definition.root.widgetId;
@@ -197,6 +197,9 @@ export class WindowEditorView {
       if (!draggedId) return;
       const draggedEntry = this.model.findWidget(draggedId);
       if (!draggedEntry || draggedId === containerNode.widgetId) return;
+      if (containerNode.flow !== "stack") {
+        this.model.updateWidgetProps(containerNode.widgetId, { flow: "stack" });
+      }
       if (draggedEntry.parent !== containerNode) {
         this.model.moveWidget(draggedId, containerNode.widgetId, null);
       }
@@ -213,25 +216,16 @@ export class WindowEditorView {
       if (!draggedId || draggedId === widgetId) return;
       const targetEntry = this.model.findWidget(widgetId);
       if (!targetEntry) return;
-      // A stack container - or a widget already living inside one - always
-      // resolves to a free x/y drop against that stack container.
-      if (targetEntry.node.type === "container" && targetEntry.node.flow === "stack") {
-        dropFreePosition(targetEntry.node, event);
-        return;
-      }
-      if (targetEntry.parent && targetEntry.parent.flow === "stack") {
-        dropFreePosition(targetEntry.parent, event);
-        return;
-      }
+      // Dropping directly onto a container free-positions inside it;
+      // dropping onto a leaf widget free-positions inside that widget's
+      // own parent container instead (both always convert to flow:"stack"
+      // if needed, so any component can be dragged anywhere - plan
+      // follow-up "而不是只能拖动排序").
       if (targetEntry.node.type === "container") {
-        this.model.moveWidget(draggedId, widgetId, null);
+        dropFreePosition(targetEntry.node, event);
       } else if (targetEntry.parent) {
-        const rect = widgetEls.get(widgetId).getBoundingClientRect();
-        const horizontal = targetEntry.parent.flow === "horizontal";
-        const before = horizontal ? event.clientX - rect.left < rect.width / 2 : event.clientY - rect.top < rect.height / 2;
-        this.model.moveWidget(draggedId, targetEntry.parent.widgetId, targetEntry.index + (before ? 0 : 1));
+        dropFreePosition(targetEntry.parent, event);
       }
-      this.render();
     };
     for (const [widgetId, el] of widgetEls) {
       if (widgetId === rootWidgetId) continue;
@@ -253,21 +247,14 @@ export class WindowEditorView {
       });
     }
     // Dropping on empty canvas space (the root container itself, not a
-    // nested widget) appends to the root - mirrors the structure tree's
-    // root row drop target - or free-positions it if root itself is a
-    // stack container.
+    // nested widget) always free-positions against the root - mirrors the
+    // structure tree's root row drop target - converting root to
+    // flow:"stack" first if needed.
     rootEl.addEventListener("dragover", (e) => e.preventDefault());
     rootEl.addEventListener("drop", (e) => {
       if (e.target !== rootEl) return; // a nested widget's own drop handler already ran (and stopped propagation)
       e.preventDefault();
-      const draggedId = e.dataTransfer.getData("text/widget-id");
-      if (!draggedId) return;
-      if (this.model.definition.root.flow === "stack") {
-        dropFreePosition(this.model.definition.root, e);
-      } else {
-        this.model.moveWidget(draggedId, rootWidgetId, null);
-        this.render();
-      }
+      dropFreePosition(this.model.definition.root, e);
     });
   }
 

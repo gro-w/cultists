@@ -26,9 +26,10 @@ const ZOOM_STEP = 0.1;
  * independent models + views.
  */
 export class ActivityEditorView {
-  constructor({ activityId, blueprint, displayName, onSaveToMemory, dataFileName } = {}) {
+  constructor({ activityId, blueprint, displayName, onSaveToMemory, onRenameId, dataFileName } = {}) {
     this.model = createActivityEditorModel({ activityId, blueprint, displayName });
     this.onSaveToMemory = onSaveToMemory || (() => {});
+    this.onRenameId = onRenameId || (() => {});
     this.dataFileName = dataFileName || null;
     this.zoom = 1;
     this._dragPointer = new PointerInteraction();
@@ -614,9 +615,26 @@ export class ActivityEditorView {
     nameRow.appendChild(nameInput);
     this.inspectorEl.appendChild(nameRow);
 
-    const idRow = document.createElement("div");
+    const idRow = document.createElement("label");
     idRow.className = "ng-editor-inspector-row";
-    idRow.innerHTML = `<span>activityId</span><span>${this.model.activityId ?? ""}</span>`;
+    idRow.innerHTML = "<span>activityId</span>";
+    const idInput = document.createElement("input");
+    idInput.type = "text";
+    idInput.value = this.model.activityId ?? "";
+    idInput.addEventListener("change", () => {
+      const nextId = idInput.value.trim();
+      if (!nextId || nextId === this.model.activityId) { idInput.value = this.model.activityId ?? ""; return; }
+      const previousId = this.model.activityId;
+      try {
+        this.model.setActivityId(nextId);
+        this.onRenameId(previousId, nextId);
+      } catch (err) {
+        this.model.setActivityId(previousId);
+        idInput.value = previousId ?? "";
+        alert(err.message);
+      }
+    });
+    idRow.appendChild(idInput);
     this.inspectorEl.appendChild(idRow);
 
     const startRow = document.createElement("div");

@@ -32,7 +32,7 @@ const definitions = {
     label: "阻塞直到",
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
-    valueInputs: [valueIn("key", "string"), valueIn("equals")],
+    valueInputs: [valueIn("key", "string"), valueIn("equals"), valueIn("condition", "bool")],
   },
   consumeTime: {
     label: "消耗时间",
@@ -124,6 +124,26 @@ const definitions = {
     label: "读取变量",
     valueInputs: [valueIn("key", "string")],
     valueOutputs: [valueOut("value")],
+  },
+  // Public-variable nodes (plan §10). These operate on the typed,
+  // ID-addressed PublicVariableManager (0..65535, bool/smallInteger/
+  // integer/real/string/object) through `pvGateway`, distinct from the
+  // generic per-run `variableStore` string-keyed nodes above.
+  getPublicVariable: {
+    label: "读取公共变量",
+    valueInputs: [valueIn("id", "number")],
+    valueOutputs: [valueOut("value")],
+  },
+  publicVariableCondition: {
+    label: "公共变量条件",
+    valueInputs: [valueIn("id", "number"), valueIn("op", "string"), valueIn("value")],
+    valueOutputs: [valueOut("value", "bool")],
+  },
+  applyPublicVariableEffect: {
+    label: "应用公共变量效果",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("id", "number"), valueIn("value"), valueIn("delta", "number"), valueIn("toggle", "bool"), valueIn("setObjectRef")],
   },
 };
 

@@ -45,12 +45,18 @@ export async function initDeveloperMode({
 
   function openEditor(activity) {
     const windowId = `dev-activity-editor-${activity.id}-${editorWindowSeq++}`;
+    let currentId = activity.id;
     const view = new ActivityEditorView({
       activityId: activity.id,
       blueprint: activity.blueprint,
       displayName: activity.displayName,
       dataFileName: `activities/${activity.id}.json`,
-      onSaveToMemory: (blueprint) => model.saveActivityBlueprint(activity.id, blueprint),
+      onSaveToMemory: (blueprint) => model.saveActivityBlueprint(currentId, blueprint),
+      onRenameId: (oldId, newId) => {
+        model.renameActivity(oldId, newId);
+        currentId = newId;
+        view.dataFileName = `activities/${newId}.json`;
+      },
     });
     const definition = windowDefinitionStore.register({
       id: windowId,
@@ -144,7 +150,7 @@ export async function initDeveloperMode({
     windowManager.open(definition);
   }
 
-  const windowManagerView = new WindowDefinitionManagerView(windowDefinitionStore.list(), { openEditor: openWindowEditor });
+  const windowManagerView = new WindowDefinitionManagerView(windowDefinitionStore, { openEditor: openWindowEditor });
   windowDefinitionStore.register({
     id: WINDOW_MANAGER_WINDOW_ID,
     title: "自定义窗口编辑器",

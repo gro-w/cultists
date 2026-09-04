@@ -114,4 +114,14 @@ const baseDefinition = {
   assert.equal(model.toDefinition().title, "下班模式");
 }
 
+// --- a definition without a `root` widget tree (e.g. body-only legacy
+// windows like example.json) never crashes the model; a default empty
+// root is synthesized so renderNode()-style tree walks always see a node ---
+{
+  const model = createWindowEditorModel({ definition: { id: "example", title: "Example", body: "<p>hi</p>" } });
+  assert.ok(model.definition.root);
+  assert.equal(model.definition.root.type, "container");
+  assert.equal(model.listWidgets().length, 1);
+}
+
 console.log("window-editor-probe: all scenarios passed");

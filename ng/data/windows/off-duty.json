@@ -19,5 +19,15 @@
       { "widgetId": "off-duty-hint", "type": "label", "text": "点击右上角关闭按钮结束休息，返回桌面。" }
     ]
   },
-  "events": { "onCreate": null, "onDestroy": null }
+  "events": {
+    "onCreate": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "x": 60, "y": 60, "inputs": {}, "next": { "flowOut": { "nodeId": "consume", "port": "flowIn" } } },
+        "consume": { "id": "consume", "type": "consumeTime", "x": 260, "y": 60, "inputs": { "minutes": 480 }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+        "end": { "id": "end", "type": "activityEnd", "x": 460, "y": 60, "inputs": {} }
+      }
+    },
+    "onDestroy": null
+  }
 }

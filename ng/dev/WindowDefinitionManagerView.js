@@ -31,7 +31,11 @@ export class WindowDefinitionManagerView {
 
   render() {
     this.itemsEl.innerHTML = "";
-    for (const definition of this.definitions) {
+    // Only definitions with a `root` widget tree are WYSIWYG-editable (plan
+    // §7.1); legacy `body`-only definitions (e.g. example.json, or dev-tool
+    // windows registered by DeveloperMode itself) have no editable
+    // structure and would otherwise crash the editor on open.
+    for (const definition of this.definitions.filter((definition) => definition.root)) {
       const item = document.createElement("div");
       item.className = "ng-list-manager-list-item";
       item.textContent = `${definition.id}${definition.fullscreen ? " (全屏)" : ""}`;

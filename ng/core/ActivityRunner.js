@@ -31,7 +31,7 @@ function nextFlow(blueprint, node, port = "flowOut") {
  * value input is wired to one of their outputs, recursing through chained
  * value nodes. `stack` guards against circular wiring.
  */
-function evaluateValueOutput(blueprint, nodeId, portName, variableStore, stack) {
+export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, stack) {
   const key = `${nodeId}:${portName}`;
   if (stack.has(key)) throw new Error(`Circular value dependency at ${key}`);
   const node = blueprint.nodes[nodeId];

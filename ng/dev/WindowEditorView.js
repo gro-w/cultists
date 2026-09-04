@@ -19,10 +19,11 @@ const WIDGET_TYPES = [
  * 哪些 x/y 属性不生效").
  */
 export class WindowEditorView {
-  constructor({ definition, dataFileName, onSaveToMemory } = {}) {
+  constructor({ definition, dataFileName, onSaveToMemory, variableStore } = {}) {
     this.model = createWindowEditorModel({ definition });
     this.dataFileName = dataFileName || null;
     this.onSaveToMemory = onSaveToMemory || (() => {});
+    this.variableStore = variableStore || null;
     this._buildDom();
     this.render();
     this._bindKeys();
@@ -156,7 +157,12 @@ export class WindowEditorView {
 
   _renderPreview() {
     this.previewEl.innerHTML = "";
-    const { el } = renderWindowRoot(this.model.definition.root, {});
+    // Same renderer + same ctx shape the runtime WindowFrame uses (plan
+    // §7.1), so a bound property previews exactly as it will run.
+    const { el } = renderWindowRoot(this.model.definition.root, {
+      variableStore: this.variableStore,
+      valueGraph: this.model.definition.valueGraph,
+    });
     el.addEventListener("click", (e) => {
       const target = e.target.closest("[data-widget-id]");
       if (!target) return;

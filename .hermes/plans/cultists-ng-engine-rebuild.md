@@ -603,8 +603,8 @@ Activity 必须区分以下对象：
 - `fullscreen: true` 只改变窗口运行时的几何和层级策略，由通用 `WindowManager` 处理
 - 全屏窗口显示在桌面、普通窗口和任务栏之上，但仍然是一个普通 `windowId`/`windowInstanceId`
 - 关闭、保存、恢复、多窗口上下文和 `onCreate`/`onDestroy` 与其他窗口完全相同
-- 下班图标不调用专用下班函数；它绑定一个内置 blueprint，由 blueprint 打开下班窗口并显式执行时间推进节点
-- 打开窗口本身不推进时间；是否推进时间完全由图标 blueprint 的节点决定
+- 下班图标不调用专用下班函数；它绑定一个只负责 `openWindow` 的内置 blueprint
+- 时间推进节点属于下班窗口定义自身的 `events.onCreate` blueprint，随窗口创建时通过 `ActivityExecutionService` 执行一次；打开窗口这个动作本身（`WindowManager.open`/桌面图标 blueprint 的 `openWindow` 节点）永远不推进时间
 - 存档只保存普通窗口实例的 `windowId`、fullscreen 定义版本、打开状态和几何快照
 
 示例行为流：
@@ -613,8 +613,11 @@ Activity 必须区分以下对象：
 桌面双击“下班”图标
   -> 创建图标绑定的内置 Activity blueprint 实例
   -> openWindow(windowId="off-duty")
-  -> consumeTime(20 或由 blueprint 输入指定的时间)
-  -> 完成 Activity
+  -> 完成图标 Activity（不推进时间）
+窗口管理器发出 window:opened(windowId="off-duty")
+  -> 引擎执行 off-duty 窗口定义自身的 events.onCreate blueprint
+  -> consumeTime(480 或由 blueprint 输入指定的时间)
+  -> 完成该内置生命周期 Activity
 ```
 
 “下班模式”这个名称属于游戏内容/窗口定义，不进入通用引擎代码的领域分支。

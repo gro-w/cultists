@@ -27,6 +27,10 @@ function defaultWidget(type) {
   return { ...base, value: "" };
 }
 
+function defaultRoot() {
+  return { widgetId: "root", type: "container", flow: "vertical", gap: 8, padding: 10, children: [] };
+}
+
 export function createWindowEditorModel({ definition } = {}) {
   let current = cloneValue(definition) || {
     id: "untitled",
@@ -34,9 +38,15 @@ export function createWindowEditorModel({ definition } = {}) {
     mode: "window",
     fullscreen: false,
     geometry: { x: 80, y: 60, width: 480, height: 320 },
-    root: { widgetId: "root", type: "container", flow: "vertical", gap: 8, padding: 10, children: [] },
+    root: defaultRoot(),
     events: { onCreate: null, onDestroy: null },
   };
+  // A definition may legitimately have no `root` widget tree yet (legacy
+  // `body`-only windows like example.json, or a dev-tool window registered
+  // before the widget-tree schema). Synthesize an empty root rather than
+  // letting every tree-walking helper below crash on `undefined`; this
+  // never discards `body` since `toDefinition()` still carries it through.
+  if (!current.root) current.root = defaultRoot();
   let selectedId = null;
   const history = [];
   const future = [];

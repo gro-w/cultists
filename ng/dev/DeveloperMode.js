@@ -20,7 +20,7 @@ let windowEditorWindowSeq = 0;
  * decision). Writing back to disk is done exclusively via devApi's
  * writeDataFile(), called from the list manager / editor views.
  */
-export async function initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore, activityQueueRegistry, eventBus }) {
+export async function initDeveloperMode({ engineConfig, windowManager, windowDefinitionStore, activityQueueRegistry, eventBus, variableStore }) {
   const model = createActivityListManagerModel();
   await loadExistingActivities(model, engineConfig);
 
@@ -79,6 +79,7 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
       definition,
       dataFileName: `windows/${definition.id}.json`,
       onSaveToMemory: (updated) => windowDefinitionStore.register(updated),
+      variableStore,
     });
     const editorDefinition = windowDefinitionStore.register({
       id: windowId,

@@ -10,7 +10,14 @@
  * without maintaining a second parallel tree.
  */
 
+import { resolvePropertyValue } from "./PropertyBinding.js";
+
 const CONTAINER_FLOWS = new Set(["vertical", "horizontal", "grid", "stack"]);
+
+/** Reads a possibly-bound widget property (plan §7.5-equivalent value binding); falls back to the literal when unbound. */
+function prop(node, key, ctx, fallback) {
+  return resolvePropertyValue(node[key], { valueGraph: ctx.valueGraph, variableStore: ctx.variableStore }, fallback);
+}
 
 /** Apply container layout (flow/gap/padding/align/justify/wrap/minSize/maxSize) as inline CSS. */
 function applyContainerStyle(el, node) {
@@ -40,38 +47,38 @@ function applyContainerStyle(el, node) {
   }
 }
 
-function applyCommonAttrs(el, node) {
+function applyCommonAttrs(el, node, ctx) {
   el.dataset.widgetId = node.widgetId || node.id || "";
   el.dataset.widgetType = node.type;
   if (node.className) el.className = `ng-widget ${node.className}`;
   else el.className = "ng-widget";
   el.classList.add(`ng-widget-${node.type}`);
-  if (node.visible === false) el.hidden = true;
-  if (node.enabled === false) el.setAttribute("aria-disabled", "true");
+  if (prop(node, "visible", ctx, true) === false) el.hidden = true;
+  if (prop(node, "enabled", ctx, true) === false) el.setAttribute("aria-disabled", "true");
 }
 
 function renderLeaf(node, ctx) {
   const el = document.createElement(node.type === "button" ? "button" : "div");
   switch (node.type) {
     case "label":
-      el.textContent = node.text ?? "";
+      el.textContent = prop(node, "text", ctx, "");
       break;
     case "button":
       el.type = "button";
-      el.textContent = node.text ?? "";
+      el.textContent = prop(node, "text", ctx, "");
       if (ctx.onEvent) el.addEventListener("click", () => ctx.onEvent(node, "onClick"));
       break;
     case "textInput": {
       const input = document.createElement("input");
       input.type = "text";
-      input.value = node.value ?? "";
+      input.value = prop(node, "value", ctx, "");
       if (ctx.onEvent) input.addEventListener("input", () => ctx.onEvent(node, "onChange", input.value));
       el.appendChild(input);
       break;
     }
     case "textarea": {
       const textarea = document.createElement("textarea");
-      textarea.value = node.value ?? "";
+      textarea.value = prop(node, "value", ctx, "");
       if (ctx.onEvent) textarea.addEventListener("input", () => ctx.onEvent(node, "onChange", textarea.value));
       el.appendChild(textarea);
       break;
@@ -84,7 +91,7 @@ function renderLeaf(node, ctx) {
         opt.textContent = option.label ?? option.value;
         select.appendChild(opt);
       }
-      select.value = node.value ?? "";
+      select.value = prop(node, "value", ctx, "");
       if (ctx.onEvent) select.addEventListener("change", () => ctx.onEvent(node, "onChange", select.value));
       el.appendChild(select);
       break;
@@ -92,15 +99,15 @@ function renderLeaf(node, ctx) {
     case "checkbox": {
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
-      checkbox.checked = Boolean(node.value);
+      checkbox.checked = Boolean(prop(node, "value", ctx, false));
       if (ctx.onEvent) checkbox.addEventListener("change", () => ctx.onEvent(node, "onChange", checkbox.checked));
       el.appendChild(checkbox);
       break;
     }
     case "image": {
       const img = document.createElement("img");
-      img.src = node.src || "";
-      img.alt = node.alt || "";
+      img.src = prop(node, "src", ctx, "") || "";
+      img.alt = prop(node, "alt", ctx, "") || "";
       el.appendChild(img);
       break;
     }
@@ -130,7 +137,7 @@ function renderLeaf(node, ctx) {
     case "progress": {
       const bar = document.createElement("div");
       bar.className = "ng-widget-progress-bar";
-      bar.style.width = `${Math.max(0, Math.min(100, Number(node.value) || 0))}%`;
+      bar.style.width = `${Math.max(0, Math.min(100, Number(prop(node, "value", ctx, 0)) || 0))}%`;
       el.appendChild(bar);
       break;
     }
@@ -160,7 +167,7 @@ export function renderWidgetNode(node, ctx = {}) {
   } else {
     el = renderLeaf(node, ctx);
   }
-  applyCommonAttrs(el, node);
+  applyCommonAttrs(el, node, ctx);
   ctx.widgetEls.set(node.widgetId || node.id, el);
   return el;
 }

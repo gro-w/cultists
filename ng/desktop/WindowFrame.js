@@ -17,15 +17,17 @@ export class WindowFrame {
    * @param {HTMLElement|string} [body] - element or HTML string for the window body
    * @param {object} [root] - widget tree (plan §7.1); when given it is rendered via
    *   the same `renderWindowRoot()` the editor preview uses, and `body` is ignored
+   * @param {object} [rendererCtx] - `{ variableStore, valueGraph }` for widget/window
+   *   properties sourced from blueprint value-output wiring instead of literals
    */
-  constructor(windowManager, eventBus, state, body, root) {
+  constructor(windowManager, eventBus, state, body, root, rendererCtx = {}) {
     this.windowManager = windowManager;
     this.eventBus = eventBus;
     this.instanceId = state.instanceId;
     this._unsubscribers = [];
     this._drag = new PointerInteraction();
     this._resize = new PointerInteraction();
-    this._buildDom(state, body, root);
+    this._buildDom(state, body, root, rendererCtx);
     this._bindControls();
     this._bindDrag();
     if (state.resizable) this._bindResize();
@@ -33,7 +35,7 @@ export class WindowFrame {
     this._render(this.windowManager.get(this.instanceId));
   }
 
-  _buildDom(state, body, root) {
+  _buildDom(state, body, root, rendererCtx = {}) {
     const el = document.createElement("div");
     el.className = "ng-window bevel-out";
     el.id = state.instanceId;
@@ -64,7 +66,7 @@ export class WindowFrame {
     if (root) {
       // Runtime and the WYSIWYG editor preview must render the exact same
       // widget tree with the exact same renderer (plan §7.1).
-      const { el: rootEl } = renderWindowRoot(root, {});
+      const { el: rootEl } = renderWindowRoot(root, rendererCtx);
       bodyEl.appendChild(rootEl);
     } else if (typeof body === "string") bodyEl.innerHTML = body;
     else if (body instanceof HTMLElement) bodyEl.appendChild(body);

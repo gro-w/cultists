@@ -15,13 +15,16 @@ export class DesktopShell {
    * @param {import('../core/EventBus.js').default} eventBus
    * @param {HTMLElement} rootEl
    * @param {import('../core/GameClock.js').GameClock} [gameClock]
+   * @param {import('../core/VariableStore.js').VariableStore} [variableStore] - lets widget/window
+   *   properties be sourced from blueprint value-output wiring instead of only fixed literals
    */
-  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock) {
+  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore) {
     this.windowManager = windowManager;
     this.windowDefinitionStore = windowDefinitionStore;
     this.eventBus = eventBus;
     this.rootEl = rootEl;
     this.gameClock = gameClock || null;
+    this.variableStore = variableStore || null;
     this.frames = new Map(); // instanceId -> WindowFrame
     this._buildDom();
     this._bindEvents();
@@ -88,7 +91,8 @@ export class DesktopShell {
     const state = this.windowManager.get(instanceId);
     if (!state) return;
     const definition = this.windowDefinitionStore.get(state.windowId);
-    const frame = new WindowFrame(this.windowManager, this.eventBus, state, definition?.body, definition?.root);
+    const rendererCtx = { variableStore: this.variableStore, valueGraph: definition?.valueGraph };
+    const frame = new WindowFrame(this.windowManager, this.eventBus, state, definition?.body, definition?.root, rendererCtx);
     this.frames.set(instanceId, frame);
     this.windowLayerEl.appendChild(frame.el);
   }

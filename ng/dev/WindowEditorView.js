@@ -1,6 +1,7 @@
 // DEV-TOOLS:START
 import { createWindowEditorModel } from "./WindowEditorModel.js";
 import { renderWindowRoot } from "../core/WidgetLayoutRenderer.js";
+import { isBoundValue } from "../core/PropertyBinding.js";
 import { writeDataFile, downloadTextFile } from "./devApi.js";
 
 const WIDGET_TYPES = [
@@ -19,11 +20,12 @@ const WIDGET_TYPES = [
  * 哪些 x/y 属性不生效").
  */
 export class WindowEditorView {
-  constructor({ definition, dataFileName, onSaveToMemory, variableStore } = {}) {
+  constructor({ definition, dataFileName, onSaveToMemory, variableStore, openEventBlueprintEditor } = {}) {
     this.model = createWindowEditorModel({ definition });
     this.dataFileName = dataFileName || null;
     this.onSaveToMemory = onSaveToMemory || (() => {});
     this.variableStore = variableStore || null;
+    this.openEventBlueprintEditor = openEventBlueprintEditor || null;
     this._buildDom();
     this.render();
     this._bindKeys();
@@ -159,7 +161,7 @@ export class WindowEditorView {
     this.previewEl.innerHTML = "";
     // Same renderer + same ctx shape the runtime WindowFrame uses (plan
     // §7.1), so a bound property previews exactly as it will run.
-    const { el } = renderWindowRoot(this.model.definition.root, {
+    const { el, widgetEls } = renderWindowRoot(this.model.definition.root, {
       variableStore: this.variableStore,
       valueGraph: this.model.definition.valueGraph,
     });
@@ -170,7 +172,65 @@ export class WindowEditorView {
       this.model.select(target.dataset.widgetId);
       this.render();
     });
+    this._bindPreviewDrag(el, widgetEls);
     this.previewEl.appendChild(el);
+  }
+
+  /**
+   * Drag-to-reposition directly on the rendered preview canvas (plan §7.3
+   * "组件可选中、移动..."), not just the side structure-tree list. Since
+   * containers are real flex/grid (never editor-only absolute positioning,
+   * per "对 flex/grid 容器明确显示哪些 x/y 属性不生效"), "position" here
+   * means a widget's place in the flow order / which container it belongs
+   * to - exactly what `moveWidget(widgetId, parentId, index)` already
+   * expresses, just driven from pointer drops on the canvas instead of the
+   * structure-tree rows.
+   */
+  _bindPreviewDrag(rootEl, widgetEls) {
+    const rootWidgetId = this.model.definition.root.widgetId;
+    const dropOnto = (widgetId, event) => {
+      const draggedId = event.dataTransfer.getData("text/widget-id");
+      if (!draggedId || draggedId === widgetId) return;
+      const targetEntry = this.model.findWidget(widgetId);
+      if (!targetEntry) return;
+      if (targetEntry.node.type === "container") {
+        this.model.moveWidget(draggedId, widgetId, null);
+      } else if (targetEntry.parent) {
+        const rect = widgetEls.get(widgetId).getBoundingClientRect();
+        const horizontal = targetEntry.parent.flow === "horizontal";
+        const before = horizontal ? event.clientX - rect.left < rect.width / 2 : event.clientY - rect.top < rect.height / 2;
+        this.model.moveWidget(draggedId, targetEntry.parent.widgetId, targetEntry.index + (before ? 0 : 1));
+      }
+      this.render();
+    };
+    for (const [widgetId, el] of widgetEls) {
+      if (widgetId === rootWidgetId) continue;
+      el.draggable = true;
+      el.addEventListener("dragstart", (e) => {
+        e.stopPropagation();
+        e.dataTransfer.setData("text/widget-id", widgetId);
+      });
+      el.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+      el.addEventListener("drop", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropOnto(widgetId, e);
+      });
+    }
+    // Dropping on empty canvas space (the root container itself, not a
+    // nested widget) appends to the root - mirrors the structure tree's
+    // root row drop target.
+    rootEl.addEventListener("dragover", (e) => e.preventDefault());
+    rootEl.addEventListener("drop", (e) => {
+      if (e.target !== rootEl) return; // a nested widget's own drop handler already ran (and stopped propagation)
+      e.preventDefault();
+      const draggedId = e.dataTransfer.getData("text/widget-id");
+      if (draggedId) this.model.moveWidget(draggedId, rootWidgetId, null);
+      this.render();
+    });
   }
 
   _renderInspector() {
@@ -187,8 +247,27 @@ export class WindowEditorView {
       const row = document.createElement("label");
       row.className = "ng-window-editor-field";
       row.innerHTML = `<span>${field.label}</span>`;
+      const rawValue = node[field.key];
+      const bound = Boolean(field.bindable && isBoundValue(rawValue));
+      if (field.bindable) {
+        const bindToggle = document.createElement("input");
+        bindToggle.type = "checkbox";
+        bindToggle.className = "ng-window-editor-field-bind-toggle";
+        bindToggle.title = "通过变量取值而非固定值 (窗口/组件属性也都可以通过蓝图指定)";
+        bindToggle.checked = bound;
+        bindToggle.addEventListener("change", () => {
+          const patch = bindToggle.checked ? { [field.key]: { variable: "" } } : { [field.key]: field.type === "number" ? 0 : "" };
+          this.model.updateWidgetProps(node.widgetId, patch);
+          this.render();
+        });
+        row.appendChild(bindToggle);
+      }
       const input = document.createElement(field.type === "checkbox" ? "input" : field.type === "select" ? "select" : "input");
-      if (field.type === "checkbox") {
+      if (bound) {
+        input.type = "text";
+        input.placeholder = "变量名";
+        input.value = rawValue.variable || "";
+      } else if (field.type === "checkbox") {
         input.type = "checkbox";
         input.checked = Boolean(field.value);
       } else if (field.type === "number") {
@@ -210,7 +289,9 @@ export class WindowEditorView {
       // full re-render mid-typing, so focus is never lost (plan §7.3
       // "输入框 text 事件只更新现有 inspector 值，不整体重绘导致失焦").
       input.addEventListener("input", () => {
-        const value = field.type === "checkbox" ? input.checked : field.type === "number" ? Number(input.value) : input.value;
+        const value = bound
+          ? { variable: input.value }
+          : field.type === "checkbox" ? input.checked : field.type === "number" ? Number(input.value) : input.value;
         this.model.updateWidgetProps(node.widgetId, { [field.key]: value });
         this._renderStructure();
         this._renderPreview();
@@ -218,12 +299,68 @@ export class WindowEditorView {
       row.appendChild(input);
       this.inspectorEl.appendChild(row);
     }
+    this._renderEventsInspector(node);
+  }
+
+  /** Which `events[eventName]` blueprints actually fire for a widget type (mirrors WidgetLayoutRenderer's ctx.onEvent call sites). */
+  _eventNamesFor(type) {
+    if (type === "button") return ["onClick"];
+    if (["textInput", "textarea", "select", "checkbox"].includes(type)) return ["onChange", "onFocus", "onBlur"];
+    return [];
+  }
+
+  /**
+   * "窗口组件也有对应的操作蓝图，比如说 onClick、onChange 等等" - every
+   * interactive widget can bind each of its events to an inline Blueprint,
+   * authored in the exact same ActivityEditorView used for top-level
+   * Activities (opened via `openEventBlueprintEditor`, wired by
+   * DeveloperMode). Nothing here executes the blueprint - only the runtime
+   * WindowFrame's `onEvent` ctx (engine.js's `runWidgetEvent`) does that -
+   * this is purely the authoring affordance.
+   */
+  _renderEventsInspector(node) {
+    const eventNames = this._eventNamesFor(node.type);
+    if (!eventNames.length) return;
+    const section = document.createElement("div");
+    section.className = "ng-window-editor-events";
+    section.innerHTML = "<h4>事件蓝图</h4>";
+    for (const eventName of eventNames) {
+      const row = document.createElement("div");
+      row.className = "ng-window-editor-event-row";
+      const bound = Boolean(node.events?.[eventName]);
+      const status = document.createElement("span");
+      status.textContent = `${eventName}: ${bound ? "已绑定" : "未绑定"}`;
+      row.appendChild(status);
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.textContent = "编辑蓝图";
+      editButton.disabled = !this.openEventBlueprintEditor;
+      editButton.addEventListener("click", () => {
+        this.openEventBlueprintEditor(node.events?.[eventName] || null, `${node.widgetId}.${eventName}`, (blueprint) => {
+          this.model.updateWidgetProps(node.widgetId, { events: { ...(node.events || {}), [eventName]: blueprint } });
+          this._renderInspector();
+        });
+      });
+      row.appendChild(editButton);
+      if (bound) {
+        const clearButton = document.createElement("button");
+        clearButton.type = "button";
+        clearButton.textContent = "清除";
+        clearButton.addEventListener("click", () => {
+          this.model.updateWidgetProps(node.widgetId, { events: { ...(node.events || {}), [eventName]: null } });
+          this._renderInspector();
+        });
+        row.appendChild(clearButton);
+      }
+      section.appendChild(row);
+    }
+    this.inspectorEl.appendChild(section);
   }
 
   _renderWindowMetaInspector() {
     const definition = this.model.definition;
     const fields = [
-      { key: "title", label: "title", type: "text", value: definition.title || "" },
+      { key: "title", label: "title", type: "text", value: definition.title || "", bindable: true },
       { key: "mode", label: "mode", type: "select", options: ["window", "custom"], value: definition.mode || "window" },
       { key: "fullscreen", label: "fullscreen", type: "checkbox", value: Boolean(definition.fullscreen) },
     ];
@@ -231,8 +368,26 @@ export class WindowEditorView {
       const row = document.createElement("label");
       row.className = "ng-window-editor-field";
       row.innerHTML = `<span>${field.label}</span>`;
+      const rawValue = definition[field.key];
+      const bound = Boolean(field.bindable && isBoundValue(rawValue));
+      if (field.bindable) {
+        const bindToggle = document.createElement("input");
+        bindToggle.type = "checkbox";
+        bindToggle.className = "ng-window-editor-field-bind-toggle";
+        bindToggle.title = "通过变量取值而非固定值";
+        bindToggle.checked = bound;
+        bindToggle.addEventListener("change", () => {
+          this.model.updateWindowProps({ [field.key]: bindToggle.checked ? { variable: "" } : "" });
+          this.render();
+        });
+        row.appendChild(bindToggle);
+      }
       const input = document.createElement(field.type === "select" ? "select" : "input");
-      if (field.type === "checkbox") {
+      if (bound) {
+        input.type = "text";
+        input.placeholder = "变量名";
+        input.value = rawValue.variable || "";
+      } else if (field.type === "checkbox") {
         input.type = "checkbox";
         input.checked = Boolean(field.value);
       } else if (field.type === "select") {
@@ -248,7 +403,7 @@ export class WindowEditorView {
         input.value = field.value ?? "";
       }
       input.addEventListener("input", () => {
-        const value = field.type === "checkbox" ? input.checked : input.value;
+        const value = bound ? { variable: input.value } : field.type === "checkbox" ? input.checked : input.value;
         this.model.updateWindowProps({ [field.key]: value });
       });
       row.appendChild(input);
@@ -269,12 +424,16 @@ export class WindowEditorView {
       ];
     }
     if (node.type === "label" || node.type === "button") {
-      return [...common, { key: "text", label: "text", type: "text", value: node.text || "" }];
+      return [...common, { key: "text", label: "text", type: "text", value: node.text || "", bindable: true }];
     }
     if (node.type === "image") {
-      return [...common, { key: "src", label: "src", type: "text", value: node.src || "" }, { key: "alt", label: "alt", type: "text", value: node.alt || "" }];
+      return [
+        ...common,
+        { key: "src", label: "src", type: "text", value: node.src || "", bindable: true },
+        { key: "alt", label: "alt", type: "text", value: node.alt || "", bindable: true },
+      ];
     }
-    return [...common, { key: "value", label: "value", type: "text", value: node.value ?? "" }];
+    return [...common, { key: "value", label: "value", type: "text", value: node.value ?? "", bindable: true }];
   }
 }
 

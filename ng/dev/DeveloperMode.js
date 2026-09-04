@@ -11,6 +11,7 @@ const DEBUGGER_WINDOW_ID = "dev-activity-debugger";
 const WINDOW_MANAGER_WINDOW_ID = "dev-window-definition-manager";
 let editorWindowSeq = 0;
 let windowEditorWindowSeq = 0;
+let widgetEventEditorSeq = 0;
 
 /**
  * DeveloperMode - top-level controller wired into ng/engine.js only when
@@ -80,6 +81,7 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
       dataFileName: `windows/${definition.id}.json`,
       onSaveToMemory: (updated) => windowDefinitionStore.register(updated),
       variableStore,
+      openEventBlueprintEditor: openWidgetEventEditor,
     });
     const editorDefinition = windowDefinitionStore.register({
       id: windowId,
@@ -92,6 +94,36 @@ export async function initDeveloperMode({ engineConfig, windowManager, windowDef
       body: view.el,
     });
     windowManager.open(editorDefinition);
+  }
+
+  /**
+   * Opens a widget's `events.onClick`/`onChange`/... inline blueprint in the
+   * exact same ActivityEditorView used for top-level Activities (plan §4.2
+   * "组件交互事件...统一经过 ActivityExecutionService"), so authoring a
+   * component's click/change behaviour is no different from authoring any
+   * other Activity - same node palette, same visual language, same save
+   * flow, just written back into the widget's `events[eventName]` field
+   * instead of `data/activities/*.json`.
+   */
+  function openWidgetEventEditor(blueprint, displayName, onSave) {
+    const windowId = `dev-widget-event-editor-${widgetEventEditorSeq++}`;
+    const view = new ActivityEditorView({
+      activityId: windowId,
+      blueprint,
+      displayName,
+      onSaveToMemory: onSave,
+    });
+    const definition = windowDefinitionStore.register({
+      id: windowId,
+      title: `事件蓝图 - ${displayName}`,
+      icon: "⚡",
+      width: 860,
+      height: 560,
+      resizable: true,
+      singleInstance: true,
+      body: view.el,
+    });
+    windowManager.open(definition);
   }
 
   const windowManagerView = new WindowDefinitionManagerView(windowDefinitionStore.list(), { openEditor: openWindowEditor });

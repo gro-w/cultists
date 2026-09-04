@@ -67,19 +67,17 @@ export async function bootstrap(rootEl) {
   // never mix. This is a general window-lifecycle mechanism, not specific
   // to any one window: any custom window definition can declare these.
   const windowEventsQueue = activityQueueRegistry.register("window-events", { nonBlocking: true });
-  function runWindowLifecycleEvent(windowId, eventName) {
-    const definition = windowDefinitionStore.get(windowId);
-    const blueprint = definition?.events?.[eventName];
-    if (!blueprint) return null;
+
+  /** Runs an inline (non-stored) Blueprint through ActivityExecutionService, exactly like a normal Activity. */
+  function runInlineBlueprint(queue, activityId, blueprint, errorContext) {
     const validation = validateBlueprint(blueprint);
     if (!validation.ok) {
-      console.error(`Invalid ${eventName} blueprint for window "${windowId}": ${validation.errors.join("；")}`);
+      console.error(`Invalid blueprint for ${errorContext}: ${validation.errors.join("；")}`);
       return null;
     }
-    const activityId = `window:${windowId}:${eventName}`;
-    const instance = windowEventsQueue.append({ activityId });
+    const instance = queue.append({ activityId });
     return activityExecutionService.run({
-      queue: windowEventsQueue,
+      queue,
       definition: { id: activityId, blueprint: validation.blueprint },
       instance,
       variableStore,
@@ -87,8 +85,46 @@ export async function bootstrap(rootEl) {
       windowGateway: (id) => shell.openWindow(id),
     });
   }
+
+  function runWindowLifecycleEvent(windowId, eventName) {
+    const definition = windowDefinitionStore.get(windowId);
+    const blueprint = definition?.events?.[eventName];
+    if (!blueprint) return null;
+    return runInlineBlueprint(windowEventsQueue, `window:${windowId}:${eventName}`, blueprint, `window "${windowId}" ${eventName}`);
+  }
   eventBus.on("window:opened", ({ windowId }) => runWindowLifecycleEvent(windowId, "onCreate"));
   eventBus.on("window:closed", ({ windowId }) => runWindowLifecycleEvent(windowId, "onDestroy"));
+
+  /** Depth-first search for a widget node by id inside a window's `root` widget tree. */
+  function findWidgetNode(root, widgetId) {
+    if (!root) return null;
+    if (root.widgetId === widgetId) return root;
+    if (root.type !== "container") return null;
+    for (const child of root.children || []) {
+      const found = findWidgetNode(child, widgetId);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  // Every widget can likewise declare `events.onClick`/`onChange`/`onFocus`/
+  // `onBlur` inline blueprints (plan §4.2/§7.3 "所有组件事件都创建
+  // Activity，通过统一执行服务运行"), kept on their own queue so a flood of
+  // UI interactions never crowds the window-lifecycle queue's history.
+  const widgetEventsQueue = activityQueueRegistry.register("widget-events", { nonBlocking: true });
+  function runWidgetEvent(windowId, widgetId, eventName, value) {
+    const definition = windowDefinitionStore.get(windowId);
+    const widget = findWidgetNode(definition?.root, widgetId);
+    const blueprint = widget?.events?.[eventName];
+    if (!blueprint) return null;
+    // The triggering value (e.g. a textInput's new text, a checkbox's new
+    // checked state) is exposed to the blueprint via the same `{variable}`
+    // read shorthand every other value input already understands, under a
+    // well-known key - no new node type needed.
+    if (value !== undefined) variableStore.set("event:value", value);
+    return runInlineBlueprint(widgetEventsQueue, `widget:${windowId}:${widgetId}:${eventName}`, blueprint, `widget "${widgetId}" ${eventName}`);
+  }
+  shell.runWidgetEvent = runWidgetEvent;
 
   if (Array.isArray(engineConfig.activityLists)) {
     for (const listFile of engineConfig.activityLists) {

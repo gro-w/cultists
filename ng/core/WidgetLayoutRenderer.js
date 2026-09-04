@@ -57,6 +57,12 @@ function applyCommonAttrs(el, node, ctx) {
   if (prop(node, "enabled", ctx, true) === false) el.setAttribute("aria-disabled", "true");
 }
 
+function bindFocusBlur(el, node, ctx) {
+  if (!ctx.onEvent) return;
+  el.addEventListener("focus", () => ctx.onEvent(node, "onFocus"));
+  el.addEventListener("blur", () => ctx.onEvent(node, "onBlur"));
+}
+
 function renderLeaf(node, ctx) {
   const el = document.createElement(node.type === "button" ? "button" : "div");
   switch (node.type) {
@@ -73,6 +79,7 @@ function renderLeaf(node, ctx) {
       input.type = "text";
       input.value = prop(node, "value", ctx, "");
       if (ctx.onEvent) input.addEventListener("input", () => ctx.onEvent(node, "onChange", input.value));
+      bindFocusBlur(input, node, ctx);
       el.appendChild(input);
       break;
     }
@@ -80,6 +87,7 @@ function renderLeaf(node, ctx) {
       const textarea = document.createElement("textarea");
       textarea.value = prop(node, "value", ctx, "");
       if (ctx.onEvent) textarea.addEventListener("input", () => ctx.onEvent(node, "onChange", textarea.value));
+      bindFocusBlur(textarea, node, ctx);
       el.appendChild(textarea);
       break;
     }
@@ -93,6 +101,7 @@ function renderLeaf(node, ctx) {
       }
       select.value = prop(node, "value", ctx, "");
       if (ctx.onEvent) select.addEventListener("change", () => ctx.onEvent(node, "onChange", select.value));
+      bindFocusBlur(select, node, ctx);
       el.appendChild(select);
       break;
     }

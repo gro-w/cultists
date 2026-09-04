@@ -254,6 +254,8 @@ create -> mount -> focus/blur -> minimize/restore/maximize -> close -> destroy
 
 生命周期 Activity 必须统一经过 `ActivityExecutionService`，不能由窗口自己创建另一套 Runner。销毁路径必须幂等，标题栏关闭、系统菜单关闭和程序化关闭只能执行一次 `onDestroy`。
 
+实现现状：`onCreate`/`onDestroy` 在 `window-events` 队列执行（`engine.js` 的 `runWindowLifecycleEvent`）；组件的 `onClick`/`onChange`/`onFocus`/`onBlur` 在独立的 `widget-events` 队列执行（`runWidgetEvent`，通过 widget 树按 `widgetId` 查找），两条队列分开是为了调试器里不把窗口生命周期和高频组件交互事件混在一起。触发值（如 onChange 的新值）通过 `variableStore` 的约定变量名 `event:value` 传给蓝图，复用既有 `{variable}` 取值方式，未引入新节点类型。`onSubmit` 因渲染器尚无表单包装概念，暂不实现。
+
 ### 4.3 拖动与大小调节
 
 - 标题栏拖动使用 Pointer Events

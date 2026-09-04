@@ -2,6 +2,7 @@ import { WindowFrame } from "./WindowFrame.js";
 import { Taskbar } from "./Taskbar.js";
 import { renderDesktopIcons } from "./DesktopIcon.js";
 import { GAME_CLOCK_EVENTS } from "../core/GameClock.js";
+import { resolvePropertyValue } from "../core/PropertyBinding.js";
 
 /**
  * DesktopShell - presentation-only root: desktop background, icon layer,
@@ -25,6 +26,10 @@ export class DesktopShell {
     this.rootEl = rootEl;
     this.gameClock = gameClock || null;
     this.variableStore = variableStore || null;
+    // Set post-construction by engine.js (mirrors `shell.runActivity`), so
+    // component interaction events (plan §4.2 onClick/onChange/...) reach
+    // the exact same ActivityExecutionService as every other Activity.
+    this.runWidgetEvent = null;
     this.frames = new Map(); // instanceId -> WindowFrame
     this._buildDom();
     this._bindEvents();
@@ -91,8 +96,18 @@ export class DesktopShell {
     const state = this.windowManager.get(instanceId);
     if (!state) return;
     const definition = this.windowDefinitionStore.get(state.windowId);
-    const rendererCtx = { variableStore: this.variableStore, valueGraph: definition?.valueGraph };
-    const frame = new WindowFrame(this.windowManager, this.eventBus, state, definition?.body, definition?.root, rendererCtx);
+    const rendererCtx = {
+      variableStore: this.variableStore,
+      valueGraph: definition?.valueGraph,
+      onEvent: (node, eventName, value) => this.runWidgetEvent?.(state.windowId, node.widgetId, eventName, value),
+    };
+    // A window's title (like its widget properties) may be a bound value
+    // instead of a fixed literal ("窗口属性...也都可以通过蓝图指定"); this
+    // only affects the rendered titlebar text, never `WindowManager`'s own
+    // state.title (which stays the plain literal/fallback used for the
+    // taskbar and singleInstance lookups).
+    const title = resolvePropertyValue(definition?.title, rendererCtx, state.title);
+    const frame = new WindowFrame(this.windowManager, this.eventBus, { ...state, title }, definition?.body, definition?.root, rendererCtx);
     this.frames.set(instanceId, frame);
     this.windowLayerEl.appendChild(frame.el);
   }

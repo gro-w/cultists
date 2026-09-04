@@ -1,1 +1,10 @@
-[]
+[
+  { "databaseId": "inventoryItems", "recordType": "item", "primaryKey": "id" },
+  { "databaseId": "patients", "recordType": "patient", "primaryKey": "id" },
+  { "databaseId": "symptoms", "recordType": "symptom", "primaryKey": "id" },
+  { "databaseId": "diagnoses", "recordType": "diagnosis", "primaryKey": "id" },
+  { "databaseId": "treatments", "recordType": "treatment", "primaryKey": "id" },
+  { "databaseId": "medicalCases", "recordType": "medicalCase", "primaryKey": "id" },
+  { "databaseId": "patientDialogueContexts", "recordType": "patientDialogueContext", "primaryKey": "id" },
+  { "databaseId": "medicalAppointments", "recordType": "medicalAppointment", "primaryKey": "id" }
+]

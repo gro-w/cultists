@@ -1,1 +1,71 @@
-[]
+[
+  {
+    "id": "item",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "quantity", "type": "integer", "default": 1 },
+      { "id": "consumable", "type": "bool", "default": true },
+      { "id": "useMinutes", "type": "integer", "default": 5 }
+    ]
+  },
+  {
+    "id": "patient",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "npcRef", "type": "objectRef" }
+    ]
+  },
+  {
+    "id": "symptom",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "description", "type": "string" }
+    ]
+  },
+  {
+    "id": "diagnosis",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" }
+    ]
+  },
+  {
+    "id": "treatment",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" }
+    ]
+  },
+  {
+    "id": "medicalCase",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "patientId", "type": "string" },
+      { "id": "status", "type": "string", "default": "open" },
+      { "id": "symptomIds", "type": "array<string>", "default": [] },
+      { "id": "diagnosisId", "type": "string", "default": "" },
+      { "id": "treatmentId", "type": "string", "default": "" }
+    ]
+  },
+  {
+    "id": "patientDialogueContext",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "patientId", "type": "string" },
+      { "id": "dialogueActivityId", "type": "string" }
+    ]
+  },
+  {
+    "id": "medicalAppointment",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "patientId", "type": "string" },
+      { "id": "startMinutes", "type": "integer" },
+      { "id": "dialogueActivityId", "type": "string" },
+      { "id": "triggered", "type": "bool", "default": false }
+    ]
+  }
+]

@@ -1076,6 +1076,8 @@ UI 不直接修改库存，也不直接推进时间。
 - 物品使用不绕过 Activity
 - 医疗对话按 blockUntil 时间触发且不会重复触发
 
+**实现状态**：`ng/core/PublicVariableManager.js`（0..65535 ID、六种类型、`evaluateCondition`/`applyEffect`/`snapshot`/`restore`）+ `ng/core/RuntimeRefResolver.js`（按 `objectType` 注册解析器，失效引用显式 `{resolved:false}`）已实现；`ActivityNodeRegistry`/`ActivityRunner` 新增 `getPublicVariable`/`publicVariableCondition`/`applyPublicVariableEffect` 节点与 `pvGateway`（与既有 `dbGateway` 同构），`blockUntil` 额外支持一个可选的已连线布尔 `condition` 输入，等待重检同时监听 `variable:changed` 与 `gameClock:changed`。`engine.js` 为每个已加载数据库自动注册 `database:<id>` 引用解析器，并支持 `data/public-variables.json`（新增声明式 `syncSource:"gameClock.totalMinutes"` 字段，由引擎把 GameClock 镜像进一个只读公共变量，供内容通过通用原语表达按时间的 `blockUntil`）。已提供 `item`/`patient`/`medicalCase`/`symptom`/`diagnosis`/`treatment`/`patientDialogueContext`/`medicalAppointment` 结构与对应数据库（`data/structures.json`/`data/databases.json`），以及 `data/activities/use-item.json`（查询数据库→分支→改记录→消耗时间→emitEvent，全程走 Activity/数据库 API）与 `data/activities/medical-appointment-watcher.json`（创建示例记录→按 `publicVariableCondition` 时间条件 `blockUntil`→更新病例状态→`runActivity` 触发对话 Activity，对话内容本身留给独立 Activity 列表实现）。`ng/probes/public-variable-probe.mjs` 覆盖全部确定性探针（含 blockUntil 按时间触发且仅触发一次）。尚未实现：开发人员模式下的公共变量可视化编辑器。
+
 ### Phase 7：存档与发布边界
 
 交付：

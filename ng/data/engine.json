@@ -6,5 +6,6 @@
   "activityLists": ["default.json"],
   "structures": "structures.json",
   "databases": "databases.json",
+  "publicVariables": "public-variables.json",
   "defaultActivity": { "queueId": "main", "activityId": "default" }
 }

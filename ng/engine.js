@@ -60,6 +60,19 @@ export async function bootstrap(rootEl) {
     if (publicVariablesResponse.ok) publicVariableManager.loadDefinitions(await publicVariablesResponse.json());
   }
 
+  // Declarative gameClock mirror (see PublicVariableManager's `syncSource`
+  // doc comment): any variable data marks with `"syncSource":
+  // "gameClock.totalMinutes"` is kept in lockstep with the GameClock, so
+  // content can express `blockUntil`/`publicVariableCondition` waits keyed
+  // off in-game time using only generic public-variable primitives.
+  publicVariableManager.list()
+    .filter((definition) => definition.syncSource === "gameClock.totalMinutes")
+    .forEach((definition) => {
+      const sync = ({ day, minutes }) => publicVariableManager.set(definition.id, (day - 1) * 1440 + minutes);
+      sync(gameClock.snapshot());
+      eventBus.on("gameClock:changed", sync);
+    });
+
   // Every structure-backed database record is resolvable as an "object"-typed
   // public variable's ref via `{objectType:"database:<databaseId>", objectId:<primaryKey>}`
   // - a generic mechanism (no per-database code), registered once every

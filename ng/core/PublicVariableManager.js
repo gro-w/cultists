@@ -59,6 +59,11 @@ export class PublicVariableManager {
       persistent: raw.persistent !== false,
       readOnly: Boolean(raw.readOnly),
       objectTarget: raw.objectTarget || null,
+      // Declarative hook (plan-compatible extension, not a new engine concept):
+      // content data may mark a variable as mirroring some other generic
+      // engine signal (currently only "gameClock.totalMinutes" is wired, in
+      // engine.js) - the manager itself does not interpret this value.
+      syncSource: raw.syncSource || null,
       description: raw.description || "",
     };
     this.definitions.set(id, definition);

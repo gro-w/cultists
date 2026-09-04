@@ -1,0 +1,30 @@
+{
+  "id": "medical-appointment-watcher",
+  "displayName": "医疗预约触发器（示例）",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": { "id": "start", "type": "flowStart", "x": 60, "y": 60, "inputs": {} },
+      "ensurePatient": { "id": "ensurePatient", "type": "createRecord", "x": 260, "y": 0, "inputs": { "databaseId": "patients", "data": { "id": "patient-1", "name": "访客", "npcRef": "npc-1" } } },
+      "ensureCase": { "id": "ensureCase", "type": "createRecord", "x": 460, "y": 0, "inputs": { "databaseId": "medicalCases", "data": { "id": "case-1", "patientId": "patient-1", "status": "scheduled" } } },
+      "ensureAppointment": { "id": "ensureAppointment", "type": "createRecord", "x": 660, "y": 0, "inputs": { "databaseId": "medicalAppointments", "data": { "id": "appointment-1", "patientId": "patient-1", "startMinutes": 100, "dialogueActivityId": "patient-dialogue-1", "triggered": false } } },
+      "isDue": { "id": "isDue", "type": "publicVariableCondition", "x": 260, "y": 200, "inputs": { "id": 0, "op": "gte", "value": 100 } },
+      "wait": { "id": "wait", "type": "blockUntil", "x": 860, "y": 60, "inputs": {} },
+      "markTriggered": { "id": "markTriggered", "type": "updateRecord", "x": 1060, "y": 0, "inputs": { "databaseId": "medicalAppointments", "key": "appointment-1", "patch": { "triggered": true } } },
+      "runDialogue": { "id": "runDialogue", "type": "runActivity", "x": 1260, "y": 0, "inputs": { "activityId": "patient-dialogue-1", "queueId": "main" } },
+      "updateCase": { "id": "updateCase", "type": "updateRecord", "x": 1460, "y": 0, "inputs": { "databaseId": "medicalCases", "key": "case-1", "patch": { "status": "in-progress" } } },
+      "end": { "id": "end", "type": "activityEnd", "x": 1660, "y": 0, "inputs": {} }
+    },
+    "connections": [
+      { "id": "edge-1", "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "ensurePatient", "toPort": "flowIn" },
+      { "id": "edge-2", "fromNodeId": "ensurePatient", "fromPort": "flowOut", "toNodeId": "ensureCase", "toPort": "flowIn" },
+      { "id": "edge-3", "fromNodeId": "ensureCase", "fromPort": "flowOut", "toNodeId": "ensureAppointment", "toPort": "flowIn" },
+      { "id": "edge-4", "fromNodeId": "ensureAppointment", "fromPort": "flowOut", "toNodeId": "wait", "toPort": "flowIn" },
+      { "id": "edge-5", "fromNodeId": "isDue", "fromPort": "value", "toNodeId": "wait", "toPort": "condition" },
+      { "id": "edge-6", "fromNodeId": "wait", "fromPort": "flowOut", "toNodeId": "markTriggered", "toPort": "flowIn" },
+      { "id": "edge-7", "fromNodeId": "markTriggered", "fromPort": "flowOut", "toNodeId": "runDialogue", "toPort": "flowIn" },
+      { "id": "edge-8", "fromNodeId": "runDialogue", "fromPort": "flowOut", "toNodeId": "updateCase", "toPort": "flowIn" },
+      { "id": "edge-9", "fromNodeId": "updateCase", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "id": "chatgtp",
+  "title": "ChatGTP",
+  "icon": "🤖",
+  "width": 520,
+  "height": 480,
+  "resizable": true,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 12,
+    "children": [
+      { "widgetId": "chatgtp-title", "type": "label", "text": "ChatGTP - 智能问答（关键词组合查询）" },
+      { "widgetId": "chatgtp-keyword1-label", "type": "label", "text": "关键词 1" },
+      { "widgetId": "chatgtp-keyword1-select", "type": "select", "options": { "variable": "chatgtp:keywords" }, "optionValueField": "id", "optionLabelField": "content", "events": {
+        "onChange": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
+            "set": { "id": "set", "type": "setVariable", "inputs": { "key": "chatgtp:keyword1", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+            "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+          }
+        }
+      } },
+      { "widgetId": "chatgtp-keyword2-label", "type": "label", "text": "关键词 2（可选）" },
+      { "widgetId": "chatgtp-keyword2-select", "type": "select", "options": { "variable": "chatgtp:keywords" }, "optionValueField": "id", "optionLabelField": "content", "events": {
+        "onChange": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
+            "set": { "id": "set", "type": "setVariable", "inputs": { "key": "chatgtp:keyword2", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+            "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+          }
+        }
+      } },
+      { "widgetId": "chatgtp-query", "type": "button", "text": "查询", "events": {
+        "onClick": {
+          "startNodeId": "start",
+          "nodes": {
+            "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "checkOnline", "port": "flowIn" } } },
+            "checkOnline": { "id": "checkOnline", "type": "branch", "inputs": { "condition": { "nodeId": "isOnline", "port": "value" } }, "next": { "true": { "nodeId": "lookup", "port": "flowIn" }, "false": { "nodeId": "goOffline", "port": "flowIn" } } },
+            "isOnline": { "id": "isOnline", "type": "publicVariableCondition", "inputs": { "id": 5, "op": "gt", "value": 0 } },
+
+            "lookup": { "id": "lookup", "type": "getRecord", "inputs": { "databaseId": "chatgtpQaEntries", "key": { "nodeId": "finalKey", "port": "value" }, "resultVariable": "chatgtp:lookup" }, "next": { "flowOut": { "nodeId": "setAnswer", "port": "flowIn" } } },
+            "hasSecond": { "id": "hasSecond", "type": "arithmetic", "inputs": { "operator": "=", "left": { "variable": "chatgtp:keyword2" }, "right": "" } },
+            "keywordLess": { "id": "keywordLess", "type": "arithmetic", "inputs": { "operator": "<", "left": { "variable": "chatgtp:keyword1" }, "right": { "variable": "chatgtp:keyword2" } } },
+            "lowKeyword": { "id": "lowKeyword", "type": "conditionalValue", "inputs": { "condition": { "nodeId": "keywordLess", "port": "value" }, "whenTrue": { "variable": "chatgtp:keyword1" }, "whenFalse": { "variable": "chatgtp:keyword2" } } },
+            "highKeyword": { "id": "highKeyword", "type": "conditionalValue", "inputs": { "condition": { "nodeId": "keywordLess", "port": "value" }, "whenTrue": { "variable": "chatgtp:keyword2" }, "whenFalse": { "variable": "chatgtp:keyword1" } } },
+            "joinPlus": { "id": "joinPlus", "type": "arithmetic", "inputs": { "operator": "concat", "left": { "nodeId": "lowKeyword", "port": "value" }, "right": "+" } },
+            "comboKey": { "id": "comboKey", "type": "arithmetic", "inputs": { "operator": "concat", "left": { "nodeId": "joinPlus", "port": "value" }, "right": { "nodeId": "highKeyword", "port": "value" } } },
+            "finalKey": { "id": "finalKey", "type": "conditionalValue", "inputs": { "condition": { "nodeId": "hasSecond", "port": "value" }, "whenTrue": { "variable": "chatgtp:keyword1" }, "whenFalse": { "nodeId": "comboKey", "port": "value" } } },
+
+            "notFound": { "id": "notFound", "type": "arithmetic", "inputs": { "operator": "=", "left": { "variable": "chatgtp:lookup" }, "right": null } },
+            "foundAnswer": { "id": "foundAnswer", "type": "getProperty", "inputs": { "value": { "variable": "chatgtp:lookup" }, "key": "answer" } },
+            "resolvedAnswer": { "id": "resolvedAnswer", "type": "conditionalValue", "inputs": { "condition": { "nodeId": "notFound", "port": "value" }, "whenTrue": "……（数据库中暂无匹配这一关键词组合的问答记录。）", "whenFalse": { "nodeId": "foundAnswer", "port": "value" } } },
+            "setAnswer": { "id": "setAnswer", "type": "setVariable", "inputs": { "key": "chatgtp:answer", "value": { "nodeId": "resolvedAnswer", "port": "value" } }, "next": { "flowOut": { "nodeId": "spendSan", "port": "flowIn" } } },
+            "spendSan": { "id": "spendSan", "type": "applyPublicVariableEffect", "inputs": { "id": 5, "delta": { "nodeId": "negatedCost", "port": "value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+            "sanCost": { "id": "sanCost", "type": "getProperty", "inputs": { "value": { "variable": "chatgtp:settings" }, "key": "sanCostPerQuery" } },
+            "negatedCost": { "id": "negatedCost", "type": "arithmetic", "inputs": { "operator": "-", "left": 0, "right": { "nodeId": "sanCost", "port": "value" } } },
+
+            "goOffline": { "id": "goOffline", "type": "setVariable", "inputs": { "key": "chatgtp:answer", "value": { "nodeId": "offlineAnswer", "port": "value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+            "offlineAnswer": { "id": "offlineAnswer", "type": "getProperty", "inputs": { "value": { "variable": "chatgtp:settings" }, "key": "offlineAnswer" } },
+
+            "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+          }
+        }
+      } },
+      { "widgetId": "chatgtp-answer-label", "type": "label", "text": "回答" },
+      { "widgetId": "chatgtp-answer", "type": "label", "className": "ng-chatgtp-answer", "text": { "variable": "chatgtp:answer" } }
+    ]
+  },
+  "events": {
+    "onCreate": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "findKeywords", "port": "flowIn" } } },
+        "findKeywords": { "id": "findKeywords", "type": "findRecords", "inputs": { "databaseId": "keywords", "query": {}, "resultVariable": "chatgtp:keywords" }, "next": { "flowOut": { "nodeId": "getSettings", "port": "flowIn" } } },
+        "getSettings": { "id": "getSettings", "type": "getRecord", "inputs": { "databaseId": "chatgtpSettings", "key": "default", "resultVariable": "chatgtp:settings" }, "next": { "flowOut": { "nodeId": "clearKeyword1", "port": "flowIn" } } },
+        "clearKeyword1": { "id": "clearKeyword1", "type": "setVariable", "inputs": { "key": "chatgtp:keyword1", "value": "" }, "next": { "flowOut": { "nodeId": "clearKeyword2", "port": "flowIn" } } },
+        "clearKeyword2": { "id": "clearKeyword2", "type": "setVariable", "inputs": { "key": "chatgtp:keyword2", "value": "" }, "next": { "flowOut": { "nodeId": "clearAnswer", "port": "flowIn" } } },
+        "clearAnswer": { "id": "clearAnswer", "type": "setVariable", "inputs": { "key": "chatgtp:answer", "value": "" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+        "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+      }
+    },
+    "onDestroy": null
+  }
+}

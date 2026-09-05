@@ -67,4 +67,21 @@ const blueprint = {
   assert.deepEqual(value, ["first"]);
 }
 
+// --- conditionalValue: ternary selection ----------------------------------
+{
+  const bp = {
+    nodes: {
+      lt: { id: "lt", type: "arithmetic", inputs: { operator: "<", left: "flu", right: "cough" } },
+      pick: { id: "pick", type: "conditionalValue", inputs: { condition: { nodeId: "lt", port: "value" }, whenTrue: "flu-first", whenFalse: "cough-first" } },
+    },
+  };
+  assert.equal(evaluateValueOutput(bp, "pick", "value", variableStore, new Set()), "cough-first");
+}
+
+// --- arithmetic "concat": string join, not numeric coercion --------------
+{
+  const bp = { nodes: { join: { id: "join", type: "arithmetic", inputs: { operator: "concat", left: "flu", right: "cough" } } } };
+  assert.equal(evaluateValueOutput(bp, "join", "value", variableStore, new Set()), "flucough");
+}
+
 console.log("get-property-node-probe: ok");

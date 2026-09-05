@@ -120,6 +120,16 @@ const definitions = {
     valueInputs: [valueIn("operator", "string"), valueIn("left"), valueIn("right")],
     valueOutputs: [valueOut("value")],
   },
+  // Ternary value selection (no domain meaning, same "engine stays generic"
+  // spirit as `arithmetic`/`branch`): picks `whenTrue`/`whenFalse` based on
+  // `condition`, letting a value-graph express e.g. "pick the
+  // alphabetically-first of two chosen keyword ids" with only comparison +
+  // this node, no dedicated sort/min node.
+  conditionalValue: {
+    label: "条件取值",
+    valueInputs: [valueIn("condition", "bool"), valueIn("whenTrue"), valueIn("whenFalse")],
+    valueOutputs: [valueOut("value")],
+  },
   getVariable: {
     label: "读取变量",
     valueInputs: [valueIn("key", "string")],

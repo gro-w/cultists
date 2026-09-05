@@ -16,5 +16,6 @@
   { "databaseId": "keywords", "recordType": "keyword", "primaryKey": "id" },
   { "databaseId": "locations", "recordType": "location", "primaryKey": "id" },
   { "databaseId": "achievements", "recordType": "achievement", "primaryKey": "id" },
-  { "databaseId": "achievementCategories", "recordType": "achievementCategory", "primaryKey": "id" }
+  { "databaseId": "achievementCategories", "recordType": "achievementCategory", "primaryKey": "id" },
+  { "databaseId": "chatgtpSettings", "recordType": "chatgtpSettings", "primaryKey": "id", "allowDelete": false }
 ]

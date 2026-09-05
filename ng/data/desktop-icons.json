@@ -25,5 +25,14 @@
     "position": { "mode": "grid" },
     "blueprintId": "desktop.open-window",
     "inputs": { "windowId": "his" }
+  },
+  {
+    "iconId": "chatgtp",
+    "label": "ChatGTP",
+    "glyph": "🤖",
+    "order": 3,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "chatgtp" }
   }
 ]

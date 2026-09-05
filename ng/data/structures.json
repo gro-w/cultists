@@ -181,5 +181,14 @@
       { "id": "id", "type": "string" },
       { "id": "label", "type": "string" }
     ]
+  },
+  {
+    "id": "chatgtpSettings",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "sanCostPerQuery", "type": "smallInteger", "default": 0 },
+      { "id": "offlineAnswer", "type": "string", "default": "" },
+      { "id": "revealKeywordIds", "type": "array<string>", "default": [] }
+    ]
   }
 ]

@@ -46,6 +46,9 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
     case "arithmetic":
       result = applyArithmetic(read("operator", "+"), read("left", 0), read("right", 0));
       break;
+    case "conditionalValue":
+      result = read("condition", false) ? read("whenTrue") : read("whenFalse");
+      break;
     case "getVariable":
       result = variableStore.get(read("key"));
       break;
@@ -98,6 +101,10 @@ function applyArithmetic(operator, left, right) {
     // legacy engine's `randomBranch`/`diceCheck` content as an ordinary
     // value/flow graph, with no dedicated "random" flow node needed.
     case "random": return Math.random();
+    // Generic string concatenation (as opposed to "+"'s numeric coercion) -
+    // e.g. building a display label or a lookup key from two variable-
+    // sourced strings.
+    case "concat": return String(left) + String(right);
     default: throw new Error(`Unknown arithmetic operator: ${operator}`);
   }
 }

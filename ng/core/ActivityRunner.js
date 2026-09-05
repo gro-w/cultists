@@ -82,6 +82,12 @@ function applyArithmetic(operator, left, right) {
     case "<=": return left <= right;
     case "=": return left === right;
     case "not": return !Boolean(left);
+    // Generic entropy source (Phase 8 legacy content migration): ignores
+    // both operands, returns a float in [0, 1). This — composed with
+    // `branch`/comparison operators above — is enough to express the
+    // legacy engine's `randomBranch`/`diceCheck` content as an ordinary
+    // value/flow graph, with no dedicated "random" flow node needed.
+    case "random": return Math.random();
     default: throw new Error(`Unknown arithmetic operator: ${operator}`);
   }
 }
@@ -93,7 +99,7 @@ function applyArithmetic(operator, left, right) {
  * 表"), then the legacy `{variable: name}` literal shorthand, then a plain
  * literal, then `fallback`.
  */
-function resolveInput(blueprint, node, name, variableStore, fallback, stack = new Set(), pvGateway = null) {
+export function resolveInput(blueprint, node, name, variableStore, fallback, stack = new Set(), pvGateway = null) {
   const raw = node.inputs ? node.inputs[name] : undefined;
   if (raw && typeof raw === "object" && !Array.isArray(raw)) {
     if ("nodeId" in raw) return evaluateValueOutput(blueprint, raw.nodeId, raw.port || "value", variableStore, stack, pvGateway);
@@ -227,6 +233,34 @@ export function createActivityRunner({
           pvGateway.set(id, resolveInput(blueprint, node, "value", variableStore, undefined, pvGateway));
         }
         return { next: nextFlow(blueprint, node) };
+      }
+      case "text": {
+        const continueKey = resolveInput(blueprint, node, "continueKey", variableStore, undefined, undefined, pvGateway);
+        eventGateway("dialogue:text", {
+          speaker: resolveInput(blueprint, node, "speaker", variableStore, "", undefined, pvGateway),
+          text: resolveInput(blueprint, node, "text", variableStore, "", undefined, pvGateway),
+          displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway),
+          keywordIds: resolveInput(blueprint, node, "keywordIds", variableStore, [], undefined, pvGateway),
+        }, instance, node);
+        if (continueKey && !variableStore.get(continueKey)) return { wait: true };
+        if (continueKey) variableStore.set(continueKey, null);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "choice": {
+        const selectionKey = resolveInput(blueprint, node, "selectionKey", variableStore, undefined, undefined, pvGateway);
+        const optionCount = Number(resolveInput(blueprint, node, "optionCount", variableStore, 0, undefined, pvGateway)) || 0;
+        eventGateway("dialogue:choice", {
+          options: resolveInput(blueprint, node, "options", variableStore, [], undefined, pvGateway),
+          selectionKey,
+        }, instance, node);
+        const selected = selectionKey ? variableStore.get(selectionKey) : undefined;
+        if (selected === undefined || selected === null) return { wait: true };
+        const index = Number(selected);
+        if (!Number.isInteger(index) || index < 0 || index >= optionCount) {
+          throw new Error(`Node ${node.id} received an out-of-range choice selection: ${selected}`);
+        }
+        if (selectionKey) variableStore.set(selectionKey, null);
+        return { next: nextFlow(blueprint, node, `option${index}`) };
       }
       default:
         throw new Error(`Unhandled node type: ${node.type}`);

@@ -1124,6 +1124,8 @@ UI 不直接修改库存，也不直接推进时间。
 
 后续领域（物品、医疗诊断树、结局、对话节点类型扩展、`chatgtp_qa.json` 批量导入等）留待后续会话按同一模式（结构+数据库/Activity+行为矩阵+探针）逐个推进。
 
+第三个切片：**对话节点类型审计 + 引擎扩展**——逐一比对旧引擎 `js/core/ActivityRunner.js` 的节点执行语义与 `ng/core/ActivityNodeRegistry.js` 现有通用节点集，发现绝大多数"缺失"节点类型无需新增引擎概念、可由既有通用原语组合表达：`setGlobal`/`getGlobal`→`applyPublicVariableEffect`/`getPublicVariable`（id 与已迁移的 `public-variables.json` 一致）、`randomBranch`/`diceCheck`（骰子判定分档）→ `arithmetic` 新增的 `"random"` 运算符（返回 `[0,1)` 浮点，不带任何领域语义）配合既有 `branch`/比较运算符链式表达、`insertActivity`→既有 `runActivity`。仅 `text`（显示一行对话+可选等待"继续"信号）与 `choice`（展示 N 个带标签选项+等待外部选择+按序号分支)确无等价通用原语，遂新增为两个通用节点类型（§15 风险 F 审查：两者都不引用 his/social/item 等具体领域，`displayTo`/`options`/`selectionKey` 都是不透明字符串/数据，与既有 `emitEvent` 的 `eventName` 同类）：`text` 通过 `eventGateway` 广播 `speaker`/`text`/`displayTo`/`keywordIds`，仅当 `continueKey` 有值时才阻塞（复用与 `blockUntil` 完全相同的"等待变量置真→消费重置→继续"机制，由某个组件的 onClick 蓝图 `setVariable` 唤醒，无需新的等待原语）；`choice` 同理通过 `selectionKey` 阻塞，`optionCount` 个 `optionN` 流程输出端口（静态声明至 `option5`，对应旧内容全库实测最大分支数 3；`ActivityValidator` 按 `optionCount` 只校验前 N 个端口的连线，其余视为未使用而非报错)。`prerequisite`/`activityExpiry` 按旧引擎原样迁移为无流程端口的纯数值节点（旧引擎里它们本就不参与流程执行、只被"选择/过期检查"逻辑按类型查找后直接读取输入），`ActivityValidator` 的可达性检查对无流程端口的节点天然豁免。行为矩阵：见 `ng/probes/dialogue-node-probe.mjs`（text 自动推进/等待续行两种模式、choice 分支路由与越界选择报错、prerequisite/activityExpiry 未接入流程仍可校验通过并被读取、random 运算符落在 `[0,1)` 且不恒定）。**尚未加入**：`diceCheck`/`segmentBranch`/`insertActivity`/`inventoryOperation`/`statOperation`/`showCg`/`endCg`/`showImage`/`spellCast`/`spellEffect`/`his*`（医疗问诊 App 专属显示节点）的实际转换脚本映射规则——这些的引擎原语已具备（或明确判定为纯内容层可组合表达），但脚本化改编尚未编写；下一切片是编写 `ng/tools/migrate-legacy-blueprint.mjs` 批量改编旧蓝图 JSON，而非手工逐条转录。
+
 ### Phase 9：ng/ 成熟后的根目录替换
 
 该阶段不是日常开发的一部分，只有新引擎和首批改编内容达到发布质量后执行：

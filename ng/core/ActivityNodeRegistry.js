@@ -145,6 +145,53 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("id", "number"), valueIn("value"), valueIn("delta", "number"), valueIn("toggle", "bool"), valueIn("setObjectRef")],
   },
+  // Generic narrative-display primitive (Phase 8 legacy content migration):
+  // announces a line of text through `eventGateway` (same mechanism as
+  // `emitEvent` — no "his-app"/"social-app" enum baked in, `displayTo` is an
+  // opaque routing string a window/widget subscribes to) and, only when a
+  // `continueKey` is wired, blocks exactly like `blockUntil` until that
+  // variable becomes truthy (a widget's onClick blueprint sets it), then
+  // resets the key and continues. Omitting `continueKey` auto-advances
+  // immediately, for non-interactive/automated narration.
+  text: {
+    label: "显示文本",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("speaker", "string"), valueIn("text", "string"), valueIn("displayTo", "string"), valueIn("keywordIds"), valueIn("continueKey", "string")],
+  },
+  // Generic labeled N-way branch primitive: announces `options` through
+  // `eventGateway` for a window/widget to render as buttons, then blocks
+  // until `selectionKey` (set by a button's onClick blueprint to the chosen
+  // option's index) is a valid integer in [0, optionCount), consumes it
+  // (resets to null so a later revisit — e.g. a loop back onto this node —
+  // waits for a fresh selection), and branches on the matching `optionN`
+  // flow output. `optionN` ports are declared up to a fixed cap (6, well
+  // above the legacy corpus's observed max of 3) since Blueprint node types
+  // are statically registered; ActivityValidator only requires the first
+  // `optionCount` of them to be wired (plan §15 风险 F: still domain-agnostic
+  // — nothing here references dialogue/item/medical content).
+  choice: {
+    label: "选择分支",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut("option0"), flowOut("option1"), flowOut("option2"), flowOut("option3"), flowOut("option4"), flowOut("option5")],
+    valueInputs: [valueIn("options"), valueIn("optionCount", "number"), valueIn("selectionKey", "string")],
+  },
+  // Pure value nodes with no flow ports at all (legacy `prerequisite`/
+  // `activityExpiry`, ported 1:1): never flow-stepped by the runner, never
+  // wired to another node's value input either — future Activity-selection
+  // logic (deciding which entries are offered/still valid) finds the one
+  // `prerequisite`/`activityExpiry` node in a definition's blueprint (by
+  // type, exactly like the legacy engine's `matchesPrerequisites`/expiry
+  // check) and reads its `condition`/`expires`/`expiresAt` inputs directly
+  // via the same generic `resolveInput` helper flow nodes already use.
+  prerequisite: {
+    label: "前置条件",
+    valueInputs: [valueIn("condition", "bool")],
+  },
+  activityExpiry: {
+    label: "活动过期",
+    valueInputs: [valueIn("expires", "bool"), valueIn("expiresAt", "number")],
+  },
 };
 
 export const ACTIVITY_NODE_TYPES = Object.freeze(Object.keys(definitions));

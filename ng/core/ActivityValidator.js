@@ -75,7 +75,14 @@ export function validateBlueprint(raw) {
     if (!definition) { errors.push(`节点 ${id} 使用未知类型 ${node.type}`); continue; }
 
     if (node.type !== "activityEnd") {
-      for (const port of flowPorts("output", definition)) {
+      // `choice` over-provisions a fixed static port list (option0..
+      // option5); only the first `optionCount` of them are required to be
+      // wired, the rest are simply unused ports, not validation errors.
+      const optionCount = Number(node.inputs?.optionCount) || 0;
+      const outputPorts = node.type === "choice" && optionCount > 0
+        ? flowPorts("output", definition).slice(0, optionCount)
+        : flowPorts("output", definition);
+      for (const port of outputPorts) {
         const target = node.next?.[port.name];
         if (!target?.nodeId) { errors.push(`节点 ${id} 的流程输出 ${port.name} 未连接`); continue; }
         const targetNode = blueprint.nodes[target.nodeId];

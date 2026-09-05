@@ -403,6 +403,7 @@ export async function bootstrap(rootEl) {
       dataStructureManager,
       dataStore,
       publicVariableManager,
+      onboardingManager,
       refreshIcons: () => shell.mountIcons(iconManager),
     });
     buildDeveloperDesktopIcons().forEach((icon) => iconManager.register(icon));

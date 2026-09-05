@@ -387,7 +387,10 @@ export async function bootstrap(rootEl) {
   // hints (ported near-verbatim from legacy js/desktop/TutorialOverlay.js);
   // it only listens to "onboarding:hint_requested"/"onboarding:hint_closed"
   // events, so it needs no engine-specific wiring beyond construction.
-  const tutorialOverlay = new TutorialOverlay({ eventBus, onboardingManager, root: rootEl });
+  // The overlay owns a separate fixed layer.  Do not pass `ng-root` as its
+  // root: TutorialOverlay replaces its root's contents when mounting, which
+  // would erase the already-rendered desktop shell.
+  const tutorialOverlay = new TutorialOverlay({ eventBus, onboardingManager });
 
   // DEV-TOOLS:START
   if (isDevEntry()) {

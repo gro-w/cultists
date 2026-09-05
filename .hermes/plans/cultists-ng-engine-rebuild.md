@@ -1118,6 +1118,8 @@ UI 不直接修改库存，也不直接推进时间。
 - 为每个迁移模块写行为矩阵与确定性探针
 - 新旧游戏内容可在独立入口比较，但不要求旧存档可加载
 
+**实现状态（进行中）**：鉴于 `data/zh-hans/` 全量 50 个 JSON 文件、约 49 万行（`chatgtp_qa.json` 一个文件即 432,840 行），且多个文件本身内嵌完整的旧引擎专属节点图（`his`/`social` 对话树、`items.json` 的 investigate/use 蓝图），逐一改编无法一次性完成，采用按领域逐步推进、每领域独立可验证的路线。当前已完成第一个领域切片：**公共变量**——将 `data/zh-hans/global_variables.json`（111 条，ids 0..110 中的 0..99 为系统预留区间，语义见 `AGENTS.md`：1=主角SAN、2=金钱、5=ChatGTP SAN、20-39=技能点、40-59=好感度、60-79=NPC SAN）原样以相同 id、相同默认值迁移进 `ng/data/public-variables.json`，类型映射为 PublicVariableManager 既有类型（旧 `number`→`smallInteger`、`decimal`→`real`、`bool`→`bool`，无新增引擎概念）。原两条 Phase 6/7 示例变量（`gameTimeMinutes`/`playerInventoryFocus`）与旧引擎保留区间 id 0/1 冲突，已改配到 id 1000/1001（`ng/data/activities/medical-appointment-watcher.json` 同步更新其 `publicVariableCondition` 引用），无其它代码/探针硬编码这两个 id。行为矩阵：见 `ng/probes/legacy-public-variables-probe.mjs` 顶部注释与断言（条目数、无重复 id、AGENTS.md 保留区间语义、smallInteger 落在 0..255、示例变量重新编号后仍可用）。后续领域（NPC、物品、技能、关键词、地点、医疗、成就、结局、对话节点类型扩展、`chatgtp_qa.json` 批量导入等）留待后续会话按同一模式（结构+数据库/Activity+行为矩阵+探针）逐个推进。
+
 ### Phase 9：ng/ 成熟后的根目录替换
 
 该阶段不是日常开发的一部分，只有新引擎和首批改编内容达到发布质量后执行：

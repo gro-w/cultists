@@ -8,7 +8,7 @@
       "ensurePatient": { "id": "ensurePatient", "type": "createRecord", "x": 260, "y": 0, "inputs": { "databaseId": "patients", "data": { "id": "patient-1", "name": "访客", "npcRef": "npc-1" } } },
       "ensureCase": { "id": "ensureCase", "type": "createRecord", "x": 460, "y": 0, "inputs": { "databaseId": "medicalCases", "data": { "id": "case-1", "patientId": "patient-1", "status": "scheduled" } } },
       "ensureAppointment": { "id": "ensureAppointment", "type": "createRecord", "x": 660, "y": 0, "inputs": { "databaseId": "medicalAppointments", "data": { "id": "appointment-1", "patientId": "patient-1", "startMinutes": 100, "dialogueActivityId": "patient-dialogue-1", "triggered": false } } },
-      "isDue": { "id": "isDue", "type": "publicVariableCondition", "x": 260, "y": 200, "inputs": { "id": 0, "op": "gte", "value": 100 } },
+      "isDue": { "id": "isDue", "type": "publicVariableCondition", "x": 260, "y": 200, "inputs": { "id": 1000, "op": "gte", "value": 100 } },
       "wait": { "id": "wait", "type": "blockUntil", "x": 860, "y": 60, "inputs": {} },
       "markTriggered": { "id": "markTriggered", "type": "updateRecord", "x": 1060, "y": 0, "inputs": { "databaseId": "medicalAppointments", "key": "appointment-1", "patch": { "triggered": true } } },
       "runDialogue": { "id": "runDialogue", "type": "runActivity", "x": 1260, "y": 0, "inputs": { "activityId": "patient-dialogue-1", "queueId": "main" } },

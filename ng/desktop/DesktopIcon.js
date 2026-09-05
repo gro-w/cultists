@@ -27,25 +27,37 @@ export function renderDesktopIcons(rootEl, icons, { onActivate, onReorder, onFre
       <span class="icon-glyph">${icon.glyph || "🗂"}</span>
       <span class="icon-label">${icon.label}</span>
     `;
-    // Open on a normal click as well as a double-click.  The old desktop
-    // interaction was double-click-only, but the ng shell is also used from
-    // embedded/browser surfaces where a second click may not be synthesized
-    // as a `dblclick` event.  Delay the single-click action briefly so a
-    // double-click still activates exactly once.
+    // Opening is intentionally double-click-only.  Count the two click
+    // events ourselves as well as listening for dblclick: embedded browser
+    // surfaces do not always synthesize dblclick, while a single click must
+    // never start an Activity or open a window.
     let clickTimer = null;
+    let lastActivationAt = -Infinity;
+    const activate = () => {
+      const now = performance.now();
+      if (now - lastActivationAt < 400) return;
+      lastActivationAt = now;
+      onActivate?.(icon);
+    };
     el.addEventListener("click", () => {
-      if (clickTimer !== null) return;
+      if (clickTimer !== null) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+        activate();
+        return;
+      }
       clickTimer = setTimeout(() => {
         clickTimer = null;
-        onActivate?.(icon);
-      }, 250);
+      }, 400);
     });
-    el.addEventListener("dblclick", () => {
+    el.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       if (clickTimer !== null) {
         clearTimeout(clickTimer);
         clickTimer = null;
       }
-      onActivate?.(icon);
+      activate();
     });
     el.addEventListener("dragstart", (e) => {
       e.dataTransfer.setData("text/desktop-icon-id", icon.iconId);

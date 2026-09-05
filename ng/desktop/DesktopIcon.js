@@ -27,7 +27,26 @@ export function renderDesktopIcons(rootEl, icons, { onActivate, onReorder, onFre
       <span class="icon-glyph">${icon.glyph || "🗂"}</span>
       <span class="icon-label">${icon.label}</span>
     `;
-    el.addEventListener("dblclick", () => onActivate?.(icon));
+    // Open on a normal click as well as a double-click.  The old desktop
+    // interaction was double-click-only, but the ng shell is also used from
+    // embedded/browser surfaces where a second click may not be synthesized
+    // as a `dblclick` event.  Delay the single-click action briefly so a
+    // double-click still activates exactly once.
+    let clickTimer = null;
+    el.addEventListener("click", () => {
+      if (clickTimer !== null) return;
+      clickTimer = setTimeout(() => {
+        clickTimer = null;
+        onActivate?.(icon);
+      }, 250);
+    });
+    el.addEventListener("dblclick", () => {
+      if (clickTimer !== null) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+      }
+      onActivate?.(icon);
+    });
     el.addEventListener("dragstart", (e) => {
       e.dataTransfer.setData("text/desktop-icon-id", icon.iconId);
     });

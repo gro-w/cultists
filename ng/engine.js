@@ -19,6 +19,8 @@ import { SaveLoadView } from "./desktop/SaveLoadView.js";
 import { DialogueView } from "./desktop/DialogueView.js";
 import { KeywordManager } from "./core/KeywordManager.js";
 import { NotebookView } from "./desktop/NotebookView.js";
+import { OnboardingManager } from "./core/OnboardingManager.js";
+import { TutorialOverlay } from "./desktop/TutorialOverlay.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -51,6 +53,18 @@ export async function bootstrap(rootEl) {
   const dataStore = new DataStore(dataStructureManager);
   const refResolver = new RuntimeRefResolver();
   const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
+
+  // Generic milestone/hint mechanic (mirrors legacy js/core/OnboardingManager.js's
+  // effect, but is fully data-driven: `data/onboarding.json`'s hints are the
+  // only content this module ever reads, exactly like keywordManager only
+  // reads the `keywords` database). Created early so its `markMilestone`
+  // gateway can be threaded through every ActivityExecutionService.run()
+  // call site below, same convention as dbGateway/pvGateway.
+  const onboardingManager = new OnboardingManager({ eventBus });
+  if (engineConfig.onboarding) {
+    const onboardingResponse = await fetch(`data/${engineConfig.onboarding}`);
+    if (onboardingResponse.ok) onboardingManager.loadHints(await onboardingResponse.json());
+  }
 
   if (engineConfig.structures) {
     const structuresResponse = await fetch(`data/${engineConfig.structures}`);
@@ -123,6 +137,7 @@ export async function bootstrap(rootEl) {
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
       dbGateway: dataStore,
       pvGateway: publicVariableManager,
+      onboardingGateway: onboardingManager,
     });
   }
   shell.runActivity = runActivity;
@@ -154,6 +169,7 @@ export async function bootstrap(rootEl) {
         eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
         dbGateway: dataStore,
         pvGateway: publicVariableManager,
+        onboardingGateway: onboardingManager,
       });
     });
   }
@@ -185,6 +201,7 @@ export async function bootstrap(rootEl) {
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
       dbGateway: dataStore,
       pvGateway: publicVariableManager,
+      onboardingGateway: onboardingManager,
     });
   }
 
@@ -257,6 +274,7 @@ export async function bootstrap(rootEl) {
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
       dbGateway: dataStore,
       pvGateway: publicVariableManager,
+      onboardingGateway: onboardingManager,
     });
   }
   shell.runIconBlueprint = runIconBlueprint;
@@ -293,6 +311,7 @@ export async function bootstrap(rootEl) {
     windowManager,
     desktopIconManager: iconManager,
     keywordManager,
+    onboardingManager,
     activityExecutionService,
     resumePendingActivities,
     engineVersion: engineConfig.version,
@@ -360,6 +379,15 @@ export async function bootstrap(rootEl) {
     blueprintId: "desktop.open-window",
     inputs: { windowId: NOTEBOOK_WINDOW_ID },
   });
+  eventBus.on("window:opened", ({ windowId }) => {
+    if (windowId === NOTEBOOK_WINDOW_ID) onboardingManager.markMilestone("notebook_opened");
+  });
+
+  // TutorialOverlay is the generic visual layer for onboardingManager's
+  // hints (ported near-verbatim from legacy js/desktop/TutorialOverlay.js);
+  // it only listens to "onboarding:hint_requested"/"onboarding:hint_closed"
+  // events, so it needs no engine-specific wiring beyond construction.
+  const tutorialOverlay = new TutorialOverlay({ eventBus, onboardingManager, root: rootEl });
 
   // DEV-TOOLS:START
   if (isDevEntry()) {
@@ -382,6 +410,7 @@ export async function bootstrap(rootEl) {
   // DEV-TOOLS:END
 
   shell.mountIcons(iconManager);
+  onboardingManager.markMilestone("desktop_seen");
 
   if (engineConfig.defaultActivity) {
     const { activityId, queueId } = engineConfig.defaultActivity;
@@ -405,6 +434,8 @@ export async function bootstrap(rootEl) {
     refResolver,
     iconManager,
     saveManager,
+    onboardingManager,
+    tutorialOverlay,
   };
 }
 

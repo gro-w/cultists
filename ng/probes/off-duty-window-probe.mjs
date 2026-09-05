@@ -20,6 +20,7 @@ import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
+import { OnboardingManager } from "../core/OnboardingManager.js";
 import { evaluateValueOutput } from "../core/ActivityRunner.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -41,6 +42,7 @@ const variableStore = new VariableStore(eventBus);
 const activityQueueRegistry = new ActivityQueueRegistry();
 const queue = activityQueueRegistry.register("test", { nonBlocking: true });
 const activityExecutionService = new ActivityExecutionService(eventBus);
+const onboardingManager = new OnboardingManager({ eventBus });
 
 let consumedMinutes = 0;
 function runBlueprint(blueprint, label) {
@@ -58,6 +60,7 @@ function runBlueprint(blueprint, label) {
     eventGateway: () => {},
     dbGateway: dataStore,
     pvGateway: publicVariableManager,
+    onboardingGateway: onboardingManager,
   });
 }
 

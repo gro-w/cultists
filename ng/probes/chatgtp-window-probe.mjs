@@ -20,6 +20,7 @@ import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
+import { OnboardingManager } from "../core/OnboardingManager.js";
 import { entryKey } from "../tools/migrate-legacy-chatgtp-qa.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -43,6 +44,7 @@ const variableStore = new VariableStore(eventBus);
 const activityQueueRegistry = new ActivityQueueRegistry();
 const queue = activityQueueRegistry.register("test", { nonBlocking: true });
 const activityExecutionService = new ActivityExecutionService(eventBus);
+const onboardingManager = new OnboardingManager({ eventBus });
 
 function runBlueprint(blueprint, label) {
   const { ok, errors, blueprint: normalized } = validateBlueprint(blueprint);
@@ -59,6 +61,7 @@ function runBlueprint(blueprint, label) {
     eventGateway: () => {},
     dbGateway: dataStore,
     pvGateway: publicVariableManager,
+    onboardingGateway: onboardingManager,
   });
 }
 

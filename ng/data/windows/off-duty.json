@@ -672,6 +672,19 @@
           },
           "next": {
             "flowOut": {
+              "nodeId": "markDormSeen",
+              "port": "flowIn"
+            }
+          }
+        },
+        "markDormSeen": {
+          "id": "markDormSeen",
+          "type": "markOnboardingMilestone",
+          "inputs": {
+            "id": "dorm_seen"
+          },
+          "next": {
+            "flowOut": {
               "nodeId": "consume",
               "port": "flowIn"
             }

@@ -14,7 +14,7 @@ export class ActivityExecutionService {
     this._firedTerminal = new Set();
   }
 
-  run({ queue, definition, instance, variableStore, timeGateway, windowGateway, activityGateway, eventGateway, dbGateway, pvGateway } = {}) {
+  run({ queue, definition, instance, variableStore, timeGateway, windowGateway, activityGateway, eventGateway, dbGateway, pvGateway, onboardingGateway } = {}) {
     if (!queue || !definition || !instance) return null;
     if (instance.status === "resolved" || this.runners.has(instance.instanceId)) return null;
 
@@ -29,6 +29,7 @@ export class ActivityExecutionService {
       eventGateway,
       dbGateway,
       pvGateway,
+      onboardingGateway,
       onCheckpoint: (updated) => {
         queue.update(updated.instanceId, updated);
         this.eventBus.emit(ACTIVITY_EVENTS.changed, { queueId: queue.queueId, instance: { ...updated } });

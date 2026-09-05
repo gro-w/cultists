@@ -221,6 +221,18 @@ const definitions = {
     label: "活动过期",
     valueInputs: [valueIn("expires", "bool"), valueIn("expiresAt", "number")],
   },
+  // Generic onboarding/tutorial primitive (mirrors the legacy engine's
+  // effect - milestone-driven hints - without baking any specific
+  // milestone id or event-name mapping into engine code; any blueprint
+  // (dialogue node, widget onClick, window onCreate, desktop icon) can
+  // mark a milestone). Operates on `onboardingGateway`, a small sibling of
+  // `pvGateway`/`dbGateway`.
+  markOnboardingMilestone: {
+    label: "标记新手引导里程碑",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("id", "string")],
+  },
 };
 
 export const ACTIVITY_NODE_TYPES = Object.freeze(Object.keys(definitions));

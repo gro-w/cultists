@@ -10,6 +10,7 @@ import { GameClock } from "../core/GameClock.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
+import { OnboardingManager } from "../core/OnboardingManager.js";
 import { DataStructureManager } from "../core/DataStructureManager.js";
 import { DataStore } from "../core/DataStore.js";
 import { PublicVariableManager } from "../core/PublicVariableManager.js";
@@ -23,7 +24,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * through the shared ActivityExecutionService whenever WindowManager emits
  * `window:opened`/`window:closed`, on a dedicated non-blocking queue.
  */
-function wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock, dbGateway, pvGateway }) {
+function wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock, dbGateway, pvGateway, onboardingGateway }) {
   const windowEventsQueue = activityQueueRegistry.register("window-events", { nonBlocking: true });
   function runWindowLifecycleEvent(windowId, eventName) {
     const definition = windowDefinitionStore.get(windowId);
@@ -42,6 +43,7 @@ function wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueReg
       windowGateway: () => {},
       dbGateway,
       pvGateway,
+      onboardingGateway,
     });
   }
   eventBus.on("window:opened", ({ windowId }) => runWindowLifecycleEvent(windowId, "onCreate"));
@@ -74,7 +76,8 @@ function buildHarness() {
   const activityQueueRegistry = new ActivityQueueRegistry();
   const activityExecutionService = new ActivityExecutionService(eventBus);
   const { dbGateway, pvGateway } = buildDataGateways();
-  wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock, dbGateway, pvGateway });
+  const onboardingGateway = new OnboardingManager({ eventBus });
+  wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock, dbGateway, pvGateway, onboardingGateway });
   return { eventBus, windowManager, windowDefinitionStore, variableStore, gameClock };
 }
 

@@ -20,6 +20,7 @@
 const ONE_SHOT_NODE_TYPES = new Set([
   "setVariable", "consumeTime", "openWindow", "runActivity", "emitEvent",
   "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect",
+  "markOnboardingMilestone",
 ]);
 const MAX_STEPS = 1000;
 
@@ -158,6 +159,7 @@ export function createActivityRunner({
   eventGateway = () => {},
   dbGateway = null,
   pvGateway = null,
+  onboardingGateway = null,
   onCheckpoint = () => {},
   onComplete = () => {},
 } = {}) {
@@ -271,6 +273,11 @@ export function createActivityRunner({
         } else {
           pvGateway.set(id, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway));
         }
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "markOnboardingMilestone": {
+        if (!onboardingGateway) throw new Error(`Node ${node.type} requires an onboardingGateway`);
+        onboardingGateway.markMilestone(resolveInput(blueprint, node, "id", variableStore, undefined, undefined, pvGateway));
         return { next: nextFlow(blueprint, node) };
       }
       case "text": {

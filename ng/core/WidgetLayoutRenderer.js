@@ -172,7 +172,7 @@ function renderLeaf(node, ctx) {
       const itemLabelField = node.itemLabelField || "name";
       for (const item of prop(node, "items", ctx, []) || []) {
         const li = document.createElement("div");
-        li.className = "ng-widget-list-item";
+        li.className = node.itemClassName ? `ng-widget-list-item ${node.itemClassName}` : "ng-widget-list-item";
         li.textContent = typeof item === "string" ? item : item.label ?? item[itemLabelField] ?? "";
         if (item && typeof item === "object" && item.id !== undefined) {
           li.dataset.itemId = item.id;

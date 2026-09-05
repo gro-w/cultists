@@ -99,7 +99,9 @@
       { "id": "diagnosisId", "type": "string", "default": "" },
       { "id": "treatmentId", "type": "string", "default": "" },
       { "id": "prescribedMedicineIds", "type": "array<string>", "default": [] },
-      { "id": "correct", "type": "bool", "default": false }
+      { "id": "correct", "type": "bool", "default": false },
+      { "id": "bonus", "type": "integer", "default": 0 },
+      { "id": "commission", "type": "real", "default": 0 }
     ]
   },
   {

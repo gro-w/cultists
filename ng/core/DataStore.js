@@ -41,6 +41,23 @@ export class DataStore {
     return [...this.databases.values()].map(({ records, ...config }) => ({ ...config, recordCount: records.size }));
   }
 
+  /**
+   * Bulk-inserts pre-authored records into an already-registered database -
+   * the generic, config-driven counterpart to `loadDefinitions()` for
+   * *content* (e.g. `data/seed-records.json`), not schema. Each record still
+   * goes through `createRecord()`'s normal defaults/validation/duplicate-key
+   * checks, so a bad seed file fails the same way a bad `createRecord` call
+   * would; no domain-specific bypass is introduced.
+   */
+  loadRecords(databaseId, records = []) {
+    records.forEach((record) => this.createRecord(databaseId, record));
+  }
+
+  /** Bulk-loads a `{ databaseId: records[] }` map (e.g. fetched from `data/seed-records.json`) across every listed database, in file order. */
+  loadRecordSet(recordsByDatabase = {}) {
+    Object.entries(recordsByDatabase).forEach(([databaseId, records]) => this.loadRecords(databaseId, records));
+  }
+
 
   _db(databaseId) {
     const db = this.databases.get(databaseId);

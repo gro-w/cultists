@@ -7,10 +7,13 @@
  * records, never a new engine-level type.
  *
  * Supported field types (plan §9.2, first version):
- *   bool, smallInteger, integer, real, string, objectRef, array
+ *   bool, smallInteger, integer, real, string, objectRef, array, object
  * `array<T>` may be written as the field's `type` (e.g. "array<string>") to
  * additionally validate each element's type; a bare "array" accepts any
- * element type.
+ * element type. `object` accepts any plain (non-array) JSON object -
+ * for content whose internal shape is itself data-defined (e.g. a legacy
+ * achievement's free-form `trigger` descriptor), not a new engine concept,
+ * just a scalar type as domain-agnostic as `array`'s "accept anything".
  */
 const SCALAR_VALIDATORS = {
   bool: (value) => typeof value === "boolean",
@@ -23,6 +26,7 @@ const SCALAR_VALIDATORS = {
   // variable, window instance, ...); resolving that reference is the
   // caller's concern, not the structure manager's.
   objectRef: (value) => typeof value === "string" && value.length > 0,
+  object: (value) => typeof value === "object" && value !== null && !Array.isArray(value),
 };
 
 function parseArrayItemType(type) {
@@ -41,6 +45,7 @@ function defaultValueFor(field) {
   if (field.type === "real") return 0;
   if (field.type === "string") return "";
   if (field.type === "array" || parseArrayItemType(field.type)) return [];
+  if (field.type === "object") return {};
   return null;
 }
 

@@ -61,6 +61,13 @@ export async function bootstrap(rootEl) {
     const publicVariablesResponse = await fetch(`data/${engineConfig.publicVariables}`);
     if (publicVariablesResponse.ok) publicVariableManager.loadDefinitions(await publicVariablesResponse.json());
   }
+  // Generic seed-content loader (plan §9.3): a `{ databaseId: records[] }`
+  // map of pre-authored records, config-driven exactly like
+  // structures/databases/publicVariables above - not a per-domain importer.
+  if (engineConfig.seedRecords) {
+    const seedResponse = await fetch(`data/${engineConfig.seedRecords}`);
+    if (seedResponse.ok) dataStore.loadRecordSet(await seedResponse.json());
+  }
 
   // Declarative gameClock mirror (see PublicVariableManager's `syncSource`
   // doc comment): any variable data marks with `"syncSource":

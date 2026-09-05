@@ -7,5 +7,6 @@
   "structures": "structures.json",
   "databases": "databases.json",
   "publicVariables": "public-variables.json",
+  "seedRecords": "seed-records.json",
   "defaultActivity": { "queueId": "main", "activityId": "default" }
 }

@@ -16,5 +16,14 @@
     "position": { "mode": "grid" },
     "blueprintId": "desktop.run-activity",
     "inputs": { "activityId": "off-duty-open" }
+  },
+  {
+    "iconId": "work01a",
+    "label": "上班",
+    "glyph": "🩺",
+    "order": 2,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.run-activity",
+    "inputs": { "activityId": "work01a-patient1-start" }
   }
 ]

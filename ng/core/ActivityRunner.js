@@ -237,10 +237,12 @@ export function createActivityRunner({
       case "text": {
         const continueKey = resolveInput(blueprint, node, "continueKey", variableStore, undefined, undefined, pvGateway);
         eventGateway("dialogue:text", {
+          instanceId: instance.instanceId,
           speaker: resolveInput(blueprint, node, "speaker", variableStore, "", undefined, pvGateway),
           text: resolveInput(blueprint, node, "text", variableStore, "", undefined, pvGateway),
           displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway),
           keywordIds: resolveInput(blueprint, node, "keywordIds", variableStore, [], undefined, pvGateway),
+          continueKey: continueKey || null,
         }, instance, node);
         if (continueKey && !variableStore.get(continueKey)) return { wait: true };
         if (continueKey) variableStore.set(continueKey, null);
@@ -250,6 +252,7 @@ export function createActivityRunner({
         const selectionKey = resolveInput(blueprint, node, "selectionKey", variableStore, undefined, undefined, pvGateway);
         const optionCount = Number(resolveInput(blueprint, node, "optionCount", variableStore, 0, undefined, pvGateway)) || 0;
         eventGateway("dialogue:choice", {
+          instanceId: instance.instanceId,
           options: resolveInput(blueprint, node, "options", variableStore, [], undefined, pvGateway),
           selectionKey,
         }, instance, node);

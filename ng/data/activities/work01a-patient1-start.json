@@ -1,0 +1,18 @@
+{
+  "id": "work01a-patient1-start",
+  "displayName": "上班（问诊：林若晴）",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": { "id": "start", "type": "flowStart", "x": 60, "y": 60, "inputs": {} },
+      "open": { "id": "open", "type": "openWindow", "x": 260, "y": 60, "inputs": { "windowId": "dialogue" } },
+      "run": { "id": "run", "type": "runActivity", "x": 460, "y": 60, "inputs": { "activityId": "work01a-patient1" } },
+      "end": { "id": "end", "type": "activityEnd", "x": 660, "y": 60, "inputs": {} }
+    },
+    "connections": [
+      { "id": "edge-1", "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "open", "toPort": "flowIn" },
+      { "id": "edge-2", "fromNodeId": "open", "fromPort": "flowOut", "toNodeId": "run", "toPort": "flowIn" },
+      { "id": "edge-3", "fromNodeId": "run", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+    ]
+  }
+}

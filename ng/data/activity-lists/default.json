@@ -1,4 +1,4 @@
 {
   "id": "default",
-  "activityIds": ["default", "off-duty-open", "use-item", "medical-appointment-watcher"]
+  "activityIds": ["default", "off-duty-open", "use-item", "medical-appointment-watcher", "work01a-patient1", "work01a-patient1-start"]
 }

@@ -16,6 +16,7 @@ import { PublicVariableManager } from "./core/PublicVariableManager.js";
 import { RuntimeRefResolver } from "./core/RuntimeRefResolver.js";
 import { SaveManager } from "./core/SaveManager.js";
 import { SaveLoadView } from "./desktop/SaveLoadView.js";
+import { DialogueView } from "./desktop/DialogueView.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -292,6 +293,28 @@ export async function bootstrap(rootEl) {
     order: iconManager.list().length,
     blueprintId: "desktop.open-window",
     inputs: { windowId: SAVE_LOAD_WINDOW_ID },
+  });
+
+  // Generic dialogue-rendering window (see DialogueView.js doc comment):
+  // any Activity's `text`/`choice` nodes become visible transcript/choice
+  // buttons here, with no his-app/social-app specific code in the engine
+  // itself. Content wires a desktop icon's `blueprintId` to an Activity
+  // that opens this window then runs the actual dialogue Activity (e.g.
+  // `work01a-patient1`).
+  const dialogueView = new DialogueView({ eventBus, variableStore });
+  const DIALOGUE_WINDOW_ID = "dialogue";
+  windowDefinitionStore.register({
+    id: DIALOGUE_WINDOW_ID,
+    title: "对话",
+    icon: "💬",
+    width: 480,
+    height: 360,
+    resizable: true,
+    singleInstance: true,
+    body: dialogueView.el,
+  });
+  eventBus.on("window:opened", ({ windowId }) => {
+    if (windowId === DIALOGUE_WINDOW_ID) dialogueView.reset();
   });
 
   // DEV-TOOLS:START

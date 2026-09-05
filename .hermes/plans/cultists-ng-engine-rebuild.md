@@ -1129,6 +1129,14 @@ UI 不直接修改库存，也不直接推进时间。
 
 后续领域（物品、医疗诊断树、结局、`his*`/`showCg`/`spellCast` 等剩余节点类型、`chatgtp_qa.json` 批量导入等）留待后续会话按同一模式（结构+数据库/Activity+行为矩阵+探针）逐个推进。
 
+第五个切片：**首个可玩垂直切片——渲染层 + 一段真实问诊对话端到端跑通**——针对用户明确提出的目标（"打开 ng 后得到和原有引擎类似的游戏体验"），发现此前四个切片虽已让蓝图数据可转换/可校验，但 `ng/` 里完全没有任何窗口订阅 `text`/`choice` 节点广播的 `dialogue:text`/`dialogue:choice` 事件——引擎图跑得通，玩家却什么都看不到。补齐方式：
+- 新增通用（非 his/social 专属，§15 风险 F 审查）`ng/desktop/DialogueView.js`：只理解 `dialogue:text`/`dialogue:choice` 事件的不透明 payload 形状（`speaker`/`text`/`continueKey`、`options`/`selectionKey`），渲染对话记录 + "继续"按钮/选项按钮，点击时对相应 key 调用 `variableStore.set(...)` 唤醒等待中的节点；渲染层完全不知道"问诊"是什么。
+- `ActivityRunner.js` 的 `text`/`choice` 事件 payload 补充 `instanceId`（`choice` 已含 `selectionKey`）与 `text` 的 `continueKey`，使多个并发 Activity 不会串台（`dialogue-node-probe.mjs` 断言同步更新）。
+- `engine.js` 注册一个单例的通用 `dialogue` 窗口（`DialogueView` 实例作为 `body`），随 `window:opened` 事件重置记录。
+- 用 `migrate-legacy-blueprint.mjs` 实际转换 `data/zh-hans/work01a.json` 第一个病人条目（`patient_lin_ruoqing_01`/林若晴，7 个 text + 3 个 choice + 7 个 consumeTime 节点，转换 0 阻塞），写出为真正的 `ng/data/activities/work01a-patient1.json`；新增包装 Activity `work01a-patient1-start.json`（`openWindow("dialogue")` → `runActivity("work01a-patient1")`），注册进 `activity-lists/default.json`，并挂一个新桌面图标"上班"（`desktop.run-activity`）。行为矩阵：见 `ng/probes/work01a-patient1-probe.mjs`（从磁盘加载真实文件、驱动完整问诊对话到 `activityEnd`、断言 4 处 consumeTime 共 80 分钟、text/choice 各按等待重入语义触发 2 次/等待点、每个 dialogue 事件都带正确 `instanceId`）。**这证明了渠道打通**：任何已可转换的 105 份蓝图现在都只差"写出 Activity 定义 + 挂桌面图标/窗口触发"就能变成可玩内容，不再需要新的引擎能力。
+
+**仍未开始**：`work01a.json` 其余 6 名病人 + `work02a/03a/04a/06a/07a/07b.json`/`social*.json` 的批量写出与桌面/窗口接入（目前只手工接入了 1 份作为端到端验证）、旧引擎 `DayNightSystem`/`phase`/`duty`/`location` 工作日-休息日状态机在 ng 中完全没有内容层等价物（`AGENTS.md` 描述的是旧引擎职责划分，ng 需要用公共变量+Activity 表达，而非新引擎代码）、`his*` 医疗 App 专属渲染（病人列表/诊断/处方界面）仍未设计。
+
 ### Phase 9：ng/ 成熟后的根目录替换
 
 该阶段不是日常开发的一部分，只有新引擎和首批改编内容达到发布质量后执行：

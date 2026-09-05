@@ -134,6 +134,16 @@ const definitions = {
     valueInputs: [valueIn("value"), valueIn("key", "string")],
     valueOutputs: [valueOut("value")],
   },
+  // Appends one item to the end of an array value (treating a missing/
+  // non-array input as empty) - the generic counterpart to `arithmetic`
+  // for building up a list purely from value-node wiring, e.g. a "add to
+  // prescription"/"pick a keyword" button appending to a variableStore
+  // array one click at a time with no domain-specific node type.
+  arrayAppend: {
+    label: "数组追加",
+    valueInputs: [valueIn("array"), valueIn("item")],
+    valueOutputs: [valueOut("value")],
+  },
   // Public-variable nodes (plan §10). These operate on the typed,
   // ID-addressed PublicVariableManager (0..65535, bool/smallInteger/
   // integer/real/string/object) through `pvGateway`, distinct from the

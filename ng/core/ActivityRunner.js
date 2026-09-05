@@ -54,6 +54,11 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       result = target == null ? undefined : target[read("key")];
       break;
     }
+    case "arrayAppend": {
+      const array = read("array");
+      result = [...(Array.isArray(array) ? array : []), read("item")];
+      break;
+    }
     case "getPublicVariable": {
       if (!pvGateway) throw new Error("Node getPublicVariable requires a pvGateway");
       result = pvGateway.get(read("id"));
@@ -98,19 +103,41 @@ function applyArithmetic(operator, left, right) {
 }
 
 /**
+ * Recursively resolves wire-refs (`{nodeId,port}`/`{variable}`) nested
+ * anywhere inside a composite literal - e.g. `createRecord`'s `data` input
+ * is itself a plain object whose *fields* are individually wired to value
+ * nodes (a selected patient's id, a computed correctness bool, ...), not
+ * the whole `data` input as one wire-ref. Without this, only a top-level
+ * wire-ref would ever resolve and nested ones would pass through as inert
+ * `{nodeId:...}` literals. Plain scalars/arrays/objects with no wire-refs
+ * anywhere inside are returned unchanged (safe superset of the old
+ * top-level-only behavior).
+ */
+function resolveDeep(blueprint, value, variableStore, stack, pvGateway) {
+  if (Array.isArray(value)) return value.map((item) => resolveDeep(blueprint, item, variableStore, stack, pvGateway));
+  if (value && typeof value === "object") {
+    if ("nodeId" in value) return evaluateValueOutput(blueprint, value.nodeId, value.port || "value", variableStore, stack, pvGateway);
+    if ("variable" in value) return variableStore.get(value.variable);
+    const out = {};
+    for (const [key, child] of Object.entries(value)) out[key] = resolveDeep(blueprint, child, variableStore, stack, pvGateway);
+    return out;
+  }
+  return value;
+}
+
+/**
  * Resolve one node's value input: a wired connection from another node's
  * value output takes precedence (evaluated lazily, following the node's
  * `inputs[name] = { nodeId, port }` upstream link - "数值只记录上家的链
  * 表"), then the legacy `{variable: name}` literal shorthand, then a plain
- * literal, then `fallback`.
+ * literal, then `fallback` - recursing into composite object/array
+ * literals so any wire-refs nested inside them (e.g. `createRecord`'s
+ * `data` fields) resolve too.
  */
 export function resolveInput(blueprint, node, name, variableStore, fallback, stack = new Set(), pvGateway = null) {
   const raw = node.inputs ? node.inputs[name] : undefined;
-  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
-    if ("nodeId" in raw) return evaluateValueOutput(blueprint, raw.nodeId, raw.port || "value", variableStore, stack, pvGateway);
-    if ("variable" in raw) return variableStore.get(raw.variable);
-  }
-  return raw === undefined ? fallback : raw;
+  if (raw === undefined) return fallback;
+  return resolveDeep(blueprint, raw, variableStore, stack, pvGateway);
 }
 
 export function createActivityRunner({
@@ -153,11 +180,11 @@ export function createActivityRunner({
         finish("completed");
         return { stop: true };
       case "setVariable": {
-        const key = resolveInput(blueprint, node, "key", variableStore, undefined, pvGateway);
+        const key = resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway);
         if (Object.prototype.hasOwnProperty.call(node.inputs || {}, "delta")) {
           variableStore.delta(key, resolveInput(blueprint, node, "delta", variableStore, 0, undefined, pvGateway));
         } else {
-          variableStore.set(key, resolveInput(blueprint, node, "value", variableStore, undefined, pvGateway));
+          variableStore.set(key, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway));
         }
         return { next: nextFlow(blueprint, node) };
       }
@@ -171,7 +198,7 @@ export function createActivityRunner({
           if (condition) return { next: nextFlow(blueprint, node) };
           return { wait: true };
         }
-        const key = resolveInput(blueprint, node, "key", variableStore, undefined, pvGateway);
+        const key = resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway);
         const expected = resolveInput(blueprint, node, "equals", variableStore, true, undefined, pvGateway);
         if (variableStore.get(key) === expected) return { next: nextFlow(blueprint, node) };
         return { wait: true };
@@ -182,19 +209,19 @@ export function createActivityRunner({
         return { next: nextFlow(blueprint, node) };
       }
       case "openWindow": {
-        const windowId = resolveInput(blueprint, node, "windowId", variableStore, undefined, pvGateway);
+        const windowId = resolveInput(blueprint, node, "windowId", variableStore, undefined, undefined, pvGateway);
         windowGateway(windowId, instance, node);
         return { next: nextFlow(blueprint, node) };
       }
       case "runActivity": {
-        const activityId = resolveInput(blueprint, node, "activityId", variableStore, undefined, pvGateway);
+        const activityId = resolveInput(blueprint, node, "activityId", variableStore, undefined, undefined, pvGateway);
         const queueId = resolveInput(blueprint, node, "queueId", variableStore, "main", undefined, pvGateway);
         activityGateway(activityId, queueId, instance, node);
         return { next: nextFlow(blueprint, node) };
       }
       case "emitEvent": {
-        const eventName = resolveInput(blueprint, node, "eventName", variableStore, undefined, pvGateway);
-        const payload = resolveInput(blueprint, node, "payload", variableStore, undefined, pvGateway);
+        const eventName = resolveInput(blueprint, node, "eventName", variableStore, undefined, undefined, pvGateway);
+        const payload = resolveInput(blueprint, node, "payload", variableStore, undefined, undefined, pvGateway);
         eventGateway(eventName, payload, instance, node);
         return { next: nextFlow(blueprint, node) };
       }
@@ -205,17 +232,17 @@ export function createActivityRunner({
       case "findRecords":
       case "countRecords": {
         if (!dbGateway) throw new Error(`Node ${node.type} requires a dbGateway`);
-        const databaseId = resolveInput(blueprint, node, "databaseId", variableStore, undefined, pvGateway);
-        const resultVariable = resolveInput(blueprint, node, "resultVariable", variableStore, undefined, pvGateway);
+        const databaseId = resolveInput(blueprint, node, "databaseId", variableStore, undefined, undefined, pvGateway);
+        const resultVariable = resolveInput(blueprint, node, "resultVariable", variableStore, undefined, undefined, pvGateway);
         let result;
         if (node.type === "createRecord") {
-          result = dbGateway.createRecord(databaseId, resolveInput(blueprint, node, "data", variableStore, undefined, pvGateway));
+          result = dbGateway.createRecord(databaseId, resolveInput(blueprint, node, "data", variableStore, undefined, undefined, pvGateway));
         } else if (node.type === "getRecord") {
-          result = dbGateway.getRecord(databaseId, resolveInput(blueprint, node, "key", variableStore, undefined, pvGateway));
+          result = dbGateway.getRecord(databaseId, resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway));
         } else if (node.type === "updateRecord") {
-          result = dbGateway.updateRecord(databaseId, resolveInput(blueprint, node, "key", variableStore, undefined, pvGateway), resolveInput(blueprint, node, "patch", variableStore, undefined, pvGateway));
+          result = dbGateway.updateRecord(databaseId, resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway), resolveInput(blueprint, node, "patch", variableStore, undefined, undefined, pvGateway));
         } else if (node.type === "deleteRecord") {
-          result = dbGateway.deleteRecord(databaseId, resolveInput(blueprint, node, "key", variableStore, undefined, pvGateway));
+          result = dbGateway.deleteRecord(databaseId, resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway));
         } else if (node.type === "findRecords") {
           result = dbGateway.findRecords(databaseId, resolveInput(blueprint, node, "query", variableStore, {}, undefined, pvGateway));
         } else {
@@ -226,7 +253,7 @@ export function createActivityRunner({
       }
       case "applyPublicVariableEffect": {
         if (!pvGateway) throw new Error(`Node ${node.type} requires a pvGateway`);
-        const id = resolveInput(blueprint, node, "id", variableStore, undefined, pvGateway);
+        const id = resolveInput(blueprint, node, "id", variableStore, undefined, undefined, pvGateway);
         const inputs = node.inputs || {};
         if (Object.prototype.hasOwnProperty.call(inputs, "delta")) {
           pvGateway.increment(id, resolveInput(blueprint, node, "delta", variableStore, 0, undefined, pvGateway));
@@ -235,7 +262,7 @@ export function createActivityRunner({
         } else if (Object.prototype.hasOwnProperty.call(inputs, "setObjectRef")) {
           pvGateway.setObjectRef(id, resolveInput(blueprint, node, "setObjectRef", variableStore, null, undefined, pvGateway));
         } else {
-          pvGateway.set(id, resolveInput(blueprint, node, "value", variableStore, undefined, pvGateway));
+          pvGateway.set(id, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway));
         }
         return { next: nextFlow(blueprint, node) };
       }

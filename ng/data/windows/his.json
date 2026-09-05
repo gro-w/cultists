@@ -1,0 +1,139 @@
+{
+  "id": "his",
+  "title": "医院信息系统",
+  "icon": "🏥",
+  "width": 720,
+  "height": 480,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "patient": { "id": "patient", "type": "getVariable", "inputs": { "key": "his:selectedPatient" } },
+      "patientName": { "id": "patientName", "type": "getProperty", "inputs": { "value": { "nodeId": "patient", "port": "value" }, "key": "name" } },
+      "patientAge": { "id": "patientAge", "type": "getProperty", "inputs": { "value": { "nodeId": "patient", "port": "value" }, "key": "age" } }
+    }
+  },
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "flow": "horizontal",
+    "gap": 12,
+    "padding": 12,
+    "children": [
+      {
+        "widgetId": "his-patient-panel",
+        "type": "container",
+        "flow": "vertical",
+        "gap": 8,
+        "minSize": { "width": 200 },
+        "children": [
+          { "widgetId": "his-patient-panel-title", "type": "label", "text": "患者列表" },
+          { "widgetId": "his-patient-list", "type": "list", "items": { "variable": "his:patients" }, "itemLabelField": "name", "events": {
+            "onItemClick": {
+              "startNodeId": "start",
+              "nodes": {
+                "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "getPatient", "port": "flowIn" } } },
+                "getPatient": { "id": "getPatient", "type": "getRecord", "inputs": { "databaseId": "patients", "key": { "variable": "event:value" }, "resultVariable": "his:selectedPatient" }, "next": { "flowOut": { "nodeId": "clearDiagnosis", "port": "flowIn" } } },
+                "clearDiagnosis": { "id": "clearDiagnosis", "type": "setVariable", "inputs": { "key": "his:diagnosisChoice", "value": "" }, "next": { "flowOut": { "nodeId": "clearMedicine", "port": "flowIn" } } },
+                "clearMedicine": { "id": "clearMedicine", "type": "setVariable", "inputs": { "key": "his:medicineChoice", "value": "" }, "next": { "flowOut": { "nodeId": "clearPrescribed", "port": "flowIn" } } },
+                "clearPrescribed": { "id": "clearPrescribed", "type": "setVariable", "inputs": { "key": "his:prescribedMedicineIds", "value": [] }, "next": { "flowOut": { "nodeId": "clearResult", "port": "flowIn" } } },
+                "clearResult": { "id": "clearResult", "type": "setVariable", "inputs": { "key": "his:resultMessage", "value": "" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+                "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+              }
+            }
+          } }
+        ]
+      },
+      {
+        "widgetId": "his-detail-panel",
+        "type": "container",
+        "flow": "vertical",
+        "gap": 8,
+        "children": [
+          { "widgetId": "his-patient-name", "type": "label", "text": { "nodeId": "patientName", "port": "value" } },
+          { "widgetId": "his-patient-age", "type": "label", "text": { "nodeId": "patientAge", "port": "value" } },
+          { "widgetId": "his-start-dialogue", "type": "button", "text": "开始问诊", "events": {
+            "onClick": {
+              "startNodeId": "start",
+              "nodes": {
+                "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "openDialogue", "port": "flowIn" } } },
+                "openDialogue": { "id": "openDialogue", "type": "openWindow", "inputs": { "windowId": "dialogue" }, "next": { "flowOut": { "nodeId": "runDialogue", "port": "flowIn" } } },
+                "runDialogue": { "id": "runDialogue", "type": "runActivity", "inputs": { "activityId": { "nodeId": "activityIdProp", "port": "value" }, "queueId": "desktop-icons" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+                "activityIdProp": { "id": "activityIdProp", "type": "getProperty", "inputs": { "value": { "variable": "his:selectedPatient" }, "key": "dialogueActivityId" } },
+                "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+              }
+            }
+          } },
+          { "widgetId": "his-diagnosis-label", "type": "label", "text": "诊断" },
+          { "widgetId": "his-diagnosis-select", "type": "select", "options": { "variable": "his:diagnoses" }, "optionValueField": "id", "optionLabelField": "normalName", "events": {
+            "onChange": {
+              "startNodeId": "start",
+              "nodes": {
+                "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "setDiagnosis", "port": "flowIn" } } },
+                "setDiagnosis": { "id": "setDiagnosis", "type": "setVariable", "inputs": { "key": "his:diagnosisChoice", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+                "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+              }
+            }
+          } },
+          { "widgetId": "his-medicine-label", "type": "label", "text": "处方药品" },
+          { "widgetId": "his-medicine-select", "type": "select", "options": { "variable": "his:medicines" }, "optionValueField": "id", "optionLabelField": "name", "events": {
+            "onChange": {
+              "startNodeId": "start",
+              "nodes": {
+                "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "setMedicine", "port": "flowIn" } } },
+                "setMedicine": { "id": "setMedicine", "type": "setVariable", "inputs": { "key": "his:medicineChoice", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+                "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+              }
+            }
+          } },
+          { "widgetId": "his-add-medicine", "type": "button", "text": "加入处方", "events": {
+            "onClick": {
+              "startNodeId": "start",
+              "nodes": {
+                "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "append", "port": "flowIn" } } },
+                "append": { "id": "append", "type": "setVariable", "inputs": { "key": "his:prescribedMedicineIds", "value": { "nodeId": "appendOp", "port": "value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+                "appendOp": { "id": "appendOp", "type": "arrayAppend", "inputs": { "array": { "variable": "his:prescribedMedicineIds" }, "item": { "variable": "his:medicineChoice" } } },
+                "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+              }
+            }
+          } },
+          { "widgetId": "his-prescribed-label", "type": "label", "text": "已选处方" },
+          { "widgetId": "his-prescribed-list", "type": "list", "items": { "variable": "his:prescribedMedicineIds" } },
+          { "widgetId": "his-submit", "type": "button", "text": "提交诊断", "events": {
+            "onClick": {
+              "startNodeId": "start",
+              "nodes": {
+                "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "create", "port": "flowIn" } } },
+                "create": { "id": "create", "type": "createRecord", "inputs": { "databaseId": "medicalCases", "data": { "patientId": { "nodeId": "patientId", "port": "value" }, "diagnosisId": { "variable": "his:diagnosisChoice" }, "prescribedMedicineIds": { "variable": "his:prescribedMedicineIds" }, "correct": { "nodeId": "isCorrect", "port": "value" }, "status": "submitted" }, "resultVariable": "his:lastCase" }, "next": { "flowOut": { "nodeId": "setMessage", "port": "flowIn" } } },
+                "setMessage": { "id": "setMessage", "type": "setVariable", "inputs": { "key": "his:resultMessage", "value": "已提交诊断，等待所长复核。" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+                "end": { "id": "end", "type": "activityEnd", "inputs": {} },
+                "patientId": { "id": "patientId", "type": "getProperty", "inputs": { "value": { "variable": "his:selectedPatient" }, "key": "id" } },
+                "correctDiagnosisId": { "id": "correctDiagnosisId", "type": "getProperty", "inputs": { "value": { "variable": "his:selectedPatient" }, "key": "correctDiagnosisId" } },
+                "isCorrect": { "id": "isCorrect", "type": "arithmetic", "inputs": { "operator": "=", "left": { "variable": "his:diagnosisChoice" }, "right": { "nodeId": "correctDiagnosisId", "port": "value" } } }
+              }
+            }
+          } },
+          { "widgetId": "his-result", "type": "label", "text": { "variable": "his:resultMessage" } }
+        ]
+      }
+    ]
+  },
+  "events": {
+    "onCreate": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "findPatients", "port": "flowIn" } } },
+        "findPatients": { "id": "findPatients", "type": "findRecords", "inputs": { "databaseId": "patients", "query": {}, "resultVariable": "his:patients" }, "next": { "flowOut": { "nodeId": "findDiagnoses", "port": "flowIn" } } },
+        "findDiagnoses": { "id": "findDiagnoses", "type": "findRecords", "inputs": { "databaseId": "diagnoses", "query": {}, "resultVariable": "his:diagnoses" }, "next": { "flowOut": { "nodeId": "findMedicines", "port": "flowIn" } } },
+        "findMedicines": { "id": "findMedicines", "type": "findRecords", "inputs": { "databaseId": "medicines", "query": {}, "resultVariable": "his:medicines" }, "next": { "flowOut": { "nodeId": "clearSelected", "port": "flowIn" } } },
+        "clearSelected": { "id": "clearSelected", "type": "setVariable", "inputs": { "key": "his:selectedPatient", "value": null }, "next": { "flowOut": { "nodeId": "clearDiagnosis", "port": "flowIn" } } },
+        "clearDiagnosis": { "id": "clearDiagnosis", "type": "setVariable", "inputs": { "key": "his:diagnosisChoice", "value": "" }, "next": { "flowOut": { "nodeId": "clearMedicine", "port": "flowIn" } } },
+        "clearMedicine": { "id": "clearMedicine", "type": "setVariable", "inputs": { "key": "his:medicineChoice", "value": "" }, "next": { "flowOut": { "nodeId": "clearPrescribed", "port": "flowIn" } } },
+        "clearPrescribed": { "id": "clearPrescribed", "type": "setVariable", "inputs": { "key": "his:prescribedMedicineIds", "value": [] }, "next": { "flowOut": { "nodeId": "clearResult", "port": "flowIn" } } },
+        "clearResult": { "id": "clearResult", "type": "setVariable", "inputs": { "key": "his:resultMessage", "value": "" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+        "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+      }
+    },
+    "onDestroy": null
+  }
+}

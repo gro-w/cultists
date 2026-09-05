@@ -1,8 +1,10 @@
-// Proves the generic `getProperty` value node (Phase 8 HIS/ChatGTP window
-// work): reads one field off an object value - e.g. a `getRecord`/
-// `findRecords` result already stored in variableStore - so a window's
-// `valueGraph` can feed a widget's `text`/`options` property with e.g. a
-// selected patient's `name` without any domain-specific node type.
+// Proves two generic value nodes added for the Phase 8 HIS/ChatGTP window
+// work: `getProperty` reads one field off an object value (e.g. a
+// `getRecord`/`findRecords` result already stored in variableStore) so a
+// window's `valueGraph` can feed a widget's `text`/`options` property with
+// e.g. a selected patient's `name`; `arrayAppend` builds up a list one
+// click at a time (e.g. an "add to prescription" button). Neither node is
+// domain-specific.
 import assert from "node:assert/strict";
 import { VariableStore } from "../core/VariableStore.js";
 import EventBus from "../core/EventBus.js";
@@ -40,6 +42,29 @@ const blueprint = {
   };
   const value = evaluateValueOutput(directBlueprint, "age", "value", variableStore, new Set());
   assert.equal(value, 24);
+}
+
+// --- arrayAppend: builds up a list one click at a time -------------------
+{
+  variableStore.set("picked", ["a"]);
+  const appendBlueprint = {
+    nodes: {
+      append: { id: "append", type: "arrayAppend", inputs: { array: { variable: "picked" }, item: "b" } },
+    },
+  };
+  const value = evaluateValueOutput(appendBlueprint, "append", "value", variableStore, new Set());
+  assert.deepEqual(value, ["a", "b"]);
+}
+
+// --- arrayAppend: missing/non-array input treated as empty ---------------
+{
+  const appendBlueprint = {
+    nodes: {
+      append: { id: "append", type: "arrayAppend", inputs: { array: { variable: "nothing" }, item: "first" } },
+    },
+  };
+  const value = evaluateValueOutput(appendBlueprint, "append", "value", variableStore, new Set());
+  assert.deepEqual(value, ["first"]);
 }
 
 console.log("get-property-node-probe: ok");

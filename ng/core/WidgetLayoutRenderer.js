@@ -52,12 +52,23 @@ function applyContainerStyle(el, node) {
   }
 }
 
-/** In a "stack" container, position a child absolutely at its own x/y (defaulting to 0,0); a no-op for every other flow. */
-function applyStackPosition(childEl, childNode, parentNode) {
+/** In a "stack" container, position a child absolutely at its own x/y (each may be a plain literal or blueprint-bound value, per plan §7.5-equivalent binding; defaults to 0,0); a no-op for every other flow. */
+function applyStackPosition(childEl, childNode, parentNode, ctx) {
   if (!parentNode || parentNode.type !== "container" || parentNode.flow !== "stack") return;
   childEl.style.position = "absolute";
-  childEl.style.left = `${Number.isFinite(childNode.x) ? childNode.x : 0}px`;
-  childEl.style.top = `${Number.isFinite(childNode.y) ? childNode.y : 0}px`;
+  const x = Number(prop(childNode, "x", ctx, 0));
+  const y = Number(prop(childNode, "y", ctx, 0));
+  childEl.style.left = `${Number.isFinite(x) ? x : 0}px`;
+  childEl.style.top = `${Number.isFinite(y) ? y : 0}px`;
+}
+
+/** Resolves the "enabled" property (literal or blueprint-bound) and, for controls with a real DOM `disabled` flag, applies it there too - not just as a decorative aria-disabled on the wrapper. */
+function applyEnabled(el, node, ctx, controlEl) {
+  const enabled = prop(node, "enabled", ctx, true) !== false;
+  if (!enabled) el.setAttribute("aria-disabled", "true");
+  else el.removeAttribute("aria-disabled");
+  const target = controlEl || el;
+  if ("disabled" in target) target.disabled = !enabled;
 }
 
 function applyCommonAttrs(el, node, ctx) {
@@ -67,7 +78,7 @@ function applyCommonAttrs(el, node, ctx) {
   else el.className = "ng-widget";
   el.classList.add(`ng-widget-${node.type}`);
   if (prop(node, "visible", ctx, true) === false) el.hidden = true;
-  if (prop(node, "enabled", ctx, true) === false) el.setAttribute("aria-disabled", "true");
+  applyEnabled(el, node, ctx, ctx.controlEls?.get(node.widgetId || node.id));
 }
 
 function bindFocusBlur(el, node, ctx) {
@@ -94,6 +105,7 @@ function renderLeaf(node, ctx) {
       if (ctx.onEvent) input.addEventListener("input", () => ctx.onEvent(node, "onChange", input.value));
       bindFocusBlur(input, node, ctx);
       el.appendChild(input);
+      ctx.controlEls?.set(node.widgetId || node.id, input);
       break;
     }
     case "textarea": {
@@ -102,6 +114,7 @@ function renderLeaf(node, ctx) {
       if (ctx.onEvent) textarea.addEventListener("input", () => ctx.onEvent(node, "onChange", textarea.value));
       bindFocusBlur(textarea, node, ctx);
       el.appendChild(textarea);
+      ctx.controlEls?.set(node.widgetId || node.id, textarea);
       break;
     }
     case "select": {
@@ -116,6 +129,7 @@ function renderLeaf(node, ctx) {
       if (ctx.onEvent) select.addEventListener("change", () => ctx.onEvent(node, "onChange", select.value));
       bindFocusBlur(select, node, ctx);
       el.appendChild(select);
+      ctx.controlEls?.set(node.widgetId || node.id, select);
       break;
     }
     case "checkbox": {
@@ -124,6 +138,7 @@ function renderLeaf(node, ctx) {
       checkbox.checked = Boolean(prop(node, "value", ctx, false));
       if (ctx.onEvent) checkbox.addEventListener("change", () => ctx.onEvent(node, "onChange", checkbox.checked));
       el.appendChild(checkbox);
+      ctx.controlEls?.set(node.widgetId || node.id, checkbox);
       break;
     }
     case "image": {
@@ -179,13 +194,14 @@ function renderLeaf(node, ctx) {
 export function renderWidgetNode(node, ctx = {}) {
   if (!node) throw new Error("renderWidgetNode requires a node");
   ctx.widgetEls = ctx.widgetEls || new Map();
+  ctx.controlEls = ctx.controlEls || new Map();
   let el;
   if (node.type === "container") {
     el = document.createElement("div");
     applyContainerStyle(el, node);
     for (const child of node.children || []) {
       const childEl = renderWidgetNode(child, ctx);
-      applyStackPosition(childEl, child, node);
+      applyStackPosition(childEl, child, node, ctx);
       el.appendChild(childEl);
     }
   } else {
@@ -199,6 +215,7 @@ export function renderWidgetNode(node, ctx = {}) {
 /** Render a whole window's `root` widget tree; returns { el, widgetEls }. */
 export function renderWindowRoot(root, ctx = {}) {
   ctx.widgetEls = new Map();
+  ctx.controlEls = new Map();
   const el = renderWidgetNode(root, ctx);
   return { el, widgetEls: ctx.widgetEls };
 }

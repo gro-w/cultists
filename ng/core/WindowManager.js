@@ -271,6 +271,34 @@ export class WindowManager {
   list() {
     return [...this.windows.values()].sort((a, b) => a.zIndex - b.zIndex);
   }
+
+  /** Deep-cloned snapshot of every open window instance (plan §12.2 "窗口实例、几何、最大化/最小化、打开的定义 ID") - a pure save boundary, no DOM/live references. */
+  snapshotInstances() {
+    return [...this.windows.values()].map((state) => ({ ...state }));
+  }
+
+  /**
+   * Replaces every open window instance from a save snapshot. Bypasses
+   * `open()`'s definition-driven geometry defaults entirely, since each
+   * snapshot entry already carries its own fully-resolved state; only
+   * `SaveManager.restore()` should call this (plan §12.3 "恢复前停止当前
+   * Runner...替换队列与实例 snapshot 后再恢复 Runner").
+   */
+  restoreInstances(instances = []) {
+    if (!Array.isArray(instances)) throw new Error("Invalid window instance snapshot");
+    const next = new Map();
+    let maxSeq = _instanceIdCounter;
+    for (const raw of instances) {
+      if (!raw || typeof raw.instanceId !== "string" || typeof raw.windowId !== "string" || next.has(raw.instanceId)) {
+        throw new Error("Invalid or duplicate window instance");
+      }
+      next.set(raw.instanceId, { ...raw });
+      const match = raw.instanceId.match(/^win-(\d+)$/);
+      if (match) maxSeq = Math.max(maxSeq, Number(match[1]));
+    }
+    this.windows = next;
+    _instanceIdCounter = maxSeq;
+  }
 }
 
 WindowManager.MIN_WIDTH = MIN_WIDTH;

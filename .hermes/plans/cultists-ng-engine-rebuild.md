@@ -602,6 +602,15 @@ Activity 必须区分以下对象：
 > `flow:"stack"` 会先自动切换为 `stack`（仅在编辑器里发生一次拖放手势时触
 > 发，运行时/未编辑过的窗口定义不会自行改变声明的 flex/grid flow）。
 
+> 实现状态（follow-up "窗口组件的属性(如xy、disabled等)可以由蓝图指定"）：
+> `ng/core/WidgetLayoutRenderer.js` 的 `applyStackPosition`（`stack` 容器子
+> 组件的 `x`/`y`）现与 `visible`/`enabled`/`text`/`value`/`src`/`alt` 一样经
+> 由共享的 `prop()`/`resolvePropertyValue` 解析，可写成字面量或
+> `{variable}`/`{nodeId,port}` 绑定值；`enabled` 除了在外层元素上设置
+> `aria-disabled`，现在还会把真正的 DOM `disabled` 应用到实际可交互控件
+> （button 本身、或 textInput/textarea/select/checkbox 内部真正的
+> `<input>`/`<textarea>`/`<select>`），不再只是外层容器上的装饰属性。
+
 ### 7.4 全屏下班窗口
 
 下班模式不需要专用的 `OffDutyMode` 运行时代码，也不需要独立覆盖层实现。它只是后续通过自定义窗口编辑器创建的普通窗口定义，并设置 `fullscreen: true`：
@@ -1076,7 +1085,7 @@ UI 不直接修改库存，也不直接推进时间。
 - 物品使用不绕过 Activity
 - 医疗对话按 blockUntil 时间触发且不会重复触发
 
-**实现状态**：`ng/core/PublicVariableManager.js`（0..65535 ID、六种类型、`evaluateCondition`/`applyEffect`/`snapshot`/`restore`）+ `ng/core/RuntimeRefResolver.js`（按 `objectType` 注册解析器，失效引用显式 `{resolved:false}`）已实现；`ActivityNodeRegistry`/`ActivityRunner` 新增 `getPublicVariable`/`publicVariableCondition`/`applyPublicVariableEffect` 节点与 `pvGateway`（与既有 `dbGateway` 同构），`blockUntil` 额外支持一个可选的已连线布尔 `condition` 输入，等待重检同时监听 `variable:changed` 与 `gameClock:changed`。`engine.js` 为每个已加载数据库自动注册 `database:<id>` 引用解析器，并支持 `data/public-variables.json`（新增声明式 `syncSource:"gameClock.totalMinutes"` 字段，由引擎把 GameClock 镜像进一个只读公共变量，供内容通过通用原语表达按时间的 `blockUntil`）。已提供 `item`/`patient`/`medicalCase`/`symptom`/`diagnosis`/`treatment`/`patientDialogueContext`/`medicalAppointment` 结构与对应数据库（`data/structures.json`/`data/databases.json`），以及 `data/activities/use-item.json`（查询数据库→分支→改记录→消耗时间→emitEvent，全程走 Activity/数据库 API）与 `data/activities/medical-appointment-watcher.json`（创建示例记录→按 `publicVariableCondition` 时间条件 `blockUntil`→更新病例状态→`runActivity` 触发对话 Activity，对话内容本身留给独立 Activity 列表实现）。`ng/probes/public-variable-probe.mjs` 覆盖全部确定性探针（含 blockUntil 按时间触发且仅触发一次）。尚未实现：开发人员模式下的公共变量可视化编辑器。
+**实现状态**：`ng/core/PublicVariableManager.js`（0..65535 ID、六种类型、`evaluateCondition`/`applyEffect`/`snapshot`/`restore`）+ `ng/core/RuntimeRefResolver.js`（按 `objectType` 注册解析器，失效引用显式 `{resolved:false}`）已实现；`ActivityNodeRegistry`/`ActivityRunner` 新增 `getPublicVariable`/`publicVariableCondition`/`applyPublicVariableEffect` 节点与 `pvGateway`（与既有 `dbGateway` 同构），`blockUntil` 额外支持一个可选的已连线布尔 `condition` 输入，等待重检同时监听 `variable:changed` 与 `gameClock:changed`。`engine.js` 为每个已加载数据库自动注册 `database:<id>` 引用解析器，并支持 `data/public-variables.json`（新增声明式 `syncSource:"gameClock.totalMinutes"` 字段，由引擎把 GameClock 镜像进一个只读公共变量，供内容通过通用原语表达按时间的 `blockUntil`）。已提供 `item`/`patient`/`medicalCase`/`symptom`/`diagnosis`/`treatment`/`patientDialogueContext`/`medicalAppointment` 结构与对应数据库（`data/structures.json`/`data/databases.json`），以及 `data/activities/use-item.json`（查询数据库→分支→改记录→消耗时间→emitEvent，全程走 Activity/数据库 API）与 `data/activities/medical-appointment-watcher.json`（创建示例记录→按 `publicVariableCondition` 时间条件 `blockUntil`→更新病例状态→`runActivity` 触发对话 Activity，对话内容本身留给独立 Activity 列表实现）。`ng/probes/public-variable-probe.mjs` 覆盖全部确定性探针（含 blockUntil 按时间触发且仅触发一次）。开发人员模式下的公共变量可视化编辑器（`ng/dev/PublicVariableEditorView.js`，写 `data/public-variables.json`）与运行时公共变量调试器（`ng/dev/PublicVariableDebuggerView.js`，只经 `set`/`setObjectRef` 改live值，不写数据文件）均已实现并接入 `DeveloperMode.js` 的上/下两个启动区。
 
 ### Phase 7：存档与发布边界
 
@@ -1096,6 +1105,8 @@ UI 不直接修改库存，也不直接推进时间。
 - 错误存档不破坏当前状态
 - 发布产物无 DEV-TOOLS、编辑器入口或 dev-server
 - 引擎许可与游戏内容许可分离可审计
+
+**实现状态**：`ng/core/SaveManager.js` 已实现版本化 envelope（`format:"cultists-ng-save"`/`version:1`/`engineVersion`/`createdAtGameTime`/`state`），`snapshot()` 聚合 `GameClock`/`VariableStore`/`PublicVariableManager`/`DataStore`/`ActivityQueueRegistry`（已内含 Activity 实例，等价于 schema 里的 `activityInstances`+`queues`）/`WindowManager`（新增 `snapshotInstances()`/`restoreInstances()`）/`DesktopIconManager` 的深拷贝快照；`restore()` 恢复前用 `activityExecutionService.clear()` 停止所有 Runner，恢复前先对当前状态做一次 rollback 快照，`_applyState` 中途抛错则回滚到该快照并重新扫描一次待启动项，`restoring` guard 由 `try/finally` 释放，格式/版本/字段缺失在任何 mutation 之前校验并拒绝。恢复成功后由 `engine.js` 的 `resumePendingActivities()`（对每个队列的 `current()` 未解决实例按其 `activityId` 重新 `run()`）执行唯一一次的"扫描待启动项"。玩家可见入口是 `ng/desktop/SaveLoadView.js`（保存到文件下载 / 从文件加载）注册成一个普通窗口 + 桌面图标（不受 `?dev` 限制）。`ng/probes/save-manager-probe.mjs` 覆盖新建/保存/刷新/加载状态一致、等待中 Activity 恢复后仍正确阻塞且只完成一次、错误/不兼容/内部不一致存档不破坏当前状态、重入 restore 被拒绝。dev 发布移除与 2BSD/游戏内容 NOTICE 分离均已就绪：项目根目录既有的 `publish.js` 按文件名逐级排除 `dev-server.js`（含 `ng/dev-server.js`）并对每个文本文件剥离 `DEV-TOOLS:START/END` 块，`ng/dev/*.js` 整份都在块内，剥离后内容为空即被跳过，因此 `publish/ng/dev/` 产物为空、不含任何编辑器入口或 dev-server；`ng/LICENSE`/`ng/NOTICE.md` 已把引擎代码（2-Clause BSD）与 `ng/data/` 游戏内容的授权边界分离并随 `publish/` 一并复制，无需为 `ng/` 新增独立发布脚本。
 
 ### Phase 8：旧内容 agents 改编接口
 

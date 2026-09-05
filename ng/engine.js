@@ -14,6 +14,8 @@ import { DataStructureManager } from "./core/DataStructureManager.js";
 import { DataStore } from "./core/DataStore.js";
 import { PublicVariableManager } from "./core/PublicVariableManager.js";
 import { RuntimeRefResolver } from "./core/RuntimeRefResolver.js";
+import { SaveManager } from "./core/SaveManager.js";
+import { SaveLoadView } from "./desktop/SaveLoadView.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -107,6 +109,37 @@ export async function bootstrap(rootEl) {
     });
   }
   shell.runActivity = runActivity;
+
+  /**
+   * Resumes every queue's still-unresolved instance by re-running it
+   * through the exact same gateways as a fresh `runActivity()` call - the
+   * "恢复成功后只扫描一次待启动项" step of `SaveManager.restore()` (plan
+   * §12.3). A definition missing after a data update is left as-is rather
+   * than throwing, so one stale instance can't block restoring everything
+   * else; queues driven by inline (non-stored) blueprints - window/widget
+   * events, desktop icons - are expected to run to completion synchronously
+   * and are not resumed here.
+   */
+  function resumePendingActivities() {
+    activityQueueRegistry.list().forEach((queue) => {
+      const instance = queue.current();
+      if (!instance) return;
+      const definition = activityDefinitionStore.get(instance.activityId);
+      if (!definition) return;
+      activityExecutionService.run({
+        queue,
+        definition,
+        instance,
+        variableStore,
+        timeGateway: (minutes) => gameClock.advance(minutes),
+        windowGateway: (windowId) => shell.openWindow(windowId),
+        activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
+        eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
+        dbGateway: dataStore,
+        pvGateway: publicVariableManager,
+      });
+    });
+  }
 
   // Every window's optional `events.onCreate`/`onDestroy` inline blueprint
   // (plan §4.2) executes through this exact same ActivityExecutionService -
@@ -221,6 +254,39 @@ export async function bootstrap(rootEl) {
 
   const iconManager = new DesktopIconManager(icons);
 
+  const saveManager = new SaveManager({
+    gameClock,
+    variableStore,
+    publicVariableManager,
+    dataStore,
+    activityQueueRegistry,
+    windowManager,
+    desktopIconManager: iconManager,
+    activityExecutionService,
+    resumePendingActivities,
+    engineVersion: engineConfig.version,
+  });
+  const saveLoadView = new SaveLoadView({ saveManager });
+  const SAVE_LOAD_WINDOW_ID = "save-load";
+  windowDefinitionStore.register({
+    id: SAVE_LOAD_WINDOW_ID,
+    title: "存档",
+    icon: "💾",
+    width: 360,
+    height: 220,
+    resizable: true,
+    singleInstance: true,
+    body: saveLoadView.el,
+  });
+  iconManager.register({
+    iconId: "save-load",
+    label: "存档",
+    glyph: "💾",
+    order: iconManager.list().length,
+    blueprintId: "desktop.open-window",
+    inputs: { windowId: SAVE_LOAD_WINDOW_ID },
+  });
+
   // DEV-TOOLS:START
   if (isDevEntry()) {
     const { initDeveloperMode, buildDeveloperDesktopIcons } = await import("./dev/DeveloperMode.js");
@@ -264,6 +330,7 @@ export async function bootstrap(rootEl) {
     publicVariableManager,
     refResolver,
     iconManager,
+    saveManager,
   };
 }
 

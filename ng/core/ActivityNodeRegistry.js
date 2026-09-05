@@ -125,6 +125,15 @@ const definitions = {
     valueInputs: [valueIn("key", "string")],
     valueOutputs: [valueOut("value")],
   },
+  // Reads one field off an object value (e.g. a `getRecord`/`findRecords`
+  // result stored in variableStore) - the generic counterpart to
+  // `getVariable` for structured values, so a widget property can display
+  // e.g. a selected patient's `name` without a domain-specific node.
+  getProperty: {
+    label: "读取属性",
+    valueInputs: [valueIn("value"), valueIn("key", "string")],
+    valueOutputs: [valueOut("value")],
+  },
   // Public-variable nodes (plan §10). These operate on the typed,
   // ID-addressed PublicVariableManager (0..65535, bool/smallInteger/
   // integer/real/string/object) through `pvGateway`, distinct from the

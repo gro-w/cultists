@@ -49,6 +49,11 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
     case "getVariable":
       result = variableStore.get(read("key"));
       break;
+    case "getProperty": {
+      const target = read("value");
+      result = target == null ? undefined : target[read("key")];
+      break;
+    }
     case "getPublicVariable": {
       if (!pvGateway) throw new Error("Node getPublicVariable requires a pvGateway");
       result = pvGateway.get(read("id"));

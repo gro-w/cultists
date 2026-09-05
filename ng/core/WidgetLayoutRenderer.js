@@ -119,10 +119,20 @@ function renderLeaf(node, ctx) {
     }
     case "select": {
       const select = document.createElement("select");
-      for (const option of node.options || []) {
+      // `options` may be a literal `[{value,label}]` array or a bound
+      // value (plan-consistent with every other property) pulling a
+      // `findRecords`-populated variableStore array of raw database
+      // records - e.g. `{ "variable": "diagnosisOptions" }` set by the
+      // window's `onCreate` blueprint. Records rarely have literal
+      // `value`/`label` fields, so `optionValueField`/`optionLabelField`
+      // (default `"id"`/`"name"`) name which record fields to read
+      // instead - no mapping/loop node needed in the blueprint system.
+      const valueField = node.optionValueField || "value";
+      const labelField = node.optionLabelField || "label";
+      for (const option of prop(node, "options", ctx, []) || []) {
         const opt = document.createElement("option");
-        opt.value = option.value;
-        opt.textContent = option.label ?? option.value;
+        opt.value = option.value ?? option[valueField] ?? option.id ?? "";
+        opt.textContent = option.label ?? option[labelField] ?? option.name ?? opt.value;
         select.appendChild(opt);
       }
       select.value = prop(node, "value", ctx, "");
@@ -149,17 +159,32 @@ function renderLeaf(node, ctx) {
       break;
     }
     case "list": {
-      for (const item of node.items || []) {
+      // `items` may likewise be a bound array of raw database records
+      // (e.g. a `findRecords` result written to variableStore by the
+      // window's onCreate blueprint), so a list can render real rows with
+      // no window-specific engine code. `itemLabelField` (default `"name"`)
+      // names which record field to display when an item isn't already a
+      // plain string or `{label}` literal. Clicking an item with an `id`
+      // forwards `onItemClick` with that id as the widget event's
+      // `event:value` (same convention every other widget event already
+      // uses), so a blueprint can read which row was clicked without any
+      // new node type.
+      const itemLabelField = node.itemLabelField || "name";
+      for (const item of prop(node, "items", ctx, []) || []) {
         const li = document.createElement("div");
         li.className = "ng-widget-list-item";
-        li.textContent = typeof item === "string" ? item : item.label ?? "";
+        li.textContent = typeof item === "string" ? item : item.label ?? item[itemLabelField] ?? "";
+        if (item && typeof item === "object" && item.id !== undefined) {
+          li.dataset.itemId = item.id;
+          if (ctx.onEvent) li.addEventListener("click", () => ctx.onEvent(node, "onItemClick", item.id));
+        }
         el.appendChild(li);
       }
       break;
     }
     case "table": {
       const table = document.createElement("table");
-      for (const row of node.rows || []) {
+      for (const row of prop(node, "rows", ctx, []) || []) {
         const tr = document.createElement("tr");
         for (const cell of row) {
           const td = document.createElement("td");

@@ -27,12 +27,56 @@ export class WindowFrame {
     this._unsubscribers = [];
     this._drag = new PointerInteraction();
     this._resize = new PointerInteraction();
+    this._root = root;
+    this._rendererCtx = rendererCtx;
     this._buildDom(state, body, root, rendererCtx);
     this._bindControls();
     this._bindDrag();
     if (state.resizable) this._bindResize();
     this._bindEvents();
+    this._bindRootRefresh();
     this._render(this.windowManager.get(this.instanceId));
+  }
+
+  /**
+   * A widget-tree window's bound properties (`{variable}`/`{nodeId,port}`,
+   * see PropertyBinding.js) are only read at render time - there is no
+   * per-property reactivity. Rather than build fine-grained dependency
+   * tracking, this re-renders the *whole* `root` subtree on every
+   * `variable:changed` event, exactly the same "just re-render, the tree
+   * stays small" tradeoff `NotebookView` already makes for its own list.
+   * This is what makes purely declarative windows (patient rosters,
+   * dropdowns fed by `findRecords`, etc.) able to reflect an `onCreate`/
+   * widget-event blueprint's `setVariable` output without any
+   * window-specific engine code.
+   */
+  _bindRootRefresh() {
+    if (!this._root) return;
+    this._unsubscribers.push(this.eventBus.on("variable:changed", () => this._rerenderRoot()));
+  }
+
+  /**
+   * Rebuilds the widget tree, preserving which control (if any) had focus
+   * and its text-selection range - without this, a `textInput`/`textarea`
+   * bound to an `onChange` blueprint that writes the typed value back into
+   * a variable (a very common pattern) would lose keyboard focus after
+   * every single keystroke, since that write itself triggers the
+   * `variable:changed` refresh.
+   */
+  _rerenderRoot() {
+    const active = document.activeElement;
+    const focusedWidgetId = active && this.bodyEl.contains(active) ? active.closest("[data-widget-id]")?.dataset.widgetId : null;
+    const selectionStart = active && "selectionStart" in active ? active.selectionStart : null;
+    const selectionEnd = active && "selectionEnd" in active ? active.selectionEnd : null;
+    const { el: rootEl } = renderWindowRoot(this._root, this._rendererCtx);
+    this.bodyEl.innerHTML = "";
+    this.bodyEl.appendChild(rootEl);
+    if (!focusedWidgetId) return;
+    const wrapper = rootEl.querySelector(`[data-widget-id="${CSS.escape(focusedWidgetId)}"]`);
+    const target = wrapper && (wrapper.matches("input,textarea,select") ? wrapper : wrapper.querySelector("input,textarea,select"));
+    if (!target?.focus) return;
+    target.focus();
+    if (selectionStart != null && "setSelectionRange" in target) target.setSelectionRange(selectionStart, selectionEnd);
   }
 
   _buildDom(state, body, root, rendererCtx = {}) {

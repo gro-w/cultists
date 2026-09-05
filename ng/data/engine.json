@@ -1,8 +1,13 @@
 {
-  "engineName": "cultists",
-  "engineVersion": "0.1.0",
-  "initialClock": "08:00",
-  "activities": ["default", "item-use-example", "medical-demo"],
-  "windows": ["off-duty-demo"],
-  "desktopIcons": []
+  "name": "cultists-ng",
+  "version": "0.1.0-phase1",
+  "windowManifest": ["example.json", "off-duty.json", "his.json", "chatgtp.json"],
+  "desktopIcons": "desktop-icons.json",
+  "activityLists": ["default.json"],
+  "structures": "structures.json",
+  "databases": "databases.json",
+  "publicVariables": "public-variables.json",
+  "seedRecords": ["seed-records.json", "seed-records-chatgtp.json"],
+  "onboarding": "onboarding.json",
+  "defaultActivity": { "queueId": "main", "activityId": "default" }
 }

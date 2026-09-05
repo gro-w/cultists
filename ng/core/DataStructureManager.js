@@ -1,11 +1,138 @@
-export class DataStructureManager {
-  constructor(eventBus) { this.eventBus = eventBus; this.definitions = new Map(); this.databases = new Map(); }
-  register(definition) { if (!definition?.id || this.definitions.has(definition.id)) throw new Error(`Invalid or duplicate structure: ${definition?.id}`); const fields = definition.fields || []; const ids = new Set(); for (const field of fields) { if (!field.id || ids.has(field.id)) throw new Error(`Duplicate field: ${field.id}`); ids.add(field.id); } this.definitions.set(definition.id, structuredClone(definition)); }
-  createDatabase(databaseId, recordType) { if (!this.definitions.has(recordType) || this.databases.has(databaseId)) throw new Error(`Invalid database: ${databaseId}`); this.databases.set(databaseId, { databaseId, recordType, records: [] }); }
-  insert(databaseId, record) { const db = this.databases.get(databaseId); if (!db) throw new Error(`Unknown database: ${databaseId}`); const value = structuredClone(record); if (!value.id || db.records.some((item) => item.id === value.id)) throw new Error(`Duplicate record: ${value.id}`); db.records.push(value); this.eventBus?.emit("database:changed", { databaseId, action: "insert", id: value.id }); return value; }
-  find(databaseId, predicate = () => true) { return (this.databases.get(databaseId)?.records || []).filter(predicate).map((record) => structuredClone(record)); }
-  update(databaseId, id, patch) { const record = this.databases.get(databaseId)?.records.find((item) => item.id === id); if (!record) throw new Error(`Unknown record: ${id}`); Object.assign(record, structuredClone(patch)); this.eventBus?.emit("database:changed", { databaseId, action: "update", id }); return structuredClone(record); }
-  remove(databaseId, id) { const db = this.databases.get(databaseId); const index = db?.records.findIndex((item) => item.id === id); if (index < 0) throw new Error(`Unknown record: ${id}`); db.records.splice(index, 1); this.eventBus?.emit("database:changed", { databaseId, action: "delete", id }); }
-  snapshot() { return { definitions: Object.fromEntries(this.definitions), databases: Object.fromEntries(this.databases) }; }
-  restore(snapshot = {}) { this.definitions = new Map(Object.entries(snapshot.definitions || {})); this.databases = new Map(Object.entries(snapshot.databases || {})); }
+/**
+ * DataStructureManager - plan §9.2's "结构 schema": a registry of
+ * data-structure definitions (field name/type/required/default), used to
+ * validate and apply defaults to records before `DataStore` writes them.
+ * Deliberately domain-agnostic (plan §15 风险 F): items, medical records,
+ * dialogue contexts etc. are all just registered structures + database
+ * records, never a new engine-level type.
+ *
+ * Supported field types (plan §9.2, first version):
+ *   bool, smallInteger, integer, real, string, objectRef, array, object
+ * `array<T>` may be written as the field's `type` (e.g. "array<string>") to
+ * additionally validate each element's type; a bare "array" accepts any
+ * element type. `object` accepts any plain (non-array) JSON object -
+ * for content whose internal shape is itself data-defined (e.g. a legacy
+ * achievement's free-form `trigger` descriptor), not a new engine concept,
+ * just a scalar type as domain-agnostic as `array`'s "accept anything".
+ */
+const SCALAR_VALIDATORS = {
+  bool: (value) => typeof value === "boolean",
+  smallInteger: (value) => Number.isInteger(value),
+  integer: (value) => Number.isInteger(value),
+  real: (value) => typeof value === "number" && Number.isFinite(value),
+  string: (value) => typeof value === "string",
+  // objectRef only requires a stable reference id (string) to some other
+  // registered domain (activity instance, queue, structure record, global
+  // variable, window instance, ...); resolving that reference is the
+  // caller's concern, not the structure manager's.
+  objectRef: (value) => typeof value === "string" && value.length > 0,
+  object: (value) => typeof value === "object" && value !== null && !Array.isArray(value),
+};
+
+function parseArrayItemType(type) {
+  const match = /^array<(.+)>$/.exec(type || "");
+  return match ? match[1] : null;
 }
+
+function clone(value) {
+  return value === undefined ? value : JSON.parse(JSON.stringify(value));
+}
+
+function defaultValueFor(field) {
+  if (Object.prototype.hasOwnProperty.call(field, "default")) return clone(field.default);
+  if (field.type === "bool") return false;
+  if (field.type === "smallInteger" || field.type === "integer") return 0;
+  if (field.type === "real") return 0;
+  if (field.type === "string") return "";
+  if (field.type === "array" || parseArrayItemType(field.type)) return [];
+  if (field.type === "object") return {};
+  return null;
+}
+
+export class DataStructureManager {
+  constructor() {
+    this.structures = new Map();
+  }
+
+  /** Registers (or replaces) a structure definition; returns the stored definition. */
+  register(definition) {
+    if (!definition?.id) throw new Error("DataStructureManager.register requires an `id`");
+    if (!Array.isArray(definition.fields)) throw new Error(`Structure "${definition.id}" must declare a \`fields\` array`);
+    for (const field of definition.fields) {
+      if (!field?.id) throw new Error(`Structure "${definition.id}" has a field with no \`id\``);
+      const itemType = parseArrayItemType(field.type);
+      if (!SCALAR_VALIDATORS[field.type] && field.type !== "array" && !itemType) {
+        throw new Error(`Structure "${definition.id}" field "${field.id}" has unknown type "${field.type}"`);
+      }
+    }
+    this.structures.set(definition.id, definition);
+    return definition;
+  }
+
+  get(id) {
+    return this.structures.get(id) || null;
+  }
+
+  list() {
+    return [...this.structures.values()];
+  }
+
+  unregister(id) {
+    return this.structures.delete(id);
+  }
+
+  /** Loads an array of structure definitions (e.g. fetched from data/structures.json) - plan §9.2's "结构 schema" is authored as game data, not engine code. */
+  loadDefinitions(definitions = []) {
+    definitions.forEach((definition) => this.register(definition));
+  }
+
+  /** Plain-array snapshot for save/persist (mirrors `data/structures.json`'s top-level array shape). */
+  toJSON() {
+    return this.list();
+  }
+
+  /** Returns a new record with every field present, unset fields filled from `field.default` (or a type-appropriate zero value). */
+  applyDefaults(structureId, record = {}) {
+    const structure = this.get(structureId);
+    if (!structure) throw new Error(`Unknown structure: ${structureId}`);
+    const result = { ...record };
+    for (const field of structure.fields) {
+      if (!Object.prototype.hasOwnProperty.call(result, field.id) || result[field.id] === undefined) {
+        result[field.id] = defaultValueFor(field);
+      }
+    }
+    return result;
+  }
+
+  /** Validates a record against a structure's field types/required flags. Never mutates `record`. Returns { ok, errors }. */
+  validateRecord(structureId, record = {}) {
+    const structure = this.get(structureId);
+    if (!structure) return { ok: false, errors: [`未知结构: ${structureId}`] };
+    const errors = [];
+    for (const field of structure.fields) {
+      const value = record[field.id];
+      const present = value !== undefined && value !== null;
+      if (!present) {
+        if (field.required) errors.push(`字段 ${field.id} 是必填项`);
+        continue;
+      }
+      const itemType = parseArrayItemType(field.type);
+      if (itemType || field.type === "array") {
+        if (!Array.isArray(value)) {
+          errors.push(`字段 ${field.id} 必须是数组`);
+        } else if (itemType) {
+          const validator = SCALAR_VALIDATORS[itemType];
+          value.forEach((item, index) => {
+            if (validator && !validator(item)) errors.push(`字段 ${field.id}[${index}] 类型必须是 ${itemType}`);
+          });
+        }
+        continue;
+      }
+      const validator = SCALAR_VALIDATORS[field.type];
+      if (validator && !validator(value)) errors.push(`字段 ${field.id} 类型必须是 ${field.type}`);
+    }
+    return { ok: errors.length === 0, errors };
+  }
+}
+
+export default DataStructureManager;

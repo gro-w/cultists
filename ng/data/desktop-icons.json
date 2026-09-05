@@ -1,3 +1,38 @@
 [
-  {"id":"off-duty-demo","label":"下班模式示例","logo":"🌙","windowId":"off-duty-demo","position":{"mode":"grid","order":0}}
+  {
+    "iconId": "example",
+    "label": "示例窗口",
+    "glyph": "🗔",
+    "order": 0,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "example" }
+  },
+  {
+    "iconId": "off-duty",
+    "label": "下班",
+    "glyph": "🌙",
+    "order": 1,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.run-activity",
+    "inputs": { "activityId": "off-duty-open" }
+  },
+  {
+    "iconId": "his",
+    "label": "上班",
+    "glyph": "🩺",
+    "order": 2,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "his" }
+  },
+  {
+    "iconId": "chatgtp",
+    "label": "ChatGTP",
+    "glyph": "🤖",
+    "order": 3,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "chatgtp" }
+  }
 ]

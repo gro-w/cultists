@@ -1,5 +1,18 @@
-# cultists NG 授权说明
+# NOTICE
 
-`ng/` 中的引擎、通用运行时和开发工具采用 BSD 2-Clause License（2BSD），详见 `LICENSE`。
+`ng/` is the new `cultists` engine being rebuilt per
+`.hermes/plans/cultists-ng-engine-rebuild.md`.
 
-《完蛋，我被邪教徒包围了！》的剧情、角色、图片、音频、游戏内容数据及其他内容不因引擎采用 2BSD 而获得同样授权。如有利用需要请联系开发者授权。
+## Licensing boundary
+
+- **Engine code, built-in schemas, editors and generic runtime** under `ng/`
+  (this directory, excluding `ng/data/`) are licensed under the 2-Clause BSD
+  license — see `ng/LICENSE`.
+- **Game content** — story, characters, artwork, audio and any other
+  narrative/data assets placed under `ng/data/` (and the shared `../data/`
+  directory referenced by `ng/`) — is **not** covered by the 2BSD license.
+  If you want to reuse the game content of 《完蛋，我被邪教徒包围了！》
+  ("Surrounded by Cultists"), please contact the developer for authorization.
+
+This split mirrors the boundary already documented at the project root
+(`README.md`, `LICENSE`).

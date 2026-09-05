@@ -1,5 +1,196 @@
 [
-  {"id":"item","displayName":"物品","fields":[{"id":"name","type":"string","required":true},{"id":"quantity","type":"smallInteger","default":1},{"id":"tags","type":"array","default":[]}]},
-  {"id":"patient","displayName":"患者","fields":[{"id":"name","type":"string","required":true},{"id":"caseId","type":"string","required":true},{"id":"status","type":"string","default":"open"}]},
-  {"id":"medicalCase","displayName":"病例","fields":[{"id":"diagnosis","type":"string","required":true},{"id":"severity","type":"smallInteger","default":0}]}
+  {
+    "id": "item",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "quantity", "type": "integer", "default": 1 },
+      { "id": "consumable", "type": "bool", "default": true },
+      { "id": "useMinutes", "type": "integer", "default": 5 }
+    ]
+  },
+  {
+    "id": "patient",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "npcRef", "type": "objectRef" },
+      { "id": "age", "type": "smallInteger", "default": 0 },
+      { "id": "correctDiagnosisId", "type": "string", "default": "" },
+      { "id": "diagnosisOptionIds", "type": "array<string>", "default": [] },
+      { "id": "dialogueActivityId", "type": "string", "default": "" }
+    ]
+  },
+  {
+    "id": "symptom",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "description", "type": "string" }
+    ]
+  },
+  {
+    "id": "diagnosis",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "categoryId", "type": "string", "default": "" },
+      { "id": "icd10", "type": "string", "default": "" },
+      { "id": "normalName", "type": "string", "default": "" },
+      { "id": "lowSanName", "type": "string", "default": "" },
+      { "id": "applicableMedicineIds", "type": "array<string>", "default": [] },
+      { "id": "prohibitedMedicineIds", "type": "array<string>", "default": [] },
+      { "id": "symptomIds", "type": "array<string>", "default": [] }
+    ]
+  },
+  {
+    "id": "diagnosisCategory",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "icdChapter", "type": "string", "default": "" },
+      { "id": "icdLetter", "type": "string", "default": "" },
+      { "id": "icdRange", "type": "string", "default": "" },
+      { "id": "name", "type": "string", "default": "" }
+    ]
+  },
+  {
+    "id": "medicine",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "effect", "type": "string", "default": "" },
+      { "id": "price", "type": "integer", "default": 0 },
+      { "id": "commission", "type": "real", "default": 0 },
+      { "id": "categoryId", "type": "string", "default": "" },
+      { "id": "applicableDiagnosisIds", "type": "array<string>", "default": [] },
+      { "id": "prohibitedDiagnosisIds", "type": "array<string>", "default": [] }
+    ]
+  },
+  {
+    "id": "medicineCategory",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "medicineIds", "type": "array<string>", "default": [] },
+      { "id": "correspondingDiseaseCategoryIds", "type": "array<string>", "default": [] }
+    ]
+  },
+  {
+    "id": "chatgtpQaEntry",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "keywords", "type": "array<string>", "default": [] },
+      { "id": "answer", "type": "string", "default": "" }
+    ]
+  },
+  {
+    "id": "treatment",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" }
+    ]
+  },
+  {
+    "id": "medicalCase",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "patientId", "type": "string" },
+      { "id": "status", "type": "string", "default": "open" },
+      { "id": "symptomIds", "type": "array<string>", "default": [] },
+      { "id": "diagnosisId", "type": "string", "default": "" },
+      { "id": "treatmentId", "type": "string", "default": "" },
+      { "id": "prescribedMedicineIds", "type": "array<string>", "default": [] },
+      { "id": "correct", "type": "bool", "default": false },
+      { "id": "bonus", "type": "integer", "default": 0 },
+      { "id": "commission", "type": "real", "default": 0 }
+    ]
+  },
+  {
+    "id": "patientDialogueContext",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "patientId", "type": "string" },
+      { "id": "dialogueActivityId", "type": "string" }
+    ]
+  },
+  {
+    "id": "medicalAppointment",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "patientId", "type": "string" },
+      { "id": "startMinutes", "type": "integer" },
+      { "id": "dialogueActivityId", "type": "string" },
+      { "id": "triggered", "type": "bool", "default": false }
+    ]
+  },
+  {
+    "id": "npc",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "avatar", "type": "string", "default": "" },
+      { "id": "initialFavorability", "type": "smallInteger", "default": 0 },
+      { "id": "initialSan", "type": "smallInteger", "default": 0 },
+      { "id": "portraits", "type": "array", "default": [] },
+      { "id": "endingPortraits", "type": "array", "default": [] }
+    ]
+  },
+  {
+    "id": "skill",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "numericid", "type": "integer" },
+      { "id": "label", "type": "string" }
+    ]
+  },
+  {
+    "id": "keyword",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "content", "type": "string" },
+      { "id": "contentLowSan", "type": "string", "default": "" },
+      { "id": "relatedIds", "type": "array<string>", "default": [] }
+    ]
+  },
+  {
+    "id": "location",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "layer", "type": "string", "default": "" },
+      { "id": "subLocations", "type": "array", "default": [] },
+      { "id": "backgroundImages", "type": "array", "default": [] },
+      { "id": "backgroundImage", "type": "string", "default": "" }
+    ]
+  },
+  {
+    "id": "achievement",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "title", "type": "string" },
+      { "id": "description", "type": "string", "default": "" },
+      { "id": "category", "type": "string", "default": "" },
+      { "id": "hidden", "type": "bool", "default": false },
+      { "id": "icon", "type": "string", "default": "" },
+      { "id": "trigger", "type": "object", "default": {} },
+      { "id": "sanDropThreshold", "type": "smallInteger", "default": 0 },
+      { "id": "sanLowThreshold", "type": "smallInteger", "default": 0 },
+      { "id": "sanRecoveryTarget", "type": "smallInteger", "default": 0 }
+    ]
+  },
+  {
+    "id": "achievementCategory",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "label", "type": "string" }
+    ]
+  },
+  {
+    "id": "chatgtpSettings",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "sanCostPerQuery", "type": "smallInteger", "default": 0 },
+      { "id": "offlineAnswer", "type": "string", "default": "" },
+      { "id": "revealKeywordIds", "type": "array<string>", "default": [] }
+    ]
+  }
 ]

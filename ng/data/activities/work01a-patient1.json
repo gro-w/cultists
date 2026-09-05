@@ -1,0 +1,387 @@
+{
+  "id": "work01a-patient1",
+  "displayName": "问诊：林若晴",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 220
+      },
+      "intro": {
+        "id": "intro",
+        "type": "text",
+        "inputs": {
+          "displayTo": "his-app",
+          "speaker": "林若晴",
+          "text": "医生您好，我叫林若晴，今年29岁。昨晚开始上腹部[[symptom_005]]，还一直[[symptom_003]]，嘴里有点[[symptom_013]]，所以来看看。",
+          "continueKey": "dlg:intro:continue"
+        },
+        "x": 260,
+        "y": 220
+      },
+      "time_intro": {
+        "id": "time_intro",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 520,
+        "y": 220
+      },
+      "main_choice": {
+        "id": "main_choice",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "详细询问疼痛和进食关系",
+              "next": "pain_answer"
+            },
+            {
+              "label": "询问既往病史和用药",
+              "next": "history_answer"
+            },
+            {
+              "label": "询问是否有反酸或烧心",
+              "next": "reflux_answer"
+            }
+          ],
+          "optionCount": 3,
+          "selectionKey": "dlg:main_choice:select"
+        },
+        "x": 760,
+        "y": 220
+      },
+      "pain_answer": {
+        "id": "pain_answer",
+        "type": "text",
+        "inputs": {
+          "displayTo": "his-app",
+          "speaker": "林若晴",
+          "text": "疼痛主要在肚脐上方，像被拧着一样，饭后会更明显，大概持续了六七个小时；目前没有[[symptom_004]]，也没有[[symptom_006]]。",
+          "continueKey": "dlg:pain_answer:continue"
+        },
+        "x": 1020,
+        "y": 40
+      },
+      "time_pain": {
+        "id": "time_pain",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1270,
+        "y": 40
+      },
+      "pain_followup": {
+        "id": "pain_followup",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "继续询问诱因",
+              "next": "cause_answer"
+            },
+            {
+              "label": "结束问诊",
+              "next": "closing"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:pain_followup:select"
+        },
+        "x": 1510,
+        "y": 40
+      },
+      "cause_answer": {
+        "id": "cause_answer",
+        "type": "text",
+        "inputs": {
+          "displayTo": "his-app",
+          "speaker": "林若晴",
+          "text": "这几天加班比较多，三餐也不规律。昨天晚上空腹喝了咖啡，之后就开始不舒服。以前偶尔也会[[symptom_009]]，但没有这么严重。",
+          "continueKey": "dlg:cause_answer:continue"
+        },
+        "x": 1760,
+        "y": 20
+      },
+      "time_cause": {
+        "id": "time_cause",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 2010,
+        "y": 20
+      },
+      "history_answer": {
+        "id": "history_answer",
+        "type": "text",
+        "inputs": {
+          "displayTo": "his-app",
+          "speaker": "林若晴",
+          "text": "我以前有过一次[[disease:acute_gastritis:normal]]，休息后就好了。平时没有长期服药，也没有做过胃部手术；最近为了[[headache]]吃过两次止痛药。",
+          "continueKey": "dlg:history_answer:continue"
+        },
+        "x": 1020,
+        "y": 220
+      },
+      "time_history": {
+        "id": "time_history",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1270,
+        "y": 220
+      },
+      "history_followup": {
+        "id": "history_followup",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "询问是否有消化道出血表现",
+              "next": "bleeding_answer"
+            },
+            {
+              "label": "结束问诊",
+              "next": "closing"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:history_followup:select"
+        },
+        "x": 1510,
+        "y": 220
+      },
+      "bleeding_answer": {
+        "id": "bleeding_answer",
+        "type": "text",
+        "inputs": {
+          "displayTo": "his-app",
+          "speaker": "林若晴",
+          "text": "没有[[symptom_104]]，大便颜色也正常，最近没有明显的[[symptom_035]]。",
+          "continueKey": "dlg:bleeding_answer:continue"
+        },
+        "x": 1760,
+        "y": 220
+      },
+      "time_bleeding": {
+        "id": "time_bleeding",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 2010,
+        "y": 220
+      },
+      "reflux_answer": {
+        "id": "reflux_answer",
+        "type": "text",
+        "inputs": {
+          "displayTo": "his-app",
+          "speaker": "林若晴",
+          "text": "偶尔会[[symptom_009]]，胸口有一点[[symptom_010]]，但没有明显的[[symptom_011]]；躺下后不舒服会稍微加重。",
+          "continueKey": "dlg:reflux_answer:continue"
+        },
+        "x": 1020,
+        "y": 400
+      },
+      "time_reflux": {
+        "id": "time_reflux",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1270,
+        "y": 400
+      },
+      "closing": {
+        "id": "closing",
+        "type": "text",
+        "inputs": {
+          "displayTo": "his-app",
+          "speaker": "player",
+          "text": "好的，我已经了解你的症状、诱因和既往病史了。请先到外面等候检查结果。",
+          "continueKey": "dlg:closing:continue"
+        },
+        "x": 2260,
+        "y": 220
+      },
+      "time_closing": {
+        "id": "time_closing",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 2510,
+        "y": 220
+      },
+      "activityEnd": {
+        "id": "activityEnd",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 2760,
+        "y": 220
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 80,
+        "y": 240
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 80,
+        "y": 360
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "intro",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro",
+        "fromPort": "flowOut",
+        "toNodeId": "time_intro",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_intro",
+        "fromPort": "flowOut",
+        "toNodeId": "main_choice",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "main_choice",
+        "fromPort": "option0",
+        "toNodeId": "pain_answer",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "main_choice",
+        "fromPort": "option1",
+        "toNodeId": "history_answer",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "main_choice",
+        "fromPort": "option2",
+        "toNodeId": "reflux_answer",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "pain_answer",
+        "fromPort": "flowOut",
+        "toNodeId": "time_pain",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_pain",
+        "fromPort": "flowOut",
+        "toNodeId": "pain_followup",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "pain_followup",
+        "fromPort": "option0",
+        "toNodeId": "cause_answer",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "pain_followup",
+        "fromPort": "option1",
+        "toNodeId": "closing",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cause_answer",
+        "fromPort": "flowOut",
+        "toNodeId": "time_cause",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_cause",
+        "fromPort": "flowOut",
+        "toNodeId": "closing",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "history_answer",
+        "fromPort": "flowOut",
+        "toNodeId": "time_history",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_history",
+        "fromPort": "flowOut",
+        "toNodeId": "history_followup",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "history_followup",
+        "fromPort": "option0",
+        "toNodeId": "bleeding_answer",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "history_followup",
+        "fromPort": "option1",
+        "toNodeId": "closing",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "bleeding_answer",
+        "fromPort": "flowOut",
+        "toNodeId": "time_bleeding",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_bleeding",
+        "fromPort": "flowOut",
+        "toNodeId": "closing",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "reflux_answer",
+        "fromPort": "flowOut",
+        "toNodeId": "time_reflux",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_reflux",
+        "fromPort": "flowOut",
+        "toNodeId": "closing",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "closing",
+        "fromPort": "flowOut",
+        "toNodeId": "time_closing",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_closing",
+        "fromPort": "flowOut",
+        "toNodeId": "activityEnd",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

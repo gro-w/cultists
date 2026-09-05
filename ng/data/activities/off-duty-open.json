@@ -1,0 +1,16 @@
+{
+  "id": "off-duty-open",
+  "displayName": "下班",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": { "id": "start", "type": "flowStart", "x": 60, "y": 60, "inputs": {} },
+      "open": { "id": "open", "type": "openWindow", "x": 260, "y": 60, "inputs": { "windowId": "off-duty" } },
+      "end": { "id": "end", "type": "activityEnd", "x": 460, "y": 60, "inputs": {} }
+    },
+    "connections": [
+      { "id": "edge-1", "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "open", "toPort": "flowIn" },
+      { "id": "edge-2", "fromNodeId": "open", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+    ]
+  }
+}

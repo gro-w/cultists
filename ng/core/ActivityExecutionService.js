@@ -1,9 +1,83 @@
-import { ActivityRunner } from "./ActivityRunner.js";
-import { ActivityInstance } from "./ActivityInstance.js";
+import { createActivityRunner } from "./ActivityRunner.js";
+import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
+
+/**
+ * ActivityExecutionService - owns ActivityRunner lifetimes. Guarantees a
+ * terminal event (`completed`/`cancelled`/`failed`) is emitted at most once
+ * per instanceId, even if `complete()`/`cancel()` is called again or the
+ * runner naturally finishes after being externally cancelled.
+ */
 export class ActivityExecutionService {
-  constructor({ definitions, queues, nodes, eventBus, effects = {}, presentation = {} } = {}) { this.definitions = definitions; this.queues = queues; this.nodes = nodes; this.eventBus = eventBus; this.effects = effects; this.presentation = presentation; this.runners = new Map(); }
-  create({ definitionId, queueId = "main", inputs = {}, payload = {} }) { const definition = this.definitions.get(definitionId); if (!definition) throw new Error(`Unknown activity definition: ${definitionId}`); const instance = new ActivityInstance({ definitionId, definitionVersion: definition.version || 1, queueId, inputs, payload }); this.queues.append(instance); this.eventBus?.emit("activity:created", { instanceId: instance.instanceId, queueId, definitionId }); return instance; }
-  start(instance) { const runner = new ActivityRunner({ instance, definition: this.definitions.get(instance.definitionId), nodes: this.nodes, eventBus: this.eventBus, effects: this.effects, presentation: this.presentation, onDone: () => this.finish(instance) }); this.runners.set(instance.instanceId, runner); runner.start(); return runner; }
-  finish(instance) { if (!instance.terminalEmitted) instance.transition("resolved"); this.queues.get(instance.queueId).complete(instance.instanceId, instance.result); this.runners.delete(instance.instanceId); this.eventBus?.emit("activity:completed", { instanceId: instance.instanceId, queueId: instance.queueId, definitionId: instance.definitionId }); }
-  cancel(id) { const runner = this.runners.get(id); if (runner) runner.cancel(); const instance = runner?.instance; if (instance && !instance.terminalEmitted) { instance.transition("cancelled"); this.eventBus?.emit("activity:cancelled", { instanceId: id, queueId: instance.queueId }); } }
+  constructor(eventBus) {
+    this.eventBus = eventBus;
+    this.runners = new Map();
+    this._firedTerminal = new Set();
+  }
+
+  run({ queue, definition, instance, variableStore, timeGateway, windowGateway, activityGateway, eventGateway, dbGateway, pvGateway, onboardingGateway } = {}) {
+    if (!queue || !definition || !instance) return null;
+    if (instance.status === "resolved" || this.runners.has(instance.instanceId)) return null;
+
+    const runner = createActivityRunner({
+      definition,
+      instance,
+      variableStore,
+      eventBus: this.eventBus,
+      timeGateway,
+      windowGateway,
+      activityGateway,
+      eventGateway,
+      dbGateway,
+      pvGateway,
+      onboardingGateway,
+      onCheckpoint: (updated) => {
+        queue.update(updated.instanceId, updated);
+        this.eventBus.emit(ACTIVITY_EVENTS.changed, { queueId: queue.queueId, instance: { ...updated } });
+      },
+      onComplete: (updated, reason) => {
+        queue.update(updated.instanceId, updated);
+        this.runners.delete(updated.instanceId);
+        this._emitTerminalOnce(queue.queueId, updated, reason);
+      },
+    });
+
+    this.runners.set(instance.instanceId, runner);
+    runner.start();
+    return runner;
+  }
+
+  _emitTerminalOnce(queueId, instance, reason) {
+    if (this._firedTerminal.has(instance.instanceId)) return;
+    this._firedTerminal.add(instance.instanceId);
+    const eventName = reason === "cancelled"
+      ? ACTIVITY_EVENTS.cancelled
+      : reason === "failed"
+        ? ACTIVITY_EVENTS.failed
+        : ACTIVITY_EVENTS.completed;
+    this.eventBus.emit(eventName, { queueId, instance: { ...instance } });
+  }
+
+  get(instanceId) {
+    return this.runners.get(instanceId) || null;
+  }
+
+  pause(instanceId) {
+    return this.get(instanceId)?.pause() || false;
+  }
+
+  resume(instanceId) {
+    return this.get(instanceId)?.resume() || false;
+  }
+
+  cancel(instanceId) {
+    return this.get(instanceId)?.cancel() || false;
+  }
+
+  /** Restore-safe teardown: cancels every live runner without re-emitting terminal events for already-resolved instances. */
+  clear() {
+    this.runners.forEach((runner) => runner.cancel());
+    this.runners.clear();
+  }
 }
+
+export default ActivityExecutionService;

@@ -1,0 +1,8347 @@
+{
+  "npcs": [
+    {
+      "id": "ajie",
+      "name": "阿杰",
+      "avatar": "👦",
+      "initialFavorability": 60,
+      "initialSan": 80,
+      "portraits": [
+        {
+          "sanMin": null,
+          "sanMax": null,
+          "height": 66,
+          "offsetX": 0,
+          "offsetY": 0,
+          "imageData": "data/assets/npc_ajie_portraits_0_6f62a86edebb.png"
+        }
+      ],
+      "endingPortraits": [
+        {
+          "endingId": "游戏王の福利",
+          "imageData": "data/assets/npc_ajie_endingPortraits_0_ce0fa970d754.png"
+        },
+        {
+          "endingId": "无尽玩笑",
+          "imageData": "data/assets/npc_ajie_endingPortraits_1_7603ee1b4256.png"
+        }
+      ]
+    },
+    {
+      "id": "awei",
+      "name": "阿伟",
+      "avatar": "👩",
+      "initialFavorability": 50,
+      "initialSan": 80,
+      "portraits": [
+        {
+          "sanMin": 51,
+          "sanMax": null,
+          "height": 66,
+          "offsetX": 0,
+          "offsetY": 0,
+          "imageData": "data/assets/npc_awei_portraits_0_a9334250e042.png"
+        },
+        {
+          "sanMin": 1,
+          "sanMax": 50,
+          "height": 66,
+          "offsetX": 0,
+          "offsetY": 0,
+          "imageData": "data/assets/npc_awei_portraits_1_b65bcdd113b9.png"
+        },
+        {
+          "sanMin": 0,
+          "sanMax": 0,
+          "height": 66,
+          "offsetX": 0,
+          "offsetY": 0,
+          "imageData": "data/assets/npc_awei_portraits_0_a9334250e042.png"
+        }
+      ],
+      "endingPortraits": []
+    },
+    {
+      "id": "binbin",
+      "name": "彬彬",
+      "avatar": "🧒",
+      "initialFavorability": 40,
+      "initialSan": 80,
+      "portraits": [
+        {
+          "sanMin": 51,
+          "sanMax": null,
+          "height": 66,
+          "offsetX": 0,
+          "offsetY": 0,
+          "imageData": "data/assets/npc_binbin_portraits_0_3e9f7feebe2c.png"
+        },
+        {
+          "sanMin": 1,
+          "sanMax": 50,
+          "height": 66,
+          "offsetX": 0,
+          "offsetY": 0,
+          "imageData": "data/assets/npc_binbin_portraits_1_389fec679871.png"
+        },
+        {
+          "sanMin": 0,
+          "sanMax": 0,
+          "height": 66,
+          "offsetX": 0,
+          "offsetY": 0,
+          "imageData": "data/assets/npc_binbin_portraits_0_3e9f7feebe2c.png"
+        }
+      ],
+      "endingPortraits": []
+    },
+    {
+      "id": "new_npc_4",
+      "name": "克苏鲁",
+      "avatar": "克苏鲁",
+      "initialFavorability": 50,
+      "initialSan": 80,
+      "portraits": [],
+      "endingPortraits": []
+    },
+    {
+      "id": "new_npc_5",
+      "name": "大衮",
+      "avatar": "大衮",
+      "initialFavorability": 50,
+      "initialSan": 80,
+      "portraits": [],
+      "endingPortraits": []
+    },
+    {
+      "id": "new_npc_6",
+      "name": "海德拉",
+      "avatar": "海德拉",
+      "initialFavorability": 50,
+      "initialSan": 80,
+      "portraits": [],
+      "endingPortraits": []
+    }
+  ],
+  "skills": [
+    {
+      "id": "observation",
+      "numericid": 0,
+      "label": "细致观察"
+    },
+    {
+      "id": "medicine",
+      "numericid": 1,
+      "label": "医学诊断"
+    },
+    {
+      "id": "communication",
+      "numericid": 2,
+      "label": "沟通应对"
+    }
+  ],
+  "keywords": [
+    {
+      "id": "fever",
+      "content": "发热"
+    },
+    {
+      "id": "cough",
+      "content": "咳嗽"
+    },
+    {
+      "id": "insomnia",
+      "content": "失眠"
+    },
+    {
+      "id": "headache",
+      "content": "头痛"
+    },
+    {
+      "id": "dizziness",
+      "content": "眩晕"
+    },
+    {
+      "id": "mystery_note",
+      "content": "神秘纸条",
+      "contentLowSan": "血迹斑斑的诅咒字符",
+      "relatedIds": [
+        "roommate_necklace_clue",
+        "strange_liquid",
+        "basement_secret"
+      ]
+    },
+    {
+      "id": "sore_throat",
+      "content": "咽痛"
+    },
+    {
+      "id": "night_shift_injury",
+      "content": "夜班受伤"
+    },
+    {
+      "id": "emergency_bruise",
+      "content": "多处淤青"
+    },
+    {
+      "id": "night_shift_rumor_echo",
+      "content": "夜班传闻的呼应"
+    },
+    {
+      "id": "night_noise",
+      "content": "深夜怪声"
+    },
+    {
+      "id": "night_shift_rumor",
+      "content": "夜班传闻",
+      "contentLowSan": "夜班的尖叫与活人献祭",
+      "relatedIds": [
+        "night_shift_injury",
+        "basement_secret",
+        "night_shift_rumor_detail"
+      ]
+    },
+    {
+      "id": "energy_drink",
+      "content": "功能饮料"
+    },
+    {
+      "id": "old_key_clue",
+      "content": "旧钥匙",
+      "contentLowSan": "通往祭坛的钥匙印记",
+      "relatedIds": [
+        "basement_secret",
+        "mystery_note",
+        "duty_room_secret"
+      ]
+    },
+    {
+      "id": "night_shift_rumor_detail",
+      "content": "夜班传闻细节"
+    },
+    {
+      "id": "angry_family",
+      "content": "医闹情绪"
+    },
+    {
+      "id": "colleague_confession",
+      "content": "同事的告白"
+    },
+    {
+      "id": "duty_room_secret",
+      "content": "值班室的秘密"
+    },
+    {
+      "id": "strange_liquid",
+      "content": "不明液体",
+      "contentLowSan": "献祭用的暗红血液",
+      "relatedIds": [
+        "roommate_necklace_clue",
+        "night_shift_rumor",
+        "basement_secret"
+      ]
+    },
+    {
+      "id": "flu_suspect",
+      "content": "流感嫌疑"
+    },
+    {
+      "id": "hypertension_risk",
+      "content": "高血压风险"
+    },
+    {
+      "id": "basement_secret",
+      "content": "地下室秘密"
+    },
+    {
+      "id": "roommate_necklace_clue",
+      "content": "项链上的奇怪符号",
+      "contentLowSan": "邪神召唤符文——而非装饰",
+      "relatedIds": [
+        "mystery_note",
+        "strange_liquid",
+        "basement_secret"
+      ]
+    },
+    {
+      "id": "disease:acute_bronchitis:low",
+      "content": "黑色枝杈缠住气管"
+    },
+    {
+      "id": "disease:acute_bronchitis:normal",
+      "content": "急性支气管炎，未特指"
+    },
+    {
+      "id": "disease:acute_cystitis:low",
+      "content": "膀胱被灼热的红印污染"
+    },
+    {
+      "id": "disease:acute_cystitis:normal",
+      "content": "急性膀胱炎，无血尿"
+    },
+    {
+      "id": "disease:acute_gastritis:low",
+      "content": "胃壁被饥饿火焰灼穿"
+    },
+    {
+      "id": "disease:acute_gastritis:normal",
+      "content": "胃炎，未特指，不伴出血"
+    },
+    {
+      "id": "disease:acute_laryngitis:low",
+      "content": "失声诅咒侵蚀声带"
+    },
+    {
+      "id": "disease:acute_laryngitis:normal",
+      "content": "急性喉炎"
+    },
+    {
+      "id": "disease:acute_maxillary_sinusitis:low",
+      "content": "颅骨窦穴积满黑雾"
+    },
+    {
+      "id": "disease:acute_maxillary_sinusitis:normal",
+      "content": "急性上颌窦炎"
+    },
+    {
+      "id": "disease:acute_myocardial_infarction:low",
+      "content": "心脏被献祭般地撕裂"
+    },
+    {
+      "id": "disease:acute_myocardial_infarction:normal",
+      "content": "急性心肌梗死，未特指"
+    },
+    {
+      "id": "disease:acute_nasopharyngitis:low",
+      "content": "寒雾侵入肺腑"
+    },
+    {
+      "id": "disease:acute_nasopharyngitis:normal",
+      "content": "急性鼻咽炎（普通感冒）"
+    },
+    {
+      "id": "disease:acute_pharyngitis:low",
+      "content": "深渊低语灼烧咽喉"
+    },
+    {
+      "id": "disease:acute_pharyngitis:normal",
+      "content": "急性咽炎，未特指"
+    },
+    {
+      "id": "disease:acute_pyelonephritis:low",
+      "content": "肾脏成为黑色祭坛"
+    },
+    {
+      "id": "disease:acute_pyelonephritis:normal",
+      "content": "急性肾盂肾炎"
+    },
+    {
+      "id": "disease:acute_stress_disorder:low",
+      "content": "创伤在现实表面撕开裂口"
+    },
+    {
+      "id": "disease:acute_stress_disorder:normal",
+      "content": "急性应激障碍"
+    },
+    {
+      "id": "disease:acute_tonsillitis:low",
+      "content": "扁桃体上的邪印发炎"
+    },
+    {
+      "id": "disease:acute_tonsillitis:normal",
+      "content": "急性扁桃体炎，未特指"
+    },
+    {
+      "id": "disease:acute_upper_respiratory_infection:low",
+      "content": "诅咒之气侵蚀"
+    },
+    {
+      "id": "disease:acute_upper_respiratory_infection:normal",
+      "content": "急性上呼吸道感染，未特指"
+    },
+    {
+      "id": "disease:alzheimer_disease:low",
+      "content": "记忆正在被灰色蠕虫啃食"
+    },
+    {
+      "id": "disease:alzheimer_disease:normal",
+      "content": "阿尔茨海默病，未特指"
+    },
+    {
+      "id": "disease:angina_pectoris:low",
+      "content": "胸腔被铁环缓慢收紧"
+    },
+    {
+      "id": "disease:angina_pectoris:normal",
+      "content": "心绞痛，未特指"
+    },
+    {
+      "id": "disease:asthma_unspecified:low",
+      "content": "窒息之手扼住胸腔"
+    },
+    {
+      "id": "disease:asthma_unspecified:normal",
+      "content": "哮喘，未特指，未伴并发症"
+    },
+    {
+      "id": "disease:atherosclerotic_heart_disease:low",
+      "content": "血管内堆积着黑色祭石"
+    },
+    {
+      "id": "disease:atherosclerotic_heart_disease:normal",
+      "content": "动脉粥样硬化性心脏病"
+    },
+    {
+      "id": "disease:atopic_dermatitis:low",
+      "content": "皮肤下孵化着梦魇的卵"
+    },
+    {
+      "id": "disease:atopic_dermatitis:normal",
+      "content": "特应性皮炎，未特指"
+    },
+    {
+      "id": "disease:atrial_fibrillation:low",
+      "content": "心脏被混沌节拍接管"
+    },
+    {
+      "id": "disease:atrial_fibrillation:normal",
+      "content": "心房颤动，未特指"
+    },
+    {
+      "id": "disease:benign_positional_vertigo:low",
+      "content": "重力诅咒使世界翻转"
+    },
+    {
+      "id": "disease:benign_positional_vertigo:normal",
+      "content": "良性阵发性位置性眩晕，未特指耳"
+    },
+    {
+      "id": "disease:benign_prostatic_hyperplasia:low",
+      "content": "前列腺被无名肿物占据"
+    },
+    {
+      "id": "disease:benign_prostatic_hyperplasia:normal",
+      "content": "良性前列腺增生，无下尿路症状"
+    },
+    {
+      "id": "disease:candidiasis:low",
+      "content": "白色菌丝在体内建立巢穴"
+    },
+    {
+      "id": "disease:candidiasis:normal",
+      "content": "念珠菌病，未特指"
+    },
+    {
+      "id": "disease:carpal_tunnel_syndrome:low",
+      "content": "腕中囚禁着看不见的虫群"
+    },
+    {
+      "id": "disease:carpal_tunnel_syndrome:normal",
+      "content": "右上肢腕管综合征"
+    },
+    {
+      "id": "disease:cellulitis:low",
+      "content": "腐败的暗影正在皮下扩散"
+    },
+    {
+      "id": "disease:cellulitis:normal",
+      "content": "蜂窝织炎，部位未特指"
+    },
+    {
+      "id": "disease:cerebral_infarction:low",
+      "content": "思维之河被暗潮截断"
+    },
+    {
+      "id": "disease:cerebral_infarction:normal",
+      "content": "脑梗死，未特指"
+    },
+    {
+      "id": "disease:chest_pain:low",
+      "content": "胸腔传来来自墓穴的敲击"
+    },
+    {
+      "id": "disease:chest_pain:normal",
+      "content": "胸痛，未特指"
+    },
+    {
+      "id": "disease:cholelithiasis:low",
+      "content": "胆囊中孕育着黑色石卵"
+    },
+    {
+      "id": "disease:cholelithiasis:normal",
+      "content": "胆囊结石，无胆囊炎，无梗阻"
+    },
+    {
+      "id": "disease:chronic_kidney_disease:low",
+      "content": "肾脏正在被缓慢风化"
+    },
+    {
+      "id": "disease:chronic_kidney_disease:normal",
+      "content": "慢性肾脏病，未特指"
+    },
+    {
+      "id": "disease:chronic_obstructive_pulmonary_disease:low",
+      "content": "锈蚀的肺门正在闭合"
+    },
+    {
+      "id": "disease:chronic_obstructive_pulmonary_disease:normal",
+      "content": "慢性阻塞性肺疾病，未特指"
+    },
+    {
+      "id": "disease:chronic_sinusitis:low",
+      "content": "永不散去的颅内回声"
+    },
+    {
+      "id": "disease:chronic_sinusitis:normal",
+      "content": "慢性鼻窦炎，未特指"
+    },
+    {
+      "id": "disease:constipation:low",
+      "content": "体内的门被古老符文封死"
+    },
+    {
+      "id": "disease:constipation:normal",
+      "content": "便秘，未特指"
+    },
+    {
+      "id": "disease:contact_dermatitis:low",
+      "content": "接触过的地方留下诅咒烙印"
+    },
+    {
+      "id": "disease:contact_dermatitis:normal",
+      "content": "未特指的接触性皮炎"
+    },
+    {
+      "id": "disease:cough:low",
+      "content": "肺部在咳出黑色回声"
+    },
+    {
+      "id": "disease:cough:normal",
+      "content": "咳嗽，未特指"
+    },
+    {
+      "id": "disease:covid19:low",
+      "content": "冠状病毒化作黑色王冠"
+    },
+    {
+      "id": "disease:covid19:normal",
+      "content": "新型冠状病毒感染"
+    },
+    {
+      "id": "disease:epilepsy_unspecified:low",
+      "content": "灵魂被闪电反复劈开"
+    },
+    {
+      "id": "disease:epilepsy_unspecified:normal",
+      "content": "癫痫，未特指，不伴难治性癫痫持续状态"
+    },
+    {
+      "id": "disease:essential_hypertension:low",
+      "content": "血压被无形祭司操纵"
+    },
+    {
+      "id": "disease:essential_hypertension:normal",
+      "content": "原发性高血压"
+    },
+    {
+      "id": "disease:fatty_liver:low",
+      "content": "肝脏被油腻的阴影覆盖"
+    },
+    {
+      "id": "disease:fatty_liver:normal",
+      "content": "脂肪变性肝，未分类处"
+    },
+    {
+      "id": "disease:fever_unspecified:low",
+      "content": "额头燃烧着不属于太阳的火"
+    },
+    {
+      "id": "disease:fever_unspecified:normal",
+      "content": "发热，未特指"
+    },
+    {
+      "id": "disease:gastroesophageal_reflux:low",
+      "content": "胃酸是来自深渊的黑潮"
+    },
+    {
+      "id": "disease:gastroesophageal_reflux:normal",
+      "content": "胃食管反流病，无食管炎"
+    },
+    {
+      "id": "disease:generalized_anxiety:low",
+      "content": "无数细小的眼睛在脑内睁开"
+    },
+    {
+      "id": "disease:generalized_anxiety:normal",
+      "content": "广泛性焦虑障碍"
+    },
+    {
+      "id": "disease:gout:low",
+      "content": "关节中结晶出邪神的盐"
+    },
+    {
+      "id": "disease:gout:normal",
+      "content": "痛风，未特指"
+    },
+    {
+      "id": "disease:headache_unspecified:low",
+      "content": "颅骨内回荡着永恒钟声"
+    },
+    {
+      "id": "disease:headache_unspecified:normal",
+      "content": "头痛，未特指"
+    },
+    {
+      "id": "disease:heart_failure:low",
+      "content": "心室拒绝再为凡人跳动"
+    },
+    {
+      "id": "disease:heart_failure:normal",
+      "content": "心力衰竭，未特指"
+    },
+    {
+      "id": "disease:herpes_zoster:low",
+      "content": "皮肤上爬过一条燃烧的蛇"
+    },
+    {
+      "id": "disease:herpes_zoster:normal",
+      "content": "带状疱疹，未特指"
+    },
+    {
+      "id": "disease:hyperlipidemia:low",
+      "content": "血管漂浮着贪食的油之灵"
+    },
+    {
+      "id": "disease:hyperlipidemia:normal",
+      "content": "高脂血症，未特指"
+    },
+    {
+      "id": "disease:hypertensive_crisis:low",
+      "content": "血管中的钟声即将爆裂"
+    },
+    {
+      "id": "disease:hypertensive_crisis:normal",
+      "content": "高血压危象，未特指"
+    },
+    {
+      "id": "disease:hyperthyroidism:low",
+      "content": "体内燃起无法熄灭的星火"
+    },
+    {
+      "id": "disease:hyperthyroidism:normal",
+      "content": "甲状腺毒症，未特指"
+    },
+    {
+      "id": "disease:hypothyroidism:low",
+      "content": "时间在体内逐渐冻结"
+    },
+    {
+      "id": "disease:hypothyroidism:normal",
+      "content": "甲状腺功能减退，未特指"
+    },
+    {
+      "id": "disease:infectious_gastroenteritis:low",
+      "content": "腹中滋生来自疫界的虫群"
+    },
+    {
+      "id": "disease:infectious_gastroenteritis:normal",
+      "content": "感染性胃肠炎和结肠炎，未特指"
+    },
+    {
+      "id": "disease:influenza_unspecified:low",
+      "content": "群鸦般的热疫盘踞肺部"
+    },
+    {
+      "id": "disease:influenza_unspecified:normal",
+      "content": "流行性感冒伴其他呼吸道表现"
+    },
+    {
+      "id": "disease:insomnia_disorder:low",
+      "content": "梦魇拒绝让意识入睡"
+    },
+    {
+      "id": "disease:insomnia_disorder:normal",
+      "content": "原发性失眠"
+    },
+    {
+      "id": "disease:irritable_bowel_syndrome:low",
+      "content": "肠道被混沌的低语驱使"
+    },
+    {
+      "id": "disease:irritable_bowel_syndrome:normal",
+      "content": "肠易激综合征，无腹泻"
+    },
+    {
+      "id": "disease:kidney_stone:low",
+      "content": "肾中滚动着来自异界的碎石"
+    },
+    {
+      "id": "disease:kidney_stone:normal",
+      "content": "肾结石"
+    },
+    {
+      "id": "disease:low_back_pain:low",
+      "content": "脊柱被沉重的黑门压弯"
+    },
+    {
+      "id": "disease:low_back_pain:normal",
+      "content": "腰痛，未特指"
+    },
+    {
+      "id": "disease:major_depressive_disorder:low",
+      "content": "灵魂沉入没有光的井底"
+    },
+    {
+      "id": "disease:major_depressive_disorder:normal",
+      "content": "重性抑郁障碍，单次发作，未特指"
+    },
+    {
+      "id": "disease:migraine_unspecified:low",
+      "content": "邪神的独眼凝视颅内"
+    },
+    {
+      "id": "disease:migraine_unspecified:normal",
+      "content": "偏头痛，未特指，不伴持续状态"
+    },
+    {
+      "id": "disease:nausea_vomiting:low",
+      "content": "胃中翻涌着不洁的海"
+    },
+    {
+      "id": "disease:nausea_vomiting:normal",
+      "content": "恶心伴呕吐，未特指"
+    },
+    {
+      "id": "disease:neck_pain:low",
+      "content": "脖颈被看不见的绳索牵引"
+    },
+    {
+      "id": "disease:neck_pain:normal",
+      "content": "颈痛"
+    },
+    {
+      "id": "disease:noninfective_gastroenteritis:low",
+      "content": "肠壁渗出不属于此世的液体"
+    },
+    {
+      "id": "disease:noninfective_gastroenteritis:normal",
+      "content": "非感染性胃肠炎和结肠炎，未特指"
+    },
+    {
+      "id": "disease:obesity:low",
+      "content": "肉身被无底深渊拖拽"
+    },
+    {
+      "id": "disease:obesity:normal",
+      "content": "肥胖，未特指"
+    },
+    {
+      "id": "disease:osteoarthritis_knee:low",
+      "content": "膝中骨骼长出锈蚀尖牙"
+    },
+    {
+      "id": "disease:osteoarthritis_knee:normal",
+      "content": "膝关节骨关节炎，未特指"
+    },
+    {
+      "id": "disease:parkinsons_disease:low",
+      "content": "身体被衰朽木偶师操纵"
+    },
+    {
+      "id": "disease:parkinsons_disease:normal",
+      "content": "帕金森病，伴运动波动"
+    },
+    {
+      "id": "disease:peptic_ulcer_unspecified:low",
+      "content": "腹中张开一只无底之眼"
+    },
+    {
+      "id": "disease:peptic_ulcer_unspecified:normal",
+      "content": "消化性溃疡，未特指，无出血或穿孔"
+    },
+    {
+      "id": "disease:pneumonia_unspecified:low",
+      "content": "肺泡中滋长异界孢子"
+    },
+    {
+      "id": "disease:pneumonia_unspecified:normal",
+      "content": "肺炎，未特指"
+    },
+    {
+      "id": "disease:rheumatoid_arthritis:low",
+      "content": "关节被群聚的灰色虫灵啃咬"
+    },
+    {
+      "id": "disease:rheumatoid_arthritis:normal",
+      "content": "类风湿关节炎，未特指"
+    },
+    {
+      "id": "disease:sciatica:low",
+      "content": "黑色电流沿脊柱向下爬行"
+    },
+    {
+      "id": "disease:sciatica:normal",
+      "content": "坐骨神经痛，未特指"
+    },
+    {
+      "id": "disease:soft_tissue_contusion:low",
+      "content": "无形之手撕裂了皮下组织"
+    },
+    {
+      "id": "disease:soft_tissue_contusion:normal",
+      "content": "胸部挫伤，未特指，初次就诊"
+    },
+    {
+      "id": "disease:streptococcal_pharyngitis:low",
+      "content": "赤色菌群在喉中举行仪式"
+    },
+    {
+      "id": "disease:streptococcal_pharyngitis:normal",
+      "content": "链球菌性咽炎"
+    },
+    {
+      "id": "disease:tension_headache:low",
+      "content": "无形绞索缠绕意识"
+    },
+    {
+      "id": "disease:tension_headache:normal",
+      "content": "紧张型头痛，未特指"
+    },
+    {
+      "id": "disease:transient_cerebral_ischemic_attack:low",
+      "content": "意识短暂坠入无光深渊"
+    },
+    {
+      "id": "disease:transient_cerebral_ischemic_attack:normal",
+      "content": "短暂性脑缺血发作，未特指"
+    },
+    {
+      "id": "disease:type1_diabetes:low",
+      "content": "胰岛被饥饿之神吞噬"
+    },
+    {
+      "id": "disease:type1_diabetes:normal",
+      "content": "1型糖尿病，无并发症"
+    },
+    {
+      "id": "disease:type2_diabetes:low",
+      "content": "血液变成甜腻的献祭蜜浆"
+    },
+    {
+      "id": "disease:type2_diabetes:normal",
+      "content": "2型糖尿病，无并发症"
+    },
+    {
+      "id": "disease:urinary_tract_infection:low",
+      "content": "膀胱中回响着地下祷词"
+    },
+    {
+      "id": "disease:urinary_tract_infection:normal",
+      "content": "尿路感染，部位未特指"
+    },
+    {
+      "id": "disease:urticaria:low",
+      "content": "皮肤浮起一片红色符文"
+    },
+    {
+      "id": "disease:urticaria:normal",
+      "content": "荨麻疹，未特指"
+    },
+    {
+      "id": "disease:varicose_veins:low",
+      "content": "腿中爬满盘绕的血蛇"
+    },
+    {
+      "id": "disease:varicose_veins:normal",
+      "content": "下肢静脉曲张，未特指"
+    },
+    {
+      "id": "disease:vertigo:low",
+      "content": "世界正在围绕裂隙旋转"
+    },
+    {
+      "id": "disease:vertigo:normal",
+      "content": "头晕和眩晕"
+    },
+    {
+      "id": "disease:vitamin_d_deficiency:low",
+      "content": "太阳的碎片已从骨中消失"
+    },
+    {
+      "id": "disease:vitamin_d_deficiency:normal",
+      "content": "维生素D缺乏，未特指"
+    },
+    {
+      "id": "disease-category:icd_a:normal",
+      "content": "某些传染病和寄生虫病"
+    },
+    {
+      "id": "disease-category:icd_a:low",
+      "content": "被深渊侵蚀的某些传染病和寄生虫病"
+    },
+    {
+      "id": "disease-category:icd_e:normal",
+      "content": "内分泌、营养和代谢疾病"
+    },
+    {
+      "id": "disease-category:icd_e:low",
+      "content": "被深渊侵蚀的内分泌、营养和代谢疾病"
+    },
+    {
+      "id": "disease-category:icd_f:normal",
+      "content": "精神和行为障碍"
+    },
+    {
+      "id": "disease-category:icd_f:low",
+      "content": "被深渊侵蚀的精神和行为障碍"
+    },
+    {
+      "id": "disease-category:icd_g:normal",
+      "content": "神经系统疾病"
+    },
+    {
+      "id": "disease-category:icd_g:low",
+      "content": "被深渊侵蚀的神经系统疾病"
+    },
+    {
+      "id": "disease-category:icd_h:normal",
+      "content": "耳和乳突疾病"
+    },
+    {
+      "id": "disease-category:icd_h:low",
+      "content": "被深渊侵蚀的耳和乳突疾病"
+    },
+    {
+      "id": "disease-category:icd_i:normal",
+      "content": "循环系统疾病"
+    },
+    {
+      "id": "disease-category:icd_i:low",
+      "content": "被深渊侵蚀的循环系统疾病"
+    },
+    {
+      "id": "disease-category:icd_j:normal",
+      "content": "呼吸系统疾病"
+    },
+    {
+      "id": "disease-category:icd_j:low",
+      "content": "被深渊侵蚀的呼吸系统疾病"
+    },
+    {
+      "id": "disease-category:icd_k:normal",
+      "content": "消化系统疾病"
+    },
+    {
+      "id": "disease-category:icd_k:low",
+      "content": "被深渊侵蚀的消化系统疾病"
+    },
+    {
+      "id": "disease-category:icd_l:normal",
+      "content": "皮肤和皮下组织疾病"
+    },
+    {
+      "id": "disease-category:icd_l:low",
+      "content": "被深渊侵蚀的皮肤和皮下组织疾病"
+    },
+    {
+      "id": "disease-category:icd_m:normal",
+      "content": "肌肉骨骼系统和结缔组织疾病"
+    },
+    {
+      "id": "disease-category:icd_m:low",
+      "content": "被深渊侵蚀的肌肉骨骼系统和结缔组织疾病"
+    },
+    {
+      "id": "disease-category:icd_n:normal",
+      "content": "泌尿生殖系统疾病"
+    },
+    {
+      "id": "disease-category:icd_n:low",
+      "content": "被深渊侵蚀的泌尿生殖系统疾病"
+    },
+    {
+      "id": "disease-category:icd_r:normal",
+      "content": "症状、体征和异常的临床及实验室检查结果"
+    },
+    {
+      "id": "disease-category:icd_r:low",
+      "content": "被深渊侵蚀的症状、体征和异常的临床及实验室检查结果"
+    },
+    {
+      "id": "disease-category:icd_s:normal",
+      "content": "损伤、中毒和外因的某些其他后果"
+    },
+    {
+      "id": "disease-category:icd_s:low",
+      "content": "被深渊侵蚀的损伤、中毒和外因的某些其他后果"
+    },
+    {
+      "id": "disease-category:icd_u:normal",
+      "content": "用于特殊目的的编码"
+    },
+    {
+      "id": "disease-category:icd_u:low",
+      "content": "被深渊侵蚀的用于特殊目的的编码"
+    },
+    {
+      "id": "symptom_001",
+      "content": "乏力"
+    },
+    {
+      "id": "symptom_002",
+      "content": "食欲减退"
+    },
+    {
+      "id": "symptom_003",
+      "content": "恶心"
+    },
+    {
+      "id": "symptom_004",
+      "content": "呕吐"
+    },
+    {
+      "id": "symptom_005",
+      "content": "腹痛"
+    },
+    {
+      "id": "symptom_006",
+      "content": "腹泻"
+    },
+    {
+      "id": "symptom_007",
+      "content": "便秘"
+    },
+    {
+      "id": "symptom_008",
+      "content": "腹胀"
+    },
+    {
+      "id": "symptom_009",
+      "content": "反酸"
+    },
+    {
+      "id": "symptom_010",
+      "content": "烧心"
+    },
+    {
+      "id": "symptom_011",
+      "content": "吞咽困难"
+    },
+    {
+      "id": "symptom_012",
+      "content": "口干"
+    },
+    {
+      "id": "symptom_013",
+      "content": "口苦"
+    },
+    {
+      "id": "symptom_014",
+      "content": "口腔溃疡"
+    },
+    {
+      "id": "symptom_015",
+      "content": "牙龈出血"
+    },
+    {
+      "id": "symptom_016",
+      "content": "鼻塞"
+    },
+    {
+      "id": "symptom_017",
+      "content": "流鼻涕"
+    },
+    {
+      "id": "symptom_018",
+      "content": "打喷嚏"
+    },
+    {
+      "id": "symptom_019",
+      "content": "鼻痒"
+    },
+    {
+      "id": "symptom_020",
+      "content": "嗅觉减退"
+    },
+    {
+      "id": "symptom_021",
+      "content": "声音嘶哑"
+    },
+    {
+      "id": "symptom_022",
+      "content": "咽部异物感"
+    },
+    {
+      "id": "symptom_023",
+      "content": "咽干"
+    },
+    {
+      "id": "symptom_024",
+      "content": "咽痒"
+    },
+    {
+      "id": "symptom_025",
+      "content": "胸痛"
+    },
+    {
+      "id": "symptom_026",
+      "content": "胸闷"
+    },
+    {
+      "id": "symptom_027",
+      "content": "心悸"
+    },
+    {
+      "id": "symptom_028",
+      "content": "气短"
+    },
+    {
+      "id": "symptom_029",
+      "content": "呼吸困难"
+    },
+    {
+      "id": "symptom_030",
+      "content": "喘息"
+    },
+    {
+      "id": "symptom_031",
+      "content": "咳痰"
+    },
+    {
+      "id": "symptom_032",
+      "content": "咯血"
+    },
+    {
+      "id": "symptom_033",
+      "content": "夜间盗汗"
+    },
+    {
+      "id": "symptom_034",
+      "content": "寒战"
+    },
+    {
+      "id": "symptom_035",
+      "content": "体重下降"
+    },
+    {
+      "id": "symptom_036",
+      "content": "体重增加"
+    },
+    {
+      "id": "symptom_037",
+      "content": "水肿"
+    },
+    {
+      "id": "symptom_038",
+      "content": "面部水肿"
+    },
+    {
+      "id": "symptom_039",
+      "content": "下肢水肿"
+    },
+    {
+      "id": "symptom_040",
+      "content": "皮肤瘙痒"
+    },
+    {
+      "id": "symptom_041",
+      "content": "皮疹"
+    },
+    {
+      "id": "symptom_042",
+      "content": "红斑"
+    },
+    {
+      "id": "symptom_043",
+      "content": "丘疹"
+    },
+    {
+      "id": "symptom_044",
+      "content": "风团"
+    },
+    {
+      "id": "symptom_045",
+      "content": "水疱"
+    },
+    {
+      "id": "symptom_046",
+      "content": "脓疱"
+    },
+    {
+      "id": "symptom_047",
+      "content": "脱屑"
+    },
+    {
+      "id": "symptom_048",
+      "content": "皮肤干燥"
+    },
+    {
+      "id": "symptom_049",
+      "content": "皮肤脱色"
+    },
+    {
+      "id": "symptom_050",
+      "content": "色素沉着"
+    },
+    {
+      "id": "symptom_051",
+      "content": "伤口疼痛"
+    },
+    {
+      "id": "symptom_052",
+      "content": "伤口红肿"
+    },
+    {
+      "id": "symptom_053",
+      "content": "伤口渗液"
+    },
+    {
+      "id": "symptom_054",
+      "content": "眼睛干涩"
+    },
+    {
+      "id": "symptom_055",
+      "content": "眼睛发红"
+    },
+    {
+      "id": "symptom_056",
+      "content": "眼睛疼痛"
+    },
+    {
+      "id": "symptom_057",
+      "content": "畏光"
+    },
+    {
+      "id": "symptom_058",
+      "content": "流泪"
+    },
+    {
+      "id": "symptom_059",
+      "content": "视物模糊"
+    },
+    {
+      "id": "symptom_060",
+      "content": "视力下降"
+    },
+    {
+      "id": "symptom_061",
+      "content": "耳鸣"
+    },
+    {
+      "id": "symptom_062",
+      "content": "耳痛"
+    },
+    {
+      "id": "symptom_063",
+      "content": "听力下降"
+    },
+    {
+      "id": "symptom_064",
+      "content": "耳闷"
+    },
+    {
+      "id": "symptom_065",
+      "content": "鼻出血"
+    },
+    {
+      "id": "symptom_066",
+      "content": "牙痛"
+    },
+    {
+      "id": "symptom_067",
+      "content": "面部疼痛"
+    },
+    {
+      "id": "symptom_068",
+      "content": "颈部疼痛"
+    },
+    {
+      "id": "symptom_069",
+      "content": "颈部僵硬"
+    },
+    {
+      "id": "symptom_070",
+      "content": "肩痛"
+    },
+    {
+      "id": "symptom_071",
+      "content": "肩部活动受限"
+    },
+    {
+      "id": "symptom_072",
+      "content": "背部疼痛"
+    },
+    {
+      "id": "symptom_073",
+      "content": "腰部僵硬"
+    },
+    {
+      "id": "symptom_074",
+      "content": "关节疼痛"
+    },
+    {
+      "id": "symptom_075",
+      "content": "关节肿胀"
+    },
+    {
+      "id": "symptom_076",
+      "content": "关节僵硬"
+    },
+    {
+      "id": "symptom_077",
+      "content": "关节发热"
+    },
+    {
+      "id": "symptom_078",
+      "content": "肌肉酸痛"
+    },
+    {
+      "id": "symptom_079",
+      "content": "肌肉无力"
+    },
+    {
+      "id": "symptom_080",
+      "content": "肢体麻木"
+    },
+    {
+      "id": "symptom_081",
+      "content": "手脚发麻"
+    },
+    {
+      "id": "symptom_082",
+      "content": "针刺感"
+    },
+    {
+      "id": "symptom_083",
+      "content": "烧灼感"
+    },
+    {
+      "id": "symptom_084",
+      "content": "触觉减退"
+    },
+    {
+      "id": "symptom_085",
+      "content": "步态不稳"
+    },
+    {
+      "id": "symptom_086",
+      "content": "协调障碍"
+    },
+    {
+      "id": "symptom_087",
+      "content": "震颤"
+    },
+    {
+      "id": "symptom_088",
+      "content": "抽搐"
+    },
+    {
+      "id": "symptom_089",
+      "content": "晕厥"
+    },
+    {
+      "id": "symptom_090",
+      "content": "意识模糊"
+    },
+    {
+      "id": "symptom_091",
+      "content": "记忆力减退"
+    },
+    {
+      "id": "symptom_092",
+      "content": "注意力不集中"
+    },
+    {
+      "id": "symptom_093",
+      "content": "言语含糊"
+    },
+    {
+      "id": "symptom_094",
+      "content": "吞咽障碍"
+    },
+    {
+      "id": "symptom_095",
+      "content": "面部麻木"
+    },
+    {
+      "id": "symptom_096",
+      "content": "单侧无力"
+    },
+    {
+      "id": "symptom_097",
+      "content": "手臂无力"
+    },
+    {
+      "id": "symptom_098",
+      "content": "腿部无力"
+    },
+    {
+      "id": "symptom_099",
+      "content": "尿频"
+    },
+    {
+      "id": "symptom_100",
+      "content": "尿急"
+    },
+    {
+      "id": "symptom_101",
+      "content": "尿痛"
+    },
+    {
+      "id": "symptom_102",
+      "content": "排尿困难"
+    },
+    {
+      "id": "symptom_103",
+      "content": "尿潴留"
+    },
+    {
+      "id": "symptom_104",
+      "content": "血尿"
+    },
+    {
+      "id": "symptom_105",
+      "content": "夜尿增多"
+    },
+    {
+      "id": "symptom_106",
+      "content": "尿失禁"
+    },
+    {
+      "id": "symptom_107",
+      "content": "腰腹绞痛"
+    },
+    {
+      "id": "symptom_108",
+      "content": "阴囊疼痛"
+    },
+    {
+      "id": "symptom_109",
+      "content": "月经不规律"
+    },
+    {
+      "id": "symptom_110",
+      "content": "月经过多"
+    },
+    {
+      "id": "symptom_111",
+      "content": "月经量少"
+    },
+    {
+      "id": "symptom_112",
+      "content": "痛经"
+    },
+    {
+      "id": "symptom_113",
+      "content": "经间期出血"
+    },
+    {
+      "id": "symptom_114",
+      "content": "白带增多"
+    },
+    {
+      "id": "symptom_115",
+      "content": "外阴瘙痒"
+    },
+    {
+      "id": "symptom_116",
+      "content": "性欲减退"
+    },
+    {
+      "id": "symptom_117",
+      "content": "勃起困难"
+    },
+    {
+      "id": "symptom_118",
+      "content": "乳房疼痛"
+    },
+    {
+      "id": "symptom_120",
+      "content": "潮热"
+    },
+    {
+      "id": "symptom_121",
+      "content": "盗汗"
+    },
+    {
+      "id": "symptom_122",
+      "content": "怕冷"
+    },
+    {
+      "id": "symptom_123",
+      "content": "怕热"
+    },
+    {
+      "id": "symptom_124",
+      "content": "手抖"
+    },
+    {
+      "id": "symptom_125",
+      "content": "多汗"
+    },
+    {
+      "id": "symptom_127",
+      "content": "毛发脱落"
+    },
+    {
+      "id": "symptom_128",
+      "content": "毛发增多"
+    },
+    {
+      "id": "symptom_129",
+      "content": "痤疮"
+    },
+    {
+      "id": "symptom_130",
+      "content": "脱发"
+    },
+    {
+      "id": "symptom_131",
+      "content": "伤口愈合慢"
+    },
+    {
+      "id": "symptom_132",
+      "content": "口渴"
+    },
+    {
+      "id": "symptom_133",
+      "content": "多饮"
+    },
+    {
+      "id": "symptom_134",
+      "content": "多尿"
+    },
+    {
+      "id": "symptom_136",
+      "content": "视物重影"
+    },
+    {
+      "id": "symptom_137",
+      "content": "眼球突出"
+    },
+    {
+      "id": "symptom_138",
+      "content": "颈部肿大"
+    },
+    {
+      "id": "symptom_139",
+      "content": "声音低沉"
+    },
+    {
+      "id": "symptom_140",
+      "content": "反应迟钝"
+    },
+    {
+      "id": "symptom_141",
+      "content": "情绪低落"
+    },
+    {
+      "id": "symptom_142",
+      "content": "兴趣减退"
+    },
+    {
+      "id": "symptom_143",
+      "content": "自责感"
+    },
+    {
+      "id": "symptom_144",
+      "content": "紧张不安"
+    },
+    {
+      "id": "symptom_145",
+      "content": "坐立不安"
+    },
+    {
+      "id": "symptom_146",
+      "content": "易怒"
+    },
+    {
+      "id": "symptom_147",
+      "content": "情绪波动"
+    },
+    {
+      "id": "symptom_148",
+      "content": "惊恐发作"
+    },
+    {
+      "id": "symptom_149",
+      "content": "强迫思维"
+    },
+    {
+      "id": "symptom_150",
+      "content": "睡眠过多"
+    },
+    {
+      "id": "symptom_151",
+      "content": "早醒"
+    },
+    {
+      "id": "symptom_152",
+      "content": "噩梦"
+    },
+    {
+      "id": "symptom_153",
+      "content": "注意力涣散"
+    },
+    {
+      "id": "symptom_154",
+      "content": "疲劳感"
+    },
+    {
+      "id": "symptom_155",
+      "content": "晨僵"
+    },
+    {
+      "id": "symptom_156",
+      "content": "活动后疼痛"
+    },
+    {
+      "id": "symptom_157",
+      "content": "静息痛"
+    },
+    {
+      "id": "symptom_158",
+      "content": "夜间疼痛"
+    },
+    {
+      "id": "symptom_159",
+      "content": "间歇性跛行"
+    },
+    {
+      "id": "symptom_160",
+      "content": "肢端发冷"
+    },
+    {
+      "id": "symptom_162",
+      "content": "皮下结节"
+    },
+    {
+      "id": "symptom_163",
+      "content": "淋巴结肿大"
+    },
+    {
+      "id": "symptom_164",
+      "content": "脖子肿块"
+    },
+    {
+      "id": "symptom_165",
+      "content": "腋窝肿块"
+    },
+    {
+      "id": "symptom_166",
+      "content": "腹股沟肿块"
+    },
+    {
+      "id": "symptom_167",
+      "content": "肝区不适"
+    },
+    {
+      "id": "symptom_168",
+      "content": "右上腹痛"
+    },
+    {
+      "id": "symptom_169",
+      "content": "左上腹痛"
+    },
+    {
+      "id": "symptom_170",
+      "content": "黄疸"
+    },
+    {
+      "id": "symptom_171",
+      "content": "眼白发黄"
+    },
+    {
+      "id": "symptom_172",
+      "content": "黑便"
+    },
+    {
+      "id": "symptom_173",
+      "content": "便血"
+    },
+    {
+      "id": "symptom_174",
+      "content": "黏液便"
+    },
+    {
+      "id": "symptom_175",
+      "content": "里急后重"
+    },
+    {
+      "id": "symptom_176",
+      "content": "排便不尽"
+    },
+    {
+      "id": "symptom_177",
+      "content": "肛门疼痛"
+    },
+    {
+      "id": "symptom_178",
+      "content": "肛门瘙痒"
+    },
+    {
+      "id": "symptom_179",
+      "content": "肛门出血"
+    },
+    {
+      "id": "symptom_180",
+      "content": "皮肤苍白"
+    },
+    {
+      "id": "symptom_181",
+      "content": "口唇发绀"
+    },
+    {
+      "id": "symptom_182",
+      "content": "指甲脆裂"
+    },
+    {
+      "id": "symptom_183",
+      "content": "头发干枯"
+    },
+    {
+      "id": "symptom_184",
+      "content": "骨痛"
+    },
+    {
+      "id": "symptom_185",
+      "content": "骨折后疼痛"
+    },
+    {
+      "id": "symptom_186",
+      "content": "活动受限"
+    },
+    {
+      "id": "symptom_187",
+      "content": "关节弹响"
+    },
+    {
+      "id": "symptom_188",
+      "content": "足跟痛"
+    },
+    {
+      "id": "symptom_189",
+      "content": "足底痛"
+    },
+    {
+      "id": "symptom_190",
+      "content": "手腕痛"
+    },
+    {
+      "id": "symptom_191",
+      "content": "手指僵硬"
+    },
+    {
+      "id": "symptom_192",
+      "content": "手指变形"
+    },
+    {
+      "id": "symptom_193",
+      "content": "小腿抽筋"
+    },
+    {
+      "id": "symptom_194",
+      "content": "腿部沉重"
+    },
+    {
+      "id": "symptom_195",
+      "content": "静脉曲张"
+    },
+    {
+      "id": "symptom_196",
+      "content": "伤口感染"
+    },
+    {
+      "id": "symptom_197",
+      "content": "发冷"
+    },
+    {
+      "id": "symptom_198",
+      "content": "虚弱感"
+    },
+    {
+      "id": "symptom_199",
+      "content": "脱水感"
+    },
+    {
+      "id": "symptom_200",
+      "content": "站立头晕"
+    },
+    {
+      "id": "med_paracetamol",
+      "content": "对乙酰氨基酚"
+    },
+    {
+      "id": "med_cough_syrup",
+      "content": "止咳糖浆"
+    },
+    {
+      "id": "med_001",
+      "content": "布洛芬"
+    },
+    {
+      "id": "med_002",
+      "content": "阿司匹林"
+    },
+    {
+      "id": "med_003",
+      "content": "双氯芬酸钠"
+    },
+    {
+      "id": "med_004",
+      "content": "塞来昔布"
+    },
+    {
+      "id": "med_005",
+      "content": "吲哚美辛"
+    },
+    {
+      "id": "med_006",
+      "content": "萘普生"
+    },
+    {
+      "id": "med_007",
+      "content": "洛索洛芬钠"
+    },
+    {
+      "id": "med_008",
+      "content": "美洛昔康"
+    },
+    {
+      "id": "med_009",
+      "content": "曲马多"
+    },
+    {
+      "id": "med_010",
+      "content": "盐酸氨酚曲马多"
+    },
+    {
+      "id": "med_011",
+      "content": "复方氨酚烷胺"
+    },
+    {
+      "id": "med_012",
+      "content": "氯雷他定"
+    },
+    {
+      "id": "med_013",
+      "content": "西替利嗪"
+    },
+    {
+      "id": "med_014",
+      "content": "地氯雷他定"
+    },
+    {
+      "id": "med_015",
+      "content": "依巴斯汀"
+    },
+    {
+      "id": "med_016",
+      "content": "孟鲁司特钠"
+    },
+    {
+      "id": "med_017",
+      "content": "氨溴索"
+    },
+    {
+      "id": "med_018",
+      "content": "乙酰半胱氨酸"
+    },
+    {
+      "id": "med_019",
+      "content": "盐酸氨溴索"
+    },
+    {
+      "id": "med_020",
+      "content": "右美沙芬"
+    },
+    {
+      "id": "med_021",
+      "content": "喷托维林"
+    },
+    {
+      "id": "med_022",
+      "content": "多索茶碱"
+    },
+    {
+      "id": "med_023",
+      "content": "沙丁胺醇"
+    },
+    {
+      "id": "med_024",
+      "content": "布地奈德"
+    },
+    {
+      "id": "med_025",
+      "content": "异丙托溴铵"
+    },
+    {
+      "id": "med_026",
+      "content": "糠酸莫米松鼻喷雾剂"
+    },
+    {
+      "id": "med_027",
+      "content": "丙酸氟替卡松"
+    },
+    {
+      "id": "med_028",
+      "content": "羟甲唑啉"
+    },
+    {
+      "id": "med_029",
+      "content": "生理性海水鼻喷雾"
+    },
+    {
+      "id": "med_030",
+      "content": "阿莫西林"
+    },
+    {
+      "id": "med_031",
+      "content": "阿莫西林克拉维酸钾"
+    },
+    {
+      "id": "med_032",
+      "content": "头孢氨苄"
+    },
+    {
+      "id": "med_033",
+      "content": "头孢呋辛酯"
+    },
+    {
+      "id": "med_034",
+      "content": "头孢克洛"
+    },
+    {
+      "id": "med_035",
+      "content": "头孢地尼"
+    },
+    {
+      "id": "med_036",
+      "content": "头孢曲松"
+    },
+    {
+      "id": "med_037",
+      "content": "阿奇霉素"
+    },
+    {
+      "id": "med_038",
+      "content": "克拉霉素"
+    },
+    {
+      "id": "med_039",
+      "content": "罗红霉素"
+    },
+    {
+      "id": "med_040",
+      "content": "左氧氟沙星"
+    },
+    {
+      "id": "med_041",
+      "content": "莫西沙星"
+    },
+    {
+      "id": "med_042",
+      "content": "环丙沙星"
+    },
+    {
+      "id": "med_043",
+      "content": "甲硝唑"
+    },
+    {
+      "id": "med_044",
+      "content": "替硝唑"
+    },
+    {
+      "id": "med_045",
+      "content": "呋喃妥因"
+    },
+    {
+      "id": "med_046",
+      "content": "磷霉素氨丁三醇"
+    },
+    {
+      "id": "med_047",
+      "content": "阿昔洛韦"
+    },
+    {
+      "id": "med_048",
+      "content": "伐昔洛韦"
+    },
+    {
+      "id": "med_049",
+      "content": "泛昔洛韦"
+    },
+    {
+      "id": "med_050",
+      "content": "奥司他韦"
+    },
+    {
+      "id": "med_051",
+      "content": "利巴韦林"
+    },
+    {
+      "id": "med_052",
+      "content": "恩替卡韦"
+    },
+    {
+      "id": "med_053",
+      "content": "氟康唑"
+    },
+    {
+      "id": "med_054",
+      "content": "伊曲康唑"
+    },
+    {
+      "id": "med_055",
+      "content": "特比萘芬"
+    },
+    {
+      "id": "med_056",
+      "content": "硝酸咪康唑"
+    },
+    {
+      "id": "med_057",
+      "content": "克霉唑"
+    },
+    {
+      "id": "med_058",
+      "content": "制霉菌素"
+    },
+    {
+      "id": "med_059",
+      "content": "蒙脱石散"
+    },
+    {
+      "id": "med_060",
+      "content": "口服补液盐"
+    },
+    {
+      "id": "med_061",
+      "content": "双歧杆菌三联活菌"
+    },
+    {
+      "id": "med_062",
+      "content": "枯草杆菌二联活菌"
+    },
+    {
+      "id": "med_063",
+      "content": "乳果糖"
+    },
+    {
+      "id": "med_064",
+      "content": "聚乙二醇电解质"
+    },
+    {
+      "id": "med_065",
+      "content": "开塞露"
+    },
+    {
+      "id": "med_066",
+      "content": "洛哌丁胺"
+    },
+    {
+      "id": "med_067",
+      "content": "复方黄连素"
+    },
+    {
+      "id": "med_068",
+      "content": "奥美拉唑"
+    },
+    {
+      "id": "med_069",
+      "content": "埃索美拉唑"
+    },
+    {
+      "id": "med_070",
+      "content": "泮托拉唑"
+    },
+    {
+      "id": "med_071",
+      "content": "雷贝拉唑"
+    },
+    {
+      "id": "med_072",
+      "content": "法莫替丁"
+    },
+    {
+      "id": "med_073",
+      "content": "铝碳酸镁"
+    },
+    {
+      "id": "med_074",
+      "content": "硫糖铝"
+    },
+    {
+      "id": "med_075",
+      "content": "枸橼酸铋钾"
+    },
+    {
+      "id": "med_076",
+      "content": "多潘立酮"
+    },
+    {
+      "id": "med_077",
+      "content": "莫沙必利"
+    },
+    {
+      "id": "med_078",
+      "content": "曲美布汀"
+    },
+    {
+      "id": "med_079",
+      "content": "消旋山莨菪碱"
+    },
+    {
+      "id": "med_080",
+      "content": "硝酸甘油"
+    },
+    {
+      "id": "med_081",
+      "content": "速效救心丸"
+    },
+    {
+      "id": "med_082",
+      "content": "美托洛尔"
+    },
+    {
+      "id": "med_083",
+      "content": "比索洛尔"
+    },
+    {
+      "id": "med_084",
+      "content": "氨氯地平"
+    },
+    {
+      "id": "med_085",
+      "content": "硝苯地平"
+    },
+    {
+      "id": "med_086",
+      "content": "非洛地平"
+    },
+    {
+      "id": "med_087",
+      "content": "缬沙坦"
+    },
+    {
+      "id": "med_088",
+      "content": "氯沙坦"
+    },
+    {
+      "id": "med_089",
+      "content": "厄贝沙坦"
+    },
+    {
+      "id": "med_090",
+      "content": "贝那普利"
+    },
+    {
+      "id": "med_091",
+      "content": "依那普利"
+    },
+    {
+      "id": "med_092",
+      "content": "卡托普利"
+    },
+    {
+      "id": "med_093",
+      "content": "氢氯噻嗪"
+    },
+    {
+      "id": "med_094",
+      "content": "呋塞米"
+    },
+    {
+      "id": "med_095",
+      "content": "螺内酯"
+    },
+    {
+      "id": "med_096",
+      "content": "阿托伐他汀"
+    },
+    {
+      "id": "med_097",
+      "content": "瑞舒伐他汀"
+    },
+    {
+      "id": "med_098",
+      "content": "辛伐他汀"
+    },
+    {
+      "id": "med_099",
+      "content": "非诺贝特"
+    },
+    {
+      "id": "med_100",
+      "content": "二甲双胍"
+    },
+    {
+      "id": "med_101",
+      "content": "格列美脲"
+    },
+    {
+      "id": "med_102",
+      "content": "格列齐特"
+    },
+    {
+      "id": "med_103",
+      "content": "阿卡波糖"
+    },
+    {
+      "id": "med_104",
+      "content": "西格列汀"
+    },
+    {
+      "id": "med_105",
+      "content": "达格列净"
+    },
+    {
+      "id": "med_106",
+      "content": "胰岛素注射液"
+    },
+    {
+      "id": "med_107",
+      "content": "左甲状腺素钠"
+    },
+    {
+      "id": "med_108",
+      "content": "甲巯咪唑"
+    },
+    {
+      "id": "med_109",
+      "content": "丙硫氧嘧啶"
+    },
+    {
+      "id": "med_110",
+      "content": "泼尼松"
+    },
+    {
+      "id": "med_111",
+      "content": "甲泼尼龙"
+    },
+    {
+      "id": "med_112",
+      "content": "地塞米松"
+    },
+    {
+      "id": "med_113",
+      "content": "氯喹"
+    },
+    {
+      "id": "med_114",
+      "content": "羟氯喹"
+    },
+    {
+      "id": "med_115",
+      "content": "甲氨蝶呤"
+    },
+    {
+      "id": "med_116",
+      "content": "别嘌醇"
+    },
+    {
+      "id": "med_117",
+      "content": "秋水仙碱"
+    },
+    {
+      "id": "med_118",
+      "content": "阿仑膦酸钠"
+    },
+    {
+      "id": "med_119",
+      "content": "碳酸钙D3"
+    },
+    {
+      "id": "med_120",
+      "content": "骨化三醇"
+    },
+    {
+      "id": "med_121",
+      "content": "维生素D滴剂"
+    },
+    {
+      "id": "med_122",
+      "content": "维生素B1"
+    },
+    {
+      "id": "med_123",
+      "content": "维生素B12"
+    },
+    {
+      "id": "med_124",
+      "content": "叶酸"
+    },
+    {
+      "id": "med_125",
+      "content": "硫酸亚铁"
+    },
+    {
+      "id": "med_126",
+      "content": "复方硫酸亚铁"
+    },
+    {
+      "id": "med_127",
+      "content": "琥珀酸亚铁"
+    },
+    {
+      "id": "med_128",
+      "content": "氯化钾"
+    },
+    {
+      "id": "med_129",
+      "content": "氯己定"
+    },
+    {
+      "id": "med_130",
+      "content": "碘伏"
+    },
+    {
+      "id": "med_131",
+      "content": "莫匹罗星"
+    },
+    {
+      "id": "med_132",
+      "content": "夫西地酸"
+    },
+    {
+      "id": "med_133",
+      "content": "炉甘石洗剂"
+    },
+    {
+      "id": "med_134",
+      "content": "糠酸莫米松乳膏"
+    },
+    {
+      "id": "med_135",
+      "content": "丁酸氢化可的松"
+    },
+    {
+      "id": "med_136",
+      "content": "尿素乳膏"
+    },
+    {
+      "id": "med_137",
+      "content": "维A酸乳膏"
+    },
+    {
+      "id": "med_138",
+      "content": "过氧化苯甲酰"
+    },
+    {
+      "id": "med_139",
+      "content": "他克莫司软膏"
+    },
+    {
+      "id": "med_140",
+      "content": "玻璃酸钠滴眼液"
+    },
+    {
+      "id": "med_141",
+      "content": "妥布霉素滴眼液"
+    },
+    {
+      "id": "med_142",
+      "content": "氧氟沙星滴眼液"
+    },
+    {
+      "id": "med_143",
+      "content": "金霉素眼膏"
+    },
+    {
+      "id": "med_144",
+      "content": "人工泪液"
+    },
+    {
+      "id": "med_145",
+      "content": "盐酸氟桂利嗪"
+    },
+    {
+      "id": "med_146",
+      "content": "倍他司汀"
+    },
+    {
+      "id": "med_147",
+      "content": "加巴喷丁"
+    },
+    {
+      "id": "med_148",
+      "content": "普瑞巴林"
+    },
+    {
+      "id": "med_149",
+      "content": "舍曲林"
+    },
+    {
+      "id": "med_150",
+      "content": "帕罗西汀"
+    },
+    {
+      "id": "medicine-category:analgesic",
+      "content": "解热镇痛药"
+    },
+    {
+      "id": "medicine-category:antiallergic",
+      "content": "抗过敏药"
+    },
+    {
+      "id": "medicine-category:respiratory",
+      "content": "呼吸系统用药"
+    },
+    {
+      "id": "medicine-category:antibacterial",
+      "content": "抗菌药"
+    },
+    {
+      "id": "medicine-category:antiviral",
+      "content": "抗病毒药"
+    },
+    {
+      "id": "medicine-category:antifungal",
+      "content": "抗真菌药"
+    },
+    {
+      "id": "medicine-category:gastrointestinal",
+      "content": "消化系统用药"
+    },
+    {
+      "id": "medicine-category:cardiovascular",
+      "content": "心血管用药"
+    },
+    {
+      "id": "medicine-category:lipid_lowering",
+      "content": "调脂药"
+    },
+    {
+      "id": "medicine-category:antidiabetic",
+      "content": "降糖药"
+    },
+    {
+      "id": "medicine-category:thyroid",
+      "content": "甲状腺用药"
+    },
+    {
+      "id": "medicine-category:steroid_immunomodulator",
+      "content": "糖皮质激素与免疫调节药"
+    },
+    {
+      "id": "medicine-category:bone_gout",
+      "content": "骨代谢与痛风用药"
+    },
+    {
+      "id": "medicine-category:dermatology",
+      "content": "皮肤科用药"
+    },
+    {
+      "id": "medicine-category:ophthalmology",
+      "content": "眼科用药"
+    },
+    {
+      "id": "medicine-category:neurology",
+      "content": "神经系统用药"
+    },
+    {
+      "id": "medicine-category:psychiatry",
+      "content": "精神科用药"
+    },
+    {
+      "id": "medicine-category:supplement",
+      "content": "维生素与电解质补充剂"
+    },
+    {
+      "id": "disease:otitis_media:normal",
+      "content": "中耳炎，未特指"
+    },
+    {
+      "id": "disease:otitis_media:low",
+      "content": "耳内回响着深海的炎潮"
+    },
+    {
+      "id": "disease:sensorineural_hearing_loss:normal",
+      "content": "感音神经性听力损失，未特指"
+    },
+    {
+      "id": "disease:sensorineural_hearing_loss:low",
+      "content": "声音正从世界边缘逐渐剥落"
+    },
+    {
+      "id": "disease:dry_eye:normal",
+      "content": "双眼干眼症"
+    },
+    {
+      "id": "disease:dry_eye:low",
+      "content": "泪膜变薄，眼表像久未落雨的土地"
+    },
+    {
+      "id": "disease:bacterial_conjunctivitis:normal",
+      "content": "结膜炎，未特指"
+    },
+    {
+      "id": "disease:bacterial_conjunctivitis:low",
+      "content": "结膜的红与痛提示眼表正在发炎"
+    },
+    {
+      "id": "disease:diplopia:normal",
+      "content": "复视"
+    },
+    {
+      "id": "disease:diplopia:low",
+      "content": "两重影像提示眼球运动或视觉通路需要检查"
+    },
+    {
+      "id": "disease:allergic_rhinitis:normal",
+      "content": "变应性鼻炎，未特指"
+    },
+    {
+      "id": "disease:allergic_rhinitis:low",
+      "content": "鼻腔被无形花粉反复灼烧"
+    },
+    {
+      "id": "disease:bronchiectasis:normal",
+      "content": "支气管扩张，未特指"
+    },
+    {
+      "id": "disease:bronchiectasis:low",
+      "content": "扩张的气道积存着难以咳尽的暗潮"
+    },
+    {
+      "id": "disease:chronic_hepatitis_b:normal",
+      "content": "慢性乙型病毒性肝炎"
+    },
+    {
+      "id": "disease:chronic_hepatitis_b:low",
+      "content": "肝脏藏着一枚持续复制的病毒印记"
+    },
+    {
+      "id": "disease:hepatitis_c:normal",
+      "content": "慢性丙型病毒性肝炎"
+    },
+    {
+      "id": "disease:hepatitis_c:low",
+      "content": "血液深处潜伏着慢性肝炎的影子"
+    },
+    {
+      "id": "disease:thiamine_deficiency:normal",
+      "content": "硫胺素缺乏，未特指"
+    },
+    {
+      "id": "disease:thiamine_deficiency:low",
+      "content": "身体的能量炉缺少维生素B1的火种"
+    },
+    {
+      "id": "disease:vitamin_b12_deficiency_anemia:normal",
+      "content": "维生素B12缺乏性贫血"
+    },
+    {
+      "id": "disease:vitamin_b12_deficiency_anemia:low",
+      "content": "造血所需的B12在血液里留下空缺"
+    },
+    {
+      "id": "disease:folate_deficiency_anemia:normal",
+      "content": "叶酸缺乏性贫血"
+    },
+    {
+      "id": "disease:folate_deficiency_anemia:low",
+      "content": "细胞更新因叶酸不足而变得迟缓"
+    },
+    {
+      "id": "disease:polycystic_ovary_syndrome:normal",
+      "content": "多囊卵巢综合征"
+    },
+    {
+      "id": "disease:polycystic_ovary_syndrome:low",
+      "content": "排卵和雄激素变化可能共同影响月经与皮肤"
+    },
+    {
+      "id": "disease:iron_deficiency_anemia:normal",
+      "content": "缺铁性贫血，未特指"
+    },
+    {
+      "id": "disease:iron_deficiency_anemia:low",
+      "content": "铁不足会影响血红蛋白生成并造成苍白和乏力"
+    },
+    {
+      "id": "disease:gingivitis:normal",
+      "content": "慢性牙龈炎，未特指"
+    },
+    {
+      "id": "disease:gingivitis:low",
+      "content": "牙龈在刷牙和进食时容易渗血"
+    },
+    {
+      "id": "disease:ulcerative_colitis:normal",
+      "content": "溃疡性结肠炎，未伴并发症"
+    },
+    {
+      "id": "disease:ulcerative_colitis:low",
+      "content": "结肠黏膜炎症可导致血便、黏液便和里急后重"
+    },
+    {
+      "id": "disease:hemorrhoids:normal",
+      "content": "痔，未特指"
+    },
+    {
+      "id": "disease:hemorrhoids:low",
+      "content": "肛门出血、瘙痒或疼痛常见于痔，但仍需排除其他病因"
+    },
+    {
+      "id": "disease:acne_vulgaris:normal",
+      "content": "痤疮，未特指"
+    },
+    {
+      "id": "disease:acne_vulgaris:low",
+      "content": "毛囊皮脂腺单位的堵塞和炎症形成痤疮"
+    },
+    {
+      "id": "disease:vitiligo:normal",
+      "content": "白癜风"
+    },
+    {
+      "id": "disease:vitiligo:low",
+      "content": "局部黑色素细胞减少会形成边界清楚的脱色斑"
+    },
+    {
+      "id": "disease:postinflammatory_hyperpigmentation:normal",
+      "content": "炎症后色素沉着"
+    },
+    {
+      "id": "disease:postinflammatory_hyperpigmentation:low",
+      "content": "皮肤炎症消退后可能留下色素加深"
+    },
+    {
+      "id": "disease:alopecia_areata:normal",
+      "content": "斑秃，未特指"
+    },
+    {
+      "id": "disease:alopecia_areata:low",
+      "content": "免疫相关的毛囊改变可造成斑片状脱发"
+    },
+    {
+      "id": "disease:hirsutism:normal",
+      "content": "多毛症"
+    },
+    {
+      "id": "disease:hirsutism:low",
+      "content": "雄激素作用增强可使体毛分布发生改变"
+    },
+    {
+      "id": "disease:panic_disorder:normal",
+      "content": "惊恐障碍"
+    },
+    {
+      "id": "disease:panic_disorder:low",
+      "content": "突发强烈恐惧伴自主神经症状需要与躯体疾病鉴别"
+    },
+    {
+      "id": "disease:obsessive_compulsive_disorder:normal",
+      "content": "强迫症，未特指"
+    },
+    {
+      "id": "disease:obsessive_compulsive_disorder:low",
+      "content": "反复侵入的想法和难以抵抗的仪式行为会造成困扰"
+    },
+    {
+      "id": "disease:urinary_incontinence:normal",
+      "content": "其他尿失禁"
+    },
+    {
+      "id": "disease:urinary_incontinence:low",
+      "content": "膀胱控制下降会造成不自主漏尿"
+    },
+    {
+      "id": "disease:epididymitis:normal",
+      "content": "附睾炎"
+    },
+    {
+      "id": "disease:epididymitis:low",
+      "content": "阴囊疼痛可能来自附睾的感染性炎症"
+    },
+    {
+      "id": "disease:dysmenorrhea:normal",
+      "content": "痛经，未特指"
+    },
+    {
+      "id": "disease:dysmenorrhea:low",
+      "content": "月经期前列腺素变化可引起痉挛性疼痛"
+    },
+    {
+      "id": "disease:menopause:normal",
+      "content": "绝经期和围绝经期疾病"
+    },
+    {
+      "id": "disease:menopause:low",
+      "content": "激素波动可带来潮热、盗汗和性欲变化"
+    },
+    {
+      "id": "disease:erectile_dysfunction:normal",
+      "content": "勃起功能障碍，未特指"
+    },
+    {
+      "id": "disease:erectile_dysfunction:low",
+      "content": "血管、神经、药物及心理因素都可能参与勃起困难"
+    },
+    {
+      "id": "disease:mastalgia:normal",
+      "content": "乳房痛"
+    },
+    {
+      "id": "disease:mastalgia:low",
+      "content": "乳房疼痛需要结合周期、触诊和影像检查判断"
+    },
+    {
+      "id": "disease:shoulder_impingement:normal",
+      "content": "肩峰撞击综合征，未特指"
+    },
+    {
+      "id": "disease:shoulder_impingement:low",
+      "content": "抬臂时肩峰下空间反复受到刺激"
+    },
+    {
+      "id": "disease:plantar_fasciitis:normal",
+      "content": "足底筋膜炎"
+    },
+    {
+      "id": "disease:plantar_fasciitis:low",
+      "content": "足底筋膜负荷过大常引起晨起或行走时足跟痛"
+    },
+    {
+      "id": "disease:lymphadenopathy:normal",
+      "content": "淋巴结肿大"
+    },
+    {
+      "id": "disease:lymphadenopathy:low",
+      "content": "颈部、腋窝或腹股沟肿块可能是淋巴结反应，需寻找原因"
+    },
+    {
+      "id": "disease:splenomegaly:normal",
+      "content": "脾肿大"
+    },
+    {
+      "id": "disease:splenomegaly:low",
+      "content": "左上腹不适有时与脾脏增大有关"
+    },
+    {
+      "id": "disease:orthostatic_hypotension:normal",
+      "content": "体位性低血压"
+    },
+    {
+      "id": "disease:orthostatic_hypotension:low",
+      "content": "站立后头晕提示血压调节需要评估"
+    },
+    {
+      "id": "disease:closed_foot_fracture:normal",
+      "content": "足部骨折，未特指，初次就诊"
+    },
+    {
+      "id": "disease:closed_foot_fracture:low",
+      "content": "外伤后的持续足部疼痛需要影像检查排除骨折"
+    },
+    {
+      "id": "disease:benign_breast_lump:normal",
+      "content": "乳房局限性肿块，未特指"
+    },
+    {
+      "id": "disease:benign_breast_lump:low",
+      "content": "乳房肿块必须通过查体和影像学进一步区分"
+    },
+    {
+      "id": "disease:hypoglycemia:normal",
+      "content": "低血糖，未特指"
+    },
+    {
+      "id": "disease:hypoglycemia:low",
+      "content": "出汗、心悸、乏力或发抖等低血糖表现需要结合实际血糖确认"
+    }
+  ],
+  "locations": [
+    {
+      "id": "dorm",
+      "name": "宿舍",
+      "layer": "above",
+      "subLocations": [
+        {
+          "id": "player_desk",
+          "name": "主角书桌",
+          "zone": {
+            "x": 22,
+            "y": 288,
+            "width": 191,
+            "height": 63
+          }
+        },
+        {
+          "id": "ajie_desk",
+          "name": "阿杰书桌",
+          "zone": {
+            "x": 15,
+            "y": 21,
+            "width": 200,
+            "height": 253
+          }
+        },
+        {
+          "id": "awei_desk",
+          "name": "阿伟书桌",
+          "zone": {
+            "x": 222,
+            "y": 28,
+            "width": 188,
+            "height": 249
+          }
+        },
+        {
+          "id": "binbin_desk",
+          "name": "彬彬书桌",
+          "zone": {
+            "x": 416,
+            "y": 25,
+            "width": 207,
+            "height": 250
+          }
+        },
+        {
+          "id": "fridge",
+          "name": "宿舍小冰柜",
+          "zone": {
+            "x": 418,
+            "y": 290,
+            "width": 199,
+            "height": 61
+          }
+        }
+      ],
+      "backgroundImages": [
+        {
+          "sanMin": null,
+          "sanMax": null,
+          "image": "data/assets/location_dorm_ecf66b3d164a.jpg"
+        }
+      ],
+      "backgroundImage": "data/assets/location_dorm_ecf66b3d164a.jpg"
+    },
+    {
+      "id": "hospital",
+      "name": "医院",
+      "layer": "above",
+      "subLocations": [],
+      "backgroundImages": []
+    },
+    {
+      "id": "restaurant",
+      "name": "火锅店",
+      "layer": "above",
+      "subLocations": [],
+      "backgroundImages": []
+    },
+    {
+      "id": "seaside",
+      "name": "海边",
+      "layer": "above",
+      "subLocations": [],
+      "backgroundImages": []
+    }
+  ],
+  "achievements": [
+    {
+      "id": "developer_mode",
+      "title": "我要强制下班",
+      "description": "你可以通过存档把这个成就带出开发人员模式。",
+      "category": "special",
+      "hidden": false,
+      "icon": "🛠️",
+      "trigger": {
+        "event": "developer:force_end_work",
+        "once": true
+      }
+    },
+    {
+      "id": "study_first",
+      "title": "题之意志",
+      "description": "第一次放弃宿舍活动，独自选择刷题备考。",
+      "category": "study",
+      "hidden": false,
+      "icon": "📖",
+      "trigger": {
+        "event": "game:study",
+        "once": true
+      }
+    },
+    {
+      "id": "study_believer",
+      "title": "题之信念",
+      "description": "深夜苦读整整四小时，再苦再难也要翻越这座大山。",
+      "category": "study",
+      "hidden": false,
+      "icon": "🕯️",
+      "trigger": {
+        "event": "game:study_night",
+        "once": true
+      }
+    },
+    {
+      "id": "study_king",
+      "title": "题王争霸",
+      "description": "累计三天选择刷题备考，你是考场上命中注定的王者。",
+      "category": "study",
+      "hidden": false,
+      "icon": "👑",
+      "trigger": {
+        "event": "game:study",
+        "progress": true,
+        "target": 3
+      }
+    },
+    {
+      "id": "exam_pass",
+      "title": "金榜题名",
+      "description": "医学考试达到及格线（60分），十二天的煎熬没有白费。",
+      "category": "study",
+      "hidden": false,
+      "icon": "🎓",
+      "trigger": {
+        "event": "game:exam_result",
+        "condition": {
+          "score": {
+            "gte": 60
+          }
+        }
+      }
+    },
+    {
+      "id": "fav_first_up",
+      "title": "初见倾心",
+      "description": "第一次通过自己的选择，让某位室友对你更加亲近了。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "💛",
+      "trigger": {
+        "event": "favorability:changed",
+        "condition": {
+          "delta": {
+            "gt": 0
+          }
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "fav_first_down",
+      "title": "关系裂痕",
+      "description": "第一次让室友对你产生了一丝失望，裂痕总是从最小的地方开始。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "💔",
+      "trigger": {
+        "event": "favorability:changed",
+        "condition": {
+          "delta": {
+            "lt": 0
+          }
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "fav_cumulative_up",
+      "title": "宿舍暖心人",
+      "description": "累计提升室友好感度达到50点，你是宿舍里大家的小太阳。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "🌟",
+      "trigger": {
+        "event": "favorability:changed",
+        "progress": true,
+        "progressKey": "cumulative_up",
+        "target": 50,
+        "condition": {
+          "delta": {
+            "gt": 0
+          }
+        },
+        "progressDelta": "delta"
+      }
+    },
+    {
+      "id": "fav_cumulative_down",
+      "title": "到处惹祸",
+      "description": "累计降低室友好感度达到30点，你的人际关系堪忧。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "💢",
+      "trigger": {
+        "event": "favorability:changed",
+        "progress": true,
+        "progressKey": "cumulative_down",
+        "target": 30,
+        "condition": {
+          "delta": {
+            "lt": 0
+          }
+        },
+        "progressDelta": "delta_abs"
+      }
+    },
+    {
+      "id": "fav_maxed",
+      "title": "真心相待",
+      "description": "与某位室友的关系达到了顶点，彼此之间无话不谈。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "❤️",
+      "trigger": {
+        "event": "favorability:changed",
+        "condition": {
+          "value": {
+            "gte": 100
+          }
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "fav_zeroed",
+      "title": "反目成仇",
+      "description": "与某位室友的关系跌至谷底，他再也不想理你了。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "🚫",
+      "trigger": {
+        "event": "favorability:changed",
+        "condition": {
+          "value": {
+            "eq": 0
+          }
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "fav_three_high",
+      "title": "三千宠爱在一身",
+      "description": "阿杰、阿伟和彬彬三人的好感度同时超过75，宿舍四人组其乐融融。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "🏆",
+      "trigger": {
+        "event": "favorability:changed",
+        "condition": {
+          "allAbove": 75
+        }
+      }
+    },
+    {
+      "id": "fav_all_positive",
+      "title": "雨露均沾",
+      "description": "与阿杰、阿伟、彬彬都至少发生过一次让他们开心的互动。",
+      "category": "favorability",
+      "hidden": false,
+      "icon": "🌈",
+      "trigger": {
+        "event": "favorability:changed",
+        "condition": {
+          "allHadPositive": true
+        }
+      }
+    },
+    {
+      "id": "tabletop_first",
+      "title": "新手探案",
+      "description": "第一次参与彬彬组织的COC跑团，踏入《印斯茅斯的阴霾》。",
+      "category": "tabletop",
+      "hidden": false,
+      "icon": "🎲",
+      "trigger": {
+        "event": "game:tabletop_session",
+        "once": true
+      }
+    },
+    {
+      "id": "tabletop_veteran",
+      "title": "老KP的眼神",
+      "description": "累计参与3次跑团，《印斯茅斯的阴霾》已经是你的老朋友了。",
+      "category": "tabletop",
+      "hidden": false,
+      "icon": "🎭",
+      "trigger": {
+        "event": "game:tabletop_session",
+        "progress": true,
+        "target": 3
+      }
+    },
+    {
+      "id": "tabletop_skip",
+      "title": "鸽了彬彬",
+      "description": "明明有跑团活动，你却选择了刷题。彬彬的眼神有点受伤。",
+      "category": "tabletop",
+      "hidden": false,
+      "icon": "🕊️",
+      "trigger": {
+        "event": "game:tabletop_skipped",
+        "once": true
+      }
+    },
+    {
+      "id": "skillcheck_first_success",
+      "title": "骰运附体",
+      "description": "第一次技能检定成功，命运女神今天心情不错。",
+      "category": "skill",
+      "hidden": false,
+      "icon": "🎯",
+      "trigger": {
+        "event": "game:skill_check",
+        "condition": {
+          "outcome": [
+            "success",
+            "criticalSuccess"
+          ]
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "skillcheck_cumulative_success",
+      "title": "大骰精",
+      "description": "累计5次技能检定成功，出手就是稳的。",
+      "category": "skill",
+      "hidden": false,
+      "icon": "🎰",
+      "trigger": {
+        "event": "game:skill_check",
+        "progress": true,
+        "target": 5,
+        "condition": {
+          "outcome": [
+            "success",
+            "criticalSuccess"
+          ]
+        }
+      }
+    },
+    {
+      "id": "skillcheck_first_failure",
+      "title": "骰子背刺",
+      "description": "第一次技能检定失败，是你的错，不是骰子的错，是吧。",
+      "category": "skill",
+      "hidden": false,
+      "icon": "🎲",
+      "trigger": {
+        "event": "game:skill_check",
+        "condition": {
+          "outcome": [
+            "failure",
+            "criticalFailure"
+          ]
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "skillcheck_critical_failure",
+      "title": "一命归西",
+      "description": "遭遇技能检定大失败，这种运气放在彩票上能发家致富。",
+      "category": "skill",
+      "hidden": true,
+      "icon": "💀",
+      "trigger": {
+        "event": "game:skill_check",
+        "condition": {
+          "outcome": [
+            "criticalFailure"
+          ]
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "ending_any",
+      "title": "命运的终章",
+      "description": "达成了游戏的一个结局，属于你的故事告一段落。",
+      "category": "ending",
+      "hidden": false,
+      "icon": "🌙",
+      "trigger": {
+        "event": "ending:triggered",
+        "once": true
+      }
+    },
+    {
+      "id": "san_fast_drop",
+      "title": "精神内耗",
+      "description": "单次理智损失超过10点，某些东西把你的心理防线撕开了一道口子。",
+      "category": "sanity",
+      "hidden": false,
+      "icon": "🧠",
+      "trigger": {
+        "event": "game:sanity_changed",
+        "condition": {
+          "delta": {
+            "lte": -10
+          }
+        },
+        "once": true
+      },
+      "sanDropThreshold": 10
+    },
+    {
+      "id": "san_steady",
+      "title": "处变不惊",
+      "description": "第5天结束时理智仍在80以上，你的心理素质令人钦佩。",
+      "category": "sanity",
+      "hidden": false,
+      "icon": "🛡️",
+      "trigger": {
+        "event": "daynight:changed",
+        "condition": {
+          "day": {
+            "gte": 5
+          },
+          "sanity": {
+            "gte": 80
+          }
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "san_recovery",
+      "title": "触底反弹",
+      "description": "理智曾经低于30，却在同一局游戏中恢复到60以上——你比自己想象的更坚强。",
+      "category": "sanity",
+      "hidden": true,
+      "icon": "✨",
+      "trigger": {
+        "event": "game:sanity_changed",
+        "condition": {
+          "hadLow": true,
+          "value": {
+            "gte": 60
+          }
+        },
+        "once": true
+      },
+      "sanLowThreshold": 30,
+      "sanRecoveryTarget": 60
+    },
+    {
+      "id": "san_zero",
+      "title": "清醒的疯狂",
+      "description": "理智降至零。奇怪的是，你反而比任何时候都看得更清楚。",
+      "category": "sanity",
+      "hidden": true,
+      "icon": "👁️",
+      "trigger": {
+        "event": "gamestate:changed",
+        "condition": {
+          "sanity": {
+            "eq": 0
+          }
+        },
+        "once": true
+      }
+    },
+    {
+      "id": "all_texts_read",
+      "title": "无字天书",
+      "description": "阅读了游戏中所有的对话内容，你终于把这个世界的每一行字都读完了。",
+      "category": "exploration",
+      "hidden": false,
+      "icon": "📚",
+      "trigger": {
+        "event": "game:text_read",
+        "condition": {
+          "allRead": true
+        }
+      }
+    }
+  ],
+  "achievementCategories": [
+    {
+      "id": "study",
+      "label": "刷题"
+    },
+    {
+      "id": "favorability",
+      "label": "好感度"
+    },
+    {
+      "id": "tabletop",
+      "label": "跑团"
+    },
+    {
+      "id": "skill",
+      "label": "技能检定"
+    },
+    {
+      "id": "ending",
+      "label": "结局"
+    },
+    {
+      "id": "sanity",
+      "label": "理智值"
+    },
+    {
+      "id": "exploration",
+      "label": "探索"
+    }
+  ],
+  "diagnosisCategories": [
+    {
+      "id": "icd_a",
+      "icdChapter": "I",
+      "icdLetter": "A–B",
+      "icdRange": "A00–B99",
+      "name": "某些传染病和寄生虫病"
+    },
+    {
+      "id": "icd_e",
+      "icdChapter": "IV",
+      "icdLetter": "E",
+      "icdRange": "E00–E90",
+      "name": "内分泌、营养和代谢疾病"
+    },
+    {
+      "id": "icd_f",
+      "icdChapter": "V",
+      "icdLetter": "F",
+      "icdRange": "F00–F99",
+      "name": "精神和行为障碍"
+    },
+    {
+      "id": "icd_g",
+      "icdChapter": "VI",
+      "icdLetter": "G",
+      "icdRange": "G00–G99",
+      "name": "神经系统疾病"
+    },
+    {
+      "id": "icd_h",
+      "icdChapter": "VIII",
+      "icdLetter": "H",
+      "icdRange": "H60–H95",
+      "name": "耳和乳突疾病"
+    },
+    {
+      "id": "icd_i",
+      "icdChapter": "IX",
+      "icdLetter": "I",
+      "icdRange": "I00–I99",
+      "name": "循环系统疾病"
+    },
+    {
+      "id": "icd_j",
+      "icdChapter": "X",
+      "icdLetter": "J",
+      "icdRange": "J00–J99",
+      "name": "呼吸系统疾病"
+    },
+    {
+      "id": "icd_k",
+      "icdChapter": "XI",
+      "icdLetter": "K",
+      "icdRange": "K00–K93",
+      "name": "消化系统疾病"
+    },
+    {
+      "id": "icd_l",
+      "icdChapter": "XII",
+      "icdLetter": "L",
+      "icdRange": "L00–L99",
+      "name": "皮肤和皮下组织疾病"
+    },
+    {
+      "id": "icd_m",
+      "icdChapter": "XIII",
+      "icdLetter": "M",
+      "icdRange": "M00–M99",
+      "name": "肌肉骨骼系统和结缔组织疾病"
+    },
+    {
+      "id": "icd_n",
+      "icdChapter": "XIV",
+      "icdLetter": "N",
+      "icdRange": "N00–N99",
+      "name": "泌尿生殖系统疾病"
+    },
+    {
+      "id": "icd_r",
+      "icdChapter": "XVIII",
+      "icdLetter": "R",
+      "icdRange": "R00–R99",
+      "name": "症状、体征和异常的临床及实验室检查结果"
+    },
+    {
+      "id": "icd_s",
+      "icdChapter": "XIX",
+      "icdLetter": "S",
+      "icdRange": "S00–T98",
+      "name": "损伤、中毒和外因的某些其他后果"
+    },
+    {
+      "id": "icd_u",
+      "icdChapter": "XXII",
+      "icdLetter": "U",
+      "icdRange": "U00–U99",
+      "name": "用于特殊目的的编码"
+    }
+  ],
+  "diagnoses": [
+    {
+      "id": "infectious_gastroenteritis",
+      "categoryId": "icd_a",
+      "icd10": "A09",
+      "normalName": "感染性胃肠炎和结肠炎，未特指",
+      "lowSanName": "腹中滋生来自疫界的虫群",
+      "applicableMedicineIds": [
+        "med_043",
+        "med_044",
+        "med_059",
+        "med_060",
+        "med_061",
+        "med_062",
+        "med_066",
+        "med_067",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "herpes_zoster",
+      "categoryId": "icd_a",
+      "icd10": "B02.9",
+      "normalName": "带状疱疹，未特指",
+      "lowSanName": "皮肤上爬过一条燃烧的蛇",
+      "applicableMedicineIds": [
+        "med_047",
+        "med_048",
+        "med_049",
+        "med_147",
+        "med_148"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "candidiasis",
+      "categoryId": "icd_a",
+      "icd10": "B37.9",
+      "normalName": "念珠菌病，未特指",
+      "lowSanName": "白色菌丝在体内建立巢穴",
+      "applicableMedicineIds": [
+        "med_053",
+        "med_054",
+        "med_055",
+        "med_056",
+        "med_057",
+        "med_058"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "chronic_hepatitis_b",
+      "categoryId": "icd_a",
+      "icd10": "B18.1",
+      "normalName": "慢性乙型病毒性肝炎",
+      "lowSanName": "肝脏藏着一枚持续复制的病毒印记",
+      "applicableMedicineIds": [
+        "med_052"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_170",
+        "symptom_171",
+        "symptom_169",
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "hepatitis_c",
+      "categoryId": "icd_a",
+      "icd10": "B18.2",
+      "normalName": "慢性丙型病毒性肝炎",
+      "lowSanName": "血液深处潜伏着慢性肝炎的影子",
+      "applicableMedicineIds": [
+        "med_051"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_170",
+        "symptom_171",
+        "symptom_180",
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "type2_diabetes",
+      "categoryId": "icd_e",
+      "icd10": "E11.9",
+      "normalName": "2型糖尿病，无并发症",
+      "lowSanName": "血液变成甜腻的献祭蜜浆",
+      "applicableMedicineIds": [
+        "med_100",
+        "med_101",
+        "med_102",
+        "med_103",
+        "med_104",
+        "med_105",
+        "med_106"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "type1_diabetes",
+      "categoryId": "icd_e",
+      "icd10": "E10.9",
+      "normalName": "1型糖尿病，无并发症",
+      "lowSanName": "胰岛被饥饿之神吞噬",
+      "applicableMedicineIds": [
+        "med_100",
+        "med_101",
+        "med_102",
+        "med_103",
+        "med_104",
+        "med_105",
+        "med_106"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "hypothyroidism",
+      "categoryId": "icd_e",
+      "icd10": "E03.9",
+      "normalName": "甲状腺功能减退，未特指",
+      "lowSanName": "时间在体内逐渐冻结",
+      "applicableMedicineIds": [
+        "med_107"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_127",
+        "symptom_130",
+        "symptom_139",
+        "symptom_153"
+      ]
+    },
+    {
+      "id": "hyperthyroidism",
+      "categoryId": "icd_e",
+      "icd10": "E05.90",
+      "normalName": "甲状腺毒症，未特指",
+      "lowSanName": "体内燃起无法熄灭的星火",
+      "applicableMedicineIds": [
+        "med_108",
+        "med_109"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_120",
+        "symptom_121",
+        "symptom_127",
+        "symptom_130"
+      ]
+    },
+    {
+      "id": "hyperlipidemia",
+      "categoryId": "icd_e",
+      "icd10": "E78.5",
+      "normalName": "高脂血症，未特指",
+      "lowSanName": "血管漂浮着贪食的油之灵",
+      "applicableMedicineIds": [
+        "med_096",
+        "med_097",
+        "med_098",
+        "med_099"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "obesity",
+      "categoryId": "icd_e",
+      "icd10": "E66.9",
+      "normalName": "肥胖，未特指",
+      "lowSanName": "肉身被无底深渊拖拽",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_036"
+      ]
+    },
+    {
+      "id": "vitamin_d_deficiency",
+      "categoryId": "icd_e",
+      "icd10": "E55.9",
+      "normalName": "维生素D缺乏，未特指",
+      "lowSanName": "太阳的碎片已从骨中消失",
+      "applicableMedicineIds": [
+        "med_118",
+        "med_119",
+        "med_120",
+        "med_121",
+        "med_125",
+        "med_126",
+        "med_127"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "thiamine_deficiency",
+      "categoryId": "icd_e",
+      "icd10": "E51.9",
+      "normalName": "硫胺素缺乏，未特指",
+      "lowSanName": "身体的能量炉缺少维生素B1的火种",
+      "applicableMedicineIds": [
+        "med_122"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_097",
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "vitamin_b12_deficiency_anemia",
+      "categoryId": "icd_e",
+      "icd10": "D51.9",
+      "normalName": "维生素B12缺乏性贫血",
+      "lowSanName": "造血所需的B12在血液里留下空缺",
+      "applicableMedicineIds": [
+        "med_123"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_180",
+        "symptom_182",
+        "symptom_198",
+        "symptom_153"
+      ]
+    },
+    {
+      "id": "folate_deficiency_anemia",
+      "categoryId": "icd_e",
+      "icd10": "D52.9",
+      "normalName": "叶酸缺乏性贫血",
+      "lowSanName": "细胞更新因叶酸不足而变得迟缓",
+      "applicableMedicineIds": [
+        "med_124"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_180",
+        "symptom_182",
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "polycystic_ovary_syndrome",
+      "categoryId": "icd_e",
+      "icd10": "E28.2",
+      "normalName": "多囊卵巢综合征",
+      "lowSanName": "排卵和雄激素变化可能共同影响月经与皮肤",
+      "applicableMedicineIds": [
+        "med_100"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_109",
+        "symptom_111",
+        "symptom_113",
+        "symptom_116",
+        "symptom_129",
+        "symptom_128"
+      ]
+    },
+    {
+      "id": "iron_deficiency_anemia",
+      "categoryId": "icd_e",
+      "icd10": "D50.9",
+      "normalName": "缺铁性贫血，未特指",
+      "lowSanName": "铁不足会影响血红蛋白生成并造成苍白和乏力",
+      "applicableMedicineIds": [
+        "med_125",
+        "med_126",
+        "med_127"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_180",
+        "symptom_182",
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "hypoglycemia",
+      "categoryId": "icd_e",
+      "icd10": "E16.2",
+      "normalName": "低血糖，未特指",
+      "lowSanName": "出汗、心悸、乏力或发抖等低血糖表现需要结合实际血糖确认",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "generalized_anxiety",
+      "categoryId": "icd_f",
+      "icd10": "F41.1",
+      "normalName": "广泛性焦虑障碍",
+      "lowSanName": "无数细小的眼睛在脑内睁开",
+      "applicableMedicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "major_depressive_disorder",
+      "categoryId": "icd_f",
+      "icd10": "F32.9",
+      "normalName": "重性抑郁障碍，单次发作，未特指",
+      "lowSanName": "灵魂沉入没有光的井底",
+      "applicableMedicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "insomnia_disorder",
+      "categoryId": "icd_f",
+      "icd10": "F51.01",
+      "normalName": "原发性失眠",
+      "lowSanName": "梦魇拒绝让意识入睡",
+      "applicableMedicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "insomnia"
+      ]
+    },
+    {
+      "id": "acute_stress_disorder",
+      "categoryId": "icd_f",
+      "icd10": "F43.0",
+      "normalName": "急性应激障碍",
+      "lowSanName": "创伤在现实表面撕开裂口",
+      "applicableMedicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "panic_disorder",
+      "categoryId": "icd_f",
+      "icd10": "F41.0",
+      "normalName": "惊恐障碍",
+      "lowSanName": "突发强烈恐惧伴自主神经症状需要与躯体疾病鉴别",
+      "applicableMedicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_148",
+        "symptom_153"
+      ]
+    },
+    {
+      "id": "obsessive_compulsive_disorder",
+      "categoryId": "icd_f",
+      "icd10": "F42.9",
+      "normalName": "强迫症，未特指",
+      "lowSanName": "反复侵入的想法和难以抵抗的仪式行为会造成困扰",
+      "applicableMedicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_149",
+        "symptom_153"
+      ]
+    },
+    {
+      "id": "transient_cerebral_ischemic_attack",
+      "categoryId": "icd_g",
+      "icd10": "G45.9",
+      "normalName": "短暂性脑缺血发作，未特指",
+      "lowSanName": "意识短暂坠入无光深渊",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_097",
+        "symptom_136"
+      ]
+    },
+    {
+      "id": "migraine_unspecified",
+      "categoryId": "icd_g",
+      "icd10": "G43.909",
+      "normalName": "偏头痛，未特指，不伴持续状态",
+      "lowSanName": "邪神的独眼凝视颅内",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_145",
+        "med_146",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "tension_headache",
+      "categoryId": "icd_g",
+      "icd10": "G44.209",
+      "normalName": "紧张型头痛，未特指",
+      "lowSanName": "无形绞索缠绕意识",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "epilepsy_unspecified",
+      "categoryId": "icd_g",
+      "icd10": "G40.909",
+      "normalName": "癫痫，未特指，不伴难治性癫痫持续状态",
+      "lowSanName": "灵魂被闪电反复劈开",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_087",
+        "symptom_088"
+      ]
+    },
+    {
+      "id": "parkinsons_disease",
+      "categoryId": "icd_g",
+      "icd10": "G20.A1",
+      "normalName": "帕金森病，伴运动波动",
+      "lowSanName": "身体被衰朽木偶师操纵",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_087",
+        "symptom_191"
+      ]
+    },
+    {
+      "id": "alzheimer_disease",
+      "categoryId": "icd_g",
+      "icd10": "G30.9",
+      "normalName": "阿尔茨海默病，未特指",
+      "lowSanName": "记忆正在被灰色蠕虫啃食",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_091"
+      ]
+    },
+    {
+      "id": "carpal_tunnel_syndrome",
+      "categoryId": "icd_g",
+      "icd10": "G56.01",
+      "normalName": "右上肢腕管综合征",
+      "lowSanName": "腕中囚禁着看不见的虫群",
+      "applicableMedicineIds": [
+        "med_147",
+        "med_148"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "benign_positional_vertigo",
+      "categoryId": "icd_h",
+      "icd10": "H81.10",
+      "normalName": "良性阵发性位置性眩晕，未特指耳",
+      "lowSanName": "重力诅咒使世界翻转",
+      "applicableMedicineIds": [
+        "med_145",
+        "med_146"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_200"
+      ]
+    },
+    {
+      "id": "otitis_media",
+      "categoryId": "icd_h",
+      "icd10": "H66.90",
+      "normalName": "中耳炎，未特指",
+      "lowSanName": "耳内回响着深海的炎潮",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_032",
+        "med_037"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_062",
+        "symptom_064"
+      ]
+    },
+    {
+      "id": "sensorineural_hearing_loss",
+      "categoryId": "icd_h",
+      "icd10": "H90.5",
+      "normalName": "感音神经性听力损失，未特指",
+      "lowSanName": "声音正从世界边缘逐渐剥落",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_063",
+        "symptom_064"
+      ]
+    },
+    {
+      "id": "dry_eye",
+      "categoryId": "icd_h",
+      "icd10": "H04.123",
+      "normalName": "双眼干眼症",
+      "lowSanName": "泪膜变薄，眼表像久未落雨的土地",
+      "applicableMedicineIds": [
+        "med_140",
+        "med_144"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_054",
+        "symptom_055",
+        "symptom_056",
+        "symptom_058"
+      ]
+    },
+    {
+      "id": "bacterial_conjunctivitis",
+      "categoryId": "icd_h",
+      "icd10": "H10.9",
+      "normalName": "结膜炎，未特指",
+      "lowSanName": "结膜的红与痛提示眼表正在发炎",
+      "applicableMedicineIds": [
+        "med_141",
+        "med_142",
+        "med_143"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_055",
+        "symptom_056",
+        "symptom_058"
+      ]
+    },
+    {
+      "id": "diplopia",
+      "categoryId": "icd_h",
+      "icd10": "H53.2",
+      "normalName": "复视",
+      "lowSanName": "两重影像提示眼球运动或视觉通路需要检查",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_136"
+      ]
+    },
+    {
+      "id": "essential_hypertension",
+      "categoryId": "icd_i",
+      "icd10": "I10",
+      "normalName": "原发性高血压",
+      "lowSanName": "血压被无形祭司操纵",
+      "applicableMedicineIds": [
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "hypertensive_crisis",
+      "categoryId": "icd_i",
+      "icd10": "I16.9",
+      "normalName": "高血压危象，未特指",
+      "lowSanName": "血管中的钟声即将爆裂",
+      "applicableMedicineIds": [
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "angina_pectoris",
+      "categoryId": "icd_i",
+      "icd10": "I20.9",
+      "normalName": "心绞痛，未特指",
+      "lowSanName": "胸腔被铁环缓慢收紧",
+      "applicableMedicineIds": [
+        "med_080",
+        "med_081",
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_myocardial_infarction",
+      "categoryId": "icd_i",
+      "icd10": "I21.9",
+      "normalName": "急性心肌梗死，未特指",
+      "lowSanName": "心脏被献祭般地撕裂",
+      "applicableMedicineIds": [
+        "med_080",
+        "med_081"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "heart_failure",
+      "categoryId": "icd_i",
+      "icd10": "I50.9",
+      "normalName": "心力衰竭，未特指",
+      "lowSanName": "心室拒绝再为凡人跳动",
+      "applicableMedicineIds": [
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "prohibitedMedicineIds": [
+        "med_001",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008"
+      ],
+      "symptomIds": [
+        "symptom_037",
+        "symptom_181"
+      ]
+    },
+    {
+      "id": "atrial_fibrillation",
+      "categoryId": "icd_i",
+      "icd10": "I48.91",
+      "normalName": "心房颤动，未特指",
+      "lowSanName": "心脏被混沌节拍接管",
+      "applicableMedicineIds": [
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "atherosclerotic_heart_disease",
+      "categoryId": "icd_i",
+      "icd10": "I25.10",
+      "normalName": "动脉粥样硬化性心脏病",
+      "lowSanName": "血管内堆积着黑色祭石",
+      "applicableMedicineIds": [
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095",
+        "med_096",
+        "med_097",
+        "med_098",
+        "med_099"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "cerebral_infarction",
+      "categoryId": "icd_i",
+      "icd10": "I63.9",
+      "normalName": "脑梗死，未特指",
+      "lowSanName": "思维之河被暗潮截断",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_097",
+        "symptom_136"
+      ]
+    },
+    {
+      "id": "varicose_veins",
+      "categoryId": "icd_i",
+      "icd10": "I83.90",
+      "normalName": "下肢静脉曲张，未特指",
+      "lowSanName": "腿中爬满盘绕的血蛇",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_039"
+      ]
+    },
+    {
+      "id": "acute_nasopharyngitis",
+      "categoryId": "icd_j",
+      "icd10": "J00",
+      "normalName": "急性鼻咽炎（普通感冒）",
+      "lowSanName": "寒雾侵入肺腑",
+      "applicableMedicineIds": [
+        "med_011",
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015",
+        "med_020",
+        "med_021",
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029",
+        "med_cough_syrup"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_maxillary_sinusitis",
+      "categoryId": "icd_j",
+      "icd10": "J01.00",
+      "normalName": "急性上颌窦炎",
+      "lowSanName": "颅骨窦穴积满黑雾",
+      "applicableMedicineIds": [
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029",
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_pharyngitis",
+      "categoryId": "icd_j",
+      "icd10": "J02.9",
+      "normalName": "急性咽炎，未特指",
+      "lowSanName": "深渊低语灼烧咽喉",
+      "applicableMedicineIds": [
+        "med_020",
+        "med_021",
+        "med_cough_syrup"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_tonsillitis",
+      "categoryId": "icd_j",
+      "icd10": "J03.90",
+      "normalName": "急性扁桃体炎，未特指",
+      "lowSanName": "扁桃体上的邪印发炎",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_laryngitis",
+      "categoryId": "icd_j",
+      "icd10": "J04.0",
+      "normalName": "急性喉炎",
+      "lowSanName": "失声诅咒侵蚀声带",
+      "applicableMedicineIds": [
+        "med_020",
+        "med_021",
+        "med_cough_syrup"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_bronchitis",
+      "categoryId": "icd_j",
+      "icd10": "J20.9",
+      "normalName": "急性支气管炎，未特指",
+      "lowSanName": "黑色枝杈缠住气管",
+      "applicableMedicineIds": [
+        "med_020",
+        "med_021",
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_cough_syrup"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "pneumonia_unspecified",
+      "categoryId": "icd_j",
+      "icd10": "J18.9",
+      "normalName": "肺炎，未特指",
+      "lowSanName": "肺泡中滋长异界孢子",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "asthma_unspecified",
+      "categoryId": "icd_j",
+      "icd10": "J45.909",
+      "normalName": "哮喘，未特指，未伴并发症",
+      "lowSanName": "窒息之手扼住胸腔",
+      "applicableMedicineIds": [
+        "med_016",
+        "med_022",
+        "med_023",
+        "med_024",
+        "med_025",
+        "med_110",
+        "med_111",
+        "med_112"
+      ],
+      "prohibitedMedicineIds": [
+        "med_082",
+        "med_083"
+      ],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_upper_respiratory_infection",
+      "categoryId": "icd_j",
+      "icd10": "J06.9",
+      "normalName": "急性上呼吸道感染，未特指",
+      "lowSanName": "诅咒之气侵蚀",
+      "applicableMedicineIds": [
+        "med_020",
+        "med_021",
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029",
+        "med_cough_syrup"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "chronic_obstructive_pulmonary_disease",
+      "categoryId": "icd_j",
+      "icd10": "J44.9",
+      "normalName": "慢性阻塞性肺疾病，未特指",
+      "lowSanName": "锈蚀的肺门正在闭合",
+      "applicableMedicineIds": [
+        "med_016",
+        "med_022",
+        "med_023",
+        "med_024",
+        "med_025"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "chronic_sinusitis",
+      "categoryId": "icd_j",
+      "icd10": "J32.9",
+      "normalName": "慢性鼻窦炎，未特指",
+      "lowSanName": "永不散去的颅内回声",
+      "applicableMedicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015",
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "influenza_unspecified",
+      "categoryId": "icd_j",
+      "icd10": "J11.1",
+      "normalName": "流行性感冒伴其他呼吸道表现",
+      "lowSanName": "群鸦般的热疫盘踞肺部",
+      "applicableMedicineIds": [
+        "med_020",
+        "med_021",
+        "med_050",
+        "med_cough_syrup",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "streptococcal_pharyngitis",
+      "categoryId": "icd_j",
+      "icd10": "J02.0",
+      "normalName": "链球菌性咽炎",
+      "lowSanName": "赤色菌群在喉中举行仪式",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "allergic_rhinitis",
+      "categoryId": "icd_j",
+      "icd10": "J30.9",
+      "normalName": "变应性鼻炎，未特指",
+      "lowSanName": "鼻腔被无形花粉反复灼烧",
+      "applicableMedicineIds": [
+        "med_012",
+        "med_013",
+        "med_026"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_019",
+        "symptom_024",
+        "symptom_065"
+      ]
+    },
+    {
+      "id": "bronchiectasis",
+      "categoryId": "icd_j",
+      "icd10": "J47.9",
+      "normalName": "支气管扩张，未特指",
+      "lowSanName": "扩张的气道积存着难以咳尽的暗潮",
+      "applicableMedicineIds": [
+        "med_017",
+        "med_018",
+        "med_019"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_032",
+        "symptom_024"
+      ]
+    },
+    {
+      "id": "gastroesophageal_reflux",
+      "categoryId": "icd_k",
+      "icd10": "K21.9",
+      "normalName": "胃食管反流病，无食管炎",
+      "lowSanName": "胃酸是来自深渊的黑潮",
+      "applicableMedicineIds": [
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075",
+        "med_076",
+        "med_077",
+        "med_078",
+        "med_079"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_013"
+      ]
+    },
+    {
+      "id": "acute_gastritis",
+      "categoryId": "icd_k",
+      "icd10": "K29.70",
+      "normalName": "胃炎，未特指，不伴出血",
+      "lowSanName": "胃壁被饥饿火焰灼穿",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075"
+      ],
+      "prohibitedMedicineIds": [
+        "med_002"
+      ],
+      "symptomIds": [
+        "symptom_013"
+      ]
+    },
+    {
+      "id": "peptic_ulcer_unspecified",
+      "categoryId": "icd_k",
+      "icd10": "K27.9",
+      "normalName": "消化性溃疡，未特指，无出血或穿孔",
+      "lowSanName": "腹中张开一只无底之眼",
+      "applicableMedicineIds": [
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075"
+      ],
+      "prohibitedMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008"
+      ],
+      "symptomIds": []
+    },
+    {
+      "id": "irritable_bowel_syndrome",
+      "categoryId": "icd_k",
+      "icd10": "K58.9",
+      "normalName": "肠易激综合征，无腹泻",
+      "lowSanName": "肠道被混沌的低语驱使",
+      "applicableMedicineIds": [
+        "med_059",
+        "med_060",
+        "med_061",
+        "med_062",
+        "med_066",
+        "med_067",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075",
+        "med_076",
+        "med_077",
+        "med_078",
+        "med_079"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "constipation",
+      "categoryId": "icd_k",
+      "icd10": "K59.00",
+      "normalName": "便秘，未特指",
+      "lowSanName": "体内的门被古老符文封死",
+      "applicableMedicineIds": [
+        "med_063",
+        "med_064",
+        "med_065",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "noninfective_gastroenteritis",
+      "categoryId": "icd_k",
+      "icd10": "K52.9",
+      "normalName": "非感染性胃肠炎和结肠炎，未特指",
+      "lowSanName": "肠壁渗出不属于此世的液体",
+      "applicableMedicineIds": [
+        "med_059",
+        "med_060",
+        "med_061",
+        "med_062",
+        "med_066",
+        "med_067",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075",
+        "med_076",
+        "med_077",
+        "med_078",
+        "med_079"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "cholelithiasis",
+      "categoryId": "icd_k",
+      "icd10": "K80.20",
+      "normalName": "胆囊结石，无胆囊炎，无梗阻",
+      "lowSanName": "胆囊中孕育着黑色石卵",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_170",
+        "symptom_171"
+      ]
+    },
+    {
+      "id": "fatty_liver",
+      "categoryId": "icd_k",
+      "icd10": "K76.0",
+      "normalName": "脂肪变性肝，未分类处",
+      "lowSanName": "肝脏被油腻的阴影覆盖",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_170",
+        "symptom_171"
+      ]
+    },
+    {
+      "id": "gingivitis",
+      "categoryId": "icd_k",
+      "icd10": "K05.10",
+      "normalName": "慢性牙龈炎，未特指",
+      "lowSanName": "牙龈在刷牙和进食时容易渗血",
+      "applicableMedicineIds": [
+        "med_129"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_015",
+        "symptom_066"
+      ]
+    },
+    {
+      "id": "ulcerative_colitis",
+      "categoryId": "icd_k",
+      "icd10": "K51.90",
+      "normalName": "溃疡性结肠炎，未伴并发症",
+      "lowSanName": "结肠黏膜炎症可导致血便、黏液便和里急后重",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [
+        "med_066"
+      ],
+      "symptomIds": [
+        "symptom_173",
+        "symptom_174",
+        "symptom_175",
+        "symptom_177"
+      ]
+    },
+    {
+      "id": "hemorrhoids",
+      "categoryId": "icd_k",
+      "icd10": "K64.9",
+      "normalName": "痔，未特指",
+      "lowSanName": "肛门出血、瘙痒或疼痛常见于痔，但仍需排除其他病因",
+      "applicableMedicineIds": [
+        "med_063",
+        "med_065"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_173",
+        "symptom_177",
+        "symptom_178",
+        "symptom_179"
+      ]
+    },
+    {
+      "id": "atopic_dermatitis",
+      "categoryId": "icd_l",
+      "icd10": "L20.9",
+      "normalName": "特应性皮炎，未特指",
+      "lowSanName": "皮肤下孵化着梦魇的卵",
+      "applicableMedicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015",
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_133",
+        "med_134",
+        "med_135",
+        "med_136",
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "contact_dermatitis",
+      "categoryId": "icd_l",
+      "icd10": "L25.9",
+      "normalName": "未特指的接触性皮炎",
+      "lowSanName": "接触过的地方留下诅咒烙印",
+      "applicableMedicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015",
+        "med_133",
+        "med_134",
+        "med_135",
+        "med_136",
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "urticaria",
+      "categoryId": "icd_l",
+      "icd10": "L50.9",
+      "normalName": "荨麻疹，未特指",
+      "lowSanName": "皮肤浮起一片红色符文",
+      "applicableMedicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015",
+        "med_133",
+        "med_134",
+        "med_135",
+        "med_136",
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "cellulitis",
+      "categoryId": "icd_l",
+      "icd10": "L03.90",
+      "normalName": "蜂窝织炎，部位未特指",
+      "lowSanName": "腐败的暗影正在皮下扩散",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_043",
+        "med_044",
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_129",
+        "med_130",
+        "med_131",
+        "med_132"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_196"
+      ]
+    },
+    {
+      "id": "acne_vulgaris",
+      "categoryId": "icd_l",
+      "icd10": "L70.9",
+      "normalName": "痤疮，未特指",
+      "lowSanName": "毛囊皮脂腺单位的堵塞和炎症形成痤疮",
+      "applicableMedicineIds": [
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_129",
+        "symptom_046",
+        "symptom_050"
+      ]
+    },
+    {
+      "id": "vitiligo",
+      "categoryId": "icd_l",
+      "icd10": "L80",
+      "normalName": "白癜风",
+      "lowSanName": "局部黑色素细胞减少会形成边界清楚的脱色斑",
+      "applicableMedicineIds": [
+        "med_139"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_049"
+      ]
+    },
+    {
+      "id": "postinflammatory_hyperpigmentation",
+      "categoryId": "icd_l",
+      "icd10": "L81.0",
+      "normalName": "炎症后色素沉着",
+      "lowSanName": "皮肤炎症消退后可能留下色素加深",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_050"
+      ]
+    },
+    {
+      "id": "alopecia_areata",
+      "categoryId": "icd_l",
+      "icd10": "L63.9",
+      "normalName": "斑秃，未特指",
+      "lowSanName": "免疫相关的毛囊改变可造成斑片状脱发",
+      "applicableMedicineIds": [
+        "med_110",
+        "med_134"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_127",
+        "symptom_130"
+      ]
+    },
+    {
+      "id": "hirsutism",
+      "categoryId": "icd_l",
+      "icd10": "L68.0",
+      "normalName": "多毛症",
+      "lowSanName": "雄激素作用增强可使体毛分布发生改变",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_128"
+      ]
+    },
+    {
+      "id": "sciatica",
+      "categoryId": "icd_m",
+      "icd10": "M54.30",
+      "normalName": "坐骨神经痛，未特指",
+      "lowSanName": "黑色电流沿脊柱向下爬行",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_147",
+        "med_148"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "low_back_pain",
+      "categoryId": "icd_m",
+      "icd10": "M54.50",
+      "normalName": "腰痛，未特指",
+      "lowSanName": "脊柱被沉重的黑门压弯",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "osteoarthritis_knee",
+      "categoryId": "icd_m",
+      "icd10": "M17.9",
+      "normalName": "膝关节骨关节炎，未特指",
+      "lowSanName": "膝中骨骼长出锈蚀尖牙",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "rheumatoid_arthritis",
+      "categoryId": "icd_m",
+      "icd10": "M06.9",
+      "normalName": "类风湿关节炎，未特指",
+      "lowSanName": "关节被群聚的灰色虫灵啃咬",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_113",
+        "med_114",
+        "med_115"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_071"
+      ]
+    },
+    {
+      "id": "gout",
+      "categoryId": "icd_m",
+      "icd10": "M10.9",
+      "normalName": "痛风，未特指",
+      "lowSanName": "关节中结晶出邪神的盐",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_116",
+        "med_117"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "neck_pain",
+      "categoryId": "icd_m",
+      "icd10": "M54.2",
+      "normalName": "颈痛",
+      "lowSanName": "脖颈被看不见的绳索牵引",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "shoulder_impingement",
+      "categoryId": "icd_m",
+      "icd10": "M75.40",
+      "normalName": "肩峰撞击综合征，未特指",
+      "lowSanName": "抬臂时肩峰下空间反复受到刺激",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_004"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_071"
+      ]
+    },
+    {
+      "id": "plantar_fasciitis",
+      "categoryId": "icd_m",
+      "icd10": "M72.2",
+      "normalName": "足底筋膜炎",
+      "lowSanName": "足底筋膜负荷过大常引起晨起或行走时足跟痛",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_004"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_188",
+        "symptom_189"
+      ]
+    },
+    {
+      "id": "urinary_tract_infection",
+      "categoryId": "icd_n",
+      "icd10": "N39.0",
+      "normalName": "尿路感染，部位未特指",
+      "lowSanName": "膀胱中回响着地下祷词",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_045",
+        "med_046"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_cystitis",
+      "categoryId": "icd_n",
+      "icd10": "N30.00",
+      "normalName": "急性膀胱炎，无血尿",
+      "lowSanName": "膀胱被灼热的红印污染",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_043",
+        "med_044",
+        "med_045",
+        "med_046"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "acute_pyelonephritis",
+      "categoryId": "icd_n",
+      "icd10": "N10",
+      "normalName": "急性肾盂肾炎",
+      "lowSanName": "肾脏成为黑色祭坛",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_043",
+        "med_044"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "kidney_stone",
+      "categoryId": "icd_n",
+      "icd10": "N20.0",
+      "normalName": "肾结石",
+      "lowSanName": "肾中滚动着来自异界的碎石",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_104",
+        "symptom_169"
+      ]
+    },
+    {
+      "id": "benign_prostatic_hyperplasia",
+      "categoryId": "icd_n",
+      "icd10": "N40.0",
+      "normalName": "良性前列腺增生，无下尿路症状",
+      "lowSanName": "前列腺被无名肿物占据",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_099",
+        "symptom_100",
+        "symptom_102",
+        "symptom_103"
+      ]
+    },
+    {
+      "id": "chronic_kidney_disease",
+      "categoryId": "icd_n",
+      "icd10": "N18.9",
+      "normalName": "慢性肾脏病，未特指",
+      "lowSanName": "肾脏正在被缓慢风化",
+      "applicableMedicineIds": [
+        "med_125",
+        "med_126",
+        "med_127",
+        "med_128"
+      ],
+      "prohibitedMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_100",
+        "med_106"
+      ],
+      "symptomIds": [
+        "symptom_037",
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "urinary_incontinence",
+      "categoryId": "icd_n",
+      "icd10": "N39.498",
+      "normalName": "其他尿失禁",
+      "lowSanName": "膀胱控制下降会造成不自主漏尿",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_106"
+      ]
+    },
+    {
+      "id": "epididymitis",
+      "categoryId": "icd_n",
+      "icd10": "N45.1",
+      "normalName": "附睾炎",
+      "lowSanName": "阴囊疼痛可能来自附睾的感染性炎症",
+      "applicableMedicineIds": [
+        "med_030",
+        "med_037",
+        "med_040"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_108"
+      ]
+    },
+    {
+      "id": "dysmenorrhea",
+      "categoryId": "icd_n",
+      "icd10": "N94.6",
+      "normalName": "痛经，未特指",
+      "lowSanName": "月经期前列腺素变化可引起痉挛性疼痛",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_006",
+        "med_008"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_112"
+      ]
+    },
+    {
+      "id": "menopause",
+      "categoryId": "icd_n",
+      "icd10": "N95.1",
+      "normalName": "绝经期和围绝经期疾病",
+      "lowSanName": "激素波动可带来潮热、盗汗和性欲变化",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [
+        "med_150"
+      ],
+      "symptomIds": [
+        "symptom_109",
+        "symptom_111",
+        "symptom_116",
+        "symptom_120",
+        "symptom_121"
+      ]
+    },
+    {
+      "id": "erectile_dysfunction",
+      "categoryId": "icd_n",
+      "icd10": "N52.9",
+      "normalName": "勃起功能障碍，未特指",
+      "lowSanName": "血管、神经、药物及心理因素都可能参与勃起困难",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_116",
+        "symptom_117"
+      ]
+    },
+    {
+      "id": "mastalgia",
+      "categoryId": "icd_n",
+      "icd10": "N64.4",
+      "normalName": "乳房痛",
+      "lowSanName": "乳房疼痛需要结合周期、触诊和影像检查判断",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_118"
+      ]
+    },
+    {
+      "id": "vertigo",
+      "categoryId": "icd_r",
+      "icd10": "R42",
+      "normalName": "头晕和眩晕",
+      "lowSanName": "世界正在围绕裂隙旋转",
+      "applicableMedicineIds": [
+        "med_145",
+        "med_146"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "fever_unspecified",
+      "categoryId": "icd_r",
+      "icd10": "R50.9",
+      "normalName": "发热，未特指",
+      "lowSanName": "额头燃烧着不属于太阳的火",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "cough",
+      "categoryId": "icd_r",
+      "icd10": "R05.9",
+      "normalName": "咳嗽，未特指",
+      "lowSanName": "肺部在咳出黑色回声",
+      "applicableMedicineIds": [
+        "med_020",
+        "med_021",
+        "med_cough_syrup",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "headache_unspecified",
+      "categoryId": "icd_r",
+      "icd10": "R51.9",
+      "normalName": "头痛，未特指",
+      "lowSanName": "颅骨内回荡着永恒钟声",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "nausea_vomiting",
+      "categoryId": "icd_r",
+      "icd10": "R11.2",
+      "normalName": "恶心伴呕吐，未特指",
+      "lowSanName": "胃中翻涌着不洁的海",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_003",
+        "symptom_004"
+      ]
+    },
+    {
+      "id": "chest_pain",
+      "categoryId": "icd_r",
+      "icd10": "R07.9",
+      "normalName": "胸痛，未特指",
+      "lowSanName": "胸腔传来来自墓穴的敲击",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    },
+    {
+      "id": "lymphadenopathy",
+      "categoryId": "icd_r",
+      "icd10": "R59.1",
+      "normalName": "淋巴结肿大",
+      "lowSanName": "颈部、腋窝或腹股沟肿块可能是淋巴结反应，需寻找原因",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_164",
+        "symptom_165",
+        "symptom_166"
+      ]
+    },
+    {
+      "id": "splenomegaly",
+      "categoryId": "icd_r",
+      "icd10": "R16.1",
+      "normalName": "脾肿大",
+      "lowSanName": "左上腹不适有时与脾脏增大有关",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_169"
+      ]
+    },
+    {
+      "id": "orthostatic_hypotension",
+      "categoryId": "icd_r",
+      "icd10": "I95.1",
+      "normalName": "体位性低血压",
+      "lowSanName": "站立后头晕提示血压调节需要评估",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [
+        "med_093",
+        "med_094"
+      ],
+      "symptomIds": [
+        "symptom_200",
+        "symptom_037",
+        "symptom_198"
+      ]
+    },
+    {
+      "id": "benign_breast_lump",
+      "categoryId": "icd_r",
+      "icd10": "N63.0",
+      "normalName": "乳房局限性肿块，未特指",
+      "lowSanName": "乳房肿块必须通过查体和影像学进一步区分",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_118"
+      ]
+    },
+    {
+      "id": "soft_tissue_contusion",
+      "categoryId": "icd_s",
+      "icd10": "S20.219A",
+      "normalName": "胸部挫伤，未特指，初次就诊",
+      "lowSanName": "无形之手撕裂了皮下组织",
+      "applicableMedicineIds": [
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010",
+        "med_129",
+        "med_130",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_185"
+      ]
+    },
+    {
+      "id": "closed_foot_fracture",
+      "categoryId": "icd_s",
+      "icd10": "S92.909A",
+      "normalName": "足部骨折，未特指，初次就诊",
+      "lowSanName": "外伤后的持续足部疼痛需要影像检查排除骨折",
+      "applicableMedicineIds": [],
+      "prohibitedMedicineIds": [],
+      "symptomIds": [
+        "symptom_185",
+        "symptom_188",
+        "symptom_189"
+      ]
+    },
+    {
+      "id": "covid19",
+      "categoryId": "icd_u",
+      "icd10": "U07.1",
+      "normalName": "新型冠状病毒感染",
+      "lowSanName": "冠状病毒化作黑色王冠",
+      "applicableMedicineIds": [
+        "med_020",
+        "med_021",
+        "med_cough_syrup",
+        "med_paracetamol"
+      ],
+      "prohibitedMedicineIds": [],
+      "symptomIds": []
+    }
+  ],
+  "medicineCategories": [
+    {
+      "id": "analgesic",
+      "name": "解热镇痛药",
+      "medicineIds": [
+        "med_paracetamol",
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_j",
+        "icd_k",
+        "icd_m",
+        "icd_n",
+        "icd_r",
+        "icd_s",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antiallergic",
+      "name": "抗过敏药",
+      "medicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l"
+      ]
+    },
+    {
+      "id": "respiratory",
+      "name": "呼吸系统用药",
+      "medicineIds": [
+        "med_cough_syrup",
+        "med_011",
+        "med_016",
+        "med_017",
+        "med_018",
+        "med_019",
+        "med_020",
+        "med_021",
+        "med_022",
+        "med_023",
+        "med_024",
+        "med_025",
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_r",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antibacterial",
+      "name": "抗菌药",
+      "medicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_043",
+        "med_044",
+        "med_045",
+        "med_046"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_h",
+        "icd_j",
+        "icd_l",
+        "icd_n"
+      ]
+    },
+    {
+      "id": "antiviral",
+      "name": "抗病毒药",
+      "medicineIds": [
+        "med_047",
+        "med_048",
+        "med_049",
+        "med_050",
+        "med_051",
+        "med_052"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_j"
+      ]
+    },
+    {
+      "id": "antifungal",
+      "name": "抗真菌药",
+      "medicineIds": [
+        "med_053",
+        "med_054",
+        "med_055",
+        "med_056",
+        "med_057",
+        "med_058"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a"
+      ]
+    },
+    {
+      "id": "gastrointestinal",
+      "name": "消化系统用药",
+      "medicineIds": [
+        "med_059",
+        "med_060",
+        "med_061",
+        "med_062",
+        "med_063",
+        "med_064",
+        "med_065",
+        "med_066",
+        "med_067",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075",
+        "med_076",
+        "med_077",
+        "med_078",
+        "med_079"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_k"
+      ]
+    },
+    {
+      "id": "cardiovascular",
+      "name": "心血管用药",
+      "medicineIds": [
+        "med_080",
+        "med_081",
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_i"
+      ]
+    },
+    {
+      "id": "lipid_lowering",
+      "name": "调脂药",
+      "medicineIds": [
+        "med_096",
+        "med_097",
+        "med_098",
+        "med_099"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_i"
+      ]
+    },
+    {
+      "id": "antidiabetic",
+      "name": "降糖药",
+      "medicineIds": [
+        "med_100",
+        "med_101",
+        "med_102",
+        "med_103",
+        "med_104",
+        "med_105",
+        "med_106"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "thyroid",
+      "name": "甲状腺用药",
+      "medicineIds": [
+        "med_107",
+        "med_108",
+        "med_109"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "steroid_immunomodulator",
+      "name": "糖皮质激素与免疫调节药",
+      "medicineIds": [
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_113",
+        "med_114",
+        "med_115"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "bone_gout",
+      "name": "骨代谢与痛风用药",
+      "medicineIds": [
+        "med_116",
+        "med_117",
+        "med_118",
+        "med_119",
+        "med_120",
+        "med_121"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "dermatology",
+      "name": "皮肤科用药",
+      "medicineIds": [
+        "med_129",
+        "med_130",
+        "med_131",
+        "med_132",
+        "med_133",
+        "med_134",
+        "med_135",
+        "med_136",
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_k",
+        "icd_l",
+        "icd_s"
+      ]
+    },
+    {
+      "id": "ophthalmology",
+      "name": "眼科用药",
+      "medicineIds": [
+        "med_140",
+        "med_141",
+        "med_142",
+        "med_143",
+        "med_144"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_h"
+      ]
+    },
+    {
+      "id": "neurology",
+      "name": "神经系统用药",
+      "medicineIds": [
+        "med_145",
+        "med_146",
+        "med_147",
+        "med_148"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_h",
+        "icd_m",
+        "icd_r"
+      ]
+    },
+    {
+      "id": "psychiatry",
+      "name": "精神科用药",
+      "medicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_f"
+      ]
+    },
+    {
+      "id": "supplement",
+      "name": "维生素与电解质补充剂",
+      "medicineIds": [
+        "med_122",
+        "med_123",
+        "med_124",
+        "med_125",
+        "med_126",
+        "med_127",
+        "med_128"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_h",
+        "icd_n"
+      ]
+    }
+  ],
+  "medicines": [
+    {
+      "id": "med_paracetamol",
+      "name": "对乙酰氨基酚",
+      "effect": "解热镇痛，用于发热与轻中度疼痛",
+      "price": 300,
+      "commission": 30,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "cough",
+        "covid19",
+        "fever_unspecified",
+        "headache_unspecified",
+        "infectious_gastroenteritis",
+        "influenza_unspecified",
+        "migraine_unspecified",
+        "soft_tissue_contusion"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_cough_syrup",
+      "name": "止咳糖浆",
+      "effect": "缓解咳嗽症状",
+      "price": 250,
+      "commission": 25,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_001",
+      "name": "布洛芬",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "plantar_fasciitis",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "shoulder_impingement",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_002",
+      "name": "阿司匹林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "acute_gastritis",
+        "chronic_kidney_disease",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_003",
+      "name": "双氯芬酸钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_004",
+      "name": "塞来昔布",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "plantar_fasciitis",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "shoulder_impingement",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_005",
+      "name": "吲哚美辛",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_006",
+      "name": "萘普生",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_007",
+      "name": "洛索洛芬钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_008",
+      "name": "美洛昔康",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "dysmenorrhea",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease",
+        "heart_failure",
+        "peptic_ulcer_unspecified"
+      ]
+    },
+    {
+      "id": "med_009",
+      "name": "曲马多",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_010",
+      "name": "盐酸氨酚曲马多",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "analgesic",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "chest_pain",
+        "fever_unspecified",
+        "gout",
+        "headache_unspecified",
+        "low_back_pain",
+        "migraine_unspecified",
+        "neck_pain",
+        "osteoarthritis_knee",
+        "rheumatoid_arthritis",
+        "sciatica",
+        "soft_tissue_contusion",
+        "tension_headache"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_011",
+      "name": "复方氨酚烷胺",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_012",
+      "name": "氯雷他定",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "antiallergic",
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "allergic_rhinitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_013",
+      "name": "西替利嗪",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "antiallergic",
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "allergic_rhinitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_014",
+      "name": "地氯雷他定",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "antiallergic",
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_015",
+      "name": "依巴斯汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "antiallergic",
+      "applicableDiagnosisIds": [
+        "acute_nasopharyngitis",
+        "atopic_dermatitis",
+        "chronic_sinusitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_016",
+      "name": "孟鲁司特钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_017",
+      "name": "氨溴索",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "bronchiectasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_018",
+      "name": "乙酰半胱氨酸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "bronchiectasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_019",
+      "name": "盐酸氨溴索",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "bronchiectasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_020",
+      "name": "右美沙芬",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_021",
+      "name": "喷托维林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_laryngitis",
+        "acute_nasopharyngitis",
+        "acute_pharyngitis",
+        "acute_upper_respiratory_infection",
+        "cough",
+        "covid19",
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_022",
+      "name": "多索茶碱",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_023",
+      "name": "沙丁胺醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_024",
+      "name": "布地奈德",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_025",
+      "name": "异丙托溴铵",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "asthma_unspecified",
+        "chronic_obstructive_pulmonary_disease"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_026",
+      "name": "糠酸莫米松鼻喷雾剂",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "allergic_rhinitis",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_027",
+      "name": "丙酸氟替卡松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_028",
+      "name": "羟甲唑啉",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_029",
+      "name": "生理性海水鼻喷雾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "respiratory",
+      "applicableDiagnosisIds": [
+        "acute_maxillary_sinusitis",
+        "acute_nasopharyngitis",
+        "acute_upper_respiratory_infection",
+        "chronic_sinusitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_030",
+      "name": "阿莫西林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_031",
+      "name": "阿莫西林克拉维酸钾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_032",
+      "name": "头孢氨苄",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_033",
+      "name": "头孢呋辛酯",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_034",
+      "name": "头孢克洛",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_035",
+      "name": "头孢地尼",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_036",
+      "name": "头孢曲松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_037",
+      "name": "阿奇霉素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "otitis_media",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_038",
+      "name": "克拉霉素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_039",
+      "name": "罗红霉素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_040",
+      "name": "左氧氟沙星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "epididymitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_041",
+      "name": "莫西沙星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_042",
+      "name": "环丙沙星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "acute_cystitis",
+        "acute_maxillary_sinusitis",
+        "acute_pyelonephritis",
+        "acute_tonsillitis",
+        "cellulitis",
+        "pneumonia_unspecified",
+        "streptococcal_pharyngitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_043",
+      "name": "甲硝唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "acute_pyelonephritis",
+        "cellulitis",
+        "infectious_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_044",
+      "name": "替硝唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "acute_pyelonephritis",
+        "cellulitis",
+        "infectious_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_045",
+      "name": "呋喃妥因",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_046",
+      "name": "磷霉素氨丁三醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "antibacterial",
+      "applicableDiagnosisIds": [
+        "acute_cystitis",
+        "urinary_tract_infection"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_047",
+      "name": "阿昔洛韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "antiviral",
+      "applicableDiagnosisIds": [
+        "herpes_zoster"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_048",
+      "name": "伐昔洛韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "antiviral",
+      "applicableDiagnosisIds": [
+        "herpes_zoster"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_049",
+      "name": "泛昔洛韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "antiviral",
+      "applicableDiagnosisIds": [
+        "herpes_zoster"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_050",
+      "name": "奥司他韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "antiviral",
+      "applicableDiagnosisIds": [
+        "influenza_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_051",
+      "name": "利巴韦林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "antiviral",
+      "applicableDiagnosisIds": [
+        "hepatitis_c"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_052",
+      "name": "恩替卡韦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "antiviral",
+      "applicableDiagnosisIds": [
+        "chronic_hepatitis_b"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_053",
+      "name": "氟康唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "antifungal",
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_054",
+      "name": "伊曲康唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "antifungal",
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_055",
+      "name": "特比萘芬",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "antifungal",
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_056",
+      "name": "硝酸咪康唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "antifungal",
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_057",
+      "name": "克霉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "antifungal",
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_058",
+      "name": "制霉菌素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "antifungal",
+      "applicableDiagnosisIds": [
+        "candidiasis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_059",
+      "name": "蒙脱石散",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_060",
+      "name": "口服补液盐",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_061",
+      "name": "双歧杆菌三联活菌",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_062",
+      "name": "枯草杆菌二联活菌",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_063",
+      "name": "乳果糖",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "constipation",
+        "hemorrhoids"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_064",
+      "name": "聚乙二醇电解质",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "constipation"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_065",
+      "name": "开塞露",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "constipation",
+        "hemorrhoids"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_066",
+      "name": "洛哌丁胺",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "ulcerative_colitis"
+      ]
+    },
+    {
+      "id": "med_067",
+      "name": "复方黄连素",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "infectious_gastroenteritis",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_068",
+      "name": "奥美拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_069",
+      "name": "埃索美拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_070",
+      "name": "泮托拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_071",
+      "name": "雷贝拉唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_072",
+      "name": "法莫替丁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_073",
+      "name": "铝碳酸镁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_074",
+      "name": "硫糖铝",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_075",
+      "name": "枸橼酸铋钾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "acute_gastritis",
+        "constipation",
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis",
+        "peptic_ulcer_unspecified"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_076",
+      "name": "多潘立酮",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_077",
+      "name": "莫沙必利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_078",
+      "name": "曲美布汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_079",
+      "name": "消旋山莨菪碱",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "gastrointestinal",
+      "applicableDiagnosisIds": [
+        "gastroesophageal_reflux",
+        "irritable_bowel_syndrome",
+        "noninfective_gastroenteritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_080",
+      "name": "硝酸甘油",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "acute_myocardial_infarction",
+        "angina_pectoris"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_081",
+      "name": "速效救心丸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "acute_myocardial_infarction",
+        "angina_pectoris"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_082",
+      "name": "美托洛尔",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "asthma_unspecified"
+      ]
+    },
+    {
+      "id": "med_083",
+      "name": "比索洛尔",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "asthma_unspecified"
+      ]
+    },
+    {
+      "id": "med_084",
+      "name": "氨氯地平",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_085",
+      "name": "硝苯地平",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_086",
+      "name": "非洛地平",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_087",
+      "name": "缬沙坦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_088",
+      "name": "氯沙坦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_089",
+      "name": "厄贝沙坦",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_090",
+      "name": "贝那普利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_091",
+      "name": "依那普利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_092",
+      "name": "卡托普利",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_093",
+      "name": "氢氯噻嗪",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "orthostatic_hypotension"
+      ]
+    },
+    {
+      "id": "med_094",
+      "name": "呋塞米",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": [
+        "orthostatic_hypotension"
+      ]
+    },
+    {
+      "id": "med_095",
+      "name": "螺内酯",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "cardiovascular",
+      "applicableDiagnosisIds": [
+        "angina_pectoris",
+        "atherosclerotic_heart_disease",
+        "atrial_fibrillation",
+        "essential_hypertension",
+        "heart_failure",
+        "hypertensive_crisis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_096",
+      "name": "阿托伐他汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "lipid_lowering",
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_097",
+      "name": "瑞舒伐他汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "lipid_lowering",
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_098",
+      "name": "辛伐他汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "lipid_lowering",
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_099",
+      "name": "非诺贝特",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "lipid_lowering",
+      "applicableDiagnosisIds": [
+        "atherosclerotic_heart_disease",
+        "hyperlipidemia"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_100",
+      "name": "二甲双胍",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "antidiabetic",
+      "applicableDiagnosisIds": [
+        "polycystic_ovary_syndrome",
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease"
+      ]
+    },
+    {
+      "id": "med_101",
+      "name": "格列美脲",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "antidiabetic",
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_102",
+      "name": "格列齐特",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "antidiabetic",
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_103",
+      "name": "阿卡波糖",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "antidiabetic",
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_104",
+      "name": "西格列汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "antidiabetic",
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_105",
+      "name": "达格列净",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "antidiabetic",
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_106",
+      "name": "胰岛素注射液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "antidiabetic",
+      "applicableDiagnosisIds": [
+        "type1_diabetes",
+        "type2_diabetes"
+      ],
+      "prohibitedDiagnosisIds": [
+        "chronic_kidney_disease"
+      ]
+    },
+    {
+      "id": "med_107",
+      "name": "左甲状腺素钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "thyroid",
+      "applicableDiagnosisIds": [
+        "hypothyroidism"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_108",
+      "name": "甲巯咪唑",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "thyroid",
+      "applicableDiagnosisIds": [
+        "hyperthyroidism"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_109",
+      "name": "丙硫氧嘧啶",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "thyroid",
+      "applicableDiagnosisIds": [
+        "hyperthyroidism"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_110",
+      "name": "泼尼松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "steroid_immunomodulator",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "alopecia_areata",
+        "asthma_unspecified",
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_111",
+      "name": "甲泼尼龙",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "steroid_immunomodulator",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "asthma_unspecified",
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_112",
+      "name": "地塞米松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "steroid_immunomodulator",
+      "applicableDiagnosisIds": [
+        "acute_bronchitis",
+        "asthma_unspecified",
+        "atopic_dermatitis",
+        "cellulitis",
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_113",
+      "name": "氯喹",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "steroid_immunomodulator",
+      "applicableDiagnosisIds": [
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_114",
+      "name": "羟氯喹",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "steroid_immunomodulator",
+      "applicableDiagnosisIds": [
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_115",
+      "name": "甲氨蝶呤",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "steroid_immunomodulator",
+      "applicableDiagnosisIds": [
+        "rheumatoid_arthritis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_116",
+      "name": "别嘌醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "bone_gout",
+      "applicableDiagnosisIds": [
+        "gout"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_117",
+      "name": "秋水仙碱",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "bone_gout",
+      "applicableDiagnosisIds": [
+        "gout"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_118",
+      "name": "阿仑膦酸钠",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "bone_gout",
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_119",
+      "name": "碳酸钙D3",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "bone_gout",
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_120",
+      "name": "骨化三醇",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "bone_gout",
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_121",
+      "name": "维生素D滴剂",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "bone_gout",
+      "applicableDiagnosisIds": [
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_122",
+      "name": "维生素B1",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "supplement",
+      "applicableDiagnosisIds": [
+        "thiamine_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_123",
+      "name": "维生素B12",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "supplement",
+      "applicableDiagnosisIds": [
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_124",
+      "name": "叶酸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "supplement",
+      "applicableDiagnosisIds": [
+        "folate_deficiency_anemia"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_125",
+      "name": "硫酸亚铁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "supplement",
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_126",
+      "name": "复方硫酸亚铁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "supplement",
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_127",
+      "name": "琥珀酸亚铁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "supplement",
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease",
+        "iron_deficiency_anemia",
+        "vitamin_d_deficiency"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_128",
+      "name": "氯化钾",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "supplement",
+      "applicableDiagnosisIds": [
+        "chronic_kidney_disease"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_129",
+      "name": "氯己定",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "cellulitis",
+        "gingivitis",
+        "soft_tissue_contusion"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_130",
+      "name": "碘伏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "cellulitis",
+        "soft_tissue_contusion"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_131",
+      "name": "莫匹罗星",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "cellulitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_132",
+      "name": "夫西地酸",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "cellulitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_133",
+      "name": "炉甘石洗剂",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_134",
+      "name": "糠酸莫米松乳膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "alopecia_areata",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_135",
+      "name": "丁酸氢化可的松",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_136",
+      "name": "尿素乳膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_137",
+      "name": "维A酸乳膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_138",
+      "name": "过氧化苯甲酰",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 316,
+      "commission": 31.6,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_139",
+      "name": "他克莫司软膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 353,
+      "commission": 35.3,
+      "categoryId": "dermatology",
+      "applicableDiagnosisIds": [
+        "acne_vulgaris",
+        "atopic_dermatitis",
+        "contact_dermatitis",
+        "urticaria",
+        "vitiligo"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_140",
+      "name": "玻璃酸钠滴眼液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 390,
+      "commission": 39,
+      "categoryId": "ophthalmology",
+      "applicableDiagnosisIds": [
+        "dry_eye"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_141",
+      "name": "妥布霉素滴眼液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 427,
+      "commission": 42.7,
+      "categoryId": "ophthalmology",
+      "applicableDiagnosisIds": [
+        "bacterial_conjunctivitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_142",
+      "name": "氧氟沙星滴眼液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 464,
+      "commission": 46.4,
+      "categoryId": "ophthalmology",
+      "applicableDiagnosisIds": [
+        "bacterial_conjunctivitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_143",
+      "name": "金霉素眼膏",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 20,
+      "commission": 2,
+      "categoryId": "ophthalmology",
+      "applicableDiagnosisIds": [
+        "bacterial_conjunctivitis"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_144",
+      "name": "人工泪液",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 57,
+      "commission": 5.7,
+      "categoryId": "ophthalmology",
+      "applicableDiagnosisIds": [
+        "dry_eye"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_145",
+      "name": "盐酸氟桂利嗪",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 94,
+      "commission": 9.4,
+      "categoryId": "neurology",
+      "applicableDiagnosisIds": [
+        "benign_positional_vertigo",
+        "migraine_unspecified",
+        "vertigo"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_146",
+      "name": "倍他司汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 131,
+      "commission": 13.1,
+      "categoryId": "neurology",
+      "applicableDiagnosisIds": [
+        "benign_positional_vertigo",
+        "migraine_unspecified",
+        "vertigo"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_147",
+      "name": "加巴喷丁",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 168,
+      "commission": 16.8,
+      "categoryId": "neurology",
+      "applicableDiagnosisIds": [
+        "carpal_tunnel_syndrome",
+        "herpes_zoster",
+        "sciatica"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_148",
+      "name": "普瑞巴林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 205,
+      "commission": 20.5,
+      "categoryId": "neurology",
+      "applicableDiagnosisIds": [
+        "carpal_tunnel_syndrome",
+        "herpes_zoster",
+        "sciatica"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_149",
+      "name": "舍曲林",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 242,
+      "commission": 24.2,
+      "categoryId": "psychiatry",
+      "applicableDiagnosisIds": [
+        "acute_stress_disorder",
+        "generalized_anxiety",
+        "insomnia_disorder",
+        "major_depressive_disorder",
+        "obsessive_compulsive_disorder",
+        "panic_disorder"
+      ],
+      "prohibitedDiagnosisIds": []
+    },
+    {
+      "id": "med_150",
+      "name": "帕罗西汀",
+      "effect": "用于常见症状的对症或专科治疗（游戏资料）",
+      "price": 279,
+      "commission": 27.9,
+      "categoryId": "psychiatry",
+      "applicableDiagnosisIds": [
+        "acute_stress_disorder",
+        "generalized_anxiety",
+        "insomnia_disorder",
+        "major_depressive_disorder",
+        "obsessive_compulsive_disorder",
+        "panic_disorder"
+      ],
+      "prohibitedDiagnosisIds": [
+        "menopause"
+      ]
+    }
+  ],
+  "patients": [
+    {
+      "id": "patient_lin_ruoqing_01",
+      "name": "林若晴",
+      "npcRef": null,
+      "age": 29,
+      "correctDiagnosisId": "acute_gastritis",
+      "diagnosisOptionIds": [
+        "acute_gastritis",
+        "gastroesophageal_reflux",
+        "peptic_ulcer_unspecified"
+      ],
+      "dialogueActivityId": "work01a-patient1-start"
+    },
+    {
+      "id": "patient_01_02_kidney_stone",
+      "name": "朱梦瑶",
+      "npcRef": null,
+      "age": 44,
+      "correctDiagnosisId": "kidney_stone",
+      "diagnosisOptionIds": [
+        "kidney_stone",
+        "iron_deficiency_anemia",
+        "ulcerative_colitis"
+      ],
+      "dialogueActivityId": "work01a-patient2-start"
+    },
+    {
+      "id": "patient_01_03_benign_prostatic_hyperplasia",
+      "name": "韩子轩",
+      "npcRef": null,
+      "age": 33,
+      "correctDiagnosisId": "benign_prostatic_hyperplasia",
+      "diagnosisOptionIds": [
+        "benign_prostatic_hyperplasia",
+        "dry_eye",
+        "hemorrhoids"
+      ],
+      "dialogueActivityId": "work01a-patient3-start"
+    },
+    {
+      "id": "patient_01_04_nausea_vomiting",
+      "name": "吴博文",
+      "npcRef": null,
+      "age": 28,
+      "correctDiagnosisId": "nausea_vomiting",
+      "diagnosisOptionIds": [
+        "nausea_vomiting",
+        "bacterial_conjunctivitis",
+        "kidney_stone"
+      ],
+      "dialogueActivityId": "work01a-patient4-start"
+    },
+    {
+      "id": "patient_01_05_lymphadenopathy",
+      "name": "罗安琪",
+      "npcRef": null,
+      "age": 50,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "ulcerative_colitis",
+        "benign_prostatic_hyperplasia"
+      ],
+      "dialogueActivityId": "work01a-patient5-start"
+    },
+    {
+      "id": "patient_01_06_orthostatic_hypotension",
+      "name": "郭可欣",
+      "npcRef": null,
+      "age": 55,
+      "correctDiagnosisId": "orthostatic_hypotension",
+      "diagnosisOptionIds": [
+        "orthostatic_hypotension",
+        "hemorrhoids",
+        "nausea_vomiting"
+      ],
+      "dialogueActivityId": "work01a-patient6-start"
+    },
+    {
+      "id": "patient_01_07_closed_foot_fracture",
+      "name": "郑文博",
+      "npcRef": null,
+      "age": 47,
+      "correctDiagnosisId": "closed_foot_fracture",
+      "diagnosisOptionIds": [
+        "closed_foot_fracture",
+        "kidney_stone",
+        "lymphadenopathy"
+      ],
+      "dialogueActivityId": "work01a-patient7-start"
+    }
+  ],
+  "chatgtpSettings": [
+    {
+      "id": "default",
+      "sanCostPerQuery": 2,
+      "offlineAnswer": "……（无应答。ChatGTP 似乎已经彻底宕机，光标在空白对话框里孤零零地闪烁。）",
+      "revealKeywordIds": ["flu_suspect", "hypertension_risk", "basement_secret"]
+    }
+  ]
+}

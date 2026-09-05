@@ -1,57 +1,307 @@
-import { WindowFrame } from "./WindowFrame.js";
+/**
+ * WindowManager - sole owner of "打开的窗口及几何信息" (open windows and their
+ * geometry), per the Phase 1 state-ownership table in
+ * .hermes/plans/cultists-ng-engine-rebuild.md §2.3.
+ *
+ * This class is intentionally DOM-independent: it only tracks window state
+ * (position, size, focus/z-order, minimized/maximized) and persists geometry
+ * keyed by windowId. DOM creation, dragging and resize *gestures* live in
+ * desktop/WindowFrame.js and desktop/PointerInteraction.js, which call back
+ * into this manager. Keeping the two separated lets the state machine be
+ * probed deterministically without a browser (see probes/window-manager-probe.mjs).
+ */
+
+const MIN_WIDTH = 220;
+const MIN_HEIGHT = 140;
+const GEOMETRY_STORAGE_KEY = "cultists-ng-window-geometry";
+const TITLEBAR_HEIGHT = 20;
+const MIN_VISIBLE_MARGIN = 48;
+const TASKBAR_HEIGHT = 30;
+
+function defaultViewport() {
+  if (typeof window === "undefined") return { width: Infinity, height: Infinity };
+  return { width: window.innerWidth, height: Math.max(0, window.innerHeight - TASKBAR_HEIGHT) };
+}
+
+function memoryStorage() {
+  const map = new Map();
+  return {
+    getItem: (key) => (map.has(key) ? map.get(key) : null),
+    setItem: (key, value) => map.set(key, value),
+  };
+}
+
+let _instanceIdCounter = 0;
+
 export class WindowManager {
-  constructor(layer, eventBus) { this.layer = layer; this.eventBus = eventBus; this.definitions = new Map(); this.instances = new Map(); this.geometry = new Map(); this.z = 10; try { const saved = JSON.parse(localStorage.getItem("cultists-ng-window-geometry") || "{}"); for (const [id, geometry] of Object.entries(saved)) this.geometry.set(id, geometry); } catch { /* ignore a corrupt optional layout cache */ } }
-  register(definition) { this.definitions.set(definition.id, definition); }
-  openDynamic({ id, title, content = {}, width = 640, height = 480, x = 60, y = 40 } = {}) {
-    const definition = { id, title, geometry: { x, y, width, height }, content: content instanceof HTMLElement ? {} : content };
-    this.register(definition);
-    const frame = this.open(id);
-    if (content instanceof HTMLElement) frame.el.querySelector(".ng-body").replaceChildren(content);
-    return frame;
+  /**
+   * @param {import('./EventBus.js').default} eventBus
+   * @param {{ storage?: { getItem(key:string):string|null, setItem(key:string,value:string):void }, getViewport?: () => {width:number,height:number} }} [options]
+   */
+  constructor(eventBus, options = {}) {
+    this.eventBus = eventBus;
+    this.storage = options.storage || (typeof localStorage !== "undefined" ? localStorage : memoryStorage());
+    this.getViewport = options.getViewport || defaultViewport;
+    this.windows = new Map(); // instanceId -> window state
+    this.geometry = new Map(); // windowId -> saved geometry
+    this.zCounter = 10;
+    this._loadGeometry();
   }
-  open(windowId) {
-    const definition = this.definitions.get(windowId);
-    if (!definition) throw new Error(`Unknown window: ${windowId}`);
-    const frame = new WindowFrame(this, definition);
-    this.instances.set(frame.windowInstanceId, frame); this.layer.append(frame.el); this.focus(frame.windowInstanceId); if (definition.fullscreen) frame.maximize();
-    this.eventBus.emit("window:created", { windowId, windowInstanceId: frame.windowInstanceId });
-    return frame;
+
+  _loadGeometry() {
+    try {
+      const raw = this.storage.getItem(GEOMETRY_STORAGE_KEY);
+      const saved = raw ? JSON.parse(raw) : {};
+      for (const [windowId, geometry] of Object.entries(saved)) {
+        this.geometry.set(windowId, geometry);
+      }
+    } catch {
+      // A corrupt optional layout cache should never block startup.
+    }
   }
-  close(instanceId) {
-    const frame = this.instances.get(instanceId); if (!frame) return;
-    frame.persistGeometry(); frame.resizeObserver?.disconnect(); frame.el.remove(); this.instances.delete(instanceId);
-    this.eventBus.emit("window:closed", { windowId: frame.definition.id, windowInstanceId: instanceId });
+
+  getSavedGeometry(windowId) {
+    const geometry = this.geometry.get(windowId);
+    return geometry ? { ...geometry } : null;
   }
-  focus(instanceId) {
-    const frame = this.instances.get(instanceId);
-    if (!frame) return;
-    frame.el.style.zIndex = String(++this.z);
-    for (const other of this.instances.values()) other.el.classList.toggle("focused", other === frame);
-    this.eventBus.emit("window:focused", { windowInstanceId: instanceId });
-  }
-  minimize(frame) { frame.el.classList.toggle("minimized"); this.eventBus.emit("window:changed", { windowInstanceId: frame.windowInstanceId, action: "minimize" }); }
-  handleWindowAction(frame, action) { if (action === "close") this.close(frame.windowInstanceId); else if (action === "minimize") this.minimize(frame); else if (action === "maximize") frame.maximize(); }
-  getSavedGeometry(windowId) { const g = this.geometry.get(windowId); return g ? { ...g } : null; }
-  viewport() { return { width: this.layer.clientWidth || globalThis.innerWidth || 0, height: this.layer.clientHeight || Math.max(0, (globalThis.innerHeight || 0) - 28) }; }
-  clampGeometry({ x = 0, y = 0, width = 420, height = 260 }) {
-    const { width: viewportWidth, height: viewportHeight } = this.viewport();
-    const minWidth = 220;
-    const minHeight = 140;
-    const safeWidth = Math.max(minWidth, Number(width) || minWidth);
-    const safeHeight = Math.max(minHeight, Number(height) || minHeight);
-    return { x: Math.round(Number(x) || 0), y: Math.round(Number(y) || 0), width: Math.round(safeWidth), height: Math.round(safeHeight) };
-  }
-  clampTitlebarGeometry({ x = 0, y = 0, width = 420, height = 260 }) {
-    const geometry = this.clampGeometry({ x, y, width, height });
-    const { width: viewportWidth, height: viewportHeight } = this.viewport();
-    const visibleTitlebar = 48;
-    return {
+
+  /**
+   * Open a window instance for a given definition. If `singleInstance` is set
+   * (default true) and a window with the same `windowId` is already open, it
+   * is focused and restored instead of creating a duplicate.
+   */
+  open(definition) {
+    const { windowId: explicitWindowId, id, title, icon, resizable = true, singleInstance = true, fullscreen = false } = definition;
+    const windowId = explicitWindowId || id;
+    if (singleInstance) {
+      const existing = this.getByWindowId(windowId);
+      if (existing) {
+        if (existing.minimized) this.restore(existing.instanceId);
+        this.focus(existing.instanceId);
+        return existing;
+      }
+    }
+
+    const viewport = this.getViewport();
+    const saved = this.getSavedGeometry(windowId);
+    const geometry = fullscreen
+      // Fullscreen only changes runtime geometry/z-index policy (plan §7.4);
+      // it is still a perfectly normal window state otherwise.
+      ? this._clampSize({
+          x: 0,
+          y: 0,
+          width: Number.isFinite(viewport.width) ? viewport.width : (definition.width ?? 480),
+          height: Number.isFinite(viewport.height) ? viewport.height : (definition.height ?? 360),
+        })
+      : this._clampSize({
+          x: saved?.x ?? definition.x ?? 60,
+          y: saved?.y ?? definition.y ?? 40,
+          width: saved?.width ?? definition.width ?? 480,
+          height: saved?.height ?? definition.height ?? 360,
+        });
+    const clampedPosition = fullscreen ? { x: 0, y: 0 } : this._clampPosition(geometry.x, geometry.y, geometry.width);
+
+    const instanceId = `win-${++_instanceIdCounter}`;
+    const state = {
+      instanceId,
+      windowId,
+      title: title || "Untitled",
+      icon: icon || null,
+      resizable: fullscreen ? false : resizable,
+      fullscreen: Boolean(fullscreen),
+      minimized: false,
+      maximized: false,
+      normalBounds: null,
+      zIndex: 0,
       ...geometry,
-      x: Math.min(viewportWidth - visibleTitlebar, Math.max(-(geometry.width - visibleTitlebar), geometry.x)),
-      y: Math.min(viewportHeight - 20, Math.max(0, geometry.y)),
+      ...clampedPosition,
+    };
+    this.windows.set(instanceId, state);
+    this.focus(instanceId);
+    this.eventBus.emit("window:opened", { instanceId, windowId, title: state.title });
+    return state;
+  }
+
+  getByWindowId(windowId) {
+    for (const state of this.windows.values()) {
+      if (state.windowId === windowId) return state;
+    }
+    return null;
+  }
+
+  get(instanceId) {
+    return this.windows.get(instanceId) || null;
+  }
+
+  close(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    this.persistGeometry(instanceId);
+    this.windows.delete(instanceId);
+    this.eventBus.emit("window:closed", { instanceId, windowId: state.windowId });
+  }
+
+  focus(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    this.zCounter += 1;
+    state.zIndex = this.zCounter;
+    this.eventBus.emit("window:focused", { instanceId, windowId: state.windowId });
+  }
+
+  /** instanceId of the currently topmost (focused) window, if any. */
+  focusedInstanceId() {
+    let topId = null;
+    let topZ = -Infinity;
+    for (const state of this.windows.values()) {
+      if (!state.minimized && state.zIndex > topZ) {
+        topZ = state.zIndex;
+        topId = state.instanceId;
+      }
+    }
+    return topId;
+  }
+
+  moveTo(instanceId, x, y) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    const clamped = this._clampPosition(x, y, state.width);
+    state.x = clamped.x;
+    state.y = clamped.y;
+    this.eventBus.emit("window:moved", { instanceId, x: state.x, y: state.y });
+  }
+
+  resize(instanceId, width, height) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    const clamped = this._clampSize({ x: state.x, y: state.y, width, height });
+    state.width = clamped.width;
+    state.height = clamped.height;
+    this.eventBus.emit("window:resized", { instanceId, width: state.width, height: state.height });
+  }
+
+  minimize(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    state.minimized = true;
+    this.eventBus.emit("window:minimized", { instanceId });
+  }
+
+  restore(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    state.minimized = false;
+    this.eventBus.emit("window:restored", { instanceId });
+  }
+
+  toggleMinimize(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    if (state.minimized) this.restore(instanceId);
+    else this.minimize(instanceId);
+  }
+
+  maximize(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state || state.maximized) return;
+    state.normalBounds = { x: state.x, y: state.y, width: state.width, height: state.height };
+    state.maximized = true;
+    this.eventBus.emit("window:maximized", { instanceId });
+  }
+
+  unmaximize(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state || !state.maximized || !state.normalBounds) return;
+    Object.assign(state, state.normalBounds);
+    const clamped = this._clampPosition(state.x, state.y, state.width);
+    state.x = clamped.x;
+    state.y = clamped.y;
+    state.maximized = false;
+    state.normalBounds = null;
+    this.eventBus.emit("window:unmaximized", { instanceId });
+  }
+
+  toggleMaximize(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    if (state.maximized) this.unmaximize(instanceId);
+    else this.maximize(instanceId);
+  }
+
+  /** Persist an open instance's current geometry, keyed by its windowId. */
+  persistGeometry(instanceId) {
+    const state = this.windows.get(instanceId);
+    if (!state) return;
+    const geometry = { x: state.x, y: state.y, width: state.width, height: state.height };
+    this.geometry.set(state.windowId, geometry);
+    try {
+      this.storage.setItem(GEOMETRY_STORAGE_KEY, JSON.stringify(Object.fromEntries(this.geometry)));
+    } catch {
+      // Layout persistence is best-effort; never let it break the session.
+    }
+    this.eventBus.emit("window:geometry-changed", { windowId: state.windowId, geometry });
+  }
+
+  _clampSize({ x, y, width, height }) {
+    return {
+      x,
+      y,
+      width: Math.max(MIN_WIDTH, Math.round(Number(width) || MIN_WIDTH)),
+      height: Math.max(MIN_HEIGHT, Math.round(Number(height) || MIN_HEIGHT)),
     };
   }
-  saveGeometry(windowId, geometry) { this.geometry.set(windowId, { ...geometry }); try { localStorage.setItem("cultists-ng-window-geometry", JSON.stringify(Object.fromEntries(this.geometry))); } catch { /* layout persistence is best effort */ } this.eventBus.emit("window:geometry-changed", { windowId, geometry: { ...geometry } }); }
-  geometryFromElement(el) { const r = el.getBoundingClientRect(); return { x: Math.round(r.left), y: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height) }; }
-  snapshot() { return { geometry: Object.fromEntries(this.geometry), open: [...this.instances.values()].map((frame) => ({ windowId: frame.definition.id, windowInstanceId: frame.windowInstanceId, geometry: this.geometryFromElement(frame.el), minimized: frame.el.classList.contains("minimized"), maximized: frame.el.dataset.maximized === "true" })) }; }
+
+  /**
+   * Keep at least MIN_VISIBLE_MARGIN px of the titlebar reachable on every
+   * edge, and never let the taskbar fully cover it vertically (mirrors the
+   * old engine's Win95Window._clampLeft/_clampTop/_ensureVisible behaviour).
+   */
+  _clampPosition(x, y, width) {
+    const viewport = this.getViewport();
+    const minX = Number.isFinite(viewport.width) ? -(width - MIN_VISIBLE_MARGIN) : -Infinity;
+    const maxX = Number.isFinite(viewport.width) ? viewport.width - MIN_VISIBLE_MARGIN : Infinity;
+    const maxY = Number.isFinite(viewport.height) ? Math.max(0, viewport.height - TITLEBAR_HEIGHT) : Infinity;
+    return {
+      x: Math.round(Math.min(Math.max(x, minX), maxX)),
+      y: Math.round(Math.min(Math.max(y, 0), maxY)),
+    };
+  }
+
+  /** Every open window ordered bottom-to-top of the z-stack (used by the taskbar). */
+  list() {
+    return [...this.windows.values()].sort((a, b) => a.zIndex - b.zIndex);
+  }
+
+  /** Deep-cloned snapshot of every open window instance (plan §12.2 "窗口实例、几何、最大化/最小化、打开的定义 ID") - a pure save boundary, no DOM/live references. */
+  snapshotInstances() {
+    return [...this.windows.values()].map((state) => ({ ...state }));
+  }
+
+  /**
+   * Replaces every open window instance from a save snapshot. Bypasses
+   * `open()`'s definition-driven geometry defaults entirely, since each
+   * snapshot entry already carries its own fully-resolved state; only
+   * `SaveManager.restore()` should call this (plan §12.3 "恢复前停止当前
+   * Runner...替换队列与实例 snapshot 后再恢复 Runner").
+   */
+  restoreInstances(instances = []) {
+    if (!Array.isArray(instances)) throw new Error("Invalid window instance snapshot");
+    const next = new Map();
+    let maxSeq = _instanceIdCounter;
+    for (const raw of instances) {
+      if (!raw || typeof raw.instanceId !== "string" || typeof raw.windowId !== "string" || next.has(raw.instanceId)) {
+        throw new Error("Invalid or duplicate window instance");
+      }
+      next.set(raw.instanceId, { ...raw });
+      const match = raw.instanceId.match(/^win-(\d+)$/);
+      if (match) maxSeq = Math.max(maxSeq, Number(match[1]));
+    }
+    this.windows = next;
+    _instanceIdCounter = maxSeq;
+  }
 }
+
+WindowManager.MIN_WIDTH = MIN_WIDTH;
+WindowManager.MIN_HEIGHT = MIN_HEIGHT;
+
+export default WindowManager;

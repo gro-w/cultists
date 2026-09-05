@@ -1,0 +1,658 @@
+{
+  "id": "his",
+  "title": "HIS 医疗系统",
+  "icon": "🏥",
+  "width": 640,
+  "height": 460,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "patient": {"id": "patient", "type": "getVariable", "inputs": {"key": "his:selectedPatient"}},
+      "patientName": {"id": "patientName", "type": "getProperty", "inputs": {"value": {"nodeId": "patient", "port": "value"}, "key": "name"}},
+      "patientAge": {"id": "patientAge", "type": "getProperty", "inputs": {"value": {"nodeId": "patient", "port": "value"}, "key": "age"}},
+      "san": {"id": "san", "type": "getPublicVariable", "inputs": {"id": 1}},
+      "sanLow": {"id": "sanLow", "type": "arithmetic", "inputs": {"operator": "<", "left": {"nodeId": "san", "port": "value"}, "right": 50}},
+      "selectedDiagnosis": {"id": "selectedDiagnosis", "type": "getVariable", "inputs": {"key": "his:selectedDiagnosisRecord"}},
+      "diagnosisNormalName": {"id": "diagnosisNormalName", "type": "getProperty", "inputs": {"value": {"nodeId": "selectedDiagnosis", "port": "value"}, "key": "normalName"}},
+      "diagnosisLowSanName": {"id": "diagnosisLowSanName", "type": "getProperty", "inputs": {"value": {"nodeId": "selectedDiagnosis", "port": "value"}, "key": "lowSanName"}},
+      "diagnosisIcd10": {"id": "diagnosisIcd10", "type": "getProperty", "inputs": {"value": {"nodeId": "selectedDiagnosis", "port": "value"}, "key": "icd10"}},
+      "diagnosisDisplayName": {"id": "diagnosisDisplayName", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "sanLow", "port": "value"}, "whenTrue": {"nodeId": "diagnosisLowSanName", "port": "value"}, "whenFalse": {"nodeId": "diagnosisNormalName", "port": "value"}}},
+      "diagnosisLabelJoin": {"id": "diagnosisLabelJoin", "type": "arithmetic", "inputs": {"operator": "concat", "left": {"nodeId": "diagnosisIcd10", "port": "value"}, "right": " · "}},
+      "diagnosisLabel": {"id": "diagnosisLabel", "type": "arithmetic", "inputs": {"operator": "concat", "left": {"nodeId": "diagnosisLabelJoin", "port": "value"}, "right": {"nodeId": "diagnosisDisplayName", "port": "value"}}},
+      "diagnosisSelected": {"id": "diagnosisSelected", "type": "getVariable", "inputs": {"key": "his:diagnosisChoice"}},
+      "diagnosisLabelVisible": {"id": "diagnosisLabelVisible", "type": "arithmetic", "inputs": {"operator": "and", "left": {"nodeId": "patient", "port": "value"}, "right": {"nodeId": "diagnosisSelected", "port": "value"}}},
+      "existingCases": {"id": "existingCases", "type": "getVariable", "inputs": {"key": "his:existingCases"}},
+      "existingCaseCount": {"id": "existingCaseCount", "type": "getProperty", "inputs": {"value": {"nodeId": "existingCases", "port": "value"}, "key": "length"}},
+      "alreadySubmitted": {"id": "alreadySubmitted", "type": "arithmetic", "inputs": {"operator": ">", "left": {"nodeId": "existingCaseCount", "port": "value"}, "right": 0}},
+      "notAlreadySubmitted": {"id": "notAlreadySubmitted", "type": "arithmetic", "inputs": {"operator": "not", "left": {"nodeId": "alreadySubmitted", "port": "value"}, "right": null}},
+      "patientChosen": {"id": "patientChosen", "type": "arithmetic", "inputs": {"operator": "and", "left": {"nodeId": "notAlreadySubmitted", "port": "value"}, "right": {"nodeId": "patient", "port": "value"}}}
+    }
+  },
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "className": "his-layout",
+    "flow": "horizontal",
+    "gap": 6,
+    "padding": 6,
+    "children": [
+      {
+        "widgetId": "his-patient-panel",
+        "type": "container",
+        "className": "his-patient-list panel-inset",
+        "flow": "vertical",
+        "gap": 8,
+        "minSize": {
+          "width": 140
+        },
+        "children": [
+          {
+            "widgetId": "his-patient-panel-title",
+            "type": "label",
+            "text": "患者列表"
+          },
+          {
+            "widgetId": "his-patient-list",
+            "type": "list",
+            "items": {
+              "variable": "his:patients"
+            },
+            "itemLabelField": "name",
+            "itemClassName": "his-patient-btn",
+            "events": {
+              "onItemClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "getPatient", "port": "flowIn"}}},
+                  "getPatient": {"id": "getPatient", "type": "getRecord", "inputs": {"databaseId": "patients", "key": {"variable": "event:value"}, "resultVariable": "his:selectedPatient"}, "next": {"flowOut": {"nodeId": "findExistingCases", "port": "flowIn"}}},
+                  "findExistingCases": {"id": "findExistingCases", "type": "findRecords", "inputs": {"databaseId": "medicalCases", "query": {"patientId": {"variable": "event:value"}}, "resultVariable": "his:existingCases"}, "next": {"flowOut": {"nodeId": "clearDiagnosisCategory", "port": "flowIn"}}},
+                  "clearDiagnosisCategory": {"id": "clearDiagnosisCategory", "type": "setVariable", "inputs": {"key": "his:diagnosisCategoryChoice", "value": ""}, "next": {"flowOut": {"nodeId": "clearDiagnosisOptions", "port": "flowIn"}}},
+                  "clearDiagnosisOptions": {"id": "clearDiagnosisOptions", "type": "setVariable", "inputs": {"key": "his:diagnosisOptions", "value": []}, "next": {"flowOut": {"nodeId": "clearDiagnosis", "port": "flowIn"}}},
+                  "clearDiagnosis": {"id": "clearDiagnosis", "type": "setVariable", "inputs": {"key": "his:diagnosisChoice", "value": ""}, "next": {"flowOut": {"nodeId": "clearSelectedDiagnosisRecord", "port": "flowIn"}}},
+                  "clearSelectedDiagnosisRecord": {"id": "clearSelectedDiagnosisRecord", "type": "setVariable", "inputs": {"key": "his:selectedDiagnosisRecord", "value": null}, "next": {"flowOut": {"nodeId": "clearMedCategory1", "port": "flowIn"}}},
+                  "clearMedCategory1": {"id": "clearMedCategory1", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice1", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions1", "port": "flowIn"}}},
+                  "clearMedOptions1": {"id": "clearMedOptions1", "type": "setVariable", "inputs": {"key": "his:medOptions1", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice1", "port": "flowIn"}}},
+                  "clearMedChoice1": {"id": "clearMedChoice1", "type": "setVariable", "inputs": {"key": "his:medChoice1", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory2", "port": "flowIn"}}},
+                  "clearMedCategory2": {"id": "clearMedCategory2", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice2", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions2", "port": "flowIn"}}},
+                  "clearMedOptions2": {"id": "clearMedOptions2", "type": "setVariable", "inputs": {"key": "his:medOptions2", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice2", "port": "flowIn"}}},
+                  "clearMedChoice2": {"id": "clearMedChoice2", "type": "setVariable", "inputs": {"key": "his:medChoice2", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory3", "port": "flowIn"}}},
+                  "clearMedCategory3": {"id": "clearMedCategory3", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice3", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions3", "port": "flowIn"}}},
+                  "clearMedOptions3": {"id": "clearMedOptions3", "type": "setVariable", "inputs": {"key": "his:medOptions3", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice3", "port": "flowIn"}}},
+                  "clearMedChoice3": {"id": "clearMedChoice3", "type": "setVariable", "inputs": {"key": "his:medChoice3", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory4", "port": "flowIn"}}},
+                  "clearMedCategory4": {"id": "clearMedCategory4", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice4", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions4", "port": "flowIn"}}},
+                  "clearMedOptions4": {"id": "clearMedOptions4", "type": "setVariable", "inputs": {"key": "his:medOptions4", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice4", "port": "flowIn"}}},
+                  "clearMedChoice4": {"id": "clearMedChoice4", "type": "setVariable", "inputs": {"key": "his:medChoice4", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory5", "port": "flowIn"}}},
+                  "clearMedCategory5": {"id": "clearMedCategory5", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice5", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions5", "port": "flowIn"}}},
+                  "clearMedOptions5": {"id": "clearMedOptions5", "type": "setVariable", "inputs": {"key": "his:medOptions5", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice5", "port": "flowIn"}}},
+                  "clearMedChoice5": {"id": "clearMedChoice5", "type": "setVariable", "inputs": {"key": "his:medChoice5", "value": ""}, "next": {"flowOut": {"nodeId": "clearResult", "port": "flowIn"}}},
+                  "clearResult": {"id": "clearResult", "type": "setVariable", "inputs": {"key": "his:resultMessage", "value": ""}, "next": {"flowOut": {"nodeId": "markPatientSelected", "port": "flowIn"}}},
+                  "markPatientSelected": {"id": "markPatientSelected", "type": "markOnboardingMilestone", "inputs": {"id": "first_patient_selected"}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                  "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "his-main-panel",
+        "type": "container",
+        "className": "his-main",
+        "flow": "vertical",
+        "gap": 8,
+        "children": [
+          {
+            "widgetId": "his-patient-name",
+            "type": "label",
+            "text": {
+              "nodeId": "patientName",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "his-patient-age",
+            "type": "label",
+            "text": {
+              "nodeId": "patientAge",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "his-start-dialogue",
+            "type": "button",
+            "text": "开始问诊",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "openDialogue", "port": "flowIn"}}},
+                  "openDialogue": {"id": "openDialogue", "type": "openWindow", "inputs": {"windowId": "dialogue"}, "next": {"flowOut": {"nodeId": "runDialogue", "port": "flowIn"}}},
+                  "runDialogue": {"id": "runDialogue", "type": "runActivity", "inputs": {"activityId": {"nodeId": "activityIdProp", "port": "value"}, "queueId": "desktop-icons"}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                  "activityIdProp": {"id": "activityIdProp", "type": "getProperty", "inputs": {"value": {"variable": "his:selectedPatient"}, "key": "dialogueActivityId"}},
+                  "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "his-diagnosis-panel",
+            "type": "container",
+            "className": "his-diagnosis panel-inset",
+            "flow": "vertical",
+            "gap": 4,
+            "children": [
+              {
+                "widgetId": "his-diagnosis-label",
+                "type": "label",
+                "text": "诊断"
+              },
+              {
+                "widgetId": "his-diagnosis-category-select",
+                "type": "select",
+                "className": "his-diagnosis-category",
+                "options": {
+                  "variable": "his:diagnosisCategories"
+                },
+                "optionValueField": "id",
+                "optionLabelField": "name",
+                "placeholder": "选择 ICD 分类",
+                "value": {
+                  "variable": "his:diagnosisCategoryChoice"
+                },
+                "events": {
+                  "onChange": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setCategory", "port": "flowIn"}}},
+                      "setCategory": {"id": "setCategory", "type": "setVariable", "inputs": {"key": "his:diagnosisCategoryChoice", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "findDiagnoses", "port": "flowIn"}}},
+                      "findDiagnoses": {"id": "findDiagnoses", "type": "findRecords", "inputs": {"databaseId": "diagnoses", "query": {"categoryId": {"variable": "event:value"}}, "resultVariable": "his:diagnosisOptions"}, "next": {"flowOut": {"nodeId": "clearDiagnosis", "port": "flowIn"}}},
+                      "clearDiagnosis": {"id": "clearDiagnosis", "type": "setVariable", "inputs": {"key": "his:diagnosisChoice", "value": ""}, "next": {"flowOut": {"nodeId": "clearSelectedDiagnosisRecord", "port": "flowIn"}}},
+                      "clearSelectedDiagnosisRecord": {"id": "clearSelectedDiagnosisRecord", "type": "setVariable", "inputs": {"key": "his:selectedDiagnosisRecord", "value": null}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                      "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                    }
+                  }
+                }
+              },
+              {
+                "widgetId": "his-diagnosis-select",
+                "type": "select",
+                "className": "his-diagnosis-select",
+                "options": {
+                  "variable": "his:diagnosisOptions"
+                },
+                "optionValueField": "id",
+                "optionLabelField": "normalName",
+                "placeholder": "选择诊断",
+                "enabled": {
+                  "variable": "his:diagnosisCategoryChoice"
+                },
+                "value": {
+                  "variable": "his:diagnosisChoice"
+                },
+                "events": {
+                  "onChange": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setDiagnosis", "port": "flowIn"}}},
+                      "setDiagnosis": {"id": "setDiagnosis", "type": "setVariable", "inputs": {"key": "his:diagnosisChoice", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "getDiagnosisRecord", "port": "flowIn"}}},
+                      "getDiagnosisRecord": {"id": "getDiagnosisRecord", "type": "getRecord", "inputs": {"databaseId": "diagnoses", "key": {"variable": "event:value"}, "resultVariable": "his:selectedDiagnosisRecord"}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                      "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                    }
+                  }
+                }
+              },
+              {
+                "widgetId": "his-diagnosis-selected-label",
+                "type": "label",
+                "className": "his-diagnosis-selected-label",
+                "text": {
+                  "nodeId": "diagnosisLabel",
+                  "port": "value"
+                },
+                "visible": {
+                  "nodeId": "diagnosisLabelVisible",
+                  "port": "value"
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "his-prescription-panel",
+            "type": "container",
+            "className": "his-prescription panel-inset",
+            "flow": "vertical",
+            "gap": 4,
+            "children": [
+              {
+                "widgetId": "his-prescription-label",
+                "type": "label",
+                "text": "处方（最多 5 种药品，每行独立按分类筛选）"
+              },
+              {
+                "widgetId": "his-prescription-rows",
+                "type": "container",
+                "className": "his-prescription-rows",
+                "flow": "vertical",
+                "gap": 4,
+                "children": [
+                  {
+                    "widgetId": "his-prescription-row-1",
+                    "type": "container",
+                    "className": "his-prescription-row",
+                    "flow": "horizontal",
+                    "gap": 6,
+                    "children": [
+                      {
+                        "widgetId": "his-medicine-category-1",
+                        "type": "select",
+                        "className": "his-medicine-category",
+                        "options": {
+                          "variable": "his:medicineCategories"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品分类",
+                        "value": {
+                          "variable": "his:medCategoryChoice1"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedCategory1", "port": "flowIn"}}},
+                              "setMedCategory1": {"id": "setMedCategory1", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice1", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "findMedicines1", "port": "flowIn"}}},
+                              "findMedicines1": {"id": "findMedicines1", "type": "findRecords", "inputs": {"databaseId": "medicines", "query": {"categoryId": {"variable": "event:value"}}, "resultVariable": "his:medOptions1"}, "next": {"flowOut": {"nodeId": "clearMedChoice1", "port": "flowIn"}}},
+                              "clearMedChoice1": {"id": "clearMedChoice1", "type": "setVariable", "inputs": {"key": "his:medChoice1", "value": ""}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "widgetId": "his-medicine-select-1",
+                        "type": "select",
+                        "className": "his-medicine-select",
+                        "options": {
+                          "variable": "his:medOptions1"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品",
+                        "value": {
+                          "variable": "his:medChoice1"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedChoice1", "port": "flowIn"}}},
+                              "setMedChoice1": {"id": "setMedChoice1", "type": "setVariable", "inputs": {"key": "his:medChoice1", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "widgetId": "his-prescription-row-2",
+                    "type": "container",
+                    "className": "his-prescription-row",
+                    "flow": "horizontal",
+                    "gap": 6,
+                    "children": [
+                      {
+                        "widgetId": "his-medicine-category-2",
+                        "type": "select",
+                        "className": "his-medicine-category",
+                        "options": {
+                          "variable": "his:medicineCategories"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品分类",
+                        "value": {
+                          "variable": "his:medCategoryChoice2"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedCategory2", "port": "flowIn"}}},
+                              "setMedCategory2": {"id": "setMedCategory2", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice2", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "findMedicines2", "port": "flowIn"}}},
+                              "findMedicines2": {"id": "findMedicines2", "type": "findRecords", "inputs": {"databaseId": "medicines", "query": {"categoryId": {"variable": "event:value"}}, "resultVariable": "his:medOptions2"}, "next": {"flowOut": {"nodeId": "clearMedChoice2", "port": "flowIn"}}},
+                              "clearMedChoice2": {"id": "clearMedChoice2", "type": "setVariable", "inputs": {"key": "his:medChoice2", "value": ""}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "widgetId": "his-medicine-select-2",
+                        "type": "select",
+                        "className": "his-medicine-select",
+                        "options": {
+                          "variable": "his:medOptions2"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品",
+                        "value": {
+                          "variable": "his:medChoice2"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedChoice2", "port": "flowIn"}}},
+                              "setMedChoice2": {"id": "setMedChoice2", "type": "setVariable", "inputs": {"key": "his:medChoice2", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "widgetId": "his-prescription-row-3",
+                    "type": "container",
+                    "className": "his-prescription-row",
+                    "flow": "horizontal",
+                    "gap": 6,
+                    "children": [
+                      {
+                        "widgetId": "his-medicine-category-3",
+                        "type": "select",
+                        "className": "his-medicine-category",
+                        "options": {
+                          "variable": "his:medicineCategories"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品分类",
+                        "value": {
+                          "variable": "his:medCategoryChoice3"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedCategory3", "port": "flowIn"}}},
+                              "setMedCategory3": {"id": "setMedCategory3", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice3", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "findMedicines3", "port": "flowIn"}}},
+                              "findMedicines3": {"id": "findMedicines3", "type": "findRecords", "inputs": {"databaseId": "medicines", "query": {"categoryId": {"variable": "event:value"}}, "resultVariable": "his:medOptions3"}, "next": {"flowOut": {"nodeId": "clearMedChoice3", "port": "flowIn"}}},
+                              "clearMedChoice3": {"id": "clearMedChoice3", "type": "setVariable", "inputs": {"key": "his:medChoice3", "value": ""}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "widgetId": "his-medicine-select-3",
+                        "type": "select",
+                        "className": "his-medicine-select",
+                        "options": {
+                          "variable": "his:medOptions3"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品",
+                        "value": {
+                          "variable": "his:medChoice3"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedChoice3", "port": "flowIn"}}},
+                              "setMedChoice3": {"id": "setMedChoice3", "type": "setVariable", "inputs": {"key": "his:medChoice3", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "widgetId": "his-prescription-row-4",
+                    "type": "container",
+                    "className": "his-prescription-row",
+                    "flow": "horizontal",
+                    "gap": 6,
+                    "children": [
+                      {
+                        "widgetId": "his-medicine-category-4",
+                        "type": "select",
+                        "className": "his-medicine-category",
+                        "options": {
+                          "variable": "his:medicineCategories"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品分类",
+                        "value": {
+                          "variable": "his:medCategoryChoice4"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedCategory4", "port": "flowIn"}}},
+                              "setMedCategory4": {"id": "setMedCategory4", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice4", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "findMedicines4", "port": "flowIn"}}},
+                              "findMedicines4": {"id": "findMedicines4", "type": "findRecords", "inputs": {"databaseId": "medicines", "query": {"categoryId": {"variable": "event:value"}}, "resultVariable": "his:medOptions4"}, "next": {"flowOut": {"nodeId": "clearMedChoice4", "port": "flowIn"}}},
+                              "clearMedChoice4": {"id": "clearMedChoice4", "type": "setVariable", "inputs": {"key": "his:medChoice4", "value": ""}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "widgetId": "his-medicine-select-4",
+                        "type": "select",
+                        "className": "his-medicine-select",
+                        "options": {
+                          "variable": "his:medOptions4"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品",
+                        "value": {
+                          "variable": "his:medChoice4"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedChoice4", "port": "flowIn"}}},
+                              "setMedChoice4": {"id": "setMedChoice4", "type": "setVariable", "inputs": {"key": "his:medChoice4", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "widgetId": "his-prescription-row-5",
+                    "type": "container",
+                    "className": "his-prescription-row",
+                    "flow": "horizontal",
+                    "gap": 6,
+                    "children": [
+                      {
+                        "widgetId": "his-medicine-category-5",
+                        "type": "select",
+                        "className": "his-medicine-category",
+                        "options": {
+                          "variable": "his:medicineCategories"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品分类",
+                        "value": {
+                          "variable": "his:medCategoryChoice5"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedCategory5", "port": "flowIn"}}},
+                              "setMedCategory5": {"id": "setMedCategory5", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice5", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "findMedicines5", "port": "flowIn"}}},
+                              "findMedicines5": {"id": "findMedicines5", "type": "findRecords", "inputs": {"databaseId": "medicines", "query": {"categoryId": {"variable": "event:value"}}, "resultVariable": "his:medOptions5"}, "next": {"flowOut": {"nodeId": "clearMedChoice5", "port": "flowIn"}}},
+                              "clearMedChoice5": {"id": "clearMedChoice5", "type": "setVariable", "inputs": {"key": "his:medChoice5", "value": ""}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "widgetId": "his-medicine-select-5",
+                        "type": "select",
+                        "className": "his-medicine-select",
+                        "options": {
+                          "variable": "his:medOptions5"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品",
+                        "value": {
+                          "variable": "his:medChoice5"
+                        },
+                        "events": {
+                          "onChange": {
+                            "startNodeId": "start",
+                            "nodes": {
+                              "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "setMedChoice5", "port": "flowIn"}}},
+                              "setMedChoice5": {"id": "setMedChoice5", "type": "setVariable", "inputs": {"key": "his:medChoice5", "value": {"variable": "event:value"}}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                              "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "widgetId": "his-submit",
+                "type": "button",
+                "text": "提交诊断",
+                "enabled": {
+                  "nodeId": "patientChosen",
+                  "port": "value"
+                },
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "checkDiagnosis", "port": "flowIn"}}},
+                      "diagnosisChoiceVal": {"id": "diagnosisChoiceVal", "type": "getVariable", "inputs": {"key": "his:diagnosisChoice"}},
+                      "isDiagnosisEmpty": {"id": "isDiagnosisEmpty", "type": "arithmetic", "inputs": {"operator": "=", "left": {"nodeId": "diagnosisChoiceVal", "port": "value"}, "right": ""}},
+                      "hasDiagnosis": {"id": "hasDiagnosis", "type": "arithmetic", "inputs": {"operator": "not", "left": {"nodeId": "isDiagnosisEmpty", "port": "value"}}},
+                      "checkDiagnosis": {"id": "checkDiagnosis", "type": "branch", "inputs": {"condition": {"nodeId": "hasDiagnosis", "port": "value"}}, "next": {"true": {"nodeId": "getMedRecord1", "port": "flowIn"}, "false": {"nodeId": "setNoDiagnosisMessage", "port": "flowIn"}}},
+                      "setNoDiagnosisMessage": {"id": "setNoDiagnosisMessage", "type": "setVariable", "inputs": {"key": "his:resultMessage", "value": "请先选择诊断。"}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                      "getMedRecord1": {"id": "getMedRecord1", "type": "getRecord", "inputs": {"databaseId": "medicines", "key": {"variable": "his:medChoice1"}, "resultVariable": "his:medRecord1"}, "next": {"flowOut": {"nodeId": "getMedRecord2", "port": "flowIn"}}},
+                      "getMedRecord2": {"id": "getMedRecord2", "type": "getRecord", "inputs": {"databaseId": "medicines", "key": {"variable": "his:medChoice2"}, "resultVariable": "his:medRecord2"}, "next": {"flowOut": {"nodeId": "getMedRecord3", "port": "flowIn"}}},
+                      "getMedRecord3": {"id": "getMedRecord3", "type": "getRecord", "inputs": {"databaseId": "medicines", "key": {"variable": "his:medChoice3"}, "resultVariable": "his:medRecord3"}, "next": {"flowOut": {"nodeId": "getMedRecord4", "port": "flowIn"}}},
+                      "getMedRecord4": {"id": "getMedRecord4", "type": "getRecord", "inputs": {"databaseId": "medicines", "key": {"variable": "his:medChoice4"}, "resultVariable": "his:medRecord4"}, "next": {"flowOut": {"nodeId": "getMedRecord5", "port": "flowIn"}}},
+                      "getMedRecord5": {"id": "getMedRecord5", "type": "getRecord", "inputs": {"databaseId": "medicines", "key": {"variable": "his:medChoice5"}, "resultVariable": "his:medRecord5"}, "next": {"flowOut": {"nodeId": "create", "port": "flowIn"}}},
+                      "patientVar": {"id": "patientVar", "type": "getVariable", "inputs": {"key": "his:selectedPatient"}},
+                      "patientId": {"id": "patientId", "type": "getProperty", "inputs": {"value": {"nodeId": "patientVar", "port": "value"}, "key": "id"}},
+                      "correctDiagnosisId": {"id": "correctDiagnosisId", "type": "getProperty", "inputs": {"value": {"nodeId": "patientVar", "port": "value"}, "key": "correctDiagnosisId"}},
+                      "isCorrect": {"id": "isCorrect", "type": "arithmetic", "inputs": {"operator": "=", "left": {"nodeId": "diagnosisChoiceVal", "port": "value"}, "right": {"nodeId": "correctDiagnosisId", "port": "value"}}},
+                      "bonus": {"id": "bonus", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "isCorrect", "port": "value"}, "whenTrue": 200, "whenFalse": 0}},
+                      "medRecordVar1": {"id": "medRecordVar1", "type": "getVariable", "inputs": {"key": "his:medRecord1"}},
+                      "isMedEmpty1": {"id": "isMedEmpty1", "type": "arithmetic", "inputs": {"operator": "=", "left": {"nodeId": "medRecordVar1", "port": "value"}, "right": null}},
+                      "medCommissionRaw1": {"id": "medCommissionRaw1", "type": "getProperty", "inputs": {"value": {"nodeId": "medRecordVar1", "port": "value"}, "key": "commission"}},
+                      "medCommission1": {"id": "medCommission1", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "isMedEmpty1", "port": "value"}, "whenTrue": 0, "whenFalse": {"nodeId": "medCommissionRaw1", "port": "value"}}},
+                      "commissionSum1": {"id": "commissionSum1", "type": "arithmetic", "inputs": {"operator": "+", "left": {"nodeId": "medCommission1", "port": "value"}, "right": 0}},
+                      "medRecordVar2": {"id": "medRecordVar2", "type": "getVariable", "inputs": {"key": "his:medRecord2"}},
+                      "isMedEmpty2": {"id": "isMedEmpty2", "type": "arithmetic", "inputs": {"operator": "=", "left": {"nodeId": "medRecordVar2", "port": "value"}, "right": null}},
+                      "medCommissionRaw2": {"id": "medCommissionRaw2", "type": "getProperty", "inputs": {"value": {"nodeId": "medRecordVar2", "port": "value"}, "key": "commission"}},
+                      "medCommission2": {"id": "medCommission2", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "isMedEmpty2", "port": "value"}, "whenTrue": 0, "whenFalse": {"nodeId": "medCommissionRaw2", "port": "value"}}},
+                      "commissionSum2": {"id": "commissionSum2", "type": "arithmetic", "inputs": {"operator": "+", "left": {"nodeId": "commissionSum1", "port": "value"}, "right": {"nodeId": "medCommission2", "port": "value"}}},
+                      "medRecordVar3": {"id": "medRecordVar3", "type": "getVariable", "inputs": {"key": "his:medRecord3"}},
+                      "isMedEmpty3": {"id": "isMedEmpty3", "type": "arithmetic", "inputs": {"operator": "=", "left": {"nodeId": "medRecordVar3", "port": "value"}, "right": null}},
+                      "medCommissionRaw3": {"id": "medCommissionRaw3", "type": "getProperty", "inputs": {"value": {"nodeId": "medRecordVar3", "port": "value"}, "key": "commission"}},
+                      "medCommission3": {"id": "medCommission3", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "isMedEmpty3", "port": "value"}, "whenTrue": 0, "whenFalse": {"nodeId": "medCommissionRaw3", "port": "value"}}},
+                      "commissionSum3": {"id": "commissionSum3", "type": "arithmetic", "inputs": {"operator": "+", "left": {"nodeId": "commissionSum2", "port": "value"}, "right": {"nodeId": "medCommission3", "port": "value"}}},
+                      "medRecordVar4": {"id": "medRecordVar4", "type": "getVariable", "inputs": {"key": "his:medRecord4"}},
+                      "isMedEmpty4": {"id": "isMedEmpty4", "type": "arithmetic", "inputs": {"operator": "=", "left": {"nodeId": "medRecordVar4", "port": "value"}, "right": null}},
+                      "medCommissionRaw4": {"id": "medCommissionRaw4", "type": "getProperty", "inputs": {"value": {"nodeId": "medRecordVar4", "port": "value"}, "key": "commission"}},
+                      "medCommission4": {"id": "medCommission4", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "isMedEmpty4", "port": "value"}, "whenTrue": 0, "whenFalse": {"nodeId": "medCommissionRaw4", "port": "value"}}},
+                      "commissionSum4": {"id": "commissionSum4", "type": "arithmetic", "inputs": {"operator": "+", "left": {"nodeId": "commissionSum3", "port": "value"}, "right": {"nodeId": "medCommission4", "port": "value"}}},
+                      "medRecordVar5": {"id": "medRecordVar5", "type": "getVariable", "inputs": {"key": "his:medRecord5"}},
+                      "isMedEmpty5": {"id": "isMedEmpty5", "type": "arithmetic", "inputs": {"operator": "=", "left": {"nodeId": "medRecordVar5", "port": "value"}, "right": null}},
+                      "medCommissionRaw5": {"id": "medCommissionRaw5", "type": "getProperty", "inputs": {"value": {"nodeId": "medRecordVar5", "port": "value"}, "key": "commission"}},
+                      "medCommission5": {"id": "medCommission5", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "isMedEmpty5", "port": "value"}, "whenTrue": 0, "whenFalse": {"nodeId": "medCommissionRaw5", "port": "value"}}},
+                      "commissionSum5": {"id": "commissionSum5", "type": "arithmetic", "inputs": {"operator": "+", "left": {"nodeId": "commissionSum4", "port": "value"}, "right": {"nodeId": "medCommission5", "port": "value"}}},
+                      "totalDelta": {"id": "totalDelta", "type": "arithmetic", "inputs": {"operator": "+", "left": {"nodeId": "bonus", "port": "value"}, "right": {"nodeId": "commissionSum5", "port": "value"}}},
+                      "create": {"id": "create", "type": "createRecord", "inputs": {"databaseId": "medicalCases", "data": {"patientId": {"nodeId": "patientId", "port": "value"}, "diagnosisId": {"nodeId": "diagnosisChoiceVal", "port": "value"}, "prescribedMedicineIds": [{"variable": "his:medChoice1"}, {"variable": "his:medChoice2"}, {"variable": "his:medChoice3"}, {"variable": "his:medChoice4"}, {"variable": "his:medChoice5"}], "correct": {"nodeId": "isCorrect", "port": "value"}, "status": "submitted", "bonus": {"nodeId": "bonus", "port": "value"}, "commission": {"nodeId": "commissionSum5", "port": "value"}}, "resultVariable": "his:lastCase"}, "next": {"flowOut": {"nodeId": "applyEffect", "port": "flowIn"}}},
+                      "applyEffect": {"id": "applyEffect", "type": "applyPublicVariableEffect", "inputs": {"id": 2, "delta": {"nodeId": "totalDelta", "port": "value"}}, "next": {"flowOut": {"nodeId": "refreshExisting", "port": "flowIn"}}},
+                      "refreshExisting": {"id": "refreshExisting", "type": "findRecords", "inputs": {"databaseId": "medicalCases", "query": {"patientId": {"nodeId": "patientId", "port": "value"}}, "resultVariable": "his:existingCases"}, "next": {"flowOut": {"nodeId": "setMessage", "port": "flowIn"}}},
+                      "income": {"id": "income", "type": "getPublicVariable", "inputs": {"id": 2}},
+                      "diagnosisPart": {"id": "diagnosisPart", "type": "conditionalValue", "inputs": {"condition": {"nodeId": "isCorrect", "port": "value"}, "whenTrue": "正确，奖金 +200", "whenFalse": "错误，无诊断奖金"}},
+                      "msg1": {"id": "msg1", "type": "arithmetic", "inputs": {"operator": "concat", "left": "诊断", "right": {"nodeId": "diagnosisPart", "port": "value"}}},
+                      "msg2": {"id": "msg2", "type": "arithmetic", "inputs": {"operator": "concat", "left": {"nodeId": "msg1", "port": "value"}, "right": "。药品提成 +"}},
+                      "msg3": {"id": "msg3", "type": "arithmetic", "inputs": {"operator": "concat", "left": {"nodeId": "msg2", "port": "value"}, "right": {"nodeId": "commissionSum5", "port": "value"}}},
+                      "msg4": {"id": "msg4", "type": "arithmetic", "inputs": {"operator": "concat", "left": {"nodeId": "msg3", "port": "value"}, "right": " 元；当前收入："}},
+                      "msg5": {"id": "msg5", "type": "arithmetic", "inputs": {"operator": "concat", "left": {"nodeId": "msg4", "port": "value"}, "right": {"nodeId": "income", "port": "value"}}},
+                      "finalMessage": {"id": "finalMessage", "type": "arithmetic", "inputs": {"operator": "concat", "left": {"nodeId": "msg5", "port": "value"}, "right": " 元。"}},
+                      "setMessage": {"id": "setMessage", "type": "setVariable", "inputs": {"key": "his:resultMessage", "value": {"nodeId": "finalMessage", "port": "value"}}, "next": {"flowOut": {"nodeId": "markSubmitted", "port": "flowIn"}}},
+                      "markSubmitted": {"id": "markSubmitted", "type": "markOnboardingMilestone", "inputs": {"id": "first_diagnosis_submitted"}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+                      "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+                    }
+                  }
+                }
+              },
+              {
+                "widgetId": "his-result",
+                "type": "label",
+                "className": "his-result",
+                "text": {
+                  "variable": "his:resultMessage"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "events": {
+    "onCreate": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {"id": "start", "type": "flowStart", "inputs": {}, "next": {"flowOut": {"nodeId": "findPatients", "port": "flowIn"}}},
+        "findPatients": {"id": "findPatients", "type": "findRecords", "inputs": {"databaseId": "patients", "query": {}, "resultVariable": "his:patients"}, "next": {"flowOut": {"nodeId": "findDiagnosisCategories", "port": "flowIn"}}},
+        "findDiagnosisCategories": {"id": "findDiagnosisCategories", "type": "findRecords", "inputs": {"databaseId": "diagnosisCategories", "query": {}, "resultVariable": "his:diagnosisCategories"}, "next": {"flowOut": {"nodeId": "findMedicineCategories", "port": "flowIn"}}},
+        "findMedicineCategories": {"id": "findMedicineCategories", "type": "findRecords", "inputs": {"databaseId": "medicineCategories", "query": {}, "resultVariable": "his:medicineCategories"}, "next": {"flowOut": {"nodeId": "clearSelectedPatient", "port": "flowIn"}}},
+        "clearSelectedPatient": {"id": "clearSelectedPatient", "type": "setVariable", "inputs": {"key": "his:selectedPatient", "value": null}, "next": {"flowOut": {"nodeId": "clearExistingCases", "port": "flowIn"}}},
+        "clearExistingCases": {"id": "clearExistingCases", "type": "setVariable", "inputs": {"key": "his:existingCases", "value": []}, "next": {"flowOut": {"nodeId": "clearDiagnosisCategory", "port": "flowIn"}}},
+        "clearDiagnosisCategory": {"id": "clearDiagnosisCategory", "type": "setVariable", "inputs": {"key": "his:diagnosisCategoryChoice", "value": ""}, "next": {"flowOut": {"nodeId": "clearDiagnosisOptions", "port": "flowIn"}}},
+        "clearDiagnosisOptions": {"id": "clearDiagnosisOptions", "type": "setVariable", "inputs": {"key": "his:diagnosisOptions", "value": []}, "next": {"flowOut": {"nodeId": "clearDiagnosis", "port": "flowIn"}}},
+        "clearDiagnosis": {"id": "clearDiagnosis", "type": "setVariable", "inputs": {"key": "his:diagnosisChoice", "value": ""}, "next": {"flowOut": {"nodeId": "clearSelectedDiagnosisRecord", "port": "flowIn"}}},
+        "clearSelectedDiagnosisRecord": {"id": "clearSelectedDiagnosisRecord", "type": "setVariable", "inputs": {"key": "his:selectedDiagnosisRecord", "value": null}, "next": {"flowOut": {"nodeId": "clearMedCategory1", "port": "flowIn"}}},
+        "clearMedCategory1": {"id": "clearMedCategory1", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice1", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions1", "port": "flowIn"}}},
+        "clearMedOptions1": {"id": "clearMedOptions1", "type": "setVariable", "inputs": {"key": "his:medOptions1", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice1", "port": "flowIn"}}},
+        "clearMedChoice1": {"id": "clearMedChoice1", "type": "setVariable", "inputs": {"key": "his:medChoice1", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory2", "port": "flowIn"}}},
+        "clearMedCategory2": {"id": "clearMedCategory2", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice2", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions2", "port": "flowIn"}}},
+        "clearMedOptions2": {"id": "clearMedOptions2", "type": "setVariable", "inputs": {"key": "his:medOptions2", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice2", "port": "flowIn"}}},
+        "clearMedChoice2": {"id": "clearMedChoice2", "type": "setVariable", "inputs": {"key": "his:medChoice2", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory3", "port": "flowIn"}}},
+        "clearMedCategory3": {"id": "clearMedCategory3", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice3", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions3", "port": "flowIn"}}},
+        "clearMedOptions3": {"id": "clearMedOptions3", "type": "setVariable", "inputs": {"key": "his:medOptions3", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice3", "port": "flowIn"}}},
+        "clearMedChoice3": {"id": "clearMedChoice3", "type": "setVariable", "inputs": {"key": "his:medChoice3", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory4", "port": "flowIn"}}},
+        "clearMedCategory4": {"id": "clearMedCategory4", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice4", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions4", "port": "flowIn"}}},
+        "clearMedOptions4": {"id": "clearMedOptions4", "type": "setVariable", "inputs": {"key": "his:medOptions4", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice4", "port": "flowIn"}}},
+        "clearMedChoice4": {"id": "clearMedChoice4", "type": "setVariable", "inputs": {"key": "his:medChoice4", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedCategory5", "port": "flowIn"}}},
+        "clearMedCategory5": {"id": "clearMedCategory5", "type": "setVariable", "inputs": {"key": "his:medCategoryChoice5", "value": ""}, "next": {"flowOut": {"nodeId": "clearMedOptions5", "port": "flowIn"}}},
+        "clearMedOptions5": {"id": "clearMedOptions5", "type": "setVariable", "inputs": {"key": "his:medOptions5", "value": []}, "next": {"flowOut": {"nodeId": "clearMedChoice5", "port": "flowIn"}}},
+        "clearMedChoice5": {"id": "clearMedChoice5", "type": "setVariable", "inputs": {"key": "his:medChoice5", "value": ""}, "next": {"flowOut": {"nodeId": "clearResult", "port": "flowIn"}}},
+        "clearResult": {"id": "clearResult", "type": "setVariable", "inputs": {"key": "his:resultMessage", "value": ""}, "next": {"flowOut": {"nodeId": "markHisOpened", "port": "flowIn"}}},
+        "markHisOpened": {"id": "markHisOpened", "type": "markOnboardingMilestone", "inputs": {"id": "his_opened"}, "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}}},
+        "end": {"id": "end", "type": "activityEnd", "inputs": {}}
+      }
+    },
+    "onDestroy": null
+  }
+}

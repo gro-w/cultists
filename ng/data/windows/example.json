@@ -1,0 +1,12 @@
+{
+  "id": "example",
+  "title": "示例窗口",
+  "icon": "🗔",
+  "x": 80,
+  "y": 60,
+  "width": 420,
+  "height": 260,
+  "resizable": true,
+  "singleInstance": true,
+  "body": "<div class=\"ng-panel\"><h1>NG 窗口内核</h1><p>这是 Phase 1 的最小自定义窗口示例：可拖动、可调整大小、可最小化/最大化/关闭。</p></div>"
+}

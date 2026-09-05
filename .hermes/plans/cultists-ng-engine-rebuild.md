@@ -254,6 +254,8 @@ create -> mount -> focus/blur -> minimize/restore/maximize -> close -> destroy
 
 生命周期 Activity 必须统一经过 `ActivityExecutionService`，不能由窗口自己创建另一套 Runner。销毁路径必须幂等，标题栏关闭、系统菜单关闭和程序化关闭只能执行一次 `onDestroy`。
 
+实现现状：`onCreate`/`onDestroy` 在 `window-events` 队列执行（`engine.js` 的 `runWindowLifecycleEvent`）；组件的 `onClick`/`onChange`/`onFocus`/`onBlur` 在独立的 `widget-events` 队列执行（`runWidgetEvent`，通过 widget 树按 `widgetId` 查找），两条队列分开是为了调试器里不把窗口生命周期和高频组件交互事件混在一起。触发值（如 onChange 的新值）通过 `variableStore` 的约定变量名 `event:value` 传给蓝图，复用既有 `{variable}` 取值方式，未引入新节点类型。`onSubmit` 因渲染器尚无表单包装概念，暂不实现。
+
 ### 4.3 拖动与大小调节
 
 - 标题栏拖动使用 Pointer Events
@@ -595,6 +597,20 @@ Activity 必须区分以下对象：
 - 动态列表保留当前值，增加/删除有边界限制
 - 所有组件事件都创建 Activity，通过统一执行服务运行
 
+> 实现状态（follow-up "组件可以拖动放置到任何位置，而不是只能拖动排序"）：预
+> 览画布上的拖放操作总是把被拖组件自由定位到鼠标释放点，若目标容器当前不是
+> `flow:"stack"` 会先自动切换为 `stack`（仅在编辑器里发生一次拖放手势时触
+> 发，运行时/未编辑过的窗口定义不会自行改变声明的 flex/grid flow）。
+
+> 实现状态（follow-up "窗口组件的属性(如xy、disabled等)可以由蓝图指定"）：
+> `ng/core/WidgetLayoutRenderer.js` 的 `applyStackPosition`（`stack` 容器子
+> 组件的 `x`/`y`）现与 `visible`/`enabled`/`text`/`value`/`src`/`alt` 一样经
+> 由共享的 `prop()`/`resolvePropertyValue` 解析，可写成字面量或
+> `{variable}`/`{nodeId,port}` 绑定值；`enabled` 除了在外层元素上设置
+> `aria-disabled`，现在还会把真正的 DOM `disabled` 应用到实际可交互控件
+> （button 本身、或 textInput/textarea/select/checkbox 内部真正的
+> `<input>`/`<textarea>`/`<select>`），不再只是外层容器上的装饰属性。
+
 ### 7.4 全屏下班窗口
 
 下班模式不需要专用的 `OffDutyMode` 运行时代码，也不需要独立覆盖层实现。它只是后续通过自定义窗口编辑器创建的普通窗口定义，并设置 `fullscreen: true`：
@@ -603,8 +619,8 @@ Activity 必须区分以下对象：
 - `fullscreen: true` 只改变窗口运行时的几何和层级策略，由通用 `WindowManager` 处理
 - 全屏窗口显示在桌面、普通窗口和任务栏之上，但仍然是一个普通 `windowId`/`windowInstanceId`
 - 关闭、保存、恢复、多窗口上下文和 `onCreate`/`onDestroy` 与其他窗口完全相同
-- 下班图标不调用专用下班函数；它绑定一个内置 blueprint，由 blueprint 打开下班窗口并显式执行时间推进节点
-- 打开窗口本身不推进时间；是否推进时间完全由图标 blueprint 的节点决定
+- 下班图标不调用专用下班函数；它绑定一个只负责 `openWindow` 的内置 blueprint
+- 时间推进节点属于下班窗口定义自身的 `events.onCreate` blueprint，随窗口创建时通过 `ActivityExecutionService` 执行一次；打开窗口这个动作本身（`WindowManager.open`/桌面图标 blueprint 的 `openWindow` 节点）永远不推进时间
 - 存档只保存普通窗口实例的 `windowId`、fullscreen 定义版本、打开状态和几何快照
 
 示例行为流：
@@ -613,8 +629,11 @@ Activity 必须区分以下对象：
 桌面双击“下班”图标
   -> 创建图标绑定的内置 Activity blueprint 实例
   -> openWindow(windowId="off-duty")
-  -> consumeTime(20 或由 blueprint 输入指定的时间)
-  -> 完成 Activity
+  -> 完成图标 Activity（不推进时间）
+窗口管理器发出 window:opened(windowId="off-duty")
+  -> 引擎执行 off-duty 窗口定义自身的 events.onCreate blueprint
+  -> consumeTime(480 或由 blueprint 输入指定的时间)
+  -> 完成该内置生命周期 Activity
 ```
 
 “下班模式”这个名称属于游戏内容/窗口定义，不进入通用引擎代码的领域分支。
@@ -659,10 +678,16 @@ logo 支持：
 - 指定双击行为
 - 双击只绑定一个稳定的 blueprint ID 和输入参数；不在图标数据中内联另一套执行器
 - blueprint 可以通过通用节点打开窗口、打开全屏自定义窗口、推进时间、入队 Activity 或发出通用事件
-- 下班图标绑定的 blueprint 至少包含 `openWindow(windowId="off-duty")` 和显式 `consumeTime` 节点
+- 下班图标绑定的 blueprint 通过 `desktop.run-activity` 运行专用的 `off-duty-open` Activity（只执行 `openWindow(windowId="off-duty")`）；`consumeTime` 属于下班窗口自身的 `events.onCreate`（见 §7.4），图标 blueprint 本身不包含 `consumeTime` 节点
 - 图标行为参数通过 schema 校验
 - 只通过稳定 `iconId`、`windowId`、`blueprintId` 引用
 - 桌面与编辑器使用同一位置/布局渲染器
+
+> 实现状态：`ng/dev/DesktopIconEditorView.js` 已实现（新建/删除/上移/下移/
+> 改 label·glyph·position·blueprintId·inputs），直接操作与运行中桌面共享的
+> `DesktopIconManager` 实例，每次编辑立即调用 `refreshIcons()` 预览，另有
+> 「写入磁盘」按钮持久化到 `desktop-icons.json`。从开发人员模式启动器的
+> 「桌面图标编辑器」入口打开。
 
 ### 8.3 内置图标 blueprint
 
@@ -755,6 +780,13 @@ API 需要输入 schema 校验，返回值进入 Activity 局部变量或公共�
 运行时生成 `GeneratedDataEditor`，但生成器只生成配置，不生成重复 JS 文件。编辑器与运行时共享字段 schema、校验器和数据绑定器。
 
 多窗口打开时，每个结构编辑器必须有实例级上下文，不能使用重复全局 DOM ID。
+
+> 实现状态：`ng/dev/DataStructureEditorView.js`（结构 schema 增删字段）与
+> `ng/dev/DatabaseDebuggerView.js`（运行时记录浏览/创建/编辑/删除，始终经
+> `DataStore.createRecord/updateRecord/deleteRecord/findRecords/listDatabases`
+> API）已实现，从开发人员模式启动器的「数据结构管理器」「数据库调试器」入口
+> 打开。`editor` 分组/控件类型/可见性条件驱动的 `GeneratedDataEditor` 仍未
+> 实现，当前数据库调试器对每条记录使用通用 JSON 文本框。
 
 ---
 
@@ -1053,6 +1085,8 @@ UI 不直接修改库存，也不直接推进时间。
 - 物品使用不绕过 Activity
 - 医疗对话按 blockUntil 时间触发且不会重复触发
 
+**实现状态**：`ng/core/PublicVariableManager.js`（0..65535 ID、六种类型、`evaluateCondition`/`applyEffect`/`snapshot`/`restore`）+ `ng/core/RuntimeRefResolver.js`（按 `objectType` 注册解析器，失效引用显式 `{resolved:false}`）已实现；`ActivityNodeRegistry`/`ActivityRunner` 新增 `getPublicVariable`/`publicVariableCondition`/`applyPublicVariableEffect` 节点与 `pvGateway`（与既有 `dbGateway` 同构），`blockUntil` 额外支持一个可选的已连线布尔 `condition` 输入，等待重检同时监听 `variable:changed` 与 `gameClock:changed`。`engine.js` 为每个已加载数据库自动注册 `database:<id>` 引用解析器，并支持 `data/public-variables.json`（新增声明式 `syncSource:"gameClock.totalMinutes"` 字段，由引擎把 GameClock 镜像进一个只读公共变量，供内容通过通用原语表达按时间的 `blockUntil`）。已提供 `item`/`patient`/`medicalCase`/`symptom`/`diagnosis`/`treatment`/`patientDialogueContext`/`medicalAppointment` 结构与对应数据库（`data/structures.json`/`data/databases.json`），以及 `data/activities/use-item.json`（查询数据库→分支→改记录→消耗时间→emitEvent，全程走 Activity/数据库 API）与 `data/activities/medical-appointment-watcher.json`（创建示例记录→按 `publicVariableCondition` 时间条件 `blockUntil`→更新病例状态→`runActivity` 触发对话 Activity，对话内容本身留给独立 Activity 列表实现）。`ng/probes/public-variable-probe.mjs` 覆盖全部确定性探针（含 blockUntil 按时间触发且仅触发一次）。开发人员模式下的公共变量可视化编辑器（`ng/dev/PublicVariableEditorView.js`，写 `data/public-variables.json`）与运行时公共变量调试器（`ng/dev/PublicVariableDebuggerView.js`，只经 `set`/`setObjectRef` 改live值，不写数据文件）均已实现并接入 `DeveloperMode.js` 的上/下两个启动区。
+
 ### Phase 7：存档与发布边界
 
 交付：
@@ -1072,6 +1106,8 @@ UI 不直接修改库存，也不直接推进时间。
 - 发布产物无 DEV-TOOLS、编辑器入口或 dev-server
 - 引擎许可与游戏内容许可分离可审计
 
+**实现状态**：`ng/core/SaveManager.js` 已实现版本化 envelope（`format:"cultists-ng-save"`/`version:1`/`engineVersion`/`createdAtGameTime`/`state`），`snapshot()` 聚合 `GameClock`/`VariableStore`/`PublicVariableManager`/`DataStore`/`ActivityQueueRegistry`（已内含 Activity 实例，等价于 schema 里的 `activityInstances`+`queues`）/`WindowManager`（新增 `snapshotInstances()`/`restoreInstances()`）/`DesktopIconManager` 的深拷贝快照；`restore()` 恢复前用 `activityExecutionService.clear()` 停止所有 Runner，恢复前先对当前状态做一次 rollback 快照，`_applyState` 中途抛错则回滚到该快照并重新扫描一次待启动项，`restoring` guard 由 `try/finally` 释放，格式/版本/字段缺失在任何 mutation 之前校验并拒绝。恢复成功后由 `engine.js` 的 `resumePendingActivities()`（对每个队列的 `current()` 未解决实例按其 `activityId` 重新 `run()`）执行唯一一次的"扫描待启动项"。玩家可见入口是 `ng/desktop/SaveLoadView.js`（保存到文件下载 / 从文件加载）注册成一个普通窗口 + 桌面图标（不受 `?dev` 限制）。`ng/probes/save-manager-probe.mjs` 覆盖新建/保存/刷新/加载状态一致、等待中 Activity 恢复后仍正确阻塞且只完成一次、错误/不兼容/内部不一致存档不破坏当前状态、重入 restore 被拒绝。dev 发布移除与 2BSD/游戏内容 NOTICE 分离均已就绪：项目根目录既有的 `publish.js` 按文件名逐级排除 `dev-server.js`（含 `ng/dev-server.js`）并对每个文本文件剥离 `DEV-TOOLS:START/END` 块，`ng/dev/*.js` 整份都在块内，剥离后内容为空即被跳过，因此 `publish/ng/dev/` 产物为空、不含任何编辑器入口或 dev-server；`ng/LICENSE`/`ng/NOTICE.md` 已把引擎代码（2-Clause BSD）与 `ng/data/` 游戏内容的授权边界分离并随 `publish/` 一并复制，无需为 `ng/` 新增独立发布脚本。
+
 ### Phase 8：旧内容 agents 改编接口
 
 仅在前述阶段全部通过后开始：
@@ -1082,7 +1118,56 @@ UI 不直接修改库存，也不直接推进时间。
 - 为每个迁移模块写行为矩阵与确定性探针
 - 新旧游戏内容可在独立入口比较，但不要求旧存档可加载
 
-### Phase 9：ng/ 成熟后的根目录替换
+**实现状态（进行中）**：鉴于 `data/zh-hans/` 全量 50 个 JSON 文件、约 49 万行（`chatgtp_qa.json` 一个文件即 432,840 行），且多个文件本身内嵌完整的旧引擎专属节点图（`his`/`social` 对话树、`items.json` 的 investigate/use 蓝图），逐一改编无法一次性完成，采用按领域逐步推进、每领域独立可验证的路线。当前已完成第一个领域切片：**公共变量**——将 `data/zh-hans/global_variables.json`（111 条，ids 0..110 中的 0..99 为系统预留区间，语义见 `AGENTS.md`：1=主角SAN、2=金钱、5=ChatGTP SAN、20-39=技能点、40-59=好感度、60-79=NPC SAN）原样以相同 id、相同默认值迁移进 `ng/data/public-variables.json`，类型映射为 PublicVariableManager 既有类型（旧 `number`→`smallInteger`、`decimal`→`real`、`bool`→`bool`，无新增引擎概念）。原两条 Phase 6/7 示例变量（`gameTimeMinutes`/`playerInventoryFocus`）与旧引擎保留区间 id 0/1 冲突，已改配到 id 1000/1001（`ng/data/activities/medical-appointment-watcher.json` 同步更新其 `publicVariableCondition` 引用），无其它代码/探针硬编码这两个 id。行为矩阵：见 `ng/probes/legacy-public-variables-probe.mjs` 顶部注释与断言（条目数、无重复 id、AGENTS.md 保留区间语义、smallInteger 落在 0..255、示例变量重新编号后仍可用）。
+
+第二个领域切片：**扁平参考数据**（NPC、技能、关键词、地点、成就+成就分类）——将 `data/zh-hans/{npcs,skills,keywords,locations,achievements}.json` 原样迁移进 `ng/data/structures.json`（新增 `npc`/`skill`/`keyword`/`location`/`achievement`/`achievementCategory` 结构）+ `ng/data/databases.json`（对应 6 个新数据库）+ `ng/data/seed-records.json`（记录内容本身）。为此新增了一个通用、非领域相关的种子数据加载机制：`DataStore.loadRecords()`/`loadRecordSet()`（复用 `createRecord()` 的校验/默认值/主键去重逻辑，非绕过式写入）+ `engine.json` 的 `seedRecords` 配置键（`engine.js` 启动时按与 `structures`/`databases`/`publicVariables` 完全相同的 `fetch` 约定读取），使后续任何领域都能同样以"结构 + 数据库 + 种子数据"三件套声明式接入，无需再写引擎代码。另给 `DataStructureManager` 新增了一个通用标量字段类型 `object`（接受任意非数组 JSON 对象，语义上与既有 `array`"接受任意元素"一致，非领域相关的最小扩展），用于承载 `achievement.trigger` 这类自由格式的旧数据。行为矩阵：见 `ng/probes/legacy-reference-data-probe.mjs`（条目数与旧文件一致、嵌套数组/对象字段无损保留、`getRecord` clone-on-read 不变式仍成立）。此切片**刻意排除** `items.json` 内嵌的 investigate/use 蓝图、`endings.json` 的 `blueprint` 字段、以及 `medicines.json`/`diagnoses.json` 的分类树——这些都依赖尚未加入 `ActivityNodeRegistry` 的对话节点类型（`text`/`choice`/`prerequisite`/`his*`/`spellCast` 等，参见旧引擎 `data/zh-hans/work01a.json` 等蓝图节点清单），需要作为独立切片单独攻克。
+
+
+第三个切片：**对话节点类型审计 + 引擎扩展**——逐一比对旧引擎 `js/core/ActivityRunner.js` 的节点执行语义与 `ng/core/ActivityNodeRegistry.js` 现有通用节点集，发现绝大多数"缺失"节点类型无需新增引擎概念、可由既有通用原语组合表达：`setGlobal`/`getGlobal`→`applyPublicVariableEffect`/`getPublicVariable`（id 与已迁移的 `public-variables.json` 一致）、`randomBranch`/`diceCheck`（骰子判定分档）→ `arithmetic` 新增的 `"random"` 运算符（返回 `[0,1)` 浮点，不带任何领域语义）配合既有 `branch`/比较运算符链式表达、`insertActivity`→既有 `runActivity`。仅 `text`（显示一行对话+可选等待"继续"信号）与 `choice`（展示 N 个带标签选项+等待外部选择+按序号分支)确无等价通用原语，遂新增为两个通用节点类型（§15 风险 F 审查：两者都不引用 his/social/item 等具体领域，`displayTo`/`options`/`selectionKey` 都是不透明字符串/数据，与既有 `emitEvent` 的 `eventName` 同类）：`text` 通过 `eventGateway` 广播 `speaker`/`text`/`displayTo`/`keywordIds`，仅当 `continueKey` 有值时才阻塞（复用与 `blockUntil` 完全相同的"等待变量置真→消费重置→继续"机制，由某个组件的 onClick 蓝图 `setVariable` 唤醒，无需新的等待原语）；`choice` 同理通过 `selectionKey` 阻塞，`optionCount` 个 `optionN` 流程输出端口（静态声明至 `option5`，对应旧内容全库实测最大分支数 3；`ActivityValidator` 按 `optionCount` 只校验前 N 个端口的连线，其余视为未使用而非报错)。`prerequisite`/`activityExpiry` 按旧引擎原样迁移为无流程端口的纯数值节点（旧引擎里它们本就不参与流程执行、只被"选择/过期检查"逻辑按类型查找后直接读取输入），`ActivityValidator` 的可达性检查对无流程端口的节点天然豁免。行为矩阵：见 `ng/probes/dialogue-node-probe.mjs`（text 自动推进/等待续行两种模式、choice 分支路由与越界选择报错、prerequisite/activityExpiry 未接入流程仍可校验通过并被读取、random 运算符落在 `[0,1)` 且不恒定）。**尚未加入**：`diceCheck`/`segmentBranch`/`insertActivity`/`inventoryOperation`/`statOperation`/`showCg`/`endCg`/`showImage`/`spellCast`/`spellEffect`/`his*`（医疗问诊 App 专属显示节点）的实际转换脚本映射规则——这些的引擎原语已具备（或明确判定为纯内容层可组合表达），但脚本化改编尚未编写；下一切片是编写 `ng/tools/migrate-legacy-blueprint.mjs` 批量改编旧蓝图 JSON，而非手工逐条转录。
+
+第四个切片：**批量蓝图转换脚本 + 覆盖率摸底**——新增 `ng/tools/migrate-legacy-blueprint.mjs`：`convertBlueprint(legacyBlueprint)` 把单个旧蓝图（`{startNodeId,nodes,connections}`，节点 `type` 为旧引擎命名）重命名为 ng 等价节点（`flowStart`/`activityEnd`/`consumeTime`/`branch`/`arithmetic`/`prerequisite`/`activityExpiry` 原样；`setGlobal`/`getGlobal` 的 `variableId` 字段更名为 `id`；`text`/`choice` 额外合成确定性的 `continueKey`/`selectionKey`，供未来的对话窗口 UI 用 onClick 蓝图唤醒）——**不改写 `connections` 数组本身**，因为 `ActivityValidator.normalizeBlueprint()` 已经在加载期把这个旧扁平数组折叠进 `next`/`inputs`，脚本只需要管节点类型/字段重命名。遇到脚本尚未支持的旧节点类型时整份蓝图判定 `ok:false` 并原样返回（绝不静默丢弃内容或部分转换）。CLI `--report [dir]` 递归扫描任意 JSON（不局限于 his/social 对话，也覆盖 `items.json`/`endings.json` 内嵌蓝图）、找出每一个 `{startNodeId,nodes}` 结构，汇总每份蓝图/每个文件的可转换情况与阻塞节点类型分布。对 `data/zh-hans/*.json` 全量运行的结果：**168 份内嵌蓝图中 105 份（62%）已可无损自动转换**，其中 `work01a/02a/03a/04a/06a/07a/07b.json`（his 问诊对话，共 57 份蓝图）与 `social02a/04a/05a/05b/06a.json`（共 11 份）**全部**转换成功；已用 `ng/probes/migrate-legacy-blueprint-probe.mjs` 验证：抽样蓝图转换后能通过 `ActivityValidator.validateBlueprint()`、能在真实 `createActivityRunner` 上端到端跑通（text 等待续行→choice 等待选择→分支→结束），以及对上述 12 个文件全部 68 份蓝图逐一转换+校验均无错误。当前阻塞项（按出现文件数排序）：`getGameTime`/`insertActivity`/`getActivityInstanceCount`（各 4 个文件，集中在 `social01b/02b/03b/04b.json` 的宿舍活动插入逻辑）、`statOperation`（3 个文件）、`showCg`/`inventoryOperation`/`diceCheck`/`ending`（各 2 个）、`hisRefresh`/`hisSelectPatient`/`hisRenderDiagnosis`/`hisRenderPrescription`/`hisSubmit`（各 1 个，均集中在 `app_his_custom.json`）、`endCg`/`segmentBranch`/`showImage`/`spellCast`/`spellEffect`/`randomBranch`（各 1 个）。**这只是把蓝图节点图转换正确——尚未把转换结果写入 `ng/data/activities/*.json` 并接入实际的 Activity 定义/队列/窗口**（例如 his 问诊对话还需要"病人"数据结构+问诊 App 窗口才能真正跑起来），下一切片应从 `items.json` 的 investigate/use 蓝图（57 份中 30 份已可转换）或某一天完整的 work+social 垂直切片入手，把转换脚本的输出接进真正可玩的 Activity 定义。
+
+后续领域（物品、医疗诊断树、结局、`his*`/`showCg`/`spellCast` 等剩余节点类型、`chatgtp_qa.json` 批量导入等）留待后续会话按同一模式（结构+数据库/Activity+行为矩阵+探针）逐个推进。
+
+第五个切片：**首个可玩垂直切片——渲染层 + 一段真实问诊对话端到端跑通**——针对用户明确提出的目标（"打开 ng 后得到和原有引擎类似的游戏体验"），发现此前四个切片虽已让蓝图数据可转换/可校验，但 `ng/` 里完全没有任何窗口订阅 `text`/`choice` 节点广播的 `dialogue:text`/`dialogue:choice` 事件——引擎图跑得通，玩家却什么都看不到。补齐方式：
+- 新增通用（非 his/social 专属，§15 风险 F 审查）`ng/desktop/DialogueView.js`：只理解 `dialogue:text`/`dialogue:choice` 事件的不透明 payload 形状（`speaker`/`text`/`continueKey`、`options`/`selectionKey`），渲染对话记录 + "继续"按钮/选项按钮，点击时对相应 key 调用 `variableStore.set(...)` 唤醒等待中的节点；渲染层完全不知道"问诊"是什么。
+- `ActivityRunner.js` 的 `text`/`choice` 事件 payload 补充 `instanceId`（`choice` 已含 `selectionKey`）与 `text` 的 `continueKey`，使多个并发 Activity 不会串台（`dialogue-node-probe.mjs` 断言同步更新）。
+- `engine.js` 注册一个单例的通用 `dialogue` 窗口（`DialogueView` 实例作为 `body`），随 `window:opened` 事件重置记录。
+- 用 `migrate-legacy-blueprint.mjs` 实际转换 `data/zh-hans/work01a.json` 第一个病人条目（`patient_lin_ruoqing_01`/林若晴，7 个 text + 3 个 choice + 7 个 consumeTime 节点，转换 0 阻塞），写出为真正的 `ng/data/activities/work01a-patient1.json`；新增包装 Activity `work01a-patient1-start.json`（`openWindow("dialogue")` → `runActivity("work01a-patient1")`），注册进 `activity-lists/default.json`，并挂一个新桌面图标"上班"（`desktop.run-activity`）。行为矩阵：见 `ng/probes/work01a-patient1-probe.mjs`（从磁盘加载真实文件、驱动完整问诊对话到 `activityEnd`、断言 4 处 consumeTime 共 80 分钟、text/choice 各按等待重入语义触发 2 次/等待点、每个 dialogue 事件都带正确 `instanceId`）。**这证明了渠道打通**：任何已可转换的 105 份蓝图现在都只差"写出 Activity 定义 + 挂桌面图标/窗口触发"就能变成可玩内容，不再需要新的引擎能力。
+
+**仍未开始**：`work01a.json` 其余 6 名病人 + `work02a/03a/04a/06a/07a/07b.json`/`social*.json` 的批量写出与桌面/窗口接入（目前只手工接入了 1 份作为端到端验证）、旧引擎 `DayNightSystem`/`phase`/`duty`/`location` 工作日-休息日状态机在 ng 中完全没有内容层等价物（`AGENTS.md` 描述的是旧引擎职责划分，ng 需要用公共变量+Activity 表达，而非新引擎代码）、`his*` 医疗 App 专属渲染（病人列表/诊断/处方界面）仍未设计。
+
+第六个切片：**关键词收集机制（通用引擎能力，非领域代码）**——针对用户提出的"关键词的收集"需求，新增 `ng/core/KeywordManager.js`：不引用 dialogue/his/item 任何具体领域概念，只理解 `keywords` 数据库（Phase 8 第二切片已迁移的 `data/zh-hans/keywords.json` 196 条 `symptom_XXX` 等记录）里 `{id, content, contentLowSan, relatedIds}` 记录，以及文本里的 `[[id]]`/`[[id|显示文本]]` 标记（与旧引擎 `js/core/KeywordManager.js` 语法完全一致）。低 SAN（<50，读取公共变量 id 1 `主角SAN`，由 `engine.js` 通过 `sanityProvider` 回调注入，模块本身不知道 id 含义）显示 `contentLowSan` 扭曲文案。`collect`/`has`/`get`/`all` 与 `snapshot()`/`restore()`（接入 `SaveManager`，存档格式升级到 v2：新增 `state.keywords`，按 `AGENTS.md`"改变 payload 要评估是否提升版本"要求，v1 存档显式拒绝而非静默迁移）。`DialogueView.js`（Phase 8 第五切片新增的通用对话窗口）改为通过 `keywordManager.renderHighlightedText()` 渲染台词，用事件委托在 transcript 容器上监听 `.keyword-highlight` 点击并调用 `collect`——不引入任何新 Activity 节点类型，收集本身是纯 UI 交互，和旧引擎行为一致。新增通用 `NotebookView.js`（笔记本窗口，列出已收集关键词+收集天数，随 `keyword:collected`/`keyword:removed` 事件重渲染）与桌面图标。已验证 `work01a-patient1.json`（第五切片迁移的问诊内容）本身就包含 11 个 `[[symptom_XXX]]`/`[[headache]]` 标记且均已存在于 seed 数据中，端到端可点击收集，无需额外内容改动。行为矩阵：见 `ng/probes/keyword-manager-probe.mjs`（标记解析去重、已知/未知 id 渲染差异、collect 幂等+仅首次触发 `keyword:new`、低 SAN 扭曲文案规则、snapshot/restore 往返）与更新后的 `ng/probes/save-manager-probe.mjs`（v2 格式号、keywords 状态往返）。
+
+**仍未开始**：ChatGTP 窗口（`js/apps/ChatGTPApp.js`，`chatgtp_qa.json` 432,840 行问答库尚未导入/无窗口）、HIS 窗口的诊断与开药部分（`js/apps/HISApp.js` 的分类/诊断下拉、处方编辑器、`medicines.json`/`diagnoses.json` 分类树，仅问诊对话本身已迁移，提交诊断后的判定/结算逻辑未动）、下班模式中和室友互动的界面与交互流程（`js/desktop/DormMode.js` 1069 行，ng 的 `off-duty` 窗口目前只是一个空占位，没有室友列表/好感度互动/对话入口）、`work01a.json` 其余 6 名病人 + `work02a/03a/04a/06a/07a/07b.json`/`social*.json` 的批量写出与桌面/窗口接入（目前只手工接入了 1 份作为端到端验证）、旧引擎 `DayNightSystem`/`phase`/`duty`/`location` 工作日-休息日状态机在 ng 中完全没有内容层等价物、`his*` 医疗 App 专属渲染（病人列表/诊断/处方界面）仍未设计。
+
+第七个切片：**HIS 诊断/开药参考数据迁移（结构+数据库，非硬编码）**——针对用户提出的"新建HIS app窗口……完全移植……关键词应该使用新引擎的数据库与数据结构功能，而不是写进代码里面"需求做的准备工作。确认关键词部分（第六切片 `KeywordManager`）本就只读 `keywords` 数据库，不含任何硬编码领域概念，符合要求，无需改动。确认 Activity 编辑器可编辑全部列表（`ng/dev/ActivityListManagerModel.js`/`ActivityListManagerView.js` + `DeveloperMode.js#loadExistingActivities` 早已按 `engine.json` 的 `activityLists` 数组加载并可切换全部列表下的 activity，非只有 default），已用 `ng/probes/activity-editor-probe.mjs` 验证，无需改动。本切片新增 HIS 诊断/开药所需的参考数据基础设施：扩展 `diagnosis` 结构（补齐 `icd10`/`normalName`/`lowSanName`/`categoryId`/`applicableMedicineIds`/`prohibitedMedicineIds`/`symptomIds`，此前只有 `id`/`name` 占位字段）、新增 `diagnosisCategory`/`medicine`/`medicineCategory` 三个结构+数据库，新增 `ng/tools/migrate-legacy-medical-reference.mjs` 把 `data/zh-hans/diagnoses.json`（114 条诊断，14 个 ICD 分类）与 `data/zh-hans/medicines.json`（152 种药物，18 个药物分类）转换为 seed-records 格式并入 `ng/data/seed-records.json`。行为矩阵见 `ng/probes/legacy-medical-reference-probe.mjs`（全量加载校验、已知条目 spot-check、未知 id 查询返回 null 不伪造记录）。
+
+**仍未开始（本切片之后）**：HIS 窗口本身（分类/诊断下拉、处方编辑器、提交后的判定/结算逻辑与 `medicalCaseManager` 等价物）尚未用窗口编辑器新建——本切片只搭好了它要读的参考数据库；ChatGTP 窗口（`js/apps/ChatGTPApp.js`，`chatgtp_qa.json` 432,840 行/48,195 条问答尚未导入/无窗口，且其分类下拉同样依赖本切片刚迁移的 diagnoses/medicines 数据库）；下班模式中和室友互动的界面与交互流程（`js/desktop/DormMode.js` 1069 行，`off-duty` 窗口仍是占位）仍是最大的未动项。三者都需要按"结构→数据库→窗口/Activity→行为矩阵→探针"节奏继续分切片推进。
+
+第八个切片：**work01a 剩余病人 + ChatGTP 48,195 条问答库迁移脚本 + HIS/ChatGTP 窗口 + 下班室友互动 UI**——一次性推进上一切片列出的三个最大未动项。批量迁移 `work01a.json` 剩余 6 名病人（`work01a-patient{2..7}.json`+`-start.json`，同第五切片手法），扩展 `patient`/`medicalCase` 结构以承载诊断判定所需字段。新增 `ng/tools/migrate-legacy-chatgtp-qa.mjs`：把 `data/zh-hans/chatgtp_qa.json`（432,840 行/48,195 条）转换为 `ng/data/seed-records-chatgtp.json`（`chatgtpQaEntries` 数据库记录，`id` 用旧引擎 `entryKey()` 同款排序拼接的关键词组合键，未改变查找语义）+ `ng/data/chatgtp-settings.json`（SAN 消耗/离线文案等设置，后并入 `chatgtpSettings` 数据库单条 `id:"default"` 记录，供窗口蓝图用既有 `getRecord` 读取，不新增"读任意 JSON 文件"节点）；`engine.json` 的 `seedRecords` 配置键扩展为支持数组形式的多个种子文件。
+
+为了让 HIS/ChatGTP/下班三个窗口按用户"用窗口编辑器搭建"的要求以纯声明式 widget 树 + Activity 蓝图实现（而非新写专用 JS 视图模块），先做了两处必要的通用引擎扩展：(1) `ng/core/WidgetLayoutRenderer.js`——`select.options`/`list.items` 现在可以是绑定值（`{variable:"key"}`），新增 `optionValueField`/`optionLabelField`/`itemLabelField` 让原始数据库记录（任意字段名）直接填充下拉/列表而无需额外的映射/循环节点，`list` 新增 `onItemClick` 事件把被点项的 `id` 作为 `event:value` 转发；(2) `ng/desktop/WindowFrame.js`——widget 树窗口现在订阅 `variable:changed` 并整体重渲染 `root` 子树（`_bindRootRefresh`/`_rerenderRoot`），带焦点与选区保留，使得任何绑定 `textInput` 不会因为重渲染而中断输入。`ActivityNodeRegistry.js`/`ActivityRunner.js` 新增三个通用取值节点：`getProperty`（读对象单字段）、`arrayAppend`（数组追加）、`conditionalValue`（三元选择，用于只用比较+条件取值模拟"取两项中较小者"而不新增专用排序节点），以及算术运算新增 `concat`（字符串拼接，区别于 `+` 的数值强制转换）。
+
+**过程中发现并修复了 `ActivityRunner.js` 里一个真实的既存 bug**：`execute()` 内几乎所有 `resolveInput()` 调用点的位置参数都传错了（把 `pvGateway` 传进了 `stack` 形参槽，真正的 `stack`/`pvGateway` 都留在默认值），这个 bug 多年来没被发现是因为它只有在某个流程节点的取值输入被连线到"链式取值节点图"（而非字面量或 `{variable}` 简写）时才会发作——本仓库现存内容此前从未这样连过线，直到 HIS 窗口的 `createRecord`/`setVariable` 节点第一次需要这么做。已用批量正则替换修复全部调用点，并逐一 grep 确认无遗漏。同时发现 `resolveInput` 此前只在"整个输入值本身就是一个线引用"时才解析（如 `{nodeId,port}`/`{variable}`），从不递归查找复合对象/数组字面量内部嵌套的线引用（例如 `createRecord` 的 `data:{patientId:{nodeId:...},...}`，整个 `data` 对象会被原样返回、内部引用完全不解析）——新增 `resolveDeep()` 递归解析器，`resolveInput` 现在对所有输入调用它，是既有行为的严格超集。
+
+`ng/data/windows/his.json`：病人列表（`list` 绑定 `patients` 数据库）→"开始问诊"按钮动态取选中病人的 `dialogueActivityId` 并 `runActivity`→诊断/处方 `select` 绑定 `diagnoses`/`medicines` 数据库→`arrayAppend` 累积处方→提交按钮 `createRecord` 写入 `medicalCases` 记录并按 `correctDiagnosisId` 判定对错。已知简化：诊断/处方下拉目前展示全部条目而非按病人的 `diagnosisOptionIds` 过滤（引擎尚无循环/过滤节点）。`ng/data/windows/chatgtp.json`：keyword1/keyword2 两个 `select` 绑定 `keywords` 数据库，"查询"按钮用 `conditionalValue`+`concat` 模拟旧引擎 `entryKey()` 的排序拼接（两项定长场景下无需新增排序节点），对 `chatgtpQaEntries` 做 `getRecord` 查找，未命中则回退提示文案；通过 `publicVariableCondition`（id 5 "ChatGTP SAN"）判断在线/离线，在线扣费读自 `chatgtpSettings` 记录的 `sanCostPerQuery`，离线展示其 `offlineAnswer`。已知简化：回答用纯文本 `label` 渲染，`[[keyword_id|文本]]` 标记暂不支持关键词高亮/点击收集（`label` widget 无富文本变体）。两窗口均已注册进 `engine.json` 的 `windowManifest` 并各自挂了桌面图标。
+
+`ng/data/windows/off-duty.json` 从占位换成真正的宿舍室友互动 UI：沿用旧引擎硬编码的 `NPC_IDS = ["ajie","awei","binbin"]` 顺序（对应公共变量好感度 id 40/41/42、SAN id 60/61/62，语义见 `AGENTS.md`），`onCreate` 用 `getRecord` 读取三名室友的 `npcs` 记录存入变量，widget 树用 `valueGraph`（`getProperty`+`getPublicVariable`+`concat`）为每名室友渲染头像/姓名/"好感度：N"/"SAN：N"，每人一个"交流"按钮。因为暂无任何 social 对话 Activity 迁移进 ng/，交流按钮目前只置换一条"宿舍剧情尚未迁移"的占位文案；仍保留窗口自身 `onCreate` 里显式 `consumeTime(480)`（决策 13/§7.4 既定行为，不受本切片影响）。
+
+行为矩阵：`ng/probes/value-node-probe.mjs`（`getProperty`/`arrayAppend`/`conditionalValue`/`concat`）、`ng/probes/his-window-probe.mjs`（全部内联蓝图校验 + 端到端选病人→问诊跳转→诊断→开药→提交→判定，含误诊场景）、`ng/probes/chatgtp-window-probe.mjs`（单/双关键词组合查找与顺序无关性、SAN 门禁与扣费、未命中回退、离线文案）、`ng/probes/off-duty-window-probe.mjs`（三名室友数据加载、`valueGraph` 展示文本、逐一点击"交流"的占位消息）；`ng/probes/window-lifecycle-probe.mjs` 相应更新其测试用 `buildHarness()`，为窗口生命周期蓝图接入真实 `dbGateway`/`pvGateway`（此前是纯 no-op 桩，off-duty.json 的 `onCreate` 现在真的会读数据库/公共变量）。全部 32 份探针通过。
+
+**仍未开始**：HIS/ChatGTP 下拉的按条件过滤（需要循环/过滤类节点，当前是已知简化）；ChatGTP 回答的富文本关键词高亮（需要新 widget 类型或专用 JS）；宿舍室友"交流"按钮的真实 social 对话内容（需要先迁移 `social*.json`）；`work02a/03a/04a/06a/07a/07b.json`/`social*.json` 仍未批量写出接入；`DayNightSystem`/`phase`/`duty`/`location` 状态机仍无内容层等价物。
+
+第九个切片：**新手引导系统（通用引擎能力，可视化编辑）+ HIS 窗口重建，向旧引擎效果对齐**——针对用户提出的"实现效果与旧引擎类似的、可通过可视化编辑器编辑的新手引导""让新版 HIS app 1:1 复刻旧版"两项需求。新增 `ng/core/OnboardingManager.js`：不像旧引擎 `js/core/OnboardingManager.js` 那样把里程碑 id 列表和"事件名→里程碑"映射写死在 JS 里，而是只认一个通用的 `{id, trigger, completeOn, target, title, text}` 提示数组（`data/onboarding.json`，内容可由新 `ng/dev/OnboardingEditorView.js` 可视化编辑并"预览"/"写入磁盘"），里程碑本身是任意字符串，由新增的通用 Activity 节点 `markOnboardingMilestone`（`ActivityNodeRegistry.js`/`ActivityRunner.js`，新增 `onboardingGateway` 参数，与既有 `dbGateway`/`pvGateway` 同一约定贯穿 `ActivityExecutionService`/`engine.js` 全部 4 个 `run()` 调用点）在任意对话/窗口 onCreate/按钮 onClick 里标记，无需再改引擎代码。`ng/desktop/TutorialOverlay.js` 从旧引擎近乎逐行搬运（同名 CSS 类：`.tutorial-overlay`/`.tutorial-highlight`/`.tutorial-card` 等），只订阅 `onboarding:hint_requested`/`onboarding:hint_closed` 两个事件。`engine.js` 实例化两者、加载 `data/onboarding.json`、在桌面挂载后标记 `desktop_seen`、在 notebook 窗口打开时桥接标记 `notebook_opened`（笔记本是 JS 视图非声明式窗口，没有 `events.onCreate` 挂载点，故在 engine.js 里做一次性事件桥接，而非硬编码进 `NotebookView.js`）。`SaveManager` 升级到存档格式 v3（新增 `state.onboarding`，同 v2 先例显式拒绝旧版本而非静默迁移）。`data/onboarding.json` 写入 6 条示例提示，串起 desktop→HIS→收集关键词→笔记本→ChatGTP→提交诊断 的完整新手引导链路。
+
+HIS 窗口从"仅问诊本身已迁移，诊断/开药是全量下拉+简化判定"重建为向旧引擎 `js/apps/HISApp.js` 效果对齐：新增诊断分类→诊断、药品分类→药品的两级级联下拉（`his:diagnosisCategoryChoice`→`findRecords(query:{categoryId})`→`his:diagnosisOptions`，5 行处方各自独立复刻同一模式）；处方区从原先单个"添加药品"按钮+数组累积，改为静态 5 行（旧引擎处方行数上限同为 5，`list` widget 无法渲染"每项一套独立表单"的动态模板，5 行静态是已记录的引擎能力边界，非疏漏）；提交时按 `medicine.commission`（seed 数据里已预计算好的字段，如 `med_paracetamol` price 300/commission 30，非运行时 `price*0.1`）逐行求和（5 个固定 `arithmetic "+"` 链，因行数固定无需新增 reduce 节点）、诊断正确加 200 奖金，一次性通过 `applyPublicVariableEffect`（id 2 "金钱"）结算（旧引擎是日结算，ng 无日结算子系统，已记录为已知简化）；选中病人时 `findRecords(medicalCases, {patientId})` 查已提交记录到 `his:existingCases`（旧引擎用病人列表项加粗→不加粗的视觉区分"已问诊"，ng 的 `list` widget 无法按每项独立判断加粗与否，改为记录存在性数据供后续 UI 判定使用，视觉呈现层面为已知简化）。`ng/style.css` 从 `css/apps.css` 移植 `.his-*` 系列类名保持外观一致。已知记录为超出本次范围：旧引擎医疗突发事件/技能检定子系统（`DiceCheck.js` 相关）ng 无对应实现。
+
+行为矩阵：`ng/probes/onboarding-probe.mjs`（提示加载/请求/完成自动关闭/dismiss 幂等/acknowledge/snapshot-restore 往返/`markOnboardingMilestone` 节点无 gateway 报错+有 gateway 正确调用）；`ng/probes/his-window-probe.mjs` 全面重写（onCreate 加载病人+两个分类库、选病人重置全部字段+查已有病例、诊断分类级联+诊断级联、两行处方的药品分类级联+药品级联、提交后正确核算 bonus/commission/收入并生成结果文案、重复选中同一病人能看到已有病例、误诊场景奖金为 0）；`ng/probes/save-manager-probe.mjs` 更新至 v3 并新增 onboarding 状态往返断言；`ng/probes/chatgtp-window-probe.mjs`/`ng/probes/off-duty-window-probe.mjs`/`ng/probes/window-lifecycle-probe.mjs` 补上新增的 `onboardingGateway` 测试桩（因为 `chatgtp.json`/`off-duty.json` 的 `onCreate`/查询按钮蓝图里也新增了 `markOnboardingMilestone` 节点）。全部探针通过。
+
+**仍未开始**：HIS/ChatGTP 下拉的按条件过滤（同上一切片，已知简化，未变化）；ChatGTP 回答的富文本关键词高亮；宿舍室友"交流"按钮的真实 social 对话内容；`work02a/03a/04a/06a/07a/07b.json`/`social*.json` 批量写出接入；`DayNightSystem`/`phase`/`duty`/`location` 状态机内容层等价物；旧引擎医疗突发事件/技能检定子系统；诊断/处方下拉全量展示未按 `diagnosisOptionIds`/`applicableMedicineIds` 过滤（HIS 重建时沿用了这一已知简化，同样需要循环/过滤节点才能解决）。
+
+
 
 该阶段不是日常开发的一部分，只有新引擎和首批改编内容达到发布质量后执行：
 

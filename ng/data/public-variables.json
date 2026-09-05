@@ -1,0 +1,906 @@
+[
+  {
+    "id": 0,
+    "name": "怀疑度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 1,
+    "name": "主角SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 100,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 2,
+    "name": "金钱",
+    "type": "real",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=decimal）。"
+  },
+  {
+    "id": 3,
+    "name": "NPC不稳定SAN阈值",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 50,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 4,
+    "name": "NPC下线SAN阈值",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 20,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 5,
+    "name": "ChatGTP SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 80,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 6,
+    "name": "预留变量6",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 7,
+    "name": "预留变量7",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 8,
+    "name": "预留变量8",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 9,
+    "name": "预留变量9",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 10,
+    "name": "预留变量10",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 11,
+    "name": "预留变量11",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 12,
+    "name": "预留变量12",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 13,
+    "name": "预留变量13",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 14,
+    "name": "预留变量14",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 15,
+    "name": "预留变量15",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 16,
+    "name": "预留变量16",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 17,
+    "name": "预留变量17",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 18,
+    "name": "预留变量18",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 19,
+    "name": "预留变量19",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 20,
+    "name": "主角技能0点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 55,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 21,
+    "name": "主角技能1点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 65,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 22,
+    "name": "主角技能2点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 50,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 23,
+    "name": "主角技能3点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 24,
+    "name": "主角技能4点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 25,
+    "name": "主角技能5点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 26,
+    "name": "主角技能6点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 27,
+    "name": "主角技能7点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 28,
+    "name": "主角技能8点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 29,
+    "name": "主角技能9点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 30,
+    "name": "主角技能10点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 31,
+    "name": "主角技能11点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 32,
+    "name": "主角技能12点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 33,
+    "name": "主角技能13点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 34,
+    "name": "主角技能14点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 35,
+    "name": "主角技能15点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 36,
+    "name": "主角技能16点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 37,
+    "name": "主角技能17点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 38,
+    "name": "主角技能18点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 39,
+    "name": "主角技能19点",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 40,
+    "name": "NPC0好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 60,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 41,
+    "name": "NPC1好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 50,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 42,
+    "name": "NPC2好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 40,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 43,
+    "name": "NPC3好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 44,
+    "name": "NPC4好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 45,
+    "name": "NPC5好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 46,
+    "name": "NPC6好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 47,
+    "name": "NPC7好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 48,
+    "name": "NPC8好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 49,
+    "name": "NPC9好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 50,
+    "name": "NPC10好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 51,
+    "name": "NPC11好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 52,
+    "name": "NPC12好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 53,
+    "name": "NPC13好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 54,
+    "name": "NPC14好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 55,
+    "name": "NPC15好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 56,
+    "name": "NPC16好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 57,
+    "name": "NPC17好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 58,
+    "name": "NPC18好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 59,
+    "name": "NPC19好感度",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 60,
+    "name": "NPC0 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 80,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 61,
+    "name": "NPC1 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 80,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 62,
+    "name": "NPC2 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 80,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 63,
+    "name": "NPC3 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 64,
+    "name": "NPC4 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 65,
+    "name": "NPC5 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 66,
+    "name": "NPC6 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 67,
+    "name": "NPC7 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 68,
+    "name": "NPC8 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 69,
+    "name": "NPC9 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 70,
+    "name": "NPC10 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 71,
+    "name": "NPC11 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 72,
+    "name": "NPC12 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 73,
+    "name": "NPC13 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 74,
+    "name": "NPC14 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 75,
+    "name": "NPC15 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 76,
+    "name": "NPC16 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 77,
+    "name": "NPC17 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 78,
+    "name": "NPC18 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 79,
+    "name": "NPC19 SAN",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 80,
+    "name": "预留变量80",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 81,
+    "name": "预留变量81",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 82,
+    "name": "预留变量82",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 83,
+    "name": "预留变量83",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 84,
+    "name": "预留变量84",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 85,
+    "name": "预留变量85",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 86,
+    "name": "预留变量86",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 87,
+    "name": "预留变量87",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 88,
+    "name": "预留变量88",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 89,
+    "name": "预留变量89",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 90,
+    "name": "预留变量90",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 91,
+    "name": "预留变量91",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 92,
+    "name": "预留变量92",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 93,
+    "name": "预留变量93",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 94,
+    "name": "预留变量94",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 95,
+    "name": "预留变量95",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 96,
+    "name": "预留变量96",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 97,
+    "name": "预留变量97",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 98,
+    "name": "预留变量98",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 99,
+    "name": "预留变量99",
+    "type": "smallInteger",
+    "persistent": true,
+    "defaultValue": 0,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=number）。"
+  },
+  {
+    "id": 100,
+    "name": "昨天是否与阿杰对话",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 101,
+    "name": "昨天是否与阿伟对话",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 104,
+    "name": "第1天选择宿舍活动",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 105,
+    "name": "第2天选择宿舍活动",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 106,
+    "name": "第3天选择宿舍活动",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 107,
+    "name": "第4天选择宿舍活动",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 109,
+    "name": "第1天刷题",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 110,
+    "name": "第2天刷题",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 111,
+    "name": "第3天刷题",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 112,
+    "name": "第4天刷题",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": false,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 113,
+    "name": "第1天未刷题",
+    "type": "bool",
+    "persistent": true,
+    "defaultValue": true,
+    "description": "旧引擎 global_variables.json 迁移（legacy type=bool）。"
+  },
+  {
+    "id": 1000,
+    "name": "gameTimeMinutes",
+    "type": "integer",
+    "persistent": false,
+    "syncSource": "gameClock.totalMinutes",
+    "description": "当前游戏内绝对分钟数 (day-1)*1440+minutes，由引擎在 gameClock:changed 时自动写入；仅供 blockUntil/publicVariableCondition 按时间比较读取，不应通过 applyPublicVariableEffect 写入。"
+  },
+  {
+    "id": 1001,
+    "name": "playerInventoryFocus",
+    "type": "object",
+    "persistent": true,
+    "objectTarget": "database:inventoryItems",
+    "description": "示例：玩家当前关注/使用中的背包物品引用 {objectType:\"database:inventoryItems\", objectId}，演示 object 类型公共变量指向自定义数据库记录（plan §11.1）。"
+  }
+]

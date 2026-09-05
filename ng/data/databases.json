@@ -1,5 +1,21 @@
 [
-  {"databaseId":"inventoryItems","recordType":"item","records":[]},
-  {"databaseId":"patients","recordType":"patient","records":[]},
-  {"databaseId":"medicalCases","recordType":"medicalCase","records":[]}
+  { "databaseId": "inventoryItems", "recordType": "item", "primaryKey": "id" },
+  { "databaseId": "patients", "recordType": "patient", "primaryKey": "id" },
+  { "databaseId": "symptoms", "recordType": "symptom", "primaryKey": "id" },
+  { "databaseId": "diagnoses", "recordType": "diagnosis", "primaryKey": "id" },
+  { "databaseId": "diagnosisCategories", "recordType": "diagnosisCategory", "primaryKey": "id" },
+  { "databaseId": "medicines", "recordType": "medicine", "primaryKey": "id" },
+  { "databaseId": "medicineCategories", "recordType": "medicineCategory", "primaryKey": "id" },
+  { "databaseId": "chatgtpQaEntries", "recordType": "chatgtpQaEntry", "primaryKey": "id", "allowDelete": false },
+  { "databaseId": "treatments", "recordType": "treatment", "primaryKey": "id" },
+  { "databaseId": "medicalCases", "recordType": "medicalCase", "primaryKey": "id" },
+  { "databaseId": "patientDialogueContexts", "recordType": "patientDialogueContext", "primaryKey": "id" },
+  { "databaseId": "medicalAppointments", "recordType": "medicalAppointment", "primaryKey": "id" },
+  { "databaseId": "npcs", "recordType": "npc", "primaryKey": "id" },
+  { "databaseId": "skills", "recordType": "skill", "primaryKey": "id" },
+  { "databaseId": "keywords", "recordType": "keyword", "primaryKey": "id" },
+  { "databaseId": "locations", "recordType": "location", "primaryKey": "id" },
+  { "databaseId": "achievements", "recordType": "achievement", "primaryKey": "id" },
+  { "databaseId": "achievementCategories", "recordType": "achievementCategory", "primaryKey": "id" },
+  { "databaseId": "chatgtpSettings", "recordType": "chatgtpSettings", "primaryKey": "id", "allowDelete": false }
 ]

@@ -1,11 +1,26 @@
-export class ActivityInstance {
-  constructor({ instanceId, definitionId, definitionVersion = 1, queueId = "main", inputs = {}, payload = {} } = {}) {
-    if (!definitionId) throw new Error("Activity definitionId is required");
-    this.instanceId = instanceId || `activity-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`}`;
-    this.definitionId = definitionId; this.definitionVersion = definitionVersion; this.queueId = queueId;
-    this.inputs = structuredClone(inputs); this.payload = structuredClone(payload); this.currentNodeId = null; this.waiting = null; this.status = "unresolved"; this.result = null; this.transcript = []; this.terminalEmitted = false;
-  }
-  snapshot() { return structuredClone(this); }
-  static restore(snapshot) { const instance = new ActivityInstance(snapshot); Object.assign(instance, structuredClone(snapshot)); return instance; }
-  transition(status, result = null) { if (!["unresolved", "running", "blocked", "resolved", "failed", "cancelled"].includes(status)) throw new Error(`Invalid activity status: ${status}`); if (this.terminalEmitted) return false; this.status = status; if (["resolved", "failed", "cancelled"].includes(status)) { this.terminalEmitted = true; this.result = result; } return true; }
+/**
+ * ActivityInstance - canonical shape for a single Activity instance plus
+ * helpers to create/clone one. ActivityQueue is the only module allowed to
+ * assign `instanceId` (it owns the per-activity sequence numbers); this
+ * module just owns the instance's field defaults so every queue produces
+ * consistent, snapshot-safe instances.
+ */
+export function createActivityInstance({ instanceId, activityId, queueId, currentNodeId = null }) {
+  return {
+    instanceId,
+    activityId,
+    queueId,
+    status: "unresolved",
+    resolutionReason: null,
+    currentNodeId,
+    waitingNodeId: null,
+    executedNodeIds: [],
+  };
 }
+
+/** Deep clone, breaking every reference — used by ActivityQueue.snapshot() to emulate a true save/load boundary. */
+export function cloneActivityInstance(instance) {
+  return JSON.parse(JSON.stringify(instance));
+}
+
+export default createActivityInstance;

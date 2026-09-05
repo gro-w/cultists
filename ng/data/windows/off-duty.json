@@ -1,0 +1,715 @@
+{
+  "id": "off-duty",
+  "title": "下班模式",
+  "icon": "🌙",
+  "mode": "window",
+  "fullscreen": true,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 12,
+    "padding": 24,
+    "align": "center",
+    "justify": "center",
+    "children": [
+      {
+        "widgetId": "off-duty-title",
+        "type": "label",
+        "className": "ng-off-duty-title",
+        "text": "下班模式"
+      },
+      {
+        "widgetId": "off-duty-hint",
+        "type": "label",
+        "text": "点击右上角关闭按钮结束休息，返回桌面。"
+      },
+      {
+        "widgetId": "off-duty-roommates",
+        "type": "container",
+        "flow": "horizontal",
+        "gap": 16,
+        "children": [
+          {
+            "widgetId": "off-duty-card-ajie",
+            "type": "container",
+            "flow": "vertical",
+            "gap": 4,
+            "align": "center",
+            "className": "ng-off-duty-card",
+            "children": [
+              {
+                "widgetId": "off-duty-ajie-avatar",
+                "type": "label",
+                "className": "ng-off-duty-avatar",
+                "text": {
+                  "nodeId": "ajieAvatar",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-ajie-name",
+                "type": "label",
+                "text": {
+                  "nodeId": "ajieName",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-ajie-fav",
+                "type": "label",
+                "text": {
+                  "nodeId": "ajieFavText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-ajie-san",
+                "type": "label",
+                "text": {
+                  "nodeId": "ajieSanText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-ajie-interact",
+                "type": "button",
+                "text": "交流",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "ajieNpc": {
+                        "id": "ajieNpc",
+                        "type": "getVariable",
+                        "inputs": {
+                          "key": "dorm:npc0"
+                        }
+                      },
+                      "ajieName": {
+                        "id": "ajieName",
+                        "type": "getProperty",
+                        "inputs": {
+                          "value": {
+                            "nodeId": "ajieNpc",
+                            "port": "value"
+                          },
+                          "key": "name"
+                        }
+                      },
+                      "buildMessage": {
+                        "id": "buildMessage",
+                        "type": "arithmetic",
+                        "inputs": {
+                          "operator": "concat",
+                          "left": {
+                            "nodeId": "ajieName",
+                            "port": "value"
+                          },
+                          "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
+                        }
+                      },
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "setMessage",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "setMessage": {
+                        "id": "setMessage",
+                        "type": "setVariable",
+                        "inputs": {
+                          "key": "dorm:message",
+                          "value": {
+                            "nodeId": "buildMessage",
+                            "port": "value"
+                          }
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "off-duty-card-awei",
+            "type": "container",
+            "flow": "vertical",
+            "gap": 4,
+            "align": "center",
+            "className": "ng-off-duty-card",
+            "children": [
+              {
+                "widgetId": "off-duty-awei-avatar",
+                "type": "label",
+                "className": "ng-off-duty-avatar",
+                "text": {
+                  "nodeId": "aweiAvatar",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-awei-name",
+                "type": "label",
+                "text": {
+                  "nodeId": "aweiName",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-awei-fav",
+                "type": "label",
+                "text": {
+                  "nodeId": "aweiFavText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-awei-san",
+                "type": "label",
+                "text": {
+                  "nodeId": "aweiSanText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-awei-interact",
+                "type": "button",
+                "text": "交流",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "aweiNpc": {
+                        "id": "aweiNpc",
+                        "type": "getVariable",
+                        "inputs": {
+                          "key": "dorm:npc1"
+                        }
+                      },
+                      "aweiName": {
+                        "id": "aweiName",
+                        "type": "getProperty",
+                        "inputs": {
+                          "value": {
+                            "nodeId": "aweiNpc",
+                            "port": "value"
+                          },
+                          "key": "name"
+                        }
+                      },
+                      "buildMessage": {
+                        "id": "buildMessage",
+                        "type": "arithmetic",
+                        "inputs": {
+                          "operator": "concat",
+                          "left": {
+                            "nodeId": "aweiName",
+                            "port": "value"
+                          },
+                          "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
+                        }
+                      },
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "setMessage",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "setMessage": {
+                        "id": "setMessage",
+                        "type": "setVariable",
+                        "inputs": {
+                          "key": "dorm:message",
+                          "value": {
+                            "nodeId": "buildMessage",
+                            "port": "value"
+                          }
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "off-duty-card-binbin",
+            "type": "container",
+            "flow": "vertical",
+            "gap": 4,
+            "align": "center",
+            "className": "ng-off-duty-card",
+            "children": [
+              {
+                "widgetId": "off-duty-binbin-avatar",
+                "type": "label",
+                "className": "ng-off-duty-avatar",
+                "text": {
+                  "nodeId": "binbinAvatar",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-binbin-name",
+                "type": "label",
+                "text": {
+                  "nodeId": "binbinName",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-binbin-fav",
+                "type": "label",
+                "text": {
+                  "nodeId": "binbinFavText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-binbin-san",
+                "type": "label",
+                "text": {
+                  "nodeId": "binbinSanText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-binbin-interact",
+                "type": "button",
+                "text": "交流",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "binbinNpc": {
+                        "id": "binbinNpc",
+                        "type": "getVariable",
+                        "inputs": {
+                          "key": "dorm:npc2"
+                        }
+                      },
+                      "binbinName": {
+                        "id": "binbinName",
+                        "type": "getProperty",
+                        "inputs": {
+                          "value": {
+                            "nodeId": "binbinNpc",
+                            "port": "value"
+                          },
+                          "key": "name"
+                        }
+                      },
+                      "buildMessage": {
+                        "id": "buildMessage",
+                        "type": "arithmetic",
+                        "inputs": {
+                          "operator": "concat",
+                          "left": {
+                            "nodeId": "binbinName",
+                            "port": "value"
+                          },
+                          "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
+                        }
+                      },
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "setMessage",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "setMessage": {
+                        "id": "setMessage",
+                        "type": "setVariable",
+                        "inputs": {
+                          "key": "dorm:message",
+                          "value": {
+                            "nodeId": "buildMessage",
+                            "port": "value"
+                          }
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-message",
+        "type": "label",
+        "className": "ng-off-duty-message",
+        "text": {
+          "variable": "dorm:message"
+        }
+      }
+    ]
+  },
+  "valueGraph": {
+    "nodes": {
+      "ajieNpc": {
+        "id": "ajieNpc",
+        "type": "getVariable",
+        "inputs": {
+          "key": "dorm:npc0"
+        }
+      },
+      "ajieName": {
+        "id": "ajieName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "ajieNpc",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "ajieAvatar": {
+        "id": "ajieAvatar",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "ajieNpc",
+            "port": "value"
+          },
+          "key": "avatar"
+        }
+      },
+      "ajieFav": {
+        "id": "ajieFav",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 40
+        }
+      },
+      "ajieFavText": {
+        "id": "ajieFavText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "好感度：",
+          "right": {
+            "nodeId": "ajieFav",
+            "port": "value"
+          }
+        }
+      },
+      "ajieSan": {
+        "id": "ajieSan",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 60
+        }
+      },
+      "ajieSanText": {
+        "id": "ajieSanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "SAN：",
+          "right": {
+            "nodeId": "ajieSan",
+            "port": "value"
+          }
+        }
+      },
+      "aweiNpc": {
+        "id": "aweiNpc",
+        "type": "getVariable",
+        "inputs": {
+          "key": "dorm:npc1"
+        }
+      },
+      "aweiName": {
+        "id": "aweiName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "aweiNpc",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "aweiAvatar": {
+        "id": "aweiAvatar",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "aweiNpc",
+            "port": "value"
+          },
+          "key": "avatar"
+        }
+      },
+      "aweiFav": {
+        "id": "aweiFav",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 41
+        }
+      },
+      "aweiFavText": {
+        "id": "aweiFavText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "好感度：",
+          "right": {
+            "nodeId": "aweiFav",
+            "port": "value"
+          }
+        }
+      },
+      "aweiSan": {
+        "id": "aweiSan",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 61
+        }
+      },
+      "aweiSanText": {
+        "id": "aweiSanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "SAN：",
+          "right": {
+            "nodeId": "aweiSan",
+            "port": "value"
+          }
+        }
+      },
+      "binbinNpc": {
+        "id": "binbinNpc",
+        "type": "getVariable",
+        "inputs": {
+          "key": "dorm:npc2"
+        }
+      },
+      "binbinName": {
+        "id": "binbinName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "binbinNpc",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "binbinAvatar": {
+        "id": "binbinAvatar",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "binbinNpc",
+            "port": "value"
+          },
+          "key": "avatar"
+        }
+      },
+      "binbinFav": {
+        "id": "binbinFav",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 42
+        }
+      },
+      "binbinFavText": {
+        "id": "binbinFavText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "好感度：",
+          "right": {
+            "nodeId": "binbinFav",
+            "port": "value"
+          }
+        }
+      },
+      "binbinSan": {
+        "id": "binbinSan",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 62
+        }
+      },
+      "binbinSanText": {
+        "id": "binbinSanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "SAN：",
+          "right": {
+            "nodeId": "binbinSan",
+            "port": "value"
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "onCreate": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {
+          "id": "start",
+          "type": "flowStart",
+          "inputs": {},
+          "next": {
+            "flowOut": {
+              "nodeId": "get-ajie",
+              "port": "flowIn"
+            }
+          }
+        },
+        "get-ajie": {
+          "id": "get-ajie",
+          "type": "getRecord",
+          "inputs": {
+            "databaseId": "npcs",
+            "key": "ajie",
+            "resultVariable": "dorm:npc0"
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "get-awei",
+              "port": "flowIn"
+            }
+          }
+        },
+        "get-awei": {
+          "id": "get-awei",
+          "type": "getRecord",
+          "inputs": {
+            "databaseId": "npcs",
+            "key": "awei",
+            "resultVariable": "dorm:npc1"
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "get-binbin",
+              "port": "flowIn"
+            }
+          }
+        },
+        "get-binbin": {
+          "id": "get-binbin",
+          "type": "getRecord",
+          "inputs": {
+            "databaseId": "npcs",
+            "key": "binbin",
+            "resultVariable": "dorm:npc2"
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "clearMessage",
+              "port": "flowIn"
+            }
+          }
+        },
+        "clearMessage": {
+          "id": "clearMessage",
+          "type": "setVariable",
+          "inputs": {
+            "key": "dorm:message",
+            "value": ""
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "markDormSeen",
+              "port": "flowIn"
+            }
+          }
+        },
+        "markDormSeen": {
+          "id": "markDormSeen",
+          "type": "markOnboardingMilestone",
+          "inputs": {
+            "id": "dorm_seen"
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "consume",
+              "port": "flowIn"
+            }
+          }
+        },
+        "consume": {
+          "id": "consume",
+          "type": "consumeTime",
+          "inputs": {
+            "minutes": 480
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "end",
+              "port": "flowIn"
+            }
+          }
+        },
+        "end": {
+          "id": "end",
+          "type": "activityEnd",
+          "inputs": {}
+        }
+      }
+    },
+    "onDestroy": null
+  }
+}

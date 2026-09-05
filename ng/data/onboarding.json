@@ -1,0 +1,8 @@
+[
+  { "id": "welcome", "trigger": "desktop_seen", "completeOn": "his_opened", "target": ".desktop-icon[data-icon-id=\"his\"]", "title": "欢迎！新的实习生~", "text": "请先打开 HIS 系统吧！" },
+  { "id": "his-first-open", "trigger": "his_opened", "completeOn": "first_patient_selected", "target": ".his-patient-btn", "title": "第一次问诊", "text": "点击病人查看对话，收集症状，最后提交诊断与处方。" },
+  { "id": "keyword-first", "trigger": "first_patient_selected", "completeOn": "first_keyword_collected", "target": ".keyword-highlight", "title": "收集关键词", "text": "对话里高亮的文字是关键词，点击它就能收集到笔记本里。" },
+  { "id": "notebook-first-open", "trigger": "first_keyword_collected", "completeOn": "notebook_opened", "target": ".desktop-icon[data-icon-id=\"notebook\"]", "title": "关键词笔记本", "text": "你收集到的关键词会保存在这里。点击桌面上的笔记本，就能查看它们。" },
+  { "id": "chatgtp-suggestion", "trigger": "notebook_opened", "completeOn": "chatgtp_opened", "target": ".desktop-icon[data-icon-id=\"chatgtp\"]", "title": "需要一点帮助？", "text": "不知道该选什么诊断用什么药？要不要试试问问万能的 ChatGTP？" },
+  { "id": "diagnosis-submit", "trigger": "chatgtp_opened", "completeOn": "first_diagnosis_submitted", "target": ".his-prescription", "title": "提交问诊", "text": "选好诊断和处方后点击提交，会结算这次问诊的奖金与提成。" }
+]

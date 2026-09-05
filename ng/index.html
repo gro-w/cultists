@@ -1,24 +1,13 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="zh-Hans">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>cultists · next generation engine</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cultists (ng)</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main id="desktop" class="desktop" aria-label="cultists desktop">
-    <div id="desktop-icons" class="desktop-icons"></div>
-    <section id="window-layer" class="window-layer" aria-live="polite"></section>
-    <!-- DEV-TOOLS:START -->
-    <div id="desktop-label" class="desktop-label" hidden></div>
-    <!-- DEV-TOOLS:END -->
-  </main>
-  <footer id="taskbar" class="taskbar">
-    <button id="start-button" class="win-button start-button" type="button">▣ 开始</button>
-    <div id="task-list" class="task-list"></div>
-    <div class="taskbar-clock" id="taskbar-clock">08:00</div>
-  </footer>
+  <div id="ng-root"></div>
   <script type="module" src="engine.js"></script>
 </body>
 </html>

@@ -67,9 +67,16 @@ export async function bootstrap(rootEl) {
   // Generic seed-content loader (plan §9.3): a `{ databaseId: records[] }`
   // map of pre-authored records, config-driven exactly like
   // structures/databases/publicVariables above - not a per-domain importer.
+  // `seedRecords` may be a single filename or an array of filenames (large
+  // domains like the 48,195-entry ChatGTP QA table are split into their own
+  // file so the "main" seed file stays reviewable) - every file's map is
+  // merged into the same DataStore via loadRecordSet.
   if (engineConfig.seedRecords) {
-    const seedResponse = await fetch(`data/${engineConfig.seedRecords}`);
-    if (seedResponse.ok) dataStore.loadRecordSet(await seedResponse.json());
+    const seedFiles = Array.isArray(engineConfig.seedRecords) ? engineConfig.seedRecords : [engineConfig.seedRecords];
+    for (const seedFile of seedFiles) {
+      const seedResponse = await fetch(`data/${seedFile}`);
+      if (seedResponse.ok) dataStore.loadRecordSet(await seedResponse.json());
+    }
   }
 
   // Declarative gameClock mirror (see PublicVariableManager's `syncSource`

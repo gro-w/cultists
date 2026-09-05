@@ -1,4 +1,13 @@
 {
   "id": "default",
-  "activityIds": ["default", "off-duty-open", "use-item", "medical-appointment-watcher", "work01a-patient1", "work01a-patient1-start"]
+  "activityIds": [
+    "default", "off-duty-open", "use-item", "medical-appointment-watcher",
+    "work01a-patient1", "work01a-patient1-start",
+    "work01a-patient2", "work01a-patient2-start",
+    "work01a-patient3", "work01a-patient3-start",
+    "work01a-patient4", "work01a-patient4-start",
+    "work01a-patient5", "work01a-patient5-start",
+    "work01a-patient6", "work01a-patient6-start",
+    "work01a-patient7", "work01a-patient7-start"
+  ]
 }

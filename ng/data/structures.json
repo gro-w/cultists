@@ -14,7 +14,11 @@
     "fields": [
       { "id": "id", "type": "string" },
       { "id": "name", "type": "string" },
-      { "id": "npcRef", "type": "objectRef" }
+      { "id": "npcRef", "type": "objectRef" },
+      { "id": "age", "type": "smallInteger", "default": 0 },
+      { "id": "correctDiagnosisId", "type": "string", "default": "" },
+      { "id": "diagnosisOptionIds", "type": "array<string>", "default": [] },
+      { "id": "dialogueActivityId", "type": "string", "default": "" }
     ]
   },
   {
@@ -71,6 +75,14 @@
     ]
   },
   {
+    "id": "chatgtpQaEntry",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "keywords", "type": "array<string>", "default": [] },
+      { "id": "answer", "type": "string", "default": "" }
+    ]
+  },
+  {
     "id": "treatment",
     "fields": [
       { "id": "id", "type": "string" },
@@ -85,7 +97,9 @@
       { "id": "status", "type": "string", "default": "open" },
       { "id": "symptomIds", "type": "array<string>", "default": [] },
       { "id": "diagnosisId", "type": "string", "default": "" },
-      { "id": "treatmentId", "type": "string", "default": "" }
+      { "id": "treatmentId", "type": "string", "default": "" },
+      { "id": "prescribedMedicineIds", "type": "array<string>", "default": [] },
+      { "id": "correct", "type": "bool", "default": false }
     ]
   },
   {

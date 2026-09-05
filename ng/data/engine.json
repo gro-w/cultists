@@ -7,6 +7,6 @@
   "structures": "structures.json",
   "databases": "databases.json",
   "publicVariables": "public-variables.json",
-  "seedRecords": "seed-records.json",
+  "seedRecords": ["seed-records.json", "seed-records-chatgtp.json"],
   "defaultActivity": { "queueId": "main", "activityId": "default" }
 }

@@ -6,6 +6,7 @@
   { "databaseId": "diagnosisCategories", "recordType": "diagnosisCategory", "primaryKey": "id" },
   { "databaseId": "medicines", "recordType": "medicine", "primaryKey": "id" },
   { "databaseId": "medicineCategories", "recordType": "medicineCategory", "primaryKey": "id" },
+  { "databaseId": "chatgtpQaEntries", "recordType": "chatgtpQaEntry", "primaryKey": "id", "allowDelete": false },
   { "databaseId": "treatments", "recordType": "treatment", "primaryKey": "id" },
   { "databaseId": "medicalCases", "recordType": "medicalCase", "primaryKey": "id" },
   { "databaseId": "patientDialogueContexts", "recordType": "patientDialogueContext", "primaryKey": "id" },

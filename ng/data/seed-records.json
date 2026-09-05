@@ -8242,5 +8242,98 @@
         "menopause"
       ]
     }
+  ],
+  "patients": [
+    {
+      "id": "patient_lin_ruoqing_01",
+      "name": "林若晴",
+      "npcRef": null,
+      "age": 29,
+      "correctDiagnosisId": "acute_gastritis",
+      "diagnosisOptionIds": [
+        "acute_gastritis",
+        "gastroesophageal_reflux",
+        "peptic_ulcer_unspecified"
+      ],
+      "dialogueActivityId": "work01a-patient1-start"
+    },
+    {
+      "id": "patient_01_02_kidney_stone",
+      "name": "朱梦瑶",
+      "npcRef": null,
+      "age": 44,
+      "correctDiagnosisId": "kidney_stone",
+      "diagnosisOptionIds": [
+        "kidney_stone",
+        "iron_deficiency_anemia",
+        "ulcerative_colitis"
+      ],
+      "dialogueActivityId": "work01a-patient2-start"
+    },
+    {
+      "id": "patient_01_03_benign_prostatic_hyperplasia",
+      "name": "韩子轩",
+      "npcRef": null,
+      "age": 33,
+      "correctDiagnosisId": "benign_prostatic_hyperplasia",
+      "diagnosisOptionIds": [
+        "benign_prostatic_hyperplasia",
+        "dry_eye",
+        "hemorrhoids"
+      ],
+      "dialogueActivityId": "work01a-patient3-start"
+    },
+    {
+      "id": "patient_01_04_nausea_vomiting",
+      "name": "吴博文",
+      "npcRef": null,
+      "age": 28,
+      "correctDiagnosisId": "nausea_vomiting",
+      "diagnosisOptionIds": [
+        "nausea_vomiting",
+        "bacterial_conjunctivitis",
+        "kidney_stone"
+      ],
+      "dialogueActivityId": "work01a-patient4-start"
+    },
+    {
+      "id": "patient_01_05_lymphadenopathy",
+      "name": "罗安琪",
+      "npcRef": null,
+      "age": 50,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "ulcerative_colitis",
+        "benign_prostatic_hyperplasia"
+      ],
+      "dialogueActivityId": "work01a-patient5-start"
+    },
+    {
+      "id": "patient_01_06_orthostatic_hypotension",
+      "name": "郭可欣",
+      "npcRef": null,
+      "age": 55,
+      "correctDiagnosisId": "orthostatic_hypotension",
+      "diagnosisOptionIds": [
+        "orthostatic_hypotension",
+        "hemorrhoids",
+        "nausea_vomiting"
+      ],
+      "dialogueActivityId": "work01a-patient6-start"
+    },
+    {
+      "id": "patient_01_07_closed_foot_fracture",
+      "name": "郑文博",
+      "npcRef": null,
+      "age": 47,
+      "correctDiagnosisId": "closed_foot_fracture",
+      "diagnosisOptionIds": [
+        "closed_foot_fracture",
+        "kidney_stone",
+        "lymphadenopathy"
+      ],
+      "dialogueActivityId": "work01a-patient7-start"
+    }
   ]
 }

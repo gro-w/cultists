@@ -1145,7 +1145,21 @@ UI 不直接修改库存，也不直接推进时间。
 
 **仍未开始（本切片之后）**：HIS 窗口本身（分类/诊断下拉、处方编辑器、提交后的判定/结算逻辑与 `medicalCaseManager` 等价物）尚未用窗口编辑器新建——本切片只搭好了它要读的参考数据库；ChatGTP 窗口（`js/apps/ChatGTPApp.js`，`chatgtp_qa.json` 432,840 行/48,195 条问答尚未导入/无窗口，且其分类下拉同样依赖本切片刚迁移的 diagnoses/medicines 数据库）；下班模式中和室友互动的界面与交互流程（`js/desktop/DormMode.js` 1069 行，`off-duty` 窗口仍是占位）仍是最大的未动项。三者都需要按"结构→数据库→窗口/Activity→行为矩阵→探针"节奏继续分切片推进。
 
-### Phase 9：ng/ 成熟后的根目录替换
+第八个切片：**work01a 剩余病人 + ChatGTP 48,195 条问答库迁移脚本 + HIS/ChatGTP 窗口 + 下班室友互动 UI**——一次性推进上一切片列出的三个最大未动项。批量迁移 `work01a.json` 剩余 6 名病人（`work01a-patient{2..7}.json`+`-start.json`，同第五切片手法），扩展 `patient`/`medicalCase` 结构以承载诊断判定所需字段。新增 `ng/tools/migrate-legacy-chatgtp-qa.mjs`：把 `data/zh-hans/chatgtp_qa.json`（432,840 行/48,195 条）转换为 `ng/data/seed-records-chatgtp.json`（`chatgtpQaEntries` 数据库记录，`id` 用旧引擎 `entryKey()` 同款排序拼接的关键词组合键，未改变查找语义）+ `ng/data/chatgtp-settings.json`（SAN 消耗/离线文案等设置，后并入 `chatgtpSettings` 数据库单条 `id:"default"` 记录，供窗口蓝图用既有 `getRecord` 读取，不新增"读任意 JSON 文件"节点）；`engine.json` 的 `seedRecords` 配置键扩展为支持数组形式的多个种子文件。
+
+为了让 HIS/ChatGTP/下班三个窗口按用户"用窗口编辑器搭建"的要求以纯声明式 widget 树 + Activity 蓝图实现（而非新写专用 JS 视图模块），先做了两处必要的通用引擎扩展：(1) `ng/core/WidgetLayoutRenderer.js`——`select.options`/`list.items` 现在可以是绑定值（`{variable:"key"}`），新增 `optionValueField`/`optionLabelField`/`itemLabelField` 让原始数据库记录（任意字段名）直接填充下拉/列表而无需额外的映射/循环节点，`list` 新增 `onItemClick` 事件把被点项的 `id` 作为 `event:value` 转发；(2) `ng/desktop/WindowFrame.js`——widget 树窗口现在订阅 `variable:changed` 并整体重渲染 `root` 子树（`_bindRootRefresh`/`_rerenderRoot`），带焦点与选区保留，使得任何绑定 `textInput` 不会因为重渲染而中断输入。`ActivityNodeRegistry.js`/`ActivityRunner.js` 新增三个通用取值节点：`getProperty`（读对象单字段）、`arrayAppend`（数组追加）、`conditionalValue`（三元选择，用于只用比较+条件取值模拟"取两项中较小者"而不新增专用排序节点），以及算术运算新增 `concat`（字符串拼接，区别于 `+` 的数值强制转换）。
+
+**过程中发现并修复了 `ActivityRunner.js` 里一个真实的既存 bug**：`execute()` 内几乎所有 `resolveInput()` 调用点的位置参数都传错了（把 `pvGateway` 传进了 `stack` 形参槽，真正的 `stack`/`pvGateway` 都留在默认值），这个 bug 多年来没被发现是因为它只有在某个流程节点的取值输入被连线到"链式取值节点图"（而非字面量或 `{variable}` 简写）时才会发作——本仓库现存内容此前从未这样连过线，直到 HIS 窗口的 `createRecord`/`setVariable` 节点第一次需要这么做。已用批量正则替换修复全部调用点，并逐一 grep 确认无遗漏。同时发现 `resolveInput` 此前只在"整个输入值本身就是一个线引用"时才解析（如 `{nodeId,port}`/`{variable}`），从不递归查找复合对象/数组字面量内部嵌套的线引用（例如 `createRecord` 的 `data:{patientId:{nodeId:...},...}`，整个 `data` 对象会被原样返回、内部引用完全不解析）——新增 `resolveDeep()` 递归解析器，`resolveInput` 现在对所有输入调用它，是既有行为的严格超集。
+
+`ng/data/windows/his.json`：病人列表（`list` 绑定 `patients` 数据库）→"开始问诊"按钮动态取选中病人的 `dialogueActivityId` 并 `runActivity`→诊断/处方 `select` 绑定 `diagnoses`/`medicines` 数据库→`arrayAppend` 累积处方→提交按钮 `createRecord` 写入 `medicalCases` 记录并按 `correctDiagnosisId` 判定对错。已知简化：诊断/处方下拉目前展示全部条目而非按病人的 `diagnosisOptionIds` 过滤（引擎尚无循环/过滤节点）。`ng/data/windows/chatgtp.json`：keyword1/keyword2 两个 `select` 绑定 `keywords` 数据库，"查询"按钮用 `conditionalValue`+`concat` 模拟旧引擎 `entryKey()` 的排序拼接（两项定长场景下无需新增排序节点），对 `chatgtpQaEntries` 做 `getRecord` 查找，未命中则回退提示文案；通过 `publicVariableCondition`（id 5 "ChatGTP SAN"）判断在线/离线，在线扣费读自 `chatgtpSettings` 记录的 `sanCostPerQuery`，离线展示其 `offlineAnswer`。已知简化：回答用纯文本 `label` 渲染，`[[keyword_id|文本]]` 标记暂不支持关键词高亮/点击收集（`label` widget 无富文本变体）。两窗口均已注册进 `engine.json` 的 `windowManifest` 并各自挂了桌面图标。
+
+`ng/data/windows/off-duty.json` 从占位换成真正的宿舍室友互动 UI：沿用旧引擎硬编码的 `NPC_IDS = ["ajie","awei","binbin"]` 顺序（对应公共变量好感度 id 40/41/42、SAN id 60/61/62，语义见 `AGENTS.md`），`onCreate` 用 `getRecord` 读取三名室友的 `npcs` 记录存入变量，widget 树用 `valueGraph`（`getProperty`+`getPublicVariable`+`concat`）为每名室友渲染头像/姓名/"好感度：N"/"SAN：N"，每人一个"交流"按钮。因为暂无任何 social 对话 Activity 迁移进 ng/，交流按钮目前只置换一条"宿舍剧情尚未迁移"的占位文案；仍保留窗口自身 `onCreate` 里显式 `consumeTime(480)`（决策 13/§7.4 既定行为，不受本切片影响）。
+
+行为矩阵：`ng/probes/value-node-probe.mjs`（`getProperty`/`arrayAppend`/`conditionalValue`/`concat`）、`ng/probes/his-window-probe.mjs`（全部内联蓝图校验 + 端到端选病人→问诊跳转→诊断→开药→提交→判定，含误诊场景）、`ng/probes/chatgtp-window-probe.mjs`（单/双关键词组合查找与顺序无关性、SAN 门禁与扣费、未命中回退、离线文案）、`ng/probes/off-duty-window-probe.mjs`（三名室友数据加载、`valueGraph` 展示文本、逐一点击"交流"的占位消息）；`ng/probes/window-lifecycle-probe.mjs` 相应更新其测试用 `buildHarness()`，为窗口生命周期蓝图接入真实 `dbGateway`/`pvGateway`（此前是纯 no-op 桩，off-duty.json 的 `onCreate` 现在真的会读数据库/公共变量）。全部 32 份探针通过。
+
+**仍未开始**：HIS/ChatGTP 下拉的按条件过滤（需要循环/过滤类节点，当前是已知简化）；ChatGTP 回答的富文本关键词高亮（需要新 widget 类型或专用 JS）；宿舍室友"交流"按钮的真实 social 对话内容（需要先迁移 `social*.json`）；`work02a/03a/04a/06a/07a/07b.json`/`social*.json` 仍未批量写出接入；`DayNightSystem`/`phase`/`duty`/`location` 状态机仍无内容层等价物。
+
+
 
 该阶段不是日常开发的一部分，只有新引擎和首批改编内容达到发布质量后执行：
 

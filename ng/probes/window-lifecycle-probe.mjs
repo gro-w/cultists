@@ -10,6 +10,10 @@ import { GameClock } from "../core/GameClock.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
+import { DataStructureManager } from "../core/DataStructureManager.js";
+import { DataStore } from "../core/DataStore.js";
+import { PublicVariableManager } from "../core/PublicVariableManager.js";
+import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -19,7 +23,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * through the shared ActivityExecutionService whenever WindowManager emits
  * `window:opened`/`window:closed`, on a dedicated non-blocking queue.
  */
-function wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock }) {
+function wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock, dbGateway, pvGateway }) {
   const windowEventsQueue = activityQueueRegistry.register("window-events", { nonBlocking: true });
   function runWindowLifecycleEvent(windowId, eventName) {
     const definition = windowDefinitionStore.get(windowId);
@@ -36,11 +40,29 @@ function wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueReg
       variableStore,
       timeGateway: (minutes) => gameClock.advance(minutes),
       windowGateway: () => {},
+      dbGateway,
+      pvGateway,
     });
   }
   eventBus.on("window:opened", ({ windowId }) => runWindowLifecycleEvent(windowId, "onCreate"));
   eventBus.on("window:closed", ({ windowId }) => runWindowLifecycleEvent(windowId, "onDestroy"));
   return { windowEventsQueue };
+}
+
+// Real seeded data (structures/databases/npcs + public-variable defs), used
+// so window onCreate blueprints that read them (e.g. off-duty.json's dorm
+// roommate cards) behave exactly as they would wired through engine.js.
+function buildDataGateways() {
+  const dataDir = path.join(__dirname, "../data");
+  const readJSON = (relPath) => JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
+  const dataStructureManager = new DataStructureManager();
+  dataStructureManager.loadDefinitions(readJSON("structures.json"));
+  const dbGateway = new DataStore(dataStructureManager);
+  dbGateway.loadDefinitions(readJSON("databases.json"));
+  dbGateway.loadRecordSet(readJSON("seed-records.json"));
+  const pvGateway = new PublicVariableManager(new RuntimeRefResolver(), new EventBus());
+  pvGateway.loadDefinitions(readJSON("public-variables.json"));
+  return { dbGateway, pvGateway };
 }
 
 function buildHarness() {
@@ -51,7 +73,8 @@ function buildHarness() {
   const gameClock = new GameClock(eventBus);
   const activityQueueRegistry = new ActivityQueueRegistry();
   const activityExecutionService = new ActivityExecutionService(eventBus);
-  wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock });
+  const { dbGateway, pvGateway } = buildDataGateways();
+  wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueRegistry, activityExecutionService, variableStore, gameClock, dbGateway, pvGateway });
   return { eventBus, windowManager, windowDefinitionStore, variableStore, gameClock };
 }
 

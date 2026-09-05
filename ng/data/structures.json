@@ -29,7 +29,45 @@
     "id": "diagnosis",
     "fields": [
       { "id": "id", "type": "string" },
-      { "id": "name", "type": "string" }
+      { "id": "categoryId", "type": "string", "default": "" },
+      { "id": "icd10", "type": "string", "default": "" },
+      { "id": "normalName", "type": "string", "default": "" },
+      { "id": "lowSanName", "type": "string", "default": "" },
+      { "id": "applicableMedicineIds", "type": "array<string>", "default": [] },
+      { "id": "prohibitedMedicineIds", "type": "array<string>", "default": [] },
+      { "id": "symptomIds", "type": "array<string>", "default": [] }
+    ]
+  },
+  {
+    "id": "diagnosisCategory",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "icdChapter", "type": "string", "default": "" },
+      { "id": "icdLetter", "type": "string", "default": "" },
+      { "id": "icdRange", "type": "string", "default": "" },
+      { "id": "name", "type": "string", "default": "" }
+    ]
+  },
+  {
+    "id": "medicine",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "effect", "type": "string", "default": "" },
+      { "id": "price", "type": "integer", "default": 0 },
+      { "id": "commission", "type": "real", "default": 0 },
+      { "id": "categoryId", "type": "string", "default": "" },
+      { "id": "applicableDiagnosisIds", "type": "array<string>", "default": [] },
+      { "id": "prohibitedDiagnosisIds", "type": "array<string>", "default": [] }
+    ]
+  },
+  {
+    "id": "medicineCategory",
+    "fields": [
+      { "id": "id", "type": "string" },
+      { "id": "name", "type": "string" },
+      { "id": "medicineIds", "type": "array<string>", "default": [] },
+      { "id": "correspondingDiseaseCategoryIds", "type": "array<string>", "default": [] }
     ]
   },
   {

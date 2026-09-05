@@ -1141,6 +1141,10 @@ UI 不直接修改库存，也不直接推进时间。
 
 **仍未开始**：ChatGTP 窗口（`js/apps/ChatGTPApp.js`，`chatgtp_qa.json` 432,840 行问答库尚未导入/无窗口）、HIS 窗口的诊断与开药部分（`js/apps/HISApp.js` 的分类/诊断下拉、处方编辑器、`medicines.json`/`diagnoses.json` 分类树，仅问诊对话本身已迁移，提交诊断后的判定/结算逻辑未动）、下班模式中和室友互动的界面与交互流程（`js/desktop/DormMode.js` 1069 行，ng 的 `off-duty` 窗口目前只是一个空占位，没有室友列表/好感度互动/对话入口）、`work01a.json` 其余 6 名病人 + `work02a/03a/04a/06a/07a/07b.json`/`social*.json` 的批量写出与桌面/窗口接入（目前只手工接入了 1 份作为端到端验证）、旧引擎 `DayNightSystem`/`phase`/`duty`/`location` 工作日-休息日状态机在 ng 中完全没有内容层等价物、`his*` 医疗 App 专属渲染（病人列表/诊断/处方界面）仍未设计。
 
+第七个切片：**HIS 诊断/开药参考数据迁移（结构+数据库，非硬编码）**——针对用户提出的"新建HIS app窗口……完全移植……关键词应该使用新引擎的数据库与数据结构功能，而不是写进代码里面"需求做的准备工作。确认关键词部分（第六切片 `KeywordManager`）本就只读 `keywords` 数据库，不含任何硬编码领域概念，符合要求，无需改动。确认 Activity 编辑器可编辑全部列表（`ng/dev/ActivityListManagerModel.js`/`ActivityListManagerView.js` + `DeveloperMode.js#loadExistingActivities` 早已按 `engine.json` 的 `activityLists` 数组加载并可切换全部列表下的 activity，非只有 default），已用 `ng/probes/activity-editor-probe.mjs` 验证，无需改动。本切片新增 HIS 诊断/开药所需的参考数据基础设施：扩展 `diagnosis` 结构（补齐 `icd10`/`normalName`/`lowSanName`/`categoryId`/`applicableMedicineIds`/`prohibitedMedicineIds`/`symptomIds`，此前只有 `id`/`name` 占位字段）、新增 `diagnosisCategory`/`medicine`/`medicineCategory` 三个结构+数据库，新增 `ng/tools/migrate-legacy-medical-reference.mjs` 把 `data/zh-hans/diagnoses.json`（114 条诊断，14 个 ICD 分类）与 `data/zh-hans/medicines.json`（152 种药物，18 个药物分类）转换为 seed-records 格式并入 `ng/data/seed-records.json`。行为矩阵见 `ng/probes/legacy-medical-reference-probe.mjs`（全量加载校验、已知条目 spot-check、未知 id 查询返回 null 不伪造记录）。
+
+**仍未开始（本切片之后）**：HIS 窗口本身（分类/诊断下拉、处方编辑器、提交后的判定/结算逻辑与 `medicalCaseManager` 等价物）尚未用窗口编辑器新建——本切片只搭好了它要读的参考数据库；ChatGTP 窗口（`js/apps/ChatGTPApp.js`，`chatgtp_qa.json` 432,840 行/48,195 条问答尚未导入/无窗口，且其分类下拉同样依赖本切片刚迁移的 diagnoses/medicines 数据库）；下班模式中和室友互动的界面与交互流程（`js/desktop/DormMode.js` 1069 行，`off-duty` 窗口仍是占位）仍是最大的未动项。三者都需要按"结构→数据库→窗口/Activity→行为矩阵→探针"节奏继续分切片推进。
+
 ### Phase 9：ng/ 成熟后的根目录替换
 
 该阶段不是日常开发的一部分，只有新引擎和首批改编内容达到发布质量后执行：

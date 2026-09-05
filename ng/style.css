@@ -452,6 +452,44 @@ button {
   padding: 4px 12px;
 }
 
+.keyword-highlight {
+  background: #ffe680;
+  border-bottom: 1px dashed #a86b00;
+  cursor: pointer;
+  padding: 0 2px;
+  font-weight: bold;
+}
+
+.keyword-highlight.keyword-highlight-collected {
+  background: #c8f7c5;
+  color: #1a6b1a;
+  border-bottom-color: #1a6b1a;
+}
+
+.ng-notebook-view {
+  height: 100%;
+  overflow: auto;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.ng-notebook-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--w95-gray-dark);
+}
+
+.ng-notebook-day {
+  color: var(--w95-gray-darker, #444);
+  white-space: nowrap;
+}
+
+.ng-notebook-empty {
+  color: var(--w95-gray-darker, #444);
+}
+
 /* DEV-TOOLS:START */
 .ng-list-manager {
   display: flex;

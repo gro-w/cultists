@@ -12,11 +12,19 @@
  * queues don't interleave into one transcript: this view only renders
  * events for the instance it is currently "following" (the most recent
  * instance to emit, until the window is reset).
+ *
+ * `text` payloads may also carry `keywordIds` (unused today, kept for
+ * parity with the legacy payload shape) - keyword highlighting itself is
+ * driven purely by `[[id]]`/`[[id|display]]` markers inside `text` via
+ * `KeywordManager.renderHighlightedText()`, so any already-migrated
+ * dialogue line collects keywords with no per-line authoring changes.
  */
 export class DialogueView {
-  constructor({ eventBus, variableStore } = {}) {
+  constructor({ eventBus, variableStore, keywordManager, gameClock } = {}) {
     this.eventBus = eventBus;
     this.variableStore = variableStore;
+    this.keywordManager = keywordManager;
+    this.gameClock = gameClock;
     this.instanceId = null;
     this._buildDom();
     this._unsubscribers = [
@@ -35,6 +43,17 @@ export class DialogueView {
     this.el = el;
     this.transcriptEl = el.querySelector(".ng-dialogue-transcript");
     this.controlsEl = el.querySelector(".ng-dialogue-controls");
+    // Event delegation (plan §15 风险 F: this listener knows nothing about
+    // *which* keyword was clicked beyond its opaque id) collects a keyword
+    // the moment its highlighted span is clicked, same interaction as the
+    // legacy engine's `KeywordManager.bindHighlights()`.
+    this.transcriptEl.addEventListener("click", (event) => {
+      const span = event.target.closest(".keyword-highlight");
+      if (!span || !this.keywordManager) return;
+      const day = this.gameClock ? this.gameClock.snapshot().day : undefined;
+      this.keywordManager.collect(span.dataset.keywordId, day);
+      span.classList.add("keyword-highlight-collected");
+    });
   }
 
   /** Clears the transcript and stops following whichever instance was previously shown, for a fresh Activity run. */
@@ -49,7 +68,8 @@ export class DialogueView {
     const line = document.createElement("p");
     line.className = "ng-dialogue-line";
     const speaker = payload.speaker ? `<span class="ng-dialogue-speaker">${payload.speaker}：</span>` : "";
-    line.innerHTML = `${speaker}${this._escape(payload.text || "")}`;
+    const body = this.keywordManager ? this.keywordManager.renderHighlightedText(payload.text || "") : this._escape(payload.text || "");
+    line.innerHTML = `${speaker}${body}`;
     this.transcriptEl.appendChild(line);
     this.transcriptEl.scrollTop = this.transcriptEl.scrollHeight;
 

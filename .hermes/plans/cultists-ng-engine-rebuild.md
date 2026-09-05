@@ -1137,6 +1137,10 @@ UI 不直接修改库存，也不直接推进时间。
 
 **仍未开始**：`work01a.json` 其余 6 名病人 + `work02a/03a/04a/06a/07a/07b.json`/`social*.json` 的批量写出与桌面/窗口接入（目前只手工接入了 1 份作为端到端验证）、旧引擎 `DayNightSystem`/`phase`/`duty`/`location` 工作日-休息日状态机在 ng 中完全没有内容层等价物（`AGENTS.md` 描述的是旧引擎职责划分，ng 需要用公共变量+Activity 表达，而非新引擎代码）、`his*` 医疗 App 专属渲染（病人列表/诊断/处方界面）仍未设计。
 
+第六个切片：**关键词收集机制（通用引擎能力，非领域代码）**——针对用户提出的"关键词的收集"需求，新增 `ng/core/KeywordManager.js`：不引用 dialogue/his/item 任何具体领域概念，只理解 `keywords` 数据库（Phase 8 第二切片已迁移的 `data/zh-hans/keywords.json` 196 条 `symptom_XXX` 等记录）里 `{id, content, contentLowSan, relatedIds}` 记录，以及文本里的 `[[id]]`/`[[id|显示文本]]` 标记（与旧引擎 `js/core/KeywordManager.js` 语法完全一致）。低 SAN（<50，读取公共变量 id 1 `主角SAN`，由 `engine.js` 通过 `sanityProvider` 回调注入，模块本身不知道 id 含义）显示 `contentLowSan` 扭曲文案。`collect`/`has`/`get`/`all` 与 `snapshot()`/`restore()`（接入 `SaveManager`，存档格式升级到 v2：新增 `state.keywords`，按 `AGENTS.md`"改变 payload 要评估是否提升版本"要求，v1 存档显式拒绝而非静默迁移）。`DialogueView.js`（Phase 8 第五切片新增的通用对话窗口）改为通过 `keywordManager.renderHighlightedText()` 渲染台词，用事件委托在 transcript 容器上监听 `.keyword-highlight` 点击并调用 `collect`——不引入任何新 Activity 节点类型，收集本身是纯 UI 交互，和旧引擎行为一致。新增通用 `NotebookView.js`（笔记本窗口，列出已收集关键词+收集天数，随 `keyword:collected`/`keyword:removed` 事件重渲染）与桌面图标。已验证 `work01a-patient1.json`（第五切片迁移的问诊内容）本身就包含 11 个 `[[symptom_XXX]]`/`[[headache]]` 标记且均已存在于 seed 数据中，端到端可点击收集，无需额外内容改动。行为矩阵：见 `ng/probes/keyword-manager-probe.mjs`（标记解析去重、已知/未知 id 渲染差异、collect 幂等+仅首次触发 `keyword:new`、低 SAN 扭曲文案规则、snapshot/restore 往返）与更新后的 `ng/probes/save-manager-probe.mjs`（v2 格式号、keywords 状态往返）。
+
+**仍未开始**：ChatGTP 窗口（`js/apps/ChatGTPApp.js`，`chatgtp_qa.json` 432,840 行问答库尚未导入/无窗口）、HIS 窗口的诊断与开药部分（`js/apps/HISApp.js` 的分类/诊断下拉、处方编辑器、`medicines.json`/`diagnoses.json` 分类树，仅问诊对话本身已迁移，提交诊断后的判定/结算逻辑未动）、下班模式中和室友互动的界面与交互流程（`js/desktop/DormMode.js` 1069 行，ng 的 `off-duty` 窗口目前只是一个空占位，没有室友列表/好感度互动/对话入口）、`work01a.json` 其余 6 名病人 + `work02a/03a/04a/06a/07a/07b.json`/`social*.json` 的批量写出与桌面/窗口接入（目前只手工接入了 1 份作为端到端验证）、旧引擎 `DayNightSystem`/`phase`/`duty`/`location` 工作日-休息日状态机在 ng 中完全没有内容层等价物、`his*` 医疗 App 专属渲染（病人列表/诊断/处方界面）仍未设计。
+
 ### Phase 9：ng/ 成熟后的根目录替换
 
 该阶段不是日常开发的一部分，只有新引擎和首批改编内容达到发布质量后执行：

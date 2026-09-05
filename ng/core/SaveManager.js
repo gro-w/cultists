@@ -26,7 +26,11 @@
  *      restores instead of corrupting state with two restores racing.
  */
 const SAVE_FORMAT = "cultists-ng-save";
-const SAVE_FORMAT_VERSION = 1;
+// v2 (plan §8 "关键词的收集"): adds `state.keywords` (KeywordManager's
+// collected-set). Bumped rather than silently defaulting missing entries
+// on load (AGENTS.md: "改变 payload...要评估是否提升版本；旧版本不应静默
+// 迁移") - a v1 save is explicitly rejected by `_validate`, not migrated.
+const SAVE_FORMAT_VERSION = 2;
 
 function isPlainObject(value) {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
@@ -41,6 +45,7 @@ export class SaveManager {
     activityQueueRegistry,
     windowManager,
     desktopIconManager,
+    keywordManager,
     activityExecutionService,
     resumePendingActivities,
     engineVersion = "0.1.0",
@@ -52,6 +57,7 @@ export class SaveManager {
     this.activityQueueRegistry = activityQueueRegistry;
     this.windowManager = windowManager;
     this.desktopIconManager = desktopIconManager;
+    this.keywordManager = keywordManager;
     this.activityExecutionService = activityExecutionService;
     this.resumePendingActivities = resumePendingActivities || (() => {});
     this.engineVersion = engineVersion;
@@ -74,6 +80,7 @@ export class SaveManager {
         queues: this.activityQueueRegistry.snapshot(),
         windows: this.windowManager.snapshotInstances(),
         desktopIcons: this.desktopIconManager.toJSON(),
+        keywords: this.keywordManager.snapshot(),
       },
     };
   }
@@ -92,6 +99,7 @@ export class SaveManager {
     if (!isPlainObject(state.queues)) throw new Error("Save data is missing queues state");
     if (!Array.isArray(state.windows)) throw new Error("Save data is missing windows state");
     if (!Array.isArray(state.desktopIcons)) throw new Error("Save data is missing desktopIcons state");
+    if (!Array.isArray(state.keywords)) throw new Error("Save data is missing keywords state");
     return state;
   }
 
@@ -136,6 +144,7 @@ export class SaveManager {
     this.activityQueueRegistry.restore(state.queues);
     this.windowManager.restoreInstances(state.windows);
     this.desktopIconManager.restore(state.desktopIcons);
+    this.keywordManager.restore(state.keywords);
   }
 }
 

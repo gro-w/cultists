@@ -10,6 +10,7 @@ import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { WindowManager } from "../core/WindowManager.js";
 import { DesktopIconManager } from "../core/DesktopIconManager.js";
+import { KeywordManager } from "../core/KeywordManager.js";
 import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 import { SaveManager } from "../core/SaveManager.js";
 
@@ -44,14 +45,18 @@ function makeSession() {
   ]);
   const dataStructureManager = new DataStructureManager();
   dataStructureManager.register({ id: "note", fields: [{ id: "text", type: "string" }] });
+  dataStructureManager.register({ id: "keyword", fields: [{ id: "id", type: "string" }, { id: "content", type: "string" }] });
   const dataStore = new DataStore(dataStructureManager);
   dataStore.registerDatabase({ databaseId: "notes", recordType: "note" });
+  dataStore.registerDatabase({ databaseId: "keywords", recordType: "keyword" });
+  dataStore.createRecord("keywords", { id: "fever", content: "发热" });
   const activityDefinitionStore = new ActivityDefinitionStore();
   activityDefinitionStore.register(waitingDefinition);
   const activityQueueRegistry = new ActivityQueueRegistry();
   const activityExecutionService = new ActivityExecutionService(eventBus);
   const windowManager = new WindowManager(eventBus, { storage: { getItem: () => null, setItem: () => {} } });
   const desktopIconManager = new DesktopIconManager();
+  const keywordManager = new KeywordManager({ dataStore, eventBus });
 
   function runActivity(activityId, queueId = "main") {
     const queue = activityQueueRegistry.get(queueId);
@@ -96,6 +101,7 @@ function makeSession() {
     activityQueueRegistry,
     windowManager,
     desktopIconManager,
+    keywordManager,
     activityExecutionService,
     resumePendingActivities,
   });
@@ -103,7 +109,7 @@ function makeSession() {
   return {
     eventBus, gameClock, variableStore, publicVariableManager, dataStructureManager, dataStore,
     activityDefinitionStore, activityQueueRegistry, activityExecutionService, windowManager,
-    desktopIconManager, saveManager, runActivity,
+    desktopIconManager, keywordManager, saveManager, runActivity,
   };
 }
 
@@ -115,6 +121,7 @@ function makeSession() {
   session.dataStore.createRecord("notes", { id: "n1", text: "hello" });
   session.windowManager.open({ id: "inventory", title: "Inventory", width: 300, height: 200 });
   session.desktopIconManager.register({ iconId: "icon-a", blueprintId: "desktop.open-window", inputs: { windowId: "inventory" } });
+  session.keywordManager.collect("fever", 1);
   const instance = session.runActivity("waiting");
 
   // Waiting mid-flow before saving.
@@ -123,7 +130,7 @@ function makeSession() {
 
   const saved = session.saveManager.snapshot();
   assert.equal(saved.format, "cultists-ng-save");
-  assert.equal(saved.version, 1);
+  assert.equal(saved.version, 2);
   assert.equal(saved.createdAtGameTime, 110);
 
   // Fresh "reloaded" session, as if the page refreshed.
@@ -139,6 +146,8 @@ function makeSession() {
   assert.ok(restoredWindow, "window instance must survive restore");
   assert.equal(restoredWindow.width, 300);
   assert.deepEqual(restoredSession.desktopIconManager.list().map((icon) => icon.iconId), ["icon-a"]);
+  assert.ok(restoredSession.keywordManager.has("fever"), "collected keyword must survive restore");
+  assert.equal(restoredSession.keywordManager.get("fever").collectedDay, 1);
 
   // The waiting Activity instance resumed automatically (single post-restore
   // scan) and is still correctly blocked - object identity/consistency
@@ -164,7 +173,7 @@ function makeSession() {
   assert.throws(() => session.saveManager.restore(null), /valid object/);
   assert.throws(() => session.saveManager.restore({ format: "something-else" }), /Unknown save format/);
   assert.throws(() => session.saveManager.restore({ format: "cultists-ng-save", version: 999 }), /Unsupported save version/);
-  assert.throws(() => session.saveManager.restore({ format: "cultists-ng-save", version: 1 }), /missing state/);
+  assert.throws(() => session.saveManager.restore({ format: "cultists-ng-save", version: 2 }), /missing state/);
 
   // A structurally-valid-looking envelope with an internally-inconsistent
   // window snapshot (duplicate instanceId) must roll back cleanly.

@@ -17,6 +17,8 @@ import { RuntimeRefResolver } from "./core/RuntimeRefResolver.js";
 import { SaveManager } from "./core/SaveManager.js";
 import { SaveLoadView } from "./desktop/SaveLoadView.js";
 import { DialogueView } from "./desktop/DialogueView.js";
+import { KeywordManager } from "./core/KeywordManager.js";
+import { NotebookView } from "./desktop/NotebookView.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -262,6 +264,19 @@ export async function bootstrap(rootEl) {
 
   const iconManager = new DesktopIconManager(icons);
 
+  // `keywordManager` is the generic "关键词收集" mechanic (plan §8):
+  // sourced from the seeded `keywords` database, its SAN-aware distorted
+  // text reads public-variable id 1 (主角SAN, AGENTS.md's reserved id
+  // range) - the one place this generic module is told which id that is.
+  // Created before `saveManager` so its collected-set can be part of the
+  // save envelope like every other domain.
+  const PROTAGONIST_SAN_VARIABLE_ID = 1;
+  const keywordManager = new KeywordManager({
+    dataStore,
+    eventBus,
+    sanityProvider: () => publicVariableManager.get(PROTAGONIST_SAN_VARIABLE_ID),
+  });
+
   const saveManager = new SaveManager({
     gameClock,
     variableStore,
@@ -270,6 +285,7 @@ export async function bootstrap(rootEl) {
     activityQueueRegistry,
     windowManager,
     desktopIconManager: iconManager,
+    keywordManager,
     activityExecutionService,
     resumePendingActivities,
     engineVersion: engineConfig.version,
@@ -301,7 +317,7 @@ export async function bootstrap(rootEl) {
   // itself. Content wires a desktop icon's `blueprintId` to an Activity
   // that opens this window then runs the actual dialogue Activity (e.g.
   // `work01a-patient1`).
-  const dialogueView = new DialogueView({ eventBus, variableStore });
+  const dialogueView = new DialogueView({ eventBus, variableStore, keywordManager, gameClock });
   const DIALOGUE_WINDOW_ID = "dialogue";
   windowDefinitionStore.register({
     id: DIALOGUE_WINDOW_ID,
@@ -315,6 +331,27 @@ export async function bootstrap(rootEl) {
   });
   eventBus.on("window:opened", ({ windowId }) => {
     if (windowId === DIALOGUE_WINDOW_ID) dialogueView.reset();
+  });
+
+  const notebookView = new NotebookView({ eventBus, keywordManager });
+  const NOTEBOOK_WINDOW_ID = "notebook";
+  windowDefinitionStore.register({
+    id: NOTEBOOK_WINDOW_ID,
+    title: "笔记本",
+    icon: "📓",
+    width: 360,
+    height: 420,
+    resizable: true,
+    singleInstance: true,
+    body: notebookView.el,
+  });
+  iconManager.register({
+    iconId: "notebook",
+    label: "笔记本",
+    glyph: "📓",
+    order: iconManager.list().length,
+    blueprintId: "desktop.open-window",
+    inputs: { windowId: NOTEBOOK_WINDOW_ID },
   });
 
   // DEV-TOOLS:START

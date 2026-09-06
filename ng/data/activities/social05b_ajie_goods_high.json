@@ -1,0 +1,362 @@
+{
+  "id": "social05b_ajie_goods_high",
+  "type": "other",
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶",
+  "displayName": "【谷子店】",
+  "condition": {
+    "globalVariables": {
+      "id": 40,
+      "op": "gte",
+      "value": 50
+    }
+  },
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "t0": {
+        "id": "t0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "走，跟我去谷子店看看。",
+          "continueKey": "dlg:t0:continue"
+        }
+      },
+      "t1": {
+        "id": "t1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "谷子店？那是什么地方？",
+          "continueKey": "dlg:t1:continue"
+        }
+      },
+      "t2": {
+        "id": "t2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "买盲盒的地方。",
+          "continueKey": "dlg:t2:continue"
+        }
+      },
+      "time_0": {
+        "id": "time_0",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "t4": {
+        "id": "t4",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "你有要想抽到的角色吗？我可以帮你看看攻略。",
+          "continueKey": "dlg:t4:continue"
+        }
+      },
+      "t5": {
+        "id": "t5",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "你是照攻略学会走路的吧……",
+          "continueKey": "dlg:t5:continue"
+        }
+      },
+      "time_1": {
+        "id": "time_1",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "choice_0": {
+        "id": "choice_0",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "不然很亏啊，价格除以概率，远远超出物品的价值。",
+              "next": "choice_0_op0"
+            },
+            {
+              "label": "你愿意承担风险就行。",
+              "next": "choice_0_op1"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice_0:select"
+        }
+      },
+      "choice_0_join": {
+        "id": "choice_0_join",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "旁白",
+          "text": "（场景继续）",
+          "continueKey": "dlg:choice_0_join:continue"
+        }
+      },
+      "choice_0_op0": {
+        "id": "choice_0_op0",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": -10,
+          "id": 40
+        }
+      },
+      "choice_0_op0_t0": {
+        "id": "choice_0_op0_t0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "这样才刺激嘛。",
+          "continueKey": "dlg:choice_0_op0_t0:continue"
+        }
+      },
+      "choice_0_op0_t1": {
+        "id": "choice_0_op0_t1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "花钱得到想要的就是惊喜，得到不想要的不就是吃亏了吗？",
+          "continueKey": "dlg:choice_0_op0_t1:continue"
+        }
+      },
+      "choice_0_op0_t2": {
+        "id": "choice_0_op0_t2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "你是对意外过敏吗？",
+          "continueKey": "dlg:choice_0_op0_t2:continue"
+        }
+      },
+      "choice_0_op1": {
+        "id": "choice_0_op1",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": 10,
+          "id": 40
+        }
+      },
+      "choice_0_op1_t0": {
+        "id": "choice_0_op1_t0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "我买的就是风险。",
+          "continueKey": "dlg:choice_0_op1_t0:continue"
+        }
+      },
+      "after_0": {
+        "id": "after_0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "好诡异的店面，所有人都低着头不说话。",
+          "continueKey": "dlg:after_0:continue"
+        }
+      },
+      "after_1": {
+        "id": "after_1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "只需要挑选就可以了。",
+          "continueKey": "dlg:after_1:continue"
+        }
+      },
+      "after_2": {
+        "id": "after_2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "挑选这些肉色的片状物吗？",
+          "continueKey": "dlg:after_2:continue"
+        }
+      },
+      "after_3": {
+        "id": "after_3",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "我推在墙上从左到右第三列，你看到了吗？怎么样，可爱吧？要不要入坑？",
+          "continueKey": "dlg:after_3:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "prerequisite": {
+        "id": "prerequisite",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "expiry": {
+        "id": "expiry",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 8639
+        }
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "t0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t0",
+        "fromPort": "flowOut",
+        "toNodeId": "t1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t1",
+        "fromPort": "flowOut",
+        "toNodeId": "t2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t2",
+        "fromPort": "flowOut",
+        "toNodeId": "time_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_0",
+        "fromPort": "flowOut",
+        "toNodeId": "t4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t4",
+        "fromPort": "flowOut",
+        "toNodeId": "t5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t5",
+        "fromPort": "flowOut",
+        "toNodeId": "time_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_1",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0",
+        "fromPort": "option0",
+        "toNodeId": "choice_0_op0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op0_t0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0_t0",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op0_t1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0_t1",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op0_t2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0_t2",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_join",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0",
+        "fromPort": "option1",
+        "toNodeId": "choice_0_op1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op1",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op1_t0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op1_t0",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_join",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_join",
+        "fromPort": "flowOut",
+        "toNodeId": "after_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_0",
+        "fromPort": "flowOut",
+        "toNodeId": "after_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_1",
+        "fromPort": "flowOut",
+        "toNodeId": "after_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_2",
+        "fromPort": "flowOut",
+        "toNodeId": "after_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_3",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  },
+  "day": 5
+}

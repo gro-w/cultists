@@ -29,6 +29,7 @@ export class DesktopShell {
     this.gameClock = gameClock || null;
     this.variableStore = variableStore || null;
     this.pvGateway = pvGateway || null;
+    this.conditionContext = {};
     // Set post-construction by engine.js (mirrors `shell.runActivity`), so
     // component interaction events (plan §4.2 onClick/onChange/...) reach
     // the exact same ActivityExecutionService as every other Activity.
@@ -120,6 +121,7 @@ export class DesktopShell {
       variableStore: this.variableStore,
       pvGateway: this.pvGateway,
       valueGraph: definition?.valueGraph,
+      conditionContext: this.conditionContext,
       onEvent: (node, eventName, value) => this.runWidgetEvent?.(state.windowId, node.widgetId, eventName, value),
     };
     // A window's title (like its widget properties) may be a bound value

@@ -1,0 +1,285 @@
+{
+  "id": "social06a_ajie_chat",
+  "type": "other",
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶",
+  "displayName": "闲聊池",
+  "condition": {
+    "globalVariables": {
+      "id": 100,
+      "op": "eq",
+      "value": true
+    }
+  },
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "line_0": {
+        "id": "line_0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "老盯着我看干嘛？",
+          "continueKey": "dlg:line_0:continue"
+        }
+      },
+      "line_1": {
+        "id": "line_1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "现在你好点了吗？",
+          "continueKey": "dlg:line_1:continue"
+        }
+      },
+      "line_2": {
+        "id": "line_2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "挺好的，为什么这么问？",
+          "continueKey": "dlg:line_2:continue"
+        }
+      },
+      "time_2": {
+        "id": "time_2",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "line_3": {
+        "id": "line_3",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "昨天我们一起去吃火锅，你突然发癔症……吓了我们一跳。",
+          "continueKey": "dlg:line_3:continue"
+        }
+      },
+      "line_4": {
+        "id": "line_4",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "有吗？",
+          "continueKey": "dlg:line_4:continue"
+        }
+      },
+      "line_5": {
+        "id": "line_5",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "……那就好。",
+          "continueKey": "dlg:line_5:continue"
+        }
+      },
+      "time_5": {
+        "id": "time_5",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "line_6": {
+        "id": "line_6",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "到底什么意思？怎么不说清楚？",
+          "continueKey": "dlg:line_6:continue"
+        }
+      },
+      "line_7": {
+        "id": "line_7",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "明天你就要值夜班了吧？",
+          "continueKey": "dlg:line_7:continue"
+        }
+      },
+      "line_8": {
+        "id": "line_8",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "对啊，怎么了？",
+          "continueKey": "dlg:line_8:continue"
+        }
+      },
+      "time_8": {
+        "id": "time_8",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "line_9": {
+        "id": "line_9",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "你害怕吗？晚上住院部的走廊可是没有尽头的哦……",
+          "continueKey": "dlg:line_9:continue"
+        }
+      },
+      "line_10": {
+        "id": "line_10",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "别想吓唬我。",
+          "continueKey": "dlg:line_10:continue"
+        }
+      },
+      "line_11": {
+        "id": "line_11",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "看来真的好了……",
+          "continueKey": "dlg:line_11:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "prerequisite": {
+        "id": "prerequisite",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "expiry": {
+        "id": "expiry",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 10079
+        }
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "line_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_0",
+        "fromPort": "flowOut",
+        "toNodeId": "line_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_1",
+        "fromPort": "flowOut",
+        "toNodeId": "line_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_2",
+        "fromPort": "flowOut",
+        "toNodeId": "time_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_2",
+        "fromPort": "flowOut",
+        "toNodeId": "line_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_3",
+        "fromPort": "flowOut",
+        "toNodeId": "line_4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_4",
+        "fromPort": "flowOut",
+        "toNodeId": "line_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_5",
+        "fromPort": "flowOut",
+        "toNodeId": "time_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_5",
+        "fromPort": "flowOut",
+        "toNodeId": "line_6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_6",
+        "fromPort": "flowOut",
+        "toNodeId": "line_7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_7",
+        "fromPort": "flowOut",
+        "toNodeId": "line_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_8",
+        "fromPort": "flowOut",
+        "toNodeId": "time_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_8",
+        "fromPort": "flowOut",
+        "toNodeId": "line_9",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_9",
+        "fromPort": "flowOut",
+        "toNodeId": "line_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_10",
+        "fromPort": "flowOut",
+        "toNodeId": "line_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_11",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  },
+  "day": 6
+}

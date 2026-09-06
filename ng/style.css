@@ -1250,6 +1250,8 @@ button {
 /* Data-driven legacy dorm layout. All elements are widgets from off-duty.json. */
 .ng-off-duty-root { height: 100%; min-height: 0; background: #1a1530; color: #f4ecc9; }
 .ng-off-duty-header { flex-shrink: 0; padding: 6px; background: #211c38; border-bottom: 2px solid #51486d; }
+.ng-off-duty-story-list { flex-shrink: 0; max-height: 132px; padding: 5px 8px; overflow-y: auto; background: #171329; border-bottom: 2px solid #51486d; }
+.ng-off-duty-story-list .ng-widget-button { width: 100%; text-align: left; font-size: 11px; }
 .ng-off-duty-title { font-size: 14px; font-weight: bold; }
 .ng-off-duty-clock { padding: 3px 8px; font-size: 10px; letter-spacing: 1px; }
 .ng-off-duty-actions { margin-left: auto; }

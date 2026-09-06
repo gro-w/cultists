@@ -11,6 +11,7 @@
  */
 
 import { resolvePropertyValue } from "./PropertyBinding.js";
+import { evaluateCondition } from "./ConditionEvaluator.js";
 
 const CONTAINER_FLOWS = new Set(["vertical", "horizontal", "grid", "stack"]);
 
@@ -75,13 +76,31 @@ function applyEnabled(el, node, ctx, controlEl) {
   if ("disabled" in target) target.disabled = !enabled;
 }
 
+function findRunActivityId(events) {
+  if (!events || typeof events !== "object") return null;
+  const pending = [events];
+  while (pending.length) {
+    const value = pending.pop();
+    if (!value || typeof value !== "object") continue;
+    if (value.type === "runActivity") return value.inputs?.activityId || null;
+    for (const child of Object.values(value)) {
+      if (child && typeof child === "object") pending.push(child);
+    }
+  }
+  return null;
+}
+
 function applyCommonAttrs(el, node, ctx) {
   el.dataset.widgetId = node.widgetId || node.id || "";
   el.dataset.widgetType = node.type;
   if (node.className) el.className = `ng-widget ${node.className}`;
   else el.className = "ng-widget";
   el.classList.add(`ng-widget-${node.type}`);
-  if (prop(node, "visible", ctx, true) === false) el.hidden = true;
+  const activityId = node.activityId || findRunActivityId(node.events);
+  const implicitAvailability = activityId ? { activity: { id: activityId, available: true } } : null;
+  const visible = prop(node, "visible", ctx, true) !== false
+    && evaluateCondition(node.visibleWhen || implicitAvailability, ctx.conditionContext || {});
+  if (!visible) el.hidden = true;
   applyEnabled(el, node, ctx, ctx.controlEls?.get(node.widgetId || node.id));
 }
 

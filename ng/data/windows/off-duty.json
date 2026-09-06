@@ -221,6 +221,1280 @@
         ]
       },
       {
+        "widgetId": "off-duty-story-list",
+        "type": "container",
+        "flow": "vertical",
+        "gap": 4,
+        "className": "ng-off-duty-story-list",
+        "children": [
+          {
+            "widgetId": "off-duty-story-social01b_ajie_honor_of_kings",
+            "type": "button",
+            "text": "《皇者荣耀》 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social01b_ajie_honor_of_kings",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social01b_awei_headphones",
+            "type": "button",
+            "text": "测评耳机 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social01b_awei_headphones",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social02a_ajie_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social02a_ajie_chat",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social02a_awei_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social02a_awei_chat",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social02b_dorm_invite",
+            "type": "button",
+            "text": "宿舍集体活动邀请 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social02b_dorm_invite",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_ajie_24_personality_high",
+            "type": "button",
+            "text": "《第二十四人格》 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social03b_ajie_24_personality_high",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_ajie_24_personality_low",
+            "type": "button",
+            "text": "《第二十四人格》 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social03b_ajie_24_personality_low",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_awei_tail_high",
+            "type": "button",
+            "text": "尾款风云 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social03b_awei_tail_high",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_awei_tail_low",
+            "type": "button",
+            "text": "尾款风云 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social03b_awei_tail_low",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social04a_ajie_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social04a_ajie_chat",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social04a_awei_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social04a_awei_chat",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social04b_dorm_invite",
+            "type": "button",
+            "text": "宿舍集体活动邀请 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social04b_dorm_invite",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day5",
+            "type": "button",
+            "text": "【海底O火锅】 · 海底O火锅",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "dorm_activity_day5",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_ajie_goods_high",
+            "type": "button",
+            "text": "【谷子店】 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social05b_ajie_goods_high",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_ajie_goods_low",
+            "type": "button",
+            "text": "【谷子店】 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social05b_ajie_goods_low",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_awei_record_high",
+            "type": "button",
+            "text": "【线下唱片店】 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social05b_awei_record_high",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_awei_record_low",
+            "type": "button",
+            "text": "【线下唱片店】 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social05b_awei_record_low",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social06a_ajie_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social06a_ajie_chat",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social06a_awei_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social06a_awei_chat",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day1",
+            "type": "button",
+            "text": "第1天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "dorm_activity_day1",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day2",
+            "type": "button",
+            "text": "第2天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "dorm_activity_day2",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day3",
+            "type": "button",
+            "text": "第3天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "dorm_activity_day3",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day4",
+            "type": "button",
+            "text": "第4天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "open",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
+                    "inputs": {
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "dorm_activity_day4",
+                      "queueId": "social"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
         "widgetId": "off-duty-scene",
         "type": "container",
         "flow": "horizontal",
@@ -277,56 +1551,36 @@
                   "onClick": {
                     "startNodeId": "start",
                     "nodes": {
-                      "ajieNpc": {
-                        "id": "ajieNpc",
-                        "type": "getVariable",
-                        "inputs": {
-                          "key": "dorm:npc0"
-                        }
-                      },
-                      "ajieName": {
-                        "id": "ajieName",
-                        "type": "getProperty",
-                        "inputs": {
-                          "value": {
-                            "nodeId": "ajieNpc",
-                            "port": "value"
-                          },
-                          "key": "name"
-                        }
-                      },
-                      "buildMessage": {
-                        "id": "buildMessage",
-                        "type": "arithmetic",
-                        "inputs": {
-                          "operator": "concat",
-                          "left": {
-                            "nodeId": "ajieName",
-                            "port": "value"
-                          },
-                          "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
-                        }
-                      },
                       "start": {
                         "id": "start",
                         "type": "flowStart",
                         "inputs": {},
                         "next": {
                           "flowOut": {
-                            "nodeId": "setMessage",
+                            "nodeId": "open",
                             "port": "flowIn"
                           }
                         }
                       },
-                      "setMessage": {
-                        "id": "setMessage",
-                        "type": "setVariable",
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
                         "inputs": {
-                          "key": "dorm:message",
-                          "value": {
-                            "nodeId": "buildMessage",
-                            "port": "value"
+                          "windowId": "dialogue"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "run",
+                            "port": "flowIn"
                           }
+                        }
+                      },
+                      "run": {
+                        "id": "run",
+                        "type": "runActivity",
+                        "inputs": {
+                          "activityId": "social01b_ajie_honor_of_kings",
+                          "queueId": "social"
                         },
                         "next": {
                           "flowOut": {
@@ -436,56 +1690,36 @@
                   "onClick": {
                     "startNodeId": "start",
                     "nodes": {
-                      "aweiNpc": {
-                        "id": "aweiNpc",
-                        "type": "getVariable",
-                        "inputs": {
-                          "key": "dorm:npc1"
-                        }
-                      },
-                      "aweiName": {
-                        "id": "aweiName",
-                        "type": "getProperty",
-                        "inputs": {
-                          "value": {
-                            "nodeId": "aweiNpc",
-                            "port": "value"
-                          },
-                          "key": "name"
-                        }
-                      },
-                      "buildMessage": {
-                        "id": "buildMessage",
-                        "type": "arithmetic",
-                        "inputs": {
-                          "operator": "concat",
-                          "left": {
-                            "nodeId": "aweiName",
-                            "port": "value"
-                          },
-                          "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
-                        }
-                      },
                       "start": {
                         "id": "start",
                         "type": "flowStart",
                         "inputs": {},
                         "next": {
                           "flowOut": {
-                            "nodeId": "setMessage",
+                            "nodeId": "open",
                             "port": "flowIn"
                           }
                         }
                       },
-                      "setMessage": {
-                        "id": "setMessage",
-                        "type": "setVariable",
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
                         "inputs": {
-                          "key": "dorm:message",
-                          "value": {
-                            "nodeId": "buildMessage",
-                            "port": "value"
+                          "windowId": "dialogue"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "run",
+                            "port": "flowIn"
                           }
+                        }
+                      },
+                      "run": {
+                        "id": "run",
+                        "type": "runActivity",
+                        "inputs": {
+                          "activityId": "social01b_awei_headphones",
+                          "queueId": "social"
                         },
                         "next": {
                           "flowOut": {
@@ -595,56 +1829,36 @@
                   "onClick": {
                     "startNodeId": "start",
                     "nodes": {
-                      "binbinNpc": {
-                        "id": "binbinNpc",
-                        "type": "getVariable",
-                        "inputs": {
-                          "key": "dorm:npc2"
-                        }
-                      },
-                      "binbinName": {
-                        "id": "binbinName",
-                        "type": "getProperty",
-                        "inputs": {
-                          "value": {
-                            "nodeId": "binbinNpc",
-                            "port": "value"
-                          },
-                          "key": "name"
-                        }
-                      },
-                      "buildMessage": {
-                        "id": "buildMessage",
-                        "type": "arithmetic",
-                        "inputs": {
-                          "operator": "concat",
-                          "left": {
-                            "nodeId": "binbinName",
-                            "port": "value"
-                          },
-                          "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
-                        }
-                      },
                       "start": {
                         "id": "start",
                         "type": "flowStart",
                         "inputs": {},
                         "next": {
                           "flowOut": {
-                            "nodeId": "setMessage",
+                            "nodeId": "open",
                             "port": "flowIn"
                           }
                         }
                       },
-                      "setMessage": {
-                        "id": "setMessage",
-                        "type": "setVariable",
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
                         "inputs": {
-                          "key": "dorm:message",
-                          "value": {
-                            "nodeId": "buildMessage",
-                            "port": "value"
+                          "windowId": "dialogue"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "run",
+                            "port": "flowIn"
                           }
+                        }
+                      },
+                      "run": {
+                        "id": "run",
+                        "type": "runActivity",
+                        "inputs": {
+                          "activityId": "dorm_activity_day1",
+                          "queueId": "social"
                         },
                         "next": {
                           "flowOut": {
@@ -722,56 +1936,36 @@
               "onClick": {
                 "startNodeId": "start",
                 "nodes": {
-                  "ajieNpc": {
-                    "id": "ajieNpc",
-                    "type": "getVariable",
-                    "inputs": {
-                      "key": "dorm:npc0"
-                    }
-                  },
-                  "ajieName": {
-                    "id": "ajieName",
-                    "type": "getProperty",
-                    "inputs": {
-                      "value": {
-                        "nodeId": "ajieNpc",
-                        "port": "value"
-                      },
-                      "key": "name"
-                    }
-                  },
-                  "buildMessage": {
-                    "id": "buildMessage",
-                    "type": "arithmetic",
-                    "inputs": {
-                      "operator": "concat",
-                      "left": {
-                        "nodeId": "ajieName",
-                        "port": "value"
-                      },
-                      "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
-                    }
-                  },
                   "start": {
                     "id": "start",
                     "type": "flowStart",
                     "inputs": {},
                     "next": {
                       "flowOut": {
-                        "nodeId": "setMessage",
+                        "nodeId": "open",
                         "port": "flowIn"
                       }
                     }
                   },
-                  "setMessage": {
-                    "id": "setMessage",
-                    "type": "setVariable",
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
                     "inputs": {
-                      "key": "dorm:message",
-                      "value": {
-                        "nodeId": "buildMessage",
-                        "port": "value"
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
                       }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social01b_ajie_honor_of_kings",
+                      "queueId": "social"
                     },
                     "next": {
                       "flowOut": {
@@ -797,56 +1991,36 @@
               "onClick": {
                 "startNodeId": "start",
                 "nodes": {
-                  "aweiNpc": {
-                    "id": "aweiNpc",
-                    "type": "getVariable",
-                    "inputs": {
-                      "key": "dorm:npc1"
-                    }
-                  },
-                  "aweiName": {
-                    "id": "aweiName",
-                    "type": "getProperty",
-                    "inputs": {
-                      "value": {
-                        "nodeId": "aweiNpc",
-                        "port": "value"
-                      },
-                      "key": "name"
-                    }
-                  },
-                  "buildMessage": {
-                    "id": "buildMessage",
-                    "type": "arithmetic",
-                    "inputs": {
-                      "operator": "concat",
-                      "left": {
-                        "nodeId": "aweiName",
-                        "port": "value"
-                      },
-                      "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
-                    }
-                  },
                   "start": {
                     "id": "start",
                     "type": "flowStart",
                     "inputs": {},
                     "next": {
                       "flowOut": {
-                        "nodeId": "setMessage",
+                        "nodeId": "open",
                         "port": "flowIn"
                       }
                     }
                   },
-                  "setMessage": {
-                    "id": "setMessage",
-                    "type": "setVariable",
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
                     "inputs": {
-                      "key": "dorm:message",
-                      "value": {
-                        "nodeId": "buildMessage",
-                        "port": "value"
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
                       }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "social01b_awei_headphones",
+                      "queueId": "social"
                     },
                     "next": {
                       "flowOut": {
@@ -872,56 +2046,36 @@
               "onClick": {
                 "startNodeId": "start",
                 "nodes": {
-                  "binbinNpc": {
-                    "id": "binbinNpc",
-                    "type": "getVariable",
-                    "inputs": {
-                      "key": "dorm:npc2"
-                    }
-                  },
-                  "binbinName": {
-                    "id": "binbinName",
-                    "type": "getProperty",
-                    "inputs": {
-                      "value": {
-                        "nodeId": "binbinNpc",
-                        "port": "value"
-                      },
-                      "key": "name"
-                    }
-                  },
-                  "buildMessage": {
-                    "id": "buildMessage",
-                    "type": "arithmetic",
-                    "inputs": {
-                      "operator": "concat",
-                      "left": {
-                        "nodeId": "binbinName",
-                        "port": "value"
-                      },
-                      "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
-                    }
-                  },
                   "start": {
                     "id": "start",
                     "type": "flowStart",
                     "inputs": {},
                     "next": {
                       "flowOut": {
-                        "nodeId": "setMessage",
+                        "nodeId": "open",
                         "port": "flowIn"
                       }
                     }
                   },
-                  "setMessage": {
-                    "id": "setMessage",
-                    "type": "setVariable",
+                  "open": {
+                    "id": "open",
+                    "type": "openWindow",
                     "inputs": {
-                      "key": "dorm:message",
-                      "value": {
-                        "nodeId": "buildMessage",
-                        "port": "value"
+                      "windowId": "dialogue"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
                       }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "dorm_activity_day1",
+                      "queueId": "social"
                     },
                     "next": {
                       "flowOut": {

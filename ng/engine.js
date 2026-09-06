@@ -21,6 +21,7 @@ import { KeywordManager } from "./core/KeywordManager.js";
 import { NotebookView } from "./desktop/NotebookView.js";
 import { OnboardingManager } from "./core/OnboardingManager.js";
 import { TutorialOverlay } from "./desktop/TutorialOverlay.js";
+import { evaluateCondition } from "./core/ConditionEvaluator.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -129,6 +130,16 @@ export async function bootstrap(rootEl) {
     const queue = activityQueueRegistry.get(queueId);
     const definition = activityDefinitionStore.get(activityId);
     if (!queue || !definition) return null;
+    const conditionContext = {
+      gameClock,
+      variableStore,
+      publicVariableManager,
+      pvGateway: publicVariableManager,
+      activityQueueRegistry,
+      activityDefinitionStore,
+    };
+    if (definition.condition && !evaluateCondition(definition.condition, conditionContext)) return null;
+    if (definition.day != null && gameClock.day !== definition.day) return null;
     const instance = queue.append({ activityId });
     return activityExecutionService.run({
       queue,
@@ -290,6 +301,17 @@ export async function bootstrap(rootEl) {
       await activityDefinitionStore.loadManifest(list.activityIds, "data/activities/");
     }
   }
+
+  // Declarative visibility for every custom window. The context contains only
+  // generic state gateways; content-specific IDs remain in JSON definitions.
+  shell.conditionContext = {
+    gameClock,
+    variableStore,
+    publicVariableManager,
+    pvGateway: publicVariableManager,
+    activityQueueRegistry,
+    activityDefinitionStore,
+  };
 
   const iconManager = new DesktopIconManager(icons);
 

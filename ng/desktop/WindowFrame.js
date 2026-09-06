@@ -53,6 +53,9 @@ export class WindowFrame {
   _bindRootRefresh() {
     if (!this._root) return;
     this._unsubscribers.push(this.eventBus.on("variable:changed", () => this._rerenderRoot()));
+    this._unsubscribers.push(this.eventBus.on("gameClock:changed", () => this._rerenderRoot()));
+    this._unsubscribers.push(this.eventBus.on("activity:completed", () => this._rerenderRoot()));
+    this._unsubscribers.push(this.eventBus.on("activity:cancelled", () => this._rerenderRoot()));
   }
 
   /**

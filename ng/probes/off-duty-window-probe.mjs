@@ -109,13 +109,26 @@ for (const { npcId, name, favId, sanId } of ROOMMATES) {
   assert.equal(evalNode(`${npcId}SanText`), `SAN：${publicVariableManager.get(sanId)}`);
 }
 
-// --- clicking "交流" sets a per-roommate placeholder message --------------
-for (const { npcId, name } of ROOMMATES) {
+// --- roommate and story launchers resolve to migrated Activity ids --------
+const activityList = readJSON("activity-lists/default.json");
+const migratedIds = [];
+for (const { npcId } of ROOMMATES) {
   const button = findWidget(offDuty.root, `off-duty-${npcId}-interact`);
   assert.ok(button, `missing interact button for ${npcId}`);
-  runBlueprint(button.events.onClick, `interact-${npcId}`);
-  const message = variableStore.get("dorm:message");
-  assert.ok(message.startsWith(name), `message should be attributed to ${name}: ${message}`);
+  const runNode = Object.values(button.events.onClick.nodes).find((node) => node.type === "runActivity");
+  assert.ok(runNode, `missing Activity launcher for ${npcId}`);
+  assert.ok(activityList.activityIds.includes(runNode.inputs.activityId), `${runNode.inputs.activityId} must be registered`);
+  migratedIds.push(runNode.inputs.activityId);
 }
+const storyList = findWidget(offDuty.root, "off-duty-story-list");
+assert.ok(storyList, "missing data-authored dorm story list");
+assert.equal(storyList.children.length, 23, "all legacy dorm story entries must be exposed");
+for (const button of storyList.children) {
+  const runNode = Object.values(button.events.onClick.nodes).find((node) => node.type === "runActivity");
+  assert.ok(runNode, `${button.widgetId} must launch an Activity`);
+  assert.ok(activityList.activityIds.includes(runNode.inputs.activityId), `${runNode.inputs.activityId} must be registered`);
+  migratedIds.push(runNode.inputs.activityId);
+}
+assert.equal(new Set(migratedIds).size, 23, "story launcher ids should be unique");
 
-console.log("off-duty-window-probe: ok");
+console.log("off-duty-window-probe: migrated dorm story ok");

@@ -1,0 +1,690 @@
+{
+  "id": "social01b_awei_headphones",
+  "type": "other",
+  "npcId": "awei",
+  "name": "阿伟",
+  "avatar": "🐱",
+  "displayName": "测评耳机",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "n1": {
+        "id": "n1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "新买的耳机终于到了，来，给你试听一下。",
+          "continueKey": "dlg:n1:continue"
+        }
+      },
+      "n2": {
+        "id": "n2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "这是你新买的？看起来很贵啊，你不才买了个黑椒唱片机吗？",
+          "continueKey": "dlg:n2:continue"
+        }
+      },
+      "n3": {
+        "id": "n3",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "是啊，不错吧，在购物车里放了好久终于等到降价了。",
+          "continueKey": "dlg:n3:continue"
+        }
+      },
+      "n4": {
+        "id": "n4",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "你全款买的？",
+          "continueKey": "dlg:n4:continue"
+        }
+      },
+      "n5": {
+        "id": "n5",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "……还没付尾款。到底听不听？赶紧的。",
+          "continueKey": "dlg:n5:continue"
+        }
+      },
+      "n6": {
+        "id": "n6",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "音质很……好，声场比较强，有空间感，高音甜中音稳低音沉……",
+          "continueKey": "dlg:n6:continue"
+        }
+      },
+      "n7": {
+        "id": "n7",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "你有没有听到什么奇怪的声音？",
+          "continueKey": "dlg:n7:continue"
+        }
+      },
+      "n8": {
+        "id": "n8",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "什么？",
+          "continueKey": "dlg:n8:continue"
+        }
+      },
+      "n9": {
+        "id": "n9",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "这里，我放大点，你仔细听。",
+          "continueKey": "dlg:n9:continue"
+        }
+      },
+      "n10": {
+        "id": "n10",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "什么也没听出来啊。",
+          "continueKey": "dlg:n10:continue"
+        }
+      },
+      "n11": {
+        "id": "n11",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "难道是我幻听了？我总觉得这里有点底噪，但只有我听到第37秒会有。",
+          "continueKey": "dlg:n11:continue"
+        }
+      },
+      "choice12": {
+        "id": "choice12",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "是什么声音？"
+            },
+            {
+              "label": "要不你换首歌试试？"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice12:select"
+        }
+      },
+      "choice12_op0": {
+        "id": "choice12_op0",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": 5,
+          "id": 41
+        }
+      },
+      "n13": {
+        "id": "n13",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "一种……好像谁在说话。",
+          "continueKey": "dlg:n13:continue"
+        }
+      },
+      "n14": {
+        "id": "n14",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "是不是这首歌里本来就有的？",
+          "continueKey": "dlg:n14:continue"
+        }
+      },
+      "n15": {
+        "id": "n15",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "我对《月之暗面》比对《外科学》还熟悉，怎么会搞错？",
+          "continueKey": "dlg:n15:continue"
+        }
+      },
+      "n16": {
+        "id": "n16",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "肯定是你听错了，你是不是背着大家在偷偷复习医师资格证考试压力太大？",
+          "continueKey": "dlg:n16:continue"
+        }
+      },
+      "n17": {
+        "id": "n17",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "说你自己呢吧……",
+          "continueKey": "dlg:n17:continue"
+        }
+      },
+      "choice12_op1": {
+        "id": "choice12_op1",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": -5,
+          "id": 41
+        }
+      },
+      "n18": {
+        "id": "n18",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "就是为了听《月之暗面》我才买的这个耳机。",
+          "continueKey": "dlg:n18:continue"
+        }
+      },
+      "n19": {
+        "id": "n19",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "真的没听出来。",
+          "continueKey": "dlg:n19:continue"
+        }
+      },
+      "n20": {
+        "id": "n20",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "或许是这段时间太累了，我休息休息就好了。",
+          "continueKey": "dlg:n20:continue"
+        }
+      },
+      "n21": {
+        "id": "n21",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "幻听要去看医生的。",
+          "continueKey": "dlg:n21:continue"
+        }
+      },
+      "n22": {
+        "id": "n22",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "这不用你告诉我。",
+          "continueKey": "dlg:n22:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "consume_time_20_1": {
+        "id": "consume_time_20_1",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_2": {
+        "id": "consume_time_20_2",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_3": {
+        "id": "consume_time_20_3",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_4": {
+        "id": "consume_time_20_4",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_5": {
+        "id": "consume_time_20_5",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_6": {
+        "id": "consume_time_20_6",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_7": {
+        "id": "consume_time_20_7",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_8": {
+        "id": "consume_time_20_8",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_9": {
+        "id": "consume_time_20_9",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_10": {
+        "id": "consume_time_20_10",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_11": {
+        "id": "consume_time_20_11",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_12": {
+        "id": "consume_time_20_12",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 80,
+        "y": 240
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 2880
+        },
+        "x": 80,
+        "y": 360
+      },
+      "current_game_time": {
+        "id": "current_game_time",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 1000
+        }
+      },
+      "insert_dorm_activity": {
+        "id": "insert_dorm_activity",
+        "type": "runActivity",
+        "inputs": {
+          "activityId": "dorm_activity_day1",
+          "queueId": "social"
+        }
+      },
+      "activity_count": {
+        "id": "activity_count",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "+",
+          "left": 0,
+          "right": 0
+        }
+      },
+      "activity_available": {
+        "id": "activity_available",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "eq",
+          "right": 0
+        }
+      },
+      "activity_guard": {
+        "id": "activity_guard",
+        "type": "branch",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "n1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n1",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_1",
+        "fromPort": "flowOut",
+        "toNodeId": "n2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n2",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_2",
+        "fromPort": "flowOut",
+        "toNodeId": "n3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n3",
+        "fromPort": "flowOut",
+        "toNodeId": "n4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n4",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_3",
+        "fromPort": "flowOut",
+        "toNodeId": "n5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n5",
+        "fromPort": "flowOut",
+        "toNodeId": "n6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n6",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_4",
+        "fromPort": "flowOut",
+        "toNodeId": "n7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n7",
+        "fromPort": "flowOut",
+        "toNodeId": "n8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n8",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_5",
+        "fromPort": "flowOut",
+        "toNodeId": "n9",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n9",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_6",
+        "fromPort": "flowOut",
+        "toNodeId": "n10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n10",
+        "fromPort": "flowOut",
+        "toNodeId": "n11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n11",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_7",
+        "fromPort": "flowOut",
+        "toNodeId": "choice12",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice12",
+        "fromPort": "option0",
+        "toNodeId": "choice12_op0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice12_op0",
+        "fromPort": "flowOut",
+        "toNodeId": "n13",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n13",
+        "fromPort": "flowOut",
+        "toNodeId": "n14",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n14",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_8",
+        "fromPort": "flowOut",
+        "toNodeId": "n15",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n15",
+        "fromPort": "flowOut",
+        "toNodeId": "n16",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n16",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_9",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_9",
+        "fromPort": "flowOut",
+        "toNodeId": "n17",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice12",
+        "fromPort": "option1",
+        "toNodeId": "choice12_op1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice12_op1",
+        "fromPort": "flowOut",
+        "toNodeId": "n18",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n18",
+        "fromPort": "flowOut",
+        "toNodeId": "n19",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n19",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_10",
+        "fromPort": "flowOut",
+        "toNodeId": "n20",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n17",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_11",
+        "fromPort": "flowOut",
+        "toNodeId": "n21",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n20",
+        "fromPort": "flowOut",
+        "toNodeId": "n21",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n21",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_12",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_12",
+        "fromPort": "flowOut",
+        "toNodeId": "n22",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n22",
+        "fromPort": "flowOut",
+        "toNodeId": "activity_guard",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "activity_count",
+        "fromPort": "value",
+        "toNodeId": "activity_available",
+        "toPort": "left"
+      },
+      {
+        "fromNodeId": "activity_available",
+        "fromPort": "value",
+        "toNodeId": "activity_guard",
+        "toPort": "condition"
+      },
+      {
+        "fromNodeId": "activity_guard",
+        "fromPort": "false",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "activity_guard",
+        "fromPort": "true",
+        "toNodeId": "insert_dorm_activity",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "insert_dorm_activity",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  },
+  "day": 1
+}

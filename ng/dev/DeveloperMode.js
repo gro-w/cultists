@@ -265,16 +265,14 @@ export async function initDeveloperMode({
   // 模式图标放在同一个开发人员模式app里面") - every dev sub-tool above is
   // still its own singleInstance window, just launched from one shared
   // launcher window instead of one desktop icon each. The launcher is
-  // split top/bottom (plan follow-up: "开发人员模式窗口分成上下两部分") -
-  // the top half only opens editors for game data (data/**.json: Activity
-  // 列表、窗口定义、桌面图标、数据结构), the bottom half only opens
-  // debuggers for live runtime state (Activity 队列、数据库记录), which
-  // also support modification but never write back to a data file.
+  // The upper section owns JSON-backed authoring and disk persistence. The
+  // lower section owns live runtime/save state; its mutations never write a
+  // source JSON document.
   const launcherEl = document.createElement("div");
   launcherEl.className = "ng-dev-launcher";
   launcherEl.innerHTML = `
     <div class="ng-dev-launcher-section">
-      <h4>游戏数据编辑器</h4>
+      <h4>编辑器（JSON 数据，可存盘）</h4>
       <button type="button" data-tool="list-manager">🛠 Activity 管理器</button>
       <button type="button" data-tool="window-manager">🪟 窗口编辑器</button>
       <button type="button" data-tool="icon-editor">🖱 桌面图标编辑器</button>
@@ -283,7 +281,7 @@ export async function initDeveloperMode({
       <button type="button" data-tool="onboarding-editor">💡 新手引导编辑器</button>
     </div>
     <div class="ng-dev-launcher-section">
-      <h4>运行时数据调试器</h4>
+      <h4>调试器（运行时 / 存档状态）</h4>
       <button type="button" data-tool="debugger">🐞 活动调试器</button>
       <button type="button" data-tool="database-debugger">🗄 数据库调试器</button>
       <button type="button" data-tool="public-variable-debugger">🧮 公共变量调试器</button>

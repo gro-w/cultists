@@ -86,6 +86,9 @@ export class DesktopShell {
   }
 
   _renderIcons() {
+    // Keep the Start menu in lockstep with reorder/label/icon edits made by
+    // the same DesktopIconManager; it must not maintain a second app list.
+    this.taskbar.setApps(this.iconManager.list(), (icon) => this.runIconBlueprint?.(icon));
     renderDesktopIcons(this.iconsEl, this.iconManager.list(), {
       onActivate: (icon) => this.runIconBlueprint?.(icon),
       onReorder: (iconId, newOrder) => {

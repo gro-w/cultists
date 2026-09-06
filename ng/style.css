@@ -372,6 +372,117 @@ button {
   font-size: 14px;
 }
 
+.start-menu {
+  position: fixed;
+  left: 2px;
+  bottom: 32px;
+  width: 240px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--w95-gray);
+  z-index: 1001;
+}
+
+.start-menu[hidden] { display: none; }
+
+.start-menu-group-title {
+  padding: 5px 8px 3px;
+  color: var(--w95-gray-dark);
+  border-bottom: 1px solid var(--w95-gray-dark);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.start-menu-separator {
+  height: 2px;
+  margin: 4px 0;
+  border-top: 1px solid var(--w95-gray-dark);
+  border-bottom: 1px solid var(--w95-white);
+}
+
+.start-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  font-size: 12px;
+}
+
+.start-menu-item:hover,
+.start-menu-item:focus {
+  color: var(--w95-white);
+  background: var(--w95-blue);
+  outline: none;
+}
+
+.start-menu-item-icon {
+  width: 22px;
+  flex: 0 0 22px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.start-menu-phase-item {
+  min-height: 42px;
+  margin: 2px 0;
+  padding: 8px 10px;
+  background: var(--w95-blue);
+  color: var(--w95-white);
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.55), inset -1px -1px 0 rgba(0, 0, 0, 0.45);
+}
+
+.start-menu-phase-item .start-menu-item-icon {
+  font-size: 22px;
+}
+
+.start-menu-phase-item:hover {
+  background: #174a9c;
+}
+
+.start-menu-item {
+  box-sizing: border-box;
+  font: inherit;
+  letter-spacing: normal;
+  box-shadow: none;
+}
+
+.start-menu-item::-moz-focus-inner {
+  border: 0;
+}
+
+.start-menu-item:focus-visible {
+  outline: 1px dotted var(--w95-white);
+  outline-offset: -2px;
+}
+
+.start-menu {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--w95-black, #000);
+  flex: none;
+}
+
+.start-menu-group-title {
+  color: var(--w95-gray-dark, #808080);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.start-menu-item,
+.start-menu-group-title {
+  user-select: none;
+}
+
 .taskbar-tasks {
   flex: 1;
   display: flex;

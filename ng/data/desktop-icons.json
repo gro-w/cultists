@@ -1,38 +1,80 @@
 [
   {
-    "iconId": "example",
-    "label": "示例窗口",
-    "glyph": "🗔",
-    "order": 0,
-    "position": { "mode": "grid" },
-    "blueprintId": "desktop.open-window",
-    "inputs": { "windowId": "example" }
-  },
-  {
-    "iconId": "off-duty",
-    "label": "下班",
-    "glyph": "🌙",
-    "order": 1,
-    "position": { "mode": "grid" },
-    "blueprintId": "desktop.run-activity",
-    "inputs": { "activityId": "off-duty-open" }
-  },
-  {
     "iconId": "his",
     "label": "上班",
-    "glyph": "🩺",
-    "order": 2,
-    "position": { "mode": "grid" },
+    "glyph": "🏥",
+    "order": 0,
+    "position": {
+      "mode": "grid"
+    },
     "blueprintId": "desktop.open-window",
-    "inputs": { "windowId": "his" }
+    "inputs": {
+      "windowId": "his"
+    }
   },
   {
     "iconId": "chatgtp",
     "label": "ChatGTP",
     "glyph": "🤖",
-    "order": 3,
-    "position": { "mode": "grid" },
+    "order": 1,
+    "position": {
+      "mode": "grid"
+    },
     "blueprintId": "desktop.open-window",
-    "inputs": { "windowId": "chatgtp" }
+    "inputs": {
+      "windowId": "chatgtp"
+    }
+  },
+  {
+    "iconId": "notebook",
+    "label": "笔记本",
+    "glyph": "📓",
+    "order": 2,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "notebook"
+    }
+  },
+  {
+    "iconId": "off-duty",
+    "label": "下班",
+    "glyph": "🌙",
+    "order": 3,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.run-activity",
+    "inputs": {
+      "activityId": "off-duty-open"
+    }
+  },
+  {
+    "iconId": "save-load",
+    "label": "存档",
+    "glyph": "💾",
+    "order": 4,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "save-load"
+    }
+  },
+  {
+    "iconId": "dev-mode-launcher-icon",
+    "label": "开发人员模式",
+    "glyph": "🛠",
+    "order": 5,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "dev-mode-launcher"
+    }
   }
 ]

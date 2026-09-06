@@ -52,14 +52,28 @@ export class Taskbar {
   _renderStartMenu() {
     if (!this.startMenuEl) return;
     this.startMenuEl.replaceChildren();
+    const apps = this.apps || [];
+    const phase = apps.find(({ icon }) => icon.iconId === "off-duty");
+    const regularApps = apps.filter(({ icon }) => icon.iconId !== "off-duty");
     const heading = document.createElement("div");
     heading.className = "start-menu-group-title";
     heading.textContent = "应用";
     this.startMenuEl.appendChild(heading);
-    for (const { icon, onLaunch } of this.apps || []) {
+    for (const entry of regularApps) {
+      this._appendStartMenuItem(entry);
+    }
+    if (phase) {
+      const separator = document.createElement("div");
+      separator.className = "start-menu-separator";
+      this.startMenuEl.appendChild(separator);
+      this._appendStartMenuItem(phase, "start-menu-phase-item");
+    }
+  }
+
+  _appendStartMenuItem({ icon, onLaunch }, extraClass = "") {
       const item = document.createElement("button");
       item.type = "button";
-      item.className = "start-menu-item";
+      item.className = `start-menu-item${extraClass ? ` ${extraClass}` : ""}`;
       item.dataset.iconId = icon.iconId;
       const glyph = document.createElement("span");
       glyph.className = "start-menu-item-icon";
@@ -73,7 +87,7 @@ export class Taskbar {
         onLaunch?.(icon);
       });
       this.startMenuEl.appendChild(item);
-    }
+      return item;
   }
 
   render() {

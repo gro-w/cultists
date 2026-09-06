@@ -16,7 +16,11 @@ const CONTAINER_FLOWS = new Set(["vertical", "horizontal", "grid", "stack"]);
 
 /** Reads a possibly-bound widget property (plan §7.5-equivalent value binding); falls back to the literal when unbound. */
 function prop(node, key, ctx, fallback) {
-  return resolvePropertyValue(node[key], { valueGraph: ctx.valueGraph, variableStore: ctx.variableStore }, fallback);
+  return resolvePropertyValue(node[key], {
+    valueGraph: ctx.valueGraph,
+    variableStore: ctx.variableStore,
+    pvGateway: ctx.pvGateway,
+  }, fallback);
 }
 
 /** Apply container layout (flow/gap/padding/align/justify/wrap/minSize/maxSize) as inline CSS. */

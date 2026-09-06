@@ -18,14 +18,17 @@ export class DesktopShell {
    * @param {import('../core/GameClock.js').GameClock} [gameClock]
    * @param {import('../core/VariableStore.js').VariableStore} [variableStore] - lets widget/window
    *   properties be sourced from blueprint value-output wiring instead of only fixed literals
+   * @param {import('../core/PublicVariableManager.js').PublicVariableManager} [pvGateway] - resolves
+   *   public-variable value nodes used by widget/window bindings
    */
-  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore) {
+  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, pvGateway) {
     this.windowManager = windowManager;
     this.windowDefinitionStore = windowDefinitionStore;
     this.eventBus = eventBus;
     this.rootEl = rootEl;
     this.gameClock = gameClock || null;
     this.variableStore = variableStore || null;
+    this.pvGateway = pvGateway || null;
     // Set post-construction by engine.js (mirrors `shell.runActivity`), so
     // component interaction events (plan §4.2 onClick/onChange/...) reach
     // the exact same ActivityExecutionService as every other Activity.
@@ -112,6 +115,7 @@ export class DesktopShell {
     const definition = this.windowDefinitionStore.get(state.windowId);
     const rendererCtx = {
       variableStore: this.variableStore,
+      pvGateway: this.pvGateway,
       valueGraph: definition?.valueGraph,
       onEvent: (node, eventName, value) => this.runWidgetEvent?.(state.windowId, node.widgetId, eventName, value),
     };

@@ -114,7 +114,7 @@ export async function bootstrap(rootEl) {
     refResolver.register(`database:${databaseId}`, (recordKey) => dataStore.getRecord(databaseId, recordKey));
   });
 
-  const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore);
+  const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, publicVariableManager);
 
   const activityDefinitionStore = new ActivityDefinitionStore();
   const activityQueueRegistry = new ActivityQueueRegistry();

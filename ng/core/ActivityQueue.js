@@ -15,7 +15,7 @@ export class ActivityQueue {
   }
 
   /** Append a new instance for `activityId` and return the created instance. */
-  append({ activityId, instanceId, currentNodeId } = {}) {
+  append({ activityId, instanceId, currentNodeId, payload = null, receivedDay = null, receivedTime = null, receivedPhase = null } = {}) {
     if (!activityId) throw new Error("ActivityQueue.append requires an activityId");
     const sequence = (this._sequence.get(activityId) || 0) + 1;
     this._sequence.set(activityId, sequence);
@@ -24,6 +24,10 @@ export class ActivityQueue {
       activityId,
       queueId: this.queueId,
       currentNodeId,
+      payload,
+      receivedDay,
+      receivedTime,
+      receivedPhase,
     });
     this.entries.push(instance);
     return instance;

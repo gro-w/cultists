@@ -1,0 +1,18 @@
+import assert from "node:assert/strict";
+import EventBus from "../core/EventBus.js";
+import ItemManager from "../core/ItemManager.js";
+import NPCStateManager from "../core/NPCStateManager.js";
+import SpellManager from "../core/SpellManager.js";
+import SelectionSubmissionManager from "../core/SelectionSubmissionManager.js";
+import OutcomeManager from "../core/OutcomeManager.js";
+import MediaStateManager from "../core/MediaStateManager.js";
+const eventBus = new EventBus();
+const items = new ItemManager({ eventBus }); items.define({ id: "key" }); items.add("key"); items.place("desk", "key"); assert.equal(items.pickUp("desk").itemId, "key"); assert.equal(items.count("key"), 2);
+const npcs = new NPCStateManager({ eventBus }); npcs.adjustFavorability("npc", 3); assert.equal(npcs.get("npc").favorability, 3);
+const spells = new SpellManager({ eventBus }); spells.learn("spell"); assert.equal(spells.isLearned("spell"), true);
+const selections = new SelectionSubmissionManager({ eventBus }); selections.select("session", "patient"); assert.equal(selections.submit("session").selected, "patient");
+const outcomes = new OutcomeManager({ eventBus }); assert.equal(outcomes.unlock("ending").unlocked, true);
+const media = new MediaStateManager({ eventBus }); media.showCg("cg"); media.playBgm("bgm");
+const snapshots = [items, npcs, spells, selections, outcomes, media].map((store) => store.snapshot());
+assert.equal(snapshots.length, 6);
+console.log("runtime-record-stores probe: ok");

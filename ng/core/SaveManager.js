@@ -32,7 +32,7 @@ const SAVE_FORMAT = "cultists-ng-save";
 // rather than silently defaulting missing entries on load (AGENTS.md: "改
 // 变 payload...要评估是否提升版本；旧版本不应静默迁移") - an older save is
 // explicitly rejected by `_validate`, not migrated.
-const SAVE_FORMAT_VERSION = 3;
+const SAVE_FORMAT_VERSION = 4;
 
 function isPlainObject(value) {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
@@ -49,6 +49,7 @@ export class SaveManager {
     desktopIconManager,
     keywordManager,
     onboardingManager,
+    runtimeStores = {},
     activityExecutionService,
     resumePendingActivities,
     engineVersion = "0.1.0",
@@ -62,6 +63,7 @@ export class SaveManager {
     this.desktopIconManager = desktopIconManager;
     this.keywordManager = keywordManager;
     this.onboardingManager = onboardingManager;
+    this.runtimeStores = runtimeStores;
     this.activityExecutionService = activityExecutionService;
     this.resumePendingActivities = resumePendingActivities || (() => {});
     this.engineVersion = engineVersion;
@@ -86,6 +88,7 @@ export class SaveManager {
         desktopIcons: this.desktopIconManager.toJSON(),
         keywords: this.keywordManager.snapshot(),
         onboarding: this.onboardingManager.snapshot(),
+        runtime: Object.fromEntries(Object.entries(this.runtimeStores).map(([id, store]) => [id, store.snapshot()])),
       },
     };
   }
@@ -106,6 +109,7 @@ export class SaveManager {
     if (!Array.isArray(state.desktopIcons)) throw new Error("Save data is missing desktopIcons state");
     if (!Array.isArray(state.keywords)) throw new Error("Save data is missing keywords state");
     if (!isPlainObject(state.onboarding)) throw new Error("Save data is missing onboarding state");
+    if (!isPlainObject(state.runtime)) throw new Error("Save data is missing runtime state");
     return state;
   }
 
@@ -152,6 +156,7 @@ export class SaveManager {
     this.desktopIconManager.restore(state.desktopIcons);
     this.keywordManager.restore(state.keywords);
     this.onboardingManager.restore(state.onboarding);
+    for (const [id, store] of Object.entries(this.runtimeStores)) store.restore(state.runtime[id] || {});
   }
 }
 

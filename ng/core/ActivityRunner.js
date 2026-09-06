@@ -18,9 +18,9 @@
  * variable changes correctly on resume.
  */
 const ONE_SHOT_NODE_TYPES = new Set([
-  "setVariable", "consumeTime", "openWindow", "runActivity", "emitEvent",
+  "setVariable", "consumeTime", "openWindow", "runActivity", "insertActivity", "emitEvent",
   "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect",
-  "markOnboardingMilestone",
+  "markOnboardingMilestone", "statOperation",
 ]);
 const MAX_STEPS = 1000;
 
@@ -63,6 +63,12 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       result = [...(Array.isArray(array) ? array : []), read("item")];
       break;
     }
+    case "getGameTime":
+      result = variableStore.get("__gameTime") ?? 0;
+      break;
+    case "getActivityInstanceCount":
+      result = variableStore.get(`__activityCount:${read("activityId")}`) ?? 0;
+      break;
     case "getPublicVariable": {
       if (!pvGateway) throw new Error("Node getPublicVariable requires a pvGateway");
       result = pvGateway.get(read("id"));
@@ -222,11 +228,40 @@ export function createActivityRunner({
         windowGateway(windowId, instance, node);
         return { next: nextFlow(blueprint, node) };
       }
-      case "runActivity": {
+      case "runActivity":
+      case "insertActivity": {
         const activityId = resolveInput(blueprint, node, "activityId", variableStore, undefined, undefined, pvGateway);
-        const queueId = resolveInput(blueprint, node, "queueId", variableStore, "main", undefined, pvGateway);
+        const queueId = resolveInput(blueprint, node, "queue", variableStore, resolveInput(blueprint, node, "queueId", variableStore, "main", undefined, pvGateway), undefined, pvGateway);
         activityGateway(activityId, queueId, instance, node);
         return { next: nextFlow(blueprint, node) };
+      }
+      case "statOperation": {
+        const key = resolveInput(blueprint, node, "statId", variableStore, undefined, undefined, pvGateway);
+        if (Object.prototype.hasOwnProperty.call(node.inputs || {}, "delta")) {
+          variableStore.delta(key, resolveInput(blueprint, node, "delta", variableStore, 0, undefined, pvGateway));
+        } else {
+          variableStore.set(key, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway));
+        }
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "randomBranch": {
+        const n = Number(resolveInput(blueprint, node, "n", variableStore, 2, undefined, pvGateway));
+        const count = Math.max(1, Math.min(20, Number.isInteger(n) && n > 1 ? n : 2));
+        return { next: nextFlow(blueprint, node, `flowOut${Math.floor(Math.random() * count)}`) };
+      }
+      case "diceCheck": {
+        const threshold = Number(resolveInput(blueprint, node, "n", variableStore, 0, undefined, pvGateway));
+        const roll = Math.floor(Math.random() * 20) + 1;
+        const port = roll >= threshold + 10 ? "largeSuccess" : roll >= threshold ? "success" : roll <= threshold - 10 ? "largeFailure" : "failure";
+        return { next: nextFlow(blueprint, node, port) };
+      }
+      case "ending": {
+        eventGateway("activity:ending", {
+          endingId: resolveInput(blueprint, node, "endingId", variableStore, undefined, undefined, pvGateway),
+          displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway),
+        }, instance, node);
+        finish("ending");
+        return { stop: true };
       }
       case "emitEvent": {
         const eventName = resolveInput(blueprint, node, "eventName", variableStore, undefined, undefined, pvGateway);

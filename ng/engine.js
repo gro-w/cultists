@@ -7,6 +7,17 @@ import { ActivityDefinitionStore } from "./core/ActivityDefinitionStore.js";
 import { ActivityQueueRegistry } from "./core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "./core/ActivityExecutionService.js";
 import { GameClock } from "./core/GameClock.js";
+import { TimeService } from "./core/TimeService.js";
+import { ActivityQueueConsumer } from "./core/ActivityQueueConsumer.js";
+import { DisplayReceiverRegistry } from "./core/DisplayReceiverRegistry.js";
+import { GameState } from "./core/GameState.js";
+import { PhaseBoundaryService } from "./core/PhaseBoundaryService.js";
+import { ItemManager } from "./core/ItemManager.js";
+import { NPCStateManager } from "./core/NPCStateManager.js";
+import { SpellManager } from "./core/SpellManager.js";
+import { MediaStateManager } from "./core/MediaStateManager.js";
+import { SelectionSubmissionManager } from "./core/SelectionSubmissionManager.js";
+import { OutcomeManager } from "./core/OutcomeManager.js";
 import { validateBlueprint } from "./core/ActivityValidator.js";
 import { DesktopIconManager } from "./core/DesktopIconManager.js";
 import { buildBuiltinIconBlueprint } from "./core/BuiltinIconBlueprints.js";
@@ -22,6 +33,11 @@ import { NotebookView } from "./desktop/NotebookView.js";
 import { OnboardingManager } from "./core/OnboardingManager.js";
 import { TutorialOverlay } from "./desktop/TutorialOverlay.js";
 import { evaluateCondition } from "./core/ConditionEvaluator.js";
+import { evaluateActivityAvailability } from "./core/ActivityAvailabilityEvaluator.js";
+import { DataLoader } from "./core/DataLoader.js";
+import { ContentDocumentStore } from "./core/ContentDocumentStore.js";
+import { ActivityScheduler } from "./core/ActivityScheduler.js";
+import { ACTIVITY_EVENTS } from "./core/ActivityEvents.js";
 
 /**
  * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
@@ -37,18 +53,38 @@ export function isDevEntry(search = typeof location !== "undefined" ? location.s
 }
 
 export async function bootstrap(rootEl) {
+  const dataLoader = new DataLoader();
   const windowManager = new WindowManager(eventBus);
-  const windowDefinitionStore = new WindowDefinitionStore();
+  const windowDefinitionStore = new WindowDefinitionStore(dataLoader);
 
-  const engineConfigResponse = await fetch("data/engine.json");
-  const engineConfig = await engineConfigResponse.json();
+  const engineConfig = await dataLoader.loadJSON("engine.json");
+  if (engineConfig.contentRoot) dataLoader.setRoot(engineConfig.contentRoot);
+  if (isDevEntry() && await dataLoader.detectDevServer()) {
+    dataLoader.connectChangeEvents({ onChange: (payload) => eventBus.emit("data:changed", payload) });
+  }
 
-  await windowDefinitionStore.loadManifest(engineConfig.windowManifest, "data/windows/");
+  await windowDefinitionStore.loadManifest(engineConfig.windowManifest, "windows/");
 
-  const iconsResponse = await fetch(`data/${engineConfig.desktopIcons}`);
-  const icons = await iconsResponse.json();
+  const icons = await dataLoader.loadJSON(engineConfig.desktopIcons);
+  const contentDocumentStore = new ContentDocumentStore(dataLoader);
+  if (engineConfig.legacyContentManifest) {
+    await contentDocumentStore.loadManifest(engineConfig.legacyContentManifest);
+  }
 
   const gameClock = new GameClock(eventBus);
+  const timeService = new TimeService(gameClock, eventBus);
+  const gameState = new GameState(engineConfig.initialState);
+  const phaseBoundaryService = new PhaseBoundaryService({ gameClock, timeService, state: gameState, eventBus, rules: engineConfig.phaseRules || {} });
+  phaseBoundaryService.sync();
+  const itemManager = new ItemManager({ eventBus });
+  const npcStateManager = new NPCStateManager({ eventBus });
+  const spellManager = new SpellManager({ eventBus });
+  const mediaStateManager = new MediaStateManager({ eventBus });
+  const selectionSubmissionManager = new SelectionSubmissionManager({ eventBus });
+  const outcomeManager = new OutcomeManager({ eventBus });
+  const displayReceiverRegistry = new DisplayReceiverRegistry();
+  eventBus.on("dialogue:text", (payload) => displayReceiverRegistry.dispatch(payload?.displayTo, { type: "text", ...payload }));
+  eventBus.on("dialogue:choice", (payload) => displayReceiverRegistry.dispatch(payload?.displayTo, { type: "choice", ...payload }));
   const variableStore = new VariableStore(eventBus);
   const dataStructureManager = new DataStructureManager();
   const dataStore = new DataStore(dataStructureManager);
@@ -67,21 +103,21 @@ export async function bootstrap(rootEl) {
   // call site below, same convention as dbGateway/pvGateway.
   const onboardingManager = new OnboardingManager({ eventBus });
   if (engineConfig.onboarding) {
-    const onboardingResponse = await fetch(`data/${engineConfig.onboarding}`);
-    if (onboardingResponse.ok) onboardingManager.loadHints(await onboardingResponse.json());
+    const onboarding = await dataLoader.loadJSON(engineConfig.onboarding, { optional: true });
+    if (onboarding) onboardingManager.loadHints(onboarding);
   }
 
   if (engineConfig.structures) {
-    const structuresResponse = await fetch(`data/${engineConfig.structures}`);
-    if (structuresResponse.ok) dataStructureManager.loadDefinitions(await structuresResponse.json());
+    const structures = await dataLoader.loadJSON(engineConfig.structures, { optional: true });
+    if (structures) dataStructureManager.loadDefinitions(structures);
   }
   if (engineConfig.databases) {
-    const databasesResponse = await fetch(`data/${engineConfig.databases}`);
-    if (databasesResponse.ok) dataStore.loadDefinitions(await databasesResponse.json());
+    const databases = await dataLoader.loadJSON(engineConfig.databases, { optional: true });
+    if (databases) dataStore.loadDefinitions(databases);
   }
   if (engineConfig.publicVariables) {
-    const publicVariablesResponse = await fetch(`data/${engineConfig.publicVariables}`);
-    if (publicVariablesResponse.ok) publicVariableManager.loadDefinitions(await publicVariablesResponse.json());
+    const publicVariables = await dataLoader.loadJSON(engineConfig.publicVariables, { optional: true });
+    if (publicVariables) publicVariableManager.loadDefinitions(publicVariables);
   }
   // Generic seed-content loader (plan §9.3): a `{ databaseId: records[] }`
   // map of pre-authored records, config-driven exactly like
@@ -93,8 +129,8 @@ export async function bootstrap(rootEl) {
   if (engineConfig.seedRecords) {
     const seedFiles = Array.isArray(engineConfig.seedRecords) ? engineConfig.seedRecords : [engineConfig.seedRecords];
     for (const seedFile of seedFiles) {
-      const seedResponse = await fetch(`data/${seedFile}`);
-      if (seedResponse.ok) dataStore.loadRecordSet(await seedResponse.json());
+      const seed = await dataLoader.loadJSON(seedFile, { optional: true });
+      if (seed) dataStore.loadRecordSet(seed);
     }
   }
 
@@ -121,9 +157,38 @@ export async function bootstrap(rootEl) {
 
   const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, publicVariableManager);
 
-  const activityDefinitionStore = new ActivityDefinitionStore();
+  const activityDefinitionStore = new ActivityDefinitionStore(dataLoader);
   const activityQueueRegistry = new ActivityQueueRegistry();
+  activityQueueRegistry.register("work");
+  activityQueueRegistry.register("social");
+  activityQueueRegistry.register("main");
+  const activityScheduler = new ActivityScheduler({
+    contentDocumentStore,
+    activityDefinitionStore,
+    queueRegistry: activityQueueRegistry,
+    context: { gameClock, variableStore, publicVariableManager, pvGateway: publicVariableManager, activityQueueRegistry, activityDefinitionStore },
+  });
+  activityScheduler.load();
+  activityScheduler.advanceTo(gameClock.day, gameClock.minutes);
+  eventBus.on("gameClock:changed", ({ day, minutes }) => activityScheduler.advanceTo(day, minutes));
   const activityExecutionService = new ActivityExecutionService(eventBus);
+  activityScheduler.onAppend = ({ queue, instance, definition }) => {
+    eventBus.emit(ACTIVITY_EVENTS.appended, { queueId: queue.queueId, instance: { ...instance } });
+    if (!instance.payload?.autoRun || !definition) return;
+    activityExecutionService.run({
+      queue,
+      definition,
+      instance,
+      variableStore,
+      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
+      windowGateway: (windowId) => shell.openWindow(windowId),
+      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
+      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
+      dbGateway: dataStore,
+      pvGateway: publicVariableManager,
+      onboardingGateway: onboardingManager,
+    });
+  };
 
   /** Runs an Activity by id on the given queue (default "main"), wired with the shared gameClock/windowManager gateways. */
   function runActivity(activityId, queueId = "main") {
@@ -137,16 +202,17 @@ export async function bootstrap(rootEl) {
       pvGateway: publicVariableManager,
       activityQueueRegistry,
       activityDefinitionStore,
+      evaluateCondition,
     };
-    if (definition.condition && !evaluateCondition(definition.condition, conditionContext)) return null;
-    if (definition.day != null && gameClock.day !== definition.day) return null;
+    const availability = evaluateActivityAvailability(definition, conditionContext);
+    if (!availability.ok) return null;
     const instance = queue.append({ activityId });
     return activityExecutionService.run({
       queue,
       definition,
       instance,
       variableStore,
-      timeGateway: (minutes) => gameClock.advance(minutes),
+      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
       windowGateway: (windowId) => shell.openWindow(windowId),
       activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
@@ -156,6 +222,24 @@ export async function bootstrap(rootEl) {
     });
   }
   shell.runActivity = runActivity;
+  const activityQueueConsumer = new ActivityQueueConsumer({
+    queueRegistry: activityQueueRegistry,
+    activityDefinitionStore,
+    activityExecutionService,
+    execute: ({ queue, instance, definition }) => activityExecutionService.run({
+      queue,
+      definition,
+      instance,
+      variableStore,
+      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
+      windowGateway: (windowId) => shell.openWindow(windowId),
+      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
+      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
+      dbGateway: dataStore,
+      pvGateway: publicVariableManager,
+      onboardingGateway: onboardingManager,
+    }),
+  });
 
   /**
    * Resumes every queue's still-unresolved instance by re-running it
@@ -178,7 +262,7 @@ export async function bootstrap(rootEl) {
         definition,
         instance,
         variableStore,
-        timeGateway: (minutes) => gameClock.advance(minutes),
+        timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
         windowGateway: (windowId) => shell.openWindow(windowId),
         activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
         eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
@@ -210,7 +294,7 @@ export async function bootstrap(rootEl) {
       definition: { id: activityId, blueprint: validation.blueprint },
       instance,
       variableStore,
-      timeGateway: (minutes) => gameClock.advance(minutes),
+      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
       windowGateway: (id) => shell.openWindow(id),
       activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
@@ -283,7 +367,7 @@ export async function bootstrap(rootEl) {
       definition,
       instance,
       variableStore,
-      timeGateway: (minutes) => gameClock.advance(minutes),
+      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
       windowGateway: (id) => shell.openWindow(id),
       activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
       eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
@@ -296,9 +380,8 @@ export async function bootstrap(rootEl) {
 
   if (Array.isArray(engineConfig.activityLists)) {
     for (const listFile of engineConfig.activityLists) {
-      const listResponse = await fetch(`data/activity-lists/${listFile}`);
-      const list = await listResponse.json();
-      await activityDefinitionStore.loadManifest(list.activityIds, "data/activities/");
+      const list = await dataLoader.loadJSON(`activity-lists/${listFile}`);
+      await activityDefinitionStore.loadManifest(list.activityIds, "activities/");
     }
   }
 
@@ -338,6 +421,7 @@ export async function bootstrap(rootEl) {
     desktopIconManager: iconManager,
     keywordManager,
     onboardingManager,
+    runtimeStores: { itemManager, npcStateManager, spellManager, mediaStateManager, selectionSubmissionManager, outcomeManager },
     activityExecutionService,
     resumePendingActivities,
     engineVersion: engineConfig.version,
@@ -369,7 +453,7 @@ export async function bootstrap(rootEl) {
   // itself. Content wires a desktop icon's `blueprintId` to an Activity
   // that opens this window then runs the actual dialogue Activity (e.g.
   // `work01a-patient1`).
-  const dialogueView = new DialogueView({ eventBus, variableStore, keywordManager, gameClock });
+  const dialogueView = new DialogueView({ eventBus, variableStore, keywordManager, gameClock, displayReceiverRegistry, displayTo: "dialogue" });
   const DIALOGUE_WINDOW_ID = "dialogue";
   windowDefinitionStore.register({
     id: DIALOGUE_WINDOW_ID,
@@ -433,6 +517,8 @@ export async function bootstrap(rootEl) {
       dataStore,
       publicVariableManager,
       onboardingManager,
+      dataLoader,
+      contentDocumentStore,
       refreshIcons: () => shell.mountIcons(iconManager),
     });
     buildDeveloperDesktopIcons().forEach((icon) => iconManager.register(icon));
@@ -457,7 +543,19 @@ export async function bootstrap(rootEl) {
     activityDefinitionStore,
     activityQueueRegistry,
     activityExecutionService,
+    activityQueueConsumer,
+    activityScheduler,
     gameClock,
+    timeService,
+    gameState,
+    phaseBoundaryService,
+    itemManager,
+    npcStateManager,
+    spellManager,
+    mediaStateManager,
+    selectionSubmissionManager,
+    outcomeManager,
+    displayReceiverRegistry,
     dataStructureManager,
     dataStore,
     publicVariableManager,
@@ -466,6 +564,8 @@ export async function bootstrap(rootEl) {
     saveManager,
     onboardingManager,
     tutorialOverlay,
+    dataLoader,
+    contentDocumentStore,
   };
 }
 

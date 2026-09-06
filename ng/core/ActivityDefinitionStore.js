@@ -1,4 +1,5 @@
 import { validateBlueprint } from "./ActivityValidator.js";
+import { DataLoader } from "./DataLoader.js";
 
 /**
  * ActivityDefinitionStore - single owner of Activity *definitions*
@@ -7,7 +8,8 @@ import { validateBlueprint } from "./ActivityValidator.js";
  * module scatters `fetch("data/activities/...")` calls.
  */
 export class ActivityDefinitionStore {
-  constructor() {
+  constructor(dataLoader = new DataLoader()) {
+    this.dataLoader = dataLoader;
     this._definitions = new Map();
   }
 
@@ -31,9 +33,7 @@ export class ActivityDefinitionStore {
   async loadManifest(activityIds, baseUrl = "data/activities/") {
     const loaded = await Promise.all(
       activityIds.map(async (activityId) => {
-        const response = await fetch(`${baseUrl}${activityId}.json`);
-        if (!response.ok) throw new Error(`Failed to load activity definition "${activityId}": ${response.status}`);
-        return response.json();
+        return this.dataLoader.loadJSON(`${baseUrl}${activityId}.json`);
       }),
     );
     loaded.forEach((definition) => this.register(definition));

@@ -20,17 +20,18 @@
  * dialogue line collects keywords with no per-line authoring changes.
  */
 export class DialogueView {
-  constructor({ eventBus, variableStore, keywordManager, gameClock } = {}) {
+  constructor({ eventBus, variableStore, keywordManager, gameClock, displayReceiverRegistry, displayTo = "dialogue" } = {}) {
     this.eventBus = eventBus;
     this.variableStore = variableStore;
     this.keywordManager = keywordManager;
     this.gameClock = gameClock;
+    this.displayReceiverRegistry = displayReceiverRegistry;
+    this.displayTo = displayTo;
     this.instanceId = null;
     this._buildDom();
-    this._unsubscribers = [
-      eventBus.on("dialogue:text", (payload) => this._onText(payload)),
-      eventBus.on("dialogue:choice", (payload) => this._onChoice(payload)),
-    ];
+    this._unsubscribers = displayReceiverRegistry
+      ? [displayReceiverRegistry.register(displayTo, { handle: (payload) => payload.type === "text" ? this._onText(payload) : this._onChoice(payload) })]
+      : [eventBus.on("dialogue:text", (payload) => this._onText(payload)), eventBus.on("dialogue:choice", (payload) => this._onChoice(payload))];
   }
 
   _buildDom() {

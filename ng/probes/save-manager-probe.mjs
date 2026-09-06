@@ -134,7 +134,7 @@ function makeSession() {
 
   const saved = session.saveManager.snapshot();
   assert.equal(saved.format, "cultists-ng-save");
-  assert.equal(saved.version, 3);
+  assert.equal(saved.version, 4);
   assert.equal(saved.createdAtGameTime, 110);
 
   // Fresh "reloaded" session, as if the page refreshed.
@@ -178,7 +178,7 @@ function makeSession() {
   assert.throws(() => session.saveManager.restore(null), /valid object/);
   assert.throws(() => session.saveManager.restore({ format: "something-else" }), /Unknown save format/);
   assert.throws(() => session.saveManager.restore({ format: "cultists-ng-save", version: 999 }), /Unsupported save version/);
-  assert.throws(() => session.saveManager.restore({ format: "cultists-ng-save", version: 3 }), /missing state/);
+  assert.throws(() => session.saveManager.restore({ format: "cultists-ng-save", version: 3 }), /Unsupported save version/);
 
   // A structurally-valid-looking envelope with an internally-inconsistent
   // window snapshot (duplicate instanceId) must roll back cleanly.

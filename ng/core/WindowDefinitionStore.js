@@ -1,3 +1,5 @@
+import { DataLoader } from "./DataLoader.js";
+
 /**
  * WindowDefinitionStore - single owner of window *definitions* (static
  * content describing a window's default geometry and body), loaded from
@@ -8,7 +10,8 @@
  * other module scatters `fetch("data/windows/...")` calls (plan §2.1).
  */
 export class WindowDefinitionStore {
-  constructor() {
+  constructor(dataLoader = new DataLoader()) {
+    this.dataLoader = dataLoader;
     this._definitions = new Map();
   }
 
@@ -42,11 +45,7 @@ export class WindowDefinitionStore {
   async loadManifest(manifest, baseUrl = "data/windows/") {
     const loaded = await Promise.all(
       manifest.map(async (fileName) => {
-        const response = await fetch(`${baseUrl}${fileName}`);
-        if (!response.ok) {
-          throw new Error(`Failed to load window definition "${fileName}": ${response.status}`);
-        }
-        return response.json();
+        return this.dataLoader.loadJSON(`${baseUrl}${fileName}`);
       }),
     );
     loaded.forEach((definition) => this.register(definition));

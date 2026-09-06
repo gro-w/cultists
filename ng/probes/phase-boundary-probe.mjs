@@ -1,0 +1,26 @@
+import assert from "node:assert/strict";
+import EventBus from "../core/EventBus.js";
+import GameClock from "../core/GameClock.js";
+import TimeService from "../core/TimeService.js";
+import GameState from "../core/GameState.js";
+import PhaseBoundaryService from "../core/PhaseBoundaryService.js";
+
+const bus = new EventBus();
+const clock = new GameClock(bus);
+const time = new TimeService(clock, bus);
+const state = new GameState();
+const service = new PhaseBoundaryService({ gameClock: clock, timeService: time, state, eventBus: bus, rules: { workStart: 480, workEnd: 960, wakeTime: 480 } });
+service.sync();
+assert.equal(state.day, 1);
+assert.equal(state.phase, "night");
+clock.restore({ day: 1, minutes: 960 });
+state.duty = "on-duty";
+service.transitionOffDuty();
+assert.equal(clock.minutes, 960);
+assert.equal(state.duty, "off-duty");
+clock.restore({ day: 1, minutes: 1380 });
+const result = service.sleep();
+assert.equal(result.clock.day, 2);
+assert.equal(result.clock.minutes, 480);
+assert.equal(state.duty, "on-duty");
+console.log("phase-boundary probe: ok");

@@ -39,29 +39,29 @@
     }
   },
   {
-    "iconId": "off-duty",
-    "label": "下班",
-    "glyph": "🌙",
-    "order": 3,
-    "position": {
-      "mode": "grid"
-    },
-    "blueprintId": "desktop.run-activity",
-    "inputs": {
-      "activityId": "off-duty-open"
-    }
-  },
-  {
     "iconId": "save-load",
     "label": "存档",
     "glyph": "💾",
-    "order": 4,
+    "order": 3,
     "position": {
       "mode": "grid"
     },
     "blueprintId": "desktop.open-window",
     "inputs": {
       "windowId": "save-load"
+    }
+  },
+  {
+    "iconId": "off-duty",
+    "label": "下班",
+    "glyph": "🌙",
+    "order": 4,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.run-activity",
+    "inputs": {
+      "activityId": "off-duty-open"
     }
   },
   {

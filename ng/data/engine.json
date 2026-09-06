@@ -1,6 +1,8 @@
 {
   "name": "cultists-ng",
   "version": "0.1.0-phase1",
+  "contentRoot": "data/",
+  "legacyContentManifest": "legacy-content-manifest.json",
   "windowManifest": ["example.json", "off-duty.json", "his.json", "chatgtp.json"],
   "desktopIcons": "desktop-icons.json",
   "activityLists": ["default.json"],

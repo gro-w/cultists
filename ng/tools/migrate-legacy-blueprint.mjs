@@ -160,7 +160,8 @@ function runReport(targetDir) {
   [...blockedTypeCounts.entries()].sort((a, b) => b[1] - a[1]).forEach(([type, count]) => console.log(`  ${type}: ${count}`));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) {
   const args = process.argv.slice(2);
   if (args[0] === "--report") {
     const targetDir = path.resolve(args[1] || path.join(__dirname, "../../data/zh-hans"));

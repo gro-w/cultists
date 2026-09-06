@@ -221,6 +221,44 @@ const definitions = {
     label: "活动过期",
     valueInputs: [valueIn("expires", "bool"), valueIn("expiresAt", "number")],
   },
+  getGameTime: {
+    label: "读取游戏时间",
+    valueOutputs: [valueOut("value", "number")],
+  },
+  getActivityInstanceCount: {
+    label: "读取活动实例数量",
+    valueInputs: [valueIn("activityId", "string")],
+    valueOutputs: [valueOut("value", "number")],
+  },
+  insertActivity: {
+    label: "插入活动",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("activityId", "string"), valueIn("queue", "string"), valueIn("addTime", "number")],
+  },
+  statOperation: {
+    label: "修改属性",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("statId", "string"), valueIn("delta", "number"), valueIn("value")],
+  },
+  randomBranch: {
+    label: "随机分支",
+    flowInputs: [flowIn()],
+    flowOutputs: Array.from({ length: 20 }, (_, index) => flowOut(`flowOut${index}`)),
+    valueInputs: [valueIn("n", "number")],
+  },
+  diceCheck: {
+    label: "骰子检定",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut("largeSuccess"), flowOut("success"), flowOut("failure"), flowOut("largeFailure")],
+    valueInputs: [valueIn("n", "number")],
+  },
+  ending: {
+    label: "结束流程",
+    flowInputs: [flowIn()],
+    valueInputs: [valueIn("endingId", "string"), valueIn("displayTo", "string")],
+  },
   // Generic onboarding/tutorial primitive (mirrors the legacy engine's
   // effect - milestone-driven hints - without baking any specific
   // milestone id or event-name mapping into engine code; any blueprint

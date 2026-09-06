@@ -1,0 +1,19 @@
+{
+  "placements": [
+    {
+      "id": "roommate_necklace_on_desk",
+      "itemId": "roommate_necklace",
+      "location": "dorm",
+      "zone": "ajie_desk",
+      "condition": {
+        "roommatesSleeping": true
+      },
+      "hotspot": {
+        "icon": "📿",
+        "label": "书桌上的项链"
+      },
+      "takeMessage": "你拿起了室友摘下的项链。",
+      "returnMessage": "你把项链放回了书桌原处。"
+    }
+  ]
+}

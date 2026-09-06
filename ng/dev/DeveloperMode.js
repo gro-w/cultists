@@ -11,6 +11,7 @@ import { DatabaseDebuggerView } from "./DatabaseDebuggerView.js";
 import { PublicVariableEditorView } from "./PublicVariableEditorView.js";
 import { PublicVariableDebuggerView } from "./PublicVariableDebuggerView.js";
 import { OnboardingEditorView } from "./OnboardingEditorView.js";
+import { LegacyContentEditorView } from "./LegacyContentEditorView.js";
 
 const LIST_MANAGER_WINDOW_ID = "dev-activity-list-manager";
 const DEBUGGER_WINDOW_ID = "dev-activity-debugger";
@@ -21,6 +22,7 @@ const DATABASE_DEBUGGER_WINDOW_ID = "dev-database-debugger";
 const PUBLIC_VARIABLE_MANAGER_WINDOW_ID = "dev-public-variable-manager";
 const PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID = "dev-public-variable-debugger";
 const ONBOARDING_EDITOR_WINDOW_ID = "dev-onboarding-editor";
+const LEGACY_CONTENT_EDITOR_WINDOW_ID = "dev-legacy-content-editor";
 const LAUNCHER_WINDOW_ID = "dev-mode-launcher";
 let editorWindowSeq = 0;
 let windowEditorWindowSeq = 0;
@@ -29,7 +31,7 @@ let widgetEventEditorSeq = 0;
 /**
  * DeveloperMode - top-level controller wired into ng/engine.js only when
  * isDevEntry() is true (plan §3.1 strict `?dev` gate). Reads existing game
- * data the same way the engine does - plain fetch("data/...") - never
+ * data through the same DataLoader boundary as the engine - never
  * through the dev-server API, which is write-only (per repository
  * decision). Writing back to disk is done exclusively via devApi's
  * writeDataFile(), called from the list manager / editor views.
@@ -46,10 +48,12 @@ export async function initDeveloperMode({
   dataStore,
   publicVariableManager,
   onboardingManager,
+  dataLoader,
+  contentDocumentStore,
   refreshIcons,
 }) {
   const model = createActivityListManagerModel();
-  await loadExistingActivities(model, engineConfig);
+  await loadExistingActivities(model, engineConfig, dataLoader);
 
   function openEditor(activity) {
     const windowId = `dev-activity-editor-${activity.id}-${editorWindowSeq++}`;
@@ -261,6 +265,18 @@ export async function initDeveloperMode({
     body: onboardingEditorView.el,
   });
 
+  const legacyContentEditorView = new LegacyContentEditorView({ contentDocumentStore, dataLoader });
+  windowDefinitionStore.register({
+    id: LEGACY_CONTENT_EDITOR_WINDOW_ID,
+    title: "旧引擎内容通用编辑器",
+    icon: "📚",
+    width: 820,
+    height: 620,
+    resizable: true,
+    singleInstance: true,
+    body: legacyContentEditorView.el,
+  });
+
   // Single desktop-icon entry point (plan follow-up: "把桌面上各个开发人员
   // 模式图标放在同一个开发人员模式app里面") - every dev sub-tool above is
   // still its own singleInstance window, just launched from one shared
@@ -279,6 +295,7 @@ export async function initDeveloperMode({
       <button type="button" data-tool="structure-manager">🧱 数据结构管理器</button>
       <button type="button" data-tool="public-variable-manager">🌐 公共变量管理器</button>
       <button type="button" data-tool="onboarding-editor">💡 新手引导编辑器</button>
+      <button type="button" data-tool="legacy-content-editor">📚 旧引擎内容通用编辑器</button>
     </div>
     <div class="ng-dev-launcher-section">
       <h4>调试器（运行时 / 存档状态）</h4>
@@ -311,6 +328,9 @@ export async function initDeveloperMode({
   launcherEl.querySelector('[data-tool="onboarding-editor"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(ONBOARDING_EDITOR_WINDOW_ID));
   });
+  launcherEl.querySelector('[data-tool="legacy-content-editor"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(LEGACY_CONTENT_EDITOR_WINDOW_ID));
+  });
   launcherEl.querySelector('[data-tool="public-variable-debugger"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID));
   });
@@ -336,20 +356,19 @@ export async function initDeveloperMode({
     openPublicVariableManager: () => windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_MANAGER_WINDOW_ID)),
     openPublicVariableDebugger: () => windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID)),
     openOnboardingEditor: () => windowManager.open(windowDefinitionStore.get(ONBOARDING_EDITOR_WINDOW_ID)),
+    openLegacyContentEditor: () => windowManager.open(windowDefinitionStore.get(LEGACY_CONTENT_EDITOR_WINDOW_ID)),
   };
 }
 
-async function loadExistingActivities(model, engineConfig) {
+async function loadExistingActivities(model, engineConfig, dataLoader) {
   const listFiles = Array.isArray(engineConfig?.activityLists) ? engineConfig.activityLists : [];
   for (const listFile of listFiles) {
-    const response = await fetch(`data/activity-lists/${listFile}`);
-    if (!response.ok) continue;
-    const list = await response.json();
+    const list = await dataLoader.loadJSON(`activity-lists/${listFile}`, { optional: true });
+    if (!list) continue;
     model.registerList(list);
     for (const activityId of list.activityIds || []) {
-      const activityResponse = await fetch(`data/activities/${activityId}.json`);
-      if (!activityResponse.ok) continue;
-      const definition = await activityResponse.json();
+      const definition = await dataLoader.loadJSON(`activities/${activityId}.json`, { optional: true });
+      if (!definition) continue;
       model.registerActivity(list.id, definition, definition);
     }
   }

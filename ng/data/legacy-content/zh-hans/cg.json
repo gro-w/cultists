@@ -1,0 +1,159 @@
+{
+  "cgs": [
+    {
+      "id": "cg_test1",
+      "label": "阿伟坏",
+      "imageData": "data/assets/cg_cg_test1_9ce062fc6db2.jpg"
+    },
+    {
+      "id": "cg_binbin_turtle_01",
+      "label": "彬彬·海龟汤",
+      "imageData": "data/assets/cg_cg_binbin_turtle_01_fde3be50d313.jpg"
+    },
+    {
+      "id": "cg_awei_band_ending",
+      "label": "阿伟好",
+      "imageData": "data/assets/cg_cg_awei_band_ending_f2e30278c619.jpg"
+    },
+    {
+      "id": "cg_ewexmk_1",
+      "label": "阿杰好",
+      "imageData": "data/assets/cg_cg_ewexmk_1_5db51a6fc44c.jpg"
+    },
+    {
+      "id": "cg_ewexmk_2",
+      "label": "克总2",
+      "imageData": "data/assets/cg_cg_ewexmk_2_9ce4bd092a96.jpg"
+    },
+    {
+      "id": "cg_ewexmk_3",
+      "label": "阿杰坏",
+      "imageData": "data/assets/cg_cg_ewexmk_3_c255a6b0f96d.jpg"
+    },
+    {
+      "id": "cg_ewexmk_4",
+      "label": "蹈海1",
+      "imageData": "data/assets/cg_cg_ewexmk_4_009eb7bffab4.jpg"
+    },
+    {
+      "id": "cg_ewexmk_5",
+      "label": "鱼群1",
+      "imageData": "data/assets/cg_cg_ewexmk_5_22d76e96d4a6.jpg"
+    },
+    {
+      "id": "cg_ewexmk_6",
+      "label": "鱼群2",
+      "imageData": "data/assets/cg_cg_ewexmk_6_6afbee50fc35.jpg"
+    },
+    {
+      "id": "cg_ewexmk_7",
+      "label": "蹈海2",
+      "imageData": "data/assets/cg_cg_ewexmk_7_6793ec1e2b10.jpg"
+    },
+    {
+      "id": "cg_ewexmk_9",
+      "label": "牛马",
+      "imageData": "data/assets/cg_cg_ewexmk_9_baf0e87bb8e8.jpg"
+    },
+    {
+      "id": "cg_ewexmk_a",
+      "label": "微信图片_20260830050324_66_229",
+      "imageData": "data/assets/cg_cg_ewexmk_a_368c431db7ab.jpg"
+    },
+    {
+      "id": "cg_ewexmk_b",
+      "label": "蹈海3",
+      "imageData": "data/assets/cg_cg_ewexmk_b_32bf31a79baa.jpg"
+    },
+    {
+      "id": "cg_ewexmk_c",
+      "label": "番茄",
+      "imageData": "data/assets/cg_cg_ewexmk_c_452f45a9c294.jpg"
+    },
+    {
+      "id": "cg_ewexmk_d",
+      "label": "凡俗2",
+      "imageData": "data/assets/cg_cg_ewexmk_d_2ce9d303f97c.jpg"
+    },
+    {
+      "id": "cg_ewexmk_e",
+      "label": "微信图片_20260830050342_70_229",
+      "imageData": "data/assets/cg_cg_ewexmk_e_1fdd1a6964d4.jpg"
+    },
+    {
+      "id": "cg_ewexmk_f",
+      "label": "彬彬结局",
+      "imageData": "data/assets/cg_cg_ewexmk_f_cfb9cc7593b3.jpg"
+    },
+    {
+      "id": "cg_ewexmk_g",
+      "label": "moren",
+      "imageData": "data/assets/cg_cg_ewexmk_g_f0d317787bad.jpg"
+    },
+    {
+      "id": "cg_ewexmk_h",
+      "label": "正常",
+      "imageData": "data/assets/cg_cg_ewexmk_h_dc32973788f0.jpg"
+    },
+    {
+      "id": "cg_ewexmk_i",
+      "label": "克总1",
+      "imageData": "data/assets/cg_cg_ewexmk_i_36327bc2fcf6.jpg"
+    },
+    {
+      "id": "cg_ewexmk_j",
+      "label": "微信图片_20260830050405_75_229",
+      "imageData": "data/assets/cg_cg_ewexmk_j_e20967677751.jpg"
+    },
+    {
+      "id": "cg_ewexmk_k",
+      "label": "克总0",
+      "imageData": "data/assets/cg_cg_ewexmk_k_ccbd339872ea.jpg"
+    },
+    {
+      "id": "cg_ewexmk_l",
+      "label": "阿伟坏",
+      "imageData": "data/assets/cg_cg_test1_9ce062fc6db2.jpg"
+    },
+    {
+      "id": "cg_ewexmk_n",
+      "label": "微信图片_20260830050426_79_229",
+      "imageData": "data/assets/cg_cg_ewexmk_n_4c4f057a5f91.jpg"
+    },
+    {
+      "id": "cg_ewexmk_o",
+      "label": "凡俗1",
+      "imageData": "data/assets/cg_cg_ewexmk_o_3404a33cd8a8.jpg"
+    },
+    {
+      "id": "cg_ewqdjt_p",
+      "label": "克总3",
+      "imageData": "data/assets/cg_cg_ewqdjt_p_a798be2d8496.jpg"
+    },
+    {
+      "id": "cg_exrn4m_1",
+      "label": "宿舍坏",
+      "imageData": "data/assets/cg_cg_exrn4m_1_ecf66b3d164a.jpg"
+    },
+    {
+      "id": "cg_exruzh_4",
+      "label": "火锅店",
+      "imageData": "data/assets/cg_cg_exruzh_4_3cd72f6844c5.jpg"
+    },
+    {
+      "id": "cg_exrzfp_5",
+      "label": "宿舍好",
+      "imageData": "data/assets/cg_cg_exrzfp_5_e39ea303b6be.jpg"
+    },
+    {
+      "id": "cg_extit1_7",
+      "label": "海边",
+      "imageData": "data/assets/cg_cg_extit1_7_8dda1cff4bbf.jpg"
+    },
+    {
+      "id": "cg_ey7w5j_8",
+      "label": "医院",
+      "imageData": "data/assets/cg_cg_ey7w5j_8_a844f04fb3c3.jpg"
+    }
+  ]
+}

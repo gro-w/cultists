@@ -24,7 +24,11 @@ export function resolvePropertyValue(raw, { valueGraph, variableStore, pvGateway
   if (isBoundValue(raw)) {
     if ("nodeId" in raw) {
       if (!valueGraph || !variableStore) return fallback;
-      return evaluateValueOutput(valueGraph, raw.nodeId, raw.port || "value", variableStore, new Set(), pvGateway);
+      // Runtime render contexts are rebuilt during window refreshes. Keep a
+      // second reference on the shared VariableStore so a rebuilt/legacy
+      // context cannot silently lose the public-variable gateway.
+      const runtimePvGateway = pvGateway || variableStore.publicVariableGateway || null;
+      return evaluateValueOutput(valueGraph, raw.nodeId, raw.port || "value", variableStore, new Set(), runtimePvGateway);
     }
     if ("variable" in raw) return variableStore ? variableStore.get(raw.variable) : fallback;
   }

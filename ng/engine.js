@@ -53,6 +53,10 @@ export async function bootstrap(rootEl) {
   const dataStore = new DataStore(dataStructureManager);
   const refResolver = new RuntimeRefResolver();
   const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
+  // Property-bound widget values can be evaluated during any root refresh;
+  // keep the runtime gateway beside the shared variable store as a stable
+  // fallback for rebuilt renderer contexts.
+  variableStore.publicVariableGateway = publicVariableManager;
 
   // Generic milestone/hint mechanic (mirrors legacy js/core/OnboardingManager.js's
   // effect, but is fully data-driven: `data/onboarding.json`'s hints are the

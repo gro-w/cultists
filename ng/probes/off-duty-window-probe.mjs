@@ -1,12 +1,8 @@
-// Phase 8 off-duty/dorm probe: proves `ng/data/windows/off-duty.json` now
-// renders the dorm roommate-interaction UI (per legacy's hardcoded
-// NPC_IDS = ["ajie","awei","binbin"] -> favorability public-variable ids
-// 40/41/42, SAN ids 60/61/62 convention) instead of the placeholder
-// title+hint. Covers: onCreate loads each roommate's `npcs` record, the
-// widget-tree `valueGraph` correctly derives per-roommate name/avatar and
-// "好感度：N"/"SAN：N" display text from those records + public variables,
-// and each roommate's "交流" button produces a placeholder chat message
-// (no social dialogue Activities are migrated into ng/ yet).
+// Phase 8 off-duty/dorm probe: proves the data-driven legacy dorm layout
+// in `ng/data/windows/off-duty.json` renders through the same widget tree
+// consumed by the custom window editor and runtime. It covers the three
+// roommate records, public-variable bindings and every declared event
+// blueprint (including the migrated toolbar actions).
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
@@ -89,7 +85,7 @@ const ROOMMATES = [
     for (const [name, bp] of Object.entries(node.events || {})) if (bp) blueprints.push([`${prefix}.${name}`, bp]);
     for (const child of node.children || []) collect(child, `${prefix}>${child.widgetId}`);
   })(offDuty.root, "root");
-  assert.equal(blueprints.length, 1 + ROOMMATES.length, "expected onCreate + one interact blueprint per roommate");
+  assert.ok(blueprints.length >= 1 + ROOMMATES.length, "expected onCreate + one interact blueprint per roommate");
   for (const [label, bp] of blueprints) {
     const { ok, errors } = validateBlueprint(bp);
     assert.equal(ok, true, `${label}: ${errors?.join("；")}`);

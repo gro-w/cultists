@@ -1247,4 +1247,22 @@ button {
   overflow: auto;
 }
 
+/* Data-driven legacy dorm layout. All elements are widgets from off-duty.json. */
+.ng-off-duty-root { height: 100%; min-height: 0; background: #1a1530; color: #f4ecc9; }
+.ng-off-duty-header { flex-shrink: 0; padding: 6px; background: #211c38; border-bottom: 2px solid #51486d; }
+.ng-off-duty-title { font-size: 14px; font-weight: bold; }
+.ng-off-duty-clock { padding: 3px 8px; font-size: 10px; letter-spacing: 1px; }
+.ng-off-duty-actions { margin-left: auto; }
+.ng-off-duty-actions .ng-widget-button { font-size: 12px; }
+.ng-off-duty-scene { flex: 1; min-height: 0; padding: 10px 16px 8px; overflow: hidden; align-items: stretch; background: #1a1530 url("data/assets/location_dorm_ecf66b3d164a.jpg") center/cover no-repeat; }
+.ng-off-duty-card { flex: 1; min-width: 0; background: rgba(35,29,62,.94); border: 2px solid #3d3460; }
+.ng-off-duty-portrait { width: 100%; min-height: 0; flex: 1; background: rgba(44,37,72,.88); border-bottom: 3px solid #5a4a8a; }
+.ng-off-duty-portrait img { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
+.ng-off-duty-name { color: #a090c8; letter-spacing: 1px; }
+.ng-off-duty-card .ng-widget-button { font-size: 11px; margin: 2px; }
+.ng-off-duty-strip { flex-shrink: 0; padding: 6px 12px; background: #211c38; border-top: 2px solid #51486d; }
+.ng-off-duty-message { flex-shrink: 0; min-height: 26px; padding: 5px 12px; background: #231d3e; border-top: 1px solid #51486d; font-size: 12px; color: #fff0a8; }
+
+
+
 /* DEV-TOOLS:END */

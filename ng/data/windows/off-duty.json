@@ -10,44 +10,239 @@
     "widgetId": "root",
     "type": "container",
     "flow": "vertical",
-    "gap": 12,
-    "padding": 24,
-    "align": "center",
-    "justify": "center",
+    "gap": 8,
+    "padding": 8,
+    "className": "ng-off-duty-root",
     "children": [
       {
-        "widgetId": "off-duty-title",
-        "type": "label",
-        "className": "ng-off-duty-title",
-        "text": "下班模式"
-      },
-      {
-        "widgetId": "off-duty-hint",
-        "type": "label",
-        "text": "点击右上角关闭按钮结束休息，返回桌面。"
-      },
-      {
-        "widgetId": "off-duty-roommates",
+        "widgetId": "off-duty-header",
         "type": "container",
         "flow": "horizontal",
-        "gap": 16,
+        "gap": 6,
+        "align": "center",
+        "className": "ng-off-duty-header",
+        "children": [
+          {
+            "widgetId": "off-duty-title",
+            "type": "label",
+            "text": "🏠 宿舍",
+            "className": "ng-off-duty-title"
+          },
+          {
+            "widgetId": "off-duty-clock",
+            "type": "label",
+            "text": "GAME TIME",
+            "className": "ng-off-duty-clock"
+          },
+          {
+            "widgetId": "off-duty-actions",
+            "type": "container",
+            "flow": "horizontal",
+            "gap": 4,
+            "align": "center",
+            "className": "ng-off-duty-actions",
+            "children": [
+              {
+                "widgetId": "off-duty-player",
+                "type": "button",
+                "text": "🧑 主角",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "open",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
+                        "inputs": {
+                          "windowId": "notebook"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-bed",
+                "type": "button",
+                "text": "🛏️ 睡觉",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "consume",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "consume": {
+                        "id": "consume",
+                        "type": "consumeTime",
+                        "inputs": {
+                          "minutes": 480
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-clue",
+                "type": "button",
+                "text": "🧵 线索墙",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "open",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
+                        "inputs": {
+                          "windowId": "notebook"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-computer",
+                "type": "button",
+                "text": "🖥️ 电脑",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "open",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
+                        "inputs": {
+                          "windowId": "chatgtp"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-restaurant",
+                "type": "button",
+                "text": "🍲 火锅店"
+              },
+              {
+                "widgetId": "off-duty-seaside",
+                "type": "button",
+                "text": "🌊 海边"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-scene",
+        "type": "container",
+        "flow": "horizontal",
+        "gap": 8,
+        "align": "stretch",
+        "className": "ng-off-duty-scene",
         "children": [
           {
             "widgetId": "off-duty-card-ajie",
             "type": "container",
             "flow": "vertical",
-            "gap": 4,
+            "gap": 6,
+            "padding": 8,
             "align": "center",
             "className": "ng-off-duty-card",
             "children": [
               {
-                "widgetId": "off-duty-ajie-avatar",
-                "type": "label",
-                "className": "ng-off-duty-avatar",
-                "text": {
-                  "nodeId": "ajieAvatar",
-                  "port": "value"
-                }
+                "widgetId": "off-duty-ajie-portrait",
+                "type": "image",
+                "src": "data/assets/npc_ajie_portraits_0_6f62a86edebb.png",
+                "alt": "阿杰",
+                "className": "ng-off-duty-portrait"
               },
               {
                 "widgetId": "off-duty-ajie-name",
@@ -55,7 +250,8 @@
                 "text": {
                   "nodeId": "ajieName",
                   "port": "value"
-                }
+                },
+                "className": "ng-off-duty-name"
               },
               {
                 "widgetId": "off-duty-ajie-fav",
@@ -147,6 +343,47 @@
                     }
                   }
                 }
+              },
+              {
+                "widgetId": "off-duty-ajie-inspect",
+                "type": "button",
+                "text": "调查铺位",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "open",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
+                        "inputs": {
+                          "windowId": "notebook"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
               }
             ]
           },
@@ -154,18 +391,17 @@
             "widgetId": "off-duty-card-awei",
             "type": "container",
             "flow": "vertical",
-            "gap": 4,
+            "gap": 6,
+            "padding": 8,
             "align": "center",
             "className": "ng-off-duty-card",
             "children": [
               {
-                "widgetId": "off-duty-awei-avatar",
-                "type": "label",
-                "className": "ng-off-duty-avatar",
-                "text": {
-                  "nodeId": "aweiAvatar",
-                  "port": "value"
-                }
+                "widgetId": "off-duty-awei-portrait",
+                "type": "image",
+                "src": "data/assets/npc_awei_portraits_0_a9334250e042.png",
+                "alt": "阿伟",
+                "className": "ng-off-duty-portrait"
               },
               {
                 "widgetId": "off-duty-awei-name",
@@ -173,7 +409,8 @@
                 "text": {
                   "nodeId": "aweiName",
                   "port": "value"
-                }
+                },
+                "className": "ng-off-duty-name"
               },
               {
                 "widgetId": "off-duty-awei-fav",
@@ -265,6 +502,47 @@
                     }
                   }
                 }
+              },
+              {
+                "widgetId": "off-duty-awei-inspect",
+                "type": "button",
+                "text": "调查铺位",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "open",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
+                        "inputs": {
+                          "windowId": "notebook"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
               }
             ]
           },
@@ -272,18 +550,17 @@
             "widgetId": "off-duty-card-binbin",
             "type": "container",
             "flow": "vertical",
-            "gap": 4,
+            "gap": 6,
+            "padding": 8,
             "align": "center",
             "className": "ng-off-duty-card",
             "children": [
               {
-                "widgetId": "off-duty-binbin-avatar",
-                "type": "label",
-                "className": "ng-off-duty-avatar",
-                "text": {
-                  "nodeId": "binbinAvatar",
-                  "port": "value"
-                }
+                "widgetId": "off-duty-binbin-portrait",
+                "type": "image",
+                "src": "data/assets/npc_binbin_portraits_0_3e9f7feebe2c.png",
+                "alt": "彬彬",
+                "className": "ng-off-duty-portrait"
               },
               {
                 "widgetId": "off-duty-binbin-name",
@@ -291,7 +568,8 @@
                 "text": {
                   "nodeId": "binbinName",
                   "port": "value"
-                }
+                },
+                "className": "ng-off-duty-name"
               },
               {
                 "widgetId": "off-duty-binbin-fav",
@@ -383,8 +661,283 @@
                     }
                   }
                 }
+              },
+              {
+                "widgetId": "off-duty-binbin-inspect",
+                "type": "button",
+                "text": "调查铺位",
+                "events": {
+                  "onClick": {
+                    "startNodeId": "start",
+                    "nodes": {
+                      "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "open",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "open": {
+                        "id": "open",
+                        "type": "openWindow",
+                        "inputs": {
+                          "windowId": "notebook"
+                        },
+                        "next": {
+                          "flowOut": {
+                            "nodeId": "end",
+                            "port": "flowIn"
+                          }
+                        }
+                      },
+                      "end": {
+                        "id": "end",
+                        "type": "activityEnd",
+                        "inputs": {}
+                      }
+                    }
+                  }
+                }
               }
             ]
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-strip",
+        "type": "container",
+        "flow": "horizontal",
+        "gap": 6,
+        "className": "ng-off-duty-strip",
+        "children": [
+          {
+            "widgetId": "off-duty-strip-ajie",
+            "type": "button",
+            "text": "👦 阿杰",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "ajieNpc": {
+                    "id": "ajieNpc",
+                    "type": "getVariable",
+                    "inputs": {
+                      "key": "dorm:npc0"
+                    }
+                  },
+                  "ajieName": {
+                    "id": "ajieName",
+                    "type": "getProperty",
+                    "inputs": {
+                      "value": {
+                        "nodeId": "ajieNpc",
+                        "port": "value"
+                      },
+                      "key": "name"
+                    }
+                  },
+                  "buildMessage": {
+                    "id": "buildMessage",
+                    "type": "arithmetic",
+                    "inputs": {
+                      "operator": "concat",
+                      "left": {
+                        "nodeId": "ajieName",
+                        "port": "value"
+                      },
+                      "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
+                    }
+                  },
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "setMessage",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "setMessage": {
+                    "id": "setMessage",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "dorm:message",
+                      "value": {
+                        "nodeId": "buildMessage",
+                        "port": "value"
+                      }
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-strip-awei",
+            "type": "button",
+            "text": "👩 阿伟",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "aweiNpc": {
+                    "id": "aweiNpc",
+                    "type": "getVariable",
+                    "inputs": {
+                      "key": "dorm:npc1"
+                    }
+                  },
+                  "aweiName": {
+                    "id": "aweiName",
+                    "type": "getProperty",
+                    "inputs": {
+                      "value": {
+                        "nodeId": "aweiNpc",
+                        "port": "value"
+                      },
+                      "key": "name"
+                    }
+                  },
+                  "buildMessage": {
+                    "id": "buildMessage",
+                    "type": "arithmetic",
+                    "inputs": {
+                      "operator": "concat",
+                      "left": {
+                        "nodeId": "aweiName",
+                        "port": "value"
+                      },
+                      "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
+                    }
+                  },
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "setMessage",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "setMessage": {
+                    "id": "setMessage",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "dorm:message",
+                      "value": {
+                        "nodeId": "buildMessage",
+                        "port": "value"
+                      }
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-strip-binbin",
+            "type": "button",
+            "text": "🧒 彬彬",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "binbinNpc": {
+                    "id": "binbinNpc",
+                    "type": "getVariable",
+                    "inputs": {
+                      "key": "dorm:npc2"
+                    }
+                  },
+                  "binbinName": {
+                    "id": "binbinName",
+                    "type": "getProperty",
+                    "inputs": {
+                      "value": {
+                        "nodeId": "binbinNpc",
+                        "port": "value"
+                      },
+                      "key": "name"
+                    }
+                  },
+                  "buildMessage": {
+                    "id": "buildMessage",
+                    "type": "arithmetic",
+                    "inputs": {
+                      "operator": "concat",
+                      "left": {
+                        "nodeId": "binbinName",
+                        "port": "value"
+                      },
+                      "right": "：宿舍剧情尚未迁移，暂时没有更多可说的话。"
+                    }
+                  },
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "setMessage",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "setMessage": {
+                    "id": "setMessage",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "dorm:message",
+                      "value": {
+                        "nodeId": "buildMessage",
+                        "port": "value"
+                      }
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
           }
         ]
       },

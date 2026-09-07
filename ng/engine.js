@@ -124,15 +124,15 @@ export async function bootstrap(rootEl) {
     const list = await dataLoader.loadJSON(`activity-lists/${listFile}`, { optional: true });
     for (const id of list?.activityIds || []) ids.add(id);
   }
-  const calendar = await dataLoader.loadJSON(config.activityCalendar, { optional: true });
-  for (const slot of calendar?.slots || []) if (slot.activityId) ids.add(slot.activityId);
   const defaultId = config.defaultActivity?.activityId || "default";
   ids.add(defaultId);
   const entries = [...ids].map((id) => manifestEntries.get(id)).filter(Boolean);
   if (entries.length) await activityDefinitions.loadManifest(entries, "activities/");
 
   const queues = new ActivityQueueRegistry();
-  for (const [id, options] of [["work", {}], ["social", {}], ["managers", { nonBlocking: true }], ["main", {}], ["window-events", { nonBlocking: true }], ["widget-events", { nonBlocking: true }], ["desktop-icons", { nonBlocking: true }]]) queues.register(id, options);
+  for (const definition of config.queues || []) {
+    if (definition?.id) queues.register(definition.id, { nonBlocking: Boolean(definition.nonBlocking) });
+  }
   const saveState = new EmptySnapshotStore();
   const saveManager = new SaveManager({
     gameClock, gameState: saveState, variableStore, publicVariableManager: publicVariables,

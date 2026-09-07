@@ -28,7 +28,15 @@
     "his-custom.json"
   ],
   "activityManifest": "activity-manifest.json",
-  "activityCalendar": "activity-calendar.json",
+  "queues": [
+    { "id": "work" },
+    { "id": "social" },
+    { "id": "managers", "nonBlocking": true },
+    { "id": "main" },
+    { "id": "window-events", "nonBlocking": true },
+    { "id": "widget-events", "nonBlocking": true },
+    { "id": "desktop-icons", "nonBlocking": true }
+  ],
   "structures": "structures.json",
   "databases": "databases.json",
   "publicVariables": "public-variables.json",

@@ -111,8 +111,23 @@ export async function bootstrap(rootEl) {
   }
 
   const runtimeGateway = { getCollection: () => [] };
-  const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway);
   const iconManager = new DesktopIconManager(icons);
+  const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway);
+  // Paint icons before loading the Activity catalogue. The catalogue can be
+  // large; taskbar and desktop must become visible as one initial surface.
+  shell.mountIcons(iconManager);
+  // DEV-TOOLS:START
+  if (isDevEntry()) {
+    iconManager.register({
+      iconId: "dev-mode-launcher-icon",
+      glyph: "🛠️",
+      label: "开发人员模式",
+      blueprintId: "desktop.open-window",
+      inputs: { windowId: "dev-mode-launcher" },
+    });
+    shell.refreshIcons();
+  }
+  // DEV-TOOLS:END
   const activityDefinitions = new ActivityDefinitionStore(dataLoader);
   const manifest = await dataLoader.loadJSON(config.activityManifest, { optional: true }) || { activityIds: [] };
   const manifestEntries = new Map((manifest.activityIds || []).map((entry) => {
@@ -211,7 +226,33 @@ export async function bootstrap(rootEl) {
   eventBus.on("window:closed", ({ windowId }) => runWindowLifecycle(windowId, "onDestroy"));
   shell.runActivity = runActivity;
   shell.conditionContext = { gameClock, variableStore, publicVariableManager: publicVariables, pvGateway: publicVariables, activityQueueRegistry: queues, activityDefinitionStore: activityDefinitions };
-  shell.mountIcons(iconManager);
+  shell.refreshIcons();
+
+  // DEV-TOOLS:START
+  if (isDevEntry()) {
+    const { initDeveloperMode } = await import("./dev/DeveloperMode.js");
+    await initDeveloperMode({
+      engineConfig: config,
+      activityManifest: manifest,
+      windowManager,
+      windowDefinitionStore: windowDefinitions,
+      activityQueueRegistry: queues,
+      activityDefinitionStore: activityDefinitions,
+      eventBus,
+      variableStore,
+      iconManager,
+      dataStructureManager: structures,
+      dataStore,
+      publicVariableManager: publicVariables,
+      onboardingManager: onboarding,
+      dataLoader,
+      saveManager,
+      refreshIcons: () => shell.refreshIcons(),
+    });
+    shell.refreshIcons();
+  }
+  // DEV-TOOLS:END
+
   eventBus.emit("engine:ready", {});
   const startup = config.defaultActivity;
   if (startup) {

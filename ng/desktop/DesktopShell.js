@@ -90,6 +90,10 @@ export class DesktopShell {
     this._renderIcons();
   }
 
+  refreshIcons() {
+    if (this.iconManager) this._renderIcons();
+  }
+
   _renderIcons() {
     // Keep the Start menu in lockstep with reorder/label/icon edits made by
     // the same DesktopIconManager; it must not maintain a second app list.

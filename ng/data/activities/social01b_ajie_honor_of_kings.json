@@ -1,10 +1,8 @@
 {
   "id": "social01b_ajie_honor_of_kings",
   "type": "other",
-  "npcId": "ajie",
-  "name": "阿杰",
-  "avatar": "🐶",
   "displayName": "《皇者荣耀》",
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -519,26 +517,28 @@
       },
       "current_game_time": {
         "id": "current_game_time",
-        "type": "getPublicVariable",
-        "inputs": {
-          "id": 1000
-        }
+        "type": "getGameTime",
+        "inputs": {}
       },
       "insert_dorm_activity": {
         "id": "insert_dorm_activity",
-        "type": "runActivity",
+        "type": "insertActivity",
         "inputs": {
           "activityId": "dorm_activity_day1",
-          "queueId": "social"
+          "queue": "social",
+          "respectPrerequisite": true,
+          "protectFromExpiry": false,
+          "addTime": {
+            "nodeId": "current_game_time",
+            "port": "value"
+          }
         }
       },
       "activity_count": {
         "id": "activity_count",
-        "type": "arithmetic",
+        "type": "getActivityInstanceCount",
         "inputs": {
-          "operator": "+",
-          "left": 0,
-          "right": 0
+          "activityId": "dorm_activity_day1"
         }
       },
       "activity_available": {
@@ -857,6 +857,5 @@
         "toPort": "flowIn"
       }
     ]
-  },
-  "day": 1
+  }
 }

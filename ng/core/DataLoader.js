@@ -50,12 +50,10 @@ export class DataLoader {
   }
 
   async detectDevServer() {
-    try {
-      const response = await this.fetchImpl("/api/files", { cache: "no-store" });
-      return response.ok;
-    } catch {
-      return false;
-    }
+    // The ng development server is intentionally write-only. Existing data
+    // is always read from the static content root, so probing a file-list
+    // endpoint would be both an invalid read and a noisy 404 on every dev boot.
+    return false;
   }
 
   connectChangeEvents({ onChange } = {}) {

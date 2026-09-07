@@ -1,0 +1,357 @@
+{
+  "id": "ending__蹈海",
+  "type": "ending",
+  "displayName": "蹈海",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "cg_001": {
+        "id": "cg_001",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_5"
+          }
+        },
+        "x": 340,
+        "y": 40
+      },
+      "line_002": {
+        "id": "line_002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "鱼群。",
+          "continueKey": "dlg:line_002:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "line_003": {
+        "id": "line_003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "汹涌不断浪潮翻滚无边无际的海洋，与其中的，同样无边无际的鱼群。",
+          "continueKey": "dlg:line_003:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "line_004": {
+        "id": "line_004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "那些微小的，非人的，异质的脊椎动物与无脊椎动物，从来就是那高居于食物链顶端的存在——人类的盘中美馔。当然也是他们动物朋友与其他生物界同伴的食粮。",
+          "continueKey": "dlg:line_004:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "line_005": {
+        "id": "line_005",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "但让我们回到人类——对人类而言，它们从来就是不值得同情的，如果给予它们哪怕最微末的同情的话，那宇宙的精华、万物的灵长就会失去一切自诩的圣性，而泯然于众造物。",
+          "continueKey": "dlg:line_005:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "line_006": {
+        "id": "line_006",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "所以不妨假设，假设这种在上古者之眼的注视下年轻胜过新星的所谓“传统”，是天经地义，是自然规律。",
+          "continueKey": "dlg:line_006:continue"
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "line_007": {
+        "id": "line_007",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "哦，你要知道，鱼虾是有大脑的。",
+          "continueKey": "dlg:line_007:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "line_008": {
+        "id": "line_008",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "信不信由你——它们会感到痛觉。",
+          "continueKey": "dlg:line_008:continue"
+        },
+        "x": 2440,
+        "y": 40
+      },
+      "cg_009": {
+        "id": "cg_009",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_6"
+          }
+        },
+        "x": 2740,
+        "y": 40
+      },
+      "line_010": {
+        "id": "line_010",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "从盲目痴愚的阿撒托斯说起（从那个无可名状的创世之梦开始，宇宙将永远冷漠，直到诡异的万古）——一直到原始浓汤里诞生的巨神乌波·萨斯拉——再到那臃肿的札特瓜的怪形，和无名的巨蟹神，就是那称为世界之癌的——日光之下并无新事：",
+          "continueKey": "dlg:line_010:continue"
+        },
+        "x": 3040,
+        "y": 40
+      },
+      "line_011": {
+        "id": "line_011",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "万物终将受苦——这恰好促成了某种复制单位在时空中的扩散。或者反过来说也一样，这是个循环。",
+          "continueKey": "dlg:line_011:continue"
+        },
+        "x": 3340,
+        "y": 40
+      },
+      "line_012": {
+        "id": "line_012",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "Ia! 旧日支配者昔在，今在，永在！但阿尔-哈兹莱德又曾说过，在诡异的万古中就连死亡也会消逝。",
+          "continueKey": "dlg:line_012:continue"
+        },
+        "x": 3640,
+        "y": 40
+      },
+      "line_013": {
+        "id": "line_013",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……",
+          "continueKey": "dlg:line_013:continue"
+        },
+        "x": 3940,
+        "y": 40
+      },
+      "line_014": {
+        "id": "line_014",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "祸哉！我灭亡了。因为它们已来复仇。它们来报复我——它们的食客。",
+          "continueKey": "dlg:line_014:continue"
+        },
+        "x": 4240,
+        "y": 40
+      },
+      "cg_015": {
+        "id": "cg_015",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_4"
+          }
+        },
+        "x": 4540,
+        "y": 40
+      },
+      "line_016": {
+        "id": "line_016",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "接受这一切吧。温和顺从地走进这片鱼群，正如鱼群游进罗网，万物的灵长达观地走进坟墓。",
+          "continueKey": "dlg:line_016:continue"
+        },
+        "x": 4840,
+        "y": 40
+      },
+      "line_017": {
+        "id": "line_017",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "别无他选。只能接受。",
+          "continueKey": "dlg:line_017:continue"
+        },
+        "x": 5140,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 5440,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_001",
+        "fromPort": "flowOut",
+        "toNodeId": "line_002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_002",
+        "fromPort": "flowOut",
+        "toNodeId": "line_003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_003",
+        "fromPort": "flowOut",
+        "toNodeId": "line_004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_004",
+        "fromPort": "flowOut",
+        "toNodeId": "line_005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_005",
+        "fromPort": "flowOut",
+        "toNodeId": "line_006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_006",
+        "fromPort": "flowOut",
+        "toNodeId": "line_007",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_007",
+        "fromPort": "flowOut",
+        "toNodeId": "line_008",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_008",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_009",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_009",
+        "fromPort": "flowOut",
+        "toNodeId": "line_010",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_010",
+        "fromPort": "flowOut",
+        "toNodeId": "line_011",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_011",
+        "fromPort": "flowOut",
+        "toNodeId": "line_012",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_012",
+        "fromPort": "flowOut",
+        "toNodeId": "line_013",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_013",
+        "fromPort": "flowOut",
+        "toNodeId": "line_014",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_014",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_015",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_015",
+        "fromPort": "flowOut",
+        "toNodeId": "line_016",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_016",
+        "fromPort": "flowOut",
+        "toNodeId": "line_017",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_017",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

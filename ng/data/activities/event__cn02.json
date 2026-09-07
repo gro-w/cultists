@@ -1,0 +1,287 @@
+{
+  "id": "event__彬彬献祭事件",
+  "type": "specialEvent",
+  "displayName": "彬彬献祭事件",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        }
+      },
+      "cg": {
+        "id": "cg",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_binbin_ending"
+          }
+        }
+      },
+      "intro": {
+        "id": "intro",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:intro:continue"
+        }
+      },
+      "questions": {
+        "id": "questions",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:questions:continue"
+        }
+      },
+      "answer1": {
+        "id": "answer1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:answer1:continue"
+        }
+      },
+      "choice1": {
+        "id": "choice1",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "你想……你虽然需要我的血肉，但其实不想杀死我？",
+              "next": "choice1a"
+            },
+            {
+              "label": "你只是想杀死我……因为我曾冒犯过你？",
+              "next": "choice1b"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice1:select"
+        }
+      },
+      "choice1a": {
+        "id": "choice1a",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:choice1a:continue"
+        }
+      },
+      "choice1b": {
+        "id": "choice1b",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:choice1b:continue"
+        }
+      },
+      "truth": {
+        "id": "truth",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:truth:continue"
+        }
+      },
+      "ritual": {
+        "id": "ritual",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:ritual:continue"
+        }
+      },
+      "choice2intro": {
+        "id": "choice2intro",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:choice2intro:continue"
+        }
+      },
+      "choice2": {
+        "id": "choice2",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "如果事情无法挽回，那么死亡并非我的欲望。我愿发下三重誓言。",
+              "next": "oath"
+            },
+            {
+              "label": "不……不……我宁愿死，死在你的手中，也不愿意变成怪物……",
+              "next": "death"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice2:select"
+        }
+      },
+      "oath": {
+        "id": "oath",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:oath:continue"
+        }
+      },
+      "good": {
+        "id": "good",
+        "type": "ending",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "endingId": "pl现实魅惑大成功"
+        }
+      },
+      "death": {
+        "id": "death",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "continueKey": "dlg:death:continue"
+        }
+      },
+      "bad": {
+        "id": "bad",
+        "type": "ending",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "endingId": "牺牲之血"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "cg",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg",
+        "fromPort": "flowOut",
+        "toNodeId": "intro",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro",
+        "fromPort": "flowOut",
+        "toNodeId": "questions",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "questions",
+        "fromPort": "flowOut",
+        "toNodeId": "answer1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "answer1",
+        "fromPort": "flowOut",
+        "toNodeId": "choice1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice1",
+        "fromPort": "option0",
+        "toNodeId": "choice1a",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice1",
+        "fromPort": "option1",
+        "toNodeId": "choice1b",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice1a",
+        "fromPort": "flowOut",
+        "toNodeId": "truth",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice1b",
+        "fromPort": "flowOut",
+        "toNodeId": "truth",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "truth",
+        "fromPort": "flowOut",
+        "toNodeId": "ritual",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "ritual",
+        "fromPort": "flowOut",
+        "toNodeId": "choice2intro",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice2intro",
+        "fromPort": "flowOut",
+        "toNodeId": "choice2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice2",
+        "fromPort": "option0",
+        "toNodeId": "oath",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice2",
+        "fromPort": "option1",
+        "toNodeId": "death",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "oath",
+        "fromPort": "flowOut",
+        "toNodeId": "good",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "good",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "death",
+        "fromPort": "flowOut",
+        "toNodeId": "bad",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "bad",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

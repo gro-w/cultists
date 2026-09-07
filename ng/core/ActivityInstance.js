@@ -13,6 +13,7 @@ export function createActivityInstance({ instanceId, activityId, queueId, curren
     status: "unresolved",
     resolutionReason: null,
     currentNodeId,
+    currentStep: currentNodeId ? { nodeId: currentNodeId, status: "pending" } : null,
     waitingNodeId: null,
     executedNodeIds: [],
     payload,

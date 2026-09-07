@@ -28,11 +28,12 @@ export class DesktopIconManager {
     this.icons.set(icon.iconId, {
       iconId: icon.iconId,
       label: icon.label || icon.iconId,
-      glyph: icon.glyph || "🗂",
+      glyph: icon.glyph || "📦",
       order: Number.isFinite(icon.order) ? icon.order : this.icons.size,
       position,
       blueprintId: icon.blueprintId,
       inputs: icon.inputs || {},
+      startMenu: icon.startMenu !== false,
     });
     return this.icons.get(icon.iconId);
   }
@@ -89,6 +90,13 @@ export class DesktopIconManager {
     if (!icon) return false;
     icon.blueprintId = blueprintId;
     icon.inputs = inputs;
+    return true;
+  }
+
+  setStartMenu(iconId, visible) {
+    const icon = this.get(iconId);
+    if (!icon) return false;
+    icon.startMenu = Boolean(visible);
     return true;
   }
 

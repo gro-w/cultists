@@ -45,7 +45,7 @@ export class Taskbar {
 
   /** Uses the desktop icon registry as the Start menu's application registry. */
   setApps(icons, onLaunch) {
-    this.apps = (icons || []).map((icon) => ({ icon, onLaunch }));
+    this.apps = (icons || []).filter((icon) => icon.startMenu !== false).map((icon) => ({ icon, onLaunch }));
     this._renderStartMenu();
   }
 
@@ -77,7 +77,7 @@ export class Taskbar {
       item.dataset.iconId = icon.iconId;
       const glyph = document.createElement("span");
       glyph.className = "start-menu-item-icon";
-      glyph.textContent = icon.glyph || "🗂";
+      glyph.textContent = icon.glyph || "📦";
       const label = document.createElement("span");
       label.textContent = icon.label || icon.iconId;
       item.append(glyph, label);

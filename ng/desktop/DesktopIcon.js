@@ -24,7 +24,7 @@ export function renderDesktopIcons(rootEl, icons, { onActivate, onReorder, onFre
       el.style.top = `${icon.position.y || 0}px`;
     }
     el.innerHTML = `
-      <span class="icon-glyph">${icon.glyph || "🗂"}</span>
+      <span class="icon-glyph">${icon.glyph || "📦"}</span>
       <span class="icon-label">${icon.label}</span>
     `;
     // Opening is intentionally double-click-only.  Count the two click

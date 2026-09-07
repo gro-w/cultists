@@ -1,0 +1,126 @@
+{
+  "id": "event__悔恨之泪",
+  "type": "specialEvent",
+  "displayName": "悔恨之泪",
+  "blueprint": {
+    "startNodeId": "n_26.6nj",
+    "nodes": {
+      "n_26.6nj": {
+        "id": "n_26.6nj",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "n_5l.pvt": {
+        "id": "n_5l.pvt",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "npc",
+          "text": "对，一攒够钱我就买了——终于能给挚爱的Pink Floyd一个“容器”，还挺高兴的。",
+          "continueKey": "dlg:n_5l.pvt:continue"
+        },
+        "x": 280,
+        "y": 40
+      },
+      "n_4ym.ay": {
+        "id": "n_4ym.ay",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你别又说什么高音甜中音稳那一套。",
+          "continueKey": "dlg:n_4ym.ay:continue"
+        },
+        "x": 40,
+        "y": 210
+      },
+      "n_fn7.wa": {
+        "id": "n_fn7.wa",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "来让我康康，啊不，听听。",
+          "continueKey": "dlg:n_fn7.wa:continue"
+        },
+        "x": 520,
+        "y": 40
+      },
+      "n_la.3dt": {
+        "id": "n_la.3dt",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "",
+          "continueKey": "dlg:n_la.3dt:continue"
+        },
+        "x": 760,
+        "y": 40
+      },
+      "n_0vk.kv": {
+        "id": "n_0vk.kv",
+        "type": "activityEnd",
+        "inputs": {
+          "speaker": "player",
+          "text": ""
+        },
+        "x": 280,
+        "y": 210
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 80,
+        "y": 240
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 80,
+        "y": 360
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "n_26.6nj",
+        "fromPort": "flowOut",
+        "toNodeId": "n_5l.pvt",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n_5l.pvt",
+        "fromPort": "flowOut",
+        "toNodeId": "n_fn7.wa",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n_fn7.wa",
+        "fromPort": "flowOut",
+        "toNodeId": "n_la.3dt",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n_la.3dt",
+        "fromPort": "flowOut",
+        "toNodeId": "n_4ym.ay",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n_4ym.ay",
+        "fromPort": "flowOut",
+        "toNodeId": "n_0vk.kv",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

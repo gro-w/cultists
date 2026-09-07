@@ -1,0 +1,1041 @@
+{
+  "id": "ending__现实=现实",
+  "type": "ending",
+  "displayName": "现实=现实",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "line_001": {
+        "id": "line_001",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "世界似乎变得不同了。",
+          "continueKey": "dlg:line_001:continue"
+        },
+        "x": 340,
+        "y": 40
+      },
+      "line_002": {
+        "id": "line_002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "这几天一直扰乱我心神的幻觉，似乎有所消退。那些近乎后印象派油画的鲜明彩色“滤镜”已经不再，眼中的景象也回归平凡。",
+          "continueKey": "dlg:line_002:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "line_003": {
+        "id": "line_003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "让我回到宿舍看看，那个越来越诡异的地方是否也恢复了正常。",
+          "continueKey": "dlg:line_003:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "line_004": {
+        "id": "line_004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "这些物品里并没有邪教的痕迹。难道我对邪教阴谋的记忆真是一场妄想？",
+          "continueKey": "dlg:line_004:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "line_005": {
+        "id": "line_005",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不过我似乎发现了一些别的东西。",
+          "continueKey": "dlg:line_005:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "line_006": {
+        "id": "line_006",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "老铁们，要不要一起吃火锅？",
+          "continueKey": "dlg:line_006:continue"
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "line_007": {
+        "id": "line_007",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "行啊，gogogo出发喽！",
+          "continueKey": "dlg:line_007:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "line_008": {
+        "id": "line_008",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "嗯，我现在没什么胃口，到那单点个饮料吧。",
+          "continueKey": "dlg:line_008:continue"
+        },
+        "x": 2440,
+        "y": 40
+      },
+      "line_009": {
+        "id": "line_009",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "室友们的相貌也回归了正常，对话也并没什么可疑之处。",
+          "continueKey": "dlg:line_009:continue"
+        },
+        "x": 2740,
+        "y": 40
+      },
+      "line_010": {
+        "id": "line_010",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "可以，咱们走，吃完AA。",
+          "continueKey": "dlg:line_010:continue"
+        },
+        "x": 3040,
+        "y": 40
+      },
+      "line_011": {
+        "id": "line_011",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "锅里的是什么……",
+          "continueKey": "dlg:line_011:continue"
+        },
+        "x": 3340,
+        "y": 40
+      },
+      "line_012": {
+        "id": "line_012",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "真相。现实世界的真相。",
+          "continueKey": "dlg:line_012:continue"
+        },
+        "x": 3640,
+        "y": 40
+      },
+      "line_013": {
+        "id": "line_013",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "谁能知道，是什么痛苦的幻想创造出这些果实的呢？该不是看管金苹果园的赫斯珀里得斯三姐妹在波利尼西亚果园中培植出来的吧！奇怪的是，这些果实都象活的一样，仿佛是在混沌初开时创造出来的，当时任何事物还都没有固定的形体，丰实肥硕，散发着浓郁的热带气息，好象具有一种独特的忧郁的感情。它们是被施展了魔法的果子，任何人尝了就能打开通向不知道哪些灵魂秘密的门扉，就可以走进幻境的神秘宫殿。它们孕育着无法预知的危险，咬一口就可能把一个人变成野兽，但也说不定变成神灵。一切健康的、正常的东西，淳朴人们所有的一切美好的情谊、朴素的欢乐都远远地避开了它们；但它们又具有莫大的诱惑力，就象伊甸园中能分辨善恶的智慧果一样，能把人带进未知的境界。",
+          "continueKey": "dlg:line_013:continue"
+        },
+        "x": 3940,
+        "y": 40
+      },
+      "line_014": {
+        "id": "line_014",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我似乎记得，我刷社交媒体时了解过工厂化养殖的情况，我其实知道这是什么。但为了维持和“正常人”一样的认知，刻意将其压到了记忆深处。",
+          "continueKey": "dlg:line_014:continue"
+        },
+        "x": 4240,
+        "y": 40
+      },
+      "line_015": {
+        "id": "line_015",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "妄想是一种慰藉，它将不可见转变为可见，将不可控转变为可控。而真正无可名状，令人无法理解，或者虽然可以管窥，却无法凭个人之力改变的现实往往才是最恐怖的。",
+          "continueKey": "dlg:line_015:continue"
+        },
+        "x": 4540,
+        "y": 40
+      },
+      "line_016": {
+        "id": "line_016",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我……有点吃不下了。",
+          "continueKey": "dlg:line_016:continue"
+        },
+        "x": 4840,
+        "y": 40
+      },
+      "line_017": {
+        "id": "line_017",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "没事，这顿算我请你的。",
+          "continueKey": "dlg:line_017:continue"
+        },
+        "x": 5140,
+        "y": 40
+      },
+      "line_018": {
+        "id": "line_018",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "没事，我帮你吃。",
+          "continueKey": "dlg:line_018:continue"
+        },
+        "x": 5440,
+        "y": 40
+      },
+      "line_019": {
+        "id": "line_019",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "你最近精神状态一直不太好，是不是快考试了压力太大？可以去海边散散心。",
+          "continueKey": "dlg:line_019:continue"
+        },
+        "x": 5740,
+        "y": 40
+      },
+      "line_020": {
+        "id": "line_020",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……我想自己一个人去海边走走。",
+          "continueKey": "dlg:line_020:continue"
+        },
+        "x": 6040,
+        "y": 40
+      },
+      "cg_021": {
+        "id": "cg_021",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_5"
+          }
+        },
+        "x": 6340,
+        "y": 40
+      },
+      "line_022": {
+        "id": "line_022",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "那么，如果不是妄想的话，我究竟看到了什么？",
+          "continueKey": "dlg:line_022:continue"
+        },
+        "x": 6640,
+        "y": 40
+      },
+      "line_023": {
+        "id": "line_023",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "鱼群。",
+          "continueKey": "dlg:line_023:continue"
+        },
+        "x": 6940,
+        "y": 40
+      },
+      "line_024": {
+        "id": "line_024",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "汹涌不断浪潮翻滚无边无际的海洋，与其中的，同样无边无际的鱼群。",
+          "continueKey": "dlg:line_024:continue"
+        },
+        "x": 7240,
+        "y": 40
+      },
+      "line_025": {
+        "id": "line_025",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "那些微小的，非人的，异质的脊椎动物与无脊椎动物，从来就是那高居于食物链顶端的存在——人类的盘中美馔。当然也是他们动物朋友与其他生物界同伴的食粮。",
+          "continueKey": "dlg:line_025:continue"
+        },
+        "x": 7540,
+        "y": 40
+      },
+      "line_026": {
+        "id": "line_026",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "但让我们回到人类——对人类而言，它们从来就是不值得同情的，如果给予它们哪怕最微末的同情的话，那宇宙的精华、万物的灵长就会失去一切自诩的圣性，而泯然于众造物。",
+          "continueKey": "dlg:line_026:continue"
+        },
+        "x": 7840,
+        "y": 40
+      },
+      "line_027": {
+        "id": "line_027",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "所以不妨假设，假设这种在上古者之眼的注视下年轻胜过新星的所谓“传统”，是天经地义，是自然规律。",
+          "continueKey": "dlg:line_027:continue"
+        },
+        "x": 8140,
+        "y": 40
+      },
+      "line_028": {
+        "id": "line_028",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "哦，你要知道，鱼虾是有大脑的。",
+          "continueKey": "dlg:line_028:continue"
+        },
+        "x": 8440,
+        "y": 40
+      },
+      "line_029": {
+        "id": "line_029",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "信不信由你——它们会感到痛觉。",
+          "continueKey": "dlg:line_029:continue"
+        },
+        "x": 8740,
+        "y": 40
+      },
+      "cg_030": {
+        "id": "cg_030",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_6"
+          }
+        },
+        "x": 9040,
+        "y": 40
+      },
+      "line_031": {
+        "id": "line_031",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "从盲目痴愚的阿撒托斯说起（从那个无可名状的创世之梦开始，宇宙将永远冷漠，直到诡异的万古）——一直到原始浓汤里诞生的巨神乌波·萨斯拉——再到那臃肿的札特瓜的怪形，和无名的巨蟹神，就是那称为世界之癌的——日光之下并无新事：",
+          "continueKey": "dlg:line_031:continue"
+        },
+        "x": 9340,
+        "y": 40
+      },
+      "line_032": {
+        "id": "line_032",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "万物终将受苦——这恰好促成了某种复制单位在时空中的扩散。或者反过来说也一样，这是个循环。",
+          "continueKey": "dlg:line_032:continue"
+        },
+        "x": 9640,
+        "y": 40
+      },
+      "line_033": {
+        "id": "line_033",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "Ia! 旧日支配者昔在，今在，永在！但阿尔-哈兹莱德又曾说过，在诡异的万古中就连死亡也会消逝。",
+          "continueKey": "dlg:line_033:continue"
+        },
+        "x": 9940,
+        "y": 40
+      },
+      "line_034": {
+        "id": "line_034",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……",
+          "continueKey": "dlg:line_034:continue"
+        },
+        "x": 10240,
+        "y": 40
+      },
+      "cg_035": {
+        "id": "cg_035",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_i"
+          }
+        },
+        "x": 10540,
+        "y": 40
+      },
+      "line_036": {
+        "id": "line_036",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "但是，请容许我们再纵容一次人类这个伟大而渺小，无知而博识，邪恶而圣洁的种族特有的傲慢，将目光转向此时、此地、此人。",
+          "continueKey": "dlg:line_036:continue"
+        },
+        "x": 10840,
+        "y": 40
+      },
+      "line_037": {
+        "id": "line_037",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我想起来了。我想起了很多事。",
+          "continueKey": "dlg:line_037:continue"
+        },
+        "x": 11140,
+        "y": 40
+      },
+      "line_038": {
+        "id": "line_038",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "那个早已成年的QQ群友，却面临被毫无资质、虐待成性的戒网瘾学校强制抓走的危险。",
+          "continueKey": "dlg:line_038:continue"
+        },
+        "x": 11440,
+        "y": 40
+      },
+      "line_039": {
+        "id": "line_039",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "彬彬认识的那些性少数网友也是这样，当陷入贫困时，连基本的庇护所都只能依靠社群里自发形成的草根公益组织。",
+          "continueKey": "dlg:line_039:continue"
+        },
+        "x": 11740,
+        "y": 40
+      },
+      "line_040": {
+        "id": "line_040",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "还有我自己的事。高中时，我们向家人打电话是限时的。电话那里挂着“少聊一分，提高一分，提高一分，干掉千人”的标语。我们从早上六点学到晚上十一点，高三的时候没有休息日，寒假只放十天左右。那时我们的宿舍，人均面积不如牢房大。我曾经认为那是正常的。刷题成为我唯一能证明自己有某种资格的方法。但是到底是什么资格，值得亿万人为此拼命竞争内卷？",
+          "continueKey": "dlg:line_040:continue"
+        },
+        "x": 12040,
+        "y": 40
+      },
+      "line_041": {
+        "id": "line_041",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不仅是高中，从上学起，从识字起，我的生活就局限在了两点一线，只有学习是值得认可的，而玩耍是不务正业。",
+          "continueKey": "dlg:line_041:continue"
+        },
+        "x": 12340,
+        "y": 40
+      },
+      "line_042": {
+        "id": "line_042",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "可就算这样，我学得还是不够。如果我从小学习的范围足够广、足够深，我就会知道现实和妄想之间的区别——并且学会【清晰】地运用思维——我就会知道不该沉溺于妄想，哪怕妄想的对象是“正常生活”，是最大多数人平凡日常的生活。",
+          "continueKey": "dlg:line_042:continue"
+        },
+        "x": 12640,
+        "y": 40
+      },
+      "cg_043": {
+        "id": "cg_043",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_h"
+          }
+        },
+        "x": 12940,
+        "y": 40
+      },
+      "line_044": {
+        "id": "line_044",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我错过了一些比“正常生活”更加奇异而美好的事。",
+          "continueKey": "dlg:line_044:continue"
+        },
+        "x": 13240,
+        "y": 40
+      },
+      "line_045": {
+        "id": "line_045",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "似乎整个世界在遇到“正常”这个词时卡住了。我不知道为什么会这样，结构性问题？可结构在哪里呢？我不知道我能做什么。而且我曾经认为那是正常的。",
+          "continueKey": "dlg:line_045:continue"
+        },
+        "x": 13540,
+        "y": 40
+      },
+      "line_046": {
+        "id": "line_046",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "还有那些烂梗，我说出口的那一刻，其实早就知道它会冒犯别人。",
+          "continueKey": "dlg:line_046:continue"
+        },
+        "x": 13840,
+        "y": 40
+      },
+      "line_047": {
+        "id": "line_047",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "可是，为什么停不下来呢？",
+          "continueKey": "dlg:line_047:continue"
+        },
+        "x": 14140,
+        "y": 40
+      },
+      "line_048": {
+        "id": "line_048",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "为什么呢？",
+          "continueKey": "dlg:line_048:continue"
+        },
+        "x": 14440,
+        "y": 40
+      },
+      "line_049": {
+        "id": "line_049",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……",
+          "continueKey": "dlg:line_049:continue"
+        },
+        "x": 14740,
+        "y": 40
+      },
+      "cg_050": {
+        "id": "cg_050",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_o"
+          }
+        },
+        "x": 15040,
+        "y": 40
+      },
+      "line_051": {
+        "id": "line_051",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我不知道那究竟是什么，但它确实叫我不能平静。它给我一种印象，仿佛我正坐在一间空荡荡的屋子隔壁，我知道那间屋子是空的，但不知为什么，我又觉得里面有一个人，叫我惊恐万状。",
+          "continueKey": "dlg:line_051:continue"
+        },
+        "x": 15340,
+        "y": 40
+      },
+      "line_052": {
+        "id": "line_052",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你责骂你自己吧；你知道这只不过是你的神经在作祟——但是，但是……过一小会儿，你就再也不能抗拒那紧紧捕捉住你的恐惧了。你被握在一种无形的恐怖的掌心里，无法逃脱。",
+          "continueKey": "dlg:line_052:continue"
+        },
+        "x": 15640,
+        "y": 40
+      },
+      "line_053": {
+        "id": "line_053",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "看看海水吧。你将看到——",
+          "continueKey": "dlg:line_053:continue"
+        },
+        "x": 15940,
+        "y": 40
+      },
+      "cg_054": {
+        "id": "cg_054",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_5"
+          }
+        },
+        "x": 16240,
+        "y": 40
+      },
+      "line_055": {
+        "id": "line_055",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "大自然，既崇高又冷漠，既美丽又残忍……它使你感到空间的无限和时间的永恒，叫你产生一种畏惧的感觉。…… 我仿佛看到它们都有了灵魂，都各自有一个秘密，仿佛它们的灵魂和秘密眼看就要被我抓到手里，但又总是被它们逃脱掉。那些颜色都是我熟悉的颜色，可是又有所不同；它们都具有自己的独特的重要性。而那些赤身裸体的男男女女，他们既都是尘寰的、是他们揉捏而成的尘土，又都是神灵。人的最原始的天性赤裸裸地呈现在你眼前，你看到的时候不由得感到恐惧，因为你看到的是你自己。",
+          "continueKey": "dlg:line_055:continue"
+        },
+        "x": 16540,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 16840,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "line_001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_001",
+        "fromPort": "flowOut",
+        "toNodeId": "line_002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_002",
+        "fromPort": "flowOut",
+        "toNodeId": "line_003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_003",
+        "fromPort": "flowOut",
+        "toNodeId": "line_004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_004",
+        "fromPort": "flowOut",
+        "toNodeId": "line_005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_005",
+        "fromPort": "flowOut",
+        "toNodeId": "line_006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_006",
+        "fromPort": "flowOut",
+        "toNodeId": "line_007",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_007",
+        "fromPort": "flowOut",
+        "toNodeId": "line_008",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_008",
+        "fromPort": "flowOut",
+        "toNodeId": "line_009",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_009",
+        "fromPort": "flowOut",
+        "toNodeId": "line_010",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_010",
+        "fromPort": "flowOut",
+        "toNodeId": "line_011",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_011",
+        "fromPort": "flowOut",
+        "toNodeId": "line_012",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_012",
+        "fromPort": "flowOut",
+        "toNodeId": "line_013",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_013",
+        "fromPort": "flowOut",
+        "toNodeId": "line_014",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_014",
+        "fromPort": "flowOut",
+        "toNodeId": "line_015",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_015",
+        "fromPort": "flowOut",
+        "toNodeId": "line_016",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_016",
+        "fromPort": "flowOut",
+        "toNodeId": "line_017",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_017",
+        "fromPort": "flowOut",
+        "toNodeId": "line_018",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_018",
+        "fromPort": "flowOut",
+        "toNodeId": "line_019",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_019",
+        "fromPort": "flowOut",
+        "toNodeId": "line_020",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_020",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_021",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_021",
+        "fromPort": "flowOut",
+        "toNodeId": "line_022",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_022",
+        "fromPort": "flowOut",
+        "toNodeId": "line_023",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_023",
+        "fromPort": "flowOut",
+        "toNodeId": "line_024",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_024",
+        "fromPort": "flowOut",
+        "toNodeId": "line_025",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_025",
+        "fromPort": "flowOut",
+        "toNodeId": "line_026",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_026",
+        "fromPort": "flowOut",
+        "toNodeId": "line_027",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_027",
+        "fromPort": "flowOut",
+        "toNodeId": "line_028",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_028",
+        "fromPort": "flowOut",
+        "toNodeId": "line_029",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_029",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_030",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_030",
+        "fromPort": "flowOut",
+        "toNodeId": "line_031",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_031",
+        "fromPort": "flowOut",
+        "toNodeId": "line_032",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_032",
+        "fromPort": "flowOut",
+        "toNodeId": "line_033",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_033",
+        "fromPort": "flowOut",
+        "toNodeId": "line_034",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_034",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_035",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_035",
+        "fromPort": "flowOut",
+        "toNodeId": "line_036",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_036",
+        "fromPort": "flowOut",
+        "toNodeId": "line_037",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_037",
+        "fromPort": "flowOut",
+        "toNodeId": "line_038",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_038",
+        "fromPort": "flowOut",
+        "toNodeId": "line_039",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_039",
+        "fromPort": "flowOut",
+        "toNodeId": "line_040",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_040",
+        "fromPort": "flowOut",
+        "toNodeId": "line_041",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_041",
+        "fromPort": "flowOut",
+        "toNodeId": "line_042",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_042",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_043",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_043",
+        "fromPort": "flowOut",
+        "toNodeId": "line_044",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_044",
+        "fromPort": "flowOut",
+        "toNodeId": "line_045",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_045",
+        "fromPort": "flowOut",
+        "toNodeId": "line_046",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_046",
+        "fromPort": "flowOut",
+        "toNodeId": "line_047",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_047",
+        "fromPort": "flowOut",
+        "toNodeId": "line_048",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_048",
+        "fromPort": "flowOut",
+        "toNodeId": "line_049",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_049",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_050",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_050",
+        "fromPort": "flowOut",
+        "toNodeId": "line_051",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_051",
+        "fromPort": "flowOut",
+        "toNodeId": "line_052",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_052",
+        "fromPort": "flowOut",
+        "toNodeId": "line_053",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_053",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_054",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_054",
+        "fromPort": "flowOut",
+        "toNodeId": "line_055",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_055",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

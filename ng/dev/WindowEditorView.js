@@ -20,12 +20,13 @@ const WIDGET_TYPES = [
  * 哪些 x/y 属性不生效").
  */
 export class WindowEditorView {
-  constructor({ definition, dataFileName, onSaveToMemory, variableStore, openEventBlueprintEditor } = {}) {
+  constructor({ definition, dataFileName, onSaveToMemory, variableStore, openEventBlueprintEditor, openValueBlueprintEditor } = {}) {
     this.model = createWindowEditorModel({ definition });
     this.dataFileName = dataFileName || null;
     this.onSaveToMemory = onSaveToMemory || (() => {});
     this.variableStore = variableStore || null;
     this.openEventBlueprintEditor = openEventBlueprintEditor || null;
+    this.openValueBlueprintEditor = openValueBlueprintEditor || null;
     this._buildDom();
     this.render();
     this._bindKeys();
@@ -265,7 +266,24 @@ export class WindowEditorView {
       // Mirrors ActivityEditorView's convention: with nothing selected the
       // inspector shows the window's own metadata instead of going blank.
       this._renderWindowMetaInspector();
+      if (this.openValueBlueprintEditor) this._appendValueGraphButton();
       return;
+    }
+    if (this.openValueBlueprintEditor) {
+      const graphButton = document.createElement("button");
+      graphButton.type = "button";
+      graphButton.textContent = "编辑组件数值蓝图";
+      graphButton.title = "创建/编辑组件属性和内容使用的数值输出图";
+      graphButton.addEventListener("click", () => this.openValueBlueprintEditor({
+        blueprint: this.model.definition.valueGraph || {},
+        displayName: `${this.model.definition.id || "window"} 数值蓝图`,
+        onSaveToMemory: (blueprint) => {
+          this.model.definition.valueGraph = blueprint;
+          this.render();
+          this.onSaveToMemory(this.model.definition);
+        },
+      }));
+      this.inspectorEl.append(graphButton);
     }
     const fields = this._fieldsFor(node);
     for (const field of fields) {
@@ -281,7 +299,9 @@ export class WindowEditorView {
         bindToggle.title = "通过变量取值而非固定值 (窗口/组件属性也都可以通过蓝图指定)";
         bindToggle.checked = bound;
         bindToggle.addEventListener("change", () => {
-          const patch = bindToggle.checked ? { [field.key]: { variable: "" } } : { [field.key]: field.type === "number" ? 0 : "" };
+          const patch = bindToggle.checked
+            ? { [field.key]: { variable: "" } }
+            : { [field.key]: field.type === "number" ? 0 : field.type === "checkbox" ? true : "" };
           this.model.updateWidgetProps(node.widgetId, patch);
           this.render();
         });
@@ -290,8 +310,8 @@ export class WindowEditorView {
       const input = document.createElement(field.type === "checkbox" ? "input" : field.type === "select" ? "select" : "input");
       if (bound) {
         input.type = "text";
-        input.placeholder = "变量名";
-        input.value = rawValue.variable || "";
+        input.placeholder = "变量名 或 @蓝图节点:端口";
+        input.value = rawValue.variable || (rawValue.nodeId ? `@${rawValue.nodeId}:${rawValue.port || "value"}` : "");
       } else if (field.type === "checkbox") {
         input.type = "checkbox";
         input.checked = Boolean(field.value);
@@ -315,8 +335,11 @@ export class WindowEditorView {
       // "输入框 text 事件只更新现有 inspector 值，不整体重绘导致失焦").
       input.addEventListener("input", () => {
         const value = bound
-          ? { variable: input.value }
-          : field.type === "checkbox" ? input.checked : field.type === "number" ? Number(input.value) : input.value;
+          ? this._parseBinding(input.value)
+          : field.type === "checkbox" ? input.checked
+          : field.type === "number" ? Number(input.value)
+          : ["options", "items", "rows"].includes(field.key) ? this._parseJsonField(input.value)
+          : input.value;
         this.model.updateWidgetProps(node.widgetId, { [field.key]: value });
         this._renderStructure();
         this._renderPreview();
@@ -326,6 +349,36 @@ export class WindowEditorView {
     }
     this._renderGeometryInspector(node);
     this._renderEventsInspector(node);
+  }
+
+  _appendValueGraphButton() {
+    const graphButton = document.createElement("button");
+    graphButton.type = "button";
+    graphButton.textContent = "编辑组件数值蓝图";
+    graphButton.title = "创建/编辑组件属性和内容使用的数值输出图";
+    graphButton.addEventListener("click", () => this.openValueBlueprintEditor({
+      blueprint: this.model.definition.valueGraph || {},
+      displayName: `${this.model.definition.id || "window"} 数值蓝图`,
+      onSaveToMemory: (blueprint) => {
+        this.model.definition.valueGraph = blueprint;
+        this.render();
+        this.onSaveToMemory(this.model.definition);
+      },
+    }));
+    this.inspectorEl.append(graphButton);
+  }
+
+  _parseJsonField(text) {
+    try { return JSON.parse(text); } catch { return text; }
+  }
+
+  _parseBinding(text) {
+    const value = String(text || "").trim();
+    if (value.startsWith("@")) {
+      const [nodeId, port = "value"] = value.slice(1).split(":");
+      return { nodeId, port };
+    }
+    return { variable: value };
   }
 
   /**
@@ -355,10 +408,21 @@ export class WindowEditorView {
       row.className = "ng-window-editor-field";
       row.innerHTML = `<span>${key}</span>`;
       const input = document.createElement("input");
-      input.type = "number";
-      input.value = Number.isFinite(node[key]) ? node[key] : 0;
+      const bound = isBoundValue(node[key]);
+      const bindToggle = document.createElement("input");
+      bindToggle.type = "checkbox";
+      bindToggle.checked = bound;
+      bindToggle.title = "通过数值蓝图输出驱动位置";
+      bindToggle.addEventListener("change", () => {
+        this.model.updateWidgetProps(node.widgetId, { [key]: bindToggle.checked ? { variable: "" } : 0 });
+        this._renderInspector();
+      });
+      row.appendChild(bindToggle);
+      input.type = bound ? "text" : "number";
+      input.value = bound ? (node[key].variable || (node[key].nodeId ? `@${node[key].nodeId}:${node[key].port || "value"}` : "")) : (Number.isFinite(node[key]) ? node[key] : 0);
+      if (bound) input.placeholder = "变量名 或 @节点:端口";
       input.addEventListener("input", () => {
-        this.model.updateWidgetProps(node.widgetId, { [key]: Number(input.value) || 0 });
+        this.model.updateWidgetProps(node.widgetId, { [key]: bound ? this._parseBinding(input.value) : Number(input.value) || 0 });
         this._renderPreview();
       });
       row.appendChild(input);
@@ -370,6 +434,7 @@ export class WindowEditorView {
   /** Which `events[eventName]` blueprints actually fire for a widget type (mirrors WidgetLayoutRenderer's ctx.onEvent call sites). */
   _eventNamesFor(type) {
     if (type === "button") return ["onClick"];
+    if (type === "list") return ["onItemClick"];
     if (["textInput", "textarea", "select", "checkbox"].includes(type)) return ["onChange", "onFocus", "onBlur"];
     return [];
   }
@@ -450,8 +515,8 @@ export class WindowEditorView {
       const input = document.createElement(field.type === "select" ? "select" : "input");
       if (bound) {
         input.type = "text";
-        input.placeholder = "变量名";
-        input.value = rawValue.variable || "";
+        input.placeholder = "变量名 或 @蓝图节点:端口";
+        input.value = rawValue.variable || (rawValue.nodeId ? `@${rawValue.nodeId}:${rawValue.port || "value"}` : "");
       } else if (field.type === "checkbox") {
         input.type = "checkbox";
         input.checked = Boolean(field.value);
@@ -468,7 +533,7 @@ export class WindowEditorView {
         input.value = field.value ?? "";
       }
       input.addEventListener("input", () => {
-        const value = bound ? { variable: input.value } : field.type === "checkbox" ? input.checked : input.value;
+        const value = bound ? this._parseBinding(input.value) : field.type === "checkbox" ? input.checked : input.value;
         this.model.updateWindowProps({ [field.key]: value });
       });
       row.appendChild(input);
@@ -477,15 +542,20 @@ export class WindowEditorView {
   }
 
   _fieldsFor(node) {
-    const common = [{ key: "widgetId", label: "widgetId", type: "text", value: node.widgetId }];
+    const common = [
+      { key: "widgetId", label: "widgetId", type: "text", value: node.widgetId },
+      { key: "className", label: "className", type: "text", value: node.className || "", bindable: true },
+      { key: "visible", label: "visible", type: "checkbox", value: node.visible ?? true, bindable: true },
+      { key: "enabled", label: "enabled", type: "checkbox", value: node.enabled ?? true, bindable: true },
+    ];
     if (node.type === "container") {
       return [
         ...common,
-        { key: "flow", label: "flow", type: "select", options: ["vertical", "horizontal", "grid", "stack"], value: node.flow || "vertical" },
-        { key: "gap", label: "gap", type: "number", value: node.gap ?? 0 },
-        { key: "padding", label: "padding", type: "number", value: node.padding ?? 0 },
-        { key: "align", label: "align", type: "text", value: node.align || "" },
-        { key: "justify", label: "justify", type: "text", value: node.justify || "" },
+        { key: "flow", label: "flow", type: "select", options: ["vertical", "horizontal", "grid", "stack"], value: node.flow || "vertical", bindable: true },
+        { key: "gap", label: "gap", type: "number", value: node.gap ?? 0, bindable: true },
+        { key: "padding", label: "padding", type: "number", value: node.padding ?? 0, bindable: true },
+        { key: "align", label: "align", type: "text", value: node.align || "", bindable: true },
+        { key: "justify", label: "justify", type: "text", value: node.justify || "", bindable: true },
       ];
     }
     if (node.type === "label" || node.type === "button") {
@@ -497,6 +567,41 @@ export class WindowEditorView {
         { key: "src", label: "src", type: "text", value: node.src || "", bindable: true },
         { key: "alt", label: "alt", type: "text", value: node.alt || "", bindable: true },
       ];
+    }
+    if (node.type === "range") {
+      return [
+        ...common,
+        { key: "min", label: "min", type: "number", value: node.min ?? 0, bindable: true },
+        { key: "max", label: "max", type: "number", value: node.max ?? 100, bindable: true },
+        { key: "step", label: "step", type: "number", value: node.step ?? 1, bindable: true },
+        { key: "value", label: "value", type: "number", value: node.value ?? 0, bindable: true },
+      ];
+    }
+    if (node.type === "progress") {
+      return [...common,
+        { key: "value", label: "value", type: "number", value: node.value ?? 0, bindable: true },
+        { key: "max", label: "max", type: "number", value: node.max ?? 100, bindable: true },
+      ];
+    }
+    if (node.type === "select") {
+      return [...common,
+        { key: "value", label: "value", type: "text", value: node.value ?? "", bindable: true },
+        { key: "options", label: "options", type: "text", value: JSON.stringify(node.options || []), bindable: true },
+      ];
+    }
+    if (node.type === "list") {
+      return [...common,
+        { key: "items", label: "items", type: "text", value: JSON.stringify(node.items || []), bindable: true },
+        { key: "itemLabelField", label: "itemLabelField", type: "text", value: node.itemLabelField || "name", bindable: true },
+        { key: "itemType", label: "itemType", type: "select", value: node.itemType || "div", options: [{"value":"div","label":"普通列表项"},{"value":"button","label":"按钮列表项"}] },
+        { key: "itemDisabledField", label: "itemDisabledField", type: "text", value: node.itemDisabledField || "", bindable: true },
+        { key: "itemLabelTemplate", label: "itemLabelTemplate", type: "text", value: node.itemLabelTemplate || "", bindable: true },
+        { key: "itemClassField", label: "itemClassField", type: "text", value: node.itemClassField || "", bindable: true },
+        { key: "itemClassName", label: "itemClassName", type: "text", value: node.itemClassName || "", bindable: true },
+      ];
+    }
+    if (node.type === "table") {
+      return [...common, { key: "rows", label: "rows", type: "text", value: JSON.stringify(node.rows || []), bindable: true }];
     }
     return [...common, { key: "value", label: "value", type: "text", value: node.value ?? "", bindable: true }];
   }

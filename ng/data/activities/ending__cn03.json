@@ -1,0 +1,375 @@
+{
+  "id": "ending__入院快乐",
+  "type": "ending",
+  "displayName": "入院快乐",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "cg_001": {
+        "id": "cg_001",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ey7w5j_8"
+          }
+        },
+        "x": 340,
+        "y": 40
+      },
+      "line_002": {
+        "id": "line_002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "你醒了？",
+          "continueKey": "dlg:line_002:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "line_003": {
+        "id": "line_003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "彬彬？头……有点晕……我刚才是低血糖晕倒了吗？",
+          "continueKey": "dlg:line_003:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "line_004": {
+        "id": "line_004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "是也不是。",
+          "continueKey": "dlg:line_004:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "line_005": {
+        "id": "line_005",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "等一下……我在哪里？你……要做什么？",
+          "continueKey": "dlg:line_005:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "line_006": {
+        "id": "line_006",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你们这些邪教徒，不准备演了？是不是现在要把我献祭给你们不可名状的神？",
+          "continueKey": "dlg:line_006:continue"
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "line_007": {
+        "id": "line_007",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "傻孩子，你怕是发神经了，说什么胡话呢。",
+          "continueKey": "dlg:line_007:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "line_008": {
+        "id": "line_008",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "是啊是啊，你最近一直精神状态不对劲。",
+          "continueKey": "dlg:line_008:continue"
+        },
+        "x": 2440,
+        "y": 40
+      },
+      "line_009": {
+        "id": "line_009",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "可能是刷题刷疯了。",
+          "continueKey": "dlg:line_009:continue"
+        },
+        "x": 2740,
+        "y": 40
+      },
+      "line_010": {
+        "id": "line_010",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "而且你半夜翻我们东西，我们也注意到了，不知道是不是梦游。",
+          "continueKey": "dlg:line_010:continue"
+        },
+        "x": 3040,
+        "y": 40
+      },
+      "line_011": {
+        "id": "line_011",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "梦游的话感觉有点危险啊。",
+          "continueKey": "dlg:line_011:continue"
+        },
+        "x": 3340,
+        "y": 40
+      },
+      "line_012": {
+        "id": "line_012",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "你的调查笔记，并没有藏得很好呢。我都看到了，但是其实我们真不是邪教徒……",
+          "continueKey": "dlg:line_012:continue"
+        },
+        "x": 3640,
+        "y": 40
+      },
+      "line_013": {
+        "id": "line_013",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "医者不能自医，你可能治着治着病，就把自己搞精神病了。",
+          "continueKey": "dlg:line_013:continue"
+        },
+        "x": 3940,
+        "y": 40
+      },
+      "line_014": {
+        "id": "line_014",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "然后刚才你在宿舍突然晕倒了。总之我们三个决定打120把你送到医院，住院治疗。",
+          "continueKey": "dlg:line_014:continue"
+        },
+        "x": 4240,
+        "y": 40
+      },
+      "line_015": {
+        "id": "line_015",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "别骗我，我是清醒的！你们才是疯子，邪教徒！……",
+          "continueKey": "dlg:line_015:continue"
+        },
+        "x": 4540,
+        "y": 40
+      },
+      "line_016": {
+        "id": "line_016",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "额，主任，总之就是这么个情况。您……看着办吧。",
+          "continueKey": "dlg:line_016:continue"
+        },
+        "x": 4840,
+        "y": 40
+      },
+      "line_017": {
+        "id": "line_017",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "总之是把他送过来了。我们几个才疏学浅，治他的精神病还得需要专业团队。",
+          "continueKey": "dlg:line_017:continue"
+        },
+        "x": 5140,
+        "y": 40
+      },
+      "line_018": {
+        "id": "line_018",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "吃人的书！血祭的证据！所有线索都对上了，GTP说我是对的，你们骗不了我……",
+          "continueKey": "dlg:line_018:continue"
+        },
+        "x": 5440,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 5740,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_001",
+        "fromPort": "flowOut",
+        "toNodeId": "line_002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_002",
+        "fromPort": "flowOut",
+        "toNodeId": "line_003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_003",
+        "fromPort": "flowOut",
+        "toNodeId": "line_004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_004",
+        "fromPort": "flowOut",
+        "toNodeId": "line_005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_005",
+        "fromPort": "flowOut",
+        "toNodeId": "line_006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_006",
+        "fromPort": "flowOut",
+        "toNodeId": "line_007",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_007",
+        "fromPort": "flowOut",
+        "toNodeId": "line_008",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_008",
+        "fromPort": "flowOut",
+        "toNodeId": "line_009",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_009",
+        "fromPort": "flowOut",
+        "toNodeId": "line_010",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_010",
+        "fromPort": "flowOut",
+        "toNodeId": "line_011",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_011",
+        "fromPort": "flowOut",
+        "toNodeId": "line_012",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_012",
+        "fromPort": "flowOut",
+        "toNodeId": "line_013",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_013",
+        "fromPort": "flowOut",
+        "toNodeId": "line_014",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_014",
+        "fromPort": "flowOut",
+        "toNodeId": "line_015",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_015",
+        "fromPort": "flowOut",
+        "toNodeId": "line_016",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_016",
+        "fromPort": "flowOut",
+        "toNodeId": "line_017",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_017",
+        "fromPort": "flowOut",
+        "toNodeId": "line_018",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_018",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

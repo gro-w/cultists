@@ -1,0 +1,788 @@
+{
+  "id": "event__追逐事件",
+  "type": "specialEvent",
+  "displayName": "追逐事件",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        }
+      },
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "cg_dorm": {
+        "id": "cg_dorm",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_exrn4m_1"
+          }
+        }
+      },
+      "intro_01": {
+        "id": "intro_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "昨天晚上，我做了个梦。梦见我和GTP说，我需要逃离，又说，我已经逃离，摆脱了邪教的阴谋。醒来时却还在这个令人恐慌的诡异宿舍之中。",
+          "continueKey": "dlg:intro_01:continue"
+        }
+      },
+      "intro_02": {
+        "id": "intro_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "这个宿舍越来越不对劲。邪教徒的阴谋正在暗中推进。我有生命危险。我必须马上逃离。就像《印斯茅斯的阴霾》中一样。而且我知道，那些邪教徒——甚至异种怪物——将会追逐我。",
+          "continueKey": "dlg:intro_02:continue"
+        }
+      },
+      "intro_03": {
+        "id": "intro_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "梦是预兆。现在我已经不再安全，或者说我从来就没有安全过。",
+          "continueKey": "dlg:intro_03:continue"
+        }
+      },
+      "intro_04": {
+        "id": "intro_04",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我早就知道——那次跑团——不仅是游戏，不仅是虚构，不仅是故事。那真的是此时此刻的预演。它们早有准备。",
+          "continueKey": "dlg:intro_04:continue"
+        }
+      },
+      "intro_05": {
+        "id": "intro_05",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我需要把线索墙叠起来，和记录本一并收进背包。然后下床，开门，从外面反锁住门，这样应该可以拖延一些时间。然后我将向最安全的方向跑。最危险的地方就是最安全的地方——我将逃往海边。",
+          "continueKey": "dlg:intro_05:continue"
+        }
+      },
+      "cg_seaside": {
+        "id": "cg_seaside",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_extit1_7"
+          }
+        }
+      },
+      "chase_01": {
+        "id": "chase_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我现在已经逃离。但它们正在追逐我。",
+          "continueKey": "dlg:chase_01:continue"
+        }
+      },
+      "chase_02": {
+        "id": "chase_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "诶，你往哪跑啊，不和我们一起了吗？你早上的动静把我吵醒了，迷迷糊糊中似乎听到你说要去海边。我就打了个专车把大家送到这。",
+          "continueKey": "dlg:chase_02:continue"
+        }
+      },
+      "chase_03": {
+        "id": "chase_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿伟",
+          "text": "大早上的咋突然跑了，还把门反锁了。幸好我会撬锁把门弄开了。",
+          "continueKey": "dlg:chase_03:continue"
+        }
+      },
+      "chase_04": {
+        "id": "chase_04",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "彬彬",
+          "text": "我们好不容易才追上你，你到底怎么了？",
+          "continueKey": "dlg:chase_04:continue"
+        }
+      },
+      "chase_05": {
+        "id": "chase_05",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不必多言了，邪教徒。",
+          "continueKey": "dlg:chase_05:continue"
+        }
+      },
+      "chase_06": {
+        "id": "chase_06",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "啊？什么邪教徒？",
+          "continueKey": "dlg:chase_06:continue"
+        }
+      },
+      "chase_07": {
+        "id": "chase_07",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你们",
+          "continueKey": "dlg:chase_07:continue"
+        }
+      },
+      "chase_08": {
+        "id": "chase_08",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "既然",
+          "continueKey": "dlg:chase_08:continue"
+        }
+      },
+      "chase_09": {
+        "id": "chase_09",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "追上",
+          "continueKey": "dlg:chase_09:continue"
+        }
+      },
+      "chase_10": {
+        "id": "chase_10",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "了我",
+          "continueKey": "dlg:chase_10:continue"
+        }
+      },
+      "chase_11": {
+        "id": "chase_11",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "那么",
+          "continueKey": "dlg:chase_11:continue"
+        }
+      },
+      "choice": {
+        "id": "choice",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "使用万字符",
+              "requiredItemId": "swastika",
+              "requiredSpellId": "book_moon__0",
+              "next": "use_talisman"
+            },
+            {
+              "label": "使用支配术",
+              "requiredSpellId": "book_coc7__0",
+              "next": "cast_domination"
+            },
+            {
+              "label": "接受注定的终局。",
+              "next": "normal_cg"
+            }
+          ],
+          "optionCount": 3,
+          "selectionKey": "dlg:choice:select"
+        }
+      },
+      "use_talisman": {
+        "id": "use_talisman",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:inventoryOperation",
+          "payload": {
+            "itemId": "swastika",
+            "count": -1
+          }
+        }
+      },
+      "use_talisman_cost": {
+        "id": "use_talisman_cost",
+        "type": "statOperation",
+        "inputs": {
+          "statId": "sanity",
+          "delta": -5
+        }
+      },
+      "use_talisman_spell": {
+        "id": "use_talisman_spell",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:spellEffect",
+          "payload": {
+            "spellId": "book_moon__0",
+            "eventId": "追逐事件",
+            "choiceId": "use_talisman"
+          }
+        }
+      },
+      "cast_domination": {
+        "id": "cast_domination",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:spellCast",
+          "payload": {
+            "spellId": "book_coc7__0",
+            "eventId": "追逐事件",
+            "choiceId": "cast_domination",
+            "location": "seaside"
+          }
+        }
+      },
+      "abnormal_cg": {
+        "id": "abnormal_cg",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_b"
+          }
+        }
+      },
+      "abnormal_01": {
+        "id": "abnormal_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我看见它们——过来了——犹格·索托斯救我——",
+          "continueKey": "dlg:abnormal_01:continue"
+        }
+      },
+      "abnormal_02": {
+        "id": "abnormal_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "藉由旧神之力，我将施展法术——",
+          "continueKey": "dlg:abnormal_02:continue"
+        }
+      },
+      "abnormal_03": {
+        "id": "abnormal_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "彬彬",
+          "text": "等下，你拿的这个……是……",
+          "continueKey": "dlg:abnormal_03:continue"
+        }
+      },
+      "abnormal_04": {
+        "id": "abnormal_04",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "不，快放下它！你发神经吗？",
+          "continueKey": "dlg:abnormal_04:continue"
+        }
+      },
+      "abnormal_05": {
+        "id": "abnormal_05",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿伟",
+          "text": "为什么……为什么拿这个鬼东西指着我们……你明明知道它是邪恶的！",
+          "continueKey": "dlg:abnormal_05:continue"
+        }
+      },
+      "abnormal_06": {
+        "id": "abnormal_06",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不，不，不，你们才无疑是邪恶的。我只为自保，现在你们是不是被我的法术定住动不了了？你们有想过那些无辜的活人祭品，他们在被你们束缚无法动弹时也是绝望的？哈，哈，哈！你们捆人就像捆螃蟹！而我，我将逃离你们的追逐，彻底挫败你们的献祭计划。我将在一个更好的环境里，开启一段崭新的，美好的，不被邪教阴谋所困扰的人生！",
+          "continueKey": "dlg:abnormal_06:continue"
+        }
+      },
+      "abnormal_07": {
+        "id": "abnormal_07",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "彬彬",
+          "text": "等一下，危险，停！你在往海里跑，这是凹岸，海里是有离岸流的！",
+          "continueKey": "dlg:abnormal_07:continue"
+        }
+      },
+      "abnormal_08": {
+        "id": "abnormal_08",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不要再蛊惑我了！新生活，我来了！",
+          "continueKey": "dlg:abnormal_08:continue"
+        }
+      },
+      "abnormal_09": {
+        "id": "abnormal_09",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……",
+          "continueKey": "dlg:abnormal_09:continue"
+        }
+      },
+      "abnormal_10": {
+        "id": "abnormal_10",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "离岸流给卷走了！我看不见人影！",
+          "continueKey": "dlg:abnormal_10:continue"
+        }
+      },
+      "abnormal_11": {
+        "id": "abnormal_11",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "彬彬",
+          "text": "那咋办？报警，找救生员？都试一遍吧。",
+          "continueKey": "dlg:abnormal_11:continue"
+        }
+      },
+      "abnormal_12": {
+        "id": "abnormal_12",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿伟",
+          "text": "毕竟是我们室友啊。走吧，咱分头行动。",
+          "continueKey": "dlg:abnormal_12:continue"
+        }
+      },
+      "abnormal_end": {
+        "id": "abnormal_end",
+        "type": "ending",
+        "inputs": {
+          "endingId": "异常结局"
+        }
+      },
+      "normal_cg": {
+        "id": "normal_cg",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_h"
+          }
+        }
+      },
+      "normal_01": {
+        "id": "normal_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "已经没有别的办法了，我只能接受现实。我将被这些恐怖的邪教徒当成祭品，死亡是我注定的结局。",
+          "continueKey": "dlg:normal_01:continue"
+        }
+      },
+      "normal_02": {
+        "id": "normal_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "阿撒托斯发发慈悲！赐予我我无痛的昏迷，让我无需经历流血之苦……",
+          "continueKey": "dlg:normal_02:continue"
+        }
+      },
+      "normal_03": {
+        "id": "normal_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "就在这濒临死亡的一刻，我才真正悟到，生死轮转即是不可变更、四海皆准的自然规律。万物终将灭亡。死是凉爽的夏夜，可供人无忧地安眠，而试图逃离死亡的行为正如强迫自己悖逆身体的自然节律，是一种邪恶的病态，为一切正常人所不容。",
+          "continueKey": "dlg:normal_03:continue"
+        }
+      },
+      "normal_04": {
+        "id": "normal_04",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "就算我即将死于邪教徒之手，我也知道我有一点比他们强：我的认知是完全正常的，而它们则深陷于病态的执念中，无法接受自然的规律。",
+          "continueKey": "dlg:normal_04:continue"
+        }
+      },
+      "normal_05": {
+        "id": "normal_05",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "这些邪教徒的阴谋是无法得逞的。即使它们完成仪式，服下秘药，终有一天它们也会像我一样别无选择地走向生命的消逝，无法逃离死亡的终局。",
+          "continueKey": "dlg:normal_05:continue"
+        }
+      },
+      "normal_06": {
+        "id": "normal_06",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "是时候放手了……",
+          "continueKey": "dlg:normal_06:continue"
+        }
+      },
+      "normal_end": {
+        "id": "normal_end",
+        "type": "ending",
+        "inputs": {
+          "endingId": "正常结局"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_dorm",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_dorm",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_01",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_02",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_03",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_04",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_04",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_05",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_05",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_seaside",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_seaside",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_01",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_02",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_03",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_04",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_04",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_05",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_05",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_06",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_06",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_07",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_07",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_08",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_08",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_09",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_09",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_10",
+        "fromPort": "flowOut",
+        "toNodeId": "chase_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "chase_11",
+        "fromPort": "flowOut",
+        "toNodeId": "choice",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option0",
+        "toNodeId": "use_talisman",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option1",
+        "toNodeId": "cast_domination",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option2",
+        "toNodeId": "normal_cg",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "use_talisman",
+        "fromPort": "flowOut",
+        "toNodeId": "use_talisman_cost",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "use_talisman_cost",
+        "fromPort": "flowOut",
+        "toNodeId": "use_talisman_spell",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cast_domination",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_cg",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_cg",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_01",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_02",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_03",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_04",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_04",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_05",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_05",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_06",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_06",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_07",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_07",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_08",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_08",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_09",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_09",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_10",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_11",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_12",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_12",
+        "fromPort": "flowOut",
+        "toNodeId": "abnormal_end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "abnormal_end",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_cg",
+        "fromPort": "flowOut",
+        "toNodeId": "normal_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_01",
+        "fromPort": "flowOut",
+        "toNodeId": "normal_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_02",
+        "fromPort": "flowOut",
+        "toNodeId": "normal_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_03",
+        "fromPort": "flowOut",
+        "toNodeId": "normal_04",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_04",
+        "fromPort": "flowOut",
+        "toNodeId": "normal_05",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_05",
+        "fromPort": "flowOut",
+        "toNodeId": "normal_06",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_06",
+        "fromPort": "flowOut",
+        "toNodeId": "normal_end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "normal_end",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "use_talisman_spell",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

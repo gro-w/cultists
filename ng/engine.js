@@ -1,4 +1,12 @@
+/**
+ * NG platform entry point.
+ *
+ * This module contains only the four NG capabilities: desktop/windows,
+ * blueprint Activities, save/restore, and the development-mode hook. Game
+ * semantics are data in ng/data and are scheduled by the default Activity.
+ */
 import { eventBus } from "./core/EventBus.js";
+import { DataLoader } from "./core/DataLoader.js";
 import { WindowManager } from "./core/WindowManager.js";
 import { WindowDefinitionStore } from "./core/WindowDefinitionStore.js";
 import { DesktopShell } from "./desktop/DesktopShell.js";
@@ -6,19 +14,11 @@ import { VariableStore } from "./core/VariableStore.js";
 import { ActivityDefinitionStore } from "./core/ActivityDefinitionStore.js";
 import { ActivityQueueRegistry } from "./core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "./core/ActivityExecutionService.js";
+import { ActivityQueueConsumer } from "./core/ActivityQueueConsumer.js";
+import { ACTIVITY_EVENTS } from "./core/ActivityEvents.js";
+import { validateBlueprint } from "./core/ActivityValidator.js";
 import { GameClock } from "./core/GameClock.js";
 import { TimeService } from "./core/TimeService.js";
-import { ActivityQueueConsumer } from "./core/ActivityQueueConsumer.js";
-import { DisplayReceiverRegistry } from "./core/DisplayReceiverRegistry.js";
-import { GameState } from "./core/GameState.js";
-import { PhaseBoundaryService } from "./core/PhaseBoundaryService.js";
-import { ItemManager } from "./core/ItemManager.js";
-import { NPCStateManager } from "./core/NPCStateManager.js";
-import { SpellManager } from "./core/SpellManager.js";
-import { MediaStateManager } from "./core/MediaStateManager.js";
-import { SelectionSubmissionManager } from "./core/SelectionSubmissionManager.js";
-import { OutcomeManager } from "./core/OutcomeManager.js";
-import { validateBlueprint } from "./core/ActivityValidator.js";
 import { DesktopIconManager } from "./core/DesktopIconManager.js";
 import { buildBuiltinIconBlueprint } from "./core/BuiltinIconBlueprints.js";
 import { DataStructureManager } from "./core/DataStructureManager.js";
@@ -26,551 +26,199 @@ import { DataStore } from "./core/DataStore.js";
 import { PublicVariableManager } from "./core/PublicVariableManager.js";
 import { RuntimeRefResolver } from "./core/RuntimeRefResolver.js";
 import { SaveManager } from "./core/SaveManager.js";
-import { SaveLoadView } from "./desktop/SaveLoadView.js";
-import { DialogueView } from "./desktop/DialogueView.js";
-import { KeywordManager } from "./core/KeywordManager.js";
-import { NotebookView } from "./desktop/NotebookView.js";
 import { OnboardingManager } from "./core/OnboardingManager.js";
-import { TutorialOverlay } from "./desktop/TutorialOverlay.js";
 import { evaluateCondition } from "./core/ConditionEvaluator.js";
 import { evaluateActivityAvailability } from "./core/ActivityAvailabilityEvaluator.js";
-import { DataLoader } from "./core/DataLoader.js";
-import { ContentDocumentStore } from "./core/ContentDocumentStore.js";
-import { ActivityScheduler } from "./core/ActivityScheduler.js";
-import { ACTIVITY_EVENTS } from "./core/ActivityEvents.js";
 
-/**
- * engine.js - the ng/ composition root (plan §2.2). Phase 1 wired up the
- * desktop shell and window kernel; Phase 2 adds the generic Activity
- * runtime (VariableStore stand-in + queues + execution service). Public
- * variables, data structures and dev tools arrive in later phases and are
- * deliberately not referenced here yet.
- */
-
-/** Strict dev entry: the whole query string must be exactly "?dev". */
 export function isDevEntry(search = typeof location !== "undefined" ? location.search : "") {
   return search === "?dev";
+}
+
+class EmptySnapshotStore {
+  snapshot() { return {}; }
+  restore() {}
+}
+
+function createApiRegistry({ eventBus: bus, variableStore, publicVariableManager, activityQueueRegistry, shell, timeService, dataStore }) {
+  const handlers = new Map([
+    ["engine.getVariable", ({ key }) => variableStore.get(key)],
+    ["engine.setVariable", ({ key, value }) => (variableStore.set(key, value), value)],
+    ["engine.getPublicVariable", ({ id }) => publicVariableManager.get(id)],
+    ["engine.setPublicVariable", ({ id, value }) => (publicVariableManager.set(id, value), value)],
+    ["engine.emit", ({ event, payload }) => (bus.emit(event, payload), true)],
+    ["engine.consumeTime", ({ minutes }) => timeService.consume(Number(minutes) || 0, { source: "activity" })],
+    ["engine.records", ({ databaseId, query = {} }) => dataStore.findRecords(databaseId, query)],
+    ["engine.queue.list", ({ queueId = "main", filters }) => activityQueueRegistry.listEntries(queueId, filters)],
+    ["engine.openWindow", ({ windowId }) => (shell.openWindow(windowId), true)],
+  ]);
+  return {
+    call(apiId, payload = {}) {
+      const handler = handlers.get(apiId);
+      if (!handler) throw new Error(`Unknown engine API: ${apiId}`);
+      return handler(payload);
+    },
+    list() { return [...handlers.keys()]; },
+  };
 }
 
 export async function bootstrap(rootEl) {
   const dataLoader = new DataLoader();
   const windowManager = new WindowManager(eventBus);
-  const windowDefinitionStore = new WindowDefinitionStore(dataLoader);
-
-  const engineConfig = await dataLoader.loadJSON("engine.json");
-  if (engineConfig.contentRoot) dataLoader.setRoot(engineConfig.contentRoot);
+  const windowDefinitions = new WindowDefinitionStore(dataLoader);
+  const config = await dataLoader.loadJSON("engine.json");
+  if (config.contentRoot) dataLoader.setRoot(config.contentRoot);
   if (isDevEntry() && await dataLoader.detectDevServer()) {
     dataLoader.connectChangeEvents({ onChange: (payload) => eventBus.emit("data:changed", payload) });
   }
-
-  await windowDefinitionStore.loadManifest(engineConfig.windowManifest, "windows/");
-
-  const icons = await dataLoader.loadJSON(engineConfig.desktopIcons);
-  const contentDocumentStore = new ContentDocumentStore(dataLoader);
-  if (engineConfig.legacyContentManifest) {
-    await contentDocumentStore.loadManifest(engineConfig.legacyContentManifest);
-  }
-
-  const gameClock = new GameClock(eventBus);
+  await windowDefinitions.loadManifest(config.windowManifest, "windows/");
+  const icons = await dataLoader.loadJSON(config.desktopIcons, { optional: true }) || [];
+  const initialState = config.initialState || {};
+  const gameClock = new GameClock(eventBus, {
+    day: initialState.day,
+    minutes: initialState.clockMinutes ?? initialState.minutes ?? 480,
+  });
   const timeService = new TimeService(gameClock, eventBus);
-  const gameState = new GameState(engineConfig.initialState);
-  const phaseBoundaryService = new PhaseBoundaryService({ gameClock, timeService, state: gameState, eventBus, rules: engineConfig.phaseRules || {} });
-  phaseBoundaryService.sync();
-  const itemManager = new ItemManager({ eventBus });
-  const npcStateManager = new NPCStateManager({ eventBus });
-  const spellManager = new SpellManager({ eventBus });
-  const mediaStateManager = new MediaStateManager({ eventBus });
-  const selectionSubmissionManager = new SelectionSubmissionManager({ eventBus });
-  const outcomeManager = new OutcomeManager({ eventBus });
-  const displayReceiverRegistry = new DisplayReceiverRegistry();
-  eventBus.on("dialogue:text", (payload) => displayReceiverRegistry.dispatch(payload?.displayTo, { type: "text", ...payload }));
-  eventBus.on("dialogue:choice", (payload) => displayReceiverRegistry.dispatch(payload?.displayTo, { type: "choice", ...payload }));
   const variableStore = new VariableStore(eventBus);
-  const dataStructureManager = new DataStructureManager();
-  const dataStore = new DataStore(dataStructureManager);
+  const structures = new DataStructureManager();
+  const dataStore = new DataStore(structures);
   const refResolver = new RuntimeRefResolver();
-  const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
-  // Property-bound widget values can be evaluated during any root refresh;
-  // keep the runtime gateway beside the shared variable store as a stable
-  // fallback for rebuilt renderer contexts.
-  variableStore.publicVariableGateway = publicVariableManager;
-
-  // Generic milestone/hint mechanic (mirrors legacy js/core/OnboardingManager.js's
-  // effect, but is fully data-driven: `data/onboarding.json`'s hints are the
-  // only content this module ever reads, exactly like keywordManager only
-  // reads the `keywords` database). Created early so its `markMilestone`
-  // gateway can be threaded through every ActivityExecutionService.run()
-  // call site below, same convention as dbGateway/pvGateway.
-  const onboardingManager = new OnboardingManager({ eventBus });
-  if (engineConfig.onboarding) {
-    const onboarding = await dataLoader.loadJSON(engineConfig.onboarding, { optional: true });
-    if (onboarding) onboardingManager.loadHints(onboarding);
+  const publicVariables = new PublicVariableManager(refResolver, eventBus);
+  variableStore.publicVariableGateway = publicVariables;
+  const onboarding = new OnboardingManager({ eventBus });
+  if (config.onboarding) {
+    const hints = await dataLoader.loadJSON(config.onboarding, { optional: true });
+    if (hints) onboarding.loadHints(hints);
+  }
+  if (config.structures) {
+    const value = await dataLoader.loadJSON(config.structures, { optional: true });
+    if (value) structures.loadDefinitions(value);
+  }
+  if (config.databases) {
+    const value = await dataLoader.loadJSON(config.databases, { optional: true });
+    if (value) dataStore.loadDefinitions(value);
+  }
+  if (config.publicVariables) {
+    const value = await dataLoader.loadJSON(config.publicVariables, { optional: true });
+    if (value) publicVariables.loadDefinitions(value);
+  }
+  const seedFiles = config.seedRecords ? (Array.isArray(config.seedRecords) ? config.seedRecords : [config.seedRecords]) : [];
+  for (const file of seedFiles) {
+    const value = await dataLoader.loadJSON(file, { optional: true });
+    if (value) dataStore.loadRecordSet(value);
+  }
+  for (const { databaseId } of dataStore.listDatabases()) {
+    refResolver.register(`database:${databaseId}`, (key) => dataStore.getRecord(databaseId, key));
   }
 
-  if (engineConfig.structures) {
-    const structures = await dataLoader.loadJSON(engineConfig.structures, { optional: true });
-    if (structures) dataStructureManager.loadDefinitions(structures);
+  const runtimeGateway = { getCollection: () => [] };
+  const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway);
+  const iconManager = new DesktopIconManager(icons);
+  const activityDefinitions = new ActivityDefinitionStore(dataLoader);
+  const manifest = await dataLoader.loadJSON(config.activityManifest, { optional: true }) || { activityIds: [] };
+  const manifestEntries = new Map((manifest.activityIds || []).map((entry) => {
+    const value = typeof entry === "string" ? { id: entry, file: `${entry}.json` } : entry;
+    return [value.id, value];
+  }));
+  const ids = new Set();
+  for (const listFile of config.activityLists || []) {
+    const list = await dataLoader.loadJSON(`activity-lists/${listFile}`, { optional: true });
+    for (const id of list?.activityIds || []) ids.add(id);
   }
-  if (engineConfig.databases) {
-    const databases = await dataLoader.loadJSON(engineConfig.databases, { optional: true });
-    if (databases) dataStore.loadDefinitions(databases);
-  }
-  if (engineConfig.publicVariables) {
-    const publicVariables = await dataLoader.loadJSON(engineConfig.publicVariables, { optional: true });
-    if (publicVariables) publicVariableManager.loadDefinitions(publicVariables);
-  }
-  // Generic seed-content loader (plan §9.3): a `{ databaseId: records[] }`
-  // map of pre-authored records, config-driven exactly like
-  // structures/databases/publicVariables above - not a per-domain importer.
-  // `seedRecords` may be a single filename or an array of filenames (large
-  // domains like the 48,195-entry ChatGTP QA table are split into their own
-  // file so the "main" seed file stays reviewable) - every file's map is
-  // merged into the same DataStore via loadRecordSet.
-  if (engineConfig.seedRecords) {
-    const seedFiles = Array.isArray(engineConfig.seedRecords) ? engineConfig.seedRecords : [engineConfig.seedRecords];
-    for (const seedFile of seedFiles) {
-      const seed = await dataLoader.loadJSON(seedFile, { optional: true });
-      if (seed) dataStore.loadRecordSet(seed);
-    }
-  }
+  const calendar = await dataLoader.loadJSON(config.activityCalendar, { optional: true });
+  for (const slot of calendar?.slots || []) if (slot.activityId) ids.add(slot.activityId);
+  const defaultId = config.defaultActivity?.activityId || "default";
+  ids.add(defaultId);
+  const entries = [...ids].map((id) => manifestEntries.get(id)).filter(Boolean);
+  if (entries.length) await activityDefinitions.loadManifest(entries, "activities/");
 
-  // Declarative gameClock mirror (see PublicVariableManager's `syncSource`
-  // doc comment): any variable data marks with `"syncSource":
-  // "gameClock.totalMinutes"` is kept in lockstep with the GameClock, so
-  // content can express `blockUntil`/`publicVariableCondition` waits keyed
-  // off in-game time using only generic public-variable primitives.
-  publicVariableManager.list()
-    .filter((definition) => definition.syncSource === "gameClock.totalMinutes")
-    .forEach((definition) => {
-      const sync = ({ day, minutes }) => publicVariableManager.set(definition.id, (day - 1) * 1440 + minutes);
-      sync(gameClock.snapshot());
-      eventBus.on("gameClock:changed", sync);
-    });
-
-  // Every structure-backed database record is resolvable as an "object"-typed
-  // public variable's ref via `{objectType:"database:<databaseId>", objectId:<primaryKey>}`
-  // - a generic mechanism (no per-database code), registered once every
-  // database is loaded.
-  dataStore.listDatabases().forEach(({ databaseId }) => {
-    refResolver.register(`database:${databaseId}`, (recordKey) => dataStore.getRecord(databaseId, recordKey));
+  const queues = new ActivityQueueRegistry();
+  for (const [id, options] of [["work", {}], ["social", {}], ["managers", { nonBlocking: true }], ["main", {}], ["window-events", { nonBlocking: true }], ["widget-events", { nonBlocking: true }], ["desktop-icons", { nonBlocking: true }]]) queues.register(id, options);
+  const saveState = new EmptySnapshotStore();
+  const saveManager = new SaveManager({
+    gameClock, gameState: saveState, variableStore, publicVariableManager: publicVariables,
+    activityQueueRegistry: queues, windowManager, desktopIconManager: iconManager,
+    keywordManager: saveState, onboardingManager: onboarding, runtimeStores: {},
+    activityExecutionService: null, resumePendingActivities: () => {}, engineVersion: config.version,
   });
+  const apiGateway = createApiRegistry({ eventBus, variableStore, publicVariableManager: publicVariables, activityQueueRegistry: queues, shell, timeService, dataStore });
+  const execution = new ActivityExecutionService(eventBus, { runtimeGateway });
+  const consumer = new ActivityQueueConsumer({ queueRegistry: queues, activityDefinitionStore: activityDefinitions, activityExecutionService: execution, execute: (context) => executeActivity(context) });
 
-  const shell = new DesktopShell(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, publicVariableManager);
-
-  const activityDefinitionStore = new ActivityDefinitionStore(dataLoader);
-  const activityQueueRegistry = new ActivityQueueRegistry();
-  activityQueueRegistry.register("work");
-  activityQueueRegistry.register("social");
-  activityQueueRegistry.register("main");
-  const activityScheduler = new ActivityScheduler({
-    contentDocumentStore,
-    activityDefinitionStore,
-    queueRegistry: activityQueueRegistry,
-    context: { gameClock, variableStore, publicVariableManager, pvGateway: publicVariableManager, activityQueueRegistry, activityDefinitionStore },
-  });
-  activityScheduler.load();
-  activityScheduler.advanceTo(gameClock.day, gameClock.minutes);
-  eventBus.on("gameClock:changed", ({ day, minutes }) => activityScheduler.advanceTo(day, minutes));
-  const activityExecutionService = new ActivityExecutionService(eventBus);
-  activityScheduler.onAppend = ({ queue, instance, definition }) => {
-    eventBus.emit(ACTIVITY_EVENTS.appended, { queueId: queue.queueId, instance: { ...instance } });
-    if (!instance.payload?.autoRun || !definition) return;
-    activityExecutionService.run({
-      queue,
-      definition,
-      instance,
-      variableStore,
-      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
-      windowGateway: (windowId) => shell.openWindow(windowId),
-      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
-      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
-      dbGateway: dataStore,
-      pvGateway: publicVariableManager,
-      onboardingGateway: onboardingManager,
-    });
-  };
-
-  /** Runs an Activity by id on the given queue (default "main"), wired with the shared gameClock/windowManager gateways. */
+  function enqueueActivity(activityId, queueId = "main", payload = null) {
+    const queue = queues.get(queueId) || queues.register(queueId);
+    const definition = activityDefinitions.get(activityId);
+    if (!definition) return null;
+    const instance = queue.append({ activityId, payload, currentNodeId: definition.blueprint?.startNodeId || null });
+    eventBus.emit(ACTIVITY_EVENTS.appended, { queueId, instance: { ...instance } });
+    return instance;
+  }
   function runActivity(activityId, queueId = "main") {
-    const queue = activityQueueRegistry.get(queueId);
-    const definition = activityDefinitionStore.get(activityId);
+    const queue = queues.get(queueId);
+    const definition = activityDefinitions.get(activityId);
     if (!queue || !definition) return null;
-    const conditionContext = {
-      gameClock,
-      variableStore,
-      publicVariableManager,
-      pvGateway: publicVariableManager,
-      activityQueueRegistry,
-      activityDefinitionStore,
-      evaluateCondition,
-    };
-    const availability = evaluateActivityAvailability(definition, conditionContext);
+    const availability = evaluateActivityAvailability(definition, { gameClock, variableStore, publicVariableManager: publicVariables, pvGateway: publicVariables, activityQueueRegistry: queues, activityDefinitionStore: activityDefinitions, evaluateCondition });
     if (!availability.ok) return null;
     const instance = queue.append({ activityId });
-    return activityExecutionService.run({
-      queue,
-      definition,
-      instance,
-      variableStore,
-      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
-      windowGateway: (windowId) => shell.openWindow(windowId),
-      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
-      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
-      dbGateway: dataStore,
-      pvGateway: publicVariableManager,
-      onboardingGateway: onboardingManager,
-    });
+    return executeActivity({ queue, definition, instance });
   }
-  shell.runActivity = runActivity;
-  const activityQueueConsumer = new ActivityQueueConsumer({
-    queueRegistry: activityQueueRegistry,
-    activityDefinitionStore,
-    activityExecutionService,
-    execute: ({ queue, instance, definition }) => activityExecutionService.run({
-      queue,
-      definition,
-      instance,
-      variableStore,
-      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
-      windowGateway: (windowId) => shell.openWindow(windowId),
-      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
-      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
-      dbGateway: dataStore,
-      pvGateway: publicVariableManager,
-      onboardingGateway: onboardingManager,
-    }),
-  });
-
-  /**
-   * Resumes every queue's still-unresolved instance by re-running it
-   * through the exact same gateways as a fresh `runActivity()` call - the
-   * "恢复成功后只扫描一次待启动项" step of `SaveManager.restore()` (plan
-   * §12.3). A definition missing after a data update is left as-is rather
-   * than throwing, so one stale instance can't block restoring everything
-   * else; queues driven by inline (non-stored) blueprints - window/widget
-   * events, desktop icons - are expected to run to completion synchronously
-   * and are not resumed here.
-   */
-  function resumePendingActivities() {
-    activityQueueRegistry.list().forEach((queue) => {
-      const instance = queue.current();
-      if (!instance) return;
-      const definition = activityDefinitionStore.get(instance.activityId);
-      if (!definition) return;
-      activityExecutionService.run({
-        queue,
-        definition,
-        instance,
-        variableStore,
-        timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
-        windowGateway: (windowId) => shell.openWindow(windowId),
-        activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
-        eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
-        dbGateway: dataStore,
-        pvGateway: publicVariableManager,
-        onboardingGateway: onboardingManager,
-      });
-    });
-  }
-
-  // Every window's optional `events.onCreate`/`onDestroy` inline blueprint
-  // (plan §4.2) executes through this exact same ActivityExecutionService -
-  // never a second bespoke Runner - on a dedicated non-blocking queue kept
-  // separate from gameplay Activities so the debugger/save data for the two
-  // never mix. This is a general window-lifecycle mechanism, not specific
-  // to any one window: any custom window definition can declare these.
-  const windowEventsQueue = activityQueueRegistry.register("window-events", { nonBlocking: true });
-
-  /** Runs an inline (non-stored) Blueprint through ActivityExecutionService, exactly like a normal Activity. */
-  function runInlineBlueprint(queue, activityId, blueprint, errorContext) {
-    const validation = validateBlueprint(blueprint);
-    if (!validation.ok) {
-      console.error(`Invalid blueprint for ${errorContext}: ${validation.errors.join("；")}`);
-      return null;
-    }
-    const instance = queue.append({ activityId });
-    return activityExecutionService.run({
-      queue,
-      definition: { id: activityId, blueprint: validation.blueprint },
-      instance,
-      variableStore,
+  function executeActivity({ queue, definition, instance }) {
+    return execution.run({
+      queue, definition, instance, variableStore,
       timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
       windowGateway: (id) => shell.openWindow(id),
-      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
-      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
-      dbGateway: dataStore,
-      pvGateway: publicVariableManager,
-      onboardingGateway: onboardingManager,
+      activityGateway: (id, target, source, node, payload) => node?.type === "insertActivity" ? enqueueActivity(id, target || "main", payload) : runActivity(id, target || "main"),
+      eventGateway: (name, payload) => eventBus.emit(name, payload), dbGateway: dataStore,
+      pvGateway: publicVariables, onboardingGateway: onboarding, apiGateway,
     });
   }
-
-  function runWindowLifecycleEvent(windowId, eventName) {
-    const definition = windowDefinitionStore.get(windowId);
-    const blueprint = definition?.events?.[eventName];
-    if (!blueprint) return null;
-    return runInlineBlueprint(windowEventsQueue, `window:${windowId}:${eventName}`, blueprint, `window "${windowId}" ${eventName}`);
+  function runInlineBlueprint(queue, activityId, blueprint) {
+    const validation = validateBlueprint(blueprint);
+    if (!validation.ok) throw new Error(`Invalid blueprint ${activityId}: ${validation.errors.join("；")}`);
+    const instance = queue.append({ activityId });
+    return executeActivity({ queue, definition: { id: activityId, blueprint: validation.blueprint }, instance });
   }
-  eventBus.on("window:opened", ({ windowId }) => runWindowLifecycleEvent(windowId, "onCreate"));
-  eventBus.on("window:closed", ({ windowId }) => runWindowLifecycleEvent(windowId, "onDestroy"));
-
-  /** Depth-first search for a widget node by id inside a window's `root` widget tree. */
-  function findWidgetNode(root, widgetId) {
+  function findWidget(root, widgetId) {
     if (!root) return null;
     if (root.widgetId === widgetId) return root;
-    if (root.type !== "container") return null;
     for (const child of root.children || []) {
-      const found = findWidgetNode(child, widgetId);
+      const found = findWidget(child, widgetId);
       if (found) return found;
     }
     return null;
   }
-
-  // Every widget can likewise declare `events.onClick`/`onChange`/`onFocus`/
-  // `onBlur` inline blueprints (plan §4.2/§7.3 "所有组件事件都创建
-  // Activity，通过统一执行服务运行"), kept on their own queue so a flood of
-  // UI interactions never crowds the window-lifecycle queue's history.
-  const widgetEventsQueue = activityQueueRegistry.register("widget-events", { nonBlocking: true });
+  const windowEventsQueue = queues.get("window-events");
+  const widgetEventsQueue = queues.get("widget-events");
+  const iconEventsQueue = queues.get("desktop-icons");
+  function runWindowLifecycle(windowId, eventName) {
+    const blueprint = windowDefinitions.get(windowId)?.events?.[eventName];
+    return blueprint ? runInlineBlueprint(windowEventsQueue, `window:${windowId}:${eventName}`, blueprint) : null;
+  }
   function runWidgetEvent(windowId, widgetId, eventName, value) {
-    const definition = windowDefinitionStore.get(windowId);
-    const widget = findWidgetNode(definition?.root, widgetId);
+    const widget = findWidget(windowDefinitions.get(windowId)?.root, widgetId);
     const blueprint = widget?.events?.[eventName];
     if (!blueprint) return null;
-    // The triggering value (e.g. a textInput's new text, a checkbox's new
-    // checked state) is exposed to the blueprint via the same `{variable}`
-    // read shorthand every other value input already understands, under a
-    // well-known key - no new node type needed.
     if (value !== undefined) variableStore.set("event:value", value);
-    return runInlineBlueprint(widgetEventsQueue, `widget:${windowId}:${widgetId}:${eventName}`, blueprint, `widget "${widgetId}" ${eventName}`);
+    return runInlineBlueprint(widgetEventsQueue, `widget:${windowId}:${widgetId}:${eventName}`, blueprint);
   }
-  shell.runWidgetEvent = runWidgetEvent;
-
-  // Desktop icon double-clicks (plan §8.2) resolve to a Blueprint by
-  // `blueprintId` - either one of the built-ins (BuiltinIconBlueprints.js)
-  // or a custom Activity already loaded into activityDefinitionStore -
-  // and run it through the exact same ActivityExecutionService, on its own
-  // non-blocking queue so icon activations never mix with gameplay/window
-  // Activity history.
-  const desktopIconsQueue = activityQueueRegistry.register("desktop-icons", { nonBlocking: true });
   function runIconBlueprint(icon) {
     const builtin = buildBuiltinIconBlueprint(icon.blueprintId, icon.inputs || {});
-    if (builtin) {
-      return runInlineBlueprint(desktopIconsQueue, `icon:${icon.iconId}`, builtin, `icon "${icon.iconId}"`);
-    }
-    const definition = activityDefinitionStore.get(icon.blueprintId);
-    if (!definition) {
-      console.error(`Icon "${icon.iconId}" declares unknown blueprintId "${icon.blueprintId}"`);
-      return null;
-    }
-    const instance = desktopIconsQueue.append({ activityId: icon.blueprintId });
-    return activityExecutionService.run({
-      queue: desktopIconsQueue,
-      definition,
-      instance,
-      variableStore,
-      timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
-      windowGateway: (id) => shell.openWindow(id),
-      activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
-      eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
-      dbGateway: dataStore,
-      pvGateway: publicVariableManager,
-      onboardingGateway: onboardingManager,
-    });
+    if (builtin) return runInlineBlueprint(iconEventsQueue, `icon:${icon.iconId}`, builtin);
+    return runActivity(icon.blueprintId, "desktop-icons");
   }
+  shell.runWidgetEvent = runWidgetEvent;
   shell.runIconBlueprint = runIconBlueprint;
-
-  if (Array.isArray(engineConfig.activityLists)) {
-    for (const listFile of engineConfig.activityLists) {
-      const list = await dataLoader.loadJSON(`activity-lists/${listFile}`);
-      await activityDefinitionStore.loadManifest(list.activityIds, "activities/");
-    }
-  }
-
-  // Declarative visibility for every custom window. The context contains only
-  // generic state gateways; content-specific IDs remain in JSON definitions.
-  shell.conditionContext = {
-    gameClock,
-    variableStore,
-    publicVariableManager,
-    pvGateway: publicVariableManager,
-    activityQueueRegistry,
-    activityDefinitionStore,
-  };
-
-  const iconManager = new DesktopIconManager(icons);
-
-  // `keywordManager` is the generic "关键词收集" mechanic (plan §8):
-  // sourced from the seeded `keywords` database, its SAN-aware distorted
-  // text reads public-variable id 1 (主角SAN, AGENTS.md's reserved id
-  // range) - the one place this generic module is told which id that is.
-  // Created before `saveManager` so its collected-set can be part of the
-  // save envelope like every other domain.
-  const PROTAGONIST_SAN_VARIABLE_ID = 1;
-  const keywordManager = new KeywordManager({
-    dataStore,
-    eventBus,
-    sanityProvider: () => publicVariableManager.get(PROTAGONIST_SAN_VARIABLE_ID),
-  });
-
-  const saveManager = new SaveManager({
-    gameClock,
-    variableStore,
-    publicVariableManager,
-    dataStore,
-    activityQueueRegistry,
-    windowManager,
-    desktopIconManager: iconManager,
-    keywordManager,
-    onboardingManager,
-    runtimeStores: { itemManager, npcStateManager, spellManager, mediaStateManager, selectionSubmissionManager, outcomeManager },
-    activityExecutionService,
-    resumePendingActivities,
-    engineVersion: engineConfig.version,
-  });
-  const saveLoadView = new SaveLoadView({ saveManager });
-  const SAVE_LOAD_WINDOW_ID = "save-load";
-  windowDefinitionStore.register({
-    id: SAVE_LOAD_WINDOW_ID,
-    title: "存档",
-    icon: "💾",
-    width: 360,
-    height: 220,
-    resizable: true,
-    singleInstance: true,
-    body: saveLoadView.el,
-  });
-  iconManager.register({
-    iconId: "save-load",
-    label: "存档",
-    glyph: "💾",
-    order: iconManager.list().length,
-    blueprintId: "desktop.open-window",
-    inputs: { windowId: SAVE_LOAD_WINDOW_ID },
-  });
-
-  // Generic dialogue-rendering window (see DialogueView.js doc comment):
-  // any Activity's `text`/`choice` nodes become visible transcript/choice
-  // buttons here, with no his-app/social-app specific code in the engine
-  // itself. Content wires a desktop icon's `blueprintId` to an Activity
-  // that opens this window then runs the actual dialogue Activity (e.g.
-  // `work01a-patient1`).
-  const dialogueView = new DialogueView({ eventBus, variableStore, keywordManager, gameClock, displayReceiverRegistry, displayTo: "dialogue" });
-  const DIALOGUE_WINDOW_ID = "dialogue";
-  windowDefinitionStore.register({
-    id: DIALOGUE_WINDOW_ID,
-    title: "对话",
-    icon: "💬",
-    width: 480,
-    height: 360,
-    resizable: true,
-    singleInstance: true,
-    body: dialogueView.el,
-  });
-  eventBus.on("window:opened", ({ windowId }) => {
-    if (windowId === DIALOGUE_WINDOW_ID) dialogueView.reset();
-  });
-
-  const notebookView = new NotebookView({ eventBus, keywordManager });
-  const NOTEBOOK_WINDOW_ID = "notebook";
-  windowDefinitionStore.register({
-    id: NOTEBOOK_WINDOW_ID,
-    title: "笔记本",
-    icon: "📓",
-    width: 360,
-    height: 420,
-    resizable: true,
-    singleInstance: true,
-    body: notebookView.el,
-  });
-  iconManager.register({
-    iconId: "notebook",
-    label: "笔记本",
-    glyph: "📓",
-    order: iconManager.list().length,
-    blueprintId: "desktop.open-window",
-    inputs: { windowId: NOTEBOOK_WINDOW_ID },
-  });
-  eventBus.on("window:opened", ({ windowId }) => {
-    if (windowId === NOTEBOOK_WINDOW_ID) onboardingManager.markMilestone("notebook_opened");
-  });
-
-  // TutorialOverlay is the generic visual layer for onboardingManager's
-  // hints (ported near-verbatim from legacy js/desktop/TutorialOverlay.js);
-  // it only listens to "onboarding:hint_requested"/"onboarding:hint_closed"
-  // events, so it needs no engine-specific wiring beyond construction.
-  // The overlay owns a separate fixed layer.  Do not pass `ng-root` as its
-  // root: TutorialOverlay replaces its root's contents when mounting, which
-  // would erase the already-rendered desktop shell.
-  const tutorialOverlay = new TutorialOverlay({ eventBus, onboardingManager });
-
-  // DEV-TOOLS:START
-  if (isDevEntry()) {
-    const { initDeveloperMode, buildDeveloperDesktopIcons } = await import("./dev/DeveloperMode.js");
-    await initDeveloperMode({
-      engineConfig,
-      windowManager,
-      windowDefinitionStore,
-      activityQueueRegistry,
-      eventBus,
-      variableStore,
-      iconManager,
-      dataStructureManager,
-      dataStore,
-      publicVariableManager,
-      onboardingManager,
-      dataLoader,
-      contentDocumentStore,
-      refreshIcons: () => shell.mountIcons(iconManager),
-    });
-    buildDeveloperDesktopIcons().forEach((icon) => iconManager.register(icon));
-  }
-  // DEV-TOOLS:END
-
+  eventBus.on("window:opened", ({ windowId }) => runWindowLifecycle(windowId, "onCreate"));
+  eventBus.on("window:closed", ({ windowId }) => runWindowLifecycle(windowId, "onDestroy"));
+  shell.runActivity = runActivity;
+  shell.conditionContext = { gameClock, variableStore, publicVariableManager: publicVariables, pvGateway: publicVariables, activityQueueRegistry: queues, activityDefinitionStore: activityDefinitions };
   shell.mountIcons(iconManager);
-  onboardingManager.markMilestone("desktop_seen");
-
-  if (engineConfig.defaultActivity) {
-    const { activityId, queueId } = engineConfig.defaultActivity;
-    runActivity(activityId, queueId);
-  }
-
   eventBus.emit("engine:ready", {});
-  return {
-    eventBus,
-    windowManager,
-    windowDefinitionStore,
-    shell,
-    variableStore,
-    activityDefinitionStore,
-    activityQueueRegistry,
-    activityExecutionService,
-    activityQueueConsumer,
-    activityScheduler,
-    gameClock,
-    timeService,
-    gameState,
-    phaseBoundaryService,
-    itemManager,
-    npcStateManager,
-    spellManager,
-    mediaStateManager,
-    selectionSubmissionManager,
-    outcomeManager,
-    displayReceiverRegistry,
-    dataStructureManager,
-    dataStore,
-    publicVariableManager,
-    refResolver,
-    iconManager,
-    saveManager,
-    onboardingManager,
-    tutorialOverlay,
-    dataLoader,
-    contentDocumentStore,
-  };
+  const startup = config.defaultActivity;
+  if (startup) {
+    const instance = enqueueActivity(startup.activityId, startup.queueId || "main");
+    if (instance) consumer.consume(startup.queueId || "main");
+  }
+  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityQueueConsumer: consumer, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, iconManager, saveManager, onboardingManager: onboarding };
 }
 
-if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => {
-    bootstrap(document.getElementById("ng-root"));
-  });
-}
+if (typeof document !== "undefined") document.addEventListener("DOMContentLoaded", () => bootstrap(document.getElementById("ng-root")));

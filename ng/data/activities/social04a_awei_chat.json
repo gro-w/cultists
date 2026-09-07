@@ -1,10 +1,8 @@
 {
   "id": "social04a_awei_chat",
   "type": "other",
-  "npcId": "awei",
-  "name": "阿伟",
-  "avatar": "🐱",
   "displayName": "闲聊池",
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -393,6 +391,5 @@
         "toPort": "flowIn"
       }
     ]
-  },
-  "day": 4
+  }
 }

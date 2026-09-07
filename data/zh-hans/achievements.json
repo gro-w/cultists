@@ -1,12 +1,12 @@
 {
   "achievements": [
     {
-      "id": "developer_mode",
+      "id": "force_end_work",
       "title": "我要强制下班",
-      "description": "你可以通过存档把这个成就带出开发人员模式。",
+      "description": "进入下班模式时仍有患者未完成。",
       "category": "special",
       "hidden": false,
-      "icon": "🛠️",
+      "icon": "⏱️",
       "trigger": { "event": "developer:force_end_work", "once": true }
     },
     {

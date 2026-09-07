@@ -20,7 +20,7 @@ export function isBoundValue(raw) {
   return Boolean(raw && typeof raw === "object" && !Array.isArray(raw) && ("nodeId" in raw || "variable" in raw));
 }
 
-export function resolvePropertyValue(raw, { valueGraph, variableStore, pvGateway } = {}, fallback) {
+export function resolvePropertyValue(raw, { valueGraph, variableStore, pvGateway, dbGateway, runtimeGateway } = {}, fallback) {
   if (isBoundValue(raw)) {
     if ("nodeId" in raw) {
       if (!valueGraph || !variableStore) return fallback;
@@ -28,7 +28,7 @@ export function resolvePropertyValue(raw, { valueGraph, variableStore, pvGateway
       // second reference on the shared VariableStore so a rebuilt/legacy
       // context cannot silently lose the public-variable gateway.
       const runtimePvGateway = pvGateway || variableStore.publicVariableGateway || null;
-      return evaluateValueOutput(valueGraph, raw.nodeId, raw.port || "value", variableStore, new Set(), runtimePvGateway);
+      return evaluateValueOutput(valueGraph, raw.nodeId, raw.port || "value", variableStore, new Set(), runtimePvGateway, dbGateway, runtimeGateway);
     }
     if ("variable" in raw) return variableStore ? variableStore.get(raw.variable) : fallback;
   }

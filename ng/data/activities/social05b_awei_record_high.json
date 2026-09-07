@@ -1,17 +1,8 @@
 {
   "id": "social05b_awei_record_high",
   "type": "other",
-  "npcId": "awei",
-  "name": "阿伟",
-  "avatar": "👓",
   "displayName": "【线下唱片店】",
-  "condition": {
-    "globalVariables": {
-      "id": 41,
-      "op": "gte",
-      "value": 50
-    }
-  },
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -437,6 +428,5 @@
         "toPort": "flowIn"
       }
     ]
-  },
-  "day": 5
+  }
 }

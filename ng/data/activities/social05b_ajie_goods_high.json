@@ -1,17 +1,8 @@
 {
   "id": "social05b_ajie_goods_high",
   "type": "other",
-  "npcId": "ajie",
-  "name": "阿杰",
-  "avatar": "🐶",
   "displayName": "【谷子店】",
-  "condition": {
-    "globalVariables": {
-      "id": 40,
-      "op": "gte",
-      "value": 50
-    }
-  },
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -357,6 +348,5 @@
         "toPort": "flowIn"
       }
     ]
-  },
-  "day": 5
+  }
 }

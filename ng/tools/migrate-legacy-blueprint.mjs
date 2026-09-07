@@ -49,6 +49,31 @@ function makeConverters(synthesizeKey) {
     arithmetic: "arithmetic",
     prerequisite: "prerequisite",
     activityExpiry: "activityExpiry",
+    getGameTime: "getGameTime",
+    getActivityInstanceCount: "getActivityInstanceCount",
+    insertActivity: "insertActivity",
+    statOperation: "statOperation",
+    randomBranch: "randomBranch",
+    diceCheck: "diceCheck",
+    ending: "ending",
+    // These legacy domain operations are normalized to the engine's generic
+    // event capability. Their payload remains authored data and is executed
+    // by the game's injected event gateway, not by engine-specific code.
+    showCg: (node) => ({ type: "emitEvent", inputs: { eventName: "content:showCg", payload: node.inputs || {} } }),
+    endCg: (node) => ({ type: "emitEvent", inputs: { eventName: "content:endCg", payload: node.inputs || {} } }),
+    showImage: (node) => ({ type: "emitEvent", inputs: { eventName: "content:showImage", payload: node.inputs || {} } }),
+    inventoryOperation: (node) => ({ type: "emitEvent", inputs: { eventName: "content:inventoryOperation", payload: node.inputs || {} } }),
+    spellCast: (node) => ({ type: "emitEvent", inputs: { eventName: "content:spellCast", payload: node.inputs || {} } }),
+    spellEffect: (node) => ({ type: "emitEvent", inputs: { eventName: "content:spellEffect", payload: node.inputs || {} } }),
+    segmentBranch: "segmentBranch",
+    emitEvent: "emitEvent",
+    applyPublicVariableEffect: "applyPublicVariableEffect",
+    getPublicVariable: "getPublicVariable",
+    hisRefresh: (node) => ({ type: "emitEvent", inputs: { eventName: "content:hisRefresh", payload: node.inputs || {} } }),
+    hisSelectPatient: (node) => ({ type: "emitEvent", inputs: { eventName: "content:hisSelectPatient", payload: node.inputs || {} } }),
+    hisRenderDiagnosis: (node) => ({ type: "emitEvent", inputs: { eventName: "content:hisRenderDiagnosis", payload: node.inputs || {} } }),
+    hisRenderPrescription: (node) => ({ type: "emitEvent", inputs: { eventName: "content:hisRenderPrescription", payload: node.inputs || {} } }),
+    hisSubmit: (node) => ({ type: "emitEvent", inputs: { eventName: "content:hisSubmit", payload: node.inputs || {} } }),
     // Legacy `{variableId, value|delta}` -> ng `applyPublicVariableEffect`'s
     // `{id, value|delta|toggle|setObjectRef}`. Public-variable ids are
     // unchanged by the Phase 8 slice-1 migration, so `variableId` carries
@@ -75,7 +100,7 @@ function makeConverters(synthesizeKey) {
       type: "choice",
       inputs: {
         options: node.options || node.inputs?.options || [],
-        optionCount: Number(node.inputs?.branchCount) || (node.options || []).length,
+        optionCount: Number(node.inputs?.optionCount) || Number(node.inputs?.branchCount) || (node.options || node.inputs?.options || []).length,
         selectionKey: synthesizeKey(node.id, "select"),
       },
     }),
@@ -112,9 +137,28 @@ export function convertBlueprint(legacyBlueprint, { synthesizeKey = defaultSynth
   // `connections` needs no shape change (see file-level doc comment); only
   // rewritten if it referenced a `choice` node's dynamic `optionN` ports,
   // which are identical in both schemas, so it is carried over verbatim.
+  const connections = [...(legacyBlueprint.connections || [])];
+  if (connections.length === 0) {
+    for (const [id, node] of Object.entries(legacyNodes)) {
+      const next = node.next;
+      if (typeof next === "string") connections.push({ fromNodeId: id, fromPort: "flowOut", toNodeId: next, toPort: "flowIn" });
+      else if (next && typeof next === "object") Object.entries(next).forEach(([port, target]) => {
+        const toNodeId = typeof target === "string" ? target : target?.nodeId;
+        if (toNodeId) connections.push({ fromNodeId: id, fromPort: port, toNodeId, toPort: "flowIn" });
+      });
+      (node.options || node.inputs?.options || []).forEach((option, index) => {
+        if (option?.next) connections.push({ fromNodeId: id, fromPort: `option${index}`, toNodeId: option.next, toPort: "flowIn" });
+      });
+    }
+  }
+  const flowTypes = new Set(["flowStart", "consumeTime", "branch", "insertActivity", "statOperation", "randomBranch", "diceCheck", "segmentBranch", "ending", "emitEvent", "text", "choice", "applyPublicVariableEffect"]);
+  if (nodes.end) Object.entries(nodes).forEach(([id, node]) => {
+    if (!flowTypes.has(node.type) || node.type === "flowStart" || node.type === "activityEnd") return;
+    if (!connections.some((edge) => edge.fromNodeId === id)) connections.push({ fromNodeId: id, fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" });
+  });
   return {
     ok: true,
-    blueprint: { startNodeId: legacyBlueprint.startNodeId, nodes, connections: legacyBlueprint.connections || [] },
+    blueprint: { startNodeId: legacyBlueprint.startNodeId, nodes, connections },
     blockedTypes: [],
   };
 }
@@ -160,14 +204,44 @@ function runReport(targetDir) {
   [...blockedTypeCounts.entries()].sort((a, b) => b[1] - a[1]).forEach(([type, count]) => console.log(`  ${type}: ${count}`));
 }
 
+function rewriteDirectory(targetDir) {
+  let converted = 0;
+  let blocked = 0;
+  for (const file of fs.readdirSync(targetDir).filter((name) => name.endsWith(".json")).sort()) {
+    const fullPath = path.join(targetDir, file);
+    let data;
+    try { data = JSON.parse(fs.readFileSync(fullPath, "utf8")); } catch { continue; }
+    let changed = false;
+    function rewrite(value) {
+      if (!value || typeof value !== "object") return value;
+      if (Array.isArray(value)) return value.map(rewrite);
+      if (typeof value.startNodeId === "string" && value.nodes && typeof value.nodes === "object") {
+        const result = convertBlueprint(value);
+        if (!result.ok) { blocked += 1; return value; }
+        converted += 1;
+        changed = true;
+        return result.blueprint;
+      }
+      return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child)]));
+    }
+    const rewritten = rewrite(data);
+    if (changed) fs.writeFileSync(fullPath, `${JSON.stringify(rewritten, null, 2)}\n`, "utf8");
+  }
+  console.log(`Rewrote ${converted} canonical blueprints; blocked ${blocked}`);
+  if (blocked) process.exitCode = 2;
+}
+
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const args = process.argv.slice(2);
   if (args[0] === "--report") {
     const targetDir = path.resolve(args[1] || path.join(__dirname, "../../data/zh-hans"));
     runReport(targetDir);
+  } else if (args[0] === "--write") {
+    const targetDir = path.resolve(args[1] || path.join(__dirname, "../data/content/zh-hans"));
+    rewriteDirectory(targetDir);
   } else {
-    console.log("Usage: node ng/tools/migrate-legacy-blueprint.mjs --report [dir]");
+    console.log("Usage: node ng/tools/migrate-legacy-blueprint.mjs --report [dir] | --write [dir]");
     process.exit(1);
   }
 }

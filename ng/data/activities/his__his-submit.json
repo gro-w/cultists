@@ -1,0 +1,70 @@
+{
+  "id": "his__his-submit",
+  "type": "hisCustom",
+  "displayName": "his-submit",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "submit": {
+        "id": "submit",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:hisSubmit",
+          "payload": {}
+        }
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        }
+      },
+      "time": {
+        "id": "time",
+        "type": "consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "submit",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "submit",
+        "fromPort": "flowOut",
+        "toNodeId": "time",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

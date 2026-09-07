@@ -48,7 +48,7 @@ const definitions = {
     label: "打开窗口",
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
-    valueInputs: [valueIn("windowId", "string")],
+    valueInputs: [valueIn("windowId", "string"), valueIn("skip", "bool")],
   },
   // Generic Activity-queue action (plan §8.3 "desktop.run-activity"):
   // enqueues and runs another Activity definition on a given queue, without
@@ -67,6 +67,15 @@ const definitions = {
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("eventName", "string"), valueIn("payload")],
+  },
+  // Generic content-package API boundary. The engine knows only that a
+  // blueprint may call a registered API; API IDs and domain meaning belong
+  // to the content package.
+  callApi: {
+    label: "调用内容 API",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("apiId", "string"), valueIn("payload"), valueIn("resultVariable", "string")],
   },
   // Generic database CRUD actions (plan §9.3). Every result is written into
   // `variableStore` under the node's own `resultVariable` input - the same
@@ -143,6 +152,36 @@ const definitions = {
     label: "读取属性",
     valueInputs: [valueIn("value"), valueIn("key", "string")],
     valueOutputs: [valueOut("value")],
+  },
+  getStructureDefinition: {
+    label: "读取自定义数据结构",
+    valueInputs: [valueIn("structureId", "string")],
+    valueOutputs: [valueOut("value", "object")],
+  },
+  getDatabaseDefinition: {
+    label: "读取数据库定义",
+    valueInputs: [valueIn("databaseId", "string")],
+    valueOutputs: [valueOut("value", "object")],
+  },
+  // Pure database read for widget/value bindings. Unlike findRecords (a flow
+  // action), this node can feed a list/table property directly.
+  findRecordsValue: {
+    label: "读取数据库记录列表",
+    valueInputs: [valueIn("databaseId", "string"), valueIn("query")],
+    valueOutputs: [valueOut("value", "array")],
+  },
+  // Generic runtime collection gateway. Domain systems register collections
+  // by stable id; the engine does not know achievement/HIS semantics.
+  getRuntimeCollection: {
+    label: "读取运行时集合",
+    valueInputs: [valueIn("collectionId", "string")],
+    valueOutputs: [valueOut("value", "array")],
+  },
+  // Generic join used to combine canonical records with runtime state by id.
+  mergeRecords: {
+    label: "合并记录状态",
+    valueInputs: [valueIn("left", "array"), valueIn("right", "array"), valueIn("keyField", "string")],
+    valueOutputs: [valueOut("value", "array")],
   },
   // Appends one item to the end of an array value (treating a missing/
   // non-array input as empty) - the generic counterpart to `arithmetic`
@@ -251,12 +290,19 @@ const definitions = {
   diceCheck: {
     label: "骰子检定",
     flowInputs: [flowIn()],
-    flowOutputs: [flowOut("largeSuccess"), flowOut("success"), flowOut("failure"), flowOut("largeFailure")],
+    flowOutputs: ["largeSuccess", "success", "failure", "largeFailure"].map(flowOut),
     valueInputs: [valueIn("n", "number")],
+  },
+  segmentBranch: {
+    label: "区间分支",
+    flowInputs: [flowIn()],
+    flowOutputs: ["default", ...Array.from({ length: 32 }, (_, index) => `segment${index}`)].map(flowOut),
+    valueInputs: [valueIn("value", "number"), valueIn("branchCount", "number"), ...Array.from({ length: 33 }, (_, index) => valueIn(`boundary${index}`, "number"))],
   },
   ending: {
     label: "结束流程",
     flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
     valueInputs: [valueIn("endingId", "string"), valueIn("displayTo", "string")],
   },
   // Generic onboarding/tutorial primitive (mirrors the legacy engine's

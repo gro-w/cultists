@@ -1,0 +1,285 @@
+{
+  "id": "ending__异常结局",
+  "type": "ending",
+  "displayName": "异常结局",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "n000": {
+        "id": "n000",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_b"
+          }
+        },
+        "x": 340,
+        "y": 40
+      },
+      "n001": {
+        "id": "n001",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我看见它们——过来了——犹格·索托斯救我——",
+          "continueKey": "dlg:n001:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "n002": {
+        "id": "n002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "藉由旧神之力，我将施展法术——",
+          "continueKey": "dlg:n002:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "n003": {
+        "id": "n003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "等下，你拿的这个……是……",
+          "continueKey": "dlg:n003:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "n004": {
+        "id": "n004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "ajie",
+          "text": "不，快放下它！你发神经吗？",
+          "continueKey": "dlg:n004:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "n005": {
+        "id": "n005",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "为什么……为什么拿这个鬼东西指着我们……你明明知道它是邪恶的！",
+          "continueKey": "dlg:n005:continue"
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "n006": {
+        "id": "n006",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不，不，不，你们才无疑是邪恶的。我只为自保，现在你们是不是被我的法术定住动不了了？你们有想过那些无辜的活人祭品，他们在被你们束缚无法动弹时也是绝望的？哈，哈，哈！你们捆人就像捆螃蟹！而我，我将逃离你们的追逐，彻底挫败你们的献祭计划。我将在一个更好的环境里，开启一段崭新的，美好的，不被邪教阴谋所困扰的人生！",
+          "continueKey": "dlg:n006:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "n007": {
+        "id": "n007",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "等一下，危险，停！你在往海里跑，这是凹岸，海里是有离岸流的！",
+          "continueKey": "dlg:n007:continue"
+        },
+        "x": 2440,
+        "y": 40
+      },
+      "n008": {
+        "id": "n008",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不要再蛊惑我了！新生活，我来了！",
+          "continueKey": "dlg:n008:continue"
+        },
+        "x": 2740,
+        "y": 40
+      },
+      "n009": {
+        "id": "n009",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……",
+          "continueKey": "dlg:n009:continue"
+        },
+        "x": 3040,
+        "y": 40
+      },
+      "n010": {
+        "id": "n010",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "ajie",
+          "text": "离岸流给卷走了！我看不见人影！",
+          "continueKey": "dlg:n010:continue"
+        },
+        "x": 3340,
+        "y": 40
+      },
+      "n011": {
+        "id": "n011",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "那咋办？报警，找救生员？都试一遍吧。",
+          "continueKey": "dlg:n011:continue"
+        },
+        "x": 3640,
+        "y": 40
+      },
+      "n012": {
+        "id": "n012",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "毕竟是我们室友啊。走吧，咱分头行动。",
+          "continueKey": "dlg:n012:continue"
+        },
+        "x": 3940,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 4240,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "n000",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n000",
+        "fromPort": "flowOut",
+        "toNodeId": "n001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n001",
+        "fromPort": "flowOut",
+        "toNodeId": "n002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n002",
+        "fromPort": "flowOut",
+        "toNodeId": "n003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n003",
+        "fromPort": "flowOut",
+        "toNodeId": "n004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n004",
+        "fromPort": "flowOut",
+        "toNodeId": "n005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n005",
+        "fromPort": "flowOut",
+        "toNodeId": "n006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n006",
+        "fromPort": "flowOut",
+        "toNodeId": "n007",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n007",
+        "fromPort": "flowOut",
+        "toNodeId": "n008",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n008",
+        "fromPort": "flowOut",
+        "toNodeId": "n009",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n009",
+        "fromPort": "flowOut",
+        "toNodeId": "n010",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n010",
+        "fromPort": "flowOut",
+        "toNodeId": "n011",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n011",
+        "fromPort": "flowOut",
+        "toNodeId": "n012",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n012",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

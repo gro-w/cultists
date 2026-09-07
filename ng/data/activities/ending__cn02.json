@@ -1,0 +1,69 @@
+{
+  "id": "ending__万物终亡",
+  "type": "ending",
+  "displayName": "万物终亡",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 80,
+        "y": 80
+      },
+      "text": {
+        "id": "text",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "万物终亡",
+          "continueKey": "dlg:text:continue"
+        },
+        "x": 80,
+        "y": 220
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 80,
+        "y": 360
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 80,
+        "y": 240
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 80,
+        "y": 360
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "text",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "text",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

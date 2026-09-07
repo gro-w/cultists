@@ -1,10 +1,8 @@
 {
   "id": "dorm_activity_day3",
   "type": "dormActivity",
-  "name": "宿舍集体活动",
   "displayName": "第3天宿舍集体活动",
-  "day": 3,
-  "afterSocialDialogue": true,
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -82,9 +80,9 @@
       },
       "study_san": {
         "id": "study_san",
-        "type": "applyPublicVariableEffect",
+        "type": "statOperation",
         "inputs": {
-          "id": 1,
+          "statId": "mental",
           "delta": 10
         }
       },

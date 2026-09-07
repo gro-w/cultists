@@ -21,12 +21,15 @@ function prop(node, key, ctx, fallback) {
     valueGraph: ctx.valueGraph,
     variableStore: ctx.variableStore,
     pvGateway: ctx.pvGateway,
+    dbGateway: ctx.dbGateway,
+    runtimeGateway: ctx.runtimeGateway,
   }, fallback);
 }
 
 /** Apply container layout (flow/gap/padding/align/justify/wrap/minSize/maxSize) as inline CSS. */
-function applyContainerStyle(el, node) {
-  const flow = CONTAINER_FLOWS.has(node.flow) ? node.flow : "vertical";
+function applyContainerStyle(el, node, ctx) {
+  const flowValue = prop(node, "flow", ctx, "vertical");
+  const flow = CONTAINER_FLOWS.has(flowValue) ? flowValue : "vertical";
   el.dataset.flow = flow;
   if (flow === "grid") {
     el.style.display = "grid";
@@ -42,24 +45,30 @@ function applyContainerStyle(el, node) {
     el.style.display = "flex";
     el.style.flexDirection = flow === "horizontal" ? "row" : "column";
   }
-  if (node.wrap) el.style.flexWrap = "wrap";
-  if (Number.isFinite(node.gap)) el.style.gap = `${node.gap}px`;
-  if (Number.isFinite(node.padding)) el.style.padding = `${node.padding}px`;
-  if (node.align) el.style.alignItems = node.align;
-  if (node.justify) el.style.justifyContent = node.justify;
-  if (node.minSize) {
-    if (node.minSize.width != null) el.style.minWidth = `${node.minSize.width}px`;
-    if (node.minSize.height != null) el.style.minHeight = `${node.minSize.height}px`;
+  if (prop(node, "wrap", ctx, false)) el.style.flexWrap = "wrap";
+  const gap = Number(prop(node, "gap", ctx, NaN));
+  const padding = Number(prop(node, "padding", ctx, NaN));
+  if (Number.isFinite(gap)) el.style.gap = `${gap}px`;
+  if (Number.isFinite(padding)) el.style.padding = `${padding}px`;
+  const align = prop(node, "align", ctx, "");
+  const justify = prop(node, "justify", ctx, "");
+  if (align) el.style.alignItems = align;
+  if (justify) el.style.justifyContent = justify;
+  const minSize = prop(node, "minSize", ctx, null);
+  const maxSize = prop(node, "maxSize", ctx, null);
+  if (minSize) {
+    if (minSize.width != null) el.style.minWidth = `${minSize.width}px`;
+    if (minSize.height != null) el.style.minHeight = `${minSize.height}px`;
   }
-  if (node.maxSize) {
-    if (node.maxSize.width != null) el.style.maxWidth = `${node.maxSize.width}px`;
-    if (node.maxSize.height != null) el.style.maxHeight = `${node.maxSize.height}px`;
+  if (maxSize) {
+    if (maxSize.width != null) el.style.maxWidth = `${maxSize.width}px`;
+    if (maxSize.height != null) el.style.maxHeight = `${maxSize.height}px`;
   }
 }
 
 /** In a "stack" container, position a child absolutely at its own x/y (each may be a plain literal or blueprint-bound value, per plan §7.5-equivalent binding; defaults to 0,0); a no-op for every other flow. */
 function applyStackPosition(childEl, childNode, parentNode, ctx) {
-  if (!parentNode || parentNode.type !== "container" || parentNode.flow !== "stack") return;
+  if (!parentNode || parentNode.type !== "container" || prop(parentNode, "flow", ctx, "vertical") !== "stack") return;
   childEl.style.position = "absolute";
   const x = Number(prop(childNode, "x", ctx, 0));
   const y = Number(prop(childNode, "y", ctx, 0));
@@ -93,7 +102,8 @@ function findRunActivityId(events) {
 function applyCommonAttrs(el, node, ctx) {
   el.dataset.widgetId = node.widgetId || node.id || "";
   el.dataset.widgetType = node.type;
-  if (node.className) el.className = `ng-widget ${node.className}`;
+  const className = prop(node, "className", ctx, "");
+  if (className) el.className = `ng-widget ${className}`;
   else el.className = "ng-widget";
   el.classList.add(`ng-widget-${node.type}`);
   const activityId = node.activityId || findRunActivityId(node.events);
@@ -174,11 +184,30 @@ function renderLeaf(node, ctx) {
       ctx.controlEls?.set(node.widgetId || node.id, checkbox);
       break;
     }
+    case "range": {
+      const range = document.createElement("input");
+      range.type = "range";
+      range.min = String(prop(node, "min", ctx, 0));
+      range.max = String(prop(node, "max", ctx, 100));
+      range.step = String(prop(node, "step", ctx, 1));
+      range.value = String(prop(node, "value", ctx, prop(node, "min", ctx, 0)));
+      if (ctx.onEvent) range.addEventListener("input", () => ctx.onEvent(node, "onChange", range.value));
+      bindFocusBlur(range, node, ctx);
+      el.appendChild(range);
+      ctx.controlEls?.set(node.widgetId || node.id, range);
+      break;
+    }
     case "image": {
       const img = document.createElement("img");
       img.src = prop(node, "src", ctx, "") || "";
       img.alt = prop(node, "alt", ctx, "") || "";
       el.appendChild(img);
+      break;
+    }
+    case "dialogue": {
+      const displayTo = prop(node, "displayTo", ctx, "dialogue");
+      const view = ctx.dialogueViews?.[displayTo];
+      if (view?.el) el.appendChild(view.el);
       break;
     }
     case "list": {
@@ -193,10 +222,19 @@ function renderLeaf(node, ctx) {
       // uses), so a blueprint can read which row was clicked without any
       // new node type.
       const itemLabelField = node.itemLabelField || "name";
+      const itemLabelTemplate = node.itemLabelTemplate || null;
+      const itemClassField = node.itemClassField || null;
+      const itemDisabledField = node.itemDisabledField || null;
       for (const item of prop(node, "items", ctx, []) || []) {
-        const li = document.createElement("div");
-        li.className = node.itemClassName ? `ng-widget-list-item ${node.itemClassName}` : "ng-widget-list-item";
-        li.textContent = typeof item === "string" ? item : item.label ?? item[itemLabelField] ?? "";
+        const li = document.createElement(node.itemType === "button" ? "button" : "div");
+        if (li.tagName === "BUTTON") li.type = "button";
+        const itemClass = item && typeof item === "object" && item.className ? ` ${item.className}` : "";
+        const dataClass = itemClassField && item && typeof item === "object" && item[itemClassField] ? ` ${item[itemClassField]}` : "";
+        li.className = node.itemClassName ? `ng-widget-list-item ${node.itemClassName}${dataClass}${itemClass}` : `ng-widget-list-item${dataClass}${itemClass}`;
+        if (itemDisabledField && item && typeof item === "object") li.disabled = Boolean(item[itemDisabledField]);
+        li.textContent = typeof item === "string" ? item : itemLabelTemplate
+          ? itemLabelTemplate.replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (_, key) => item?.[key] ?? "")
+          : item.label ?? item[itemLabelField] ?? "";
         if (item && typeof item === "object" && item.id !== undefined) {
           li.dataset.itemId = item.id;
           if (ctx.onEvent) li.addEventListener("click", () => ctx.onEvent(node, "onItemClick", item.id));
@@ -246,7 +284,7 @@ export function renderWidgetNode(node, ctx = {}) {
   let el;
   if (node.type === "container") {
     el = document.createElement("div");
-    applyContainerStyle(el, node);
+    applyContainerStyle(el, node, ctx);
     for (const child of node.children || []) {
       const childEl = renderWidgetNode(child, ctx);
       applyStackPosition(childEl, child, node, ctx);

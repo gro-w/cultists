@@ -1,0 +1,29 @@
+{
+  "id": "achievements",
+  "title": "成就",
+  "icon": "🏆",
+  "width": 440,
+  "height": 480,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "records": {"id":"records","type":"findRecordsValue","inputs":{"databaseId":"achievements","query":{}}},
+      "states": {"id":"states","type":"getRuntimeCollection","inputs":{"collectionId":"achievementStates"}},
+      "items": {"id":"items","type":"mergeRecords","inputs":{"left":{"nodeId":"records","port":"value"},"right":{"nodeId":"states","port":"value"},"keyField":"id"}}
+    }
+  },
+  "root": {
+    "widgetId": "achievements-root",
+    "className": "app-achievements",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "children": [
+      {"widgetId":"achievements-title","type":"label","className":"achievements-title","text":"成就记录"},
+      {"widgetId":"achievements-list","type":"list","className":"ach-list panel-inset","items":{"nodeId":"items","port":"value"},"itemLabelTemplate":"{{statusMark}} {{name}}：{{description}}","itemClassField":"statusClass","itemClassName":"ach-card"},
+      {"widgetId":"achievements-note","type":"label","className":"status-note","text":"未解锁的成就会在达成条件后记录"}
+    ]
+  }
+}

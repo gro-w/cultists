@@ -5,9 +5,9 @@
  *   { format: "cultists-ng-save", version, engineVersion,
  *     createdAtGameTime, state: {...} }
  *
- * `state` holds a deep-cloned, DOM/function/Promise-free snapshot of every
- * piece of save-scoped state (plan §12.2): public + generic variables,
- * custom database records, Activity queues (which already embed each
+ * `state` holds a deep-cloned, DOM/function/Promise-free snapshot of only
+ * save-scoped runtime state (plan §12.2): public + generic variables,
+ * Activity queues (which already embed each
  * instance's currentNodeId/waiting condition/status, so "Activity 实例"
  * and "Activity 队列" from the plan's illustrative schema are one and the
  * same object here), open window instances/geometry and desktop icon
@@ -32,18 +32,35 @@ const SAVE_FORMAT = "cultists-ng-save";
 // rather than silently defaulting missing entries on load (AGENTS.md: "改
 // 变 payload...要评估是否提升版本；旧版本不应静默迁移") - an older save is
 // explicitly rejected by `_validate`, not migrated.
-const SAVE_FORMAT_VERSION = 4;
+// v5 added the authoritative GameState snapshot. v6 removes database records
+// from saves: databases and all game-content JSON are canonical project data,
+// loaded from data files and never copied into a player save.
+const SAVE_FORMAT_VERSION = 6;
 
 function isPlainObject(value) {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
+function isDerivedVariableKey(key) {
+  return key.startsWith("gameState:")
+    || key === "calendar:days"
+    || key === "achievements:items"
+    || key === "event:value"
+    || key.startsWith("__");
+}
+
+function isSaveableVariable(key, value) {
+  return !isDerivedVariableKey(key)
+    && (value === null || ["boolean", "number", "string"].includes(typeof value));
+}
+
 export class SaveManager {
   constructor({
     gameClock,
+    gameState,
     variableStore,
     publicVariableManager,
-    dataStore,
+
     activityQueueRegistry,
     windowManager,
     desktopIconManager,
@@ -55,9 +72,9 @@ export class SaveManager {
     engineVersion = "0.1.0",
   } = {}) {
     this.gameClock = gameClock;
+    this.gameState = gameState;
     this.variableStore = variableStore;
     this.publicVariableManager = publicVariableManager;
-    this.dataStore = dataStore;
     this.activityQueueRegistry = activityQueueRegistry;
     this.windowManager = windowManager;
     this.desktopIconManager = desktopIconManager;
@@ -80,9 +97,10 @@ export class SaveManager {
       createdAtGameTime: (clockState.day - 1) * 1440 + clockState.minutes,
       state: {
         gameClock: clockState,
-        variables: this.variableStore.snapshot(),
+        gameState: this.gameState.snapshot(),
+        variables: this.variableStore.snapshot({ include: isSaveableVariable }),
         publicVariables: this.publicVariableManager.snapshot(),
-        databases: this.dataStore.toJSON(),
+
         queues: this.activityQueueRegistry.snapshot(),
         windows: this.windowManager.snapshotInstances(),
         desktopIcons: this.desktopIconManager.toJSON(),
@@ -101,9 +119,10 @@ export class SaveManager {
     const state = envelope.state;
     if (!isPlainObject(state)) throw new Error("Save data is missing state");
     if (!isPlainObject(state.gameClock)) throw new Error("Save data is missing gameClock state");
+    if (!isPlainObject(state.gameState)) throw new Error("Save data is missing gameState state");
     if (!isPlainObject(state.variables)) throw new Error("Save data is missing variables state");
     if (!isPlainObject(state.publicVariables)) throw new Error("Save data is missing publicVariables state");
-    if (!isPlainObject(state.databases)) throw new Error("Save data is missing databases state");
+
     if (!isPlainObject(state.queues)) throw new Error("Save data is missing queues state");
     if (!Array.isArray(state.windows)) throw new Error("Save data is missing windows state");
     if (!Array.isArray(state.desktopIcons)) throw new Error("Save data is missing desktopIcons state");
@@ -148,9 +167,11 @@ export class SaveManager {
   /** Replaces every manager's state from a validated `state` object; the one and only mutation point, shared by both the normal and rollback paths of `restore()`. */
   _applyState(state) {
     this.gameClock.restore(state.gameClock);
-    this.variableStore.restore(state.variables);
+    this.gameState.restore(state.gameState);
+    const preservedVariables = Object.keys(this.variableStore.snapshot()).filter(isDerivedVariableKey);
+    this.variableStore.restore(state.variables, { preserve: preservedVariables });
     this.publicVariableManager.restore(state.publicVariables);
-    this.dataStore.restore(state.databases);
+
     this.activityQueueRegistry.restore(state.queues);
     this.windowManager.restoreInstances(state.windows);
     this.desktopIconManager.restore(state.desktopIcons);

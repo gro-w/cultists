@@ -1,0 +1,47 @@
+{
+  "id": "achievement__ending_any",
+  "type": "achievement",
+  "displayName": "命运的终章",
+  "achievementId": "ending_any",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "unlock": {
+        "id": "unlock",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "achievement:display",
+          "payload": {
+            "achievementId": "ending_any"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "unlock",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "unlock",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

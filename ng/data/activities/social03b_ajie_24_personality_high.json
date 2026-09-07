@@ -1,19 +1,8 @@
 {
   "id": "social03b_ajie_24_personality_high",
   "type": "other",
-  "npcId": "ajie",
-  "name": "阿杰",
-  "avatar": "🐶",
   "displayName": "《第二十四人格》",
-  "condition": {
-    "globalVariables": [
-      {
-        "id": 40,
-        "op": "gte",
-        "value": 50
-      }
-    ]
-  },
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -499,26 +488,28 @@
       },
       "current_game_time": {
         "id": "current_game_time",
-        "type": "getPublicVariable",
-        "inputs": {
-          "id": 1000
-        }
+        "type": "getGameTime",
+        "inputs": {}
       },
       "insert_dorm_activity": {
         "id": "insert_dorm_activity",
-        "type": "runActivity",
+        "type": "insertActivity",
         "inputs": {
           "activityId": "dorm_activity_day3",
-          "queueId": "social"
+          "queue": "social",
+          "respectPrerequisite": true,
+          "protectFromExpiry": false,
+          "addTime": {
+            "nodeId": "current_game_time",
+            "port": "value"
+          }
         }
       },
       "activity_count": {
         "id": "activity_count",
-        "type": "arithmetic",
+        "type": "getActivityInstanceCount",
         "inputs": {
-          "operator": "+",
-          "left": 0,
-          "right": 0
+          "activityId": "dorm_activity_day3"
         }
       },
       "activity_available": {
@@ -861,6 +852,5 @@
         "toPort": "flowIn"
       }
     ]
-  },
-  "day": 3
+  }
 }

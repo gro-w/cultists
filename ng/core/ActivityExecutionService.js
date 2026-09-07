@@ -8,13 +8,14 @@ import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
  * runner naturally finishes after being externally cancelled.
  */
 export class ActivityExecutionService {
-  constructor(eventBus) {
+  constructor(eventBus, gateways = {}) {
     this.eventBus = eventBus;
+    this.runtimeGateway = gateways.runtimeGateway || null;
     this.runners = new Map();
     this._firedTerminal = new Set();
   }
 
-  run({ queue, definition, instance, variableStore, timeGateway, windowGateway, activityGateway, eventGateway, dbGateway, pvGateway, onboardingGateway } = {}) {
+  run({ queue, definition, instance, variableStore, timeGateway, windowGateway, activityGateway, eventGateway, dbGateway, pvGateway, runtimeGateway, onboardingGateway, apiGateway } = {}) {
     if (!queue || !definition || !instance) return null;
     if (instance.status === "resolved" || this.runners.has(instance.instanceId)) return null;
 
@@ -29,7 +30,9 @@ export class ActivityExecutionService {
       eventGateway,
       dbGateway,
       pvGateway,
+      runtimeGateway: runtimeGateway || this.runtimeGateway,
       onboardingGateway,
+      apiGateway,
       onCheckpoint: (updated) => {
         queue.update(updated.instanceId, updated);
         this.eventBus.emit(ACTIVITY_EVENTS.changed, { queueId: queue.queueId, instance: { ...updated } });
@@ -59,6 +62,32 @@ export class ActivityExecutionService {
 
   get(instanceId) {
     return this.runners.get(instanceId) || null;
+  }
+
+  /** Public lifecycle/queue surface for custom manager Activities. */
+  append(queue, options) {
+    if (!queue) throw new Error("ActivityExecutionService.append requires a queue");
+    return queue.append(options);
+  }
+
+  read(queue, instanceId) {
+    return queue?.get(instanceId) || null;
+  }
+
+  list(queue, filters) {
+    return queue?.list(filters) || [];
+  }
+
+  update(queue, instanceId, patch) {
+    return queue?.update(instanceId, patch) || false;
+  }
+
+  complete(queue, instanceId) {
+    return queue?.complete(instanceId) || false;
+  }
+
+  cancelEntry(queue, instanceId) {
+    return queue?.cancel(instanceId) || false;
   }
 
   pause(instanceId) {

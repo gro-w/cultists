@@ -29,13 +29,13 @@ function* findBlueprints(value) {
     startNodeId: "start",
     nodes: {
       start: { id: "start", type: "flowStart", inputs: {} },
-      roll: { id: "roll", type: "diceCheck", inputs: { n: 50 } },
+      roll: { id: "roll", type: "legacyUnsupportedProbeNode", inputs: {} },
       end: { id: "end", type: "activityEnd", inputs: {} },
     },
   };
   const { ok, blockedTypes } = convertBlueprint(legacy);
   assert.equal(ok, false);
-  assert.deepEqual(blockedTypes, ["diceCheck"]);
+  assert.deepEqual(blockedTypes, ["legacyUnsupportedProbeNode"]);
 }
 
 // --- setGlobal/getGlobal field renaming (variableId -> id) ------------------

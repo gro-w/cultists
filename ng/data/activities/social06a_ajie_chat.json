@@ -1,17 +1,8 @@
 {
   "id": "social06a_ajie_chat",
   "type": "other",
-  "npcId": "ajie",
-  "name": "阿杰",
-  "avatar": "🐶",
   "displayName": "闲聊池",
-  "condition": {
-    "globalVariables": {
-      "id": 100,
-      "op": "eq",
-      "value": true
-    }
-  },
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -280,6 +271,5 @@
         "toPort": "flowIn"
       }
     ]
-  },
-  "day": 6
+  }
 }

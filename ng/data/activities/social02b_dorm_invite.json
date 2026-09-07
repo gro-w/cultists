@@ -1,10 +1,8 @@
 {
   "id": "social02b_dorm_invite",
   "type": "other",
-  "npcId": "ajie",
-  "name": "阿杰",
-  "avatar": "🐶",
   "displayName": "宿舍集体活动邀请",
+  "queueId": "social",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
@@ -32,18 +30,22 @@
       },
       "insert_dorm_activity": {
         "id": "insert_dorm_activity",
-        "type": "runActivity",
+        "type": "insertActivity",
         "inputs": {
           "activityId": "dorm_activity_day2",
-          "queueId": "social"
+          "addTime": {
+            "nodeId": "current_game_time",
+            "port": "value"
+          },
+          "queue": "social",
+          "respectPrerequisite": true,
+          "protectFromExpiry": false
         }
       },
       "current_game_time": {
         "id": "current_game_time",
-        "type": "getPublicVariable",
-        "inputs": {
-          "id": 1000
-        }
+        "type": "getGameTime",
+        "inputs": {}
       },
       "end": {
         "id": "end",
@@ -52,11 +54,9 @@
       },
       "activity_count": {
         "id": "activity_count",
-        "type": "arithmetic",
+        "type": "getActivityInstanceCount",
         "inputs": {
-          "operator": "+",
-          "left": 0,
-          "right": 0
+          "activityId": "dorm_activity_day2"
         }
       },
       "activity_available": {
@@ -138,6 +138,5 @@
         "toPort": "flowIn"
       }
     ]
-  },
-  "day": 2
+  }
 }

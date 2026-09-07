@@ -1,0 +1,22 @@
+{
+  "id": "notebook",
+  "title": "笔记本",
+  "icon": "📓",
+  "width": 420,
+  "height": 480,
+  "resizable": true,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "notebook-root",
+    "className": "app-notebook",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 6,
+    "padding": 8,
+    "children": [
+      {"widgetId":"notebook-tabs","type":"label","className":"notebook-tabs","text":"🔑 关键词"},
+      {"widgetId":"notebook-list","type":"list","className":"notebook-list panel-inset","items":{"variable":"notebook:items"},"itemLabelField":"content","itemClassName":"notebook-entry"},
+      {"widgetId":"notebook-empty","type":"label","className":"notebook-empty","text":"尚未收集任何关键词。在对话中点击高亮词汇即可收集。"}
+    ]
+  }
+}

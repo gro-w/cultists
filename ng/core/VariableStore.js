@@ -26,12 +26,13 @@ export class VariableStore {
     this.set(key, current + (Number(amount) || 0));
   }
 
-  snapshot() {
-    return Object.fromEntries(this.values);
+  snapshot({ include = null } = {}) {
+    return Object.fromEntries([...this.values].filter(([key, value]) => !include || include(key, value)));
   }
 
-  restore(data = {}) {
-    this.values = new Map(Object.entries(data));
+  restore(data = {}, { preserve = [] } = {}) {
+    const preserved = new Map(preserve.map((key) => [key, this.values.get(key)]).filter(([, value]) => value !== undefined));
+    this.values = new Map([...Object.entries(data), ...preserved]);
   }
 }
 

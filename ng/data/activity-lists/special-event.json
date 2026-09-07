@@ -1,0 +1,15 @@
+{
+  "id": "special-event",
+  "displayName": "特殊事件活动",
+  "activityIds": [
+    "event__binbin_turtle_fail",
+    "event__binbin_turtle_success",
+    "event__与海之子对话",
+    "event__彬彬献祭事件",
+    "event__悔恨之泪",
+    "event__追逐",
+    "event__追逐事件",
+    "event__长眠的克苏鲁候汝入梦",
+    "event__长眠的克苏鲁候汝入梦事件"
+  ]
+}

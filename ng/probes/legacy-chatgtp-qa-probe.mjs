@@ -32,12 +32,13 @@ function makeStore() {
 
 // --- engine.json's seedRecords is the array this migration relies on ------
 assert.ok(Array.isArray(engineConfig.seedRecords), "engine.json seedRecords must be an array to merge multiple seed files");
-assert.ok(engineConfig.seedRecords.includes("seed-records-chatgtp.json"));
+const seedFiles = [...(engineConfig.seedRecords || []), ...(engineConfig.deferredSeedRecords || [])];
+assert.ok(seedFiles.includes("seed-records-chatgtp.json"));
 
 // --- every seed file merges into the same DataStore with no collisions ----
 {
   const dataStore = makeStore();
-  for (const seedFile of engineConfig.seedRecords) {
+  for (const seedFile of seedFiles) {
     const records = JSON.parse(fs.readFileSync(path.join(__dirname, "../data", seedFile), "utf8"));
     dataStore.loadRecordSet(records); // throws on any validation failure or duplicate key
   }
@@ -48,7 +49,7 @@ assert.ok(engineConfig.seedRecords.includes("seed-records-chatgtp.json"));
 // --- known legacy content preserved, keyed by the same sorted-id convention ---
 {
   const dataStore = makeStore();
-  for (const seedFile of engineConfig.seedRecords) {
+  for (const seedFile of seedFiles) {
     const records = JSON.parse(fs.readFileSync(path.join(__dirname, "../data", seedFile), "utf8"));
     dataStore.loadRecordSet(records);
   }
@@ -78,7 +79,7 @@ assert.ok(engineConfig.seedRecords.includes("seed-records-chatgtp.json"));
 // --- unknown combo returns null, never fabricates an answer -----------------
 {
   const dataStore = makeStore();
-  for (const seedFile of engineConfig.seedRecords) {
+  for (const seedFile of seedFiles) {
     const records = JSON.parse(fs.readFileSync(path.join(__dirname, "../data", seedFile), "utf8"));
     dataStore.loadRecordSet(records);
   }

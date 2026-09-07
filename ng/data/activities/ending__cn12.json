@@ -1,0 +1,705 @@
+{
+  "id": "ending__组一辈子少年乐队！",
+  "type": "ending",
+  "displayName": "组一辈子少年乐队！",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      },
+      "intro_01": {
+        "id": "intro_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你们的乐队，名字是叫“赞”是吧，似乎要在六道口黑暗学术bar首演了？",
+          "continueKey": "dlg:intro_01:continue"
+        },
+        "x": 340,
+        "y": 40
+      },
+      "intro_02": {
+        "id": "intro_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "对啊，我最近一直在练这个万年氢能旅馆的《永生的岩户城人》。（一阵劲爆的吉他扫弦）",
+          "continueKey": "dlg:intro_02:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "intro_03": {
+        "id": "intro_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "岩户城，那不是我老家吗？",
+          "continueKey": "dlg:intro_03:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "intro_04": {
+        "id": "intro_04",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "傍晚溜点辖办~关掉药厂的易伤",
+          "continueKey": "dlg:intro_04:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "intro_05": {
+        "id": "intro_05",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "咱们在医院实习，何尝不是一种药厂。",
+          "continueKey": "dlg:intro_05:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "intro_06": {
+        "id": "intro_06",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "棋子在澳洲~我取合剂瓶配酒~",
+          "continueKey": "dlg:intro_06:continue"
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "intro_07": {
+        "id": "intro_07",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "还是别喝酒，伤肝。",
+          "continueKey": "dlg:intro_07:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "intro_08": {
+        "id": "intro_08",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "如此圣火三十年~制导弹杀崩他~",
+          "continueKey": "dlg:intro_08:continue"
+        },
+        "x": 2440,
+        "y": 40
+      },
+      "intro_09": {
+        "id": "intro_09",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "大厦是豆腐渣工程吧。",
+          "continueKey": "dlg:intro_09:continue"
+        },
+        "x": 2740,
+        "y": 40
+      },
+      "intro_10": {
+        "id": "intro_10",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "用藏身处的黑案啊~淹没心急的的警官~",
+          "continueKey": "dlg:intro_10:continue"
+        },
+        "x": 3040,
+        "y": 40
+      },
+      "intro_11": {
+        "id": "intro_11",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "核备时打服众~兵帮少年焙香我~",
+          "continueKey": "dlg:intro_11:continue"
+        },
+        "x": 3340,
+        "y": 40
+      },
+      "intro_12": {
+        "id": "intro_12",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "师大附中啊，遥远的回忆了。",
+          "continueKey": "dlg:intro_12:continue"
+        },
+        "x": 3640,
+        "y": 40
+      },
+      "intro_13": {
+        "id": "intro_13",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "沉没的诸事~巫法移开的礁石",
+          "continueKey": "dlg:intro_13:continue"
+        },
+        "x": 3940,
+        "y": 40
+      },
+      "intro_14": {
+        "id": "intro_14",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "可不是嘛，往家里打电话都限时。电话那儿贴了个“少聊一分，提高一分，提高一分，干掉千人”的横幅。",
+          "continueKey": "dlg:intro_14:continue"
+        },
+        "x": 4240,
+        "y": 40
+      },
+      "intro_15": {
+        "id": "intro_15",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "圣火在惊魇你~制导弹杀崩他~",
+          "continueKey": "dlg:intro_15:continue"
+        },
+        "x": 4540,
+        "y": 40
+      },
+      "choice": {
+        "id": "choice",
+        "type": "choice",
+        "inputs": {
+          "options": [],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice:select"
+        },
+        "x": 4840,
+        "y": 40
+      },
+      "choice_1_01": {
+        "id": "choice_1_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "你也妹听我唱歌啊！总之要不要来吧，听我们演奏。",
+          "continueKey": "dlg:choice_1_01:continue"
+        },
+        "x": 5140,
+        "y": 205
+      },
+      "choice_1_02": {
+        "id": "choice_1_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "正有此意。",
+          "continueKey": "dlg:choice_1_02:continue"
+        },
+        "x": 5440,
+        "y": 205
+      },
+      "choice_2_01": {
+        "id": "choice_2_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "你懂我。",
+          "continueKey": "dlg:choice_2_01:continue"
+        },
+        "x": 5140,
+        "y": 40
+      },
+      "choice_2_02": {
+        "id": "choice_2_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "首演的时候，要不要我捧场？",
+          "continueKey": "dlg:choice_2_02:continue"
+        },
+        "x": 5440,
+        "y": 40
+      },
+      "choice_2_03": {
+        "id": "choice_2_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "呵呵，我一定不会让你失望哒！（一阵劲爆的吉他扫弦）",
+          "continueKey": "dlg:choice_2_03:continue"
+        },
+        "x": 5740,
+        "y": 40
+      },
+      "concert_cg": {
+        "id": "concert_cg",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_awei_band_ending"
+          }
+        },
+        "x": 6040,
+        "y": 40
+      },
+      "concert_01": {
+        "id": "concert_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "亿万匹拓疆的蛙~在祂滔海中奔跑~（一阵劲爆的吉他尾杀）",
+          "continueKey": "dlg:concert_01:continue"
+        },
+        "x": 6340,
+        "y": 40
+      },
+      "concert_02": {
+        "id": "concert_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "喔喔喔喔喔喔！咿呀！咿呀！",
+          "continueKey": "dlg:concert_02:continue"
+        },
+        "x": 6640,
+        "y": 40
+      },
+      "concert_03": {
+        "id": "concert_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "咿呀！",
+          "continueKey": "dlg:concert_03:continue"
+        },
+        "x": 6940,
+        "y": 40
+      },
+      "concert_04": {
+        "id": "concert_04",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "谢谢！",
+          "continueKey": "dlg:concert_04:continue"
+        },
+        "x": 7240,
+        "y": 40
+      },
+      "concert_05": {
+        "id": "concert_05",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "这次我要特别感谢我的一位朋友。",
+          "continueKey": "dlg:concert_05:continue"
+        },
+        "x": 7540,
+        "y": 40
+      },
+      "concert_06": {
+        "id": "concert_06",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "那一人是谁？",
+          "continueKey": "dlg:concert_06:continue"
+        },
+        "x": 7840,
+        "y": 40
+      },
+      "concert_07": {
+        "id": "concert_07",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "这位朋友，在我最穷困的时候不忘鼓励我哀兵必胜，在我最辉煌的时刻也不忘提醒我骄兵必败！",
+          "continueKey": "dlg:concert_07:continue"
+        },
+        "x": 8140,
+        "y": 40
+      },
+      "concert_08": {
+        "id": "concert_08",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "没有这位朋友支持我努力走下去，就没有我今日的监听级发烧耳机，也没有我们即将在流媒体上架的歌曲的HiFi音质。",
+          "continueKey": "dlg:concert_08:continue"
+        },
+        "x": 8440,
+        "y": 40
+      },
+      "concert_09": {
+        "id": "concert_09",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "好Homie，你在我心中的地位，堪比让赛博坦陆逊反败为胜的夷陵山脉最后一道山梁，在演唱结束时，让我们为这个残酷世界里的最后一道善良，点“赞”！我们要组一辈子少年乐队！谢谢。",
+          "continueKey": "dlg:concert_09:continue"
+        },
+        "x": 8740,
+        "y": 40
+      },
+      "concert_end": {
+        "id": "concert_end",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:endCg",
+          "payload": {}
+        },
+        "x": 9040,
+        "y": 40
+      },
+      "after_01": {
+        "id": "after_01",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "唱得不错，还有……特别感谢，你的特别感谢。",
+          "continueKey": "dlg:after_01:continue"
+        },
+        "x": 9340,
+        "y": 40
+      },
+      "after_02": {
+        "id": "after_02",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我很久没被人这样夸过了。",
+          "continueKey": "dlg:after_02:continue"
+        },
+        "x": 9640,
+        "y": 40
+      },
+      "after_03": {
+        "id": "after_03",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "无所谓，我会出手。",
+          "continueKey": "dlg:after_03:continue"
+        },
+        "x": 9940,
+        "y": 40
+      },
+      "after_04": {
+        "id": "after_04",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "awei",
+          "text": "往后余生，就由我一人，夸你，“赞”你，稳稳地接住你。",
+          "onShow": {
+            "ending": "组一辈子少年乐队！"
+          },
+          "continueKey": "dlg:after_04:continue"
+        },
+        "x": 10240,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 10540,
+        "y": 40
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_01",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_02",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_03",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_04",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_04",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_05",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_05",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_06",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_06",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_07",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_07",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_08",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_08",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_09",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_09",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_10",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_11",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_12",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_12",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_13",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_13",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_14",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_14",
+        "fromPort": "flowOut",
+        "toNodeId": "intro_15",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro_15",
+        "fromPort": "flowOut",
+        "toNodeId": "choice",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option0",
+        "toNodeId": "choice_1_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option1",
+        "toNodeId": "choice_2_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_1_01",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_1_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_1_02",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_cg",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_2_01",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_2_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_2_02",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_2_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_2_03",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_cg",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_cg",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_01",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_02",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_03",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_04",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_04",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_05",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_05",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_06",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_06",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_07",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_07",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_08",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_08",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_09",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_09",
+        "fromPort": "flowOut",
+        "toNodeId": "concert_end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "concert_end",
+        "fromPort": "flowOut",
+        "toNodeId": "after_01",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_01",
+        "fromPort": "flowOut",
+        "toNodeId": "after_02",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_02",
+        "fromPort": "flowOut",
+        "toNodeId": "after_03",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_03",
+        "fromPort": "flowOut",
+        "toNodeId": "after_04",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_04",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

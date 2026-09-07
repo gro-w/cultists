@@ -1,0 +1,5 @@
+{
+  "id": "system",
+  "displayName": "系统活动",
+  "activityIds": ["default", "off-duty-open", "use-item", "patient-queue-manager", "social-story-manager", "achievement-manager"]
+}

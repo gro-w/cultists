@@ -23,6 +23,16 @@ export class PhaseBoundaryService {
     this.state.day = snapshot.day;
     const phase = snapshot.minutes >= this.rules.workStart && snapshot.minutes < this.rules.workEnd ? "day" : "night";
     this.state.phase = phase;
+    if (previous.day && snapshot.day !== previous.day) {
+      this.eventBus?.emit(PHASE_EVENTS.settled, { reason: "midnight", fromDay: previous.day, toDay: snapshot.day, current: { ...this.state } });
+    }
+    if (snapshot.minutes >= this.rules.workEnd && previous.duty === "on-duty") {
+      this.state.duty = "off-duty";
+      this.state.location = this.rules.offDutyLocation || this.state.location;
+    } else if (snapshot.minutes >= this.rules.workStart && snapshot.minutes < this.rules.workEnd && previous.duty === "off-duty" && this.rules.autoStartWork !== false) {
+      this.state.duty = "on-duty";
+      this.state.location = this.rules.workLocation || this.state.location;
+    }
     if (previous.phase !== phase) this.eventBus?.emit(PHASE_EVENTS.changed, { previous, current: { ...this.state }, phaseChanged: true });
   }
 
@@ -45,6 +55,19 @@ export class PhaseBoundaryService {
     }
     this.eventBus?.emit(PHASE_EVENTS.changed, { previous: before, current: { ...this.state }, phaseChanged: before.phase !== this.state.phase });
     return { before, after: { ...this.state } };
+  }
+
+  requestLocation(locationId) {
+    if (typeof locationId !== "string" || !locationId) return { ok: false, reason: "invalid-location" };
+    const before = { ...this.state };
+    this.state.location = locationId;
+    this.eventBus?.emit(PHASE_EVENTS.changed, {
+      previous: before,
+      current: { ...this.state },
+      phaseChanged: before.phase !== this.state.phase,
+      locationChanged: before.location !== this.state.location,
+    });
+    return { ok: true, before, after: { ...this.state } };
   }
 
   sleep() {

@@ -24,10 +24,10 @@ export class DataStore {
     this.databases = new Map(); // databaseId -> { recordType, primaryKey, allowDelete, records: Map, seq }
   }
 
-  registerDatabase({ databaseId, recordType, primaryKey = "id", allowDelete = true }) {
+  registerDatabase({ databaseId, recordType, primaryKey = "id", allowDelete = true, recordFile = "seed-records.json" }) {
     if (!databaseId) throw new Error("DataStore.registerDatabase requires a databaseId");
     if (!this.dataStructureManager.get(recordType)) throw new Error(`Unknown recordType structure: ${recordType}`);
-    this.databases.set(databaseId, { databaseId, recordType, primaryKey, allowDelete, records: new Map(), seq: 1 });
+    this.databases.set(databaseId, { databaseId, recordType, primaryKey, allowDelete, recordFile, records: new Map(), seq: 1 });
     return this.databases.get(databaseId);
   }
 
@@ -77,6 +77,14 @@ export class DataStore {
     if (!validation.ok) throw new Error(`createRecord validation failed: ${validation.errors.join("；")}`);
     db.records.set(key, clone(withDefaults));
     return clone(db.records.get(key));
+  }
+
+  getStructureDefinition(structureId) {
+    return clone(this.dataStructureManager.get(structureId));
+  }
+
+  getDatabaseDefinition(databaseId) {
+    return clone(this.databases.get(databaseId));
   }
 
   getRecord(databaseId, key) {

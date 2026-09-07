@@ -31,12 +31,16 @@ export class ActivityDefinitionStore {
   }
 
   async loadManifest(activityIds, baseUrl = "data/activities/") {
-    const loaded = await Promise.all(
-      activityIds.map(async (activityId) => {
-        return this.dataLoader.loadJSON(`${baseUrl}${activityId}.json`);
-      }),
-    );
-    loaded.forEach((definition) => this.register(definition));
+    // Keep the legacy list-driven loading order. Promise.all makes the
+    // browser parse and validate the complete corpus in one bootstrap burst.
+    for (const entry of activityIds || []) {
+      const activityId = typeof entry === "string" ? entry : entry.id;
+      if (!activityId || this._definitions.has(activityId)) continue;
+      const file = typeof entry === "string" ? `${activityId}.json` : entry.file;
+      if (!file) continue;
+      const definition = await this.dataLoader.loadJSON(`${baseUrl}${file}`);
+      this.register(definition);
+    }
     return this.list();
   }
 }

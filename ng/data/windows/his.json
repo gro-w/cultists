@@ -8,6 +8,9 @@
   "singleInstance": true,
   "valueGraph": {
     "nodes": {
+      "patients": {"id": "patients", "type": "findRecordsValue", "inputs": {"databaseId": "patients", "query": {}}},
+      "submittedPatients": {"id": "submittedPatients", "type": "getRuntimeCollection", "inputs": {"collectionId": "submittedPatientStates"}},
+      "patientItems": {"id": "patientItems", "type": "mergeRecords", "inputs": {"left": {"nodeId": "patients", "port": "value"}, "right": {"nodeId": "submittedPatients", "port": "value"}, "keyField": "id"}},
       "patient": {"id": "patient", "type": "getVariable", "inputs": {"key": "his:selectedPatient"}},
       "patientName": {"id": "patientName", "type": "getProperty", "inputs": {"value": {"nodeId": "patient", "port": "value"}, "key": "name"}},
       "patientAge": {"id": "patientAge", "type": "getProperty", "inputs": {"value": {"nodeId": "patient", "port": "value"}, "key": "age"}},
@@ -56,9 +59,13 @@
             "widgetId": "his-patient-list",
             "type": "list",
             "items": {
-              "variable": "his:patients"
+              "nodeId": "patientItems",
+              "port": "value"
             },
             "itemLabelField": "name",
+            "itemType": "button",
+            "itemDisabledField": "disabled",
+            "itemClassField": "statusClass",
             "itemClassName": "his-patient-btn",
             "events": {
               "onItemClick": {
@@ -102,6 +109,12 @@
         "flow": "vertical",
         "gap": 8,
         "children": [
+          {
+            "widgetId": "his-dialogue",
+            "type": "dialogue",
+            "displayTo": "his-app",
+            "className": "his-dialogue panel-inset"
+          },
           {
             "widgetId": "his-patient-name",
             "type": "label",

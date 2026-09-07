@@ -39,6 +39,15 @@ function copyTree(source, destination) {
     // intentionally mention development-only tools or markers.
     if ([".git", "publish", "publish.js", "dev-server.js", "editors", "node_modules", ".hermes", "AGENTS.md", "README.md", "docs"].includes(entry.name)) continue;
     const from = path.join(source, entry.name);
+    const relative = path.relative(root, from).replaceAll(path.sep, "/");
+    // NG tooling, probes, migration inventories, and developer-only modules
+    // are source-maintenance assets, never player assets. Keeping them out of
+    // the copy also prevents their documentation strings from tripping the
+    // player-build safety scan.
+    if (relative === "ng/dev" || relative.startsWith("ng/dev/")
+      || relative === "ng/tools" || relative.startsWith("ng/tools/")
+      || relative === "ng/probes" || relative.startsWith("ng/probes/")
+      || relative === "ng/MIGRATION-TODO.md" || relative === "ng/LEGACY-NG-MIGRATION-INVENTORY.md") continue;
     const to = path.join(destination, entry.name);
     if (entry.isDirectory()) {
       fs.mkdirSync(to, { recursive: true });

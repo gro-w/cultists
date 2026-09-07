@@ -21,6 +21,32 @@ export class ActivityQueueRegistry {
     return this.queues.get(queueId) || null;
   }
 
+  /** Generic queue API exposed to blueprints and developer tools. */
+  append(queueId, options) {
+    const queue = this.get(queueId) || this.register(queueId);
+    return queue.append(options);
+  }
+
+  listEntries(queueId, filters) {
+    return this.get(queueId)?.list(filters) || [];
+  }
+
+  getEntry(queueId, instanceId) {
+    return this.get(queueId)?.get(instanceId) || null;
+  }
+
+  updateEntry(queueId, instanceId, patch) {
+    return this.get(queueId)?.update(instanceId, patch) || false;
+  }
+
+  completeEntry(queueId, instanceId) {
+    return this.get(queueId)?.complete(instanceId) || false;
+  }
+
+  cancelEntry(queueId, instanceId) {
+    return this.get(queueId)?.cancel(instanceId) || false;
+  }
+
   list() {
     return [...this.queues.values()];
   }

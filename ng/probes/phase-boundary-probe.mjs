@@ -23,4 +23,8 @@ const result = service.sleep();
 assert.equal(result.clock.day, 2);
 assert.equal(result.clock.minutes, 480);
 assert.equal(state.duty, "on-duty");
+clock.restore({ day: 1, minutes: 500 });
+state.duty = "on-duty";
+time.consume(460, { source: "probe" });
+assert.equal(state.duty, "off-duty");
 console.log("phase-boundary probe: ok");

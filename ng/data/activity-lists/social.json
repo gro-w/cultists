@@ -1,0 +1,5 @@
+{
+  "id": "social",
+  "displayName": "社交活动",
+  "activityIds": ["social01b_ajie_honor_of_kings", "social01b_awei_headphones", "social02a_ajie_chat", "social02a_awei_chat", "social02b_dorm_invite", "social03b_ajie_24_personality_high", "social03b_ajie_24_personality_low", "social03b_awei_tail_high", "social03b_awei_tail_low", "social04a_ajie_chat", "social04a_awei_chat", "social04b_dorm_invite", "social05b_ajie_goods_high", "social05b_ajie_goods_low", "social05b_awei_record_high", "social05b_awei_record_low", "social06a_ajie_chat", "social06a_awei_chat"]
+}

@@ -37,10 +37,23 @@ export class ActivityQueue {
     return this.entries.find((entry) => entry.instanceId === instanceId) || null;
   }
 
+  /** Read-only list for blueprint/debugger APIs. */
+  list({ status = null, activityId = null } = {}) {
+    return this.entries.filter((entry) =>
+      (!status || entry.status === status) && (!activityId || entry.activityId === activityId));
+  }
+
   update(instanceId, patch = {}) {
     const entry = this.get(instanceId);
     if (!entry) return false;
     Object.assign(entry, patch);
+    return true;
+  }
+
+  remove(instanceId) {
+    const index = this.entries.findIndex((entry) => entry.instanceId === instanceId);
+    if (index < 0) return false;
+    this.entries.splice(index, 1);
     return true;
   }
 
@@ -86,7 +99,11 @@ export class ActivityQueue {
         throw new Error("Invalid or duplicate activity instance ID");
       }
       seen.add(entry.instanceId);
-      return cloneActivityInstance(entry);
+      const restored = cloneActivityInstance(entry);
+      if (!restored.currentStep && restored.currentNodeId) {
+        restored.currentStep = { nodeId: restored.currentNodeId, status: restored.waitingNodeId ? "waiting" : "pending" };
+      }
+      return restored;
     });
     this._sequence = new Map();
     this.entries.forEach((entry) => {

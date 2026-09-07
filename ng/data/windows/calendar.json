@@ -1,0 +1,29 @@
+{
+  "id": "calendar",
+  "title": "日历",
+  "icon": "📅",
+  "width": 460,
+  "height": 500,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "day": {"id":"day","type":"getVariable","inputs":{"key":"gameState:day"}},
+      "summary": {"id":"summary","type":"arithmetic","inputs":{"operator":"concat","left":"当前第 ","right":{"nodeId":"day","port":"value"}}}
+    }
+  },
+  "root": {
+    "widgetId": "calendar-root",
+    "className": "app-calendar",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 6,
+    "padding": 8,
+    "children": [
+      {"widgetId":"calendar-summary","type":"label","className":"calendar-summary panel-inset","text":{"nodeId":"summary","port":"value"}},
+      {"widgetId":"calendar-legend","type":"label","className":"calendar-legend","text":"绿色：休息日　蓝色：工作日　黄色：今天　灰色：未解锁"},
+      {"widgetId":"calendar-grid","type":"list","className":"calendar-grid","items":{"variable":"calendar:days"},"itemLabelField":"label","itemClassName":"calendar-day"},
+      {"widgetId":"calendar-note","type":"label","className":"calendar-locked-notice","text":"第 8–31 天未解锁，敬请期待完整版发布"}
+    ]
+  }
+}

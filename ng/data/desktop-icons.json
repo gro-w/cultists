@@ -10,7 +10,8 @@
     "blueprintId": "desktop.open-window",
     "inputs": {
       "windowId": "his"
-    }
+    },
+    "startMenu": true
   },
   {
     "iconId": "chatgtp",
@@ -23,7 +24,8 @@
     "blueprintId": "desktop.open-window",
     "inputs": {
       "windowId": "chatgtp"
-    }
+    },
+    "startMenu": true
   },
   {
     "iconId": "notebook",
@@ -36,7 +38,8 @@
     "blueprintId": "desktop.open-window",
     "inputs": {
       "windowId": "notebook"
-    }
+    },
+    "startMenu": true
   },
   {
     "iconId": "save-load",
@@ -49,32 +52,91 @@
     "blueprintId": "desktop.open-window",
     "inputs": {
       "windowId": "save-load"
-    }
+    },
+    "startMenu": true
   },
   {
-    "iconId": "off-duty",
-    "label": "下班",
-    "glyph": "🌙",
+    "iconId": "status",
+    "label": "状态与属性",
+    "glyph": "📊",
     "order": 4,
     "position": {
       "mode": "grid"
     },
-    "blueprintId": "desktop.run-activity",
+    "blueprintId": "desktop.open-window",
     "inputs": {
-      "activityId": "off-duty-open"
-    }
+      "windowId": "status"
+    },
+    "startMenu": true
   },
   {
-    "iconId": "dev-mode-launcher-icon",
-    "label": "开发人员模式",
-    "glyph": "🛠",
+    "iconId": "achievements",
+    "label": "成就",
+    "glyph": "🏆",
     "order": 5,
     "position": {
       "mode": "grid"
     },
     "blueprintId": "desktop.open-window",
     "inputs": {
-      "windowId": "dev-mode-launcher"
-    }
+      "windowId": "achievements"
+    },
+    "startMenu": true
+  },
+  {
+    "iconId": "calendar",
+    "label": "日历",
+    "glyph": "📅",
+    "order": 6,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "calendar"
+    },
+    "startMenu": true
+  },
+  {
+    "iconId": "settings",
+    "label": "设置",
+    "glyph": "⚙️",
+    "order": 7,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "settings"
+    },
+    "startMenu": true
+  },
+  {
+    "iconId": "locations",
+    "label": "去往位置",
+    "glyph": "🗺️",
+    "order": 8,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "locations"
+    },
+    "startMenu": true
+  },
+  {
+    "iconId": "off-duty",
+    "label": "下班",
+    "glyph": "🌙",
+    "order": 9,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.run-activity",
+    "inputs": {
+      "activityId": "off-duty-open"
+    },
+    "startMenu": true
   }
 ]

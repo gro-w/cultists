@@ -1,6 +1,7 @@
 // DEV-TOOLS:START
+import { writeDataFile } from "./devApi.js";
 /**
- * DatabaseDebuggerView - runtime debugger for the live `DataStore` (plan
+ * DatabaseEditorView - persistent editor for canonical JSON-backed records. It
  * §9.3 "不能在 UI 中直接改数据库绕过 API"). Lists every registered
  * database, browses its records as a table, and supports creating,
  * editing and deleting records - but exclusively through
@@ -8,9 +9,11 @@
  * into its internal Map, so validation and clone-on-write semantics are
  * never bypassed even from developer tools.
  */
-export class DatabaseDebuggerView {
-  constructor({ dataStore } = {}) {
+export class DatabaseEditorView {
+  constructor({ dataStore, dataStructureManager, dataLoader } = {}) {
     this.dataStore = dataStore;
+    this.dataStructureManager = dataStructureManager;
+    this.dataLoader = dataLoader;
     this.selectedDatabaseId = null;
     this._buildDom();
     this.render();
@@ -23,6 +26,7 @@ export class DatabaseDebuggerView {
       <div class="ng-list-manager-lists">
         <div class="ng-list-manager-toolbar">
           <button type="button" data-action="refresh">刷新</button>
+          <button type="button" data-action="save-database">保存数据库 JSON</button>
         </div>
         <div class="ng-list-manager-list-items"></div>
       </div>
@@ -39,6 +43,7 @@ export class DatabaseDebuggerView {
     this.recordsEl = el.querySelector(".ng-database-debugger-records");
     this.statusEl = el.querySelector(".ng-editor-status");
     el.querySelector('[data-action="refresh"]').addEventListener("click", () => this.render());
+    el.querySelector('[data-action="save-database"]').addEventListener("click", () => this._saveDatabase());
     el.querySelector('[data-action="new-record"]').addEventListener("click", () => {
       if (!this.selectedDatabaseId) return;
       try {
@@ -48,6 +53,22 @@ export class DatabaseDebuggerView {
         this.statusEl.textContent = `创建失败: ${err.message}`;
       }
     });
+  }
+
+  async _saveDatabase() {
+    if (!this.selectedDatabaseId) return;
+    try {
+      const db = this.dataStore.listDatabases().find((entry) => entry.databaseId === this.selectedDatabaseId);
+      const fileName = db?.recordFile || "seed-records.json";
+      const source = await this.dataLoader.loadJSON(fileName, { cache: false });
+      const merged = { ...(source || {}) };
+      merged[this.selectedDatabaseId] = this.dataStore.findRecords(this.selectedDatabaseId, {});
+      await writeDataFile(fileName, JSON.stringify(merged, null, 2));
+      await writeDataFile("databases.json", JSON.stringify(this.dataStore.listDatabases().map(({ recordCount, ...definition }) => definition), null, 2));
+      this.statusEl.textContent = `已写入 ${fileName} 和 databases.json`;
+    } catch (error) {
+      this.statusEl.textContent = `写入失败: ${error.message}`;
+    }
   }
 
   render() {
@@ -71,20 +92,59 @@ export class DatabaseDebuggerView {
       return;
     }
     const records = this.dataStore.findRecords(this.selectedDatabaseId, {});
+    const db = this.dataStore.listDatabases().find((entry) => entry.databaseId === this.selectedDatabaseId);
+    const structure = this.dataStructureManager?.get(db?.recordType);
     for (const record of records) {
       const row = document.createElement("div");
       row.className = "ng-window-editor-structure-row";
 
-      const textarea = document.createElement("textarea");
-      textarea.value = JSON.stringify(record, null, 2);
-      textarea.rows = 3;
+      const fields = document.createElement("div");
+      fields.className = "ng-database-record-fields";
+      const controls = new Map();
+      for (const field of structure?.fields || Object.keys(record).map((id) => ({ id, type: "string" }))) {
+        const label = document.createElement("label");
+        label.className = "ng-window-editor-field";
+        const caption = document.createElement("span");
+        caption.textContent = `${field.id} (${field.type})`;
+        let control;
+        const value = record[field.id];
+        if (field.type === "bool") {
+          control = document.createElement("input");
+          control.type = "checkbox";
+          control.checked = Boolean(value);
+        } else if (["integer", "smallInteger", "real"].includes(field.type)) {
+          control = document.createElement("input");
+          control.type = "number";
+          control.step = field.type === "real" ? "any" : "1";
+          control.value = value ?? "";
+        } else if (field.type === "array" || field.type.startsWith("array<") || field.type === "object") {
+          control = document.createElement("textarea");
+          control.rows = 2;
+          control.value = JSON.stringify(value ?? (field.type === "object" ? {} : []), null, 2);
+        } else {
+          control = document.createElement("input");
+          control.type = "text";
+          control.value = value ?? "";
+        }
+        control.dataset.fieldId = field.id;
+        controls.set(field.id, { control, field });
+        label.append(caption, control);
+        fields.appendChild(label);
+      }
 
       const saveButton = document.createElement("button");
       saveButton.type = "button";
       saveButton.textContent = "保存修改";
       saveButton.addEventListener("click", () => {
         try {
-          const patch = JSON.parse(textarea.value);
+          const patch = {};
+          for (const [fieldId, { control, field }] of controls) {
+            if (field.type === "bool") patch[fieldId] = control.checked;
+            else if (["integer", "smallInteger"].includes(field.type)) patch[fieldId] = Number(control.value);
+            else if (field.type === "real") patch[fieldId] = Number(control.value);
+            else if (field.type === "array" || field.type.startsWith("array<") || field.type === "object") patch[fieldId] = JSON.parse(control.value || (field.type === "object" ? "{}" : "[]"));
+            else patch[fieldId] = control.value;
+          }
           this.dataStore.updateRecord(this.selectedDatabaseId, this._primaryKeyOf(record), patch);
           this.statusEl.textContent = "已更新";
           this.render();
@@ -105,7 +165,7 @@ export class DatabaseDebuggerView {
         }
       });
 
-      row.append(textarea, saveButton, deleteButton);
+      row.append(fields, saveButton, deleteButton);
       this.recordsEl.appendChild(row);
     }
   }
@@ -116,5 +176,5 @@ export class DatabaseDebuggerView {
   }
 }
 
-export default DatabaseDebuggerView;
+export default DatabaseEditorView;
 // DEV-TOOLS:END

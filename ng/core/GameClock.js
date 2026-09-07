@@ -13,10 +13,10 @@ export const GAME_CLOCK_EVENTS = Object.freeze({ changed: "gameClock:changed" })
 const MINUTES_PER_DAY = 1440;
 
 export class GameClock {
-  constructor(eventBus) {
+  constructor(eventBus, initial = {}) {
     this.eventBus = eventBus;
-    this.day = 1;
-    this.minutes = 0;
+    this.day = Math.max(1, Math.floor(Number(initial.day) || 1));
+    this.minutes = ((Math.floor(Number(initial.minutes) || 0) % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
   }
 
   /** Advance the clock by `minutesToAdd` in-game minutes (rolling over into new days); negative/NaN input is a no-op. */

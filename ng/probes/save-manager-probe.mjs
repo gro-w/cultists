@@ -14,6 +14,7 @@ import { KeywordManager } from "../core/KeywordManager.js";
 import { OnboardingManager } from "../core/OnboardingManager.js";
 import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 import { SaveManager } from "../core/SaveManager.js";
+import { GameState } from "../core/GameState.js";
 
 // A branch/blockUntil Activity that consumes time once, then waits forever
 // for an "approved" variable - used to exercise "等待中的 Activity...一致"
@@ -39,6 +40,7 @@ const waitingDefinition = {
 function makeSession() {
   const eventBus = new EventBus();
   const gameClock = new GameClock(eventBus);
+  const gameState = new GameState();
   const variableStore = new VariableStore(eventBus);
   const publicVariableManager = new PublicVariableManager(null, eventBus);
   publicVariableManager.loadDefinitions([
@@ -97,6 +99,7 @@ function makeSession() {
 
   const saveManager = new SaveManager({
     gameClock,
+    gameState,
     variableStore,
     publicVariableManager,
     dataStore,
@@ -110,7 +113,7 @@ function makeSession() {
   });
 
   return {
-    eventBus, gameClock, variableStore, publicVariableManager, dataStructureManager, dataStore,
+    eventBus, gameClock, gameState, variableStore, publicVariableManager, dataStructureManager, dataStore,
     activityDefinitionStore, activityQueueRegistry, activityExecutionService, windowManager,
     desktopIconManager, keywordManager, onboardingManager, saveManager, runActivity,
   };
@@ -121,6 +124,9 @@ function makeSession() {
   const session = makeSession();
   session.gameClock.advance(90); // Day 1 01:30
   session.publicVariableManager.set(1, 42);
+  session.variableStore.set("calendar:days", [{ id: 1, label: "第 1 天" }]);
+  session.variableStore.set("achievements:items", [{ id: "study_first", name: "题之意志" }]);
+  session.variableStore.set("query:records", [{ id: "patient-1", name: "游戏数据" }]);
   session.dataStore.createRecord("notes", { id: "n1", text: "hello" });
   session.windowManager.open({ id: "inventory", title: "Inventory", width: 300, height: 200 });
   session.desktopIconManager.register({ iconId: "icon-a", blueprintId: "desktop.open-window", inputs: { windowId: "inventory" } });
@@ -134,8 +140,12 @@ function makeSession() {
 
   const saved = session.saveManager.snapshot();
   assert.equal(saved.format, "cultists-ng-save");
-  assert.equal(saved.version, 4);
+  assert.equal(saved.version, 6);
   assert.equal(saved.createdAtGameTime, 110);
+  assert.equal(Object.hasOwn(saved.state, "databases"), false, "game data must not be embedded in saves");
+  assert.equal(Object.hasOwn(saved.state.variables, "calendar:days"), false, "derived calendar UI data must not be saved");
+  assert.equal(Object.hasOwn(saved.state.variables, "achievements:items"), false, "derived achievement UI data must not be saved");
+  assert.equal(Object.hasOwn(saved.state.variables, "query:records"), false, "database result arrays must not be saved");
 
   // Fresh "reloaded" session, as if the page refreshed.
   const restoredSession = makeSession();
@@ -145,7 +155,7 @@ function makeSession() {
 
   assert.deepEqual(restoredSession.gameClock.snapshot(), { day: 1, minutes: 110 });
   assert.equal(restoredSession.publicVariableManager.get(1), 42);
-  assert.deepEqual(restoredSession.dataStore.getRecord("notes", "n1"), { id: "n1", text: "hello" });
+  assert.equal(restoredSession.dataStore.getRecord("notes", "n1"), null, "runtime database records must not be restored from saves");
   const restoredWindow = restoredSession.windowManager.getByWindowId("inventory");
   assert.ok(restoredWindow, "window instance must survive restore");
   assert.equal(restoredWindow.width, 300);

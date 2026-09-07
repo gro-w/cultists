@@ -10,8 +10,9 @@ import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
  * shared eventBus reports any ACTIVITY_EVENTS change.
  */
 export class ActivityDebuggerView {
-  constructor({ activityQueueRegistry, eventBus }) {
+  constructor({ activityQueueRegistry, activityDefinitionStore, eventBus }) {
     this.activityQueueRegistry = activityQueueRegistry;
+    this.activityDefinitionStore = activityDefinitionStore;
     this.eventBus = eventBus;
     this._unsubscribers = [];
     this._buildDom();
@@ -72,7 +73,9 @@ export class ActivityDebuggerView {
           <th>activityId</th>
           <th>status</th>
           <th>currentNodeId</th>
+          <th>currentStep</th>
           <th>waitingNodeId</th>
+          <th>executed</th>
           <th>resolutionReason</th>
         </tr>
       </thead>
@@ -81,14 +84,23 @@ export class ActivityDebuggerView {
     const tbody = table.querySelector("tbody");
     for (const entry of queue.entries) {
       const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${entry.instanceId}</td>
-        <td>${entry.activityId}</td>
-        <td>${entry.status}</td>
-        <td>${entry.currentNodeId ?? ""}</td>
-        <td>${entry.waitingNodeId ?? ""}</td>
-        <td>${entry.resolutionReason ?? ""}</td>
-      `;
+      const definition = this.activityDefinitionStore?.get(entry.activityId);
+      const node = definition?.blueprint?.nodes?.[entry.currentNodeId];
+      const values = [
+        entry.instanceId,
+        entry.activityId,
+        entry.status,
+        entry.currentNodeId ?? "",
+        `${entry.currentStep?.status || ""}${node ? ` · ${node.type}` : ""}`,
+        entry.waitingNodeId ?? "",
+        String(entry.executedNodeIds?.length || 0),
+        entry.resolutionReason ?? "",
+      ];
+      values.forEach((value) => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
       tbody.appendChild(row);
     }
     section.appendChild(table);

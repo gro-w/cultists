@@ -20,8 +20,9 @@ export class DesktopShell {
    *   properties be sourced from blueprint value-output wiring instead of only fixed literals
    * @param {import('../core/PublicVariableManager.js').PublicVariableManager} [pvGateway] - resolves
    *   public-variable value nodes used by widget/window bindings
+   * @param {object} [runtimeGateway] generic runtime collections exposed to value blueprints
    */
-  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, pvGateway) {
+  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, pvGateway, dbGateway, runtimeGateway) {
     this.windowManager = windowManager;
     this.windowDefinitionStore = windowDefinitionStore;
     this.eventBus = eventBus;
@@ -29,6 +30,9 @@ export class DesktopShell {
     this.gameClock = gameClock || null;
     this.variableStore = variableStore || null;
     this.pvGateway = pvGateway || null;
+    this.dbGateway = dbGateway || null;
+    this.runtimeGateway = runtimeGateway || null;
+    this.dialogueViews = {};
     this.conditionContext = {};
     // Set post-construction by engine.js (mirrors `shell.runActivity`), so
     // component interaction events (plan §4.2 onClick/onChange/...) reach
@@ -120,6 +124,9 @@ export class DesktopShell {
     const rendererCtx = {
       variableStore: this.variableStore,
       pvGateway: this.pvGateway,
+      dbGateway: this.dbGateway,
+      runtimeGateway: this.runtimeGateway,
+      dialogueViews: this.dialogueViews,
       valueGraph: definition?.valueGraph,
       conditionContext: this.conditionContext,
       onEvent: (node, eventName, value) => this.runWidgetEvent?.(state.windowId, node.widgetId, eventName, value),

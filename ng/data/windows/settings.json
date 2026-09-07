@@ -1,0 +1,31 @@
+{
+  "id": "settings",
+  "title": "设置",
+  "icon": "⚙️",
+  "width": 360,
+  "height": 300,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "settings-root",
+    "className": "app-settings",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 10,
+    "padding": 10,
+    "children": [
+      {"widgetId":"settings-title","type":"label","className":"settings-heading","text":"游戏设置"},
+      {"widgetId":"settings-language-label","type":"label","className":"settings-label","text":"语言"},
+      {"widgetId":"settings-language","type":"select","className":"settings-control","options":[{"value":"zh-hans","label":"简体中文"}],"value":{"variable":"settings:language"},"events":{"onChange":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"settings:language","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"settings-autosave","type":"checkbox","className":"settings-checkbox","value":{"variable":"settings:autoSave"},"events":{"onChange":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"settings:autoSave","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"settings-autosave-label","type":"label","className":"settings-label","text":"启用自动存档"},
+      {"widgetId":"settings-volume-label","type":"label","className":"settings-label","text":"BGM 音量（0–100）"},
+      {"widgetId":"settings-volume","type":"range","className":"settings-volume-slider","min":0,"max":100,"step":1,"value":{"variable":"settings:bgmVolume"},"events":{"onChange":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"settings:bgmVolume","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"settings-sort-label","type":"label","className":"settings-label","text":"笔记本排序"},
+      {"widgetId":"settings-sort","type":"select","className":"settings-control","options":[{"value":"category","label":"按类别"},{"value":"day","label":"按收集时间"},{"value":"pinyin","label":"按拼音首字母"}],"value":{"variable":"settings:notebookSortMode"},"events":{"onChange":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"settings:notebookSortMode","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"settings-confirm-label","type":"label","className":"settings-label","text":"下班/睡觉前需要二次确认"},
+      {"widgetId":"settings-confirm","type":"checkbox","className":"settings-checkbox","value":{"variable":"settings:confirmPhaseChange"},"events":{"onChange":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"settings:confirmPhaseChange","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"settings-note","type":"label","text":"设置通过通用变量存储，并由 NG 存档系统保存"}
+    ]
+  }
+}

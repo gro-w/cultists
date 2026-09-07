@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: "Sarasa Fixed SC";
-  src: url("../data/assets/sarasa-fixed-sc-regular.ttf") format("truetype");
+  src: url("data/assets/sarasa-fixed-sc-regular.ttf") format("truetype");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -283,9 +283,7 @@ button {
   border-bottom: 1px solid var(--w95-white);
 }
 
-/* Shared widget renderer (ng/core/WidgetLayoutRenderer.js): consumed
-   verbatim by both the runtime WindowFrame body and the WYSIWYG editor
-   preview (plan §7.1), so these rules are NOT inside a DEV-TOOLS block. */
+/* Shared widget renderer: consumed verbatim by runtime and editor preview. */
 .ng-widget {
   min-width: 0;
 }
@@ -306,6 +304,211 @@ button {
 .ng-widget-list-item {
   font-size: 11px;
   padding: 1px 0;
+}
+
+/* -------------------------------------------------------------------------
+   Migrated legacy app surfaces
+   These classes intentionally mirror css/apps.css. They are attached by the
+   data-driven window documents, so runtime and editor preview share the same
+   semantic layout instead of relying on window-specific JavaScript.
+   ------------------------------------------------------------------------- */
+.panel-inset {
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+  background: var(--w95-white);
+  padding: 4px 6px;
+}
+
+.app-status,
+.app-achievements,
+.app-calendar,
+.app-settings,
+.app-locations {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.app-status,
+.app-achievements,
+.app-calendar {
+  overflow: hidden;
+}
+
+.status-heading,
+.achievements-title {
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.status-row {
+  flex-shrink: 0;
+  min-height: 22px;
+  padding: 4px 6px;
+  border-bottom: 1px solid #eee;
+  line-height: 1.35;
+}
+
+.status-note {
+  flex-shrink: 0;
+  color: var(--w95-gray-dark);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.ach-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+}
+
+.ach-card {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--w95-white);
+  border-left: 1px solid var(--w95-white);
+  border-right: 1px solid var(--w95-gray-darker);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  background: var(--w95-gray);
+  padding: 6px 8px;
+  line-height: 1.4;
+}
+
+.ach-card.ach-unlocked { background: #f0fff0; }
+.ach-card.ach-locked { opacity: 0.7; }
+
+.app-calendar .calendar-summary {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.app-calendar .calendar-legend {
+  flex-shrink: 0;
+  color: var(--w95-gray-dark);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.calendar-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.calendar-day {
+  min-height: 58px;
+  padding: 5px;
+  border: 1px solid var(--w95-gray-dark);
+  background: var(--w95-white);
+  box-sizing: border-box;
+  line-height: 1.35;
+}
+
+.calendar-day:nth-child(5) { background: #fff0f0; }
+.calendar-day:nth-child(7) { background: #eef3ff; }
+
+.calendar-locked-notice {
+  flex-shrink: 0;
+  padding: 4px 6px;
+  border: 1px solid #a0a0a0;
+  background: #e0e0e0;
+  color: #666;
+  font-size: 11px;
+  text-align: center;
+}
+
+.app-settings,
+.app-locations {
+  overflow-y: auto;
+}
+
+.app-settings .ng-widget-label,
+.app-locations .ng-widget-label {
+  line-height: 1.4;
+}
+
+.app-settings input[type="text"],
+.app-settings select,
+.app-locations button {
+  font: inherit;
+  font-size: 12px;
+  min-height: 22px;
+}
+
+.app-settings input[type="text"],
+.app-settings select {
+  width: 100%;
+  background: var(--w95-white);
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+  padding: 2px 4px;
+}
+
+.app-settings .settings-volume-slider {
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--w95-blue);
+}
+
+.app-settings .settings-checkbox {
+  display: inline-block;
+  width: 13px;
+  min-height: 13px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.app-settings .settings-checkbox input[type="checkbox"] {
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  background: var(--w95-white);
+  border-top: 1px solid var(--w95-gray-darker);
+  border-left: 1px solid var(--w95-gray-darker);
+  border-right: 1px solid var(--w95-white);
+  border-bottom: 1px solid var(--w95-white);
+}
+
+.app-settings .settings-checkbox input[type="checkbox"]:checked::after {
+  content: "✔";
+  display: block;
+  margin-top: -4px;
+  color: #000;
+  font-size: 12px;
+}
+
+.app-locations button {
+  width: 100%;
+  text-align: left;
+  background: var(--w95-gray);
+  border-top: 1px solid var(--w95-white);
+  border-left: 1px solid var(--w95-white);
+  border-right: 1px solid var(--w95-gray-darker);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  padding: 4px 8px;
+}
+
+.app-locations button:active {
+  border-top-color: var(--w95-gray-darker);
+  border-left-color: var(--w95-gray-darker);
+  border-right-color: var(--w95-white);
+  border-bottom-color: var(--w95-white);
 }
 
 .ng-panel h1 {
@@ -672,6 +875,14 @@ button {
   text-align: left;
   font-weight: bold;
   cursor: pointer;
+}
+
+.his-patient-btn:disabled,
+.his-patient-btn.his-patient-submitted {
+  color: #777;
+  font-weight: normal;
+  cursor: default;
+  opacity: 0.7;
 }
 
 .his-prescription-rows {
@@ -1247,6 +1458,13 @@ button {
   overflow: auto;
 }
 
+.ng-database-record-fields { display: grid; grid-template-columns: repeat(2, minmax(180px, 1fr)); gap: 5px 8px; width: 100%; }
+.ng-database-record-fields .ng-window-editor-field { display: flex; flex-direction: column; gap: 2px; font-size: 11px; }
+.ng-database-record-fields textarea { min-height: 42px; font-family: monospace; font-size: 10px; }
+.ng-start-menu-editor { display: flex; flex-direction: column; height: 100%; }
+.ng-start-menu-editor-list { overflow: auto; padding: 6px; }
+.ng-start-menu-editor-row { display: flex; gap: 8px; align-items: center; padding: 5px; border-bottom: 1px solid #d0d0d0; }
+
 /* Data-driven legacy dorm layout. All elements are widgets from off-duty.json. */
 .ng-off-duty-root { height: 100%; min-height: 0; background: #1a1530; color: #f4ecc9; }
 .ng-off-duty-header { flex-shrink: 0; padding: 6px; background: #211c38; border-bottom: 2px solid #51486d; }
@@ -1266,5 +1484,27 @@ button {
 .ng-off-duty-message { flex-shrink: 0; min-height: 26px; padding: 5px 12px; background: #231d3e; border-top: 1px solid #51486d; font-size: 12px; color: #fff0a8; }
 
 
+
+/* Custom notebook window: same tab/list/card language as the legacy app. */
+.ng-notebook-view { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+.ng-notebook-tabs { display: flex; gap: 0; border-bottom: 1px solid #808080; flex-shrink: 0; }
+.ng-notebook-tabs button { border: 2px outset #dfdfdf; border-bottom: 0; border-radius: 3px 3px 0 0; padding: 4px 12px; background: #c0c0c0; }
+.ng-notebook-tabs button.active { background: #fff; font-weight: 700; position: relative; z-index: 1; }
+.ng-notebook-list { flex: 1; overflow: auto; padding: 6px; }
+.ng-notebook-item { display: flex; align-items: center; gap: 6px; padding: 6px; border-bottom: 1px solid #d0d0d0; }
+.ng-notebook-content { flex: 1; font-weight: 700; }
+.ng-notebook-source, .ng-notebook-day { color: #777; font-size: 11px; }
+.ng-notebook-item button, .ng-notebook-spell button { border: 2px outset #dfdfdf; background: #c0c0c0; font-size: 11px; }
+.ng-notebook-spell { border: 1px solid #b0bec5; padding: 8px 10px; margin-bottom: 8px; background: #e8f5e9; display: flex; flex-direction: column; gap: 5px; }
+.ng-notebook-spell > span { color: #777; font-size: 11px; }
+.ng-notebook-spell p { margin: 0; color: #444; font-size: 12px; line-height: 1.5; }
+.ng-notebook-spell-footer { display: flex; align-items: center; gap: 8px; color: #777; font-size: 11px; }
+
+.ng-save-debugger-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 6px; overflow: auto; max-height: 460px; }
+.ng-save-debugger-section { min-width: 0; margin: 0; padding: 6px; }
+.ng-save-debugger-section legend { font-weight: 700; }
+.ng-save-debugger-field { display: flex; align-items: center; gap: 6px; min-height: 26px; font-size: 12px; }
+.ng-save-debugger-field > input, .ng-save-debugger-field > textarea { flex: 1; min-width: 0; box-sizing: border-box; }
+.ng-save-debugger-field > textarea { min-height: 48px; font-family: monospace; }
 
 /* DEV-TOOLS:END */

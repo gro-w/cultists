@@ -107,7 +107,15 @@
     },
     {
       "id": "achievement-manager",
-      "file": "achievement-manager.json"
+      "file": "achievement-manager.framework.json"
+    },
+    {
+      "id": "inventory-manager",
+      "file": "inventory-manager.framework.json"
+    },
+    {
+      "id": "keyword-manager",
+      "file": "keyword-manager.framework.json"
     },
     {
       "id": "patient-queue-manager",

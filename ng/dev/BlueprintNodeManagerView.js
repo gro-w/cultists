@@ -128,7 +128,7 @@ export class BlueprintNodeManagerView {
     this.detailEl.querySelector('[data-action="open"]').addEventListener("click", () => this.openEditor(node));
     this.detailEl.querySelector('[data-action="download"]').addEventListener("click", () => downloadTextFile(`blueprint-node-${node.id}.json`, `${JSON.stringify(node, null, 2)}\n`));
     this.detailEl.querySelector('[data-action="write-disk"]').addEventListener("click", async () => {
-      try { await writeDataFile("blueprint-nodes.json", `${JSON.stringify(this.nodes, null, 2)}\n`); } catch (error) { alert(`写入失败: ${error.message}`); }
+      try { await writeDataFile("blueprint-nodes.framework.json", `${JSON.stringify(this.nodes, null, 2)}\n`); } catch (error) { alert(`写入失败: ${error.message}`); }
     });
   }
 }

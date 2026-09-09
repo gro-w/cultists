@@ -1165,7 +1165,7 @@ input[type="range"] {
 }
 
 /* -------------------------------------------------------------------------
-   Tutorial overlay (ng/desktop/TutorialOverlay.js) - copied verbatim from
+   Tutorial overlay (core/desktopTutorialOverlay.js) - copied verbatim from
    ../css/tutorial.css so a data-driven onboarding hint looks the same as
    the legacy engine's hardcoded ones.
    ------------------------------------------------------------------------- */

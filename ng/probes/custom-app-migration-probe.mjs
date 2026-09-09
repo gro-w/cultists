@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import PhaseBoundaryService from "../core/PhaseBoundaryService.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../data");
-const engine = JSON.parse(fs.readFileSync(path.join(root, "engine.json"), "utf8"));
+const engine = JSON.parse(fs.readFileSync(path.join(root, "game-manifest.json"), "utf8"));
 const icons = JSON.parse(fs.readFileSync(path.join(root, "desktop-icons.json"), "utf8"));
 const migrated = [
   ["status", "状态与属性", "📊"],

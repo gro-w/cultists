@@ -2,13 +2,12 @@ import assert from "node:assert/strict";
 import EventBus from "../core/EventBus.js";
 import GameClock from "../core/GameClock.js";
 import TimeService from "../core/TimeService.js";
-import GameState from "../content/cultists/GameState.js";
 import PhaseBoundaryService from "../core/PhaseBoundaryService.js";
 
 const bus = new EventBus();
 const clock = new GameClock(bus);
 const time = new TimeService(clock, bus);
-const state = new GameState();
+const state = { day: 1, phase: "day", duty: "on-duty", location: "work", energy: 100, mental: 100, physical: 100, satiety: 100 };
 const service = new PhaseBoundaryService({ gameClock: clock, timeService: time, state, eventBus: bus, rules: { workStart: 480, workEnd: 960, wakeTime: 480 } });
 service.sync();
 assert.equal(state.day, 1);

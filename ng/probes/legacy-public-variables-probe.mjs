@@ -1,6 +1,6 @@
 // Phase 8 slice: legacy `data/zh-hans/global_variables.json` (111 entries,
 // system-reserved ids 0..99 per AGENTS.md) migrated verbatim (same ids,
-// same defaults) into ng/data/public-variables.json, typed onto
+// same defaults) into ng/data/public-variables.framework.json, typed onto
 // PublicVariableManager's existing bool/smallInteger/real types (no new
 // engine concepts). This probe proves the migrated file loads cleanly and
 // preserves the reserved-id semantics documented in AGENTS.md, plus that
@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { PublicVariableManager } from "../core/PublicVariableManager.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const definitions = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/public-variables.json"), "utf8"));
+const definitions = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/public-variables.framework.json"), "utf8"));
 
 // --- file loads and registers with no id collisions -------------------------
 {

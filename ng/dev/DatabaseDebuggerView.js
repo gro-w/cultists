@@ -64,8 +64,8 @@ export class DatabaseEditorView {
       const merged = { ...(source || {}) };
       merged[this.selectedDatabaseId] = this.dataStore.findRecords(this.selectedDatabaseId, {});
       await writeDataFile(fileName, JSON.stringify(merged, null, 2));
-      await writeDataFile("databases.json", JSON.stringify(this.dataStore.listDatabases().map(({ recordCount, ...definition }) => definition), null, 2));
-      this.statusEl.textContent = `已写入 ${fileName} 和 databases.json`;
+      await writeDataFile("databases.framework.json", JSON.stringify(this.dataStore.listDatabases().map(({ recordCount, ...definition }) => definition), null, 2));
+      this.statusEl.textContent = `已写入 ${fileName} 和 databases.framework.json`;
     } catch (error) {
       this.statusEl.textContent = `写入失败: ${error.message}`;
     }

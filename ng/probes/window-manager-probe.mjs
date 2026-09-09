@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import EventBus from "../core/EventBus.js";
 import { WindowManager } from "../core/WindowManager.js";
-import { PointerInteraction } from "../desktop/PointerInteraction.js";
+import { PointerInteraction } from "../core/desktopPointerInteraction.js";
 
 /** Minimal fake `window`-like target so PointerInteraction can be probed headlessly. */
 class FakeTarget {

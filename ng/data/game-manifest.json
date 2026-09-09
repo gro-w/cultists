@@ -1,7 +1,7 @@
 {
   "name": "cultists-ng",
   "version": "0.1.0-ng-content",
-  "contentPackage": "cultists.js",
+  "frameworkRuntime": "framework-runtime.framework.json",
   "contentRoot": "data/",
   "nativeContent": ["media.json", "calendar-rules.json", "item-placements.json", "social-apps.json", "turtle-soup-puzzles.json", "app-definitions.json"],
   "windowManifest": [
@@ -17,7 +17,7 @@
     "dialogue.json"
   ],
   "desktopIcons": "desktop-icons.json",
-  "blueprintNodes": "blueprint-nodes.json",
+  "blueprintNodes": "blueprint-nodes.framework.json",
   "activityLists": [
     "default.json",
     "system.json",
@@ -39,9 +39,9 @@
     { "id": "widget-events", "nonBlocking": true },
     { "id": "desktop-icons", "nonBlocking": true }
   ],
-  "structures": "structures.json",
-  "databases": "databases.json",
-  "publicVariables": "public-variables.json",
+  "structures": "structures.framework.json",
+  "databases": "databases.framework.json",
+  "publicVariables": "public-variables.framework.json",
   "seedRecords": [
     "seed-records.json",
     "seed-records-items.json"

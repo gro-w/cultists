@@ -1,5 +1,5 @@
 // DEV-TOOLS:START
-import { PointerInteraction } from "../desktop/PointerInteraction.js";
+import { PointerInteraction } from "../core/desktopPointerInteraction.js";
 import { listActivityNodeTypes, getActivityNodeDefinition, listActivityNodePorts, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
 import { createActivityEditorModel } from "./ActivityEditorModel.js";
 import { downloadTextFile, writeDataFile } from "./devApi.js";

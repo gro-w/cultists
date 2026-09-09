@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { ActivityScheduler } from "../tools/legacy-ActivityScheduler.mjs";
+import { ActivityScheduler } from "../scripts/legacy-ActivityScheduler.mjs";
 import { ActivityDefinitionStore } from "../core/ActivityDefinitionStore.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 

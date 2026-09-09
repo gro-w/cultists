@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import ItemManager from "../content/cultists/ItemManager.js";
-import SpellManager from "../content/cultists/SpellManager.js";
+import ItemManager from "../../tools/ng-legacy-content/ItemManager.js";
+import SpellManager from "../../tools/ng-legacy-content/SpellManager.js";
 
 const records = JSON.parse(fs.readFileSync(new URL("../data/seed-records-items.json", import.meta.url), "utf8")).inventoryItems;
 const itemManager = new ItemManager();

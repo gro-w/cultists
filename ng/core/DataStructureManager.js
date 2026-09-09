@@ -81,12 +81,12 @@ export class DataStructureManager {
     return this.structures.delete(id);
   }
 
-  /** Loads an array of structure definitions (e.g. fetched from data/structures.json) - plan §9.2's "结构 schema" is authored as game data, not engine code. */
+  /** Loads an array of structure definitions (e.g. fetched from data/structures.framework.json) - plan §9.2's "结构 schema" is authored as game data, not engine code. */
   loadDefinitions(definitions = []) {
     definitions.forEach((definition) => this.register(definition));
   }
 
-  /** Plain-array snapshot for save/persist (mirrors `data/structures.json`'s top-level array shape). */
+  /** Plain-array snapshot for save/persist (mirrors `data/structures.framework.json`'s top-level array shape). */
   toJSON() {
     return this.list();
   }

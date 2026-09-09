@@ -1,5 +1,5 @@
 import EventBus from "../core/EventBus.js";
-import MedicalCaseManager from "../content/cultists/MedicalCaseManager.js";
+import MedicalCaseManager from "../../tools/ng-legacy-content/MedicalCaseManager.js";
 
 const records = {
   patients: [{ id: "p1", correctDiagnosisId: "d1", diagnosisOptionIds: ["d1", "d2"] }],

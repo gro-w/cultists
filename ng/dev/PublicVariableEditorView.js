@@ -4,7 +4,7 @@ import { writeDataFile } from "./devApi.js";
 const VARIABLE_TYPES = ["bool", "smallInteger", "integer", "real", "string", "object"];
 
 /**
- * PublicVariableEditorView - visual editor for `data/public-variables.json`
+ * PublicVariableEditorView - visual editor for `data/public-variables.framework.json`
  * (plan §10.2 "公共变量 schema"). Lets a developer create/edit/remove
  * public-variable definitions (id/name/type/min/max/persistent/readOnly/
  * objectTarget/description) without hand editing JSON, mirroring
@@ -65,7 +65,7 @@ export class PublicVariableEditorView {
     });
     el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
-        await writeDataFile("public-variables.json", JSON.stringify(this.publicVariableManager.toJSON(), null, 2));
+        await writeDataFile("public-variables.framework.json", JSON.stringify(this.publicVariableManager.toJSON(), null, 2));
         this.statusEl.textContent = "已写入磁盘";
       } catch (err) {
         this.statusEl.textContent = `写入失败: ${err.message}`;

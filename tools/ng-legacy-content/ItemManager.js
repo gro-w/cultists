@@ -1,4 +1,4 @@
-import RuntimeRecordStore from "../../core/RuntimeRecordStore.js";
+import RuntimeRecordStore from "../../ng/core/RuntimeRecordStore.js";
 
 export class ItemManager extends RuntimeRecordStore {
   constructor(options = {}) {

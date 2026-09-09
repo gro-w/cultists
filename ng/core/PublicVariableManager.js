@@ -109,7 +109,7 @@ export class PublicVariableManager {
     return [...this.definitions.values()];
   }
 
-  /** Plain-array snapshot of every *definition* (not values) - mirrors a `data/public-variables.json` top-level array shape. */
+  /** Plain-array snapshot of every *definition* (not values) - mirrors a `data/public-variables.framework.json` top-level array shape. */
   toJSON() {
     return this.list();
   }

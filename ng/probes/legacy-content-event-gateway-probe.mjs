@@ -1,9 +1,9 @@
 import { eventBus } from "../core/EventBus.js";
-import { ItemManager } from "../content/cultists/ItemManager.js";
-import { SpellManager } from "../content/cultists/SpellManager.js";
+import { ItemManager } from "../../tools/ng-legacy-content/ItemManager.js";
+import { SpellManager } from "../../tools/ng-legacy-content/SpellManager.js";
 import { MediaStateManager } from "../core/MediaStateManager.js";
 import { SelectionSubmissionManager } from "../core/SelectionSubmissionManager.js";
-import { LegacyContentEventGateway } from "../content/cultists/LegacyContentEventGateway.js";
+import { LegacyContentEventGateway } from "../../tools/ng-legacy-content/LegacyContentEventGateway.js";
 
 const itemManager = new ItemManager({ eventBus });
 const spellManager = new SpellManager({ eventBus });

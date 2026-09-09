@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { convertBlueprint } from "../tools/migrate-legacy-blueprint.mjs";
+import { convertBlueprint } from "../scripts/migrate-legacy-blueprint.mjs";
 import { validateBlueprint } from "../core/ActivityValidator.js";
 import { createActivityRunner } from "../core/ActivityRunner.js";
 import EventBus from "../core/EventBus.js";

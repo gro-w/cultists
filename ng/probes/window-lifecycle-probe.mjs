@@ -58,12 +58,12 @@ function buildDataGateways() {
   const dataDir = path.join(__dirname, "../data");
   const readJSON = (relPath) => JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
   const dataStructureManager = new DataStructureManager();
-  dataStructureManager.loadDefinitions(readJSON("structures.json"));
+  dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
   const dbGateway = new DataStore(dataStructureManager);
-  dbGateway.loadDefinitions(readJSON("databases.json"));
+  dbGateway.loadDefinitions(readJSON("databases.framework.json"));
   dbGateway.loadRecordSet(readJSON("seed-records.json"));
   const pvGateway = new PublicVariableManager(new RuntimeRefResolver(), new EventBus());
-  pvGateway.loadDefinitions(readJSON("public-variables.json"));
+  pvGateway.loadDefinitions(readJSON("public-variables.framework.json"));
   return { dbGateway, pvGateway };
 }
 

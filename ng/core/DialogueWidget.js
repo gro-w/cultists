@@ -1,4 +1,4 @@
-import { DisplayReceiverRegistry } from "../../core/DisplayReceiverRegistry.js";
+import { DisplayReceiverRegistry } from "./DisplayReceiverRegistry.js";
 
 /**
  * Generic dialogue widget used by declarative custom windows. It owns only

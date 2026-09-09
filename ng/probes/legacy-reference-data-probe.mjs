@@ -1,9 +1,9 @@
 // Phase 8 slice 2: flat/self-contained legacy reference domains — NPCs,
 // skills, keywords, locations, achievements (+ achievement categories) —
 // migrated verbatim from data/zh-hans/{npcs,skills,keywords,locations,
-// achievements}.json into ng/data/structures.json + ng/data/databases.json
+// achievements}.json into ng/data/structures.framework.json + ng/data/databases.framework.json
 // + ng/data/seed-records.json, loaded at boot through the new generic
-// `DataStore.loadRecordSet()` seed-content loader (engine.json's
+// `DataStore.loadRecordSet()` seed-content loader (game-manifest.json's
 // `seedRecords` key), exactly like the existing structures/databases/
 // publicVariables config-driven loaders.
 //
@@ -21,8 +21,8 @@ import { DataStore } from "../core/DataStore.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(__dirname, "../data");
-const structures = JSON.parse(fs.readFileSync(path.join(dataDir, "structures.json"), "utf8"));
-const databases = JSON.parse(fs.readFileSync(path.join(dataDir, "databases.json"), "utf8"));
+const structures = JSON.parse(fs.readFileSync(path.join(dataDir, "structures.framework.json"), "utf8"));
+const databases = JSON.parse(fs.readFileSync(path.join(dataDir, "databases.framework.json"), "utf8"));
 const seedRecords = JSON.parse(fs.readFileSync(path.join(dataDir, "seed-records.json"), "utf8"));
 const legacyDir = path.join(__dirname, "../../data/zh-hans");
 

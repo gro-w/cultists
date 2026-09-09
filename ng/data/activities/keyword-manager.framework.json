@@ -1,0 +1,17 @@
+{
+  "id": "keyword-manager",
+  "displayName": "关键词管理器",
+  "type": "manager",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": { "id": "start", "type": "flowStart", "inputs": {} },
+      "ready": { "id": "ready", "type": "emitEvent", "inputs": { "eventName": "keyword:manager-ready", "payload": { "source": "keyword-manager" } } },
+      "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+    },
+    "connections": [
+      { "id": "edge-1", "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "ready", "toPort": "flowIn" },
+      { "id": "edge-2", "fromNodeId": "ready", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+    ]
+  }
+}

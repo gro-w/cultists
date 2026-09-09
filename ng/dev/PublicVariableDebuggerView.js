@@ -8,7 +8,7 @@
  * `PublicVariableManager.set()`/`setObjectRef()`, never by reaching into
  * its internal Map, so type coercion/bounds/persistence semantics are
  * never bypassed even from developer tools. Never writes back to
- * data/public-variables.json - that's PublicVariableEditorView's job.
+ * data/public-variables.framework.json - that's PublicVariableEditorView's job.
  */
 export class PublicVariableDebuggerView {
   constructor({ publicVariableManager } = {}) {

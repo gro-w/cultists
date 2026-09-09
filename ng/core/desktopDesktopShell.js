@@ -1,8 +1,8 @@
-import { WindowFrame } from "./WindowFrame.js";
-import { Taskbar } from "./Taskbar.js";
-import { renderDesktopIcons } from "./DesktopIcon.js";
-import { GAME_CLOCK_EVENTS } from "../core/GameClock.js";
-import { resolvePropertyValue } from "../core/PropertyBinding.js";
+import { WindowFrame } from "./desktopWindowFrame.js";
+import { Taskbar } from "./desktopTaskbar.js";
+import { renderDesktopIcons } from "./desktopDesktopIcon.js";
+import { GAME_CLOCK_EVENTS } from "./GameClock.js";
+import { resolvePropertyValue } from "./PropertyBinding.js";
 
 
 /**

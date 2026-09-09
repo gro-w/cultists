@@ -3,7 +3,7 @@
 // into ng's generic database (structure `chatgtpQaEntry`, database
 // `chatgtpQaEntries`), stored in its own seed file
 // (`ng/data/seed-records-chatgtp.json`) merged at boot alongside the main
-// `seed-records.json` via `engine.json`'s now-array-capable `seedRecords`
+// `seed-records.json` via `game-manifest.json`'s now-array-capable `seedRecords`
 // key. This probe proves the migrated data loads/validates cleanly at full
 // scale, spot-checks a known legacy entry, and proves the multi-file
 // seedRecords merge itself (both files loading into the same DataStore
@@ -14,12 +14,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DataStructureManager } from "../core/DataStructureManager.js";
 import { DataStore } from "../core/DataStore.js";
-import { entryKey } from "../tools/migrate-legacy-chatgtp-qa.mjs";
+import { entryKey } from "../scripts/migrate-legacy-chatgtp-qa.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const structures = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/structures.json"), "utf8"));
-const databases = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/databases.json"), "utf8"));
-const engineConfig = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/engine.json"), "utf8"));
+const structures = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/structures.framework.json"), "utf8"));
+const databases = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/databases.framework.json"), "utf8"));
+const engineConfig = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/game-manifest.json"), "utf8"));
 const settings = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/chatgtp-settings.json"), "utf8"));
 
 function makeStore() {
@@ -30,8 +30,8 @@ function makeStore() {
   return dataStore;
 }
 
-// --- engine.json's seedRecords is the array this migration relies on ------
-assert.ok(Array.isArray(engineConfig.seedRecords), "engine.json seedRecords must be an array to merge multiple seed files");
+// --- game-manifest.json's seedRecords is the array this migration relies on -
+assert.ok(Array.isArray(engineConfig.seedRecords), "game-manifest.json seedRecords must be an array to merge multiple seed files");
 const seedFiles = [...(engineConfig.seedRecords || []), ...(engineConfig.deferredSeedRecords || [])];
 assert.ok(seedFiles.includes("seed-records-chatgtp.json"));
 

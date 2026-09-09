@@ -1,0 +1,15 @@
+{
+  "id": "framework-runtime",
+  "collections": {
+    "achievements": { "databaseId": "achievements" },
+    "inventoryItems": { "databaseId": "inventoryItems" },
+    "keywords": { "databaseId": "keywords" }
+  },
+  "managers": [
+    { "id": "achievement-manager", "activityId": "achievement-manager" },
+    { "id": "inventory-manager", "activityId": "inventory-manager" },
+    { "id": "keyword-manager", "activityId": "keyword-manager" }
+  ],
+  "saveableVariableExclusions": ["calendar:days", "event:value", "query:records"],
+  "saveableVariablePrefixes": ["gameState:", "__"]
+}

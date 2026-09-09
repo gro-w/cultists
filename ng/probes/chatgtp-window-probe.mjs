@@ -21,16 +21,16 @@ import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
 import { OnboardingManager } from "../core/OnboardingManager.js";
-import { entryKey } from "../tools/migrate-legacy-chatgtp-qa.mjs";
+import { entryKey } from "../scripts/migrate-legacy-chatgtp-qa.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(__dirname, "../data");
 const readJSON = (relPath) => JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
 
 const dataStructureManager = new DataStructureManager();
-dataStructureManager.loadDefinitions(readJSON("structures.json"));
+dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
 const dataStore = new DataStore(dataStructureManager);
-dataStore.loadDefinitions(readJSON("databases.json"));
+dataStore.loadDefinitions(readJSON("databases.framework.json"));
 dataStore.loadRecordSet(readJSON("seed-records.json"));
 const chatgtpSeed = readJSON("seed-records-chatgtp.json");
 dataStore.loadRecordSet(chatgtpSeed);
@@ -38,7 +38,7 @@ dataStore.loadRecordSet(chatgtpSeed);
 const refResolver = new RuntimeRefResolver();
 const eventBus = new EventBus();
 const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
-publicVariableManager.loadDefinitions(readJSON("public-variables.json"));
+publicVariableManager.loadDefinitions(readJSON("public-variables.framework.json"));
 
 const variableStore = new VariableStore(eventBus);
 const activityQueueRegistry = new ActivityQueueRegistry();

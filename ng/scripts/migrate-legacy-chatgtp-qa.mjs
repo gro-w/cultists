@@ -5,7 +5,7 @@
  * Converts the legacy `data/zh-hans/chatgtp_qa.json` (48,195-entry
  * keyword-combo -> answer lookup table used by `js/apps/ChatGTPApp.js`)
  * into ng's generic database seed-record shape (a `chatgtpQaEntry` per
- * `ng/data/structures.json`, keyed by the same sorted-keyword-set id the
+ * `ng/data/structures.framework.json`, keyed by the same sorted-keyword-set id the
  * legacy app computes at query time via `normalizeSet()`), plus a small
  * `chatgtp-settings.json` holding the handful of scalar knobs
  * (`sanCostPerQuery`/`offlineAnswer`/`revealKeywordIds`) that aren't
@@ -24,7 +24,7 @@
  *
  * Because the 48,195-entry result is much larger than ng's other seed
  * domains, it is written to its own file (`ng/data/seed-records-chatgtp.json`)
- * rather than merged into the main `ng/data/seed-records.json`; `engine.json`'s
+ * rather than merged into the main `ng/data/seed-records.json`; `game-manifest.json`'s
  * `seedRecords` key accepts an array of filenames (see `ng/engine.js`) for
  * exactly this reason.
  *

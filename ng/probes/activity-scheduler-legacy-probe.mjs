@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { ActivityDefinitionStore } from "../core/ActivityDefinitionStore.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
-import { ActivityScheduler } from "../tools/legacy-ActivityScheduler.mjs";
+import { ActivityScheduler } from "../scripts/legacy-ActivityScheduler.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../data");
 const loader = { loadJSON: async (file) => JSON.parse(await fs.readFile(path.join(root, file), "utf8")) };

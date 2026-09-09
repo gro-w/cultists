@@ -246,7 +246,7 @@ export async function initDeveloperMode({
     body: iconEditorView.el,
   });
 
-  // Data structure manager (plan §9.2) - visual editor for structures.json,
+  // Data structure manager (plan §9.2) - visual editor for structures.framework.json,
   // shared with the live DataStructureManager so a database debugger
   // opened afterwards immediately sees any schema change.
   const structureEditorView = new DataStructureEditorView({ dataStructureManager });
@@ -277,7 +277,7 @@ export async function initDeveloperMode({
   });
 
   // Public variable manager (plan §10.2) - visual editor for
-  // public-variables.json, shared with the live PublicVariableManager so a
+  // public-variables.framework.json, shared with the live PublicVariableManager so a
   // public-variable debugger opened afterwards immediately sees any schema
   // change (mirrors DataStructureEditorView's editor/debugger split).
   const publicVariableEditorView = new PublicVariableEditorView({ publicVariableManager });

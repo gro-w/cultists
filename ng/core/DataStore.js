@@ -31,7 +31,7 @@ export class DataStore {
     return this.databases.get(databaseId);
   }
 
-  /** Loads an array of database definitions (e.g. fetched from data/databases.json) - plan §9.3's database config is authored as game data. */
+  /** Loads an array of database definitions (e.g. fetched from data/databases.framework.json) - plan §9.3's database config is authored as game data. */
   loadDefinitions(definitions = []) {
     definitions.forEach((definition) => this.registerDatabase(definition));
   }

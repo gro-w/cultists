@@ -1,33 +1,31 @@
 /**
- * Generic event-driven achievement capability. Achievement rules are authored
- * as data records; the engine only matches events, conditions, and progress.
+ * Generic event-rule state store. Rules, event names, conditions and actions
+ * are supplied by content; Core owns matching, progress, unlock state, and
+ * persistence only.
  */
-export class AchievementSystem {
-  constructor({ eventBus, records = [], runActivity = null, activityQueueRegistry = null } = {}) {
+export class EventRuleStore {
+  constructor({ eventBus, records = [], eventPrefix = "rule", idField = "recordId", onUnlock = null } = {}) {
     this.eventBus = eventBus;
     this.records = new Map(records.map((record) => [record.id, record]));
     this.unlocked = new Set();
     this.progress = new Map();
-    this.runActivity = runActivity;
-    this.activityQueueRegistry = activityQueueRegistry;
+    this.eventPrefix = eventPrefix;
+    this.idField = idField;
+    this.onUnlock = onUnlock;
     this.unsubscribe = [];
-    [...new Set(records.map((record) => record.trigger?.event).filter(Boolean))].forEach((eventName) => {
-      this.unsubscribe.push(eventBus.on(eventName, (payload) => this.handle(eventName, payload || {})));
-    });
+    [...new Set(records.map((record) => record.trigger?.event).filter(Boolean))]
+      .forEach((eventName) => this.unsubscribe.push(eventBus.on(eventName, (payload) => this.handle(eventName, payload || {}))));
   }
 
   handle(eventName, payload) {
-    if (eventName === "developer:force_end_work" && payload.unresolvedPatients == null) {
-      const queue = this.activityQueueRegistry?.get("work");
-      const pending = queue?.list().filter(({ status }) => ["pending", "running", "waiting"].includes(status)) || [];
-      payload = { ...payload, unresolvedPatients: pending.length };
-    }
     this.records.forEach((record) => {
       const trigger = record.trigger || {};
       if (trigger.event !== eventName || this.unlocked.has(record.id) || !matches(trigger.condition, payload)) return;
       if (trigger.progress) {
         const key = trigger.progressKey || record.id;
-        const delta = trigger.progressDelta === "delta_abs" ? Math.abs(Number(payload.delta || 0)) : Number(payload[trigger.progressDelta || "amount"] ?? 1);
+        const delta = trigger.progressDelta === "delta_abs"
+          ? Math.abs(Number(payload.delta || 0))
+          : Number(payload[trigger.progressDelta || "amount"] ?? 1);
         const next = (this.progress.get(key) || 0) + (Number.isFinite(delta) ? delta : 0);
         this.progress.set(key, next);
         if (next < Number(trigger.target || 1)) return;
@@ -39,13 +37,16 @@ export class AchievementSystem {
   unlock(id, payload = {}) {
     if (this.unlocked.has(id)) return false;
     this.unlocked.add(id);
-    this.eventBus.emit("achievement:unlocked", { achievementId: id, payload });
-    this.runActivity?.(`achievement__${id}`, "main");
+    this.eventBus.emit(`${this.eventPrefix}:unlocked`, { [this.idField]: id, payload });
+    this.onUnlock?.(id, payload);
     return true;
   }
 
   snapshot() { return { unlocked: [...this.unlocked], progress: [...this.progress.entries()] }; }
-  restore(snapshot = {}) { this.unlocked = new Set(snapshot.unlocked || []); this.progress = new Map(snapshot.progress || []); }
+  restore(snapshot = {}) {
+    this.unlocked = new Set(snapshot.unlocked || []);
+    this.progress = new Map(snapshot.progress || []);
+  }
 }
 
 function matches(condition, payload) {
@@ -61,4 +62,4 @@ function matches(condition, payload) {
   });
 }
 
-export default AchievementSystem;
+export default EventRuleStore;

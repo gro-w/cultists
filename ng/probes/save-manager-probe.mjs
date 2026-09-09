@@ -10,11 +10,11 @@ import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { WindowManager } from "../core/WindowManager.js";
 import { DesktopIconManager } from "../core/DesktopIconManager.js";
-import { KeywordManager } from "../content/cultists/KeywordManager.js";
+import { KeywordManager } from "../../tools/ng-legacy-framework/KeywordManager.js";
 import { OnboardingManager } from "../core/OnboardingManager.js";
 import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 import { SaveManager } from "../core/SaveManager.js";
-import { GameState } from "../content/cultists/GameState.js";
+
 
 // A branch/blockUntil Activity that consumes time once, then waits forever
 // for an "approved" variable - used to exercise "等待中的 Activity...一致"
@@ -40,7 +40,7 @@ const waitingDefinition = {
 function makeSession() {
   const eventBus = new EventBus();
   const gameClock = new GameClock(eventBus);
-  const gameState = new GameState();
+
   const variableStore = new VariableStore(eventBus);
   const publicVariableManager = new PublicVariableManager(null, eventBus);
   publicVariableManager.loadDefinitions([
@@ -99,7 +99,7 @@ function makeSession() {
 
   const saveManager = new SaveManager({
     gameClock,
-    gameState,
+
     variableStore,
     publicVariableManager,
     dataStore,
@@ -116,7 +116,7 @@ function makeSession() {
   });
 
   return {
-    eventBus, gameClock, gameState, variableStore, publicVariableManager, dataStructureManager, dataStore,
+    eventBus, gameClock, variableStore, publicVariableManager, dataStructureManager, dataStore,
     activityDefinitionStore, activityQueueRegistry, activityExecutionService, windowManager,
     desktopIconManager, keywordManager, onboardingManager, saveManager, runActivity,
   };

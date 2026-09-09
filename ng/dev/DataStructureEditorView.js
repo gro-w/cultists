@@ -4,7 +4,7 @@ import { writeDataFile } from "./devApi.js";
 const FIELD_TYPES = ["bool", "smallInteger", "integer", "real", "string", "objectRef", "array", "array<string>", "array<number>", "object"];
 
 /**
- * DataStructureEditorView - visual editor for `data/structures.json` (plan
+ * DataStructureEditorView - visual editor for `data/structures.framework.json` (plan
  * §9.2 "结构 schema"). Lets a developer create/rename/remove structures and
  * add/edit/remove their fields (id/type/required/default) without hand
  * editing JSON, then persists via the shared `writeDataFile` + registers
@@ -67,7 +67,7 @@ export class DataStructureEditorView {
     });
     el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
-        await writeDataFile("structures.json", JSON.stringify(this.dataStructureManager.toJSON(), null, 2));
+        await writeDataFile("structures.framework.json", JSON.stringify(this.dataStructureManager.toJSON(), null, 2));
         this.statusEl.textContent = "已写入磁盘";
       } catch (err) {
         this.statusEl.textContent = `写入失败: ${err.message}`;

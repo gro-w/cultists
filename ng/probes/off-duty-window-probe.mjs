@@ -24,15 +24,15 @@ const dataDir = path.join(__dirname, "../data");
 const readJSON = (relPath) => JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
 
 const dataStructureManager = new DataStructureManager();
-dataStructureManager.loadDefinitions(readJSON("structures.json"));
+dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
 const dataStore = new DataStore(dataStructureManager);
-dataStore.loadDefinitions(readJSON("databases.json"));
+dataStore.loadDefinitions(readJSON("databases.framework.json"));
 dataStore.loadRecordSet(readJSON("seed-records.json"));
 
 const refResolver = new RuntimeRefResolver();
 const eventBus = new EventBus();
 const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
-publicVariableManager.loadDefinitions(readJSON("public-variables.json"));
+publicVariableManager.loadDefinitions(readJSON("public-variables.framework.json"));
 
 const variableStore = new VariableStore(eventBus);
 const activityQueueRegistry = new ActivityQueueRegistry();

@@ -5,72 +5,44 @@
  * blueprint Activities, save/restore, and the development-mode hook. Game
  * semantics are data in ng/data and are scheduled by the default Activity.
  */
-import { eventBus } from "./core/EventBus.js";
-import { DataLoader } from "./core/DataLoader.js";
-import { WindowManager } from "./core/WindowManager.js";
-import { WindowDefinitionStore } from "./core/WindowDefinitionStore.js";
-import { DesktopShell } from "./desktop/DesktopShell.js";
-import { VariableStore } from "./core/VariableStore.js";
-import { ActivityDefinitionStore } from "./core/ActivityDefinitionStore.js";
-import { ActivityQueueRegistry } from "./core/ActivityQueueRegistry.js";
-import { ActivityExecutionService } from "./core/ActivityExecutionService.js";
-import { ActivityQueueConsumer } from "./core/ActivityQueueConsumer.js";
-import { ACTIVITY_EVENTS } from "./core/ActivityEvents.js";
-import { validateBlueprint } from "./core/ActivityValidator.js";
-import { GameClock } from "./core/GameClock.js";
-import { TimeService } from "./core/TimeService.js";
-import { DesktopIconManager } from "./core/DesktopIconManager.js";
-import { buildBuiltinIconBlueprint } from "./core/BuiltinIconBlueprints.js";
-import { DataStructureManager } from "./core/DataStructureManager.js";
-import { DataStore } from "./core/DataStore.js";
-import { PublicVariableManager } from "./core/PublicVariableManager.js";
-import { RuntimeRefResolver } from "./core/RuntimeRefResolver.js";
-import { SaveManager } from "./core/SaveManager.js";
-import { OnboardingManager } from "./core/OnboardingManager.js";
-import { evaluateCondition } from "./core/ConditionEvaluator.js";
-import { evaluateActivityAvailability } from "./core/ActivityAvailabilityEvaluator.js";
-import { DisplayReceiverRegistry } from "./core/DisplayReceiverRegistry.js";
-import { registerCustomActivityNode } from "./core/ActivityNodeRegistry.js";
+import { eventBus } from "./EventBus.js";
+import { DataLoader } from "./DataLoader.js";
+import { WindowManager } from "./WindowManager.js";
+import { WindowDefinitionStore } from "./WindowDefinitionStore.js";
+import { DesktopShell } from "./desktopDesktopShell.js";
+import { VariableStore } from "./VariableStore.js";
+import { ActivityDefinitionStore } from "./ActivityDefinitionStore.js";
+import { ActivityQueueRegistry } from "./ActivityQueueRegistry.js";
+import { ActivityExecutionService } from "./ActivityExecutionService.js";
+import { ActivityQueueConsumer } from "./ActivityQueueConsumer.js";
+import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
+import { validateBlueprint } from "./ActivityValidator.js";
+import { GameClock } from "./GameClock.js";
+import { TimeService } from "./TimeService.js";
+import { DesktopIconManager } from "./DesktopIconManager.js";
+import { buildBuiltinIconBlueprint } from "./BuiltinIconBlueprints.js";
+import { DataStructureManager } from "./DataStructureManager.js";
+import { DataStore } from "./DataStore.js";
+import { PublicVariableManager } from "./PublicVariableManager.js";
+import { RuntimeRefResolver } from "./RuntimeRefResolver.js";
+import { SaveManager } from "./SaveManager.js";
+import { OnboardingManager } from "./OnboardingManager.js";
+import { evaluateCondition } from "./ConditionEvaluator.js";
+import { evaluateActivityAvailability } from "./ActivityAvailabilityEvaluator.js";
+import { DisplayReceiverRegistry } from "./DisplayReceiverRegistry.js";
+import { registerCustomActivityNode } from "./ActivityNodeRegistry.js";
+import { createApiRegistry } from "./engine-api.js";
 
 export function isDevEntry(search = typeof location !== "undefined" ? location.search : "") {
   return search === "?dev";
 }
 
-function createApiRegistry({ eventBus: bus, variableStore, publicVariableManager, activityQueueRegistry, shell, timeService, dataStore }) {
-  const handlers = new Map([
-    ["engine.getVariable", ({ key }) => variableStore.get(key)],
-    ["engine.setVariable", ({ key, value }) => (variableStore.set(key, value), value)],
-    ["engine.getPublicVariable", ({ id }) => publicVariableManager.get(id)],
-    ["engine.setPublicVariable", ({ id, value }) => (publicVariableManager.set(id, value), value)],
-    ["engine.emit", ({ event, payload }) => (bus.emit(event, payload), true)],
-    ["engine.consumeTime", ({ minutes }) => timeService.consume(Number(minutes) || 0, { source: "activity" })],
-    ["engine.records", ({ databaseId, query = {} }) => dataStore.findRecords(databaseId, query)],
-    ["engine.queue.list", ({ queueId = "main", filters }) => activityQueueRegistry.listEntries(queueId, filters)],
-    ["engine.queue.listQueues", () => activityQueueRegistry.listQueues()],
-    ["engine.queue.get", ({ queueId = "main", instanceId }) => activityQueueRegistry.getEntry(queueId, instanceId)],
-    ["engine.queue.append", ({ queueId = "main", ...options }) => activityQueueRegistry.append(queueId, options)],
-    ["engine.queue.update", ({ queueId = "main", instanceId, patch }) => activityQueueRegistry.updateEntry(queueId, instanceId, patch)],
-    ["engine.queue.complete", ({ queueId = "main", instanceId }) => activityQueueRegistry.completeEntry(queueId, instanceId)],
-    ["engine.queue.cancel", ({ queueId = "main", instanceId }) => activityQueueRegistry.cancelEntry(queueId, instanceId)],
-    ["engine.queue.remove", ({ queueId = "main", instanceId }) => activityQueueRegistry.removeEntry(queueId, instanceId)],
-    ["engine.openWindow", ({ windowId }) => (shell.openWindow(windowId), true)],
-  ]);
-  return {
-    call(apiId, payload = {}) {
-      const handler = handlers.get(apiId);
-      if (!handler) throw new Error(`Unknown engine API: ${apiId}`);
-      return handler(payload);
-    },
-    list() { return [...handlers.keys()]; },
-    register(apiId, handler) { handlers.set(apiId, handler); },
-  };
-}
-
 export async function bootstrap(rootEl) {
   const dataLoader = new DataLoader();
+  const coreLoader = new DataLoader({ root: "" });
   const windowManager = new WindowManager(eventBus);
   const windowDefinitions = new WindowDefinitionStore(dataLoader);
-  const config = await dataLoader.loadJSON("engine.json");
+  const config = await dataLoader.loadJSON("game-manifest.json");
   if (config.contentRoot) dataLoader.setRoot(config.contentRoot);
   if (isDevEntry() && await dataLoader.detectDevServer()) {
     dataLoader.connectChangeEvents({ onChange: (payload) => eventBus.emit("data:changed", payload) });
@@ -121,9 +93,9 @@ export async function bootstrap(rootEl) {
   for (const { databaseId } of dataStore.listDatabases()) {
     refResolver.register(`database:${databaseId}`, (key) => dataStore.getRecord(databaseId, key));
   }
-  const contentModule = config.contentPackage || "cultists.js";
-  const { createContentPackage } = await import(`./content/${contentModule}`);
-  const content = createContentPackage({ eventBus, dataStore, publicVariables, variableStore });
+  const frameworkRuntimeDefinition = await dataLoader.loadJSON(config.frameworkRuntime, { optional: true }) || {};
+  const { createFrameworkRuntime } = await import("./core/FrameworkRuntime.js");
+  const content = createFrameworkRuntime({ dataStore, definition: frameworkRuntimeDefinition });
   const { keywordManager, runtimeGateway, customWidgetFactories = {} } = content;
   const iconManager = new DesktopIconManager(icons);
   // This ID is reserved by the engine. Ignore stale content/save data so the
@@ -299,7 +271,7 @@ export async function bootstrap(rootEl) {
 
   // DEV-TOOLS:START
   if (isDevEntry()) {
-    const { initDeveloperMode } = await import("./dev/DeveloperMode.js");
+    const { initDeveloperMode } = await import("../dev/DeveloperMode.js");
     await initDeveloperMode({
       engineConfig: config,
       activityManifest: manifest,

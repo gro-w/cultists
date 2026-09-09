@@ -1,5 +1,5 @@
-import { PointerInteraction } from "./PointerInteraction.js";
-import { renderWindowRoot } from "../core/WidgetLayoutRenderer.js";
+import { PointerInteraction } from "./desktopPointerInteraction.js";
+import { renderWindowRoot } from "./WidgetLayoutRenderer.js";
 
 const RESIZE_HANDLES = ["n", "ne", "e", "se", "s", "sw", "w", "nw"];
 
@@ -56,7 +56,6 @@ export class WindowFrame {
     this._unsubscribers.push(this.eventBus.on("gameClock:changed", () => this._rerenderRoot()));
     this._unsubscribers.push(this.eventBus.on("activity:completed", () => this._rerenderRoot()));
     this._unsubscribers.push(this.eventBus.on("activity:cancelled", () => this._rerenderRoot()));
-    this._unsubscribers.push(this.eventBus.on("achievement:unlocked", () => this._rerenderRoot()));
   }
 
   /**

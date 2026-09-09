@@ -1,7 +1,7 @@
 // Phase 8 HIS window probe (rebuilt for legacy 1:1 parity): proves
 // `ng/data/windows/his.json`'s `onCreate` lifecycle blueprint + every
 // widget's inline event blueprint runs end-to-end against a real DataStore
-// seeded from `data/structures.json`/`data/databases.json`/
+// seeded from `data/structures.framework.json`/`data/databases.framework.json`/
 // `data/seed-records.json` - patient roster + diagnosis/medicine category
 // load, patient selection (which resets every diagnosis/prescription
 // field and looks up existing cases for that patient), diagnosis
@@ -32,15 +32,15 @@ const dataDir = path.join(__dirname, "../data");
 const readJSON = (relPath) => JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
 
 const dataStructureManager = new DataStructureManager();
-dataStructureManager.loadDefinitions(readJSON("structures.json"));
+dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
 const dataStore = new DataStore(dataStructureManager);
-dataStore.loadDefinitions(readJSON("databases.json"));
+dataStore.loadDefinitions(readJSON("databases.framework.json"));
 dataStore.loadRecordSet(readJSON("seed-records.json"));
 
 const refResolver = new RuntimeRefResolver();
 const eventBus = new EventBus();
 const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
-publicVariableManager.loadDefinitions(readJSON("public-variables.json"));
+publicVariableManager.loadDefinitions(readJSON("public-variables.framework.json"));
 const onboardingManager = new OnboardingManager({ eventBus });
 
 const his = readJSON("windows/his.json");

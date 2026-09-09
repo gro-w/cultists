@@ -13,8 +13,8 @@ import { writeDataFile } from "./devApi.js";
  * editor never needs engine changes to add a new hint.
  */
 export class OnboardingEditorView {
-  constructor({ onboardingManager } = {}) {
-    this.onboardingManager = onboardingManager;
+  constructor({ eventStateRegistry } = {}) {
+    this.eventStateRegistry = eventStateRegistry;
     this.selectedHintId = null;
     this._buildDom();
     this.render();
@@ -66,7 +66,7 @@ export class OnboardingEditorView {
     el.querySelector('[data-action="preview"]').addEventListener("click", () => {
       const hint = this._hints().find((h) => h.id === this.selectedHintId);
       if (!hint) return;
-      this.onboardingManager.eventBus?.emit("onboarding:hint_requested", { ...hint });
+      this.eventStateRegistry.eventBus?.emit(this.eventStateRegistry.events.request, { ...hint });
     });
     el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
@@ -79,12 +79,12 @@ export class OnboardingEditorView {
   }
 
   _hints() {
-    return this.onboardingManager.list();
+    return this.eventStateRegistry.list();
   }
 
   /** Replaces the live manager's hint list (does not touch milestone/shown/dismissed progress - same contract as `loadHints`). */
   _applyHints(hints) {
-    this.onboardingManager.loadHints(hints);
+    this.eventStateRegistry.loadDefinitions(hints);
   }
 
   render() {

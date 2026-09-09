@@ -60,7 +60,7 @@ export async function initDeveloperMode({
   dataStructureManager,
   dataStore,
   publicVariableManager,
-  onboardingManager,
+  eventStateRegistry,
   dataLoader,
   saveManager,
   customBlueprintNodes = [],
@@ -310,7 +310,7 @@ export async function initDeveloperMode({
   // Onboarding hint editor (Phase 8 新手引导) - visual editor for
   // onboarding.json, shared with the live OnboardingManager so a "预览"
   // click immediately re-shows a hint through the real TutorialOverlay.
-  const onboardingEditorView = new OnboardingEditorView({ onboardingManager });
+  const onboardingEditorView = new OnboardingEditorView({ eventStateRegistry });
   windowDefinitionStore.register({
     id: ONBOARDING_EDITOR_WINDOW_ID,
     title: "新手引导编辑器",

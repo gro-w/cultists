@@ -23,7 +23,7 @@ export class DesktopShell {
    *   public-variable value nodes used by widget/window bindings
    * @param {object} [runtimeGateway] generic runtime collections exposed to value blueprints
    */
-  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, pvGateway, dbGateway, runtimeGateway, dialogueRegistry, keywordManager, customWidgetFactories = {}) {
+  constructor(windowManager, windowDefinitionStore, eventBus, rootEl, gameClock, variableStore, pvGateway, dbGateway, runtimeGateway, dialogueRegistry, customWidgetFactories = {}) {
     this.windowManager = windowManager;
     this.windowDefinitionStore = windowDefinitionStore;
     this.eventBus = eventBus;
@@ -34,7 +34,6 @@ export class DesktopShell {
     this.dbGateway = dbGateway || null;
     this.runtimeGateway = runtimeGateway || null;
     this.dialogueRegistry = dialogueRegistry || null;
-    this.keywordManager = keywordManager || null;
     this.customWidgetFactories = customWidgetFactories || {};
     this.dialogueViews = {};
     this.conditionContext = {};
@@ -144,11 +143,32 @@ export class DesktopShell {
     }
     const id = componentId || `runtime-component-${++this.runtimeComponentSeq}`;
     const inheritedEvents = Object.keys(events).length ? events : parent.children.find((child) => child.className === className)?.events || {};
-    const component = { widgetId: id, id, type: componentType, ...properties, events: inheritedEvents };
+    const component = this._cloneRuntimeComponent({ widgetId: id, id, type: componentType, ...properties, events: inheritedEvents }, this.runtimeComponentSeq);
     parent.children.push(component);
     this.frames.get(runtime.state.instanceId)?._rerenderRoot();
     this.eventBus.emit("window:component-added", { windowId: runtime.state.windowId, componentId: id });
     return { ok: true, componentId: id };
+  }
+
+  _cloneRuntimeComponent(component, sequence) {
+    const suffix = String(sequence);
+    const rewrite = (value) => {
+      if (Array.isArray(value)) return value.map(rewrite);
+      if (!value || typeof value !== "object") {
+        if (typeof value !== "string") return value;
+        return value.replace(/(\b[a-zA-Z][\w-]*:[\w-]*?)1\b/g, "$1" + suffix);
+      }
+      return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child)]));
+    };
+    const out = rewrite(component);
+    const visit = (node, isRoot = false) => {
+      if (!node || typeof node !== "object") return;
+      if (!isRoot && typeof node.widgetId === "string") node.widgetId += `-${suffix}`;
+      if (!isRoot && typeof node.id === "string") node.id += `-${suffix}`;
+      (node.children || []).forEach((child) => visit(child));
+    };
+    visit(out, true);
+    return out;
   }
 
   removeWindowComponent({ windowId, componentId } = {}) {
@@ -230,13 +250,11 @@ export class DesktopShell {
       console.log("[NG dialogue] ensure dialogue view", { widgetId: node.widgetId, target, aliases, existing: Boolean(this.dialogueViews[target]) });
       /* DEV-TOOLS:END */
       if (!this.dialogueViews[target]) {
-        const DialogueWidget = this.customWidgetFactories.dialogue;
-        if (!DialogueWidget) return;
-        this.dialogueViews[target] = new DialogueWidget({
+        const DisplayWidget = this.customWidgetFactories.display || this.customWidgetFactories.dialogue;
+        if (!DisplayWidget) return;
+        this.dialogueViews[target] = new DisplayWidget({
           eventBus: this.eventBus,
           variableStore: this.variableStore,
-          keywordManager: this.keywordManager,
-          gameClock: this.gameClock,
           displayReceiverRegistry: this.dialogueRegistry,
           displayTo: target,
           displayAliases: aliases,

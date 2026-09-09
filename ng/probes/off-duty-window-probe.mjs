@@ -4,6 +4,7 @@
 // roommate records, public-variable bindings and every declared event
 // blueprint (including the migrated toolbar actions).
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,7 +17,7 @@ import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../core/OnboardingManager.js";
+import { OnboardingManager } from "../../tools/ng-legacy-content/OnboardingManager.js";
 import { evaluateValueOutput } from "../core/ActivityRunner.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -51,6 +52,7 @@ function runBlueprint(blueprint, label) {
     instance,
     variableStore,
     timeGateway: (minutes) => { consumedMinutes += minutes; },
+    apiGateway: { call: (apiId, payload) => { if (apiId === "engine.consumeTime") return consumedMinutes += payload.minutes; throw new Error(`Unexpected API ${apiId}`); } },
     windowGateway: () => {},
     activityGateway: () => {},
     eventGateway: () => {},

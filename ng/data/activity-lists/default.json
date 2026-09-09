@@ -2,7 +2,6 @@
   "id": "default",
   "activityIds": [
     "default",
-
     "patient-queue-manager",
     "social-story-manager",
     "achievement-manager",

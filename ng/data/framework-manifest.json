@@ -1,0 +1,26 @@
+{
+  "id": "cultists-framework",
+  "version": "0.1.0",
+  "documents": {
+    "runtimeCollections": "framework-runtime.framework.json",
+    "blueprintNodes": "blueprint-nodes.framework.json",
+    "structures": "structures.framework.json",
+    "databases": "databases.framework.json",
+    "publicVariables": "public-variables.framework.json",
+    "eventState": {
+      "data": "onboarding.json",
+      "events": {
+        "changed": "onboarding:changed",
+        "request": "onboarding:hint_requested",
+        "close": "onboarding:hint_closed"
+      }
+    }
+  },
+  "activityLists": [
+    "system.json",
+    "achievement.json"
+  ],
+  "activityPatterns": [
+    "*-manager.framework.json"
+  ]
+}

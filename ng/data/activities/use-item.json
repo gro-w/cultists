@@ -50,7 +50,7 @@
       },
       "useTime": {
         "id": "useTime",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "x": 860,
         "y": 0,
         "inputs": {

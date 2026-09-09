@@ -26,7 +26,9 @@ import { DataStore } from "./DataStore.js";
 import { PublicVariableManager } from "./PublicVariableManager.js";
 import { RuntimeRefResolver } from "./RuntimeRefResolver.js";
 import { SaveManager } from "./SaveManager.js";
-import { OnboardingManager } from "./OnboardingManager.js";
+import { EventStateRegistry } from "./EventStateRegistry.js";
+import { RuntimeCollectionRegistry } from "./RuntimeCollectionRegistry.js";
+import { TextChoiceWidget } from "./TextChoiceWidget.js";
 import { evaluateCondition } from "./ConditionEvaluator.js";
 import { evaluateActivityAvailability } from "./ActivityAvailabilityEvaluator.js";
 import { DisplayReceiverRegistry } from "./DisplayReceiverRegistry.js";
@@ -44,12 +46,13 @@ export async function bootstrap(rootEl) {
   const windowDefinitions = new WindowDefinitionStore(dataLoader);
   const config = await dataLoader.loadJSON("game-manifest.json");
   if (config.contentRoot) dataLoader.setRoot(config.contentRoot);
+  const frameworkManifest = await dataLoader.loadJSON(config.frameworkManifest, { optional: true }) || {};
   if (isDevEntry() && await dataLoader.detectDevServer()) {
     dataLoader.connectChangeEvents({ onChange: (payload) => eventBus.emit("data:changed", payload) });
   }
   await windowDefinitions.loadManifest(config.windowManifest, "windows/");
   const icons = await dataLoader.loadJSON(config.desktopIcons, { optional: true }) || [];
-  const customBlueprintNodes = await dataLoader.loadJSON(config.blueprintNodes, { optional: true }) || [];
+  const customBlueprintNodes = await dataLoader.loadJSON(frameworkManifest.documents?.blueprintNodes || config.blueprintNodes, { optional: true }) || [];
   customBlueprintNodes.forEach((node) => registerCustomActivityNode(node));
   const initialState = config.initialState || {};
   const gameClock = new GameClock(eventBus, {
@@ -63,21 +66,22 @@ export async function bootstrap(rootEl) {
   const refResolver = new RuntimeRefResolver();
   const publicVariables = new PublicVariableManager(refResolver, eventBus);
   variableStore.publicVariableGateway = publicVariables;
-  const onboarding = new OnboardingManager({ eventBus });
-  if (config.onboarding) {
-    const hints = await dataLoader.loadJSON(config.onboarding, { optional: true });
-    if (hints) onboarding.loadHints(hints);
+  const eventStateConfig = frameworkManifest.documents?.eventState || {};
+  const eventState = new EventStateRegistry({ eventBus, events: eventStateConfig.events });
+  if (eventStateConfig.data || config.onboarding) {
+    const definitions = await dataLoader.loadJSON(eventStateConfig.data || config.onboarding, { optional: true });
+    if (definitions) eventState.loadDefinitions(definitions);
   }
-  if (config.structures) {
-    const value = await dataLoader.loadJSON(config.structures, { optional: true });
+  if (frameworkManifest.documents?.structures || config.structures) {
+    const value = await dataLoader.loadJSON(frameworkManifest.documents?.structures || config.structures, { optional: true });
     if (value) structures.loadDefinitions(value);
   }
-  if (config.databases) {
-    const value = await dataLoader.loadJSON(config.databases, { optional: true });
+  if (frameworkManifest.documents?.databases || config.databases) {
+    const value = await dataLoader.loadJSON(frameworkManifest.documents?.databases || config.databases, { optional: true });
     if (value) dataStore.loadDefinitions(value);
   }
-  if (config.publicVariables) {
-    const value = await dataLoader.loadJSON(config.publicVariables, { optional: true });
+  if (frameworkManifest.documents?.publicVariables || config.publicVariables) {
+    const value = await dataLoader.loadJSON(frameworkManifest.documents?.publicVariables || config.publicVariables, { optional: true });
     if (value) publicVariables.loadDefinitions(value);
   }
   publicVariables.registerSyncSource("gameClock.totalMinutes", () => (gameClock.day - 1) * 1440 + gameClock.minutes);
@@ -93,17 +97,32 @@ export async function bootstrap(rootEl) {
   for (const { databaseId } of dataStore.listDatabases()) {
     refResolver.register(`database:${databaseId}`, (key) => dataStore.getRecord(databaseId, key));
   }
-  const frameworkRuntimeDefinition = await dataLoader.loadJSON(config.frameworkRuntime, { optional: true }) || {};
-  const { createFrameworkRuntime } = await import("./FrameworkRuntime.js");
-  const content = createFrameworkRuntime({ dataStore, definition: frameworkRuntimeDefinition });
-  const { keywordManager, runtimeGateway, customWidgetFactories = {} } = content;
+  const frameworkRuntimeDefinition = await dataLoader.loadJSON(frameworkManifest.documents?.runtimeCollections || config.frameworkCollections, { optional: true }) || {};
+  const runtimeCollections = new RuntimeCollectionRegistry({ dataStore, eventBus });
+  runtimeCollections.loadDefinitions(frameworkRuntimeDefinition.collections || {});
+  const runtimeGateway = {
+    getCollection: (collectionId) => runtimeCollections.get(collectionId),
+    setCollectionValue: (collectionId, recordId, value) => runtimeCollections.set(collectionId, recordId, value),
+  };
+  const content = {
+    runtimeGateway,
+    customWidgetFactories: { display: TextChoiceWidget, dialogue: TextChoiceWidget },
+    stateProviders: {},
+    runtimeStores: { runtimeCollections },
+    saveableVariable: (key, value) => {
+      const excluded = frameworkRuntimeDefinition.saveableVariableExclusions || [];
+      const prefixes = frameworkRuntimeDefinition.saveableVariablePrefixes || [];
+      return !excluded.includes(key) && !prefixes.some((prefix) => String(key).startsWith(prefix))
+        && (value === null || ["boolean", "number", "string"].includes(typeof value));
+    },
+  };
   const iconManager = new DesktopIconManager(icons);
   // This ID is reserved by the engine. Ignore stale content/save data so the
   // developer entry can never be supplied or configured by the game package.
   iconManager.unregister("dev-mode-launcher-icon");
   const dialogueRegistry = new DisplayReceiverRegistry();
   content.installDisplayReceivers?.({ dialogueRegistry });
-  const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway, dialogueRegistry, keywordManager, customWidgetFactories);
+  const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway, dialogueRegistry, content.customWidgetFactories);
   // Paint icons before loading the Activity catalogue. The catalogue can be
   // large; taskbar and desktop must become visible as one initial surface.
   shell.mountIcons(iconManager);
@@ -143,7 +162,7 @@ export async function bootstrap(rootEl) {
   const saveManager = new SaveManager({
     gameClock, variableStore, publicVariableManager: publicVariables,
     activityQueueRegistry: queues, windowManager, desktopIconManager: iconManager,
-    onboardingManager: onboarding, stateProviders: content.stateProviders, runtimeStores: content.runtimeStores,
+    eventStateRegistry: eventState, stateProviders: content.stateProviders, runtimeStores: content.runtimeStores,
     saveableVariable: content.saveableVariable,
     activityExecutionService: null, resumePendingActivities: () => {}, engineVersion: config.version,
   });
@@ -216,7 +235,7 @@ export async function bootstrap(rootEl) {
         /* DEV-TOOLS:END */
         eventBus.emit(name, payload);
       }, dbGateway: dataStore,
-      pvGateway: publicVariables, onboardingGateway: onboarding, apiGateway,
+      pvGateway: publicVariables, eventStateGateway: eventState, apiGateway,
     });
   }
   function runInlineBlueprint(queue, activityId, blueprint) {
@@ -288,10 +307,9 @@ export async function bootstrap(rootEl) {
       dataStructureManager: structures,
       dataStore,
       publicVariableManager: publicVariables,
-      onboardingManager: onboarding,
+      eventStateRegistry: eventState,
       dataLoader,
       saveManager,
-      customBlueprintNodes,
       refreshIcons: () => shell.refreshIcons(),
     });
     shell.refreshIcons();
@@ -304,7 +322,7 @@ export async function bootstrap(rootEl) {
     const instance = enqueueActivity(startup.activityId, startup.queueId || "main");
     if (instance) consumer.consume(startup.queueId || "main");
   }
-  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, contentPackage: content, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityQueueConsumer: consumer, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, iconManager, saveManager, onboardingManager: onboarding };
+  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, contentPackage: content, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityQueueConsumer: consumer, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, iconManager, saveManager, eventStateRegistry: eventState };
 }
 
 if (typeof document !== "undefined") document.addEventListener("DOMContentLoaded", () => bootstrap(document.getElementById("ng-root")));

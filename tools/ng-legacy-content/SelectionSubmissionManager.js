@@ -1,4 +1,4 @@
-import RuntimeRecordStore from "./RuntimeRecordStore.js";
+import RuntimeRecordStore from "../../ng/core/RuntimeRecordStore.js";
 export class SelectionSubmissionManager extends RuntimeRecordStore {
   constructor(options = {}) { super({ ...options, eventPrefix: "selection" }); this.selections = new Map(); }
   select(sessionId, optionId) { this.selections.set(String(sessionId), String(optionId)); this.eventBus?.emit("selection:selected", { sessionId: String(sessionId), optionId: String(optionId) }); return optionId; }

@@ -243,9 +243,9 @@
       },
       "use_talisman_cost": {
         "id": "use_talisman_cost",
-        "type": "statOperation",
+        "type": "setVariable",
         "inputs": {
-          "statId": "sanity",
+          "key": "sanity",
           "delta": -5
         }
       },
@@ -406,9 +406,13 @@
       },
       "abnormal_end": {
         "id": "abnormal_end",
-        "type": "ending",
+        "type": "emitEvent",
         "inputs": {
-          "endingId": "异常结局"
+          "eventName": "activity:ending",
+          "payload": {
+            "endingId": "异常结局",
+            "displayTo": "default"
+          }
         }
       },
       "normal_cg": {
@@ -483,9 +487,13 @@
       },
       "normal_end": {
         "id": "normal_end",
-        "type": "ending",
+        "type": "emitEvent",
         "inputs": {
-          "endingId": "正常结局"
+          "eventName": "activity:ending",
+          "payload": {
+            "endingId": "正常结局",
+            "displayTo": "default"
+          }
         }
       },
       "end": {

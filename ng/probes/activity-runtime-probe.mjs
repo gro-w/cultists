@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import EventBus from "../core/EventBus.js";
 import { VariableStore } from "../core/VariableStore.js";
 import { ActivityDefinitionStore } from "../core/ActivityDefinitionStore.js";
@@ -41,7 +42,7 @@ const combinedDefinition = {
       incCounter: { id: "incCounter", type: "setVariable", inputs: { key: "counter", delta: 1 } },
       setEligible: { id: "setEligible", type: "setVariable", inputs: { key: "eligible", value: true } },
       eligibleBranch: { id: "eligibleBranch", type: "branch", inputs: { condition: { variable: "eligible" } } },
-      consume: { id: "consume", type: "consumeTime", inputs: { minutes: 20 } },
+      consume: { id: "consume", type: "framework:consumeTime", inputs: { minutes: 20 } },
       wait: { id: "wait", type: "blockUntil", inputs: { key: "approved", equals: true } },
       endTrue: { id: "endTrue", type: "activityEnd", inputs: {} },
       endFalse: { id: "endFalse", type: "activityEnd", inputs: {} },
@@ -130,6 +131,7 @@ function makeEngine(definitions) {
     instance,
     variableStore: engine.variableStore,
     timeGateway: (minutes) => timedMinutes.push(minutes),
+    apiGateway: { call: (apiId, payload) => { if (apiId === "engine.consumeTime") return timedMinutes.push(payload.minutes); throw new Error(`Unexpected API ${apiId}`); } },
   });
 
   // loop ran 3 times, branch took the true path, consumeTime fired once, then blocked.
@@ -157,6 +159,7 @@ function makeEngine(definitions) {
     instance: restoredInstance,
     variableStore: restoredEngine.variableStore,
     timeGateway: (minutes) => timedMinutes.push(minutes),
+    apiGateway: { call: (apiId, payload) => { if (apiId === "engine.consumeTime") return timedMinutes.push(payload.minutes); throw new Error(`Unexpected API ${apiId}`); } },
   });
   // Still blocked immediately after restore: "approved" hasn't been set yet.
   assert.equal(restoredQueue.get(instance.instanceId).status, "unresolved");
@@ -186,6 +189,7 @@ function makeEngine(definitions) {
     definition: engine.activityDefinitionStore.get("combined"),
     instance,
     variableStore: engine.variableStore,
+    apiGateway: { call: (apiId) => { if (apiId === "engine.consumeTime") return true; throw new Error(`Unexpected API ${apiId}`); } },
   });
   assert.equal(queue.get(instance.instanceId).status, "unresolved"); // blocked on "approved"
 
@@ -260,7 +264,7 @@ function makeEngine(definitions) {
       nodes: {
         start: { id: "start", type: "flowStart", inputs: {} },
         open: { id: "open", type: "openWindow", inputs: { windowId: "off-duty" } },
-        consume: { id: "consume", type: "consumeTime", inputs: { minutes: 20 } },
+        consume: { id: "consume", type: "framework:consumeTime", inputs: { minutes: 20 } },
         wait: { id: "wait", type: "blockUntil", inputs: { key: "leftWindow", equals: true } },
         end: { id: "end", type: "activityEnd", inputs: {} },
       },
@@ -282,6 +286,7 @@ function makeEngine(definitions) {
     instance,
     variableStore: engine.variableStore,
     windowGateway: (windowId) => openedWindowIds.push(windowId),
+    apiGateway: { call: (apiId) => { if (apiId === "engine.consumeTime") return true; throw new Error(`Unexpected API ${apiId}`); } },
   });
   assert.deepEqual(openedWindowIds, ["off-duty"]);
   assert.equal(queue.get(instance.instanceId).waitingNodeId, "wait");
@@ -298,6 +303,7 @@ function makeEngine(definitions) {
     instance: restoredInstance,
     variableStore: restoredEngine.variableStore,
     windowGateway: (windowId) => openedWindowIds.push(windowId),
+    apiGateway: { call: (apiId) => { if (apiId === "engine.consumeTime") return true; throw new Error(`Unexpected API ${apiId}`); } },
   });
   assert.deepEqual(openedWindowIds, ["off-duty"], "openWindow must not re-fire on resume");
 }

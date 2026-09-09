@@ -1,9 +1,17 @@
 {
   "name": "cultists-ng",
   "version": "0.1.0-ng-content",
-  "frameworkRuntime": "framework-runtime.framework.json",
+  "frameworkManifest": "framework-manifest.json",
+  "frameworkCollections": "framework-runtime.framework.json",
   "contentRoot": "data/",
-  "nativeContent": ["media.json", "calendar-rules.json", "item-placements.json", "social-apps.json", "turtle-soup-puzzles.json", "app-definitions.json"],
+  "nativeContent": [
+    "media.json",
+    "calendar-rules.json",
+    "item-placements.json",
+    "social-apps.json",
+    "turtle-soup-puzzles.json",
+    "app-definitions.json"
+  ],
   "windowManifest": [
     "example.json",
     "off-duty.json",
@@ -31,13 +39,31 @@
   ],
   "activityManifest": "activity-manifest.json",
   "queues": [
-    { "id": "work" },
-    { "id": "social" },
-    { "id": "managers", "nonBlocking": true },
-    { "id": "main" },
-    { "id": "window-events", "nonBlocking": true },
-    { "id": "widget-events", "nonBlocking": true },
-    { "id": "desktop-icons", "nonBlocking": true }
+    {
+      "id": "work"
+    },
+    {
+      "id": "social"
+    },
+    {
+      "id": "managers",
+      "nonBlocking": true
+    },
+    {
+      "id": "main"
+    },
+    {
+      "id": "window-events",
+      "nonBlocking": true
+    },
+    {
+      "id": "widget-events",
+      "nonBlocking": true
+    },
+    {
+      "id": "desktop-icons",
+      "nonBlocking": true
+    }
   ],
   "structures": "structures.framework.json",
   "databases": "databases.framework.json",
@@ -46,7 +72,9 @@
     "seed-records.json",
     "seed-records-items.json"
   ],
-  "deferredSeedRecords": ["seed-records-chatgtp.json"],
+  "deferredSeedRecords": [
+    "seed-records-chatgtp.json"
+  ],
   "initialState": {
     "day": 1,
     "clockMinutes": 480,

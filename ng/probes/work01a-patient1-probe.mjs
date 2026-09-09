@@ -3,10 +3,11 @@
 // `data/zh-hans/work01a.json`'s first `his` patient entry via
 // `migrate-legacy-blueprint.mjs`) actually runs end-to-end through the
 // exact same gateway wiring `engine.js` uses - `openWindow` fires the
-// generic "dialogue" window, `text`/`choice` nodes emit `dialogue:text`/
-// `dialogue:choice`, and a player picking the first option every time
+// generic display window, `text`/`choice` nodes emit `display:text`/
+// `display:choice`, and a player picking the first option every time
 // reaches `activityEnd` having consumed the expected in-game minutes.
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -53,10 +54,16 @@ function runActivity(activityId, queueId = "main") {
     instance,
     variableStore,
     timeGateway: (minutes) => { minutesConsumed += minutes; },
+    apiGateway: {
+      call: (apiId, payload) => {
+        if (apiId === "engine.consumeTime") minutesConsumed += Number(payload?.minutes || 0);
+        return null;
+      },
+    },
     windowGateway: (windowId) => openedWindows.push(windowId),
     activityGateway: (id, activityQueueId) => runActivity(id, activityQueueId || "main"),
     eventGateway: (eventName, payload) => {
-      if (eventName.startsWith("dialogue:")) dialogueEvents.push({ eventName, payload });
+      if (eventName.startsWith("display:")) dialogueEvents.push({ eventName, payload });
     },
   });
 }
@@ -87,10 +94,10 @@ assert.equal(minutesConsumed, 80, "expected the 4 consumeTime nodes on the all-f
 // text/choice re-emit on each wait re-check (same as blockUntil, see
 // dialogue-node-probe.mjs), so a waited node fires twice: once entering the
 // wait, once on the wake that satisfies it.
-assert.equal(dialogueEvents.filter((e) => e.eventName === "dialogue:text").length, 8);
-assert.equal(dialogueEvents.filter((e) => e.eventName === "dialogue:choice").length, 4);
-assert.equal(dialogueEvents.filter((e) => e.eventName === "dialogue:complete").length, 1);
-assert.equal(dialogueEvents.find((e) => e.eventName === "dialogue:complete").payload.displayTo, "his-app");
+assert.equal(dialogueEvents.filter((e) => e.eventName === "display:text").length, 8);
+assert.equal(dialogueEvents.filter((e) => e.eventName === "display:choice").length, 4);
+assert.equal(dialogueEvents.filter((e) => e.eventName === "display:complete").length, 1);
+assert.equal(dialogueEvents.find((e) => e.eventName === "display:complete").payload.displayTo, "his-app");
 assert.ok(dialogueEvents.every((e) => e.payload.instanceId === patientInstance.instanceId), "every dialogue event should carry the running instance's id");
 
 console.log("work01a-patient1-probe: all scenarios passed");

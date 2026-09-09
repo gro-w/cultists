@@ -311,7 +311,7 @@
             },
             "check": {
               "id": "check",
-              "type": "diceCheck",
+              "type": "framework:diceCheck",
               "inputs": {
                 "n": null
               },
@@ -699,9 +699,9 @@
             },
             "use:stat:satiety": {
               "id": "use:stat:satiety",
-              "type": "statOperation",
+              "type": "setVariable",
               "inputs": {
-                "statId": "satiety",
+                "key": "satiety",
                 "delta": 6
               },
               "outputs": {},
@@ -857,9 +857,9 @@
             },
             "use:stat:satiety": {
               "id": "use:stat:satiety",
-              "type": "statOperation",
+              "type": "setVariable",
               "inputs": {
-                "statId": "satiety",
+                "key": "satiety",
                 "delta": 90
               },
               "outputs": {},
@@ -938,7 +938,7 @@
             },
             "check": {
               "id": "check",
-              "type": "diceCheck",
+              "type": "framework:diceCheck",
               "inputs": {
                 "n": null
               },
@@ -988,9 +988,9 @@
             },
             "criticalFailure:effect": {
               "id": "criticalFailure:effect",
-              "type": "statOperation",
+              "type": "setVariable",
               "inputs": {
-                "statId": "physical",
+                "key": "physical",
                 "delta": -3
               },
               "outputs": {}
@@ -1416,7 +1416,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "consumeTime",
+              "type": "framework:consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -1951,7 +1951,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "consumeTime",
+              "type": "framework:consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -3082,7 +3082,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "consumeTime",
+              "type": "framework:consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -4446,7 +4446,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "consumeTime",
+              "type": "framework:consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -4813,7 +4813,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "consumeTime",
+              "type": "framework:consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -5799,7 +5799,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "consumeTime",
+              "type": "framework:consumeTime",
               "inputs": {
                 "minutes": 240
               },

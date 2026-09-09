@@ -4,13 +4,23 @@
     "label": "测试流程节点",
     "description": "用于验证自定义流程节点封装、参数传递和流程返回",
     "flowInputs": [
-      { "name": "flowIn", "kind": "flow" }
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
     ],
     "flowOutputs": [
-      { "name": "flowOut", "kind": "flow" }
+      {
+        "name": "flowOut",
+        "kind": "flow"
+      }
     ],
     "valueInputs": [
-      { "name": "value", "kind": "value", "type": "number" }
+      {
+        "name": "value",
+        "kind": "value",
+        "type": "number"
+      }
     ],
     "valueOutputs": [],
     "blueprint": {
@@ -22,7 +32,12 @@
           "x": 40,
           "y": 80,
           "inputs": {},
-          "next": { "flowOut": { "nodeId": "write", "port": "flowIn" } }
+          "next": {
+            "flowOut": {
+              "nodeId": "write",
+              "port": "flowIn"
+            }
+          }
         },
         "write": {
           "id": "write",
@@ -31,9 +46,16 @@
           "y": 80,
           "inputs": {
             "key": "blueprint.test.flow.value",
-            "value": { "parameter": "value" }
+            "value": {
+              "parameter": "value"
+            }
           },
-          "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } }
+          "next": {
+            "flowOut": {
+              "nodeId": "end",
+              "port": "flowIn"
+            }
+          }
         },
         "end": {
           "id": "end",
@@ -53,14 +75,21 @@
     "flowInputs": [],
     "flowOutputs": [],
     "valueInputs": [
-      { "name": "value", "kind": "value", "type": "number" }
+      {
+        "name": "value",
+        "kind": "value",
+        "type": "number"
+      }
     ],
     "valueOutputs": [
       {
         "name": "value",
         "kind": "value",
         "type": "number",
-        "source": { "nodeId": "double", "port": "value" }
+        "source": {
+          "nodeId": "double",
+          "port": "value"
+        }
       }
     ],
     "blueprint": {
@@ -72,8 +101,1374 @@
           "y": 80,
           "inputs": {
             "operator": "*",
-            "left": { "parameter": "value" },
+            "left": {
+              "parameter": "value"
+            },
             "right": 2
+          },
+          "next": {}
+        }
+      }
+    }
+  },
+  {
+    "id": "framework:consumeTime",
+    "label": "消耗时间",
+    "description": "Framework 时间系统节点；通过通用 Core 时钟 API 推进游戏时间",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "flowOut",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "minutes",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {
+          "id": "start",
+          "type": "flowStart",
+          "inputs": {},
+          "next": {
+            "flowOut": {
+              "nodeId": "consume",
+              "port": "flowIn"
+            }
+          }
+        },
+        "consume": {
+          "id": "consume",
+          "type": "callApi",
+          "inputs": {
+            "apiId": "engine.consumeTime",
+            "payload": {
+              "minutes": {
+                "parameter": "minutes"
+              }
+            }
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "end",
+              "port": "flowIn"
+            }
+          }
+        },
+        "end": {
+          "id": "end",
+          "type": "activityEnd",
+          "inputs": {},
+          "next": {}
+        }
+      }
+    }
+  },
+  {
+    "id": "ending",
+    "label": "结束流程",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "flowOut",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "endingId",
+        "kind": "value",
+        "type": "string"
+      },
+      {
+        "name": "displayTo",
+        "kind": "value",
+        "type": "string"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {
+          "id": "start",
+          "type": "flowStart",
+          "inputs": {},
+          "next": {
+            "flowOut": {
+              "nodeId": "emit",
+              "port": "flowIn"
+            }
+          }
+        },
+        "emit": {
+          "id": "emit",
+          "type": "emitEvent",
+          "inputs": {
+            "eventName": "activity:ending",
+            "payload": {
+              "endingId": {
+                "parameter": "endingId"
+              },
+              "displayTo": {
+                "parameter": "displayTo"
+              }
+            }
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "end",
+              "port": "flowIn"
+            }
+          }
+        },
+        "end": {
+          "id": "end",
+          "type": "activityEnd",
+          "inputs": {},
+          "next": {}
+        }
+      }
+    }
+  },
+  {
+    "id": "framework:randomBranch",
+    "label": "随机分支",
+    "description": "Framework 随机流程宏；使用 Core 通用随机值和算术节点",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "flowOut0",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut1",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut2",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut3",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut4",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut5",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut6",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut7",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut8",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut9",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut10",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut11",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut12",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut13",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut14",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut15",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut16",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut17",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut18",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut19",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "n",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {
+          "id": "start",
+          "type": "flowStart",
+          "inputs": {},
+          "next": {
+            "flowOut": {
+              "nodeId": "b0",
+              "port": "flowIn"
+            }
+          }
+        },
+        "roll": {
+          "id": "roll",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "random",
+            "left": 0,
+            "right": 0
+          },
+          "next": {}
+        },
+        "scaled": {
+          "id": "scaled",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "*",
+            "left": {
+              "nodeId": "roll",
+              "port": "value"
+            },
+            "right": {
+              "parameter": "n"
+            }
+          },
+          "next": {}
+        },
+        "index": {
+          "id": "index",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "floor",
+            "left": {
+              "nodeId": "scaled",
+              "port": "value"
+            },
+            "right": 0
+          },
+          "next": {}
+        },
+        "eq0": {
+          "id": "eq0",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 0
+          },
+          "next": {}
+        },
+        "r0": {
+          "id": "r0",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut0"
+          },
+          "next": {}
+        },
+        "b0": {
+          "id": "b0",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq0",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r0",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b1",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq1": {
+          "id": "eq1",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 1
+          },
+          "next": {}
+        },
+        "r1": {
+          "id": "r1",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut1"
+          },
+          "next": {}
+        },
+        "b1": {
+          "id": "b1",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq1",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r1",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b2",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq2": {
+          "id": "eq2",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 2
+          },
+          "next": {}
+        },
+        "r2": {
+          "id": "r2",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut2"
+          },
+          "next": {}
+        },
+        "b2": {
+          "id": "b2",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq2",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r2",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b3",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq3": {
+          "id": "eq3",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 3
+          },
+          "next": {}
+        },
+        "r3": {
+          "id": "r3",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut3"
+          },
+          "next": {}
+        },
+        "b3": {
+          "id": "b3",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq3",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r3",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b4",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq4": {
+          "id": "eq4",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 4
+          },
+          "next": {}
+        },
+        "r4": {
+          "id": "r4",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut4"
+          },
+          "next": {}
+        },
+        "b4": {
+          "id": "b4",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq4",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r4",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b5",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq5": {
+          "id": "eq5",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 5
+          },
+          "next": {}
+        },
+        "r5": {
+          "id": "r5",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut5"
+          },
+          "next": {}
+        },
+        "b5": {
+          "id": "b5",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq5",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r5",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b6",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq6": {
+          "id": "eq6",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 6
+          },
+          "next": {}
+        },
+        "r6": {
+          "id": "r6",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut6"
+          },
+          "next": {}
+        },
+        "b6": {
+          "id": "b6",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq6",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r6",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b7",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq7": {
+          "id": "eq7",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 7
+          },
+          "next": {}
+        },
+        "r7": {
+          "id": "r7",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut7"
+          },
+          "next": {}
+        },
+        "b7": {
+          "id": "b7",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq7",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r7",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b8",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq8": {
+          "id": "eq8",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 8
+          },
+          "next": {}
+        },
+        "r8": {
+          "id": "r8",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut8"
+          },
+          "next": {}
+        },
+        "b8": {
+          "id": "b8",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq8",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r8",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b9",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq9": {
+          "id": "eq9",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 9
+          },
+          "next": {}
+        },
+        "r9": {
+          "id": "r9",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut9"
+          },
+          "next": {}
+        },
+        "b9": {
+          "id": "b9",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq9",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r9",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b10",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq10": {
+          "id": "eq10",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 10
+          },
+          "next": {}
+        },
+        "r10": {
+          "id": "r10",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut10"
+          },
+          "next": {}
+        },
+        "b10": {
+          "id": "b10",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq10",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r10",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b11",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq11": {
+          "id": "eq11",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 11
+          },
+          "next": {}
+        },
+        "r11": {
+          "id": "r11",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut11"
+          },
+          "next": {}
+        },
+        "b11": {
+          "id": "b11",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq11",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r11",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b12",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq12": {
+          "id": "eq12",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 12
+          },
+          "next": {}
+        },
+        "r12": {
+          "id": "r12",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut12"
+          },
+          "next": {}
+        },
+        "b12": {
+          "id": "b12",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq12",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r12",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b13",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq13": {
+          "id": "eq13",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 13
+          },
+          "next": {}
+        },
+        "r13": {
+          "id": "r13",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut13"
+          },
+          "next": {}
+        },
+        "b13": {
+          "id": "b13",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq13",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r13",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b14",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq14": {
+          "id": "eq14",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 14
+          },
+          "next": {}
+        },
+        "r14": {
+          "id": "r14",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut14"
+          },
+          "next": {}
+        },
+        "b14": {
+          "id": "b14",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq14",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r14",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b15",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq15": {
+          "id": "eq15",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 15
+          },
+          "next": {}
+        },
+        "r15": {
+          "id": "r15",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut15"
+          },
+          "next": {}
+        },
+        "b15": {
+          "id": "b15",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq15",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r15",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b16",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq16": {
+          "id": "eq16",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 16
+          },
+          "next": {}
+        },
+        "r16": {
+          "id": "r16",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut16"
+          },
+          "next": {}
+        },
+        "b16": {
+          "id": "b16",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq16",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r16",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b17",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq17": {
+          "id": "eq17",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 17
+          },
+          "next": {}
+        },
+        "r17": {
+          "id": "r17",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut17"
+          },
+          "next": {}
+        },
+        "b17": {
+          "id": "b17",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq17",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r17",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b18",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq18": {
+          "id": "eq18",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 18
+          },
+          "next": {}
+        },
+        "r18": {
+          "id": "r18",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut18"
+          },
+          "next": {}
+        },
+        "b18": {
+          "id": "b18",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq18",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r18",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "b19",
+              "port": "flowIn"
+            }
+          }
+        },
+        "eq19": {
+          "id": "eq19",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "=",
+            "left": {
+              "nodeId": "index",
+              "port": "value"
+            },
+            "right": 19
+          },
+          "next": {}
+        },
+        "r19": {
+          "id": "r19",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "flowOut19"
+          },
+          "next": {}
+        },
+        "b19": {
+          "id": "b19",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "eq19",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "r19",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "r19",
+              "port": "flowIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "framework:diceCheck",
+    "label": "骰子检定",
+    "description": "Framework 检定宏；使用 Core 通用随机值和比较节点",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "largeSuccess",
+        "kind": "flow"
+      },
+      {
+        "name": "success",
+        "kind": "flow"
+      },
+      {
+        "name": "failure",
+        "kind": "flow"
+      },
+      {
+        "name": "largeFailure",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "n",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {
+          "id": "start",
+          "type": "flowStart",
+          "inputs": {},
+          "next": {
+            "flowOut": {
+              "nodeId": "large",
+              "port": "flowIn"
+            }
+          }
+        },
+        "roll0": {
+          "id": "roll0",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "random",
+            "left": 0,
+            "right": 0
+          },
+          "next": {}
+        },
+        "roll1": {
+          "id": "roll1",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "*",
+            "left": {
+              "nodeId": "roll0",
+              "port": "value"
+            },
+            "right": 20
+          },
+          "next": {}
+        },
+        "roll": {
+          "id": "roll",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "+",
+            "left": {
+              "nodeId": "roll1",
+              "port": "value"
+            },
+            "right": 1
+          },
+          "next": {}
+        },
+        "high": {
+          "id": "high",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "+",
+            "left": {
+              "parameter": "n"
+            },
+            "right": 10
+          },
+          "next": {}
+        },
+        "largeCond": {
+          "id": "largeCond",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": ">=",
+            "left": {
+              "nodeId": "roll",
+              "port": "value"
+            },
+            "right": {
+              "nodeId": "high",
+              "port": "value"
+            }
+          },
+          "next": {}
+        },
+        "large": {
+          "id": "large",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "largeCond",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "largeReturn",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "success",
+              "port": "flowIn"
+            }
+          }
+        },
+        "largeReturn": {
+          "id": "largeReturn",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "largeSuccess"
+          },
+          "next": {}
+        },
+        "successCond": {
+          "id": "successCond",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": ">=",
+            "left": {
+              "nodeId": "roll",
+              "port": "value"
+            },
+            "right": {
+              "parameter": "n"
+            }
+          },
+          "next": {}
+        },
+        "success": {
+          "id": "success",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "successCond",
+              "port": "value"
+            }
+          },
+          "next": {
+            "true": {
+              "nodeId": "successReturn",
+              "port": "flowIn"
+            },
+            "false": {
+              "nodeId": "failure",
+              "port": "flowIn"
+            }
+          }
+        },
+        "successReturn": {
+          "id": "successReturn",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "success"
+          },
+          "next": {}
+        },
+        "low": {
+          "id": "low",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "-",
+            "left": {
+              "parameter": "n"
+            },
+            "right": 10
+          },
+          "next": {}
+        },
+        "failureCond": {
+          "id": "failureCond",
+          "type": "arithmetic",
+          "inputs": {
+            "operator": "<=",
+            "left": {
+              "nodeId": "roll",
+              "port": "value"
+            },
+            "right": {
+              "nodeId": "low",
+              "port": "value"
+            }
+          },
+          "next": {}
+        },
+        "failure": {
+          "id": "failure",
+          "type": "branch",
+          "inputs": {
+            "condition": {
+              "nodeId": "failureCond",
+              "port": "value"
+            }
+          },
+          "next": {
+                    "true": {
+                      "nodeId": "largeFailureReturn",
+                      "port": "flowIn"
+                    },
+                    "false": {
+                      "nodeId": "failureReturn",
+                      "port": "flowIn"
+                    }
+                  }
+        },
+        "failureReturn": {
+          "id": "failureReturn",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "failure"
+          },
+          "next": {}
+        },
+        "largeFailureReturn": {
+          "id": "largeFailureReturn",
+          "type": "macroReturn",
+          "inputs": {
+            "port": "largeFailure"
           },
           "next": {}
         }

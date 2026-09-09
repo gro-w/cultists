@@ -4,14 +4,45 @@
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
-      "start": { "id": "start", "type": "flowStart", "x": 60, "y": 60, "inputs": {} },
-
-      "run": { "id": "run", "type": "runActivity", "x": 460, "y": 60, "inputs": { "activityId": "work01a-patient1" } },
-      "end": { "id": "end", "type": "activityEnd", "x": 660, "y": 60, "inputs": {} }
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "x": 60,
+        "y": 60,
+        "inputs": {}
+      },
+      "run": {
+        "id": "run",
+        "type": "runActivity",
+        "x": 460,
+        "y": 60,
+        "inputs": {
+          "activityId": "work01a-patient1"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "x": 660,
+        "y": 60,
+        "inputs": {}
+      }
     },
     "connections": [
-      { "id": "edge-1", "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "run", "toPort": "flowIn" },
-      { "id": "edge-3", "fromNodeId": "run", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "run",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-3",
+        "fromNodeId": "run",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
     ]
   }
 }

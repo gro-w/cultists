@@ -29,7 +29,7 @@ const BUILTIN_ICON_BLUEPRINTS = {
     nodes: {
       start: { id: "start", type: "flowStart", inputs: {} },
       open: { id: "open", type: "openWindow", inputs: { windowId: inputs.windowId } },
-      consume: { id: "consume", type: "consumeTime", inputs: { minutes: inputs.minutes ?? 0 } },
+      consume: { id: "consume", type: "callApi", inputs: { apiId: "engine.consumeTime", payload: { minutes: inputs.minutes ?? 0 } } },
       end: { id: "end", type: "activityEnd", inputs: {} },
     },
     connections: [

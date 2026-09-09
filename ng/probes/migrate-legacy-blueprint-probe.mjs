@@ -4,6 +4,7 @@
 // reported" — for a representative sample plus the real legacy corpus
 // files it currently fully covers.
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

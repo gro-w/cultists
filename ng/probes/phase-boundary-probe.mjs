@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import EventBus from "../core/EventBus.js";
 import GameClock from "../core/GameClock.js";
 import TimeService from "../core/TimeService.js";
-import PhaseBoundaryService from "../core/PhaseBoundaryService.js";
+import PhaseBoundaryService from "../../tools/ng-legacy-content/PhaseBoundaryService.js";
 
 const bus = new EventBus();
 const clock = new GameClock(bus);

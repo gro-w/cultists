@@ -6,7 +6,7 @@
  * 再提示" buttons. Ported near-verbatim from legacy (same class names, same
  * queueing/positioning/auto-close behavior) so a data-driven hint looks and
  * behaves the same as the old engine's hardcoded ones; only the data
- * source (`OnboardingManager`, driven by `ng/data/onboarding.json` instead
+ * source (the data-driven event-state registry, driven by `ng/data/onboarding.json` instead
  * of a hardcoded HINTS constant) is new.
  */
 export class TutorialOverlay {

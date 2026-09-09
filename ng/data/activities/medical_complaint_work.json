@@ -15,7 +15,7 @@
       },
       "random": {
         "id": "random",
-        "type": "randomBranch",
+        "type": "framework:randomBranch",
         "inputs": {
           "n": 20
         },
@@ -80,7 +80,7 @@
       },
       "check": {
         "id": "check",
-        "type": "diceCheck",
+        "type": "framework:diceCheck",
         "inputs": {
           "n": 0
         },

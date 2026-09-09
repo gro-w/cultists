@@ -12,7 +12,15 @@
     "flow": "vertical",
     "padding": 8,
     "children": [
-      {"widgetId":"dialogue-panel","type":"dialogue","displayTo":"his-app","displayAliases":["dorm-bottom"],"className":"dialogue-panel panel-inset"}
+      {
+        "widgetId": "dialogue-panel",
+        "type": "dialogue",
+        "displayTo": "his-app",
+        "displayAliases": [
+          "dorm-bottom"
+        ],
+        "className": "dialogue-panel panel-inset"
+      }
     ]
   }
 }

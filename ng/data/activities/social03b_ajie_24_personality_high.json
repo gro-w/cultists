@@ -342,7 +342,7 @@
       },
       "consume_time_20_1": {
         "id": "consume_time_20_1",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -351,7 +351,7 @@
       },
       "consume_time_20_2": {
         "id": "consume_time_20_2",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -360,7 +360,7 @@
       },
       "consume_time_20_3": {
         "id": "consume_time_20_3",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -369,7 +369,7 @@
       },
       "consume_time_20_4": {
         "id": "consume_time_20_4",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -378,7 +378,7 @@
       },
       "consume_time_20_5": {
         "id": "consume_time_20_5",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -387,7 +387,7 @@
       },
       "consume_time_20_6": {
         "id": "consume_time_20_6",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -396,7 +396,7 @@
       },
       "consume_time_20_7": {
         "id": "consume_time_20_7",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -405,7 +405,7 @@
       },
       "consume_time_20_8": {
         "id": "consume_time_20_8",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -414,7 +414,7 @@
       },
       "consume_time_20_9": {
         "id": "consume_time_20_9",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -423,7 +423,7 @@
       },
       "consume_time_20_10": {
         "id": "consume_time_20_10",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -432,7 +432,7 @@
       },
       "consume_time_20_11": {
         "id": "consume_time_20_11",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -441,7 +441,7 @@
       },
       "consume_time_20_12": {
         "id": "consume_time_20_12",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },

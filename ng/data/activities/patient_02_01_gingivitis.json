@@ -27,7 +27,7 @@
       },
       "time_intro": {
         "id": "time_intro",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -72,7 +72,7 @@
       },
       "time_symptom": {
         "id": "time_symptom",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -93,7 +93,7 @@
       },
       "time_history": {
         "id": "time_history",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -114,7 +114,7 @@
       },
       "time_risk": {
         "id": "time_risk",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -135,7 +135,7 @@
       },
       "time_closing": {
         "id": "time_closing",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import EventBus from "../core/EventBus.js";
 import { PublicVariableManager } from "../core/PublicVariableManager.js";
 import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
@@ -220,7 +221,7 @@ import { validateBlueprint } from "../core/ActivityValidator.js";
         query: { id: "query", type: "getRecord", inputs: { databaseId: "inventoryItems", key: "potion-1", resultVariable: "item" } },
         branch: { id: "branch", type: "branch", inputs: { condition: true } },
         consume: { id: "consume", type: "updateRecord", inputs: { databaseId: "inventoryItems", key: "potion-1", patch: { quantity: 1 } } },
-        useTime: { id: "useTime", type: "consumeTime", inputs: { minutes: 5 } },
+        useTime: { id: "useTime", type: "framework:consumeTime", inputs: { minutes: 5 } },
         notify: { id: "notify", type: "emitEvent", inputs: { eventName: "item:used", payload: "potion-1" } },
         endTrue: { id: "endTrue", type: "activityEnd", inputs: {} },
         endFalse: { id: "endFalse", type: "activityEnd", inputs: {} },
@@ -254,6 +255,7 @@ import { validateBlueprint } from "../core/ActivityValidator.js";
   activityExecutionService.run({
     queue, definition: activityDefinitionStore.get("useItem"), instance, variableStore, dbGateway: dataStore,
     timeGateway: (minutes) => timed.push(minutes),
+    apiGateway: { call: (apiId, payload) => { if (apiId === "engine.consumeTime") return timed.push(payload.minutes); throw new Error(`Unexpected API ${apiId}`); } },
     eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
   });
 

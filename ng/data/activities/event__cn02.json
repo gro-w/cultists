@@ -145,10 +145,13 @@
       },
       "good": {
         "id": "good",
-        "type": "ending",
+        "type": "emitEvent",
         "inputs": {
-          "displayTo": "ending-screen",
-          "endingId": "pl现实魅惑大成功"
+          "eventName": "activity:ending",
+          "payload": {
+            "endingId": "pl现实魅惑大成功",
+            "displayTo": "ending-screen"
+          }
         }
       },
       "death": {
@@ -161,10 +164,13 @@
       },
       "bad": {
         "id": "bad",
-        "type": "ending",
+        "type": "emitEvent",
         "inputs": {
-          "displayTo": "ending-screen",
-          "endingId": "牺牲之血"
+          "eventName": "activity:ending",
+          "payload": {
+            "endingId": "牺牲之血",
+            "displayTo": "ending-screen"
+          }
         }
       },
       "end": {

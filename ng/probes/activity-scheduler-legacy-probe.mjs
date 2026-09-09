@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

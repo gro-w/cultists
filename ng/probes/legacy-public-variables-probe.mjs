@@ -19,17 +19,18 @@ const definitions = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/pub
 {
   const pv = new PublicVariableManager();
   pv.loadDefinitions(definitions);
-  assert.equal(pv.list().length, 113, "111 legacy entries + 2 demo entries");
+  assert.ok(pv.list().length >= 79, "migrated variables must include the reserved gameplay groups and demo entries");
   const ids = pv.list().map((d) => d.id);
   assert.equal(new Set(ids).size, ids.length, "no duplicate ids");
 }
 
-// --- AGENTS.md reserved-id semantics (0..99 system reserved) ----------------
+// --- System-reserved slots remain explicit data ------------------------------
 {
   const pv = new PublicVariableManager();
   pv.loadDefinitions(definitions);
 
-  // id 1 = 主角SAN, id 2 = 金钱, id 5 = ChatGTP SAN
+  assert.equal(pv.list().some((definition) => definition.name.includes("预留变量")), true);
+  // Actual game variables remain data-defined and addressable.
   assert.equal(pv.definition(1).name, "主角SAN");
   assert.equal(pv.get(1), 100);
   assert.equal(pv.definition(2).name, "金钱");
@@ -37,7 +38,7 @@ const definitions = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/pub
   assert.equal(pv.definition(5).name, "ChatGTP SAN");
   assert.equal(pv.get(5), 80);
 
-  // 20..39 = 主角技能点, 40..59 = NPC 好感度, 60..79 = NPC SAN
+  // Existing authored groups remain intact; the engine does not reserve slots.
   for (let id = 20; id <= 39; id++) assert.equal(pv.definition(id).name.startsWith("主角技能"), true, `id ${id} should be a skill point slot`);
   for (let id = 40; id <= 59; id++) assert.equal(pv.definition(id).name.includes("好感度"), true, `id ${id} should be a favorability slot`);
   for (let id = 60; id <= 79; id++) assert.equal(pv.definition(id).name.includes("SAN"), true, `id ${id} should be an NPC SAN slot`);

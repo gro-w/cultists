@@ -20,7 +20,7 @@ import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../core/OnboardingManager.js";
+import { OnboardingManager } from "../../tools/ng-legacy-content/OnboardingManager.js";
 import { entryKey } from "../scripts/migrate-legacy-chatgtp-qa.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

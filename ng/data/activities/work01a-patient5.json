@@ -11,7 +11,15 @@
         "x": 40,
         "y": 260
       },
-      "openDialogueWindow": { "id": "openDialogueWindow", "type": "openWindow", "inputs": { "windowId": "dialogue" }, "x": 140, "y": 260 },
+      "openDialogueWindow": {
+        "id": "openDialogueWindow",
+        "type": "openWindow",
+        "inputs": {
+          "windowId": "dialogue"
+        },
+        "x": 140,
+        "y": 260
+      },
       "intro": {
         "id": "intro",
         "type": "text",
@@ -26,7 +34,7 @@
       },
       "time_intro": {
         "id": "time_intro",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -36,8 +44,8 @@
       "main_choice": {
         "id": "main_choice",
         "type": "choice",
-                "inputs": {
-                  "displayTo": "his-app",
+        "inputs": {
+          "displayTo": "his-app",
           "options": [
             {
               "label": "详细询问主诉和症状变化",
@@ -72,7 +80,7 @@
       },
       "time_symptom": {
         "id": "time_symptom",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -93,7 +101,7 @@
       },
       "time_history": {
         "id": "time_history",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -114,7 +122,7 @@
       },
       "time_risk": {
         "id": "time_risk",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },
@@ -135,7 +143,7 @@
       },
       "time_closing": {
         "id": "time_closing",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         },

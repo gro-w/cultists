@@ -1,4 +1,4 @@
-import RuntimeRecordStore from "./RuntimeRecordStore.js";
+import RuntimeRecordStore from "../../ng/core/RuntimeRecordStore.js";
 export class MediaStateManager extends RuntimeRecordStore {
   constructor(options = {}) { super({ ...options, eventPrefix: "media" }); }
   unlock(id, value = true) { return this.set(id, { unlocked: Boolean(value) }); }

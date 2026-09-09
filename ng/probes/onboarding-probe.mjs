@@ -1,6 +1,6 @@
 // Phase 8 onboarding (新手引导) probe: proves the generic `OnboardingManager`
 // milestone/hint mechanic (list/hasMilestone/markMilestone/dismissHint/
-// acknowledgeHint/snapshot/restore) and the `markOnboardingMilestone`
+// acknowledgeHint/snapshot/restore) and the `markEventState`
 // Activity node behave correctly, end-to-end through the real
 // ActivityRunner exactly like every other generic node - nothing here
 // references his/chatgtp/dorm content, only opaque hint ids, matching the
@@ -12,7 +12,7 @@ import { ActivityDefinitionStore } from "../core/ActivityDefinitionStore.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../core/OnboardingManager.js";
+import { OnboardingManager } from "../../tools/ng-legacy-content/OnboardingManager.js";
 
 const HINTS = [
   { id: "welcome", trigger: "desktop_seen", completeOn: "his_opened", target: ".desktop-icon", title: "欢迎", text: "先打开 HIS 系统吧！" },
@@ -120,7 +120,7 @@ function makeManager() {
   assert.deepEqual(requested, [], "no hint is requested while disabled");
 }
 
-// --- markOnboardingMilestone Activity node, exercised through the real -----
+// --- markEventState Activity node, exercised through the real -----
 // ActivityRunner/ActivityExecutionService exactly like any other node.
 {
   const eventBus = new EventBus();
@@ -134,7 +134,7 @@ function makeManager() {
       startNodeId: "start",
       nodes: {
         start: { id: "start", type: "flowStart", inputs: {} },
-        mark: { id: "mark", type: "markOnboardingMilestone", inputs: { id: "desktop_seen" } },
+        mark: { id: "mark", type: "markEventState", inputs: { id: "desktop_seen" } },
         end: { id: "end", type: "activityEnd", inputs: {} },
       },
       connections: [
@@ -162,7 +162,7 @@ function makeManager() {
     windowGateway: () => {},
     activityGateway: () => {},
     eventGateway: () => {},
-  }), /onboardingGateway/);
+  }), /eventStateGateway/);
 
   const instance2 = queue.append({ activityId: definition.id });
   activityExecutionService.run({

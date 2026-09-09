@@ -104,7 +104,7 @@
                       },
                       "consume": {
                         "id": "consume",
-                        "type": "consumeTime",
+                        "type": "framework:consumeTime",
                         "inputs": {
                           "minutes": 480
                         },
@@ -2386,7 +2386,7 @@
         },
         "markDormSeen": {
           "id": "markDormSeen",
-          "type": "markOnboardingMilestone",
+          "type": "markEventState",
           "inputs": {
             "id": "dorm_seen"
           },
@@ -2399,7 +2399,7 @@
         },
         "consume": {
           "id": "consume",
-          "type": "consumeTime",
+          "type": "framework:consumeTime",
           "inputs": {
             "minutes": 480
           },

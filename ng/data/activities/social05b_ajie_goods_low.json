@@ -43,7 +43,7 @@
       },
       "time_0": {
         "id": "time_0",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -70,7 +70,7 @@
       },
       "time_1": {
         "id": "time_1",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }

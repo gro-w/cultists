@@ -663,7 +663,7 @@
                   },
                   "markPatientSelected": {
                     "id": "markPatientSelected",
-                    "type": "markOnboardingMilestone",
+                    "type": "markEventState",
                     "inputs": {
                       "id": "first_patient_selected"
                     },
@@ -774,7 +774,7 @@
                   },
                   "markDialogueStarted": {
                     "id": "markDialogueStarted",
-                    "type": "markOnboardingMilestone",
+                    "type": "markEventState",
                     "inputs": {
                       "id": "first_dialogue_started"
                     },
@@ -1044,7 +1044,10 @@
                     "widgetId": "his-prescription-row-1",
                     "type": "container",
                     "className": "his-prescription-row",
-                    "componentActions": ["add", "remove"],
+                    "componentActions": [
+                      "add",
+                      "remove"
+                    ],
                     "events": {
                       "onAdd": {
                         "startNodeId": "start",
@@ -1072,7 +1075,10 @@
                               "properties": {
                                 "type": "container",
                                 "className": "his-prescription-row",
-                                "componentActions": ["add", "remove"],
+                                "componentActions": [
+                                  "add",
+                                  "remove"
+                                ],
                                 "flow": "horizontal",
                                 "gap": 6,
                                 "children": [
@@ -2177,7 +2183,7 @@
                       },
                       "markSubmitted": {
                         "id": "markSubmitted",
-                        "type": "markOnboardingMilestone",
+                        "type": "markEventState",
                         "inputs": {
                           "id": "first_diagnosis_submitted"
                         },
@@ -2581,7 +2587,7 @@
         },
         "markHisOpened": {
           "id": "markHisOpened",
-          "type": "markOnboardingMilestone",
+          "type": "markEventState",
           "inputs": {
             "id": "his_opened"
           },

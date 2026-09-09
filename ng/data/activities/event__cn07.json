@@ -1002,9 +1002,13 @@
       },
       "ending": {
         "id": "ending",
-        "type": "ending",
+        "type": "emitEvent",
         "inputs": {
-          "endingId": "现实=现实"
+          "eventName": "activity:ending",
+          "payload": {
+            "endingId": "现实=现实",
+            "displayTo": "default"
+          }
         }
       },
       "end": {

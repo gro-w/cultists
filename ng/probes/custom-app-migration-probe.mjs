@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import PhaseBoundaryService from "../core/PhaseBoundaryService.js";
+import PhaseBoundaryService from "../../tools/ng-legacy-content/PhaseBoundaryService.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../data");
 const engine = JSON.parse(fs.readFileSync(path.join(root, "game-manifest.json"), "utf8"));

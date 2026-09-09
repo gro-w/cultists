@@ -73,16 +73,16 @@
       },
       "study_time": {
         "id": "study_time",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
       },
       "study_san": {
         "id": "study_san",
-        "type": "statOperation",
+        "type": "setVariable",
         "inputs": {
-          "statId": "mental",
+          "key": "mental",
           "delta": 10
         }
       },
@@ -93,7 +93,7 @@
       },
       "game_start": {
         "id": "game_start",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -162,7 +162,7 @@
       },
       "game_time_3": {
         "id": "game_time_3",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -199,7 +199,7 @@
       },
       "game_time_6": {
         "id": "game_time_6",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -236,7 +236,7 @@
       },
       "game_time_9": {
         "id": "game_time_9",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -273,7 +273,7 @@
       },
       "game_time_12": {
         "id": "game_time_12",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -310,7 +310,7 @@
       },
       "game_time_15": {
         "id": "game_time_15",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -347,7 +347,7 @@
       },
       "game_time_18": {
         "id": "game_time_18",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }

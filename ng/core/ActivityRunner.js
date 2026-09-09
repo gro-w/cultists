@@ -20,9 +20,8 @@
 import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
 
 const ONE_SHOT_NODE_TYPES = new Set([
-  "setVariable", "consumeTime", "openWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
-  "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect",
-  "markOnboardingMilestone", "statOperation",
+  "setVariable", "setLocalVariable", "openWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
+  "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect", "markEventState",
 ]);
 const MAX_STEPS = 1000;
 
@@ -54,6 +53,9 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       break;
     case "getVariable":
       result = variableStore.get(read("key"));
+      break;
+    case "getLocalVariable":
+      result = variableStore.get(`__local:${read("key")}`);
       break;
     case "getProperty": {
       const target = read("value");
@@ -163,11 +165,9 @@ function applyArithmetic(operator, left, right) {
     case "<=": return left <= right;
     case "=": return left === right;
     case "not": return !Boolean(left);
-    // Generic entropy source (Phase 8 legacy content migration): ignores
-    // both operands, returns a float in [0, 1). This — composed with
-    // `branch`/comparison operators above — is enough to express the
-    // legacy engine's `randomBranch`/`diceCheck` content as an ordinary
-    // value/flow graph, with no dedicated "random" flow node needed.
+    case "floor": return Math.floor(Number(left));
+    // Generic entropy source: composed with value and flow operators,
+    // this remains a host primitive rather than a domain-specific node.
     case "random": return Math.random();
     // Generic string concatenation (as opposed to "+"'s numeric coercion) -
     // e.g. building a display label or a lookup key from two variable-
@@ -227,7 +227,8 @@ export function createActivityRunner({
   dbGateway = null,
   pvGateway = null,
   runtimeGateway = null,
-  onboardingGateway = null,
+  eventStateGateway = null,
+  onboardingGateway = eventStateGateway,
   apiGateway = null,
   onCheckpoint = () => {},
   onComplete = () => {},
@@ -237,6 +238,25 @@ export function createActivityRunner({
   let paused = false;
   let waitUnsubscribe = null;
   let lastDialogueDisplayTo = null;
+  const globalVariableStore = variableStore;
+  const declaredLocals = blueprint.localVariables && typeof blueprint.localVariables === "object" ? blueprint.localVariables : {};
+  if (!instance.localVariables || Object.keys(instance.localVariables).length === 0) {
+    instance.localVariables = structuredClone(Object.fromEntries(Object.entries(declaredLocals).map(([key, value]) => [key, value?.defaultValue ?? value])));
+  }
+  const localValues = new Map(Object.entries(instance.localVariables || {}));
+  variableStore = {
+    get: (key) => String(key).startsWith("__local:") ? localValues.get(String(key).slice(8)) : globalVariableStore.get(key),
+    set: (key, value) => {
+      if (String(key).startsWith("__local:")) {
+        localValues.set(String(key).slice(8), value);
+        instance.localVariables = Object.fromEntries(localValues);
+      } else globalVariableStore.set(key, value);
+    },
+    delta: (key, amount) => {
+      const current = Number(variableStore.get(key)) || 0;
+      variableStore.set(key, current + (Number(amount) || 0));
+    },
+  };
 
   function markExecuted(node) {
     if (!instance.executedNodeIds.includes(node.id)) instance.executedNodeIds.push(node.id);
@@ -249,7 +269,7 @@ export function createActivityRunner({
     instance.waitingNodeId = null;
     if (instance.currentStep) instance.currentStep = { ...instance.currentStep, status: reason };
     if (lastDialogueDisplayTo) {
-      eventGateway("dialogue:complete", {
+      eventGateway("display:complete", {
         instanceId: instance.instanceId,
         displayTo: lastDialogueDisplayTo,
         reason,
@@ -266,12 +286,26 @@ export function createActivityRunner({
       case "activityEnd":
         finish("completed");
         return { stop: true };
+      case "macroReturn":
+        instance.returnPort = String(resolveInput(blueprint, node, "port", variableStore, "flowOut", undefined, pvGateway, dbGateway, runtimeGateway));
+        finish("returned");
+        return { stop: true };
       case "setVariable": {
         const key = resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         if (Object.prototype.hasOwnProperty.call(node.inputs || {}, "delta")) {
           variableStore.delta(key, resolveInput(blueprint, node, "delta", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway));
         } else {
           variableStore.set(key, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
+        }
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "setLocalVariable": {
+        const key = resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+        const scopedKey = `__local:${key}`;
+        if (Object.prototype.hasOwnProperty.call(node.inputs || {}, "delta")) {
+          variableStore.delta(scopedKey, resolveInput(blueprint, node, "delta", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway));
+        } else {
+          variableStore.set(scopedKey, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
         }
         return { next: nextFlow(blueprint, node) };
       }
@@ -290,11 +324,7 @@ export function createActivityRunner({
         if (variableStore.get(key) === expected) return { next: nextFlow(blueprint, node) };
         return { wait: true };
       }
-      case "consumeTime": {
-        const minutes = Number(resolveInput(blueprint, node, "minutes", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway));
-        timeGateway(minutes, instance, node);
-        return { next: nextFlow(blueprint, node) };
-      }
+
       case "openWindow": {
         const skip = Boolean(resolveInput(blueprint, node, "skip", variableStore, false, undefined, pvGateway, dbGateway, runtimeGateway));
         const windowId = resolveInput(blueprint, node, "windowId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
@@ -353,40 +383,14 @@ export function createActivityRunner({
         activityGateway(activityId, queueId, instance, node, payload);
         return { next: nextFlow(blueprint, node) };
       }
-      case "statOperation": {
-        const key = resolveInput(blueprint, node, "statId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
-        if (Object.prototype.hasOwnProperty.call(node.inputs || {}, "delta")) {
-          variableStore.delta(key, resolveInput(blueprint, node, "delta", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway));
-        } else {
-          variableStore.set(key, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
-        }
-        return { next: nextFlow(blueprint, node) };
-      }
-      case "randomBranch": {
-        const n = Number(resolveInput(blueprint, node, "n", variableStore, 2, undefined, pvGateway, dbGateway, runtimeGateway));
-        const count = Math.max(1, Math.min(20, Number.isInteger(n) && n > 1 ? n : 2));
-        return { next: nextFlow(blueprint, node, `flowOut${Math.floor(Math.random() * count)}`) };
-      }
-      case "diceCheck": {
-        const threshold = Number(resolveInput(blueprint, node, "n", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway));
-        const roll = Math.floor(Math.random() * 20) + 1;
-        const port = roll >= threshold + 10 ? "largeSuccess" : roll >= threshold ? "success" : roll <= threshold - 10 ? "largeFailure" : "failure";
-        return { next: nextFlow(blueprint, node, port) };
-      }
+
+
       case "segmentBranch": {
         const value = Number(resolveInput(blueprint, node, "value", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway));
         const count = Math.max(1, Math.min(32, Math.floor(Number(resolveInput(blueprint, node, "branchCount", variableStore, 1, undefined, pvGateway, dbGateway, runtimeGateway)))));
         const boundaries = Array.from({ length: count + 1 }, (_, index) => Number(resolveInput(blueprint, node, `boundary${index}`, variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway)));
         const index = boundaries.findIndex((upper, boundaryIndex) => value <= upper && value > boundaries[boundaryIndex + 1]);
         return { next: nextFlow(blueprint, node, index < 0 ? "default" : `segment${index}`) };
-      }
-      case "ending": {
-        eventGateway("activity:ending", {
-          endingId: resolveInput(blueprint, node, "endingId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway),
-          displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway, dbGateway, runtimeGateway),
-        }, instance, node);
-        finish("ending");
-        return { stop: true };
       }
       case "emitEvent": {
         const eventName = resolveInput(blueprint, node, "eventName", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
@@ -444,11 +448,12 @@ export function createActivityRunner({
         }
         return { next: nextFlow(blueprint, node) };
       }
-      case "markOnboardingMilestone": {
-        if (!onboardingGateway) throw new Error(`Node ${node.type} requires an onboardingGateway`);
-        onboardingGateway.markMilestone(resolveInput(blueprint, node, "id", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
+      case "markEventState": {
+        if (!eventStateGateway && !onboardingGateway) throw new Error(`Node ${node.type} requires an eventStateGateway`);
+        (eventStateGateway || onboardingGateway).mark(resolveInput(blueprint, node, "id", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
         return { next: nextFlow(blueprint, node) };
       }
+
       case "text": {
         const continueKey = resolveInput(blueprint, node, "continueKey", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         const payload = {
@@ -463,7 +468,7 @@ export function createActivityRunner({
         /* DEV-TOOLS:START */
         console.log("[NG dialogue] ActivityRunner text node", { activityId: definition.id, nodeId: node.id, payload });
         /* DEV-TOOLS:END */
-        eventGateway("dialogue:text", payload, instance, node);
+        eventGateway("display:text", payload, instance, node);
         if (continueKey && !variableStore.get(continueKey)) return { wait: true };
         if (continueKey) variableStore.set(continueKey, null);
         return { next: nextFlow(blueprint, node) };
@@ -481,7 +486,7 @@ export function createActivityRunner({
         /* DEV-TOOLS:START */
         console.log("[NG dialogue] ActivityRunner choice node", { activityId: definition.id, nodeId: node.id, payload });
         /* DEV-TOOLS:END */
-        eventGateway("dialogue:choice", payload, instance, node);
+        eventGateway("display:choice", payload, instance, node);
         const selected = selectionKey ? variableStore.get(selectionKey) : undefined;
         if (selected === undefined || selected === null) return { wait: true };
         const index = Number(selected);
@@ -525,14 +530,14 @@ export function createActivityRunner({
           dbGateway,
           pvGateway,
           runtimeGateway,
-          onboardingGateway,
+          eventStateGateway,
           apiGateway,
           onCheckpoint: () => {},
           onComplete: () => {},
         });
         childRunner.start();
         if (childInstance.status !== "resolved") throw new Error(`Custom blueprint node ${node.type} entered a waiting state; reusable nodes must complete synchronously`);
-        return { next: nextFlow(blueprint, node) };
+        return { next: nextFlow(blueprint, node, childInstance.returnPort) || nextFlow(blueprint, node) };
       }
     }
   }

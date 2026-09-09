@@ -5,7 +5,7 @@
  * module just owns the instance's field defaults so every queue produces
  * consistent, snapshot-safe instances.
  */
-export function createActivityInstance({ instanceId, activityId, queueId, currentNodeId = null, payload = null, receivedDay = null, receivedTime = null, receivedPhase = null }) {
+export function createActivityInstance({ instanceId, activityId, queueId, currentNodeId = null, payload = null, receivedDay = null, receivedTime = null, receivedPhase = null, localVariables = {} }) {
   return {
     instanceId,
     activityId,
@@ -16,6 +16,7 @@ export function createActivityInstance({ instanceId, activityId, queueId, curren
     currentStep: currentNodeId ? { nodeId: currentNodeId, status: "pending" } : null,
     waitingNodeId: null,
     executedNodeIds: [],
+    localVariables: structuredClone(localVariables || {}),
     payload,
     receivedDay,
     receivedTime,

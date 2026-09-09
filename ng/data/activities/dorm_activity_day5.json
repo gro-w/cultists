@@ -43,7 +43,7 @@
       },
       "time_2": {
         "id": "time_2",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -80,7 +80,7 @@
       },
       "time_5": {
         "id": "time_5",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -117,7 +117,7 @@
       },
       "time_8": {
         "id": "time_8",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -154,7 +154,7 @@
       },
       "time_11": {
         "id": "time_11",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -191,7 +191,7 @@
       },
       "time_14": {
         "id": "time_14",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -228,7 +228,7 @@
       },
       "time_17": {
         "id": "time_17",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -265,7 +265,7 @@
       },
       "time_20": {
         "id": "time_20",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }

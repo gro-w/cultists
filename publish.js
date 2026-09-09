@@ -37,7 +37,7 @@ function copyTree(source, destination) {
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
     // Documentation and agent instructions are not player assets and may
     // intentionally mention development-only tools or markers.
-    if ([".git", "publish", "publish.js", "dev-server.js", "editors", "node_modules", ".hermes", "AGENTS.md", "README.md", "docs"].includes(entry.name)) continue;
+    if ([".git", "publish", "publish.js", "dev-server.js", "editors", "node_modules", ".hermes", "AGENTS.md", "README.md", "agent-notes.md", "docs"].includes(entry.name)) continue;
     const from = path.join(source, entry.name);
     const relative = path.relative(root, from).replaceAll(path.sep, "/");
     // NG tooling, probes, migration inventories, and developer-only modules
@@ -46,8 +46,11 @@ function copyTree(source, destination) {
     // player-build safety scan.
     if (relative === "ng/dev" || relative.startsWith("ng/dev/")
       || relative === "ng/tools" || relative.startsWith("ng/tools/")
+      || relative === "ng/scripts" || relative.startsWith("ng/scripts/")
       || relative === "ng/probes" || relative.startsWith("ng/probes/")
-      || relative === "ng/MIGRATION-TODO.md" || relative === "ng/LEGACY-NG-MIGRATION-INVENTORY.md") continue;
+      || relative === "ng/MIGRATION-TODO.md" || relative === "ng/LEGACY-NG-MIGRATION-INVENTORY.md"
+      || relative === "g/scripts" || relative.startsWith("g/scripts/")
+      || relative === "tools" || relative.startsWith("tools/")) continue;
     const to = path.join(destination, entry.name);
     if (entry.isDirectory()) {
       fs.mkdirSync(to, { recursive: true });

@@ -14,7 +14,8 @@ import { OnboardingEditorView } from "./OnboardingEditorView.js";
 import { StartMenuEditorView } from "./StartMenuEditorView.js";
 import { SaveDebuggerView } from "./SaveDebuggerView.js";
 import { BlueprintNodeManagerView } from "./BlueprintNodeManagerView.js";
-import { registerCustomActivityNode } from "../core/ActivityNodeRegistry.js";
+import { updateCustomActivityNode } from "../core/ActivityNodeRegistry.js";
+
 
 
 const LIST_MANAGER_WINDOW_ID = "dev-activity-list-manager";
@@ -67,7 +68,6 @@ export async function initDeveloperMode({
 
   refreshIcons,
 }) {
-  customBlueprintNodes.forEach((node) => registerCustomActivityNode(node));
   const model = createActivityListManagerModel();
 
   function openEditor(activity) {
@@ -341,7 +341,7 @@ export async function initDeveloperMode({
       displayName: node.label || node.id,
       onSaveToMemory: (blueprint) => {
         node.blueprint = blueprint;
-        registerCustomActivityNode(node);
+        updateCustomActivityNode(node);
         blueprintNodeManagerView.render();
       },
     });

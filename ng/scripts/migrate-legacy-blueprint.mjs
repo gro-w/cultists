@@ -44,7 +44,7 @@ function makeConverters(synthesizeKey) {
   return {
     flowStart: "flowStart",
     activityEnd: "activityEnd",
-    consumeTime: "consumeTime",
+    consumeTime: "framework:consumeTime",
     branch: "branch",
     arithmetic: "arithmetic",
     prerequisite: "prerequisite",
@@ -53,8 +53,8 @@ function makeConverters(synthesizeKey) {
     getActivityInstanceCount: "getActivityInstanceCount",
     insertActivity: "insertActivity",
     statOperation: "statOperation",
-    randomBranch: "randomBranch",
-    diceCheck: "diceCheck",
+    randomBranch: "framework:randomBranch",
+    diceCheck: "framework:diceCheck",
     ending: "ending",
     // These legacy domain operations are normalized to the engine's generic
     // event capability. Their payload remains authored data and is executed
@@ -151,7 +151,7 @@ export function convertBlueprint(legacyBlueprint, { synthesizeKey = defaultSynth
       });
     }
   }
-  const flowTypes = new Set(["flowStart", "consumeTime", "branch", "insertActivity", "statOperation", "randomBranch", "diceCheck", "segmentBranch", "ending", "emitEvent", "text", "choice", "applyPublicVariableEffect"]);
+  const flowTypes = new Set(["flowStart", "framework:consumeTime", "branch", "insertActivity", "statOperation", "framework:randomBranch", "framework:diceCheck", "segmentBranch", "ending", "emitEvent", "text", "choice", "applyPublicVariableEffect"]);
   if (nodes.end) Object.entries(nodes).forEach(([id, node]) => {
     if (!flowTypes.has(node.type) || node.type === "flowStart" || node.type === "activityEnd") return;
     if (!connections.some((edge) => edge.fromNodeId === id)) connections.push({ fromNodeId: id, fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" });

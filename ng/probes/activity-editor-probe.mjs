@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import { createActivityEditorModel } from "../dev/ActivityEditorModel.js";
 import { createActivityListManagerModel } from "../dev/ActivityListManagerModel.js";
 
@@ -22,7 +23,7 @@ const sourceBlueprint = {
 
   editorA.moveNode("start", 999, 999);
   editorA.selectOnly("start");
-  editorA.addNode("consumeTime", 500, 40, { minutes: 5 });
+  editorA.addNode("framework:consumeTime", 500, 40, { minutes: 5 });
 
   assert.equal(editorB.getNode("start").x, 40, "editor B's node position must be untouched by editor A's move");
   assert.equal(editorB.getNode("start").y, 40);

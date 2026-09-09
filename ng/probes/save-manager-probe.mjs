@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import EventBus from "../core/EventBus.js";
 import { GameClock } from "../core/GameClock.js";
 import { VariableStore } from "../core/VariableStore.js";
@@ -11,7 +12,7 @@ import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { WindowManager } from "../core/WindowManager.js";
 import { DesktopIconManager } from "../core/DesktopIconManager.js";
 import { KeywordManager } from "../../tools/ng-legacy-framework/KeywordManager.js";
-import { OnboardingManager } from "../core/OnboardingManager.js";
+import { OnboardingManager } from "../../tools/ng-legacy-content/OnboardingManager.js";
 import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 import { SaveManager } from "../core/SaveManager.js";
 
@@ -25,7 +26,7 @@ const waitingDefinition = {
     startNodeId: "start",
     nodes: {
       start: { id: "start", type: "flowStart", inputs: {} },
-      spendTime: { id: "spendTime", type: "consumeTime", inputs: { minutes: 20 } },
+      spendTime: { id: "spendTime", type: "framework:consumeTime", inputs: { minutes: 20 } },
       wait: { id: "wait", type: "blockUntil", inputs: { key: "approved", equals: true } },
       end: { id: "end", type: "activityEnd", inputs: {} },
     },
@@ -73,6 +74,7 @@ function makeSession() {
       instance,
       variableStore,
       timeGateway: (minutes) => gameClock.advance(minutes),
+      apiGateway: { call: (apiId, payload) => { if (apiId === "engine.consumeTime") return gameClock.advance(payload.minutes); throw new Error(`Unexpected API ${apiId}`); } },
       dbGateway: dataStore,
       pvGateway: publicVariableManager,
     });
@@ -91,6 +93,7 @@ function makeSession() {
         instance,
         variableStore,
         timeGateway: (minutes) => gameClock.advance(minutes),
+      apiGateway: { call: (apiId, payload) => { if (apiId === "engine.consumeTime") return gameClock.advance(payload.minutes); throw new Error(`Unexpected API ${apiId}`); } },
         dbGateway: dataStore,
         pvGateway: publicVariableManager,
       });

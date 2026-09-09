@@ -15,7 +15,7 @@
       },
       "random": {
         "id": "random",
-        "type": "randomBranch",
+        "type": "framework:randomBranch",
         "inputs": {
           "n": 20
         },
@@ -80,7 +80,7 @@
       },
       "check": {
         "id": "check",
-        "type": "diceCheck",
+        "type": "framework:diceCheck",
         "inputs": {
           "n": 0
         },
@@ -135,9 +135,13 @@
       },
       "death": {
         "id": "death",
-        "type": "ending",
+        "type": "emitEvent",
         "inputs": {
-          "endingId": "mob_violence_death"
+          "eventName": "activity:ending",
+          "payload": {
+            "endingId": "mob_violence_death",
+            "displayTo": "default"
+          }
         },
         "x": 100,
         "y": 100

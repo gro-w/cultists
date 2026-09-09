@@ -5,20 +5,42 @@
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
-      "start": { "id": "start", "type": "flowStart", "inputs": {} },
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
       "ready": {
         "id": "ready",
         "type": "emitEvent",
         "inputs": {
           "eventName": "achievement:manager-ready",
-          "payload": { "source": "achievement-manager" }
+          "payload": {
+            "source": "achievement-manager"
+          }
         }
       },
-      "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
     },
     "connections": [
-      { "id": "edge-1", "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "ready", "toPort": "flowIn" },
-      { "id": "edge-2", "fromNodeId": "ready", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "ready",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "ready",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
     ]
   }
 }

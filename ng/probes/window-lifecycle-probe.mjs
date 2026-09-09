@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./register-framework-nodes.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,7 +11,7 @@ import { GameClock } from "../core/GameClock.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../core/OnboardingManager.js";
+import { OnboardingManager } from "../../tools/ng-legacy-content/OnboardingManager.js";
 import { DataStructureManager } from "../core/DataStructureManager.js";
 import { DataStore } from "../core/DataStore.js";
 import { PublicVariableManager } from "../core/PublicVariableManager.js";
@@ -40,6 +41,7 @@ function wireWindowLifecycle({ eventBus, windowDefinitionStore, activityQueueReg
       instance,
       variableStore,
       timeGateway: (minutes) => gameClock.advance(minutes),
+      apiGateway: { call: (apiId, payload) => { if (apiId === "engine.consumeTime") return gameClock.advance(payload.minutes); throw new Error(`Unexpected API ${apiId}`); } },
       windowGateway: () => {},
       dbGateway,
       pvGateway,

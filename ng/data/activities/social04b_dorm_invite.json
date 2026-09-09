@@ -23,7 +23,7 @@
       },
       "time": {
         "id": "time",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }

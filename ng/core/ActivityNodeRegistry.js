@@ -21,11 +21,28 @@ const valueOut = (name = "value", type = "any") => ({ name, kind: VALUE, type })
 const definitions = {
   flowStart: { label: "流程起始", flowOutputs: [flowOut()] },
   activityEnd: { label: "活动结束", flowInputs: [flowIn()] },
+  macroReturn: {
+    label: "宏流程返回",
+    flowInputs: [flowIn()],
+    flowOutputs: [],
+    valueInputs: [valueIn("port", "string")],
+  },
   setVariable: {
     label: "设置变量",
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("value"), valueIn("delta", "number")],
+  },
+  setLocalVariable: {
+    label: "设置 Activity 本地变量",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("key", "string"), valueIn("value"), valueIn("delta", "number")],
+  },
+  getLocalVariable: {
+    label: "读取 Activity 本地变量",
+    valueInputs: [valueIn("key", "string")],
+    valueOutputs: [valueOut("value")],
   },
   branch: {
     label: "条件分支",
@@ -39,12 +56,7 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("equals"), valueIn("condition", "bool")],
   },
-  consumeTime: {
-    label: "消耗时间",
-    flowInputs: [flowIn()],
-    flowOutputs: [flowOut()],
-    valueInputs: [valueIn("minutes", "number")],
-  },
+
   // Generic window-kernel action (not domain logic - windows/WindowManager
   // are core engine concepts per plan §4/§7). Lets a blueprint (e.g. a
   // desktop icon's) open a window definition by id and then keep going,
@@ -299,44 +311,17 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("activityId", "string"), valueIn("queue", "string"), valueIn("addTime", "number")],
   },
-  statOperation: {
-    label: "修改属性",
-    flowInputs: [flowIn()],
-    flowOutputs: [flowOut()],
-    valueInputs: [valueIn("statId", "string"), valueIn("delta", "number"), valueIn("value")],
-  },
-  randomBranch: {
-    label: "随机分支",
-    flowInputs: [flowIn()],
-    flowOutputs: Array.from({ length: 20 }, (_, index) => flowOut(`flowOut${index}`)),
-    valueInputs: [valueIn("n", "number")],
-  },
-  diceCheck: {
-    label: "骰子检定",
-    flowInputs: [flowIn()],
-    flowOutputs: ["largeSuccess", "success", "failure", "largeFailure"].map(flowOut),
-    valueInputs: [valueIn("n", "number")],
-  },
+
+
   segmentBranch: {
     label: "区间分支",
     flowInputs: [flowIn()],
     flowOutputs: ["default", ...Array.from({ length: 32 }, (_, index) => `segment${index}`)].map(flowOut),
     valueInputs: [valueIn("value", "number"), valueIn("branchCount", "number"), ...Array.from({ length: 33 }, (_, index) => valueIn(`boundary${index}`, "number"))],
   },
-  ending: {
-    label: "结束流程",
-    flowInputs: [flowIn()],
-    flowOutputs: [flowOut()],
-    valueInputs: [valueIn("endingId", "string"), valueIn("displayTo", "string")],
-  },
-  // Generic onboarding/tutorial primitive (mirrors the legacy engine's
-  // effect - milestone-driven hints - without baking any specific
-  // milestone id or event-name mapping into engine code; any blueprint
-  // (dialogue node, widget onClick, window onCreate, desktop icon) can
-  // mark a milestone). Operates on `onboardingGateway`, a small sibling of
-  // `pvGateway`/`dbGateway`.
-  markOnboardingMilestone: {
-    label: "标记新手引导里程碑",
+
+  markEventState: {
+    label: "标记状态事件",
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("id", "string")],
@@ -384,6 +369,28 @@ export function classifyActivityNodePorts(nodeOrType) {
 
 export function unregisterCustomActivityNode(id) {
   return customDefinitions.delete(id);
+}
+
+export function updateCustomActivityNode(node) {
+  if (!node?.id || !customDefinitions.has(node.id)) {
+    throw new Error(`Cannot update unregistered custom blueprint node: ${node?.id || ""}`);
+  }
+  if (!classifyActivityNodePorts(node)) {
+    throw new Error(`Custom blueprint node ${node.id} does not match one of the four node categories`);
+  }
+  const current = customDefinitions.get(node.id);
+  const updated = {
+    ...current,
+    label: node.label || node.id,
+    flowInputs: Array.isArray(node.flowInputs) ? node.flowInputs : current.flowInputs,
+    flowOutputs: Array.isArray(node.flowOutputs) ? node.flowOutputs : current.flowOutputs,
+    valueInputs: Array.isArray(node.valueInputs) ? node.valueInputs : current.valueInputs,
+    valueOutputs: Array.isArray(node.valueOutputs) ? node.valueOutputs : current.valueOutputs,
+    custom: true,
+    blueprint: node.blueprint || null,
+  };
+  customDefinitions.set(node.id, updated);
+  return updated;
 }
 
 export function listCustomActivityNodes() {

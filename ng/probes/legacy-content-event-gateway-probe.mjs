@@ -1,8 +1,8 @@
 import { eventBus } from "../core/EventBus.js";
 import { ItemManager } from "../../tools/ng-legacy-content/ItemManager.js";
 import { SpellManager } from "../../tools/ng-legacy-content/SpellManager.js";
-import { MediaStateManager } from "../core/MediaStateManager.js";
-import { SelectionSubmissionManager } from "../core/SelectionSubmissionManager.js";
+import { MediaStateManager } from "../../tools/ng-legacy-content/MediaStateManager.js";
+import { SelectionSubmissionManager } from "../../tools/ng-legacy-content/SelectionSubmissionManager.js";
 import { LegacyContentEventGateway } from "../../tools/ng-legacy-content/LegacyContentEventGateway.js";
 
 const itemManager = new ItemManager({ eventBus });

@@ -28,7 +28,7 @@
 const SAVE_FORMAT = "cultists-ng-save";
 // v2 (plan §8 "关键词的收集"): adds `state.keywords` (KeywordManager's
 // collected-set). v3 (Phase 8 新手引导): adds `state.onboarding`
-// (OnboardingManager's milestones/shown-hint/dismissed-hint sets). Bumped
+// (the event-state registry's marked/requested/dismissed sets). Bumped
 // rather than silently defaulting missing entries on load (AGENTS.md: "改
 // 变 payload...要评估是否提升版本；旧版本不应静默迁移") - an older save is
 // explicitly rejected by `_validate`, not migrated.
@@ -55,7 +55,8 @@ export class SaveManager {
     activityQueueRegistry,
     windowManager,
     desktopIconManager,
-    onboardingManager,
+    eventStateRegistry,
+    onboardingManager = eventStateRegistry,
     stateProviders = {},
     runtimeStores = {},
     saveableVariable = defaultSaveableVariable,
@@ -69,7 +70,7 @@ export class SaveManager {
     this.activityQueueRegistry = activityQueueRegistry;
     this.windowManager = windowManager;
     this.desktopIconManager = desktopIconManager;
-    this.onboardingManager = onboardingManager;
+    this.eventStateRegistry = eventStateRegistry || onboardingManager;
     this.stateProviders = stateProviders;
     this.runtimeStores = runtimeStores;
     this.saveableVariable = saveableVariable;
@@ -95,7 +96,7 @@ export class SaveManager {
         queues: this.activityQueueRegistry.snapshot(),
         windows: this.windowManager.snapshotInstances(),
         desktopIcons: this.desktopIconManager.toJSON(),
-        onboarding: this.onboardingManager.snapshot(),
+        onboarding: this.eventStateRegistry.snapshot(),
         providers: Object.fromEntries(Object.entries(this.stateProviders).map(([id, provider]) => [id, provider.snapshot()])),
         runtime: Object.fromEntries(Object.entries(this.runtimeStores).map(([id, store]) => [id, store.snapshot()])),
       },
@@ -166,7 +167,7 @@ export class SaveManager {
     this.activityQueueRegistry.restore(state.queues);
     this.windowManager.restoreInstances(state.windows);
     this.desktopIconManager.restore(state.desktopIcons);
-    this.onboardingManager.restore(state.onboarding);
+    this.eventStateRegistry.restore(state.onboarding);
     for (const [id, provider] of Object.entries(this.stateProviders)) provider.restore(state.providers[id] || {});
     for (const [id, store] of Object.entries(this.runtimeStores)) store.restore(state.runtime[id] || {});
   }

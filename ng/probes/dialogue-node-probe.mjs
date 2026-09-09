@@ -55,8 +55,8 @@ function makeEngine(definitions) {
   });
   assert.equal(queue.get(instance.instanceId).status, "resolved");
   assert.deepEqual(emitted, [
-    { eventName: "dialogue:text", payload: { instanceId: instance.instanceId, speaker: "npc", text: "hello", displayTo: "his-app", keywordIds: [], continueKey: null } },
-    { eventName: "dialogue:complete", payload: { instanceId: instance.instanceId, displayTo: "his-app", reason: "completed" } },
+    { eventName: "display:text", payload: { instanceId: instance.instanceId, speaker: "npc", text: "hello", displayTo: "his-app", keywordIds: [], continueKey: null } },
+    { eventName: "display:complete", payload: { instanceId: instance.instanceId, displayTo: "his-app", reason: "completed" } },
   ]);
 }
 

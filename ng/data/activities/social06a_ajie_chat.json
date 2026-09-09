@@ -43,7 +43,7 @@
       },
       "time_2": {
         "id": "time_2",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -80,7 +80,7 @@
       },
       "time_5": {
         "id": "time_5",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }
@@ -117,7 +117,7 @@
       },
       "time_8": {
         "id": "time_8",
-        "type": "consumeTime",
+        "type": "framework:consumeTime",
         "inputs": {
           "minutes": 20
         }

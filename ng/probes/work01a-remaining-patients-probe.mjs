@@ -1,3 +1,5 @@
+import "./register-framework-nodes.mjs";
+
 // Phase 8 slice: the remaining 6 of `work01a.json`'s 7 patients (only
 // patient 1 was wired in the earlier "first playable slice"), batch
 // converted via the existing `migrate-legacy-blueprint.mjs#convertBlueprint`

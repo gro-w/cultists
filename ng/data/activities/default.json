@@ -5,17 +5,70 @@
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
-      "start": { "id": "start", "type": "flowStart", "inputs": {} },
-      "patients": { "id": "patients", "type": "runActivity", "inputs": { "activityId": "patient-queue-manager", "queueId": "managers" } },
-      "stories": { "id": "stories", "type": "runActivity", "inputs": { "activityId": "social-story-manager", "queueId": "managers" } },
-      "achievements": { "id": "achievements", "type": "runActivity", "inputs": { "activityId": "achievement-manager", "queueId": "managers" } },
-      "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "patients": {
+        "id": "patients",
+        "type": "runActivity",
+        "inputs": {
+          "activityId": "patient-queue-manager",
+          "queueId": "managers"
+        }
+      },
+      "stories": {
+        "id": "stories",
+        "type": "runActivity",
+        "inputs": {
+          "activityId": "social-story-manager",
+          "queueId": "managers"
+        }
+      },
+      "achievements": {
+        "id": "achievements",
+        "type": "runActivity",
+        "inputs": {
+          "activityId": "achievement-manager",
+          "queueId": "managers"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
     },
     "connections": [
-      { "id": "edge-1", "fromNodeId": "start", "fromPort": "flowOut", "toNodeId": "patients", "toPort": "flowIn" },
-      { "id": "edge-2", "fromNodeId": "patients", "fromPort": "flowOut", "toNodeId": "stories", "toPort": "flowIn" },
-      { "id": "edge-3", "fromNodeId": "stories", "fromPort": "flowOut", "toNodeId": "achievements", "toPort": "flowIn" },
-      { "id": "edge-4", "fromNodeId": "achievements", "fromPort": "flowOut", "toNodeId": "end", "toPort": "flowIn" }
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "patients",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "patients",
+        "fromPort": "flowOut",
+        "toNodeId": "stories",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-3",
+        "fromNodeId": "stories",
+        "fromPort": "flowOut",
+        "toNodeId": "achievements",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-4",
+        "fromNodeId": "achievements",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
     ]
   }
 }

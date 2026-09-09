@@ -56,6 +56,7 @@ export class WindowFrame {
     this._unsubscribers.push(this.eventBus.on("gameClock:changed", () => this._rerenderRoot()));
     this._unsubscribers.push(this.eventBus.on("activity:completed", () => this._rerenderRoot()));
     this._unsubscribers.push(this.eventBus.on("activity:cancelled", () => this._rerenderRoot()));
+    this._unsubscribers.push(this.eventBus.on("runtime:collection-changed", () => this._rerenderRoot()));
   }
 
   /**

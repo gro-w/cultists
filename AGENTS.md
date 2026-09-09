@@ -1,144 +1,72 @@
 # AGENTS.md
 
-本文件是所有 coding agent 的项目合同。修改前先阅读相关代码、数据 schema 和调用点；不要凭文件名猜接口。
+本文件是所有 coding agent 的项目合同。只保留必须遵守的规则；项目背景、命令示例、模块索引和详细参考见 [`agent-notes.md`](agent-notes.md)。修改前先阅读相关代码、数据 schema 和调用点；不要凭文件名猜接口。
 
-## 项目边界
+## 通用规则
 
-- 项目是 `surrounded by cultists`（《完蛋，我被邪教徒包围了！》）。
-- 使用原生 HTML/CSS/ES6 modules；无构建步骤、无框架、无 `package.json`。
-- `index.html` 是唯一浏览器入口，模拟 Win95 桌面、任务栏、开始菜单、应用窗口和宿舍模式。
-- 游戏内容放在 `data/<lang>/` 的 JSON 中；代码只引用稳定 ID。
-- 所有文本文件必须使用 LF 换行。
+- 所有文本文件使用 LF 换行。
+- 使用原生 HTML/CSS/ES6 modules；不要引入构建步骤、框架或未经需要的依赖。
+- 游戏内容通过数据文件加载；代码使用稳定 ID，不要硬编码语言目录或显示名称作为持久化 ID。
+- UI 外壳字符串使用 `i18n.t()`；剧情和内容放在语言数据目录。
+- 只使用许可证明确允许商业使用的开源、免费字体。新增字体必须确认授权，并在项目中保留可审计的来源；字体选择必须覆盖正文、标题、控件、伪元素、开发工具和发布版本。
 
-### NG 引擎边界（强约束）
+## NG 引擎边界
 
-NG 游戏引擎只提供以下四类基础能力：
+- NG 引擎只提供通用桌面/窗口系统、蓝图 Activity 运行系统、存档系统和开发人员模式。
+- 成就、物品、患者、宿舍、日历、室友剧情、结局、应用和患者队列必须作为内容层的数据结构、自定义窗口和自定义 Activity/管理器 Activity 实现，不得写入引擎内置业务逻辑。
+- 引擎 ready 时只允许把配置中的 default Activity 加入 default 队列；后续调度必须由已运行的管理器 Activity 通过蓝图 Activity API 显式完成。引擎不得依据日历、患者、社交或成就语义自行创建或插入 Activity。
+- `ng/engine.js` 只能作为平台入口加载内容包并启动平台；Cultists 业务 bootstrap 必须位于 `ng/content/`，不得把业务语义反向写入引擎或通用核心。
+- 开发人员模式入口不得进入发布数据或发布产物。业务成就不是开发人员模式内容，必须保留在业务数据和发布版中，并能通过存档进入发布版。
 
-1. 仿 Windows 95 的桌面和自定义窗口系统
-2. 基于蓝图的 Activity 运行系统
-3. 存档系统
-4. 开发人员模式
+## NG 三层架构与 NGL 语言边界
 
-其余全部属于通过开发人员模式加入的业务内容，不得写入引擎内置业务逻辑。成就、物品、患者、宿舍、日历、室友剧情、结局、应用和患者队列都必须由自定义数据结构、自定义窗口和自定义 Activity/管理器 Activity 构成。引擎 ready 时只允许把配置中的 default Activity 加入 default 队列；所有后续调度必须由已运行的管理器 Activity 通过蓝图 Activity API 显式完成。引擎不得根据日历、患者、社交或成就语义自行创建或插入 Activity。
+- 蓝图编程语言正式命名为 **NGL（NG Language，NG 蓝图语言）**。Activity 蓝图、节点、端口、流程边、数值边、局部变量和公共变量访问均属于 NGL 的语言契约；编辑器、校验器、运行器和调试器必须使用同一契约。
+- NG 引擎严格分为 `core`、`framework`、`game` 三层。`core` 是唯一允许使用原生 JavaScript 实现的层；`framework` 和 `game` 层必须全部使用 NGL 蓝图及数据文件实现，不得使用原生 JavaScript 编写业务逻辑、业务 Activity、业务管理器、业务窗口行为或业务系统。
+- `core` 只提供通用且与具体游戏无关的宿主能力：仿 Win95 桌面、Activity 实例执行引擎、Activity 执行池与调度、NGL 节点/端口/连线校验与求值、自定义窗口运行时和编辑器、通用数据结构、公共变量、局部变量、存档、事件总线、输入输出与受控能力网关、开发人员模式及发布剔除机制。`core` 不得包含患者、物品、日历、宿舍、成就、结局、NPC 或具体应用语义。
+- `framework` 只能用 NGL 在 `core` 通用能力之上实现预制系统，例如时间、输入输出、资源、数值、物品、角色、窗口和通用 UI 行为。预制系统不得通过原生 JavaScript 偷渡专用副作用；需要宿主能力时，必须先在 `core` 增加可复用、与领域无关的能力网关和类型安全 NGL 节点。
+- `game` 只能用 NGL 和数据实现具体游戏内容、业务 Activity、管理器 Activity、患者、宿舍、日历、社交、物品、成就、结局、应用和剧情。`game` 不得新增原生 JavaScript 业务模块，也不得把业务语义反向写入 `core` 或以 JavaScript 绕过 Activity 执行系统。
+- 如果 `framework` 或 `game` 需要原生 JavaScript 才能完成的能力，必须将其抽象为通用 core 能力，并通过公开的 NGL 节点、值端口、流程端口或能力网关调用；禁止在上层添加只服务单一业务的 JavaScript 快捷入口。新增 core 能力必须定义 owner、输入输出契约、权限/副作用、snapshot/restore（如需持久化）和确定性探针。
+- `ng/engine.js` 只能启动 core 并加载 NGL framework/game 内容包；内容 bootstrap、业务调度和业务初始化必须由 NGL Activity 完成。发布版必须剔除开发人员模式代码、编辑器和调试入口，同时保留 framework/game 的 NGL 数据和运行时所需的 core 通用能力。
+- 三层依赖方向只能是 `game → framework → core`；禁止 `core → framework`、`core → game` 或 `framework → game`。数据、蓝图定义和能力注册必须通过稳定 ID 与明确 schema 连接，不得通过原生 JavaScript 直接跨层调用。
 
-`ng/engine.js` 是纯平台入口，只负责加载内容包并启动平台；所有 Cultists 业务 bootstrap 必须位于 `ng/content/` 内容包中。内容包可以组合引擎提供的通用桌面、窗口、Activity、时间推进和存档 API，但不得反向把业务语义写回 `ng/engine.js` 或通用核心。
+## 架构与状态规则
 
-开发人员模式的桌面入口和开始菜单入口可以由开发环境代码提供，但不得进入发布数据或发布产物。业务成就不是开发人员模式内容：例如“我要强制下班”必须保留在业务成就数据和发布版中；其触发事件可以由开发人员模式、JavaScript 控制台或其他调用方发出，且成就状态必须能通过存档进入发布版。
-
-## 字体与素材许可证
-
-- 除非用户明确且强烈要求使用特定版权字体，否则任何项目默认只使用许可证明确允许商业使用的开源、免费字体。
-- 不得因为系统预装、常见或视觉效果合适就直接使用版权字体；新增字体前必须确认其授权范围，并将字体文件和来源放在项目可审计的位置。
-- 字体选择应覆盖页面正文、标题、表单控件、伪元素、开发工具和生成的发布版本；不能只替换部分界面。
-
-## 启动方式
-
-只读静态服务器：
-
-```bash
-python3 -m http.server 8000 --bind 127.0.0.1
-```
-
-开发服务器（支持开发人员模式直接写 JSON）：
-
-```bash
-node dev-server.js
-node dev-server.js --port 8001 --lang zh-hans
-```
-
-打开 `http://127.0.0.1:8000/?dev`（或实际端口）。`dev-server.js` 只绑定本机，没有认证，不得暴露到公网。
-
-## 开发服务器 API
-
-| 方法 | 路径 | 行为 |
-| --- | --- | --- |
-| `GET` | `/api/files` | 列出 `data/<lang>/` 中的 JSON |
-| `GET` | `/api/file?f=<name>` | 读取已存在的 JSON |
-| `POST` | `/api/file?f=<name>` | 校验 JSON 后原子覆盖已存在文件 |
-| `GET` | `/api/events` | SSE 文件变化通知 |
-
-开发模式启动后，`DataLoader` 会探测 `/api/files`；探测成功时从 API 读取数据。`DeveloperMode` 的「写入磁盘」按钮调用 POST，SSE 会清理 DataLoader 缓存。浏览器端没有权限写任意新文件；服务器端路径穿越也会被拒绝。
-
-## 架构规则
-
-核心模块采用“class + singleton”导出方式：
-
-```js
-class ExampleManager { /* ... */ }
-export const exampleManager = new ExampleManager();
-export default ExampleManager;
-```
-
-跨模块变化优先使用 `js/core/EventBus.js`，避免不必要的循环依赖。新增核心全局状态时必须定义 owner、snapshot/restore（如需持久化）和事件语义。
-
-### 核心模块职责
-
-| 模块 | 责任 |
-| --- | --- |
-| `GameState` | day、clockMinutes、phase、duty、location、energy、mental、physical、satiety |
-| `DayNightSystem` | 上班/下班/睡眠、工作日/休息日、最终阶段 |
-| `TimeService` | 唯一普通游戏时间推进与阶段结算 owner；处理 20 分钟行动、物品/法术时间、睡眠日结 |
-| `ScheduleData` | 加载 `workXXa/b` 和 `socialXXa/b`，按时间追加队列 |
-| `ScheduleQueue` | 独立 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
-| `ItemManager` | 物品定义、背包、调查、使用条件/效果 |
-| `ItemPlacementManager` | 场景物品摆放、可见条件、拾取/放回 |
-| `GlobalVariableManager` | 公共变量定义、值、条件比较、效果、存档快照 |
-| `SpellManager` | 学习/施放法术 |
-| `KeywordManager` | 关键词定义、收集和笔记本来源 |
-| `DialogueRunner` | HIS/Social 共用对话树执行 |
-| `DialogueEffects` | 对话节点 onShow 的共享副作用 |
-| `EndingManager` | 事件、对话、道具、属性和最终阶段结局 |
-| `SaveManager` | v15 URL 存档、公共变量、法术、CG 和窗口布局恢复 |
-
-## 状态机不变量
-
-- 初始为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`。
-- 工作窗口严格是 `[08:00, 16:00)`；天文白昼 `[06:00, 18:00)`，两者不可混用。
-- 普通成功行动默认推进 20 分钟；不要使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
-- 所有玩家可见的计时操作（ChatGTP 查询、HIS 提交、物品调查/使用、法术学习/施放）必须先创建活动实例，再由 `ActivityRunner` 或 `ItemActivityRuntime` 执行；副作用和时间推进不得由 App 直接调用。
-- 法术学习活动的顺序固定为“`consumeTime(240)` → `spellOperation` 调整已学习状态”。NPC 离线也必须通过 realtime 活动完成状态切换及后果。
-- phase、duty、location 是独立字段；存档恢复时必须保持派生关系一致。
+- 核心模块遵循 class + singleton 导出约定；跨模块变化优先使用 `js/core/EventBus.js`，避免不必要的循环依赖。
+- 新增核心全局状态必须定义 owner、snapshot/restore（如需持久化）和事件语义。
+- 初始状态必须为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`。
+- 工作窗口严格为 `[08:00, 16:00)`；不要将其与天文白昼 `[06:00, 18:00)` 混用。
+- 普通成功行动默认推进 20 分钟；不得使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
+- 所有玩家可见的计时操作必须先创建活动实例，再由 `ActivityRunner` 或 `ItemActivityRuntime` 执行；App 不得直接调用副作用或时间推进。
+- 法术学习活动必须按 `consumeTime(240)` → `spellOperation` 的顺序执行；NPC 离线也必须通过 realtime 活动完成状态切换及后果。
+- `phase`、`duty`、`location` 是独立字段；存档恢复必须保持派生关系一致。
 - 工作/夜班未完成的当前批次分别阻塞下班/睡觉；`entries: []` 是显式空批次，不是缺失数据。
 - 午夜增加游戏日期；到次日 `08:00` 只结算一次睡眠、医疗、收入支出和睡眠债。
 - 修改时间边界、行动费用或状态字段时，必须检查所有 App、快捷入口、存档恢复和事件订阅。
+- 蓝图节点只允许四类端口组合：有流程输入引脚的节点是流程节点，禁止同时拥有数值输出引脚；有数值输出引脚且没有流程输入引脚的节点是数值节点；流程输入和数值输出都没有、但有流程输出的节点是流程起始节点；流程输入和数值输出都没有、但有数值输入的节点是数值接收节点。不得新增或保留其他组合。
 
 ## 数据规则
 
-- 通过 `dataLoader.loadJSON("file.json")` 加载，禁止硬编码 `data/zh-hans/`。
-- UI 外壳字符串走 `i18n.t()` 并维护 `data/strings.<lang>.json`；剧情和内容直接放语言数据目录。
-- 关键词内容只能来自 `keywords.json`；对话关键词通过 `[[keyword_id]]` 标记引用。
-- NPC 使用稳定 `npcId`；不要把角色显示名当作持久化 ID。
-- 公共变量文件顶层是数组；ID 唯一、非负整数；类型只能是 `bool`、`number`、`decimal`、`string`；number/decimal 范围 `0..256`，decimal 精确到小数点后 2 位。
-- 公共变量 ID `0..99` 是系统预留，必须存在且不能通过开发人员模式删改；其中 `1` 为主角 SAN、`2` 为金钱、`5` 为 ChatGTP SAN、`20..39` 为主角技能点、`40..59` 为 NPC 好感度、`60..79` 为 NPC SAN。
-- 条件支持 `condition`/`globalVariableCondition`、`globalVariables`、`all`、`any` 和 `eq/neq/gt/gte/lt/lte`。
-- 公共变量效果使用 `value`，number/decimal 才能使用 `delta`。
-- 书籍法术放在物品的 `spells` 数组；学习 240 分钟，施放默认消耗 5 SAN。代码存在不代表当前数据已有法术。
+- 通过 `dataLoader.loadJSON("file.json")` 加载数据，禁止硬编码 `data/zh-hans/`。
+- 关键词只能来自 `keywords.json`；对话关键词使用 `[[keyword_id]]` 标记引用。
+- 公共变量文件顶层必须是数组；ID 唯一且为非负整数；类型只能是 `bool`、`number`、`decimal`、`string`；number/decimal 范围为 `0..256`，decimal 精确到小数点后 2 位。
+- 公共变量 ID `0..99` 为系统预留，必须存在且不得通过开发人员模式删改；其中 `1` 为主角 SAN、`2` 为金钱、`5` 为 ChatGTP SAN、`20..39` 为主角技能点、`40..59` 为 NPC 好感度、`60..79` 为 NPC SAN。
+- 条件使用 `condition`/`globalVariableCondition`、`globalVariables`、`all`、`any` 和 `eq/neq/gt/gte/lt/lte`；公共变量效果使用 `value`，number/decimal 才能使用 `delta`。
+- 书籍法术放在物品的 `spells` 数组；学习耗时 240 分钟，施放默认消耗 5 SAN。
 
-完整字段示例见 `docs/DATA-SCHEMAS.md`，状态与事件流见 `docs/ARCHITECTURE.md`。
+## 开发人员模式与存档规则
 
-## 开发人员模式边界
+- 仅开发版代码必须使用 `DEV-TOOLS:START` / `DEV-TOOLS:END` 标记；CSS/HTML 使用对应注释形式。
+- 开发入口必须严格判断 `?dev`，不能把普通查询串当作开发模式。
+- 新增开发数据编辑器必须校验 schema，并区分「保存到内存」「下载」「写入磁盘」语义。
+- 修改存档 payload 或编码布局时必须评估是否提升版本；旧版本不得静默迁移。
+- 新增可恢复窗口时，必须将 appId 加入 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
 
-所有仅开发版代码必须使用明确标记：
+## 修改、验证和交付规则
 
-```text
-// DEV-TOOLS:START
-// DEV-TOOLS:END
-```
-
-CSS/HTML 使用相应注释形式。开发入口必须严格判断 `?dev`，不能把普通查询串当开发模式。新增开发数据编辑器应校验 schema；「保存到内存」「下载」「写入磁盘」语义必须区分清楚。
-
-## 存档规则
-
-- 当前 `SaveManager` 格式为 v24，保存游戏状态、TimeService、工作/社交/主要三个队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、结局、公共变量、法术、动态活动、CG 和窗口布局。对话进度与状态由活动实例负责，不再单独保存。改变 payload 或编码布局时要评估是否提升版本；旧版本不应静默迁移。新增可恢复窗口时，将 appId 追加到 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
-
-## 修改、验证和发布
-
-1. 读取 `AGENTS.md`、相关模块、数据 schema、事件订阅和所有调用点。
+1. 修改前读取 `AGENTS.md`、相关模块、数据 schema、事件订阅和所有调用点；详细项目参考见 `agent-notes.md`。
 2. 使用 `patch`/`write_file` 修改，不做无关重构；绝不读取、打印或提交凭据，若发现凭据必须替换为 `[REDACTED]`。
 3. 修改 JS 后执行 `node --check`；修改 JSON 后执行 Python JSON 校验；始终执行 `git diff --check`。
-4. 复杂状态改动要写确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
-5. 发布玩家版执行 `node publish.js`，检查 `publish/` 不含 `DEV-TOOLS`、`DeveloperMode` 或 `dev-server.js`，并执行 `node --check publish/js/main.js`。
-6. 不要主动打开浏览器做 UI 验证，除非用户明确要求或提供必须复现的步骤；静态检查和脚本探针结果要如实报告。
-7. 不要提交、push、改写历史或创建 PR，除非用户明确要求；若用户要求交付，按改动规模选择直接 Conventional Commit 或独立分支 + PR。
-
-项目没有测试框架、linter 或 bundler，不要凭空添加依赖。更多命令和协作细节见 `docs/DEVELOPMENT.md`。
+4. 复杂状态改动必须写确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
+5. 发布玩家版执行 `node publish.js`，确认 `publish/` 不含 `DEV-TOOLS`、`DeveloperMode` 或 `dev-server.js`，并执行 `node --check publish/js/main.js`。
+6. 除非用户明确要求或提供必须复现的步骤，不主动打开浏览器做 UI 验证；如实区分静态检查、脚本探针和浏览器验证结果。
+7. 不要提交、push、改写历史或创建 PR，除非用户明确要求；用户要求交付时，按改动规模选择直接 Conventional Commit 或独立分支 + PR。

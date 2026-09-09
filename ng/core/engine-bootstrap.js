@@ -94,7 +94,7 @@ export async function bootstrap(rootEl) {
     refResolver.register(`database:${databaseId}`, (key) => dataStore.getRecord(databaseId, key));
   }
   const frameworkRuntimeDefinition = await dataLoader.loadJSON(config.frameworkRuntime, { optional: true }) || {};
-  const { createFrameworkRuntime } = await import("./core/FrameworkRuntime.js");
+  const { createFrameworkRuntime } = await import("./FrameworkRuntime.js");
   const content = createFrameworkRuntime({ dataStore, definition: frameworkRuntimeDefinition });
   const { keywordManager, runtimeGateway, customWidgetFactories = {} } = content;
   const iconManager = new DesktopIconManager(icons);

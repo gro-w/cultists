@@ -126,19 +126,6 @@ export async function bootstrap(rootEl) {
   // Paint icons before loading the Activity catalogue. The catalogue can be
   // large; taskbar and desktop must become visible as one initial surface.
   shell.mountIcons(iconManager);
-  // DEV-TOOLS:START
-  if (isDevEntry()) {
-    iconManager.register({
-      iconId: "dev-mode-launcher-icon",
-      glyph: "🛠️",
-      label: "开发人员模式",
-      blueprintId: "desktop.open-window",
-      inputs: { windowId: "dev-mode-launcher" },
-      engineOwned: true,
-    });
-    shell.refreshIcons();
-  }
-  // DEV-TOOLS:END
   const activityDefinitions = new ActivityDefinitionStore(dataLoader);
   const manifest = await dataLoader.loadJSON(config.activityManifest, { optional: true }) || { activityIds: [] };
   const manifestEntries = new Map((manifest.activityIds || []).map((entry) => {
@@ -311,6 +298,14 @@ export async function bootstrap(rootEl) {
       dataLoader,
       saveManager,
       refreshIcons: () => shell.refreshIcons(),
+    });
+    iconManager.register({
+      iconId: "dev-mode-launcher-icon",
+      glyph: "🛠️",
+      label: "开发人员模式",
+      blueprintId: "desktop.open-window",
+      inputs: { windowId: "dev-mode-launcher" },
+      engineOwned: true,
     });
     shell.refreshIcons();
   }

@@ -90,7 +90,7 @@ const CHATGTP_SAN_VARIABLE_ID = 5;
     const { ok, errors } = validateBlueprint(bp);
     assert.equal(ok, true, `${label}: ${errors?.join("；")}`);
   }
-  assert.equal(blueprints.length, 4, "expected onCreate + keyword1/keyword2/query blueprints");
+  assert.equal(blueprints.length, 5, "expected onCreate + source/category/keyword/query blueprints");
 }
 
 // --- onCreate loads keywords + settings, resets query state ---------------
@@ -101,15 +101,13 @@ assert.equal(variableStore.get("chatgtp:answer"), "");
 const startingSan = publicVariableManager.get(CHATGTP_SAN_VARIABLE_ID);
 assert.ok(startingSan > 0, "fixture assumes ChatGTP SAN starts above zero");
 
-// --- a real two-keyword combo resolves regardless of pick order ----------
-const comboEntry = chatgtpSeed.chatgtpQaEntries.find((e) => e.keywords.length === 2);
-assert.ok(comboEntry, "fixture data must contain at least one 2-keyword combo entry");
+// --- a real keyword resolves through the third column --------------------
+const comboEntry = chatgtpSeed.chatgtpQaEntries.find((e) => e.keywords.length === 1);
+assert.ok(comboEntry, "fixture data must contain at least one single-keyword entry");
 assert.equal(comboEntry.id, entryKey(comboEntry.keywords));
 
-variableStore.set("event:value", comboEntry.keywords[1]);
-runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword1-select").events.onChange, "keyword1Change");
 variableStore.set("event:value", comboEntry.keywords[0]);
-runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword2-select").events.onChange, "keyword2Change");
+runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword1-select").events.onChange, "keywordChange");
 runBlueprint(findWidget(chatgtp.root, "chatgtp-query").events.onClick, "query1");
 assert.equal(variableStore.get("chatgtp:answer"), comboEntry.answer);
 assert.equal(publicVariableManager.get(CHATGTP_SAN_VARIABLE_ID), startingSan - variableStore.get("chatgtp:settings").sanCostPerQuery);
@@ -117,9 +115,7 @@ assert.equal(publicVariableManager.get(CHATGTP_SAN_VARIABLE_ID), startingSan - v
 // --- an unmatched combo falls back gracefully, still costs SAN ------------
 const sanBeforeMiss = publicVariableManager.get(CHATGTP_SAN_VARIABLE_ID);
 variableStore.set("event:value", "__no_such_keyword_a__");
-runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword1-select").events.onChange, "keyword1Miss");
-variableStore.set("event:value", "");
-runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword2-select").events.onChange, "keyword2Miss");
+runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword1-select").events.onChange, "keywordMiss");
 runBlueprint(findWidget(chatgtp.root, "chatgtp-query").events.onClick, "queryMiss");
 assert.notEqual(variableStore.get("chatgtp:answer"), comboEntry.answer);
 assert.ok(variableStore.get("chatgtp:answer").length > 0);

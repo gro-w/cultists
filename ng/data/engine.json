@@ -1,6 +1,7 @@
 {
   "name": "cultists-ng",
   "version": "0.1.0-ng-content",
+  "contentPackage": "cultists.js",
   "contentRoot": "data/",
   "nativeContent": ["media.json", "calendar-rules.json", "item-placements.json", "social-apps.json", "turtle-soup-puzzles.json", "app-definitions.json"],
   "windowManifest": [
@@ -11,11 +12,12 @@
     "status.json",
     "achievements.json",
     "calendar.json",
-    "settings.json",
     "locations.json",
-    "notebook.json"
+    "notebook.json",
+    "dialogue.json"
   ],
   "desktopIcons": "desktop-icons.json",
+  "blueprintNodes": "blueprint-nodes.json",
   "activityLists": [
     "default.json",
     "system.json",

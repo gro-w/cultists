@@ -1,6 +1,6 @@
 // DEV-TOOLS:START
 import { PointerInteraction } from "../desktop/PointerInteraction.js";
-import { ACTIVITY_NODE_TYPES, getActivityNodeDefinition, listActivityNodePorts, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
+import { listActivityNodeTypes, getActivityNodeDefinition, listActivityNodePorts, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
 import { createActivityEditorModel } from "./ActivityEditorModel.js";
 import { downloadTextFile, writeDataFile } from "./devApi.js";
 
@@ -98,7 +98,7 @@ export class ActivityEditorView {
 
   _buildPalette() {
     this.paletteEl.innerHTML = "";
-    for (const type of ACTIVITY_NODE_TYPES) {
+    for (const type of listActivityNodeTypes()) {
       const definition = getActivityNodeDefinition(type);
       const button = document.createElement("button");
       button.type = "button";

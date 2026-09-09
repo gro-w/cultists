@@ -42,7 +42,6 @@ import { launchSocialApp } from "./apps/SocialApp.js";
 import { launchChatGTPApp } from "./apps/ChatGTPApp.js";
 import { launchNotebookApp } from "./apps/NotebookApp.js";
 import { launchStatusApp } from "./apps/StatusApp.js";
-import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
 import { launchCalendarApp } from "./apps/CalendarApp.js";
 import { launchTurtleSoup } from "./apps/TurtleSoupApp.js";
@@ -122,7 +121,6 @@ const APP_REGISTRY = [
   { id: "status", label: () => i18n.t("apps.status", "状态与属性"), icon: "📊", launch: () => launchStatusApp() },
   { id: "achievements", label: () => i18n.t("apps.achievements", "成就"), icon: "🏆", launch: () => launchAchievementsApp() },
   { id: "calendar", label: () => i18n.t("apps.calendar", "日历"), icon: "📅", launch: () => launchCalendarApp() },
-  { id: "settings", label: () => i18n.t("apps.settings", "设置"), icon: "⚙️", launch: () => launchSettingsApp() },
   // DEV-TOOLS:START
   ...(developerModeEnabled ? [{ id: "developer-mode", label: "开发人员模式", icon: "🛠️", launch: () => launchDeveloperMode() }] : []),
   // DEV-TOOLS:END

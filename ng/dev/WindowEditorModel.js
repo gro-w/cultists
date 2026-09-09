@@ -17,10 +17,14 @@ function cloneValue(value) {
   return value == null ? value : JSON.parse(JSON.stringify(value));
 }
 
+function isContainer(node) {
+  return node?.type === "container" || node?.type === "tabs";
+}
+
 function defaultWidget(type) {
   const widgetId = `${type}-${++_widgetSeq}`;
   const base = { widgetId, type };
-  if (type === "container") return { ...base, flow: "stack", gap: 4, padding: 4, children: [] };
+  if (type === "container" || type === "tabs") return { ...base, flow: "vertical", gap: 4, padding: 4, children: [] };
   if (type === "label") return { ...base, text: "文本" };
   if (type === "button") return { ...base, text: "按钮" };
   if (type === "spacer") return base;
@@ -60,7 +64,7 @@ export function createWindowEditorModel({ definition } = {}) {
   /** Depth-first walk; visitor receives (node, parent, index). */
   function walk(node, parent, index, visitor) {
     visitor(node, parent, index);
-    if (node.type === "container") {
+    if (isContainer(node)) {
       (node.children || []).forEach((child, i) => walk(child, node, i, visitor));
     }
   }
@@ -90,7 +94,7 @@ export function createWindowEditorModel({ definition } = {}) {
 
   function addWidget(type, parentId = "root", index = null) {
     const parentEntry = findWidget(parentId);
-    if (!parentEntry || parentEntry.node.type !== "container") return null;
+    if (!parentEntry || !isContainer(parentEntry.node)) return null;
     pushHistory();
     const widget = defaultWidget(type);
     const children = parentEntry.node.children || (parentEntry.node.children = []);
@@ -131,7 +135,7 @@ export function createWindowEditorModel({ definition } = {}) {
     if (widgetId === current.root.widgetId) return false;
     const entry = findWidget(widgetId);
     const target = findWidget(newParentId);
-    if (!entry || !entry.parent || !target || target.node.type !== "container") return false;
+    if (!entry || !entry.parent || !isContainer(target.node)) return false;
     if (isDescendant(entry.node, target.node)) return false; // never move a container into its own subtree
     pushHistory();
     entry.parent.children.splice(entry.index, 1);
@@ -141,9 +145,29 @@ export function createWindowEditorModel({ definition } = {}) {
     return true;
   }
 
+  function addTab(parentId = "root") {
+    const parentEntry = findWidget(parentId);
+    if (!parentEntry || !isContainer(parentEntry.node)) return null;
+    pushHistory();
+    const tab = {
+      widgetId: `tab-${++_widgetSeq}`,
+      type: "container",
+      className: "tab-panel",
+      flow: "vertical",
+      gap: 4,
+      padding: 4,
+      tabLabel: `选项卡 ${parentEntry.node.children.length + 1}`,
+      children: [],
+    };
+    parentEntry.node.children = parentEntry.node.children || [];
+    parentEntry.node.children.push(tab);
+    selectedId = tab.widgetId;
+    return tab;
+  }
+
   function isDescendant(maybeAncestor, node) {
     if (maybeAncestor === node) return true;
-    if (maybeAncestor.type !== "container") return false;
+    if (!isContainer(maybeAncestor)) return false;
     return (maybeAncestor.children || []).some((child) => isDescendant(child, node));
   }
 
@@ -187,6 +211,7 @@ export function createWindowEditorModel({ definition } = {}) {
     getSelectedId: () => selectedId,
     addWidget,
     removeWidget,
+    addTab,
     duplicateWidget,
     moveWidget,
     updateWidgetProps,

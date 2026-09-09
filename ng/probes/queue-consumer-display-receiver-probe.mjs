@@ -27,6 +27,10 @@ assert.equal(registry.dispatch("social", { type: "text", text: "hello" }), true)
 assert.equal(events[0].text, "hello");
 unregister();
 assert.equal(registry.dispatch("social", { type: "text" }), false);
+const defaultUnregister = registry.register("his-app", receiver);
+assert.equal(registry.dispatch("default", { type: "choice", options: ["A"] }), true);
+assert.equal(events.at(-1).type, "choice");
+defaultUnregister();
 
 const bus = new EventBus();
 assert.equal(bus.listenerCount(), 0);

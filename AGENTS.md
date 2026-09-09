@@ -9,14 +9,7 @@
 - 游戏内容通过数据文件加载；代码使用稳定 ID，不要硬编码语言目录或显示名称作为持久化 ID。
 - UI 外壳字符串使用 `i18n.t()`；剧情和内容放在语言数据目录。
 - 只使用许可证明确允许商业使用的开源、免费字体。新增字体必须确认授权，并在项目中保留可审计的来源；字体选择必须覆盖正文、标题、控件、伪元素、开发工具和发布版本。
-
-## NG 引擎边界
-
-- NG 引擎只提供通用桌面/窗口系统、蓝图 Activity 运行系统、存档系统和开发人员模式。
-- 成就、物品、患者、宿舍、日历、室友剧情、结局、应用和患者队列必须作为内容层的数据结构、自定义窗口和自定义 Activity/管理器 Activity 实现，不得写入引擎内置业务逻辑。
-- 引擎 ready 时只允许把配置中的 default Activity 加入 default 队列；后续调度必须由已运行的管理器 Activity 通过蓝图 Activity API 显式完成。引擎不得依据日历、患者、社交或成就语义自行创建或插入 Activity。
-- `ng/engine.js` 只能作为平台入口加载内容包并启动平台；Cultists 业务 bootstrap 必须位于 `ng/content/`，不得把业务语义反向写入引擎或通用核心。
-- 开发人员模式入口不得进入发布数据或发布产物。业务成就不是开发人员模式内容，必须保留在业务数据和发布版中，并能通过存档进入发布版。
+- 只有通用章节和 NG 三层架构与 NGL 语言边界 章节及约束NG引擎，只有通用章节和旧引擎章节约束旧引擎（位于project root）
 
 ## NG 三层架构与 NGL 语言边界
 
@@ -28,8 +21,12 @@
 - 如果 `framework` 或 `game` 需要原生 JavaScript 才能完成的能力，必须将其抽象为通用 core 能力，并通过公开的 NGL 节点、值端口、流程端口或能力网关调用；禁止在上层添加只服务单一业务的 JavaScript 快捷入口。新增 core 能力必须定义 owner、输入输出契约、权限/副作用、snapshot/restore（如需持久化）和确定性探针。
 - `ng/engine.js` 只能启动 core 并加载 NGL framework/game 内容包；内容 bootstrap、业务调度和业务初始化必须由 NGL Activity 完成。发布版必须剔除开发人员模式代码、编辑器和调试入口，同时保留 framework/game 的 NGL 数据和运行时所需的 core 通用能力。
 - 三层依赖方向只能是 `game → framework → core`；禁止 `core → framework`、`core → game` 或 `framework → game`。数据、蓝图定义和能力注册必须通过稳定 ID 与明确 schema 连接，不得通过原生 JavaScript 直接跨层调用。
+- 引擎 ready 时只允许把配置中的 default Activity 加入 default 队列；后续调度必须由已运行的管理器 Activity 通过蓝图 Activity API 显式完成。引擎不得依据日历、患者、社交或成就语义自行创建或插入 Activity。
+- `ng/engine.js` 只能作为平台入口加载内容包并启动平台；
+- 开发人员模式入口不得进入发布数据或发布产物。业务成就不是开发人员模式内容，必须保留在业务数据和发布版中，并能通过存档进入发布版。
 
-## 架构与状态规则
+
+## 旧引擎架构与状态规则
 
 - 核心模块遵循 class + singleton 导出约定；跨模块变化优先使用 `js/core/EventBus.js`，避免不必要的循环依赖。
 - 新增核心全局状态必须定义 owner、snapshot/restore（如需持久化）和事件语义。
@@ -44,7 +41,7 @@
 - 修改时间边界、行动费用或状态字段时，必须检查所有 App、快捷入口、存档恢复和事件订阅。
 - 蓝图节点只允许四类端口组合：有流程输入引脚的节点是流程节点，禁止同时拥有数值输出引脚；有数值输出引脚且没有流程输入引脚的节点是数值节点；流程输入和数值输出都没有、但有流程输出的节点是流程起始节点；流程输入和数值输出都没有、但有数值输入的节点是数值接收节点。不得新增或保留其他组合。
 
-## 数据规则
+## 旧引擎数据规则
 
 - 通过 `dataLoader.loadJSON("file.json")` 加载数据，禁止硬编码 `data/zh-hans/`。
 - 关键词只能来自 `keywords.json`；对话关键词使用 `[[keyword_id]]` 标记引用。
@@ -53,7 +50,7 @@
 - 条件使用 `condition`/`globalVariableCondition`、`globalVariables`、`all`、`any` 和 `eq/neq/gt/gte/lt/lte`；公共变量效果使用 `value`，number/decimal 才能使用 `delta`。
 - 书籍法术放在物品的 `spells` 数组；学习耗时 240 分钟，施放默认消耗 5 SAN。
 
-## 开发人员模式与存档规则
+## 通用开发人员模式与存档规则
 
 - 仅开发版代码必须使用 `DEV-TOOLS:START` / `DEV-TOOLS:END` 标记；CSS/HTML 使用对应注释形式。
 - 开发入口必须严格判断 `?dev`，不能把普通查询串当作开发模式。
@@ -61,7 +58,7 @@
 - 修改存档 payload 或编码布局时必须评估是否提升版本；旧版本不得静默迁移。
 - 新增可恢复窗口时，必须将 appId 加入 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
 
-## 修改、验证和交付规则
+## 通用修改、验证和交付规则
 
 1. 修改前读取 `AGENTS.md`、相关模块、数据 schema、事件订阅和所有调用点；详细项目参考见 `agent-notes.md`。
 2. 使用 `patch`/`write_file` 修改，不做无关重构；绝不读取、打印或提交凭据，若发现凭据必须替换为 `[REDACTED]`。

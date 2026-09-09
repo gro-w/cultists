@@ -43,8 +43,8 @@ export class WindowFrame {
    * see PropertyBinding.js) are only read at render time - there is no
    * per-property reactivity. Rather than build fine-grained dependency
    * tracking, this re-renders the *whole* `root` subtree on every
-   * `variable:changed` event, exactly the same "just re-render, the tree
-   * stays small" tradeoff `NotebookView` already makes for its own list.
+   * `variable:changed` event. This keeps declarative windows deterministic
+   * without retaining a second widget tree.
    * This is what makes purely declarative windows (patient rosters,
    * dropdowns fed by `findRecords`, etc.) able to reflect an `onCreate`/
    * widget-event blueprint's `setVariable` output without any
@@ -94,9 +94,9 @@ export class WindowFrame {
           <span class="ng-title"></span>
         </div>
         <div class="ng-window-controls">
-          <button type="button" class="ng-window-control ng-min" title="最小化" aria-label="最小化">_</button>
-          <button type="button" class="ng-window-control ng-max" title="最大化" aria-label="最大化">□</button>
-          <button type="button" class="ng-window-control ng-close" title="关闭" aria-label="关闭">✕</button>
+          <button type="button" class="bevel-out ng-window-control ng-min" title="最小化" aria-label="最小化">_</button>
+          <button type="button" class="bevel-out ng-window-control ng-max" title="最大化" aria-label="最大化">□</button>
+          <button type="button" class="bevel-out ng-window-control ng-close" title="关闭" aria-label="关闭">✕</button>
         </div>
       </div>
       <div class="ng-system-menu" hidden>
@@ -204,6 +204,10 @@ export class WindowFrame {
         onEnd: () => this.windowManager.persistGeometry(this.instanceId),
       });
     });
+    this.titlebarEl.addEventListener("dblclick", (e) => {
+      if (e.target.closest("button") || e.target.closest(".ng-titlebar-icon")) return;
+      this.windowManager.toggleMaximize(this.instanceId);
+    });
   }
 
   _bindResize() {
@@ -298,6 +302,15 @@ export class WindowFrame {
     }
     const focused = this.windowManager.focusedInstanceId() === this.instanceId;
     this.el.classList.toggle("focused", focused);
+    const maxButton = this.el.querySelector(".ng-max");
+    if (maxButton) {
+      // The legacy engine keeps the control glyph stable; only the command
+      // state changes. Changing it to a Unicode restore glyph changes the
+      // button's baseline and no longer matches the legacy title bar.
+      maxButton.textContent = "□";
+      maxButton.title = state.maximized ? "还原" : "最大化";
+      maxButton.setAttribute("aria-label", maxButton.title);
+    }
   }
 
   /** Detach every DOM/EventBus subscription and cancel in-flight gestures. */

@@ -32,6 +32,7 @@ function memoryStorage() {
 }
 
 let _instanceIdCounter = 0;
+let _openOrderCounter = 0;
 
 export class WindowManager {
   /**
@@ -112,6 +113,7 @@ export class WindowManager {
       minimized: false,
       maximized: false,
       normalBounds: null,
+      openOrder: ++_openOrderCounter,
       zIndex: 0,
       ...geometry,
       ...clampedPosition,
@@ -267,9 +269,9 @@ export class WindowManager {
     };
   }
 
-  /** Every open window ordered bottom-to-top of the z-stack (used by the taskbar). */
+  /** Every open window ordered by creation time (the taskbar ignores focus). */
   list() {
-    return [...this.windows.values()].sort((a, b) => a.zIndex - b.zIndex);
+    return [...this.windows.values()].sort((a, b) => (a.openOrder ?? 0) - (b.openOrder ?? 0));
   }
 
   /** Deep-cloned snapshot of every open window instance (plan §12.2 "窗口实例、几何、最大化/最小化、打开的定义 ID") - a pure save boundary, no DOM/live references. */
@@ -292,7 +294,8 @@ export class WindowManager {
       if (!raw || typeof raw.instanceId !== "string" || typeof raw.windowId !== "string" || next.has(raw.instanceId)) {
         throw new Error("Invalid or duplicate window instance");
       }
-      next.set(raw.instanceId, { ...raw });
+      next.set(raw.instanceId, { ...raw, openOrder: raw.openOrder ?? ++_openOrderCounter });
+      _openOrderCounter = Math.max(_openOrderCounter, next.get(raw.instanceId).openOrder);
       const match = raw.instanceId.match(/^win-(\d+)$/);
       if (match) maxSeq = Math.max(maxSeq, Number(match[1]));
     }

@@ -45,6 +45,90 @@ button {
   cursor: pointer;
 }
 
+/* All controls in data-driven windows use the same Win95 control surface. */
+button,
+select,
+input[type="text"],
+input[type="number"],
+input[type="file"],
+textarea {
+  color: #000;
+  background: var(--w95-gray);
+  border-top: 2px solid var(--w95-white);
+  border-left: 2px solid var(--w95-white);
+  border-right: 2px solid var(--w95-gray-darker);
+  border-bottom: 2px solid var(--w95-gray-darker);
+  border-radius: 0;
+  box-shadow: inset 1px 1px 0 var(--w95-gray-light);
+  font-family: var(--w95-font);
+  font-size: 12px;
+}
+
+button,
+select,
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+  min-height: 22px;
+  padding: 2px 6px;
+}
+
+textarea { padding: 3px 5px; }
+
+button:active,
+select:active,
+input:active,
+textarea:active,
+button:focus,
+select:focus,
+input:focus,
+textarea:focus {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+button:active,
+select:active,
+input[type="text"]:active,
+input[type="number"]:active,
+textarea:active {
+  border-top-color: var(--w95-gray-darker);
+  border-left-color: var(--w95-gray-darker);
+  border-right-color: var(--w95-white);
+  border-bottom-color: var(--w95-white);
+  box-shadow: inset 1px 1px 0 var(--w95-gray-dark);
+}
+
+button:disabled,
+select:disabled,
+input:disabled,
+textarea:disabled {
+  color: var(--w95-gray-dark);
+  text-shadow: 1px 1px var(--w95-white);
+  cursor: default;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  margin: 2px;
+  vertical-align: middle;
+  background: var(--w95-white);
+  border-top: 2px solid var(--w95-gray-darker);
+  border-left: 2px solid var(--w95-gray-darker);
+  border-right: 2px solid var(--w95-white);
+  border-bottom: 2px solid var(--w95-white);
+  border-radius: 0;
+}
+
+input[type="checkbox"]:checked::after { content: "✓"; display: block; margin: -4px 0 0 0; font-weight: bold; }
+
+input[type="range"] {
+  accent-color: var(--w95-blue);
+}
+
 .win95-btn {
   background: var(--w95-gray);
   border: none;
@@ -114,12 +198,14 @@ button {
   text-align: center;
   background: transparent;
   border: none;
+  box-shadow: none;
+  outline: none;
 }
 
-.desktop-icon:focus,
-.desktop-icon:hover {
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
   background: rgba(0, 0, 128, 0.4);
-  outline: 1px dotted var(--w95-white);
+  outline: none;
 }
 
 .desktop-icon .icon-glyph {
@@ -210,7 +296,7 @@ button {
 
 .ng-titlebar-icon {
   cursor: pointer;
-  line-height: 1;
+  line-height: 16px;
 }
 
 .ng-system-menu {
@@ -264,14 +350,43 @@ button {
   line-height: 1;
   padding: 0;
   background: var(--w95-gray);
-  border: 2px outset var(--w95-white);
+  border: 1px solid transparent;
 }
 
 .ng-window-control:active {
   border-style: inset;
 }
 
+.ng-window-control.bevel-out {
+  width: 16px;
+  height: 14px;
+  min-width: 16px;
+  min-height: 14px;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1;
+  background: var(--w95-gray);
+  cursor: pointer;
+  border-top: 1px solid var(--w95-white);
+  border-left: 1px solid var(--w95-white);
+  border-right: 1px solid var(--w95-gray-darker);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  box-shadow: inset 1px 1px 0 var(--w95-gray-light),
+              inset -1px -1px 0 var(--w95-gray-dark);
+}
+
+.ng-window-control.bevel-out:active {
+  border-top-color: var(--w95-gray-darker);
+  border-left-color: var(--w95-gray-darker);
+  border-right-color: var(--w95-white);
+  border-bottom-color: var(--w95-white);
+  box-shadow: inset 1px 1px 0 var(--w95-gray-dark),
+              inset -1px -1px 0 var(--w95-gray-light);
+}
+
 .ng-body {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   overflow: auto;
   background: var(--w95-white);
@@ -281,6 +396,13 @@ button {
   border-left: 1px solid var(--w95-gray-darker);
   border-right: 1px solid var(--w95-white);
   border-bottom: 1px solid var(--w95-white);
+}
+
+.ng-body > .ng-widget,
+.ng-body > [data-widget-id] {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
 }
 
 /* Shared widget renderer: consumed verbatim by runtime and editor preview. */
@@ -344,6 +466,54 @@ button {
   font-weight: bold;
   font-size: 13px;
   margin-bottom: 2px;
+}
+
+/* Win95 property-sheet tabs: raised inactive tabs and a white active tab. */
+.status-tabs {
+  flex: 0 0 auto;
+  align-items: flex-end;
+  gap: 0 !important;
+  padding: 2px 4px 0;
+  border-bottom: 1px solid var(--w95-gray-darker);
+}
+
+.status-tabs .ng-widget-button {
+  position: relative;
+  z-index: 0;
+  min-width: 72px;
+  min-height: 24px;
+  margin: 0 2px -1px 0;
+  padding: 3px 12px;
+  border: 2px outset var(--w95-gray);
+  border-bottom: 1px solid var(--w95-gray-darker);
+  border-radius: 3px 3px 0 0;
+  background: var(--w95-gray);
+  color: #000;
+  box-shadow: none;
+  font: inherit;
+  line-height: 1.2;
+}
+
+.status-tabs .ng-widget-button:hover {
+  background: #d6d6d6;
+}
+
+.status-tabs .ng-widget-button:active,
+.status-tabs .ng-widget-button.active {
+  z-index: 2;
+  border-style: solid;
+  border-color: var(--w95-gray-darker) var(--w95-white) var(--w95-white) var(--w95-gray-darker);
+  border-bottom-color: var(--w95-white);
+  background: var(--w95-white);
+  font-weight: 700;
+}
+
+.status-tab-panel {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
 }
 
 .status-row {
@@ -770,6 +940,24 @@ button {
   justify-content: flex-end;
 }
 
+/* Generic dialogue windows can host more than one opaque display target
+   (HIS and dorm). Give each target a real flex box; otherwise an empty
+   sibling collapses the dialogue view to zero height and its later text is
+   present in the DOM but not visible. */
+.dialogue-panel {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dialogue-panel .ng-dialogue-view {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+}
+
 .ng-dialogue-choices {
   display: flex;
   flex-direction: column;
@@ -848,18 +1036,57 @@ button {
 .his-layout {
   gap: 6px;
   height: 100%;
+  font-size: 13px;
+}
+
+/* The legacy HIS app inherits the 13px Win95 app font. Its three section
+   captions are h4-sized rather than the smaller generic NG label size. */
+.his-layout button,
+.his-layout select,
+.his-layout input,
+.his-layout textarea {
+  font-size: 13px;
+}
+
+.his-layout [data-widget-id="his-patient-panel-title"],
+.his-layout [data-widget-id="his-diagnosis-label"],
+.his-layout [data-widget-id="his-prescription-label"] {
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .his-patient-list {
   width: 140px;
   flex-shrink: 0;
   gap: 4px;
+  min-width: 140px;
+}
+
+.his-patient-clock {
+  margin: -2px 0 2px;
+  font-size: 13px;
+  color: var(--w95-gray-darker, #444);
 }
 
 .his-main {
   flex: 1;
   gap: 6px;
   min-width: 0;
+  min-height: 0;
+}
+
+.his-dialogue {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 120px;
+  overflow: hidden;
+}
+
+.his-dialogue .ng-dialogue-view {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
 }
 
 .his-diagnosis {
@@ -872,9 +1099,13 @@ button {
 }
 
 .his-patient-btn {
+  display: block;
+  width: 100%;
+  min-width: 0;
   text-align: left;
   font-weight: bold;
   cursor: pointer;
+  margin-bottom: 3px;
 }
 
 .his-patient-btn:disabled,
@@ -894,10 +1125,34 @@ button {
   gap: 4px;
 }
 
+/* Start with one prescription row; the renderer's + control reveals a new
+   row on demand. The remaining blueprint slots are compatibility capacity. */
+.his-prescription-rows > .his-prescription-row:not(:first-child) {
+  display: none;
+}
+
+.his-prescription-rows > .his-prescription-row.his-prescription-row-added {
+  display: flex;
+}
+
 .his-prescription-row .his-medicine-category,
 .his-prescription-row .his-medicine-select {
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
+}
+
+.his-prescription-row .his-medicine-category select,
+.his-prescription-row .his-medicine-select select {
+  width: 100%;
+  min-width: 0;
+}
+
+.his-prescription-copy,
+.his-prescription-delete {
+  flex: 0 0 24px;
+  min-width: 24px;
+  padding: 1px 4px;
 }
 
 .his-diagnosis-selected-label {
@@ -992,6 +1247,44 @@ button {
 .ng-list-manager-activity-name {
   font-weight: bold;
   margin-right: auto;
+}
+
+.ng-blueprint-node-manager {
+  display: flex;
+  height: 100%;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.ng-blueprint-node-manager-list {
+  display: flex;
+  flex: 0 0 230px;
+  flex-direction: column;
+  overflow: auto;
+  border-right: 1px solid var(--w95-gray-dark);
+}
+
+.ng-blueprint-node-manager-detail {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  overflow: auto;
+}
+
+.ng-blueprint-node-manager-detail label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ng-blueprint-node-manager-detail textarea {
+  min-height: 54px;
+  resize: vertical;
+  font-family: monospace;
+  font-size: 11px;
 }
 
 .ng-activity-editor {
@@ -1506,5 +1799,24 @@ button {
 .ng-save-debugger-field { display: flex; align-items: center; gap: 6px; min-height: 26px; font-size: 12px; }
 .ng-save-debugger-field > input, .ng-save-debugger-field > textarea { flex: 1; min-width: 0; box-sizing: border-box; }
 .ng-save-debugger-field > textarea { min-height: 48px; font-family: monospace; }
+
+/* ChatGTP: preserve the legacy app's fixed history/control split and bubble alignment. */
+.app-chatgtp { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.chatgtp-layout { display: flex; flex-direction: column; height: 100%; min-height: 0; gap: 6px; }
+.chatgtp-history { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.chatgtp-answer { flex: 0 0 auto; }
+.chatgtp-keywords { flex: 0 0 190px; height: 190px; min-height: 190px; max-height: 190px; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+.chatgtp-source-row, .chatgtp-category-row, .chatgtp-keyword-row { display: flex; gap: 4px; min-width: 0; align-items: center; }
+.chatgtp-source-row .ng-widget-select, .chatgtp-category-row .ng-widget-select, .chatgtp-keyword-row .ng-widget-select { flex: 1; min-width: 0; }
+.chatgtp-row-label { flex: 0 0 88px; font-size: 11px; }
+.chatgtp-selected-keywords { display: flex; gap: 4px; align-items: center; }
+.chatgtp-selected-keyword { flex: 1; min-width: 0; padding: 4px 8px; border: 1px solid #808080; background: #f8f8f8; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chatgtp-query-btn { align-self: flex-start; flex: 0 0 auto; }
+.chatgtp-san-indicator { margin-left: auto; font-size: 11px; color: var(--w95-gray-dark); white-space: nowrap; }
+.chatgtp-san-indicator.distressed { color: #a86b00; font-weight: bold; }
+.chatgtp-san-indicator.offline { color: #b00020; font-weight: bold; }
+.chatgtp-history .ng-widget-list-item { max-width: 80%; padding: 6px 8px; border-radius: 4px; line-height: 1.35; font-size: 12px; }
+.chatgtp-history .bubble-npc { align-self: flex-start; background: #dfefff; }
+.chatgtp-history .bubble-me { align-self: flex-end; background: #d7ffd7; }
 
 /* DEV-TOOLS:END */

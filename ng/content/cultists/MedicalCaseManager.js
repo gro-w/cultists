@@ -1,4 +1,4 @@
-import RuntimeRecordStore from "./RuntimeRecordStore.js";
+import RuntimeRecordStore from "../../core/RuntimeRecordStore.js";
 
 const DIAGNOSIS_BONUS = 200;
 

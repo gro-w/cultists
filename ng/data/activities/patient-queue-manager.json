@@ -39,7 +39,7 @@
         "id": "slot-1-insert",
         "type": "insertActivity",
         "inputs": {
-          "activityId": "patient_lin_ruoqing_01",
+          "activityId": "work01a-patient1",
           "queueId": "work",
           "payload": {
             "autoRun": true,
@@ -85,7 +85,7 @@
         "id": "slot-2-insert",
         "type": "insertActivity",
         "inputs": {
-          "activityId": "patient_01_02_kidney_stone",
+          "activityId": "work01a-patient2",
           "queueId": "work",
           "payload": {
             "autoRun": true,
@@ -131,7 +131,7 @@
         "id": "slot-3-insert",
         "type": "insertActivity",
         "inputs": {
-          "activityId": "patient_01_03_benign_prostatic_hyperplasia",
+          "activityId": "work01a-patient3",
           "queueId": "work",
           "payload": {
             "autoRun": true,
@@ -177,7 +177,7 @@
         "id": "slot-4-insert",
         "type": "insertActivity",
         "inputs": {
-          "activityId": "patient_01_04_nausea_vomiting",
+          "activityId": "work01a-patient4",
           "queueId": "work",
           "payload": {
             "autoRun": true,
@@ -223,7 +223,7 @@
         "id": "slot-5-insert",
         "type": "insertActivity",
         "inputs": {
-          "activityId": "patient_01_05_lymphadenopathy",
+          "activityId": "work01a-patient5",
           "queueId": "work",
           "payload": {
             "autoRun": true,
@@ -269,7 +269,7 @@
         "id": "slot-6-insert",
         "type": "insertActivity",
         "inputs": {
-          "activityId": "patient_01_06_orthostatic_hypotension",
+          "activityId": "work01a-patient6",
           "queueId": "work",
           "payload": {
             "autoRun": true,
@@ -315,7 +315,7 @@
         "id": "slot-7-insert",
         "type": "insertActivity",
         "inputs": {
-          "activityId": "patient_01_07_closed_foot_fracture",
+          "activityId": "work01a-patient7",
           "queueId": "work",
           "payload": {
             "autoRun": true,

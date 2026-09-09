@@ -8,8 +8,13 @@
 const FLOW = "flow";
 const VALUE = "value";
 
+// Content/developer-defined macro nodes live beside, but never replace, the
+// engine registry. Their definitions are registered after the engine boots so
+// the Activity editor and validator can use the same port contract.
+const customDefinitions = new Map();
+
 const flowIn = (name = "flowIn") => ({ name, kind: FLOW });
-const flowOut = (name = "flowOut") => ({ name, kind: FLOW });
+const flowOut = (name = "flowOut", optional = false) => ({ name, kind: FLOW, optional });
 const valueIn = (name, type = "any") => ({ name, kind: VALUE, type });
 const valueOut = (name = "value", type = "any") => ({ name, kind: VALUE, type });
 
@@ -50,6 +55,24 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("windowId", "string"), valueIn("skip", "bool")],
   },
+  addWindowComponent: {
+    label: "新增窗口组件",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut("onCreate", true), flowOut("onClick", true), flowOut("onChange", true), flowOut("onFocus", true), flowOut("onBlur", true), flowOut("onDestroy", true)],
+    valueInputs: [valueIn("windowId", "string"), valueIn("parentId", "string"), valueIn("componentId", "string"), valueIn("componentType", "string"), valueIn("publicVariableId", "number"), valueIn("resultVariable", "string"), valueIn("maxCount", "number"), valueIn("x", "number"), valueIn("y", "number"), valueIn("width", "number"), valueIn("height", "number"), valueIn("text", "string"), valueIn("enabled", "bool"), valueIn("properties")],
+  },
+  removeWindowComponent: {
+    label: "删除窗口组件",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("windowId", "string"), valueIn("componentId", "string")],
+  },
+  getWindowLayout: {
+    label: "获取窗口布局",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("windowId", "string"), valueIn("resultVariable", "string")],
+  },
   // Generic Activity-queue action (plan §8.3 "desktop.run-activity"):
   // enqueues and runs another Activity definition on a given queue, without
   // the caller needing to know anything about that Activity's own flow.
@@ -83,6 +106,7 @@ const definitions = {
   // {variable}" convention already used for widget event values - rather
   // than inventing a second value-output wiring path for side-effecting
   // flow nodes.
+  // createRecord follows the generic database action definitions below.
   createRecord: {
     label: "创建记录",
     flowInputs: [flowIn()],
@@ -242,7 +266,7 @@ const definitions = {
     label: "选择分支",
     flowInputs: [flowIn()],
     flowOutputs: [flowOut("option0"), flowOut("option1"), flowOut("option2"), flowOut("option3"), flowOut("option4"), flowOut("option5")],
-    valueInputs: [valueIn("options"), valueIn("optionCount", "number"), valueIn("selectionKey", "string")],
+    valueInputs: [valueIn("options"), valueIn("optionCount", "number"), valueIn("selectionKey", "string"), valueIn("displayTo", "string")],
   },
   // Pure value nodes with no flow ports at all (legacy `prerequisite`/
   // `activityExpiry`, ported 1:1): never flow-stepped by the runner, never
@@ -321,8 +345,57 @@ const definitions = {
 
 export const ACTIVITY_NODE_TYPES = Object.freeze(Object.keys(definitions));
 
+export function listActivityNodeTypes() {
+  return [...ACTIVITY_NODE_TYPES, ...customDefinitions.keys()];
+}
+
+export function registerCustomActivityNode(node) {
+  if (!node?.id || !/^[a-zA-Z][\w:-]*$/.test(node.id)) throw new Error("Custom blueprint node id is invalid");
+  if (definitions[node.id]) throw new Error(`Cannot replace engine blueprint node: ${node.id}`);
+  if (!classifyActivityNodePorts(node)) throw new Error(`Custom blueprint node ${node.id} does not match one of the four node categories`);
+  const definition = {
+    label: node.label || node.id,
+    flowInputs: Array.isArray(node.flowInputs) ? node.flowInputs : [],
+    flowOutputs: Array.isArray(node.flowOutputs) ? node.flowOutputs : [],
+    valueInputs: Array.isArray(node.valueInputs) ? node.valueInputs : [],
+    valueOutputs: Array.isArray(node.valueOutputs) ? node.valueOutputs : [],
+    custom: true,
+    blueprint: node.blueprint || null,
+  };
+  customDefinitions.set(node.id, definition);
+  return definition;
+}
+
+export function classifyActivityNodePorts(nodeOrType) {
+  const definition = typeof nodeOrType === "string" ? getActivityNodeDefinition(nodeOrType) : nodeOrType;
+  if (!definition) return null;
+  const hasFlowInput = Boolean(definition.flowInputs?.length);
+  const hasFlowOutput = Boolean(definition.flowOutputs?.length);
+  const hasValueInput = Boolean(definition.valueInputs?.length);
+  const hasValueOutput = Boolean(definition.valueOutputs?.length);
+  if (hasFlowInput && hasValueOutput) return null;
+  if (hasFlowInput) return "flow";
+  if (hasValueOutput) return "value";
+  if (hasFlowOutput && hasValueInput) return null;
+  if (hasFlowOutput) return "flowStart";
+  if (hasValueInput) return "valueReceiver";
+  return null;
+}
+
+export function unregisterCustomActivityNode(id) {
+  return customDefinitions.delete(id);
+}
+
+export function listCustomActivityNodes() {
+  return [...customDefinitions.entries()].map(([id, definition]) => ({ id, ...definition }));
+}
+
+export function isEngineActivityNode(type) {
+  return Object.prototype.hasOwnProperty.call(definitions, type);
+}
+
 export function getActivityNodeDefinition(type) {
-  return definitions[type] || null;
+  return definitions[type] || customDefinitions.get(type) || null;
 }
 
 export function isFlowNode(type) {

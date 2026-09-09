@@ -13,6 +13,8 @@ import { PublicVariableDebuggerView } from "./PublicVariableDebuggerView.js";
 import { OnboardingEditorView } from "./OnboardingEditorView.js";
 import { StartMenuEditorView } from "./StartMenuEditorView.js";
 import { SaveDebuggerView } from "./SaveDebuggerView.js";
+import { BlueprintNodeManagerView } from "./BlueprintNodeManagerView.js";
+import { registerCustomActivityNode } from "../core/ActivityNodeRegistry.js";
 
 
 const LIST_MANAGER_WINDOW_ID = "dev-activity-list-manager";
@@ -26,6 +28,7 @@ const PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID = "dev-public-variable-debugger";
 const ONBOARDING_EDITOR_WINDOW_ID = "dev-onboarding-editor";
 const START_MENU_EDITOR_WINDOW_ID = "dev-start-menu-editor";
 const SAVE_DEBUGGER_WINDOW_ID = "dev-save-debugger";
+const BLUEPRINT_NODE_MANAGER_WINDOW_ID = "dev-blueprint-node-manager";
 
 const LAUNCHER_WINDOW_ID = "dev-mode-launcher";
 let editorWindowSeq = 0;
@@ -49,6 +52,9 @@ export async function initDeveloperMode({
   activityDefinitionStore,
   eventBus,
   variableStore,
+  pvGateway,
+  dbGateway,
+  runtimeGateway,
   iconManager,
   dataStructureManager,
   dataStore,
@@ -56,10 +62,12 @@ export async function initDeveloperMode({
   onboardingManager,
   dataLoader,
   saveManager,
+  customBlueprintNodes = [],
   forceEndWork = null,
 
   refreshIcons,
 }) {
+  customBlueprintNodes.forEach((node) => registerCustomActivityNode(node));
   const model = createActivityListManagerModel();
 
   function openEditor(activity) {
@@ -141,6 +149,9 @@ export async function initDeveloperMode({
       dataFileName: `windows/${definition.id}.json`,
       onSaveToMemory: (updated) => windowDefinitionStore.register(updated),
       variableStore,
+      pvGateway,
+      dbGateway,
+      runtimeGateway,
       openEventBlueprintEditor: openWidgetEventEditor,
       openValueBlueprintEditor: openWidgetValueEditor,
     });
@@ -323,6 +334,42 @@ export async function initDeveloperMode({
     body: startMenuEditorView.el,
   });
 
+  function openBlueprintNodeEditor(node) {
+    const view = new ActivityEditorView({
+      activityId: `blueprint-node-${node.id}`,
+      blueprint: node.blueprint,
+      displayName: node.label || node.id,
+      onSaveToMemory: (blueprint) => {
+        node.blueprint = blueprint;
+        registerCustomActivityNode(node);
+        blueprintNodeManagerView.render();
+      },
+    });
+    const definition = windowDefinitionStore.register({
+      id: `dev-blueprint-node-editor-${node.id}`,
+      title: `蓝图节点编辑器 - ${node.label || node.id}`,
+      icon: "🔷",
+      width: 980,
+      height: 620,
+      resizable: true,
+      singleInstance: true,
+      body: view.el,
+    });
+    windowManager.open(definition);
+  }
+
+  const blueprintNodeManagerView = new BlueprintNodeManagerView({ nodes: customBlueprintNodes, openEditor: openBlueprintNodeEditor });
+  windowDefinitionStore.register({
+    id: BLUEPRINT_NODE_MANAGER_WINDOW_ID,
+    title: "蓝图节点管理器",
+    icon: "🔷",
+    width: 760,
+    height: 520,
+    resizable: true,
+    singleInstance: true,
+    body: blueprintNodeManagerView.el,
+  });
+
 
   // Single desktop-icon entry point (plan follow-up: "把桌面上各个开发人员
   // 模式图标放在同一个开发人员模式app里面") - every dev sub-tool above is
@@ -344,6 +391,7 @@ export async function initDeveloperMode({
       <button type="button" data-tool="public-variable-manager">🌐 公共变量管理器</button>
       <button type="button" data-tool="onboarding-editor">💡 新手引导编辑器</button>
       <button type="button" data-tool="start-menu-editor">📋 开始菜单编辑器</button>
+      <button type="button" data-tool="blueprint-node-manager">🔷 蓝图节点管理器</button>
 
     </div>
     <div class="ng-dev-launcher-section">
@@ -381,6 +429,9 @@ export async function initDeveloperMode({
   launcherEl.querySelector('[data-tool="start-menu-editor"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(START_MENU_EDITOR_WINDOW_ID));
   });
+  launcherEl.querySelector('[data-tool="blueprint-node-manager"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(BLUEPRINT_NODE_MANAGER_WINDOW_ID));
+  });
 
   launcherEl.querySelector('[data-tool="save-debugger"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(SAVE_DEBUGGER_WINDOW_ID));
@@ -414,6 +465,7 @@ export async function initDeveloperMode({
     openPublicVariableManager: () => windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_MANAGER_WINDOW_ID)),
     openPublicVariableDebugger: () => windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID)),
     openOnboardingEditor: () => windowManager.open(windowDefinitionStore.get(ONBOARDING_EDITOR_WINDOW_ID)),
+    openBlueprintNodeManager: () => windowManager.open(windowDefinitionStore.get(BLUEPRINT_NODE_MANAGER_WINDOW_ID)),
 
   };
 }

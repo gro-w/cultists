@@ -6,6 +6,7 @@
   "height": 480,
   "resizable": true,
   "singleInstance": true,
+  "valueGraph": {"nodes":{"items":{"id":"items","type":"getRuntimeCollection","inputs":{"collectionId":"keywords"}}}},
   "root": {
     "widgetId": "notebook-root",
     "className": "app-notebook",
@@ -15,7 +16,9 @@
     "padding": 8,
     "children": [
       {"widgetId":"notebook-tabs","type":"label","className":"notebook-tabs","text":"🔑 关键词"},
-      {"widgetId":"notebook-list","type":"list","className":"notebook-list panel-inset","items":{"variable":"notebook:items"},"itemLabelField":"content","itemClassName":"notebook-entry"},
+      {"widgetId":"notebook-sort-label","type":"label","className":"notebook-sort-label","text":"当前排序方式"},
+      {"widgetId":"notebook-sort","type":"select","className":"notebook-sort-select","options":[{"value":"pinyin","label":"按拼音首字母"},{"value":"day","label":"按收集时间"}],"value":{"variable":"settings:notebookSortMode"},"events":{"onChange":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"settings:notebookSortMode","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"notebook-list","type":"list","className":"notebook-list panel-inset","items":{"nodeId":"items","port":"value"},"itemLabelField":"content","itemClassName":"notebook-entry"},
       {"widgetId":"notebook-empty","type":"label","className":"notebook-empty","text":"尚未收集任何关键词。在对话中点击高亮词汇即可收集。"}
     ]
   }

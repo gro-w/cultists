@@ -237,7 +237,7 @@ export async function launchHISApp() {
         }
       },
       onComplete: (instance) => { offDisplay(); workQueue.complete(instance.instanceId); },
-    });
+    }).start();
     return keywordAvailable;
 
   }

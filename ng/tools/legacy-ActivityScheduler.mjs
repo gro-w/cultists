@@ -1,4 +1,4 @@
-import { evaluateCondition } from "./ConditionEvaluator.js";
+import { evaluateCondition } from "../core/ConditionEvaluator.js";
 
 const CHECKPOINTS = Object.freeze([
   { suffix: "a", minutes: 480 },

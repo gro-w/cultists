@@ -98,8 +98,15 @@ function fireChange(widgetId, value) {
     assert.equal(ok, true, `${label}: ${errors?.join("；")}`);
   }
   // onCreate + patient list + start dialogue + diagnosis category/select +
-  // 5 rows of medicine category/select + submit = 1 + 1 + 1 + 2 + 10 + 1.
-  assert.equal(blueprints.length, 16);
+  // one dynamic medicine row + row add/remove + submit = 1 + 1 + 1 + 2 + 2 + 2 + 1.
+  assert.equal(blueprints.length, 10);
+  const prescriptionRows = his.root.children.flatMap((panel) => panel.children || [])
+    .flatMap((panel) => panel.widgetId === "his-prescription-panel" ? panel.children || [] : [])
+    .find((node) => node.widgetId === "his-prescription-rows");
+  assert.equal(prescriptionRows.children.length, 1);
+  assert.equal(prescriptionRows.children[0].events.onAdd.nodes.add.type, "addWindowComponent");
+  assert.equal(prescriptionRows.children[0].events.onAdd.nodes.add.inputs.maxCount, 5);
+  assert.equal(prescriptionRows.children[0].events.onRemove.nodes.remove.type, "removeWindowComponent");
 }
 
 // --- onCreate loads the roster + category reference data -----------------
@@ -148,7 +155,7 @@ fireChange("his-diagnosis-select", correctDiagnosisId);
 assert.equal(variableStore.get("his:diagnosisChoice"), correctDiagnosisId);
 assert.equal(variableStore.get("his:selectedDiagnosisRecord").id, correctDiagnosisId);
 
-// --- medicine category -> medicine option cascading (row 1 + row 2) -------
+// --- medicine category -> medicine option cascading (dynamic row 1) --------
 const medicine1 = dataStore.getRecord("medicines", "med_paracetamol");
 fireChange("his-medicine-category-1", medicine1.categoryId);
 assert.equal(variableStore.get("his:medCategoryChoice1"), medicine1.categoryId);
@@ -158,8 +165,11 @@ fireChange("his-medicine-select-1", medicine1.id);
 assert.equal(variableStore.get("his:medChoice1"), medicine1.id);
 
 const medicine2 = dataStore.getRecord("medicines", "med_001");
-fireChange("his-medicine-category-2", medicine2.categoryId);
-fireChange("his-medicine-select-2", medicine2.id);
+// The second row is now created by the addWindowComponent blueprint. This
+// headless probe supplies its selection directly; DOM creation is covered by
+// the runtime component-node probe.
+variableStore.set("his:medCategoryChoice2", medicine2.categoryId);
+variableStore.set("his:medChoice2", medicine2.id);
 assert.equal(variableStore.get("his:medChoice2"), medicine2.id);
 
 // --- submit creates a medicalCases record, applies bonus+commission to ---

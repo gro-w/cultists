@@ -22,7 +22,7 @@
     "padding": 10,
     "children": [
       {"widgetId":"achievements-title","type":"label","className":"achievements-title","text":"成就记录"},
-      {"widgetId":"achievements-list","type":"list","className":"ach-list panel-inset","items":{"nodeId":"items","port":"value"},"itemLabelTemplate":"{{statusMark}} {{name}}：{{description}}","itemClassField":"statusClass","itemClassName":"ach-card"},
+      {"widgetId":"achievements-list","type":"list","className":"ach-list panel-inset","items":{"nodeId":"items","port":"value"},"itemLabelTemplate":"{{statusMark}} {{title}}：{{description}}","itemClassField":"statusClass","itemClassName":"ach-card"},
       {"widgetId":"achievements-note","type":"label","className":"status-note","text":"未解锁的成就会在达成条件后记录"}
     ]
   }

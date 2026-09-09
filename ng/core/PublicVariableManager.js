@@ -41,6 +41,7 @@ export class PublicVariableManager {
     this.eventBus = eventBus || null;
     this.definitions = new Map(); // id -> definition
     this.values = new Map(); // id -> coerced value (or {objectType,objectId}/null for "object")
+    this.syncSources = new Map();
   }
 
   /** Registers (or re-registers) one variable definition; returns the stored definition. Throws on invalid id/type/duplicate id. */
@@ -75,6 +76,23 @@ export class PublicVariableManager {
   /** Bulk-registers an array of definitions (e.g. fetched from a data/*.json file) - plan §10.2's schema is authored as game data. */
   loadDefinitions(definitions = []) {
     definitions.forEach((definition) => this.register(definition));
+  }
+
+  registerSyncSource(sourceId, read) {
+    if (!sourceId || typeof read !== "function") throw new Error("Public variable sync source requires an id and reader");
+    this.syncSources.set(sourceId, read);
+    this.syncFromSources();
+  }
+
+  syncFromSources() {
+    for (const definition of this.definitions.values()) {
+      if (!definition.syncSource || !this.syncSources.has(definition.syncSource)) continue;
+      const next = this._coerce(definition, this.syncSources.get(definition.syncSource)());
+      const previous = this.values.get(definition.id);
+      if (Object.is(previous, next)) continue;
+      this.values.set(definition.id, next);
+      this.eventBus?.emit("variable:changed", { id: definition.id, name: definition.name, previous, value: next, source: definition.syncSource });
+    }
   }
 
   unregister(id) {

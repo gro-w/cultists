@@ -84,7 +84,8 @@ export function validateBlueprint(raw) {
         : flowPorts("output", definition);
       for (const port of outputPorts) {
         const target = node.next?.[port.name];
-        if (!target?.nodeId) { errors.push(`节点 ${id} 的流程输出 ${port.name} 未连接`); continue; }
+        if (!port.optional && !target?.nodeId) { errors.push(`节点 ${id} 的流程输出 ${port.name} 未连接`); continue; }
+        if (!target?.nodeId) continue;
         const targetNode = blueprint.nodes[target.nodeId];
         const targetPort = targetNode ? getActivityNodePort(targetNode.type, "input", target.port) : null;
         if (!targetNode) errors.push(`节点 ${id} 的流程输出 ${port.name} 指向不存在的节点`);

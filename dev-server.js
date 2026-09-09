@@ -285,7 +285,11 @@ function handleStatic(req, res, pathname) {
     return;
   }
 
-  fs.readFile(filePath, (err, data) => {
+  fs.stat(filePath, (statErr, stats) => {
+    if (!statErr && stats.isDirectory()) {
+      return handleStatic(req, res, `${pathname.replace(/\/$/, "")}/index.html`);
+    }
+    fs.readFile(filePath, (err, data) => {
     if (err) {
       if (err.code === "ENOENT") {
         res.writeHead(404, { "Content-Type": "text/plain" });
@@ -300,6 +304,7 @@ function handleStatic(req, res, pathname) {
     const mime = MIME[ext] || "application/octet-stream";
     res.writeHead(200, { "Content-Type": mime });
     res.end(data);
+    });
   });
 }
 

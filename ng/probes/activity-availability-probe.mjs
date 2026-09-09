@@ -20,6 +20,9 @@ const definition = {
   },
 };
 assert.equal(evaluateActivityAvailability(definition, context).ok, true);
+definition.blueprint.nodes.expiry.inputs.expiresAt = 0;
+assert.equal(evaluateActivityAvailability(definition, context).ok, true);
+definition.blueprint.nodes.expiry.inputs.expiresAt = 100;
 definition.blueprint.nodes.gate.inputs.condition = false;
 assert.equal(evaluateActivityAvailability(definition, context).reason, "prerequisite");
 definition.blueprint.nodes.gate.inputs.condition = true;

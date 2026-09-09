@@ -1,4 +1,4 @@
-import RuntimeRecordStore from "./RuntimeRecordStore.js";
+import RuntimeRecordStore from "../../core/RuntimeRecordStore.js";
 export class SpellManager extends RuntimeRecordStore {
   constructor(options = {}) {
     super({ ...options, eventPrefix: "spell" });

@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import EventBus from "../core/EventBus.js";
 import { DataStructureManager } from "../core/DataStructureManager.js";
 import { DataStore } from "../core/DataStore.js";
-import { KeywordManager } from "../core/KeywordManager.js";
+import { KeywordManager } from "../content/cultists/KeywordManager.js";
 
 function makeManager({ sanityProvider } = {}) {
   const eventBus = new EventBus();

@@ -11,6 +11,13 @@
         "x": 40,
         "y": 220
       },
+      "openDialogueWindow": {
+        "id": "openDialogueWindow",
+        "type": "openWindow",
+        "inputs": { "windowId": "dialogue" },
+        "x": 140,
+        "y": 220
+      },
       "intro": {
         "id": "intro",
         "type": "text",
@@ -35,7 +42,8 @@
       "main_choice": {
         "id": "main_choice",
         "type": "choice",
-        "inputs": {
+                "inputs": {
+                  "displayTo": "his-app",
           "options": [
             {
               "label": "详细询问疼痛和进食关系",
@@ -80,7 +88,8 @@
       "pain_followup": {
         "id": "pain_followup",
         "type": "choice",
-        "inputs": {
+                "inputs": {
+                  "displayTo": "his-app",
           "options": [
             {
               "label": "继续询问诱因",
@@ -142,7 +151,8 @@
       "history_followup": {
         "id": "history_followup",
         "type": "choice",
-        "inputs": {
+                "inputs": {
+                  "displayTo": "his-app",
           "options": [
             {
               "label": "询问是否有消化道出血表现",
@@ -252,6 +262,12 @@
     "connections": [
       {
         "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "openDialogueWindow",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "openDialogueWindow",
         "fromPort": "flowOut",
         "toNodeId": "intro",
         "toPort": "flowIn"

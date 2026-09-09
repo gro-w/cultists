@@ -1,0 +1,83 @@
+[
+  {
+    "id": "testFlowNode",
+    "label": "测试流程节点",
+    "description": "用于验证自定义流程节点封装、参数传递和流程返回",
+    "flowInputs": [
+      { "name": "flowIn", "kind": "flow" }
+    ],
+    "flowOutputs": [
+      { "name": "flowOut", "kind": "flow" }
+    ],
+    "valueInputs": [
+      { "name": "value", "kind": "value", "type": "number" }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {
+          "id": "start",
+          "type": "flowStart",
+          "x": 40,
+          "y": 80,
+          "inputs": {},
+          "next": { "flowOut": { "nodeId": "write", "port": "flowIn" } }
+        },
+        "write": {
+          "id": "write",
+          "type": "setVariable",
+          "x": 260,
+          "y": 80,
+          "inputs": {
+            "key": "blueprint.test.flow.value",
+            "value": { "parameter": "value" }
+          },
+          "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } }
+        },
+        "end": {
+          "id": "end",
+          "type": "activityEnd",
+          "x": 500,
+          "y": 80,
+          "inputs": {},
+          "next": {}
+        }
+      }
+    }
+  },
+  {
+    "id": "testValueNode",
+    "label": "测试数值节点",
+    "description": "用于验证自定义数值节点连线；输出输入值乘以 2",
+    "flowInputs": [],
+    "flowOutputs": [],
+    "valueInputs": [
+      { "name": "value", "kind": "value", "type": "number" }
+    ],
+    "valueOutputs": [
+      {
+        "name": "value",
+        "kind": "value",
+        "type": "number",
+        "source": { "nodeId": "double", "port": "value" }
+      }
+    ],
+    "blueprint": {
+      "nodes": {
+        "double": {
+          "id": "double",
+          "type": "arithmetic",
+          "x": 180,
+          "y": 80,
+          "inputs": {
+            "operator": "*",
+            "left": { "parameter": "value" },
+            "right": 2
+          },
+          "next": {}
+        }
+      }
+    }
+  }
+]

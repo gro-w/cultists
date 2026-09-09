@@ -11,7 +11,6 @@ const migrated = [
   ["status", "状态与属性", "📊"],
   ["achievements", "成就", "🏆"],
   ["calendar", "日历", "📅"],
-  ["settings", "设置", "⚙️"],
   ["locations", "去往位置", "🗺️"],
 ];
 for (const [id, label, glyph] of migrated) {
@@ -32,8 +31,6 @@ const achievements = JSON.parse(fs.readFileSync(path.join(root, "windows", "achi
 assert.deepEqual(achievements.root.children.find((node) => node.widgetId === "achievements-list").items, { nodeId: "items", port: "value" });
 const calendar = JSON.parse(fs.readFileSync(path.join(root, "windows", "calendar.json"), "utf8"));
 assert.deepEqual(calendar.root.children.find((node) => node.widgetId === "calendar-grid").items, { variable: "calendar:days" });
-const settings = JSON.parse(fs.readFileSync(path.join(root, "windows", "settings.json"), "utf8"));
-assert.equal(settings.root.children.find((node) => node.widgetId === "settings-autosave").events.onChange.nodes.set.type, "setVariable");
 const locations = JSON.parse(fs.readFileSync(path.join(root, "windows", "locations.json"), "utf8"));
 for (const id of ["hospital", "restaurant", "seaside"]) {
   const button = locations.root.children.find((node) => node.widgetId === `location-${id}`);
@@ -48,4 +45,4 @@ const phaseService = new PhaseBoundaryService({
 assert.equal(phaseService.requestLocation("hospital").ok, true);
 assert.equal(phaseService.state.location, "hospital");
 assert.equal(phaseEvents[0][0], "phase:changed");
-console.log("custom-app-migration-probe: all five windows and desktop icons passed");
+console.log("custom-app-migration-probe: all four windows and desktop icons passed");

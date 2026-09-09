@@ -89,6 +89,8 @@ assert.equal(minutesConsumed, 80, "expected the 4 consumeTime nodes on the all-f
 // wait, once on the wake that satisfies it.
 assert.equal(dialogueEvents.filter((e) => e.eventName === "dialogue:text").length, 8);
 assert.equal(dialogueEvents.filter((e) => e.eventName === "dialogue:choice").length, 4);
+assert.equal(dialogueEvents.filter((e) => e.eventName === "dialogue:complete").length, 1);
+assert.equal(dialogueEvents.find((e) => e.eventName === "dialogue:complete").payload.displayTo, "his-app");
 assert.ok(dialogueEvents.every((e) => e.payload.instanceId === patientInstance.instanceId), "every dialogue event should carry the running instance's id");
 
 console.log("work01a-patient1-probe: all scenarios passed");

@@ -11,16 +11,7 @@
         "y": 60,
         "inputs": {}
       },
-      "open": {
-        "id": "open",
-        "type": "openWindow",
-        "x": 260,
-        "y": 60,
-        "inputs": {
-          "windowId": "dialogue",
-          "skip": true
-        }
-      },
+
       "run": {
         "id": "run",
         "type": "runActivity",
@@ -43,16 +34,10 @@
         "id": "edge-1",
         "fromNodeId": "start",
         "fromPort": "flowOut",
-        "toNodeId": "open",
-        "toPort": "flowIn"
-      },
-      {
-        "id": "edge-2",
-        "fromNodeId": "open",
-        "fromPort": "flowOut",
         "toNodeId": "run",
         "toPort": "flowIn"
       },
+
       {
         "id": "edge-3",
         "fromNodeId": "run",

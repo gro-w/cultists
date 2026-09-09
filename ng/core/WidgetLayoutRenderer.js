@@ -78,7 +78,10 @@ function applyStackPosition(childEl, childNode, parentNode, ctx) {
 
 /** Resolves the "enabled" property (literal or blueprint-bound) and, for controls with a real DOM `disabled` flag, applies it there too - not just as a decorative aria-disabled on the wrapper. */
 function applyEnabled(el, node, ctx, controlEl) {
-  const enabled = prop(node, "enabled", ctx, true) !== false;
+  // An explicitly bound null/undefined/empty value means the control is not
+  // actionable. The old `!== false` check treated null as enabled, which
+  // made buttons backed by an optional selection clickable before selection.
+  const enabled = Boolean(prop(node, "enabled", ctx, true));
   if (!enabled) el.setAttribute("aria-disabled", "true");
   else el.removeAttribute("aria-disabled");
   const target = controlEl || el;
@@ -106,11 +109,26 @@ function applyCommonAttrs(el, node, ctx) {
   if (className) el.className = `ng-widget ${className}`;
   else el.className = "ng-widget";
   el.classList.add(`ng-widget-${node.type}`);
+  if (evaluateCondition(node.activeWhen, ctx.conditionContext || {})) el.classList.add("active");
   const activityId = node.activityId || findRunActivityId(node.events);
-  const implicitAvailability = activityId ? { activity: { id: activityId, available: true } } : null;
+  // An event blueprint may contain a bound activity id (for example HIS
+  // reads the selected patient's dialogueActivityId). It is not an activity
+  // definition id and must not be fed into the generic availability evaluator;
+  // doing so hides the button before the event can start the activity.
+  const implicitAvailability = typeof activityId === "string" && activityId
+    ? { activity: { id: activityId, available: true } }
+    : null;
   const visible = prop(node, "visible", ctx, true) !== false
     && evaluateCondition(node.visibleWhen || implicitAvailability, ctx.conditionContext || {});
-  if (!visible) el.hidden = true;
+  if (!visible) {
+    el.hidden = true;
+    // Container widgets set an inline display value (flex/grid) before this
+    // common-attribute pass. That author rule overrides the browser's UA
+    // `[hidden] { display: none }`, causing tab panels to stack visibly.
+    el.style.setProperty("display", "none", "important");
+  } else {
+    el.hidden = false;
+  }
   applyEnabled(el, node, ctx, ctx.controlEls?.get(node.widgetId || node.id));
 }
 
@@ -126,6 +144,15 @@ function renderLeaf(node, ctx) {
     case "label":
       el.textContent = prop(node, "text", ctx, "");
       break;
+    case "clock": {
+      const snapshot = ctx.gameClock?.snapshot?.() || { day: 1, minutes: 0 };
+      const hh = String(Math.floor(snapshot.minutes / 60)).padStart(2, "0");
+      const mm = String(snapshot.minutes % 60).padStart(2, "0");
+      el.textContent = node.format === "his"
+        ? `第${snapshot.day}天 · ${snapshot.minutes >= 360 && snapshot.minutes < 1080 ? "白天" : "夜晚"} · ${hh}:${mm}`
+        : `Day ${snapshot.day} ${hh}:${mm}`;
+      break;
+    }
     case "button":
       el.type = "button";
       el.textContent = prop(node, "text", ctx, "");
@@ -162,6 +189,12 @@ function renderLeaf(node, ctx) {
       // instead - no mapping/loop node needed in the blueprint system.
       const valueField = node.optionValueField || "value";
       const labelField = node.optionLabelField || "label";
+      if (node.placeholder) {
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = node.placeholder;
+        select.appendChild(placeholder);
+      }
       for (const option of prop(node, "options", ctx, []) || []) {
         const opt = document.createElement("option");
         opt.value = option.value ?? option[valueField] ?? option.id ?? "";
@@ -207,7 +240,45 @@ function renderLeaf(node, ctx) {
     case "dialogue": {
       const displayTo = prop(node, "displayTo", ctx, "dialogue");
       const view = ctx.dialogueViews?.[displayTo];
+      /* DEV-TOOLS:START */
+      console.log("[NG dialogue] render dialogue widget", { widgetId: node.widgetId, displayTo, foundView: Boolean(view), connected: Boolean(view?.el?.isConnected) });
+      /* DEV-TOOLS:END */
       if (view?.el) el.appendChild(view.el);
+      break;
+    }
+    case "saveLoad": {
+      const saveManager = ctx.saveManager;
+      const status = document.createElement("p");
+      const save = document.createElement("button");
+      save.type = "button";
+      save.textContent = "保存到文件";
+      save.addEventListener("click", () => {
+        try {
+          const envelope = saveManager.snapshot();
+          const url = URL.createObjectURL(new Blob([JSON.stringify(envelope, null, 2)], { type: "application/json" }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `cultists-ng-save-day${envelope.state.gameClock.day}.json`;
+          link.click();
+          URL.revokeObjectURL(url);
+          status.textContent = "已保存到文件";
+        } catch (error) { status.textContent = `保存失败：${error.message}`; }
+      });
+      const load = document.createElement("input");
+      load.type = "file";
+      load.accept = "application/json";
+      load.addEventListener("change", () => {
+        const file = load.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try { saveManager.restore(JSON.parse(String(reader.result))); status.textContent = "已加载存档"; }
+          catch (error) { status.textContent = `加载失败：${error.message}`; }
+          load.value = "";
+        };
+        reader.readAsText(file);
+      });
+      el.append(save, load, status);
       break;
     }
     case "list": {
@@ -238,6 +309,17 @@ function renderLeaf(node, ctx) {
         if (item && typeof item === "object" && item.id !== undefined) {
           li.dataset.itemId = item.id;
           if (ctx.onEvent) li.addEventListener("click", () => ctx.onEvent(node, "onItemClick", item.id));
+          for (const action of node.itemActions || []) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = action.className || "win95-btn bevel-out ng-list-item-action";
+            button.textContent = action.label || action.id || "操作";
+            button.addEventListener("click", (event) => {
+              event.stopPropagation();
+              ctx.onEvent?.(node, action.eventName || action.id, item.id);
+            });
+            li.appendChild(button);
+          }
         }
         el.appendChild(li);
       }
@@ -282,13 +364,42 @@ export function renderWidgetNode(node, ctx = {}) {
   ctx.widgetEls = ctx.widgetEls || new Map();
   ctx.controlEls = ctx.controlEls || new Map();
   let el;
-  if (node.type === "container") {
+  if (node.type === "container" || node.type === "tabs") {
     el = document.createElement("div");
     applyContainerStyle(el, node, ctx);
     for (const child of node.children || []) {
       const childEl = renderWidgetNode(child, ctx);
       applyStackPosition(childEl, child, node, ctx);
       el.appendChild(childEl);
+    }
+    if (Array.isArray(node.componentActions) && node.componentActions.length) {
+      const actions = new Set(node.componentActions);
+      if (actions.has("add")) {
+      const add = document.createElement("button");
+      add.type = "button";
+      add.className = "win95-btn bevel-out his-prescription-copy";
+      add.textContent = "+";
+      add.title = "添加药品行";
+      add.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        ctx.onEvent?.(node, "onAdd");
+      });
+        el.append(add);
+      }
+      if (actions.has("remove")) {
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "win95-btn bevel-out his-prescription-delete";
+      remove.textContent = "−";
+      remove.title = "删除药品行";
+      remove.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        ctx.onEvent?.(node, "onRemove");
+      });
+        el.append(remove);
+      }
     }
   } else {
     el = renderLeaf(node, ctx);

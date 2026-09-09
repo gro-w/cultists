@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import EventBus from "../core/EventBus.js";
 import GameClock from "../core/GameClock.js";
 import TimeService from "../core/TimeService.js";
-import GameState from "../core/GameState.js";
+import GameState from "../content/cultists/GameState.js";
 import PhaseBoundaryService from "../core/PhaseBoundaryService.js";
 
 const bus = new EventBus();

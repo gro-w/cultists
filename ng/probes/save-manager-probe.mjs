@@ -10,11 +10,11 @@ import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { WindowManager } from "../core/WindowManager.js";
 import { DesktopIconManager } from "../core/DesktopIconManager.js";
-import { KeywordManager } from "../core/KeywordManager.js";
+import { KeywordManager } from "../content/cultists/KeywordManager.js";
 import { OnboardingManager } from "../core/OnboardingManager.js";
 import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 import { SaveManager } from "../core/SaveManager.js";
-import { GameState } from "../core/GameState.js";
+import { GameState } from "../content/cultists/GameState.js";
 
 // A branch/blockUntil Activity that consumes time once, then waits forever
 // for an "approved" variable - used to exercise "等待中的 Activity...一致"
@@ -106,7 +106,10 @@ function makeSession() {
     activityQueueRegistry,
     windowManager,
     desktopIconManager,
-    keywordManager,
+    stateProviders: { keywords: keywordManager },
+    saveableVariable: (key) => !["calendar:days", "achievements:items", "event:value", "query:records"].includes(key)
+      && !String(key).startsWith("gameState:")
+      && !String(key).startsWith("__"),
     onboardingManager,
     activityExecutionService,
     resumePendingActivities,
@@ -140,7 +143,7 @@ function makeSession() {
 
   const saved = session.saveManager.snapshot();
   assert.equal(saved.format, "cultists-ng-save");
-  assert.equal(saved.version, 6);
+  assert.equal(saved.version, 7);
   assert.equal(saved.createdAtGameTime, 110);
   assert.equal(Object.hasOwn(saved.state, "databases"), false, "game data must not be embedded in saves");
   assert.equal(Object.hasOwn(saved.state.variables, "calendar:days"), false, "derived calendar UI data must not be saved");

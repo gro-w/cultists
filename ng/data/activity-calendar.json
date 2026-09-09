@@ -225,7 +225,7 @@
       "day": 1,
       "minutes": 480,
       "queueId": "work",
-      "activityId": "patient_lin_ruoqing_01",
+      "activityId": "work01a-patient1",
       "once": true,
       "prerequisites": null
     },
@@ -233,7 +233,7 @@
       "day": 1,
       "minutes": 480,
       "queueId": "work",
-      "activityId": "patient_01_02_kidney_stone",
+      "activityId": "work01a-patient2",
       "once": true,
       "prerequisites": null
     },
@@ -241,7 +241,7 @@
       "day": 1,
       "minutes": 480,
       "queueId": "work",
-      "activityId": "patient_01_03_benign_prostatic_hyperplasia",
+      "activityId": "work01a-patient3",
       "once": true,
       "prerequisites": null
     },
@@ -249,7 +249,7 @@
       "day": 1,
       "minutes": 480,
       "queueId": "work",
-      "activityId": "patient_01_04_nausea_vomiting",
+      "activityId": "work01a-patient4",
       "once": true,
       "prerequisites": null
     },
@@ -257,7 +257,7 @@
       "day": 1,
       "minutes": 480,
       "queueId": "work",
-      "activityId": "patient_01_05_lymphadenopathy",
+      "activityId": "work01a-patient5",
       "once": true,
       "prerequisites": null
     },
@@ -265,7 +265,7 @@
       "day": 1,
       "minutes": 480,
       "queueId": "work",
-      "activityId": "patient_01_06_orthostatic_hypotension",
+      "activityId": "work01a-patient6",
       "once": true,
       "prerequisites": null
     },
@@ -273,7 +273,7 @@
       "day": 1,
       "minutes": 480,
       "queueId": "work",
-      "activityId": "patient_01_07_closed_foot_fracture",
+      "activityId": "work01a-patient7",
       "once": true,
       "prerequisites": null
     },

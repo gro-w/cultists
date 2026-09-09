@@ -29,14 +29,11 @@ import { SaveManager } from "./core/SaveManager.js";
 import { OnboardingManager } from "./core/OnboardingManager.js";
 import { evaluateCondition } from "./core/ConditionEvaluator.js";
 import { evaluateActivityAvailability } from "./core/ActivityAvailabilityEvaluator.js";
+import { DisplayReceiverRegistry } from "./core/DisplayReceiverRegistry.js";
+import { registerCustomActivityNode } from "./core/ActivityNodeRegistry.js";
 
 export function isDevEntry(search = typeof location !== "undefined" ? location.search : "") {
   return search === "?dev";
-}
-
-class EmptySnapshotStore {
-  snapshot() { return {}; }
-  restore() {}
 }
 
 function createApiRegistry({ eventBus: bus, variableStore, publicVariableManager, activityQueueRegistry, shell, timeService, dataStore }) {
@@ -49,6 +46,13 @@ function createApiRegistry({ eventBus: bus, variableStore, publicVariableManager
     ["engine.consumeTime", ({ minutes }) => timeService.consume(Number(minutes) || 0, { source: "activity" })],
     ["engine.records", ({ databaseId, query = {} }) => dataStore.findRecords(databaseId, query)],
     ["engine.queue.list", ({ queueId = "main", filters }) => activityQueueRegistry.listEntries(queueId, filters)],
+    ["engine.queue.listQueues", () => activityQueueRegistry.listQueues()],
+    ["engine.queue.get", ({ queueId = "main", instanceId }) => activityQueueRegistry.getEntry(queueId, instanceId)],
+    ["engine.queue.append", ({ queueId = "main", ...options }) => activityQueueRegistry.append(queueId, options)],
+    ["engine.queue.update", ({ queueId = "main", instanceId, patch }) => activityQueueRegistry.updateEntry(queueId, instanceId, patch)],
+    ["engine.queue.complete", ({ queueId = "main", instanceId }) => activityQueueRegistry.completeEntry(queueId, instanceId)],
+    ["engine.queue.cancel", ({ queueId = "main", instanceId }) => activityQueueRegistry.cancelEntry(queueId, instanceId)],
+    ["engine.queue.remove", ({ queueId = "main", instanceId }) => activityQueueRegistry.removeEntry(queueId, instanceId)],
     ["engine.openWindow", ({ windowId }) => (shell.openWindow(windowId), true)],
   ]);
   return {
@@ -58,6 +62,7 @@ function createApiRegistry({ eventBus: bus, variableStore, publicVariableManager
       return handler(payload);
     },
     list() { return [...handlers.keys()]; },
+    register(apiId, handler) { handlers.set(apiId, handler); },
   };
 }
 
@@ -72,6 +77,8 @@ export async function bootstrap(rootEl) {
   }
   await windowDefinitions.loadManifest(config.windowManifest, "windows/");
   const icons = await dataLoader.loadJSON(config.desktopIcons, { optional: true }) || [];
+  const customBlueprintNodes = await dataLoader.loadJSON(config.blueprintNodes, { optional: true }) || [];
+  customBlueprintNodes.forEach((node) => registerCustomActivityNode(node));
   const initialState = config.initialState || {};
   const gameClock = new GameClock(eventBus, {
     day: initialState.day,
@@ -101,7 +108,12 @@ export async function bootstrap(rootEl) {
     const value = await dataLoader.loadJSON(config.publicVariables, { optional: true });
     if (value) publicVariables.loadDefinitions(value);
   }
-  const seedFiles = config.seedRecords ? (Array.isArray(config.seedRecords) ? config.seedRecords : [config.seedRecords]) : [];
+  publicVariables.registerSyncSource("gameClock.totalMinutes", () => (gameClock.day - 1) * 1440 + gameClock.minutes);
+  eventBus.on("gameClock:changed", () => publicVariables.syncFromSources());
+  const seedFiles = [
+    ...(config.seedRecords ? (Array.isArray(config.seedRecords) ? config.seedRecords : [config.seedRecords]) : []),
+    ...(config.deferredSeedRecords ? (Array.isArray(config.deferredSeedRecords) ? config.deferredSeedRecords : [config.deferredSeedRecords]) : []),
+  ];
   for (const file of seedFiles) {
     const value = await dataLoader.loadJSON(file, { optional: true });
     if (value) dataStore.loadRecordSet(value);
@@ -109,10 +121,17 @@ export async function bootstrap(rootEl) {
   for (const { databaseId } of dataStore.listDatabases()) {
     refResolver.register(`database:${databaseId}`, (key) => dataStore.getRecord(databaseId, key));
   }
-
-  const runtimeGateway = { getCollection: () => [] };
+  const contentModule = config.contentPackage || "cultists.js";
+  const { createContentPackage } = await import(`./content/${contentModule}`);
+  const content = createContentPackage({ eventBus, dataStore, publicVariables, variableStore });
+  const { keywordManager, runtimeGateway, customWidgetFactories = {} } = content;
   const iconManager = new DesktopIconManager(icons);
-  const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway);
+  // This ID is reserved by the engine. Ignore stale content/save data so the
+  // developer entry can never be supplied or configured by the game package.
+  iconManager.unregister("dev-mode-launcher-icon");
+  const dialogueRegistry = new DisplayReceiverRegistry();
+  content.installDisplayReceivers?.({ dialogueRegistry });
+  const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway, dialogueRegistry, keywordManager, customWidgetFactories);
   // Paint icons before loading the Activity catalogue. The catalogue can be
   // large; taskbar and desktop must become visible as one initial surface.
   shell.mountIcons(iconManager);
@@ -124,6 +143,7 @@ export async function bootstrap(rootEl) {
       label: "开发人员模式",
       blueprintId: "desktop.open-window",
       inputs: { windowId: "dev-mode-launcher" },
+      engineOwned: true,
     });
     shell.refreshIcons();
   }
@@ -148,16 +168,31 @@ export async function bootstrap(rootEl) {
   for (const definition of config.queues || []) {
     if (definition?.id) queues.register(definition.id, { nonBlocking: Boolean(definition.nonBlocking) });
   }
-  const saveState = new EmptySnapshotStore();
   const saveManager = new SaveManager({
-    gameClock, gameState: saveState, variableStore, publicVariableManager: publicVariables,
+    gameClock, variableStore, publicVariableManager: publicVariables,
     activityQueueRegistry: queues, windowManager, desktopIconManager: iconManager,
-    keywordManager: saveState, onboardingManager: onboarding, runtimeStores: {},
+    onboardingManager: onboarding, stateProviders: content.stateProviders, runtimeStores: content.runtimeStores,
+    saveableVariable: content.saveableVariable,
     activityExecutionService: null, resumePendingActivities: () => {}, engineVersion: config.version,
   });
   const apiGateway = createApiRegistry({ eventBus, variableStore, publicVariableManager: publicVariables, activityQueueRegistry: queues, shell, timeService, dataStore });
   const execution = new ActivityExecutionService(eventBus, { runtimeGateway });
+
+  apiGateway.register("window.componentMutation", ({ componentId, action, max = 5 } = {}) => {
+    const allowed = new Set(["add", "remove"]);
+    if (!componentId || !allowed.has(action)) return { ok: false, reason: "invalid-component-mutation" };
+    eventBus.emit("window:componentMutation", { componentId, action, max: Math.min(5, Math.max(1, Number(max) || 5)) });
+    return { ok: true, componentId, action, max: Math.min(5, Math.max(1, Number(max) || 5)) };
+  });
+  apiGateway.register("window.addComponent", (payload = {}) => shell.addWindowComponent(payload));
+  apiGateway.register("window.removeComponent", (payload = {}) => shell.removeWindowComponent(payload));
+  apiGateway.register("window.getLayout", (payload = {}) => shell.getWindowLayout(payload));
+  saveManager.activityExecutionService = execution;
   const consumer = new ActivityQueueConsumer({ queueRegistry: queues, activityDefinitionStore: activityDefinitions, activityExecutionService: execution, execute: (context) => executeActivity(context) });
+  apiGateway.register("engine.queue.consume", ({ queueId = "main" }) => Boolean(consumer.consume(queueId)));
+  apiGateway.register("engine.activity.pause", ({ instanceId }) => execution.pause(instanceId));
+  apiGateway.register("engine.activity.resume", ({ instanceId }) => execution.resume(instanceId));
+  apiGateway.register("engine.activity.cancel", ({ instanceId }) => execution.cancel(instanceId));
 
   function enqueueActivity(activityId, queueId = "main", payload = null) {
     const queue = queues.get(queueId) || queues.register(queueId);
@@ -168,21 +203,47 @@ export async function bootstrap(rootEl) {
     return instance;
   }
   function runActivity(activityId, queueId = "main") {
+    /* DEV-TOOLS:START */
+    console.log("[NG dialogue] runActivity requested", { activityId, queueId, hasQueue: Boolean(queues.get(queueId)), hasDefinition: Boolean(activityDefinitions.get(activityId)) });
+    /* DEV-TOOLS:END */
     const queue = queues.get(queueId);
     const definition = activityDefinitions.get(activityId);
-    if (!queue || !definition) return null;
+    if (!queue || !definition) {
+      /* DEV-TOOLS:START */
+      console.log("[NG dialogue] runActivity rejected", { activityId, queueId, hasQueue: Boolean(queue), hasDefinition: Boolean(definition) });
+      /* DEV-TOOLS:END */
+      return null;
+    }
     const availability = evaluateActivityAvailability(definition, { gameClock, variableStore, publicVariableManager: publicVariables, pvGateway: publicVariables, activityQueueRegistry: queues, activityDefinitionStore: activityDefinitions, evaluateCondition });
-    if (!availability.ok) return null;
+    if (!availability.ok) {
+      /* DEV-TOOLS:START */
+      console.log("[NG dialogue] runActivity unavailable", { activityId, queueId, availability });
+      /* DEV-TOOLS:END */
+      return null;
+    }
     const instance = queue.append({ activityId });
-    return executeActivity({ queue, definition, instance });
+    const runner = executeActivity({ queue, definition, instance });
+    /* DEV-TOOLS:START */
+    console.log("[NG dialogue] runActivity started", { activityId, queueId, instanceId: instance.instanceId, runner: Boolean(runner) });
+    /* DEV-TOOLS:END */
+    return runner;
   }
+  content.bindRuntime?.({ runActivity });
   function executeActivity({ queue, definition, instance }) {
+    /* DEV-TOOLS:START */
+    console.log("[NG dialogue] executeActivity", { activityId: definition?.id, queueId: queue?.queueId, instanceId: instance?.instanceId, currentNodeId: instance?.currentNodeId });
+    /* DEV-TOOLS:END */
     return execution.run({
       queue, definition, instance, variableStore,
       timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
       windowGateway: (id) => shell.openWindow(id),
       activityGateway: (id, target, source, node, payload) => node?.type === "insertActivity" ? enqueueActivity(id, target || "main", payload) : runActivity(id, target || "main"),
-      eventGateway: (name, payload) => eventBus.emit(name, payload), dbGateway: dataStore,
+        eventGateway: (name, payload) => {
+        /* DEV-TOOLS:START */
+        console.log("[NG dialogue] eventGateway", name, payload);
+        /* DEV-TOOLS:END */
+        eventBus.emit(name, payload);
+      }, dbGateway: dataStore,
       pvGateway: publicVariables, onboardingGateway: onboarding, apiGateway,
     });
   }
@@ -192,6 +253,7 @@ export async function bootstrap(rootEl) {
     const instance = queue.append({ activityId });
     return executeActivity({ queue, definition: { id: activityId, blueprint: validation.blueprint }, instance });
   }
+  content.registerApis?.(apiGateway, { activityDefinitionStore: activityDefinitions, enqueueActivity });
   function findWidget(root, widgetId) {
     if (!root) return null;
     if (root.widgetId === widgetId) return root;
@@ -209,8 +271,14 @@ export async function bootstrap(rootEl) {
     return blueprint ? runInlineBlueprint(windowEventsQueue, `window:${windowId}:${eventName}`, blueprint) : null;
   }
   function runWidgetEvent(windowId, widgetId, eventName, value) {
-    const widget = findWidget(windowDefinitions.get(windowId)?.root, widgetId);
+    /* DEV-TOOLS:START */
+    console.log("[NG dialogue] widget event", { windowId, widgetId, eventName, value });
+    /* DEV-TOOLS:END */
+    const widget = findWidget(shell.getRuntimeRoot?.(windowId) || windowDefinitions.get(windowId)?.root, widgetId);
     const blueprint = widget?.events?.[eventName];
+    /* DEV-TOOLS:START */
+    console.log("[NG dialogue] widget blueprint lookup", { windowId, widgetId, eventName, foundWidget: Boolean(widget), foundBlueprint: Boolean(blueprint) });
+    /* DEV-TOOLS:END */
     if (!blueprint) return null;
     if (value !== undefined) variableStore.set("event:value", value);
     return runInlineBlueprint(widgetEventsQueue, `widget:${windowId}:${widgetId}:${eventName}`, blueprint);
@@ -221,6 +289,7 @@ export async function bootstrap(rootEl) {
     return runActivity(icon.blueprintId, "desktop-icons");
   }
   shell.runWidgetEvent = runWidgetEvent;
+  shell.saveManager = saveManager;
   shell.runIconBlueprint = runIconBlueprint;
   eventBus.on("window:opened", ({ windowId }) => runWindowLifecycle(windowId, "onCreate"));
   eventBus.on("window:closed", ({ windowId }) => runWindowLifecycle(windowId, "onDestroy"));
@@ -240,6 +309,9 @@ export async function bootstrap(rootEl) {
       activityDefinitionStore: activityDefinitions,
       eventBus,
       variableStore,
+      pvGateway: publicVariables,
+      dbGateway: dataStore,
+      runtimeGateway,
       iconManager,
       dataStructureManager: structures,
       dataStore,
@@ -247,6 +319,7 @@ export async function bootstrap(rootEl) {
       onboardingManager: onboarding,
       dataLoader,
       saveManager,
+      customBlueprintNodes,
       refreshIcons: () => shell.refreshIcons(),
     });
     shell.refreshIcons();
@@ -259,7 +332,7 @@ export async function bootstrap(rootEl) {
     const instance = enqueueActivity(startup.activityId, startup.queueId || "main");
     if (instance) consumer.consume(startup.queueId || "main");
   }
-  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityQueueConsumer: consumer, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, iconManager, saveManager, onboardingManager: onboarding };
+  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, contentPackage: content, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityQueueConsumer: consumer, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, iconManager, saveManager, onboardingManager: onboarding };
 }
 
 if (typeof document !== "undefined") document.addEventListener("DOMContentLoaded", () => bootstrap(document.getElementById("ng-root")));

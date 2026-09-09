@@ -34,6 +34,9 @@ export class DesktopIconManager {
       blueprintId: icon.blueprintId,
       inputs: icon.inputs || {},
       startMenu: icon.startMenu !== false,
+      // Engine-owned icons are injected at runtime and never belong to the
+      // game's editable data or save payload.
+      engineOwned: icon.engineOwned === true,
     });
     return this.icons.get(icon.iconId);
   }
@@ -43,8 +46,9 @@ export class DesktopIconManager {
   }
 
   /** Icons in display order (stable sort keeps insertion order for equal `order` values). */
-  list() {
+  list({ includeEngineOwned = false } = {}) {
     return [...this.icons.values()]
+      .filter((icon) => includeEngineOwned || !icon.engineOwned)
       .map((icon, index) => ({ icon, index }))
       .sort((a, b) => a.icon.order - b.icon.order || a.index - b.index)
       .map(({ icon }) => icon);
@@ -109,8 +113,12 @@ export class DesktopIconManager {
   }
 
   restore(icons = []) {
+    const engineIcons = [...this.icons.values()].filter((icon) => icon.engineOwned);
     this.icons.clear();
-    icons.forEach((icon, index) => this.register({ order: index, ...icon }));
+    engineIcons.forEach((icon) => this.icons.set(icon.iconId, icon));
+    icons
+      .filter((icon) => !icon.engineOwned)
+      .forEach((icon, index) => this.register({ order: index, ...icon }));
   }
 }
 

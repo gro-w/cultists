@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import EventBus from "../core/EventBus.js";
-import ItemManager from "../core/ItemManager.js";
-import NPCStateManager from "../core/NPCStateManager.js";
-import SpellManager from "../core/SpellManager.js";
+import ItemManager from "../content/cultists/ItemManager.js";
+import NPCStateManager from "../content/cultists/NPCStateManager.js";
+import SpellManager from "../content/cultists/SpellManager.js";
 import SelectionSubmissionManager from "../core/SelectionSubmissionManager.js";
-import OutcomeManager from "../core/OutcomeManager.js";
+import OutcomeManager from "../content/cultists/OutcomeManager.js";
 import MediaStateManager from "../core/MediaStateManager.js";
 const eventBus = new EventBus();
 const items = new ItemManager({ eventBus }); items.define({ id: "key" }); items.add("key"); items.place("desk", "key"); assert.equal(items.pickUp("desk").itemId, "key"); assert.equal(items.count("key"), 2);

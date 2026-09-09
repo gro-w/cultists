@@ -33,54 +33,46 @@ const SAVE_FORMAT = "cultists-ng-save";
 // 变 payload...要评估是否提升版本；旧版本不应静默迁移") - an older save is
 // explicitly rejected by `_validate`, not migrated.
 // v5 added the authoritative GameState snapshot. v6 removes database records
-// from saves: databases and all game-content JSON are canonical project data,
-// loaded from data files and never copied into a player save.
-const SAVE_FORMAT_VERSION = 6;
+// from saves. v7 replaces hard-coded keyword/game-state fields with generic
+// content state providers; canonical content remains outside player saves.
+const SAVE_FORMAT_VERSION = 7;
 
 function isPlainObject(value) {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
-function isDerivedVariableKey(key) {
-  return key.startsWith("gameState:")
-    || key === "calendar:days"
-    || key === "achievements:items"
-    || key === "event:value"
-    || key.startsWith("__");
-}
-
-function isSaveableVariable(key, value) {
-  return !isDerivedVariableKey(key)
+function defaultSaveableVariable(key, value) {
+  return !String(key).startsWith("__")
     && (value === null || ["boolean", "number", "string"].includes(typeof value));
 }
 
 export class SaveManager {
   constructor({
     gameClock,
-    gameState,
     variableStore,
     publicVariableManager,
 
     activityQueueRegistry,
     windowManager,
     desktopIconManager,
-    keywordManager,
     onboardingManager,
+    stateProviders = {},
     runtimeStores = {},
+    saveableVariable = defaultSaveableVariable,
     activityExecutionService,
     resumePendingActivities,
     engineVersion = "0.1.0",
   } = {}) {
     this.gameClock = gameClock;
-    this.gameState = gameState;
     this.variableStore = variableStore;
     this.publicVariableManager = publicVariableManager;
     this.activityQueueRegistry = activityQueueRegistry;
     this.windowManager = windowManager;
     this.desktopIconManager = desktopIconManager;
-    this.keywordManager = keywordManager;
     this.onboardingManager = onboardingManager;
+    this.stateProviders = stateProviders;
     this.runtimeStores = runtimeStores;
+    this.saveableVariable = saveableVariable;
     this.activityExecutionService = activityExecutionService;
     this.resumePendingActivities = resumePendingActivities || (() => {});
     this.engineVersion = engineVersion;
@@ -97,15 +89,14 @@ export class SaveManager {
       createdAtGameTime: (clockState.day - 1) * 1440 + clockState.minutes,
       state: {
         gameClock: clockState,
-        gameState: this.gameState.snapshot(),
-        variables: this.variableStore.snapshot({ include: isSaveableVariable }),
+        variables: this.variableStore.snapshot({ include: this.saveableVariable }),
         publicVariables: this.publicVariableManager.snapshot(),
 
         queues: this.activityQueueRegistry.snapshot(),
         windows: this.windowManager.snapshotInstances(),
         desktopIcons: this.desktopIconManager.toJSON(),
-        keywords: this.keywordManager.snapshot(),
         onboarding: this.onboardingManager.snapshot(),
+        providers: Object.fromEntries(Object.entries(this.stateProviders).map(([id, provider]) => [id, provider.snapshot()])),
         runtime: Object.fromEntries(Object.entries(this.runtimeStores).map(([id, store]) => [id, store.snapshot()])),
       },
     };
@@ -119,15 +110,15 @@ export class SaveManager {
     const state = envelope.state;
     if (!isPlainObject(state)) throw new Error("Save data is missing state");
     if (!isPlainObject(state.gameClock)) throw new Error("Save data is missing gameClock state");
-    if (!isPlainObject(state.gameState)) throw new Error("Save data is missing gameState state");
+
     if (!isPlainObject(state.variables)) throw new Error("Save data is missing variables state");
     if (!isPlainObject(state.publicVariables)) throw new Error("Save data is missing publicVariables state");
 
     if (!isPlainObject(state.queues)) throw new Error("Save data is missing queues state");
     if (!Array.isArray(state.windows)) throw new Error("Save data is missing windows state");
     if (!Array.isArray(state.desktopIcons)) throw new Error("Save data is missing desktopIcons state");
-    if (!Array.isArray(state.keywords)) throw new Error("Save data is missing keywords state");
     if (!isPlainObject(state.onboarding)) throw new Error("Save data is missing onboarding state");
+    if (!isPlainObject(state.providers)) throw new Error("Save data is missing providers state");
     if (!isPlainObject(state.runtime)) throw new Error("Save data is missing runtime state");
     return state;
   }
@@ -167,16 +158,16 @@ export class SaveManager {
   /** Replaces every manager's state from a validated `state` object; the one and only mutation point, shared by both the normal and rollback paths of `restore()`. */
   _applyState(state) {
     this.gameClock.restore(state.gameClock);
-    this.gameState.restore(state.gameState);
-    const preservedVariables = Object.keys(this.variableStore.snapshot()).filter(isDerivedVariableKey);
+    const currentVariables = this.variableStore.snapshot();
+    const preservedVariables = Object.keys(currentVariables).filter((key) => !this.saveableVariable(key, currentVariables[key]));
     this.variableStore.restore(state.variables, { preserve: preservedVariables });
     this.publicVariableManager.restore(state.publicVariables);
 
     this.activityQueueRegistry.restore(state.queues);
     this.windowManager.restoreInstances(state.windows);
     this.desktopIconManager.restore(state.desktopIcons);
-    this.keywordManager.restore(state.keywords);
     this.onboardingManager.restore(state.onboarding);
+    for (const [id, provider] of Object.entries(this.stateProviders)) provider.restore(state.providers[id] || {});
     for (const [id, store] of Object.entries(this.runtimeStores)) store.restore(state.runtime[id] || {});
   }
 }

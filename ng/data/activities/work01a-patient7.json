@@ -11,6 +11,7 @@
         "x": 40,
         "y": 260
       },
+      "openDialogueWindow": { "id": "openDialogueWindow", "type": "openWindow", "inputs": { "windowId": "dialogue" }, "x": 140, "y": 260 },
       "intro": {
         "id": "intro",
         "type": "text",
@@ -35,7 +36,8 @@
       "main_choice": {
         "id": "main_choice",
         "type": "choice",
-        "inputs": {
+                "inputs": {
+                  "displayTo": "his-app",
           "options": [
             {
               "label": "详细询问主诉和症状变化",
@@ -206,6 +208,12 @@
       },
       {
         "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "openDialogueWindow",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "openDialogueWindow",
         "fromPort": "flowOut",
         "toNodeId": "intro",
         "toPort": "flowIn"

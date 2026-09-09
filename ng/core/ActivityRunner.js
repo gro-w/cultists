@@ -17,8 +17,10 @@
  * nodes (`branch`, `blockUntil`) always re-evaluate so they pick up
  * variable changes correctly on resume.
  */
+import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
+
 const ONE_SHOT_NODE_TYPES = new Set([
-  "setVariable", "consumeTime", "openWindow", "runActivity", "insertActivity", "emitEvent",
+  "setVariable", "consumeTime", "openWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
   "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect",
   "markOnboardingMilestone", "statOperation",
 ]);
@@ -95,6 +97,9 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
     case "getActivityInstanceCount":
       result = variableStore.get(`__activityCount:${read("activityId")}`) ?? 0;
       break;
+    case "addWindowComponent":
+      result = variableStore.get(`__nodeResult:${node.id}:componentId`) ?? null;
+      break;
     case "getPublicVariable": {
       if (!pvGateway) throw new Error("Node getPublicVariable requires a pvGateway");
       result = pvGateway.get(read("id"));
@@ -105,8 +110,38 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       result = pvGateway.evaluateCondition({ id: read("id"), op: read("op", "eq"), value: read("value") });
       break;
     }
-    default:
-      throw new Error(`Node ${node.type} does not produce a value output`);
+    default: {
+      const customDefinition = getActivityNodeDefinition(node.type);
+      const output = customDefinition?.custom
+        ? (customDefinition.valueOutputs || []).find((port) => port.name === portName)
+        : null;
+      if (!customDefinition?.custom || !customDefinition.blueprint || !output?.source) {
+        throw new Error(`Node ${node.type} does not produce a value output`);
+      }
+      const replaceParameters = (value) => {
+        if (Array.isArray(value)) return value.map(replaceParameters);
+        if (!value || typeof value !== "object") return value;
+        if (Object.keys(value).length === 1 && typeof value.parameter === "string") {
+          return resolveInput(blueprint, node, value.parameter, variableStore, undefined, stack, pvGateway, dbGateway, runtimeGateway);
+        }
+        return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, replaceParameters(child)]));
+      };
+      const nestedBlueprint = structuredClone(customDefinition.blueprint);
+      for (const nestedNode of Object.values(nestedBlueprint.nodes || {})) {
+        nestedNode.inputs = replaceParameters(nestedNode.inputs || {});
+      }
+      result = evaluateValueOutput(
+        nestedBlueprint,
+        output.source.nodeId,
+        output.source.port || "value",
+        variableStore,
+        stack,
+        pvGateway,
+        dbGateway,
+        runtimeGateway,
+      );
+      break;
+    }
   }
   stack.delete(key);
   return result;
@@ -201,6 +236,7 @@ export function createActivityRunner({
   let cancelled = false;
   let paused = false;
   let waitUnsubscribe = null;
+  let lastDialogueDisplayTo = null;
 
   function markExecuted(node) {
     if (!instance.executedNodeIds.includes(node.id)) instance.executedNodeIds.push(node.id);
@@ -212,6 +248,13 @@ export function createActivityRunner({
     instance.resolutionReason = reason;
     instance.waitingNodeId = null;
     if (instance.currentStep) instance.currentStep = { ...instance.currentStep, status: reason };
+    if (lastDialogueDisplayTo) {
+      eventGateway("dialogue:complete", {
+        instanceId: instance.instanceId,
+        displayTo: lastDialogueDisplayTo,
+        reason,
+      }, instance);
+    }
     onCheckpoint(instance);
     onComplete(instance, reason);
   }
@@ -256,6 +299,50 @@ export function createActivityRunner({
         const skip = Boolean(resolveInput(blueprint, node, "skip", variableStore, false, undefined, pvGateway, dbGateway, runtimeGateway));
         const windowId = resolveInput(blueprint, node, "windowId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         if (!skip) windowGateway(windowId, instance, node);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "addWindowComponent": {
+        if (!apiGateway?.call) throw new Error("Node addWindowComponent requires an apiGateway");
+        const publicVariableId = resolveInput(blueprint, node, "publicVariableId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway);
+        const rawProperties = node.inputs?.properties;
+        const componentProperties = rawProperties && typeof rawProperties === "object" && !Array.isArray(rawProperties) && !Object.prototype.hasOwnProperty.call(rawProperties, "nodeId") && !Object.prototype.hasOwnProperty.call(rawProperties, "variable")
+          ? structuredClone(rawProperties)
+          : resolveInput(blueprint, node, "properties", variableStore, {}, undefined, pvGateway, dbGateway, runtimeGateway);
+        const result = apiGateway.call("window.addComponent", {
+          windowId: resolveInput(blueprint, node, "windowId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
+          parentId: resolveInput(blueprint, node, "parentId", variableStore, "root", undefined, pvGateway, dbGateway, runtimeGateway),
+          componentId: resolveInput(blueprint, node, "componentId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
+          componentType: resolveInput(blueprint, node, "componentType", variableStore, "container", undefined, pvGateway, dbGateway, runtimeGateway),
+          publicVariableId,
+          maxCount: resolveInput(blueprint, node, "maxCount", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
+          properties: {
+            ...componentProperties,
+            ...Object.fromEntries(["x", "y", "width", "height", "text", "enabled"].map((key) => [key, resolveInput(blueprint, node, key, variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway)]).filter(([, value]) => value !== undefined)),
+          },
+          events: Object.fromEntries(["onCreate", "onClick", "onChange", "onFocus", "onBlur", "onDestroy"].map((eventName) => {
+            const target = node.next?.[eventName]?.nodeId;
+            return [eventName, target ? { ...blueprint, startNodeId: target } : node.events?.[eventName]];
+          }).filter(([, event]) => event)),
+        });
+        if (result?.componentId && publicVariableId != null && pvGateway) pvGateway.set(publicVariableId, result.componentId);
+        variableStore.set(`__nodeResult:${node.id}:componentId`, result?.componentId ?? null);
+        const resultVariable = resolveInput(blueprint, node, "resultVariable", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway);
+        if (resultVariable) variableStore.set(resultVariable, result?.componentId ?? null);
+        return { next: nextFlow(blueprint, node, "onCreate") || nextFlow(blueprint, node) };
+      }
+      case "removeWindowComponent": {
+        if (!apiGateway?.call) throw new Error("Node removeWindowComponent requires an apiGateway");
+        apiGateway.call("window.removeComponent", {
+          windowId: resolveInput(blueprint, node, "windowId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
+          componentId: resolveInput(blueprint, node, "componentId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
+        });
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "getWindowLayout": {
+        if (!apiGateway?.call) throw new Error("Node getWindowLayout requires an apiGateway");
+        const result = apiGateway.call("window.getLayout", { windowId: resolveInput(blueprint, node, "windowId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway) });
+        const resultVariable = resolveInput(blueprint, node, "resultVariable", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway);
+        if (resultVariable) variableStore.set(resultVariable, result);
         return { next: nextFlow(blueprint, node) };
       }
       case "runActivity":
@@ -364,14 +451,19 @@ export function createActivityRunner({
       }
       case "text": {
         const continueKey = resolveInput(blueprint, node, "continueKey", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
-        eventGateway("dialogue:text", {
+        const payload = {
           instanceId: instance.instanceId,
           speaker: resolveInput(blueprint, node, "speaker", variableStore, "", undefined, pvGateway, dbGateway, runtimeGateway),
           text: resolveInput(blueprint, node, "text", variableStore, "", undefined, pvGateway, dbGateway, runtimeGateway),
           displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway, dbGateway, runtimeGateway),
           keywordIds: resolveInput(blueprint, node, "keywordIds", variableStore, [], undefined, pvGateway, dbGateway, runtimeGateway),
           continueKey: continueKey || null,
-        }, instance, node);
+        };
+        lastDialogueDisplayTo = payload.displayTo || lastDialogueDisplayTo;
+        /* DEV-TOOLS:START */
+        console.log("[NG dialogue] ActivityRunner text node", { activityId: definition.id, nodeId: node.id, payload });
+        /* DEV-TOOLS:END */
+        eventGateway("dialogue:text", payload, instance, node);
         if (continueKey && !variableStore.get(continueKey)) return { wait: true };
         if (continueKey) variableStore.set(continueKey, null);
         return { next: nextFlow(blueprint, node) };
@@ -379,11 +471,17 @@ export function createActivityRunner({
       case "choice": {
         const selectionKey = resolveInput(blueprint, node, "selectionKey", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         const optionCount = Number(resolveInput(blueprint, node, "optionCount", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway)) || 0;
-        eventGateway("dialogue:choice", {
+        const payload = {
           instanceId: instance.instanceId,
           options: resolveInput(blueprint, node, "options", variableStore, [], undefined, pvGateway, dbGateway, runtimeGateway),
           selectionKey,
-        }, instance, node);
+          displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway, dbGateway, runtimeGateway),
+        };
+        lastDialogueDisplayTo = payload.displayTo || lastDialogueDisplayTo;
+        /* DEV-TOOLS:START */
+        console.log("[NG dialogue] ActivityRunner choice node", { activityId: definition.id, nodeId: node.id, payload });
+        /* DEV-TOOLS:END */
+        eventGateway("dialogue:choice", payload, instance, node);
         const selected = selectionKey ? variableStore.get(selectionKey) : undefined;
         if (selected === undefined || selected === null) return { wait: true };
         const index = Number(selected);
@@ -393,8 +491,49 @@ export function createActivityRunner({
         if (selectionKey) variableStore.set(selectionKey, null);
         return { next: nextFlow(blueprint, node, `option${index}`) };
       }
-      default:
-        throw new Error(`Unhandled node type: ${node.type}`);
+      default: {
+        const customDefinition = getActivityNodeDefinition(node.type);
+        if (!customDefinition?.custom || !customDefinition.blueprint) throw new Error(`Unhandled node type: ${node.type}`);
+        const replaceParameters = (value) => {
+          if (Array.isArray(value)) return value.map(replaceParameters);
+          if (!value || typeof value !== "object") return value;
+          if (Object.keys(value).length === 1 && typeof value.parameter === "string") {
+            return resolveInput(blueprint, node, value.parameter, variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+          }
+          return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, replaceParameters(child)]));
+        };
+        const nestedBlueprint = structuredClone(customDefinition.blueprint);
+        for (const nestedNode of Object.values(nestedBlueprint.nodes || {})) {
+          nestedNode.inputs = replaceParameters(nestedNode.inputs || {});
+        }
+        const childInstance = {
+          instanceId: `${instance.instanceId}:custom:${node.id}`,
+          status: "pending",
+          currentNodeId: nestedBlueprint.startNodeId,
+          executedNodeIds: [],
+          waitingNodeId: null,
+        };
+        const childRunner = createActivityRunner({
+          definition: { id: node.type, blueprint: nestedBlueprint },
+          instance: childInstance,
+          variableStore,
+          eventBus,
+          timeGateway,
+          windowGateway,
+          activityGateway,
+          eventGateway,
+          dbGateway,
+          pvGateway,
+          runtimeGateway,
+          onboardingGateway,
+          apiGateway,
+          onCheckpoint: () => {},
+          onComplete: () => {},
+        });
+        childRunner.start();
+        if (childInstance.status !== "resolved") throw new Error(`Custom blueprint node ${node.type} entered a waiting state; reusable nodes must complete synchronously`);
+        return { next: nextFlow(blueprint, node) };
+      }
     }
   }
 

@@ -11,7 +11,8 @@
     "inputs": {
       "windowId": "his"
     },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   },
   {
     "iconId": "chatgtp",
@@ -25,7 +26,8 @@
     "inputs": {
       "windowId": "chatgtp"
     },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   },
   {
     "iconId": "notebook",
@@ -39,27 +41,14 @@
     "inputs": {
       "windowId": "notebook"
     },
-    "startMenu": true
-  },
-  {
-    "iconId": "save-load",
-    "label": "存档",
-    "glyph": "💾",
-    "order": 3,
-    "position": {
-      "mode": "grid"
-    },
-    "blueprintId": "desktop.open-window",
-    "inputs": {
-      "windowId": "save-load"
-    },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   },
   {
     "iconId": "status",
     "label": "状态与属性",
     "glyph": "📊",
-    "order": 4,
+    "order": 3,
     "position": {
       "mode": "grid"
     },
@@ -67,13 +56,14 @@
     "inputs": {
       "windowId": "status"
     },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   },
   {
     "iconId": "achievements",
     "label": "成就",
     "glyph": "🏆",
-    "order": 5,
+    "order": 4,
     "position": {
       "mode": "grid"
     },
@@ -81,13 +71,14 @@
     "inputs": {
       "windowId": "achievements"
     },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   },
   {
     "iconId": "calendar",
     "label": "日历",
     "glyph": "📅",
-    "order": 6,
+    "order": 5,
     "position": {
       "mode": "grid"
     },
@@ -95,27 +86,14 @@
     "inputs": {
       "windowId": "calendar"
     },
-    "startMenu": true
-  },
-  {
-    "iconId": "settings",
-    "label": "设置",
-    "glyph": "⚙️",
-    "order": 7,
-    "position": {
-      "mode": "grid"
-    },
-    "blueprintId": "desktop.open-window",
-    "inputs": {
-      "windowId": "settings"
-    },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   },
   {
     "iconId": "locations",
     "label": "去往位置",
     "glyph": "🗺️",
-    "order": 8,
+    "order": 6,
     "position": {
       "mode": "grid"
     },
@@ -123,7 +101,8 @@
     "inputs": {
       "windowId": "locations"
     },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   },
   {
     "iconId": "off-duty",
@@ -137,6 +116,7 @@
     "inputs": {
       "activityId": "off-duty-open"
     },
-    "startMenu": true
+    "startMenu": true,
+    "engineOwned": false
   }
 ]

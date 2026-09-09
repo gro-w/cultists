@@ -54,7 +54,10 @@ function makeEngine(definitions) {
     eventGateway: (eventName, payload) => emitted.push({ eventName, payload }),
   });
   assert.equal(queue.get(instance.instanceId).status, "resolved");
-  assert.deepEqual(emitted, [{ eventName: "dialogue:text", payload: { instanceId: instance.instanceId, speaker: "npc", text: "hello", displayTo: "his-app", keywordIds: [], continueKey: null } }]);
+  assert.deepEqual(emitted, [
+    { eventName: "dialogue:text", payload: { instanceId: instance.instanceId, speaker: "npc", text: "hello", displayTo: "his-app", keywordIds: [], continueKey: null } },
+    { eventName: "dialogue:complete", payload: { instanceId: instance.instanceId, displayTo: "his-app", reason: "completed" } },
+  ]);
 }
 
 // --- text: continueKey blocks until a widget-event blueprint sets it --------

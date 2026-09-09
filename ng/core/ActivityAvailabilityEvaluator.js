@@ -37,7 +37,12 @@ export function evaluateActivityAvailability(definition, context = {}) {
     }
     if (expired === true) return { ok: false, reason: "expired" };
     const expiresAt = readNodeInput(expiry, "expiresAt", null);
-    if (expiresAt != null && currentTotalMinutes(context.gameClock) >= Number(expiresAt)) {
+    // Content blueprints use 0 as the explicit "no absolute expiry" value.
+    // Treating it as day 1 00:00 makes every activity with the standard
+    // activity-expiry node unavailable as soon as the clock advances.
+    const absoluteExpiry = Number(expiresAt);
+    if (expiresAt != null && Number.isFinite(absoluteExpiry) && absoluteExpiry > 0
+      && currentTotalMinutes(context.gameClock) >= absoluteExpiry) {
       return { ok: false, reason: "expired" };
     }
   }

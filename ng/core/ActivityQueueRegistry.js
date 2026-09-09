@@ -31,6 +31,10 @@ export class ActivityQueueRegistry {
     return this.get(queueId)?.list(filters) || [];
   }
 
+  listQueues() {
+    return this.list().map((queue) => ({ queueId: queue.queueId, nonBlocking: queue.nonBlocking }));
+  }
+
   getEntry(queueId, instanceId) {
     return this.get(queueId)?.get(instanceId) || null;
   }
@@ -45,6 +49,10 @@ export class ActivityQueueRegistry {
 
   cancelEntry(queueId, instanceId) {
     return this.get(queueId)?.cancel(instanceId) || false;
+  }
+
+  removeEntry(queueId, instanceId) {
+    return this.get(queueId)?.remove(instanceId) || false;
   }
 
   list() {

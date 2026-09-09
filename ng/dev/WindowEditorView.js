@@ -5,7 +5,7 @@ import { isBoundValue } from "../core/PropertyBinding.js";
 import { writeDataFile, downloadTextFile } from "./devApi.js";
 
 const WIDGET_TYPES = [
-  "container", "label", "button", "textInput", "textarea",
+  "container", "tabs", "label", "button", "textInput", "textarea",
   "select", "checkbox", "image", "list", "table", "progress", "spacer",
 ];
 
@@ -20,11 +20,14 @@ const WIDGET_TYPES = [
  * 哪些 x/y 属性不生效").
  */
 export class WindowEditorView {
-  constructor({ definition, dataFileName, onSaveToMemory, variableStore, openEventBlueprintEditor, openValueBlueprintEditor } = {}) {
+  constructor({ definition, dataFileName, onSaveToMemory, variableStore, pvGateway, dbGateway, runtimeGateway, openEventBlueprintEditor, openValueBlueprintEditor } = {}) {
     this.model = createWindowEditorModel({ definition });
     this.dataFileName = dataFileName || null;
     this.onSaveToMemory = onSaveToMemory || (() => {});
     this.variableStore = variableStore || null;
+    this.pvGateway = pvGateway || null;
+    this.dbGateway = dbGateway || null;
+    this.runtimeGateway = runtimeGateway || null;
     this.openEventBlueprintEditor = openEventBlueprintEditor || null;
     this.openValueBlueprintEditor = openValueBlueprintEditor || null;
     this._buildDom();
@@ -42,6 +45,7 @@ export class WindowEditorView {
         <button type="button" data-action="redo" title="重做">重做</button>
         <select class="ng-window-editor-add-type"></select>
         <button type="button" data-action="add" title="向选中容器添加组件">添加</button>
+        <button type="button" data-action="add-tab" title="向选中选项卡容器添加选项卡">添加选项卡</button>
         <button type="button" data-action="duplicate" title="复制选中">复制</button>
         <button type="button" data-action="delete" title="删除选中 (Delete)">删除选中</button>
         <button type="button" data-action="save" title="保存到内存">保存到内存</button>
@@ -89,6 +93,7 @@ export class WindowEditorView {
       case "undo": this.model.undo(); break;
       case "redo": this.model.redo(); break;
       case "add": this.model.addWidget(this.typeSelectEl.value, selectedId || "root"); break;
+      case "add-tab": this.model.addTab(selectedId || "root"); break;
       case "duplicate": if (selectedId) this.model.duplicateWidget(selectedId); break;
       case "delete": if (selectedId) this.model.removeWidget(selectedId); break;
       case "save": this._save(); return;
@@ -140,7 +145,7 @@ export class WindowEditorView {
         e.stopPropagation();
         e.dataTransfer.setData("text/widget-id", node.widgetId);
       });
-      if (node.type === "container") {
+      if (node.type === "container" || node.type === "tabs") {
         row.addEventListener("dragover", (e) => { e.preventDefault(); e.stopPropagation(); });
         row.addEventListener("drop", (e) => {
           e.preventDefault();
@@ -151,7 +156,7 @@ export class WindowEditorView {
         });
       }
       this.structureEl.appendChild(row);
-      if (node.type === "container") {
+      if (node.type === "container" || node.type === "tabs") {
         for (const child of node.children || []) renderNode(child, depth + 1);
       }
     };
@@ -164,6 +169,9 @@ export class WindowEditorView {
     // §7.1), so a bound property previews exactly as it will run.
     const { el, widgetEls } = renderWindowRoot(this.model.definition.root, {
       variableStore: this.variableStore,
+      pvGateway: this.pvGateway,
+      dbGateway: this.dbGateway,
+      runtimeGateway: this.runtimeGateway,
       valueGraph: this.model.definition.valueGraph,
     });
     el.addEventListener("click", (e) => {
@@ -222,7 +230,7 @@ export class WindowEditorView {
       // own parent container instead (both always convert to flow:"stack"
       // if needed, so any component can be dragged anywhere - plan
       // follow-up "而不是只能拖动排序").
-      if (targetEntry.node.type === "container") {
+      if (targetEntry.node.type === "container" || targetEntry.node.type === "tabs") {
         dropFreePosition(targetEntry.node, event);
       } else if (targetEntry.parent) {
         dropFreePosition(targetEntry.parent, event);
@@ -548,7 +556,7 @@ export class WindowEditorView {
       { key: "visible", label: "visible", type: "checkbox", value: node.visible ?? true, bindable: true },
       { key: "enabled", label: "enabled", type: "checkbox", value: node.enabled ?? true, bindable: true },
     ];
-    if (node.type === "container") {
+    if (node.type === "container" || node.type === "tabs") {
       return [
         ...common,
         { key: "flow", label: "flow", type: "select", options: ["vertical", "horizontal", "grid", "stack"], value: node.flow || "vertical", bindable: true },

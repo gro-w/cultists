@@ -12,7 +12,18 @@ import { ActivityDefinitionStore } from "../core/ActivityDefinitionStore.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../../tools/ng-legacy-content/OnboardingManager.js";
+import EventStateRegistry from "../core/EventStateRegistry.js";
+
+class OnboardingManager extends EventStateRegistry {
+  constructor({ eventBus }) {
+    super({ eventBus, events: { changed: "onboarding:changed", request: "onboarding:hint_requested", close: "onboarding:hint_closed" }, stateKeys: { marked: "milestones", requested: "shownHintIds", dismissed: "dismissedHintIds" } });
+  }
+  markMilestone(id) { return this.mark(id); }
+  hasMilestone(id) { return this.has(id); }
+  loadHints(value) { return this.loadDefinitions(value); }
+  dismissHint(id) { return this.dismiss(id); }
+  acknowledgeHint(id) { return this.acknowledge(id); }
+}
 
 const HINTS = [
   { id: "welcome", trigger: "desktop_seen", completeOn: "his_opened", target: ".desktop-icon", title: "欢迎", text: "先打开 HIS 系统吧！" },
@@ -24,6 +35,25 @@ function makeManager() {
   const onboardingManager = new OnboardingManager({ eventBus });
   onboardingManager.loadHints(HINTS);
   return { eventBus, onboardingManager };
+}
+
+// Manifest-declared trigger bindings are once-only and remain once-only after
+// a save/restore boundary.
+{
+  const { eventBus, onboardingManager } = makeManager();
+  const requested = [];
+  eventBus.on("onboarding:hint_requested", (hint) => requested.push(hint.id));
+  onboardingManager.bindTriggers({ "his:opened": "his_opened" });
+  eventBus.emit("his:opened");
+  const saved = onboardingManager.snapshot();
+  const restoredBus = new EventBus();
+  const restored = new OnboardingManager({ eventBus: restoredBus });
+  restored.loadHints(HINTS);
+  restored.restore(saved);
+  restored.bindTriggers({ "his:opened": "his_opened" });
+  restoredBus.emit("his:opened");
+  assert.deepEqual(requested, ["diagnose"]);
+  assert.deepEqual(restored.snapshot(), saved);
 }
 
 // --- loadHints/list --------------------------------------------------------

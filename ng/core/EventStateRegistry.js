@@ -13,17 +13,27 @@ export class EventStateRegistry {
     this.requested = new Set();
     this.dismissed = new Set();
     this.enabled = true;
+    this._triggerUnsubscribers = [];
   }
   loadDefinitions(definitions = []) {
     this.definitions = new Map((Array.isArray(definitions) ? definitions : []).filter((item) => item && typeof item.id === "string").map((item) => [item.id, item]));
   }
+  bindTriggers(triggers = {}) {
+    this._triggerUnsubscribers.forEach((unsubscribe) => unsubscribe());
+    this._triggerUnsubscribers = Object.entries(triggers || {}).map(([eventName, stateId]) =>
+      this.eventBus?.on(eventName, () => this.mark(stateId)) || (() => {}));
+    return () => {
+      this._triggerUnsubscribers.forEach((unsubscribe) => unsubscribe());
+      this._triggerUnsubscribers = [];
+    };
+  }
   list() { return [...this.definitions.values()]; }
   has(id) { return this.marked.has(id); }
   mark(id) {
-    if (!id) return;
+    if (!id) return false;
     const isNew = !this.marked.has(id);
     this.marked.add(id);
-    if (!isNew || !this.enabled) return;
+    if (!isNew || !this.enabled) return isNew;
     this.eventBus?.emit(this.events.changed, this.snapshot());
     this.definitions.forEach((definition) => {
       if (definition.completeOn === id && this.requested.has(definition.id) && !this.dismissed.has(definition.id)) this.close(definition.id);
@@ -34,6 +44,7 @@ export class EventStateRegistry {
         this.eventBus?.emit(this.events.request, { ...definition });
       }
     });
+    return isNew;
   }
   close(id) { this.eventBus?.emit(this.events.close, { id }); }
   dismiss(id) { if (!this.definitions.has(id)) return; this.dismissed.add(id); this.close(id); this.eventBus?.emit(this.events.changed, this.snapshot()); }

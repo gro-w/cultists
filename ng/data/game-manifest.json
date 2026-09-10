@@ -86,9 +86,138 @@
     "physical": 100,
     "satiety": 100
   },
+  "stateBoundary": {
+    "rules": {
+      "workStart": 480,
+      "workEnd": 960,
+      "wakeTime": 480,
+      "workLocation": "work",
+      "offDutyLocation": "dorm",
+      "dayPhase": "day",
+      "nightPhase": "night"
+    }
+  },
+  "onboardingTriggers": {
+    "desktop:seen": "desktop_seen",
+    "his:opened": "his_opened",
+    "patient:selected": "first_patient_selected",
+    "dialogue:started": "first_dialogue_started",
+    "keyword:collected": "first_keyword_collected",
+    "notebook:opened": "notebook_opened",
+    "chatgtp:opened": "chatgtp_opened",
+    "medical:submitted": "first_diagnosis_submitted",
+    "status:settings-opened": "status_settings_opened"
+  },
   "onboarding": "onboarding.json",
   "defaultActivity": {
     "queueId": "main",
     "activityId": "default"
-  }
+  },
+  "eventRoutes": [
+    {
+      "event": "achievement:manager-ready",
+      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"manager-ready","manager":"achievement"}}]
+    },
+    {
+      "event": "inventory:manager-ready",
+      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"manager-ready","manager":"inventory"}}]
+    },
+    {
+      "event": "keyword:manager-ready",
+      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"manager-ready","manager":"keyword"}}]
+    },
+    {
+      "event": "achievement:display",
+      "actions": [
+        {"type":"collection.set","collectionId":"achievementStates","recordId":{"path":"achievementId"},"value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked"}},
+        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"achievement","id":{"path":"achievementId"}}}
+      ]
+    },
+    {
+      "event": "content:inventoryOperation",
+      "actions": [
+        {"type":"collection.operation","collectionId":"inventoryItems","recordId":{"path":"itemId"},"operation":"delta","minimum":0,"value":{"path":"count"}},
+        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"inventory","itemId":{"path":"itemId"},"count":{"path":"count"}}}
+      ]
+    },
+    {
+      "event": "item:used",
+      "actions": [
+        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"item-used","payload":{"path":""}}}
+      ]
+    },
+    {
+      "event": "content:showCg",
+      "actions": [
+        {"type":"collection.set","collectionId":"mediaState","recordId":"active","value":{"mode":"cg","cgId":{"path":"cgId"}}},
+        {"type":"display.dispatch","target":"ending-screen","displayType":"media","value":{"mediaKind":"cg","cgId":{"path":"cgId"},"imageData":{"resource":"media","id":{"path":"cgId"},"field":"imageData"}}}
+      ]
+    },
+    {
+      "event": "content:endCg",
+      "actions": [
+        {"type":"collection.set","collectionId":"mediaState","recordId":"active","value":null},
+        {"type":"display.dispatch","target":"ending-screen","displayType":"media-end","value":{}}
+      ]
+    },
+    {
+      "event": "content:spellLearned",
+      "actions": [
+        {"type":"collection.set","collectionId":"spellState","recordId":{"path":"spellId"},"value":{"learned":true,"spellId":{"path":"spellId"}}},
+        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"spell-learned","spellId":{"path":"spellId"}}}
+      ]
+    },
+    {
+      "event": "content:spellCast",
+      "actions": [
+        {"type":"collection.set","collectionId":"spellState","recordId":"last","value":{"operation":"cast","spellId":{"path":"spellId"},"eventId":{"path":"eventId"},"choiceId":{"path":"choiceId"}}},
+        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"spell-cast","spellId":{"path":"spellId"},"eventId":{"path":"eventId"}}}
+      ]
+    },
+    {
+      "event": "content:spellEffect",
+      "actions": [
+        {"type":"collection.set","collectionId":"spellState","recordId":"last","value":{"operation":"effect","spellId":{"path":"spellId"},"eventId":{"path":"eventId"},"choiceId":{"path":"choiceId"}}},
+        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"spell-effect","spellId":{"path":"spellId"},"eventId":{"path":"eventId"}}}
+      ]
+    },
+    {
+      "event": "content:showImage",
+      "actions": [
+        {"type":"collection.set","collectionId":"mediaState","recordId":"active","value":{"mode":"image","image":{"path":"image"},"displayTo":{"path":"displayTo"}}},
+        {"type":"display.dispatch","target":{"path":"displayTo"},"displayType":"media","value":{"mediaKind":"image","image":{"path":"image"}}}
+      ]
+    },
+    {
+      "event": "activity:ending",
+      "actions": [
+        {"type":"variable.set","key":"gameState:endingId","value":{"path":"endingId"}},
+        {"type":"collection.set","collectionId":"mediaState","recordId":"ending","value":{"endingId":{"path":"endingId"},"displayTo":{"path":"displayTo"}}},
+        {"type":"display.dispatch","target":{"path":"displayTo"},"displayType":"ending","value":{"endingId":{"path":"endingId"}}}
+      ]
+    },
+    {
+      "event": "content:hisSelectPatient",
+      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-select-patient","payload":{"path":""}}}]
+    },
+    {
+      "event": "content:hisRenderDiagnosis",
+      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-render-diagnosis","payload":{"path":""}}}]
+    },
+    {
+      "event": "content:hisRenderPrescription",
+      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-render-prescription","payload":{"path":""}}}]
+    },
+    {
+      "event": "content:hisRefresh",
+      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-refresh","query":{"path":"query"}}}]
+    },
+    {
+      "event": "content:hisSubmit",
+      "actions": [
+        {"type":"collection.set","collectionId":"medicalState","recordId":"lastSubmission","value":{"submitted":true,"patientId":{"path":"patientId"},"case":{"path":"case"},"resultMessage":{"path":"resultMessage"}}},
+        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-submit","patientId":{"path":"patientId"},"caseId":{"path":"case.id"},"correct":{"path":"case.correct"},"bonus":{"path":"case.bonus"},"commission":{"path":"case.commission"}}}
+      ]
+    }
+  ]
 }

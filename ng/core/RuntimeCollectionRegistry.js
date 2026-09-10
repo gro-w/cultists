@@ -44,6 +44,18 @@ export class RuntimeCollectionRegistry {
     const records = this._records(key);
     const values = this.state.get(key) || new Map();
     if (!definition) return [];
+    if (definition.stateOnly) {
+      return [...values.entries()].map(([recordId, value]) => ({ id: recordId, ...(value && typeof value === "object" ? value : { value }) }));
+    }
+    if (definition.mergeState) {
+      return records.map((record) => {
+        const recordId = String(record[definition.keyField || "id"]);
+        const value = values.get(recordId);
+        if (value && typeof value === "object") return { ...record, ...value };
+        if (value !== undefined && definition.stateField) return { ...record, [definition.stateField]: value };
+        return record;
+      });
+    }
     if (!definition.stateField) return records;
     return records
       .filter((record) => values.has(String(record[definition.keyField || "id"])))
@@ -68,9 +80,47 @@ export class RuntimeCollectionRegistry {
   mutate(id, recordId, operation = "set", value = 0) {
     const key = String(id);
     const values = this.state.get(key) || new Map();
-    const current = Number(values.get(String(recordId)) || 0);
-    const next = operation === "delta" ? current + Number(value || 0) : value;
+    const currentValue = values.get(String(recordId));
+    const current = Number(currentValue || 0);
+    const next = operation === "delta" ? current + Number(value || 0) : operation === "merge"
+      ? { ...(currentValue && typeof currentValue === "object" ? currentValue : {}), ...(value || {}) }
+      : value;
     return this.set(key, recordId, next);
+  }
+
+  /** Apply a generic guarded operation atomically; failures do not mutate state. */
+  operation(id, recordId, { operation = "delta", value = 0, minimum = 0 } = {}) {
+    const key = String(id);
+    if (!this.definitions.has(key)) throw new Error(`Unknown runtime collection: ${key}`);
+    const normalizedRecordId = String(recordId);
+    const values = this.state.get(key) || new Map();
+    const previous = values.get(normalizedRecordId);
+    const current = Number(previous || 0);
+    let next;
+    if (operation === "delta") next = current + Number(value || 0);
+    else if (operation === "setIfAbsent") {
+      if (values.has(normalizedRecordId)) return { ok: false, reason: "already-present", previous, current };
+      next = value;
+    } else if (operation === "set") next = value;
+    else throw new Error(`Unknown runtime collection operation: ${operation}`);
+    if (typeof next === "number" && next < Number(minimum)) return { ok: false, reason: "insufficient", previous, current, next };
+    this.set(key, normalizedRecordId, next);
+    return { ok: true, operation, recordId: normalizedRecordId, previous, current: next };
+  }
+
+  setCollectionValue(id, recordId, value) {
+    return this.set(id, recordId, value);
+  }
+
+  mutateCollection(id, recordId, operation, value) {
+    return this.mutate(id, recordId, operation, value);
+  }
+
+  appendCollectionValue(id, value) {
+    const key = String(id);
+    const values = this.state.get(key) || new Map();
+    const index = String(values.size);
+    return this.set(key, index, value);
   }
 
   snapshot() {

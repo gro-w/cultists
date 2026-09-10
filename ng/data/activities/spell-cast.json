@@ -1,0 +1,20 @@
+{
+  "id":"spell-cast",
+  "displayName":"施放法术",
+  "blueprint":{"startNodeId":"start","nodes":{
+    "start":{"id":"start","type":"flowStart","inputs":{}},
+    "cast":{"id":"cast","type":"callApi","inputs":{"apiId":"engine.publicVariableOperation","payload":{"id":1,"operation":"delta","value":-5,"minimum":0},"resultVariable":"spell:cast"}},
+    "ok":{"id":"ok","type":"getProperty","inputs":{"value":{"variable":"spell:cast"},"key":"ok"}},
+    "branch":{"id":"branch","type":"branch","inputs":{"condition":{"nodeId":"ok","port":"value"}}},
+    "payload":{"id":"payload","type":"getVariable","inputs":{"key":"event:payload"}},
+    "success":{"id":"success","type":"emitEvent","inputs":{"eventName":"content:spellCast","payload":{"variable":"event:payload"}}},
+    "end":{"id":"end","type":"activityEnd","inputs":{}},
+    "failure":{"id":"failure","type":"activityEnd","inputs":{}}
+  },"connections":[
+    {"fromNodeId":"start","fromPort":"flowOut","toNodeId":"cast","toPort":"flowIn"},
+    {"fromNodeId":"cast","fromPort":"flowOut","toNodeId":"branch","toPort":"flowIn"},
+    {"fromNodeId":"branch","fromPort":"true","toNodeId":"success","toPort":"flowIn"},
+    {"fromNodeId":"branch","fromPort":"false","toNodeId":"failure","toPort":"flowIn"},
+    {"fromNodeId":"success","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"}
+  ]}
+}

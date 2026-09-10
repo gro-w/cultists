@@ -12,6 +12,7 @@
 // "开始问诊" button resolving the selected patient's `dialogueActivityId`
 // dynamically through the value-node graph. Only exercises the generic
 // node set + widget-tree wiring - no domain-specific engine code touched.
+import "./register-framework-nodes.mjs";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
@@ -22,6 +23,8 @@ import { DataStructureManager } from "../core/DataStructureManager.js";
 import { DataStore } from "../core/DataStore.js";
 import { PublicVariableManager } from "../core/PublicVariableManager.js";
 import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
+import { RuntimeCollectionRegistry } from "../core/RuntimeCollectionRegistry.js";
+import { EventActivityRouter } from "../core/EventActivityRouter.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
@@ -42,10 +45,18 @@ const eventBus = new EventBus();
 const publicVariableManager = new PublicVariableManager(refResolver, eventBus);
 publicVariableManager.loadDefinitions(readJSON("public-variables.framework.json"));
 const onboardingManager = new OnboardingManager({ eventBus });
+const variableStore = new VariableStore(eventBus);
+const runtimeGateway = new RuntimeCollectionRegistry({ eventBus });
+runtimeGateway.loadDefinitions(readJSON("framework-runtime.framework.json").collections);
+const eventRouter = new EventActivityRouter({
+  eventBus,
+  variableStore,
+  runtimeGateway,
+  routes: readJSON("game-manifest.json").eventRoutes,
+}).start();
 
 const his = readJSON("windows/his.json");
 
-const variableStore = new VariableStore(eventBus);
 const activityQueueRegistry = new ActivityQueueRegistry();
 const queue = activityQueueRegistry.register("test", { nonBlocking: true });
 const activityExecutionService = new ActivityExecutionService(eventBus);
@@ -63,7 +74,7 @@ function runBlueprint(blueprint, label) {
     timeGateway: () => {},
     windowGateway: () => {},
     activityGateway: (activityId, queueId) => { lastActivityGatewayCall = { activityId, queueId }; },
-    eventGateway: () => {},
+    eventGateway: (eventName, payload) => eventBus.emit(eventName, payload),
     dbGateway: dataStore,
     pvGateway: publicVariableManager,
     onboardingGateway: onboardingManager,
@@ -188,6 +199,22 @@ assert.equal(dataStore.getRecord("medicalCases", lastCase.id).id, lastCase.id);
 assert.equal(publicVariableManager.get(2), moneyBefore + 200 + medicine1.commission + medicine2.commission);
 assert.ok(variableStore.get("his:resultMessage").length > 0);
 assert.ok(variableStore.get("his:resultMessage").includes(`${medicine1.commission + medicine2.commission}`));
+assert.deepEqual(runtimeGateway.get("medicalState")[0], {
+  id: "lastSubmission",
+  submitted: true,
+  patientId: firstPatient.id,
+  case: lastCase,
+  resultMessage: variableStore.get("his:resultMessage"),
+});
+assert.deepEqual(runtimeGateway.get("eventHistory").at(-1), {
+  id: "0",
+  kind: "his-submit",
+  patientId: firstPatient.id,
+  caseId: lastCase.id,
+  correct: true,
+  bonus: 200,
+  commission: medicine1.commission + medicine2.commission,
+});
 assert.ok(onboardingManager.hasMilestone("first_diagnosis_submitted"));
 
 // --- submitting again for the same patient surfaces the existing case ----
@@ -211,5 +238,14 @@ assert.equal(variableStore.get("his:existingCases")[0].id, lastCase.id);
   assert.equal(variableStore.get("his:lastCase").correct, false);
   assert.equal(variableStore.get("his:lastCase").bonus, 0);
 }
+
+// --- medical event state survives a save-shaped snapshot/restore ---------
+const medicalSnapshot = runtimeGateway.snapshot();
+runtimeGateway.restore({});
+assert.deepEqual(runtimeGateway.get("medicalState"), []);
+runtimeGateway.restore(medicalSnapshot);
+assert.deepEqual(runtimeGateway.get("medicalState")[0].case.id, variableStore.get("his:lastCase").id);
+assert.equal(runtimeGateway.get("medicalState")[0].case.correct, false);
+eventRouter.stop();
 
 console.log("his-window-probe: ok");

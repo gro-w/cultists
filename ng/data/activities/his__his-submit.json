@@ -15,7 +15,28 @@
         "type": "emitEvent",
         "inputs": {
           "eventName": "content:hisSubmit",
-          "payload": {}
+          "payload": {
+            "case": {
+              "variable": "his:lastCase"
+            },
+            "resultMessage": {
+              "variable": "his:resultMessage"
+            },
+            "patientId": {
+              "nodeId": "patientId",
+              "port": "value"
+            }
+          }
+        }
+      },
+      "patientId": {
+        "id": "patientId",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "variable": "his:selectedPatient"
+          },
+          "key": "id"
         }
       },
       "__prerequisite__": {

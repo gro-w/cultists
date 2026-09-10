@@ -46,7 +46,19 @@ function defaultValueFor(field) {
   if (field.type === "string") return "";
   if (field.type === "array" || parseArrayItemType(field.type)) return [];
   if (field.type === "object") return {};
+  if (field.type === "activity") return {};
   return null;
+}
+
+function isActivityBlueprint(value) {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value)
+    && value.nodes && typeof value.nodes === "object");
+}
+
+function isEmbeddedActivityValue(value) {
+  if (isActivityBlueprint(value)) return true;
+  return Boolean(value && typeof value === "object" && !Array.isArray(value)
+    && Object.values(value).every(isActivityBlueprint));
 }
 
 export class DataStructureManager {
@@ -61,7 +73,7 @@ export class DataStructureManager {
     for (const field of definition.fields) {
       if (!field?.id) throw new Error(`Structure "${definition.id}" has a field with no \`id\``);
       const itemType = parseArrayItemType(field.type);
-      if (!SCALAR_VALIDATORS[field.type] && field.type !== "array" && !itemType) {
+      if (!SCALAR_VALIDATORS[field.type] && field.type !== "array" && field.type !== "activity" && !itemType) {
         throw new Error(`Structure "${definition.id}" field "${field.id}" has unknown type "${field.type}"`);
       }
     }
@@ -117,6 +129,10 @@ export class DataStructureManager {
         continue;
       }
       const itemType = parseArrayItemType(field.type);
+      if (field.type === "activity") {
+        if (!isEmbeddedActivityValue(value)) errors.push(`字段 ${field.id} 必须是 Activity blueprint 或 Activity 映射`);
+        continue;
+      }
       if (itemType || field.type === "array") {
         if (!Array.isArray(value)) {
           errors.push(`字段 ${field.id} 必须是数组`);

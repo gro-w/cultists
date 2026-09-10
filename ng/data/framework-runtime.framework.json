@@ -4,20 +4,46 @@
     "achievements": {
       "databaseId": "achievements"
     },
+    "achievementStates": {
+      "databaseId": "achievements",
+      "mergeState": true,
+      "keyField": "id"
+    },
     "inventoryItems": {
       "databaseId": "inventoryItems",
-      "stateKey": "ownedItems"
+      "mergeState": true,
+      "stateField": "ownedCount",
+      "keyField": "id"
+    },
+    "sceneItems": {
+      "stateOnly": true
     },
     "keywords": {
       "databaseId": "keywords",
-      "stateKey": "collectedKeywords"
+      "mergeState": true,
+      "stateField": "collected",
+      "keyField": "id"
     },
     "chatgtpKeywordOptions": {
       "databaseId": "keywords",
-      "stateKey": "collectedKeywords"
+      "mergeState": true,
+      "stateField": "collected",
+      "keyField": "id"
     },
     "chatgtpCategories": {
       "databaseId": "diagnosisCategories"
+    },
+    "mediaState": {
+      "stateOnly": true
+    },
+    "spellState": {
+      "stateOnly": true
+    },
+    "medicalState": {
+      "stateOnly": true
+    },
+    "eventHistory": {
+      "stateOnly": true
     }
   },
   "managers": [

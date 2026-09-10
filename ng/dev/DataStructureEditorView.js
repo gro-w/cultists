@@ -1,7 +1,7 @@
 // DEV-TOOLS:START
 import { writeDataFile } from "./devApi.js";
 
-const FIELD_TYPES = ["bool", "smallInteger", "integer", "real", "string", "objectRef", "array", "array<string>", "array<number>", "object"];
+const FIELD_TYPES = ["bool", "smallInteger", "integer", "real", "string", "objectRef", "array", "array<string>", "array<number>", "object", "activity"];
 
 /**
  * DataStructureEditorView - visual editor for `data/structures.framework.json` (plan

@@ -1,139 +1,27 @@
 {
   "id": "use-item",
-  "displayName": "使用物品（示例）",
+  "displayName": "使用物品",
   "blueprint": {
     "startNodeId": "start",
     "nodes": {
-      "start": {
-        "id": "start",
-        "type": "flowStart",
-        "x": 60,
-        "y": 60,
-        "inputs": {}
-      },
-      "query": {
-        "id": "query",
-        "type": "getRecord",
-        "x": 260,
-        "y": 60,
-        "inputs": {
-          "databaseId": "inventoryItems",
-          "key": {
-            "variable": "event:value"
-          },
-          "resultVariable": "item"
-        }
-      },
-      "branch": {
-        "id": "branch",
-        "type": "branch",
-        "x": 460,
-        "y": 60,
-        "inputs": {
-          "condition": true
-        }
-      },
-      "consume": {
-        "id": "consume",
-        "type": "updateRecord",
-        "x": 660,
-        "y": 0,
-        "inputs": {
-          "databaseId": "inventoryItems",
-          "key": {
-            "variable": "event:value"
-          },
-          "patch": {
-            "quantity": 1
-          }
-        }
-      },
-      "useTime": {
-        "id": "useTime",
-        "type": "framework:consumeTime",
-        "x": 860,
-        "y": 0,
-        "inputs": {
-          "minutes": 5
-        }
-      },
-      "notify": {
-        "id": "notify",
-        "type": "emitEvent",
-        "x": 1060,
-        "y": 0,
-        "inputs": {
-          "eventName": "item:used",
-          "payload": {
-            "variable": "event:value"
-          }
-        }
-      },
-      "endTrue": {
-        "id": "endTrue",
-        "type": "activityEnd",
-        "x": 1260,
-        "y": 0,
-        "inputs": {}
-      },
-      "endFalse": {
-        "id": "endFalse",
-        "type": "activityEnd",
-        "x": 660,
-        "y": 160,
-        "inputs": {}
-      }
+      "start": {"id":"start","type":"flowStart","inputs":{}},
+      "payload": {"id":"payload","type":"getVariable","inputs":{"key":"event:payload"}},
+      "itemId": {"id":"itemId","type":"getProperty","inputs":{"value":{"nodeId":"payload","port":"value"},"key":"itemId"}},
+      "consume": {"id":"consume","type":"callApi","inputs":{"apiId":"runtime.collection.operation","payload":{"collectionId":"inventoryItems","recordId":{"nodeId":"itemId","port":"value"},"operation":"delta","value":-1,"minimum":0},"resultVariable":"item:operation"}},
+      "ok": {"id":"ok","type":"getProperty","inputs":{"value":{"variable":"item:operation"},"key":"ok"}},
+      "branch": {"id":"branch","type":"branch","inputs":{"condition":{"nodeId":"ok","port":"value"}}},
+      "time": {"id":"time","type":"framework:consumeTime","inputs":{"minutes":5}},
+      "used": {"id":"used","type":"emitEvent","inputs":{"eventName":"item:used","payload":{"variable":"event:payload"}}},
+      "success": {"id":"success","type":"activityEnd","inputs":{}},
+      "failure": {"id":"failure","type":"activityEnd","inputs":{}}
     },
     "connections": [
-      {
-        "id": "edge-1",
-        "fromNodeId": "start",
-        "fromPort": "flowOut",
-        "toNodeId": "query",
-        "toPort": "flowIn"
-      },
-      {
-        "id": "edge-2",
-        "fromNodeId": "query",
-        "fromPort": "flowOut",
-        "toNodeId": "branch",
-        "toPort": "flowIn"
-      },
-      {
-        "id": "edge-3",
-        "fromNodeId": "branch",
-        "fromPort": "true",
-        "toNodeId": "consume",
-        "toPort": "flowIn"
-      },
-      {
-        "id": "edge-4",
-        "fromNodeId": "branch",
-        "fromPort": "false",
-        "toNodeId": "endFalse",
-        "toPort": "flowIn"
-      },
-      {
-        "id": "edge-5",
-        "fromNodeId": "consume",
-        "fromPort": "flowOut",
-        "toNodeId": "useTime",
-        "toPort": "flowIn"
-      },
-      {
-        "id": "edge-6",
-        "fromNodeId": "useTime",
-        "fromPort": "flowOut",
-        "toNodeId": "notify",
-        "toPort": "flowIn"
-      },
-      {
-        "id": "edge-7",
-        "fromNodeId": "notify",
-        "fromPort": "flowOut",
-        "toNodeId": "endTrue",
-        "toPort": "flowIn"
-      }
+      {"fromNodeId":"start","fromPort":"flowOut","toNodeId":"consume","toPort":"flowIn"},
+      {"fromNodeId":"consume","fromPort":"flowOut","toNodeId":"branch","toPort":"flowIn"},
+      {"fromNodeId":"branch","fromPort":"true","toNodeId":"time","toPort":"flowIn"},
+      {"fromNodeId":"branch","fromPort":"false","toNodeId":"failure","toPort":"flowIn"},
+      {"fromNodeId":"time","fromPort":"flowOut","toNodeId":"used","toPort":"flowIn"},
+      {"fromNodeId":"used","fromPort":"flowOut","toNodeId":"success","toPort":"flowIn"}
     ]
   }
 }

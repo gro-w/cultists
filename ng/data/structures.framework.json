@@ -67,7 +67,7 @@
       },
       {
         "id": "activities",
-        "type": "object",
+        "type": "activity",
         "default": {}
       },
       {

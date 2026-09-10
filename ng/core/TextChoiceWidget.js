@@ -20,6 +20,8 @@ export class TextChoiceWidget {
     this._unsubscribe = () => this._receiverUnsubscribers.forEach((unsubscribe) => unsubscribe());
     this._eventUnsubscribe = this.eventBus?.on?.("display:text", (payload) => this._handle({ ...payload, type: "text" }));
     this._choiceEventUnsubscribe = this.eventBus?.on?.("display:choice", (payload) => this._handle({ ...payload, type: "choice" }));
+    this._mediaEventUnsubscribe = this.eventBus?.on?.("display:media", (payload) => this._handle({ ...payload, type: "media" }));
+    this._mediaEndEventUnsubscribe = this.eventBus?.on?.("display:media-end", (payload) => this._handle({ ...payload, type: "media-end" }));
     this._completeEventUnsubscribe = this.eventBus?.on?.("display:complete", (payload) => this._onComplete(payload));
   }
 
@@ -40,6 +42,8 @@ export class TextChoiceWidget {
     if (!this._accepts(payload)) return;
     if (payload.type === "text") this._onText(payload);
     else if (payload.type === "choice") this._onChoice(payload);
+    else if (payload.type === "media") this._onMedia(payload);
+    else if (payload.type === "media-end") this._onMediaEnd();
   }
 
   reset() {
@@ -103,6 +107,23 @@ export class TextChoiceWidget {
     this.controlsEl.appendChild(list);
   }
 
+  _onMedia(payload = {}) {
+    this.el.querySelector(".ng-dialogue-media")?.remove();
+    const media = document.createElement(payload.imageData ? "img" : "div");
+    media.className = "ng-dialogue-media";
+    if (payload.imageData) {
+      media.src = payload.imageData;
+      media.alt = payload.cgId || payload.imageId || payload.mediaKind || "media";
+    } else {
+      media.textContent = `媒体：${payload.cgId || payload.imageId || ""}`;
+    }
+    this.el.insertBefore(media, this.transcriptEl);
+  }
+
+  _onMediaEnd() {
+    this.el.querySelector(".ng-dialogue-media")?.remove();
+  }
+
   _onComplete(payload = {}) {
     if (!this._accepts(payload)) return;
     if (payload.instanceId && payload.instanceId !== this._activeInstanceId) return;
@@ -113,6 +134,8 @@ export class TextChoiceWidget {
     this._unsubscribe?.();
     this._eventUnsubscribe?.();
     this._choiceEventUnsubscribe?.();
+    this._mediaEventUnsubscribe?.();
+    this._mediaEndEventUnsubscribe?.();
     this._completeEventUnsubscribe?.();
   }
 }

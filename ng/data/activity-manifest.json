@@ -129,6 +129,18 @@
       "id": "default",
       "file": "default.json"
     },
+    {
+      "id": "use-item",
+      "file": "use-item.json"
+    },
+    {
+      "id": "spell-learn",
+      "file": "spell-learn.json"
+    },
+    {
+      "id": "spell-cast",
+      "file": "spell-cast.json"
+    },
 
     {
       "id": "dorm_activity_day1",
@@ -233,6 +245,14 @@
     {
       "id": "event__追逐",
       "file": "event__cn04.json"
+    },
+    {
+      "id": "event__游戏王の荣耀",
+      "file": "event__cn08.json"
+    },
+    {
+      "id": "event__一切谜锁都解开了",
+      "file": "event__cn09.json"
     },
     {
       "id": "event__追逐事件",

@@ -19,6 +19,7 @@ import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
 import { validateBlueprint } from "./ActivityValidator.js";
 import { GameClock } from "./GameClock.js";
 import { TimeService } from "./TimeService.js";
+import { StateBoundaryService } from "./StateBoundaryService.js";
 import { DesktopIconManager } from "./DesktopIconManager.js";
 import { buildBuiltinIconBlueprint } from "./BuiltinIconBlueprints.js";
 import { DataStructureManager } from "./DataStructureManager.js";
@@ -34,6 +35,7 @@ import { evaluateActivityAvailability } from "./ActivityAvailabilityEvaluator.js
 import { DisplayReceiverRegistry } from "./DisplayReceiverRegistry.js";
 import { registerCustomActivityNode } from "./ActivityNodeRegistry.js";
 import { createApiRegistry } from "./engine-api.js";
+import { EventActivityRouter } from "./EventActivityRouter.js";
 
 export function isDevEntry(search = typeof location !== "undefined" ? location.search : "") {
   return search === "?dev";
@@ -47,6 +49,10 @@ export async function bootstrap(rootEl) {
   const config = await dataLoader.loadJSON("game-manifest.json");
   if (config.contentRoot) dataLoader.setRoot(config.contentRoot);
   const frameworkManifest = await dataLoader.loadJSON(config.frameworkManifest, { optional: true }) || {};
+  const mediaData = await dataLoader.loadJSON("media.json", { optional: true }) || {};
+  const resources = {
+    media: new Map((mediaData.cgEntries || []).map((entry) => [String(entry.id), entry])),
+  };
   if (isDevEntry() && await dataLoader.detectDevServer()) {
     dataLoader.connectChangeEvents({ onChange: (payload) => eventBus.emit("data:changed", payload) });
   }
@@ -60,6 +66,13 @@ export async function bootstrap(rootEl) {
     minutes: initialState.clockMinutes ?? initialState.minutes ?? 480,
   });
   const timeService = new TimeService(gameClock, eventBus);
+  const stateBoundary = new StateBoundaryService({
+    gameClock,
+    timeService,
+    eventBus,
+    initialState,
+    rules: config.stateBoundary?.rules || {},
+  });
   const variableStore = new VariableStore(eventBus);
   const structures = new DataStructureManager();
   const dataStore = new DataStore(structures);
@@ -72,6 +85,7 @@ export async function bootstrap(rootEl) {
     const definitions = await dataLoader.loadJSON(eventStateConfig.data || config.onboarding, { optional: true });
     if (definitions) eventState.loadDefinitions(definitions);
   }
+  eventState.bindTriggers(config.onboardingTriggers || frameworkManifest.documents?.eventState?.triggers || {});
   if (frameworkManifest.documents?.structures || config.structures) {
     const value = await dataLoader.loadJSON(frameworkManifest.documents?.structures || config.structures, { optional: true });
     if (value) structures.loadDefinitions(value);
@@ -103,6 +117,9 @@ export async function bootstrap(rootEl) {
   const runtimeGateway = {
     getCollection: (collectionId) => runtimeCollections.get(collectionId),
     setCollectionValue: (collectionId, recordId, value) => runtimeCollections.set(collectionId, recordId, value),
+    mutateCollection: (collectionId, recordId, operation, value) => runtimeCollections.mutate(collectionId, recordId, operation, value),
+    operateCollection: (collectionId, recordId, options) => runtimeCollections.operation(collectionId, recordId, options),
+    appendCollectionValue: (collectionId, value) => runtimeCollections.appendCollectionValue(collectionId, value),
   };
   const content = {
     runtimeGateway,
@@ -121,6 +138,7 @@ export async function bootstrap(rootEl) {
   // developer entry can never be supplied or configured by the game package.
   iconManager.unregister("dev-mode-launcher-icon");
   const dialogueRegistry = new DisplayReceiverRegistry();
+  runtimeGateway.dispatchDisplay = (target, payload) => dialogueRegistry.dispatch(target, payload);
   content.installDisplayReceivers?.({ dialogueRegistry });
   const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway, dialogueRegistry, content.customWidgetFactories);
   // Paint icons before loading the Activity catalogue. The catalogue can be
@@ -149,11 +167,14 @@ export async function bootstrap(rootEl) {
   const saveManager = new SaveManager({
     gameClock, variableStore, publicVariableManager: publicVariables,
     activityQueueRegistry: queues, windowManager, desktopIconManager: iconManager,
-    eventStateRegistry: eventState, stateProviders: content.stateProviders, runtimeStores: content.runtimeStores,
+    eventStateRegistry: eventState, stateProviders: { ...content.stateProviders, stateBoundary }, runtimeStores: content.runtimeStores,
     saveableVariable: content.saveableVariable,
     activityExecutionService: null, resumePendingActivities: () => {}, engineVersion: config.version,
   });
-  const apiGateway = createApiRegistry({ eventBus, variableStore, publicVariableManager: publicVariables, activityQueueRegistry: queues, shell, timeService, dataStore });
+  const apiGateway = createApiRegistry({ eventBus, variableStore, publicVariableManager: publicVariables, activityQueueRegistry: queues, shell, timeService, dataStore, runtimeGateway });
+  apiGateway.register("engine.stateBoundary.toggle", () => stateBoundary.toggleDuty());
+  apiGateway.register("engine.stateBoundary.sleep", () => stateBoundary.sleep());
+  apiGateway.register("engine.stateBoundary.location", ({ location } = {}) => stateBoundary.requestLocation(location));
   const execution = new ActivityExecutionService(eventBus, { runtimeGateway });
 
   apiGateway.register("window.componentMutation", ({ componentId, action, max = 5 } = {}) => {
@@ -206,6 +227,15 @@ export async function bootstrap(rootEl) {
     /* DEV-TOOLS:END */
     return runner;
   }
+  const eventRouter = new EventActivityRouter({
+    eventBus,
+    variableStore,
+    runtimeGateway,
+    displayRegistry: dialogueRegistry,
+    resources,
+    runActivity,
+    routes: config.eventRoutes || [],
+  }).start();
   content.bindRuntime?.({ runActivity });
   function executeActivity({ queue, definition, instance }) {
     /* DEV-TOOLS:START */
@@ -317,7 +347,7 @@ export async function bootstrap(rootEl) {
     const instance = enqueueActivity(startup.activityId, startup.queueId || "main");
     if (instance) consumer.consume(startup.queueId || "main");
   }
-  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, contentPackage: content, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityQueueConsumer: consumer, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, iconManager, saveManager, eventStateRegistry: eventState };
+  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, contentPackage: content, eventRouter, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, stateBoundary, iconManager, saveManager, eventStateRegistry: eventState };
 }
 
 if (typeof document !== "undefined") document.addEventListener("DOMContentLoaded", () => bootstrap(document.getElementById("ng-root")));

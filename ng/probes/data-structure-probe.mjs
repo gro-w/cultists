@@ -40,6 +40,13 @@ structures.register({
 }
 
 {
+  structures.register({ id: "usableItem", fields: [{ id: "useEffect", type: "activity", default: {} }] });
+  const blueprint = { startNodeId: "start", nodes: { start: { id: "start", type: "flowStart", inputs: {} } } };
+  assert.equal(structures.validateRecord("usableItem", { useEffect: { use: blueprint } }).ok, true);
+  assert.equal(structures.validateRecord("usableItem", { useEffect: { use: { invalid: true } } }).ok, false);
+}
+
+{
   const { ok, errors } = structures.validateRecord("item", { stackable: true });
   assert.equal(ok, false);
   assert.ok(errors.some((e) => e.includes("id")), "missing required field should error");

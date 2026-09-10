@@ -14,6 +14,7 @@ import { OnboardingEditorView } from "./OnboardingEditorView.js";
 import { StartMenuEditorView } from "./StartMenuEditorView.js";
 import { SaveDebuggerView } from "./SaveDebuggerView.js";
 import { BlueprintNodeManagerView } from "./BlueprintNodeManagerView.js";
+import { DataJsonEditorView } from "./DataJsonEditorView.js";
 import { updateCustomActivityNode } from "../core/ActivityNodeRegistry.js";
 
 
@@ -30,6 +31,7 @@ const ONBOARDING_EDITOR_WINDOW_ID = "dev-onboarding-editor";
 const START_MENU_EDITOR_WINDOW_ID = "dev-start-menu-editor";
 const SAVE_DEBUGGER_WINDOW_ID = "dev-save-debugger";
 const BLUEPRINT_NODE_MANAGER_WINDOW_ID = "dev-blueprint-node-manager";
+const DATA_JSON_EDITOR_WINDOW_ID = "dev-data-json-editor";
 
 const LAUNCHER_WINDOW_ID = "dev-mode-launcher";
 let editorWindowSeq = 0;
@@ -69,6 +71,7 @@ export async function initDeveloperMode({
   refreshIcons,
 }) {
   const model = createActivityListManagerModel();
+  const dataFileManifest = await dataLoader.loadJSON("data-files.json", { cache: false });
 
   function openEditor(activity) {
     const windowId = `dev-activity-editor-${activity.id}-${editorWindowSeq++}`;
@@ -101,7 +104,7 @@ export async function initDeveloperMode({
   const listManagerView = new ActivityListManagerView(model, { openEditor });
   // Developer mode must not hold desktop mounting on the complete Activity
   // editor corpus. Populate the already-created manager in the background.
-  loadExistingActivities(model, engineConfig, activityManifest, dataLoader)
+  loadExistingActivities(model, engineConfig, activityManifest, dataLoader, dataFileManifest?.files || [])
     .then(() => listManagerView.render())
     .catch((error) => console.error("Developer Activity loading failed", error));
   windowDefinitionStore.register({
@@ -370,6 +373,21 @@ export async function initDeveloperMode({
     body: blueprintNodeManagerView.el,
   });
 
+  const dataJsonEditorView = new DataJsonEditorView({
+    dataLoader,
+    dataFiles: dataFileManifest?.files || [],
+  });
+  windowDefinitionStore.register({
+    id: DATA_JSON_EDITOR_WINDOW_ID,
+    title: "全部 JSON 数据编辑器",
+    icon: "🗃",
+    width: 1040,
+    height: 680,
+    resizable: true,
+    singleInstance: true,
+    body: dataJsonEditorView.el,
+  });
+
 
   // Single desktop-icon entry point (plan follow-up: "把桌面上各个开发人员
   // 模式图标放在同一个开发人员模式app里面") - every dev sub-tool above is
@@ -392,6 +410,7 @@ export async function initDeveloperMode({
       <button type="button" data-tool="onboarding-editor">💡 新手引导编辑器</button>
       <button type="button" data-tool="start-menu-editor">📋 开始菜单编辑器</button>
       <button type="button" data-tool="blueprint-node-manager">🔷 蓝图节点管理器</button>
+      <button type="button" data-tool="data-json-editor">🗃 全部 JSON 数据编辑器</button>
 
     </div>
     <div class="ng-dev-launcher-section">
@@ -432,6 +451,9 @@ export async function initDeveloperMode({
   launcherEl.querySelector('[data-tool="blueprint-node-manager"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(BLUEPRINT_NODE_MANAGER_WINDOW_ID));
   });
+  launcherEl.querySelector('[data-tool="data-json-editor"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(DATA_JSON_EDITOR_WINDOW_ID));
+  });
 
   launcherEl.querySelector('[data-tool="save-debugger"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(SAVE_DEBUGGER_WINDOW_ID));
@@ -466,11 +488,12 @@ export async function initDeveloperMode({
     openPublicVariableDebugger: () => windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID)),
     openOnboardingEditor: () => windowManager.open(windowDefinitionStore.get(ONBOARDING_EDITOR_WINDOW_ID)),
     openBlueprintNodeManager: () => windowManager.open(windowDefinitionStore.get(BLUEPRINT_NODE_MANAGER_WINDOW_ID)),
+    openDataJsonEditor: () => windowManager.open(windowDefinitionStore.get(DATA_JSON_EDITOR_WINDOW_ID)),
 
   };
 }
 
-async function loadExistingActivities(model, engineConfig, activityManifest, dataLoader) {
+async function loadExistingActivities(model, engineConfig, activityManifest, dataLoader, dataFiles = []) {
   const manifestEntries = new Map(
     (activityManifest?.activityIds || []).map((entry) => [entry.id, entry]),
   );
@@ -486,6 +509,18 @@ async function loadExistingActivities(model, engineConfig, activityManifest, dat
       if (!definition) continue;
       model.registerActivity(list.id, definition, definition);
     }
+  }
+
+  // Every activity JSON has a dedicated ActivityEditorView, even when the
+  // activity is not referenced by a player-facing activity list.
+  const allActivitiesListId = "__all-activities__";
+  model.registerList({ id: allActivitiesListId, activityIds: [] });
+  for (const file of dataFiles.filter((path) => path.startsWith("activities/") && path.endsWith(".json"))) {
+    const fileName = file.slice("activities/".length);
+    const definition = await dataLoader.loadJSON(file, { optional: true });
+    if (!definition) continue;
+    const id = definition.id || fileName.slice(0, -5);
+    model.registerActivity(allActivitiesListId, { ...definition, id }, definition);
   }
 }
 

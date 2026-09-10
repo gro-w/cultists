@@ -1,5 +1,6 @@
 // DEV-TOOLS:START
 import { writeDataFile } from "./devApi.js";
+import { ActivityEditorView } from "./ActivityEditorView.js";
 /**
  * DatabaseEditorView - persistent editor for canonical JSON-backed records. It
  * §9.3 "不能在 UI 中直接改数据库绕过 API"). Lists every registered
@@ -108,7 +109,55 @@ export class DatabaseEditorView {
         caption.textContent = `${field.id} (${field.type})`;
         let control;
         const value = record[field.id];
-        if (field.type === "bool") {
+        if (field.type === "activity") {
+          const activityMap = value && typeof value === "object" ? structuredClone(value) : {};
+          const activityIds = Object.keys(activityMap);
+          const activitySelect = document.createElement("select");
+          const activityEditorHost = document.createElement("div");
+          activityEditorHost.className = "ng-embedded-activity-editor";
+          const addActivityButton = document.createElement("button");
+          addActivityButton.type = "button";
+          addActivityButton.textContent = "新增内嵌 Activity";
+          const mountActivity = (activityId) => {
+            activityEditorHost.replaceChildren();
+            if (!activityId) return;
+            const editor = new ActivityEditorView({
+              activityId: `${this.selectedDatabaseId}:${this._primaryKeyOf(record)}:${field.id}:${activityId}`,
+              blueprint: activityMap[activityId] || {},
+              displayName: activityId,
+              onSaveToMemory: (blueprint) => {
+                activityMap[activityId] = blueprint;
+                this.dataStore.updateRecord(this.selectedDatabaseId, this._primaryKeyOf(record), { [field.id]: activityMap });
+                this.statusEl.textContent = `内嵌 Activity「${activityId}」已保存`;
+              },
+            });
+            activityEditorHost.appendChild(editor.el);
+          };
+          for (const activityId of activityIds) {
+            const option = document.createElement("option");
+            option.value = activityId;
+            option.textContent = activityId;
+            activitySelect.appendChild(option);
+          }
+          activitySelect.addEventListener("change", () => mountActivity(activitySelect.value));
+          addActivityButton.addEventListener("click", () => {
+            const activityId = prompt("内嵌 Activity id:");
+            if (!activityId || activityMap[activityId]) return;
+            activityMap[activityId] = {};
+            const option = document.createElement("option");
+            option.value = activityId;
+            option.textContent = activityId;
+            activitySelect.appendChild(option);
+            activitySelect.value = activityId;
+            mountActivity(activityId);
+          });
+          const activityEditor = document.createElement("div");
+          activityEditor.append(activitySelect, addActivityButton, activityEditorHost);
+          label.append(caption, activityEditor);
+          fields.appendChild(label);
+          mountActivity(activitySelect.value);
+          continue;
+        } else if (field.type === "bool") {
           control = document.createElement("input");
           control.type = "checkbox";
           control.checked = Boolean(value);
@@ -142,6 +191,7 @@ export class DatabaseEditorView {
             if (field.type === "bool") patch[fieldId] = control.checked;
             else if (["integer", "smallInteger"].includes(field.type)) patch[fieldId] = Number(control.value);
             else if (field.type === "real") patch[fieldId] = Number(control.value);
+            else if (field.type === "activity") continue;
             else if (field.type === "array" || field.type.startsWith("array<") || field.type === "object") patch[fieldId] = JSON.parse(control.value || (field.type === "object" ? "{}" : "[]"));
             else patch[fieldId] = control.value;
           }

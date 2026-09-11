@@ -97,6 +97,7 @@ Cultists 引擎（`core` 与 `framework`）遵循根目录 [`copying.txt`](copyi
 
 ## 贡献与进一步阅读
 
+- 修改引擎或迁移游戏数据后，应同步检查并更新 `AGENTS.md`、`agent-notes.md` 和本文件，分别保持代理规则、开发补充信息和人类阅读版说明一致
 - [`AGENTS.md`](AGENTS.md)：贡献者和编码代理必须遵守的工程规则
 - [`agent-notes.md`](agent-notes.md)：目录、manifest、运行时职责和维护命令的补充说明
 - `data/game-manifest.json`：当前融合引擎的内容入口

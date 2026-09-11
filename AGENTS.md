@@ -66,8 +66,10 @@
 ## 修改与验证
 
 1. 使用 `patch` 或 `write_file` 修改，只改任务需要的文件。
-2. 修改 JavaScript 后执行 `node --check`；修改 JSON 后用 Python `json.load()` 全量校验；始终执行 `git diff --check`。
-3. 状态、存档、Activity 或边界改动必须增加或运行确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
-4. 需要验证发布产物时执行 `node tools/publish.js`，确认 `publish/` 不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口，并检查发布入口语法。
-5. 静态检查、探针和浏览器交互验证要分别如实报告；没有真实运行就不能声称 UI 已验证。
-6. 除非用户明确要求，不创建 PR。
+2. 每次对代码、数据 schema、引擎架构、层职责、开发命令、版权或发布行为做出修改后，必须检查并同步更新 `AGENTS.md`、`agent-notes.md` 和 `README.md`。三份文档分别保持：代理规则、代理补充信息、人类阅读介绍；不能只更新其中一份。
+3. 文档同步必须在同一个修改任务中完成，并检查三份文档之间的引擎名称、`core/framework/game` 边界、许可证和命令没有矛盾；纯文档修改也要检查是否影响另外两份。
+4. 修改 JavaScript 后执行 `node --check`；修改 JSON 后用 Python `json.load()` 全量校验；始终执行 `git diff --check`。
+5. 状态、存档、Activity 或边界改动必须增加或运行确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
+6. 需要验证发布产物时执行 `node tools/publish.js`，确认 `publish/` 不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口，并检查发布入口语法。
+7. 静态检查、探针和浏览器交互验证要分别如实报告；没有真实运行就不能声称 UI 已验证。
+8. 除非用户明确要求，不创建 PR。

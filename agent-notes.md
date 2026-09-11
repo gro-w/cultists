@@ -87,6 +87,16 @@ node --check publish/core/engine.js
 
 针对具体状态或 Activity，优先运行对应的 `probes/*.mjs`。浏览器交互验证只有实际启动并操作页面后才能报告为通过。
 
+## 文档同步要求
+
+任何 agent 修改代码、数据 schema、引擎分层、开发命令、版权边界或发布行为后，必须在同一任务中检查并更新以下三份文档：
+
+- `AGENTS.md`：更新必须遵守的规则和架构约束
+- `agent-notes.md`：更新实现索引、命令和维护补充信息
+- `README.md`：更新面向人类读者的项目描述和使用方式
+
+完成修改前应搜索三份文档中的旧名称、旧路径、旧层职责和旧许可证，避免只更新一份文档造成互相矛盾。
+
 ## 发布与版权
 
 `tools/publish.js` 生成玩家版 `publish/`，排除 `dev/`、`tools/`、`probes/`、`dev-server.js` 和迁移资料，并移除 `DEV-TOOLS` 区块。Cultists 引擎遵循根目录 [`copying.txt`](copying.txt) 的 BSD 2-Clause License；`game` 层游戏内容保留版权，除非内容文件另有声明，不得擅自再分发。外部素材和字体仍需分别确认许可证、保留来源和版权信息。项目不使用未经确认可商业使用的版权字体。

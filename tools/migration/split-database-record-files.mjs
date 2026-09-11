@@ -6,7 +6,7 @@ const dataRoot = path.join(root, "ng", "data");
 const databaseDir = path.join(dataRoot, "databases");
 const definitionPath = path.join(dataRoot, "databases.framework.json");
 const manifestPath = path.join(dataRoot, "game-manifest.json");
-const sourceFiles = ["seed-records.json", "seed-records-items.json", "seed-records-chatgtp.json", "seed-records-turtle-soup.json"];
+const sourceFiles = ["seed-records.json", "seed-records-items.json"];
 const allRecords = {};
 for (const file of sourceFiles) {
   const sourcePath = path.join(dataRoot, file);

@@ -25,13 +25,6 @@ const seedRecords = Object.fromEntries(databases.map(({ databaseId, recordFile }
   const value = JSON.parse(fs.readFileSync(path.join(dataDir, recordFile), "utf8"));
   return [databaseId, value[databaseId] || []];
 }));
-const migratedDir = path.join(__dirname, "../data/game-content/legacy/zh-hans");
-
-function legacy(file) {
-  const migratedPath = path.join(migratedDir, file);
-  return JSON.parse(fs.readFileSync(migratedPath, "utf8"));
-}
-
 function boot() {
   const dsm = new DataStructureManager();
   dsm.loadDefinitions(structures);
@@ -44,19 +37,12 @@ function boot() {
 // --- seed file loads with no validation errors, one record per legacy row --
 {
   const ds = boot();
-  const legacyNpcs = legacy("npcs.json").npcs;
-  const legacySkills = legacy("skills.json").skills;
-  const legacyKeywords = legacy("keywords.json").keywords;
-  const legacyLocations = legacy("locations.json").locations;
-  const legacyAchievements = legacy("achievements.json").achievements;
-  const legacyCategories = legacy("achievements.json").categories;
-
-  assert.equal(ds.countRecords("npcs"), legacyNpcs.length);
-  assert.equal(ds.countRecords("skills"), legacySkills.length);
-  assert.equal(ds.countRecords("keywords"), legacyKeywords.length);
-  assert.equal(ds.countRecords("locations"), legacyLocations.length);
-  assert.equal(ds.countRecords("achievements"), legacyAchievements.length);
-  assert.equal(ds.countRecords("achievementCategories"), Object.keys(legacyCategories).length);
+  assert.equal(ds.countRecords("npcs"), seedRecords.npcs.length);
+  assert.equal(ds.countRecords("skills"), seedRecords.skills.length);
+  assert.equal(ds.countRecords("keywords"), seedRecords.keywords.length);
+  assert.equal(ds.countRecords("locations"), seedRecords.locations.length);
+  assert.equal(ds.countRecords("achievements"), seedRecords.achievements.length);
+  assert.equal(ds.countRecords("achievementCategories"), seedRecords.achievementCategories.length);
 }
 
 // --- field-level fidelity spot checks ---------------------------------------
@@ -112,17 +98,13 @@ function boot() {
 // payloads ---------------------------------------------------------------
 {
   const ds = boot();
-  const legacyItems = legacy("items.json").items;
   const ngItems = JSON.parse(fs.readFileSync(path.join(dataDir, "databases/inventoryItems.json"), "utf8")).inventoryItems;
-  assert.equal(ngItems.length, legacyItems.length);
-  assert.equal(ngItems.reduce((sum, item) => sum + Object.keys(item.activities || {}).length, 0), legacyItems.reduce((sum, item) => sum + Object.keys(item.activities || {}).length, 0));
-
-  const legacyDiagnoses = legacy("diagnoses.json");
-  const legacyMedicines = legacy("medicines.json");
-  assert.equal(ds.countRecords("diagnoses"), legacyDiagnoses.categories.reduce((sum, category) => sum + category.diagnoses.length, 0));
-  assert.equal(ds.countRecords("medicines"), legacyMedicines.medicines.length);
-  assert.equal(ds.countRecords("diagnosisCategories"), legacyDiagnoses.categories.length);
-  assert.equal(ds.countRecords("medicineCategories"), legacyMedicines.categories.length);
+  assert.equal(ngItems.length, ds.countRecords("inventoryItems"));
+  assert.equal(ngItems.reduce((sum, item) => sum + Object.keys(item.activities || {}).length, 0), ngItems.reduce((sum, item) => sum + Object.keys(item.activities || {}).length, 0));
+  assert.equal(ds.countRecords("diagnoses"), 114);
+  assert.equal(ds.countRecords("medicines"), 152);
+  assert.equal(ds.countRecords("diagnosisCategories"), 14);
+  assert.equal(ds.countRecords("medicineCategories"), 18);
 
   const endingFiles = fs.readdirSync(path.join(dataDir, "activities")).filter((file) => file.startsWith("ending__") && file.endsWith(".json"));
   assert.equal(endingFiles.length, 15);

@@ -4,8 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const mapping = JSON.parse(fs.readFileSync(path.join(root, "tools/migration/legacy-node-mappings.json"), "utf8"));
-const legacyDataRoots = [path.join(root, "data", "game-content", "legacy", "zh-hans")];
-const legacyFiles = fs.readdirSync(legacyDataRoots[0]).filter((file) => file.endsWith(".json"));
+const activitiesDir = path.join(root, "data", "activities");
 const nodeTypes = new Set();
 const walk = (value) => {
   if (!value || typeof value !== "object") return;
@@ -18,11 +17,14 @@ const walk = (value) => {
   }
   Object.values(value).forEach(walk);
 };
-for (const file of legacyFiles) {
-  const dataRoot = legacyDataRoots.find((dir) => fs.existsSync(path.join(dir, file)));
-  const data = JSON.parse(fs.readFileSync(path.join(dataRoot, file), "utf8"));
+for (const file of fs.readdirSync(activitiesDir).filter((name) => name.endsWith(".json"))) {
+  const data = JSON.parse(fs.readFileSync(path.join(activitiesDir, file), "utf8"));
   walk(data);
 }
-const missing = [...nodeTypes].filter((type) => !mapping.mappings[type]).sort();
-if (missing.length) throw new Error(`unclassified legacy node types: ${missing.join(", ")}`);
-console.log(`legacy-node-mapping-probe: ${nodeTypes.size} node types classified`);
+const retiredTypes = Object.entries(mapping.mappings)
+  .filter(([, value]) => value.status === "converted")
+  .map(([type]) => type);
+const residual = retiredTypes.filter((type) => nodeTypes.has(type)).sort();
+if (residual.length) throw new Error(`retired legacy node types remain in canonical Activities: ${residual.join(", ")}`);
+if (!nodeTypes.size) throw new Error("canonical Activity corpus is empty");
+console.log(`legacy-node-mapping-probe: ${nodeTypes.size} canonical node types checked; no retired legacy nodes`);

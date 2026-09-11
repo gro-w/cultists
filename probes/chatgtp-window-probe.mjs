@@ -1,6 +1,6 @@
 // Phase 8 ChatGTP window probe: proves `data/windows/chatgtp.json`
 // actually runs end-to-end against the real seeded 48,195-entry QA table
-// (`data/seed-records-chatgtp.json`) plus `chatgtpSettings`/`keywords` -
+// (`data/databases/chatgtpQaEntries.json`) plus `chatgtpSettings`/`keywords` -
 // keyword-combo lookup (order-independent, matching
 // `migrate-legacy-chatgtp-qa.mjs`'s `entryKey()` convention), SAN gating
 // via public variable id 5 ("ChatGTP SAN"), per-query SAN cost, offline

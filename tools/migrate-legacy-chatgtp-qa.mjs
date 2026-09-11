@@ -23,10 +23,10 @@
  * script at that point — deliberately not speculatively added now.
  *
  * Because the 48,195-entry result is much larger than ng's other seed
- * domains, it is written to its own file (`data/seed-records-chatgtp.json`)
- * rather than merged into the main `data/seed-records.json`; `game-manifest.json`'s
- * `seedRecords` key accepts an array of filenames (see `ng/engine.js`) for
- * exactly this reason.
+ * domains, it is written directly to its canonical database file
+ * (`data/databases/chatgtpQaEntries.json`). The database definition and
+ * `game-manifest.json` own the runtime registration; no parallel seed mirror
+ * is generated.
  *
  * Usage: `node tools/migrate-legacy-chatgtp-qa.mjs` writes both output
  * files directly (unlike `migrate-legacy-medical-reference.mjs`'s
@@ -40,8 +40,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const LEGACY_PATH = path.resolve(__dirname, "../data/game-content/legacy/zh-hans/chatgtp_qa.json");
-const SEED_OUT_PATH = path.resolve(__dirname, "../data/seed-records-chatgtp.json");
+const SEED_OUT_PATH = path.resolve(__dirname, "../data/databases/chatgtpQaEntries.json");
 const SETTINGS_OUT_PATH = path.resolve(__dirname, "../data/chatgtp-settings.json");
 
 /** Sorted "+"-joined keyword-id key, same convention as legacy `ChatGTPApp.js#normalizeSet`. */
@@ -64,12 +63,12 @@ export function convertChatgtpQa(legacyQaJson) {
 }
 
 function main() {
-  const legacyQaJson = JSON.parse(fs.readFileSync(LEGACY_PATH, "utf8"));
+  const legacyPath = process.argv[2];
+  if (!legacyPath) throw new Error("Usage: node tools/migrate-legacy-chatgtp-qa.mjs <legacy-chatgtp_qa.json>");
+  const legacyQaJson = JSON.parse(fs.readFileSync(path.resolve(legacyPath), "utf8"));
   const { entries, settings } = convertChatgtpQa(legacyQaJson);
-  // One JSON entry per line (rather than one giant minified line) so this
-  // 48,195-record file stays diffable/reviewable in git despite its size.
-  const body = entries.map((entry) => JSON.stringify(entry)).join(",\n");
-  fs.writeFileSync(SEED_OUT_PATH, `{"chatgtpQaEntries":[\n${body}\n]}\n`);
+  // Keep the canonical database's existing reviewable formatting stable.
+  fs.writeFileSync(SEED_OUT_PATH, JSON.stringify({ chatgtpQaEntries: entries }, null, 2) + "\n");
   fs.writeFileSync(SETTINGS_OUT_PATH, JSON.stringify(settings, null, 2) + "\n");
   process.stdout.write(`Wrote ${entries.length} chatgtpQaEntries to ${path.relative(process.cwd(), SEED_OUT_PATH)}\n`);
   process.stdout.write(`Wrote settings to ${path.relative(process.cwd(), SETTINGS_OUT_PATH)}\n`);

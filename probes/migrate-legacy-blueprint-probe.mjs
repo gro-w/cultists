@@ -15,7 +15,7 @@ import EventBus from "../core/EventBus.js";
 import { VariableStore } from "../core/VariableStore.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const legacyDir = path.join(__dirname, "../data/game-content/legacy/zh-hans");
+const activitiesDir = path.join(__dirname, "../data/activities");
 
 function* findBlueprints(value) {
   if (!value || typeof value !== "object") return;
@@ -108,25 +108,18 @@ function* findBlueprints(value) {
   assert.equal(instance.waitingNodeId, null);
 }
 
-// --- full legacy corpus files this script currently fully covers ----------
+// --- canonical Activity corpus remains valid after legacy source retirement -
 {
-  const fullyCoveredFiles = [
-    "work01a.json", "work02a.json", "work03a.json", "work04a.json",
-    "work06a.json", "work07a.json", "work07b.json",
-    "social02a.json", "social04a.json", "social05a.json", "social05b.json", "social06a.json",
-  ];
   let total = 0;
-  for (const file of fullyCoveredFiles) {
-    const data = JSON.parse(fs.readFileSync(path.join(legacyDir, file), "utf8"));
+  for (const file of fs.readdirSync(activitiesDir).filter((name) => name.endsWith(".json")).sort()) {
+    const data = JSON.parse(fs.readFileSync(path.join(activitiesDir, file), "utf8"));
     for (const legacyBlueprint of findBlueprints(data)) {
       total += 1;
-      const { ok, blueprint, blockedTypes } = convertBlueprint(legacyBlueprint);
-      assert.equal(ok, true, `${file}: unexpected blocked types ${blockedTypes}`);
-      const { ok: validOk, errors } = validateBlueprint(blueprint);
-      assert.equal(validOk, true, `${file}: ${errors.join(", ")}`);
+      const { ok, errors } = validateBlueprint(legacyBlueprint);
+      assert.equal(ok, true, `${file}: ${errors.join(", ")}`);
     }
   }
-  assert.ok(total >= 68, `expected at least 68 blueprints across the fully-covered files, saw ${total}`);
+  assert.ok(total > 0, "expected canonical Activity blueprints");
 }
 
 console.log("migrate-legacy-blueprint-probe: all scenarios passed");

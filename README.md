@@ -54,7 +54,7 @@ probes/                    确定性探针
 media/                     历史宣传资源和设计稿
 ```
 
-`data/game-content/legacy/` 是迁移资料，不代表还有另一套运行时。当前入口由 `data/game-manifest.json` 配置，Activity 定义位于 `data/activities/`，窗口定义位于 `data/windows/`，数据库位于 `data/databases/`。
+`data/` 中的 canonical 内容由 `data/game-manifest.json` 配置；旧版 `data/game-content/` 已完成迁移并从仓库删除。Activity 定义位于 `data/activities/`，窗口定义位于 `data/windows/`，数据库位于 `data/databases/`。
 
 ## 三层引擎
 
@@ -78,6 +78,8 @@ media/                     历史宣传资源和设计稿
 
 编辑器写入 canonical 数据，存档调试器只修改存档和运行时状态。新增内容应优先使用 NGL 和数据，不要把业务逻辑写进 JavaScript。
 
+ChatGTP QA 与 Turtle Soup 的运行时数据分别由 `data/databases/chatgtpQaEntries.json` 和 `data/databases/turtleSoupPuzzles.json` 唯一持有；迁移工具、manifest 和探针不得重新引入已删除的重复 seed/native 文件。
+
 ## 开发与验证
 
 典型检查命令：
@@ -85,8 +87,7 @@ media/                     历史宣传资源和设计稿
 ```bash
 for f in $(git ls-files '*.js'); do node --check "$f"; done
 git diff --check
-node tools/publish.js
-node --check publish/core/engine.js
+node tools/verify-publish.js
 ```
 
 JSON 可用 Python `json.load()` 全量校验；复杂状态和 Activity 变化可运行对应的 `probes/*.mjs`。这些检查不等同于浏览器交互验证，UI 行为只有真实启动并操作页面后才能确认。

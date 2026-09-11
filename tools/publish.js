@@ -6,7 +6,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const root = __dirname;
+const root = path.resolve(__dirname, "..");
 const output = path.join(root, "publish");
 const START = /^(\s*)(?:\/\/|\/\*|<!--)\s*DEV-TOOLS:START.*$/;
 const END = /^(\s*)(?:\/\/|\/\*|<!--)\s*DEV-TOOLS:END.*$/;
@@ -39,7 +39,7 @@ function copyTree(source, destination) {
     // intentionally mention development-only tools or markers.
     const from = path.join(source, entry.name);
     const relative = path.relative(root, from).replaceAll(path.sep, "/");
-    if (relative.split("/").length === 1 && [".git", "publish", "publish.js", "dev-server.js", "editors", "node_modules", ".hermes", "AGENTS.md", "README.md", "agent-notes.md", "docs", "legacy", "media", "tools", "probes", "dev"].includes(entry.name)) continue;
+    if (relative.split("/").length === 1 && [".git", "publish", "publish.js", "dev-server.js", "editors", "node_modules", ".hermes", "AGENTS.md", "README.md", "agent-notes.md", "docs", "legacy", "reports", "media", "tools", "probes", "dev"].includes(entry.name)) continue;
     // NG tooling, probes, migration inventories, and developer-only modules
     // are source-maintenance assets, never player assets. Keeping them out of
     // the copy also prevents their documentation strings from tripping the
@@ -48,8 +48,6 @@ function copyTree(source, destination) {
       || relative === "dev" || relative.startsWith("dev/")
       || relative === "tools" || relative.startsWith("tools/")
       || relative === "probes" || relative.startsWith("probes/")
-      || relative === "data/game-content/legacy" || relative.startsWith("data/game-content/legacy/")
-      || relative === "data/game-content/legacy-content-index.json"
       || relative === "MIGRATION-TODO.md" || relative === "LEGACY-NG-MIGRATION-INVENTORY.md"
       || relative === "LEGACY-RETIREMENT-AUDIT.md") continue;
     const to = path.join(destination, entry.name);

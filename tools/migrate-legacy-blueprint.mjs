@@ -52,6 +52,7 @@ function makeConverters(synthesizeKey) {
     getGameTime: "getGameTime",
     getActivityInstanceCount: "getActivityInstanceCount",
     insertActivity: "insertActivity",
+    runActivity: "runActivity",
     statOperation: "statOperation",
     randomBranch: "framework:randomBranch",
     diceCheck: "framework:diceCheck",
@@ -151,7 +152,7 @@ export function convertBlueprint(legacyBlueprint, { synthesizeKey = defaultSynth
       });
     }
   }
-  const flowTypes = new Set(["flowStart", "framework:consumeTime", "branch", "insertActivity", "statOperation", "framework:randomBranch", "framework:diceCheck", "segmentBranch", "ending", "emitEvent", "text", "choice", "applyPublicVariableEffect"]);
+  const flowTypes = new Set(["flowStart", "framework:consumeTime", "branch", "insertActivity", "runActivity", "statOperation", "framework:randomBranch", "framework:diceCheck", "segmentBranch", "ending", "emitEvent", "text", "choice", "applyPublicVariableEffect"]);
   if (nodes.end) Object.entries(nodes).forEach(([id, node]) => {
     if (!flowTypes.has(node.type) || node.type === "flowStart" || node.type === "activityEnd") return;
     if (!connections.some((edge) => edge.fromNodeId === id)) connections.push({ fromNodeId: id, fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" });
@@ -235,7 +236,7 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
   const args = process.argv.slice(2);
   if (args[0] === "--report") {
-    const targetDir = path.resolve(args[1] || path.join(__dirname, "../data/game-content/legacy/zh-hans"));
+    const targetDir = path.resolve(args[1] || path.join(__dirname, "../data/activities"));
     runReport(targetDir);
   } else if (args[0] === "--write") {
     const targetDir = path.resolve(args[1] || path.join(__dirname, "../data/content/zh-hans"));

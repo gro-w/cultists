@@ -21,8 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const MIGRATED_DIR = path.resolve(__dirname, "../data/game-content/legacy/zh-hans");
-const sourcePath = (file) => path.join(MIGRATED_DIR, file);
+const sourcePath = (file) => path.resolve(process.argv[2] || ".", file);
 
 export function convertDiagnoses(legacyDiagnosesJson) {
   const categories = legacyDiagnosesJson.categories || [];
@@ -75,6 +74,7 @@ export function buildSeedRecordSet({ diagnosesJson, medicinesJson }) {
 }
 
 function main() {
+  if (!process.argv[2]) throw new Error("Usage: node tools/migrate-legacy-medical-reference.mjs <legacy-data-directory>");
   const diagnosesJson = JSON.parse(fs.readFileSync(sourcePath("diagnoses.json"), "utf8"));
   const medicinesJson = JSON.parse(fs.readFileSync(sourcePath("medicines.json"), "utf8"));
   const recordSet = buildSeedRecordSet({ diagnosesJson, medicinesJson });

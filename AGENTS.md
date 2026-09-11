@@ -61,6 +61,7 @@
 - 开发人员模式、编辑器、调试器和本地写盘能力只能在开发环境使用；入口严格判断 `?dev`，不能把任意查询串视为开发模式。
 - 开发专用代码使用 `DEV-TOOLS:START` / `DEV-TOOLS:END` 标记（CSS/HTML 使用对应注释形式）。业务成就和业务数据不是开发人员模式内容，不能因发布清理而删除。
 - canonical 数据编辑器必须校验 schema，并明确区分“保存到内存”“下载”和“写入磁盘”；存档调试器只能修改存档/运行时状态，不能把数据库内容写入存档。
+- ChatGTP QA 和 Turtle Soup 的运行时 canonical owner 分别是 `data/databases/chatgtpQaEntries.json` 与 `data/databases/turtleSoupPuzzles.json`；不得重新注册已删除的 seed/native 重复副本。
 - 发布版必须移除开发工具、编辑器、调试入口、本地写盘服务器和迁移工具，同时保留运行时所需的 framework/game 数据与 core 能力。
 
 ## 修改与验证
@@ -70,6 +71,6 @@
 3. 文档同步必须在同一个修改任务中完成，并检查三份文档之间的引擎名称、`core/framework/game` 边界、许可证和命令没有矛盾；纯文档修改也要检查是否影响另外两份。
 4. 修改 JavaScript 后执行 `node --check`；修改 JSON 后用 Python `json.load()` 全量校验；始终执行 `git diff --check`。
 5. 状态、存档、Activity 或边界改动必须增加或运行确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
-6. 需要验证发布产物时执行 `node tools/publish.js`，确认 `publish/` 不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口，并检查发布入口语法。
+6. 需要验证发布产物时执行 `node tools/verify-publish.js`；该命令会生成并检查发布产物、检查入口语法，然后无论成功失败都删除 `publish/`。确认产物不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口。
 7. 静态检查、探针和浏览器交互验证要分别如实报告；没有真实运行就不能声称 UI 已验证。
 8. 除非用户明确要求，不创建 PR。

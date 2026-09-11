@@ -9,7 +9,9 @@
 - 这是一个 Windows 95 风格、原生 HTML/CSS/ES modules、无构建步骤的中文数据驱动网页互动游戏。
 - 当前唯一运行时是融合引擎：`core` 提供通用宿主，`framework` 提供可复用系统，`game` 由 NGL 蓝图和数据实现具体游戏内容。
 - `index.html` 是浏览器入口；`core/engine.js` 是引擎入口，读取 `data/game-manifest.json`，加载 framework 与 game 内容并启动桌面。
-- 根目录的 `data/game-content/legacy/` 和 `tools/migration/` 是迁移/对照资料，不是当前运行时的第二套引擎。
+- `tools/migration/` 仅保留需要外部输入的转换/对照脚本；旧版 `data/game-content/` 已完成迁移并从仓库删除。
+
+ChatGTP QA 的唯一运行时数据 owner 是 `data/databases/chatgtpQaEntries.json`，Turtle Soup 的唯一运行时数据 owner 是 `data/databases/turtleSoupPuzzles.json`。旧的 `seed-records-chatgtp.json` 和 `turtle-soup-puzzles.json` 重复副本不再注册；对应迁移脚本和确定性探针必须直接使用 canonical database。
 
 ## 目录索引
 
@@ -20,7 +22,7 @@ data/                      framework/game 的 manifest、NGL 蓝图、窗口、�
 dev/                       开发人员模式、数据库编辑器和存档/运行时调试器
 probes/                    确定性运行时探针，不属于玩家运行时
 tools/                     发布、迁移和审计脚本，不属于玩家运行时
-data/game-content/legacy/  迁移保留的旧数据参考
+data/                      canonical framework/game 数据
 media/                     历史宣传资源和设计稿
 ```
 
@@ -81,8 +83,7 @@ python3 -c 'import json, pathlib; [json.load(open(p, encoding="utf-8")) for p in
 
 # 空白与发布
 git diff --check
-node tools/publish.js
-node --check publish/core/engine.js
+node tools/verify-publish.js
 ```
 
 针对具体状态或 Activity，优先运行对应的 `probes/*.mjs`。浏览器交互验证只有实际启动并操作页面后才能报告为通过。
@@ -99,7 +100,7 @@ node --check publish/core/engine.js
 
 ## 发布与版权
 
-`tools/publish.js` 生成玩家版 `publish/`，排除 `dev/`、`tools/`、`probes/`、`dev-server.js` 和迁移资料，并移除 `DEV-TOOLS` 区块。Cultists 引擎遵循根目录 [`copying.txt`](copying.txt) 的 BSD 2-Clause License；`game` 层游戏内容保留版权，除非内容文件另有声明，不得擅自再分发。外部素材和字体仍需分别确认许可证、保留来源和版权信息。项目不使用未经确认可商业使用的版权字体。
+`tools/publish.js` 生成玩家版 `publish/`，排除 `dev/`、`tools/`、`probes/`、`dev-server.js` 和迁移资料，并移除 `DEV-TOOLS` 区块；发布验证统一使用 `tools/verify-publish.js`，验证完成后自动删除 `publish/`。Cultists 引擎遵循根目录 [`copying.txt`](copying.txt) 的 BSD 2-Clause License；`game` 层游戏内容保留版权，除非内容文件另有声明，不得擅自再分发。外部素材和字体仍需分别确认许可证、保留来源和版权信息。项目不使用未经确认可商业使用的版权字体。
 
 ## 相关文件
 

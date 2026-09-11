@@ -31,7 +31,6 @@ function isSpecializedDataFile(path) {
     "databases.framework.json",
     "seed-records.json",
     "seed-records-items.json",
-    "seed-records-chatgtp.json",
     "public-variables.framework.json",
     "onboarding.json",
     "desktop-icons.json",

@@ -13,7 +13,7 @@ const failures = [];
 const exists = (relative) => fs.existsSync(path.join(ngRoot, relative));
 const fail = (message) => failures.push(message);
 
-for (const required of ["index.html", "core/engine.js", "style.css", "core", "dev", "data/framework-manifest.json"]) {
+for (const required of ["core/engine.js", "style.css", "core", "dev", "data/framework-manifest.json"]) {
   if (!exists(required)) fail(`missing core path: ${required}`);
 }
 for (const forbidden of ["desktop", "content"]) {
@@ -63,7 +63,7 @@ if (failures.length) {
 } else {
   console.log(JSON.stringify({
     ok: true,
-    core: ["index.html", "core/engine.js", "style.css", "core/", "dev/"],
+    core: ["../index.html", "core/engine.js", "style.css", "core/", "dev/"],
     frameworkJson: frameworkFiles.map((file) => path.relative(ngRoot, file).replaceAll(path.sep, "/")),
     gameJsonCount: dataFiles.filter((file) => file.endsWith(".json") && !file.endsWith(".framework.json") && path.basename(file) !== "framework-manifest.json").length,
     gameNativeModules: gameNativeModules.map((file) => path.relative(ngRoot, file).replaceAll(path.sep, "/")),

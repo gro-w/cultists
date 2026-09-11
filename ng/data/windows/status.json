@@ -63,6 +63,25 @@
           }
         }
       },
+      "location": {
+        "id": "location",
+        "type": "getVariable",
+        "inputs": {
+          "key": "stateBoundary:location"
+        }
+      },
+      "locationText": {
+        "id": "locationText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "当前位置：",
+          "right": {
+            "nodeId": "location",
+            "port": "value"
+          }
+        }
+      },
       "inventory": {
         "id": "inventory",
         "type": "getRuntimeCollection",
@@ -298,6 +317,15 @@
             "className": "status-row",
             "text": {
               "nodeId": "timeText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-location",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "locationText",
               "port": "value"
             }
           },

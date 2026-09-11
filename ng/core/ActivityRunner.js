@@ -20,7 +20,7 @@
 import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
 
 const ONE_SHOT_NODE_TYPES = new Set([
-  "setVariable", "setLocalVariable", "openWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
+  "setVariable", "setLocalVariable", "openWindow", "closeWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
   "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect", "markEventState",
 ]);
 const MAX_STEPS = 1000;
@@ -75,9 +75,19 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       result = dbGateway.findRecords(read("databaseId"), read("query", {}));
       break;
     }
+    case "getRecordValue": {
+      if (!dbGateway?.getRecord) throw new Error("Node getRecordValue requires a dbGateway");
+      result = dbGateway.getRecord(read("databaseId"), read("key"));
+      break;
+    }
     case "getRuntimeCollection": {
       if (!runtimeGateway?.getCollection) throw new Error("Node getRuntimeCollection requires a runtimeGateway");
       result = runtimeGateway.getCollection(read("collectionId")) || [];
+      break;
+    }
+    case "getRuntimeRecord": {
+      if (!runtimeGateway?.getRecord) throw new Error("Node getRuntimeRecord requires a runtimeGateway");
+      result = runtimeGateway.getRecord(read("collectionId"), read("recordId"));
       break;
     }
     case "mergeRecords": {
@@ -98,6 +108,10 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       break;
     case "getActivityInstanceCount":
       result = variableStore.get(`__activityCount:${read("activityId")}`) ?? 0;
+      break;
+    case "getQueueEntryCount":
+      if (!runtimeGateway?.listEntries) throw new Error("Node getQueueEntryCount requires an activity queue gateway");
+      result = runtimeGateway.listEntries(read("queueId"), { status: "unresolved" }).length;
       break;
     case "addWindowComponent":
       result = variableStore.get(`__nodeResult:${node.id}:componentId`) ?? null;
@@ -299,6 +313,14 @@ export function createActivityRunner({
         }
         return { next: nextFlow(blueprint, node) };
       }
+      case "appendToArrayVariable": {
+        const key = resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+        const current = variableStore.get(key);
+        const values = Array.isArray(current) ? [...current] : [];
+        values.push(resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
+        variableStore.set(key, values);
+        return { next: nextFlow(blueprint, node) };
+      }
       case "setLocalVariable": {
         const key = resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         const scopedKey = `__local:${key}`;
@@ -329,6 +351,11 @@ export function createActivityRunner({
         const skip = Boolean(resolveInput(blueprint, node, "skip", variableStore, false, undefined, pvGateway, dbGateway, runtimeGateway));
         const windowId = resolveInput(blueprint, node, "windowId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         if (!skip) windowGateway(windowId, instance, node);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "closeWindow": {
+        const windowId = resolveInput(blueprint, node, "windowId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+        windowGateway(windowId, instance, node);
         return { next: nextFlow(blueprint, node) };
       }
       case "addWindowComponent": {

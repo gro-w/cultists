@@ -428,6 +428,27 @@ input[type="range"] {
   padding: 1px 0;
 }
 
+.ng-widget-list-item-meta {
+  display: block;
+  color: #444;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.ng-widget-list-item-progress {
+  display: block;
+  height: 8px;
+  margin-top: 3px;
+  border: 1px solid var(--w95-gray-darker);
+  background: var(--w95-white);
+}
+
+.ng-widget-list-item-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--w95-blue);
+}
+
 /* -------------------------------------------------------------------------
    Migrated legacy app surfaces
    These classes intentionally mirror css/apps.css. They are attached by the
@@ -576,6 +597,26 @@ input[type="range"] {
   overflow-y: auto;
   padding: 2px;
 }
+
+.calendar-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.calendar-legend-item::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--w95-gray-dark);
+  background: var(--w95-white);
+}
+
+.calendar-rest-legend::before { background: #fff0f0; }
+.calendar-night-legend::before { background: #eef3ff; }
+.calendar-current-legend::before { outline: 2px solid #000080; outline-offset: -2px; }
+.calendar-locked-legend::before { background: #d0d0d0; }
 
 .calendar-day {
   min-height: 58px;
@@ -1186,12 +1227,20 @@ input[type="range"] {
   font-size: 12px;
 }
 
-.ng-list-manager-lists,
-.ng-list-manager-activities {
+.ng-list-manager-lists {
   display: flex;
   flex-direction: column;
-  flex: 1 1 50%;
+  flex: 0 0 28%;
   min-width: 0;
+  overflow: auto;
+}
+
+.ng-list-manager-activities {
+  display: flex;
+  flex: 1 1 72%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
   overflow: auto;
 }
 
@@ -1258,7 +1307,7 @@ input[type="range"] {
 
 .ng-blueprint-node-manager-list {
   display: flex;
-  flex: 0 0 230px;
+  flex: 0 0 180px;
   flex-direction: column;
   overflow: auto;
   border-right: 1px solid var(--w95-gray-dark);
@@ -1333,12 +1382,12 @@ input[type="range"] {
 }
 
 .ng-editor-palette {
-  width: 120px;
+  width: 170px;
   overflow: auto;
   border-right: 1px solid var(--w95-gray-dark);
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   padding: 4px;
   flex-shrink: 0;
 }
@@ -1346,7 +1395,10 @@ input[type="range"] {
 .ng-editor-palette-item {
   text-align: left;
   font-size: 11px;
-  padding: 3px 4px;
+  line-height: 1.25;
+  padding: 4px 5px;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* Canvas visuals mirror the old engine's blueprint editor
@@ -1616,7 +1668,7 @@ input[type="range"] {
 }
 
 .ng-window-editor-structure {
-  width: 200px;
+  width: 160px;
   overflow: auto;
   border-right: 1px solid var(--w95-gray-dark);
   flex-shrink: 0;
@@ -1647,7 +1699,7 @@ input[type="range"] {
 }
 
 .ng-window-editor-inspector {
-  width: 220px;
+  width: 280px;
   overflow: auto;
   border-left: 1px solid var(--w95-gray-dark);
   flex-shrink: 0;
@@ -1714,6 +1766,10 @@ input[type="range"] {
   padding: 10px;
   height: 100%;
   overflow: auto;
+  box-sizing: border-box;
+  background: #c0c0c0;
+  color: #111;
+  font: 13px var(--w95-font);
 }
 
 .ng-dev-launcher button {
@@ -1727,6 +1783,10 @@ input[type="range"] {
   gap: 4px;
   border-top: 1px solid var(--w95-gray-dark);
   padding-top: 6px;
+  padding: 8px;
+  background: #d4d0c8;
+  border: 1px solid #808080;
+  box-shadow: inset 1px 1px #fff;
 }
 
 .ng-dev-launcher-section:first-child {
@@ -1737,6 +1797,72 @@ input[type="range"] {
 .ng-dev-launcher-section h4 {
   margin: 0 0 2px;
   font-size: 12px;
+  color: #000080;
+  background: #c7d9f7;
+  border: 1px solid #6f86ad;
+  padding: 4px 6px;
+}
+
+.ng-dev-launcher-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  align-content: start;
+  gap: 8px;
+}
+.ng-dev-launcher-section h4 {
+  grid-column: 1 / -1;
+}
+.ng-dev-launcher .ng-dev-desktop-icon {
+  width: 76px;
+  height: 76px;
+  min-width: 76px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
+  padding: 4px 2px;
+  overflow: hidden;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.15;
+  color: #000;
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+.ng-dev-launcher .ng-dev-desktop-icon:hover,
+.ng-dev-launcher .ng-dev-desktop-icon:focus-visible {
+  color: #fff;
+  background: #000080;
+  border-color: #000080;
+  outline: none;
+}
+.ng-dev-launcher .ng-dev-desktop-icon:active {
+  padding-top: 5px;
+  padding-left: 3px;
+}
+.ng-dev-icon-glyph {
+  display: block;
+  width: 42px;
+  height: 42px;
+  font-size: 32px;
+  line-height: 42px;
+  text-align: center;
+}
+.ng-dev-launcher .ng-dev-desktop-icon > span:last-child {
+  display: block;
+  width: 100%;
+  min-height: 25px;
+  overflow-wrap: anywhere;
+}
+
+.ng-dev-launcher-help {
+  color: var(--w95-gray-dark);
+  font-size: 10px;
+  line-height: 1.3;
 }
 
 .ng-database-debugger-records {
@@ -1754,6 +1880,30 @@ input[type="range"] {
 .ng-database-record-fields { display: grid; grid-template-columns: repeat(2, minmax(180px, 1fr)); gap: 5px 8px; width: 100%; }
 .ng-database-record-fields .ng-window-editor-field { display: flex; flex-direction: column; gap: 2px; font-size: 11px; }
 .ng-database-record-fields textarea { min-height: 42px; font-family: monospace; font-size: 10px; }
+.ng-database-selector-editor,
+.ng-database-record-editor { height: 100%; min-height: 0; box-sizing: border-box; background: #c0c0c0; color: #111; font: 13px var(--w95-font); }
+.ng-database-selector-editor { display: flex; flex-direction: column; padding: 8px; gap: 8px; }
+.ng-database-selector-toolbar,
+.ng-database-record-toolbar,
+.ng-database-record-list-toolbar { display: flex; align-items: center; gap: 4px; padding: 4px; background: #d4d0c8; border: 1px solid #808080; box-shadow: inset 1px 1px #fff; }
+.ng-database-selector-toolbar .ng-editor-status,
+.ng-database-record-toolbar .ng-editor-status { margin-left: auto; color: #333; }
+.ng-database-selector-list { overflow: auto; flex: 1; padding: 3px; background: #fff; border: 2px inset #d4d0c8; }
+.ng-database-selector-row,
+.ng-database-record-item { display: block; width: 100%; text-align: left; padding: 5px 7px; border: 0; background: transparent; color: #111; cursor: pointer; }
+.ng-database-selector-row.selected,
+.ng-database-record-item.selected { background: #000080; color: #fff; }
+.ng-database-record-editor { display: grid; grid-template-columns: minmax(150px, 22%) minmax(0, 78%); gap: 6px; padding: 6px; }
+.ng-database-record-list,
+.ng-database-record-inspector { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+.ng-database-record-list { background: #d4d0c8; border: 1px solid #808080; padding: 4px; }
+.ng-database-record-items { min-height: 0; overflow: auto; background: #fff; border: 2px inset #d4d0c8; }
+.ng-database-record-inspector { overflow: auto; background: #c7d9f7; border: 1px solid #6f86ad; padding: 6px; }
+.ng-database-record-title { color: #000080; }
+.ng-database-record-fields { display: grid; gap: 6px; }
+.ng-database-record-field { display: grid; grid-template-columns: minmax(130px, 30%) minmax(0, 1fr); align-items: start; gap: 6px; padding: 4px; background: #dce8fb; border: 1px solid #8da4c8; }
+.ng-database-record-field input,
+.ng-database-record-field textarea { box-sizing: border-box; width: 100%; min-width: 0; }
 .ng-start-menu-editor { display: flex; flex-direction: column; height: 100%; }
 .ng-start-menu-editor-list { overflow: auto; padding: 6px; }
 .ng-start-menu-editor-row { display: flex; gap: 8px; align-items: center; padding: 5px; border-bottom: 1px solid #d0d0d0; }
@@ -1816,7 +1966,79 @@ input[type="range"] {
 .chatgtp-san-indicator.distressed { color: #a86b00; font-weight: bold; }
 .chatgtp-san-indicator.offline { color: #b00020; font-weight: bold; }
 .chatgtp-history .ng-widget-list-item { max-width: 80%; padding: 6px 8px; border-radius: 4px; line-height: 1.35; font-size: 12px; }
-.chatgtp-history .bubble-npc { align-self: flex-start; background: #dfefff; }
-.chatgtp-history .bubble-me { align-self: flex-end; background: #d7ffd7; }
+.chatgtp-history .bubble-npc { align-self:flex-start; background:#dfefff; }
+.chatgtp-history .bubble-me { align-self:flex-end; background:#d7ffd7; }
+.chatgtp-history .ng-widget-list-item mark, .chatgtp-daily .ng-widget-list-item mark { background:#fff59d; color:inherit; padding:0 1px; }
+.chatgtp-daily { flex: 0 0 auto; max-height: 96px; min-height: 0; overflow-y: auto; display:flex; flex-direction:column; gap:6px; }
+.chatgtp-daily .ng-widget-list-item { padding:6px 8px; background:#e8e8e8; border-radius:4px; line-height:1.35; font-size:12px; }
+.chatgtp-disease-row, .chatgtp-medicine-row, .chatgtp-notebook-row { display:flex; gap:4px; min-width:0; align-items:center; }
+.chatgtp-disease-row .ng-widget-select, .chatgtp-medicine-row .ng-widget-select, .chatgtp-notebook-row .ng-widget-select { flex:1; min-width:0; }
+
+/* Exact legacy app layout contracts for the fused data-driven windows. */
+.app-achievements { display:flex; flex-direction:column; height:100%; gap:6px; }
+.ach-toolbar { display:flex; flex-direction:column; gap:4px; flex-shrink:0; }
+.ach-tabs { display:flex; gap:4px; }
+.ach-tab.active { box-shadow:inset 1px 1px 0 var(--w95-gray-dark), inset -1px -1px 0 var(--w95-gray-light); }
+.ach-category-select { font-size:12px; padding:1px 4px; width:100%; min-height:22px; }
+.ach-summary { font-size:12px; padding:4px 6px; flex-shrink:0; }
+.ach-list { flex:1 1 auto; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:4px; padding:4px; }
+.ach-card { border-top:1px solid var(--w95-white); border-left:1px solid var(--w95-white); border-right:1px solid var(--w95-gray-darker); border-bottom:1px solid var(--w95-gray-darker); background:var(--w95-gray); padding:6px 8px; line-height:1.4; }
+.ach-card.ach-unlocked { background:#f0fff0; }
+.ach-card.ach-locked { opacity:.7; }
+.ach-card.ach-secret.ach-locked { background:#f8f8f8; }
+.app-calendar { display:flex; flex-direction:column; height:100%; min-height:0; gap:6px; }
+.calendar-summary { display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+.calendar-summary-title { font-weight:700; }
+.calendar-summary-detail { color:var(--w95-gray-dark); font-size:11px; }
+.calendar-summary span, .calendar-day-label, .calendar-today-label { color:var(--w95-gray-dark); font-size:11px; }
+.calendar-legend { display:flex !important; gap:10px !important; flex-wrap:wrap; font-size:11px; }
+.calendar-locked-notice { padding:4px 6px; border:1px solid #a0a0a0; background:#e0e0e0; color:#666; font-size:11px; text-align:center; }
+.calendar-grid { display:grid !important; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; flex:1 1 auto; min-height:0; overflow-y:auto; padding:2px; }
+.calendar-day { position:relative; min-height:58px; padding:5px; border:1px solid var(--w95-gray-dark); background:var(--w95-white); box-sizing:border-box; }
+.calendar-day-number { display:block; font-size:16px; font-weight:bold; }
+.calendar-day-label { display:block; margin-top:3px; }
+.calendar-rest-day { background:#fff0f0; }
+.calendar-night-duty { background:#eef3ff; }
+.calendar-locked-day { background:#d0d0d0; border-color:#b0b0b0; color:#888; }
+.app-notebook { display:flex; flex-direction:column; height:100%; min-height:0; }
+.notebook-tabs { display:flex !important; gap:0 !important; border-bottom:1px solid #808080; flex-shrink:0; }
+.notebook-tab { border:2px outset #dfdfdf; border-bottom:0; border-radius:3px 3px 0 0; padding:4px 14px; }
+.notebook-tab.active { background:#fff; font-weight:700; position:relative; z-index:1; }
+.notebook-list { flex:1 1 auto; min-height:0; overflow:auto; }
+.notebook-entry { display:flex; align-items:center; gap:6px; padding:6px; border-bottom:1px solid #d0d0d0; }
+.notebook-section-title { padding:4px 6px 2px; font-size:12px; font-weight:700; color:#444; border-bottom:1px solid #b0b0b0; }
+.notebook-spell-note { flex-shrink:0; margin:0 0 8px; color:#888; font-size:11px; }
+.notebook-spell-empty-hint { display:block; padding:0 16px 24px; color:#aaa; font-size:11px; }
+.notebook-spell-entry { display:flex; flex-direction:column; align-items:stretch; gap:6px; margin-bottom:10px; padding:10px 12px; border:1px solid #b0bec5; border-radius:4px; background:#e8f5e9; }
+.notebook-spell-entry .ng-widget-list-item-label { color:#2e7d32; font-size:13px; font-weight:700; }
+.notebook-spell-entry .ng-widget-list-item-meta { color:#444; font-size:12px; line-height:1.5; }
+.notebook-spell-entry .notebook-cast-btn { align-self:flex-end; }
+.notebook-sort-label { flex-shrink:0; font-size:11px; color:#777; }
+.notebook-sort-select { flex-shrink:0; }
+.app-turtle-soup { display:flex; flex-direction:column; gap:8px; height:100%; min-height:0; padding:10px; font-size:13px; overflow:auto; }
+.app-location-scene { display:flex; flex-direction:column; gap:8px; height:100%; min-height:0; overflow:auto; }
+.ng-clue-wall { position:relative; width:var(--clue-wall-width,620px); height:var(--clue-wall-height,240px); min-height:170px; overflow:auto; border:1px inset #808080; background:#f5f0e8; }
+.ng-clue-wall-lines { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.ng-clue-wall-lines line { stroke:#a00000; stroke-width:2; }
+.ng-clue-wall-node { position:absolute; width:140px; min-height:34px; padding:6px; box-sizing:border-box; border:1px solid #806040; border-radius:3px; background:#fffbe8; color:#302010; font-size:12px; }
+.ng-global-media-view { display:none; }
+.ng-global-media-view.has-media { display:flex; position:fixed; inset:0; z-index:3000; align-items:center; justify-content:center; background:rgba(0,0,0,.82); }
+.ng-global-media-view .ng-dialogue-media { max-width:92vw; max-height:92vh; object-fit:contain; }
+.location-scene-title { font-size:16px; font-weight:700; }
+.location-scene-background { display:block; width:100%; max-width:100%; max-height:220px; object-fit:contain; }
+.location-scene-message, .location-scene-empty { color:#666; font-size:12px; }
+.item-inspection-active-image { display:block; width:auto; max-width:96px; max-height:72px; object-fit:contain; }
+.turtle-soup-title { margin:0; font-size:16px; font-weight:700; }
+.turtle-soup-progress { flex-shrink:0; font-weight:700; }
+.turtle-soup-source, .turtle-soup-state { flex-shrink:0; }
+.turtle-soup-guess { min-height:64px; resize:vertical; }
+.turtle-soup-questions { display:flex; flex-direction:column; gap:4px; }
+.turtle-soup-questions .ng-widget-button { text-align:left; }
+.app-chatgtp { display:flex; flex-direction:column; height:100%; min-height:0; }
+.chatgtp-layout { display:flex; flex-direction:column; height:100%; min-height:0; gap:6px; }
+.chatgtp-history { flex:1 1 auto; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
+.chatgtp-keywords { flex:0 0 150px; height:150px; min-height:150px; max-height:150px; display:flex; flex-direction:column; gap:4px; overflow:hidden; }
+.chatgtp-selected-keyword { flex:1; min-width:0; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chatgtp-query-btn { align-self:flex-start; flex:0 0 auto; }
 
 /* DEV-TOOLS:END */

@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": {
+    "legacy": "legacy/data/zh-hans + legacy/js",
+    "ng": "ng/data",
+    "plan": "2026-09-10_081823-engine-merge-plan.md"
+  },
+  "domains": [
+    {
+      "id": "items",
+      "legacyCount": 29,
+      "ngCount": 29,
+      "status": "covered",
+      "sources": [
+        "legacy/data/zh-hans/items.json"
+      ],
+      "targets": [
+        "ng/data/seed-records-items.json"
+      ]
+    },
+    {
+      "id": "spells",
+      "legacyCount": 5,
+      "ngCount": 5,
+      "status": "covered",
+      "sources": [
+        "legacy/data/zh-hans/items.json#spells"
+      ],
+      "targets": [
+        "ng/data/seed-records-items.json#spells"
+      ]
+    },
+    {
+      "id": "medical-reference",
+      "legacyCount": {
+        "diagnoses": 114,
+        "medicines": 152
+      },
+      "ngCount": {
+        "diagnoses": 114,
+        "medicines": 152
+      },
+      "status": "covered",
+      "sources": [
+        "legacy/data/zh-hans/diagnoses.json",
+        "legacy/data/zh-hans/medicines.json"
+      ],
+      "targets": [
+        "ng/data/seed-records.json"
+      ]
+    },
+    {
+      "id": "medical-activities",
+      "legacyCount": 59,
+      "ngCount": 50,
+      "registeredCount": 65,
+      "status": "covered-with-explicit-mappings",
+      "sources": [
+        "legacy/data/zh-hans/work*.json"
+      ],
+      "targets": [
+        "ng/data/activities/patient_*.json",
+        "ng/data/activity-lists/medical.json"
+      ],
+      "note": "All discovered patient activity IDs are registered; legacy entries map through day/patient IDs."
+    },
+    {
+      "id": "social",
+      "legacyCount": 23,
+      "ngCount": 18,
+      "status": "covered-with-domain-mappings",
+      "sources": [
+        "legacy/data/zh-hans/social*.json"
+      ],
+      "targets": [
+        "ng/data/activities/social*.json",
+        "ng/data/activities/dorm_activity_day*.json"
+      ],
+      "note": "social05a and socialpub map to dorm_activity_day5 and dorm_activity_day1; empty legacy batches remain explicit."
+    },
+    {
+      "id": "dorm",
+      "legacyCount": "runtime + dorm activities",
+      "ngCount": 5,
+      "status": "covered",
+      "sources": [
+        "js/desktop/DormMode.js",
+        "data/zh-hans/social05a.json",
+        "data/zh-hans/socialpub.json"
+      ],
+      "targets": [
+        "ng/data/activities/dorm_activity_day*.json"
+      ]
+    },
+    {
+      "id": "endings",
+      "legacyCount": 15,
+      "ngCount": 15,
+      "status": "covered",
+      "sources": [
+        "data/zh-hans/endings.json"
+      ],
+      "targets": [
+        "ng/data/activities/ending__cn*.json"
+      ]
+    },
+    {
+      "id": "achievements",
+      "legacyCount": 26,
+      "ngCount": 26,
+      "status": "covered",
+      "sources": [
+        "data/zh-hans/achievements.json"
+      ],
+      "targets": [
+        "ng/data/activities/achievement__*.json"
+      ]
+    },
+    {
+      "id": "calendar",
+      "legacyCount": 7,
+      "ngCount": 7,
+      "status": "covered",
+      "sources": [
+        "data/zh-hans/time_rules.json"
+      ],
+      "targets": [
+        "ng/data/calendar-rules.json",
+        "ng/data/activity-calendar.json"
+      ]
+    },
+    {
+      "id": "windows",
+      "legacyCount": "runtime-registered",
+      "ngCount": 10,
+      "status": "covered-with-runtime-mapping",
+      "sources": [
+        "js/desktop",
+        "js/apps",
+        "data/zh-hans/app_his_custom.json"
+      ],
+      "targets": [
+        "ng/data/windows/*.json"
+      ]
+    },
+    {
+      "id": "locations",
+      "legacyCount": "LocationSystem runtime locations",
+      "ngCount": 3,
+      "status": "browser-verified",
+      "sources": [
+        "js/core/LocationSystem.js",
+        "js/desktop/LocationScene.js"
+      ],
+      "targets": [
+        "ng/data/windows/locations.json",
+        "ng/data/game-manifest.json#eventRoutes[location:requested]",
+        "ng/core/StateBoundaryService.js"
+      ],
+      "note": "Chromium verified the production path: opening 去往位置, selecting 海边, and observing 状态与属性 update from 当前位置：work to 当前位置：seaside."
+    },
+    {
+      "id": "social-media",
+      "legacyCount": "runtime app",
+      "ngCount": "canonical social-app records",
+      "status": "covered-with-runtime-mapping",
+      "sources": [
+        "js/apps/SocialMediaApp.js",
+        "data/zh-hans/social_apps.json"
+      ],
+      "targets": [
+        "ng/data/social-apps.json",
+        "ng/data/windows/dialogue.json",
+        "ng/data/activities/social*.json"
+      ],
+      "note": "Social media content is represented by canonical social-app records and dialogue Activity data; no standalone legacy app launcher is retained."
+    },
+    {
+      "id": "turtle-soup",
+      "legacyCount": 6,
+      "ngCount": 6,
+      "status": "browser-unverified",
+      "sources": [
+        "js/apps/TurtleSoupApp.js",
+        "js/core/TurtleSoupManager.js"
+      ],
+      "targets": [
+        "ng/data/turtle-soup-puzzles.json",
+        "ng/data/windows/turtle-soup.json",
+        "ng/data/activities/turtle_soup_question_*.json",
+        "ng/data/activities/turtle_soup_guess.json"
+      ],
+      "note": "Canonical data and deterministic feedback probes pass; full browser questioning, guessing, reward, reset, and save/restore path remains unverified."
+    },
+    {
+      "id": "desktop-icons",
+      "legacyCount": "runtime-registered",
+      "ngCount": 10,
+      "status": "covered-with-runtime-mapping",
+      "sources": [
+        "js/desktop/Desktop.js",
+        "js/desktop/Taskbar.js"
+      ],
+      "targets": [
+        "ng/data/desktop-icons.json"
+      ]
+    },
+    {
+      "id": "legacy-game-content-package",
+      "legacyCount": {
+        "json": 54,
+        "localization": 2,
+        "assets": 80
+      },
+      "ngCount": {
+        "json": 54,
+        "localization": 2,
+        "assets": 80
+      },
+      "status": "migrated-data",
+      "sources": [
+        "data/zh-hans/*.json",
+        "data/languages.json",
+        "data/strings.zh_hans.json",
+        "data/assets/*"
+      ],
+      "targets": [
+        "ng/data/game-content/legacy/*.json",
+        "ng/data/game-content/legacy/localization/*.json",
+        "ng/data/assets/*",
+        "ng/data/game-content/legacy-content-index.json"
+      ],
+      "note": "All authored legacy JSON, localization files, and assets are preserved in the Game content package; executable behavior remains tracked by the domain rows above."
+    }
+  ],
+  "unmapped": [],
+  "validation": {
+    "activityManifest": "ng/data/activity-manifest.json",
+    "boundaryAudit": "tools/audit-ng-layer-boundary.mjs",
+    "probes": [
+      "ng/probes/*.mjs",
+      "scripts/probe-*.mjs"
+    ]
+  }
+}

@@ -3,108 +3,159 @@
     "databaseId": "inventoryItems",
     "recordType": "item",
     "primaryKey": "id",
-    "recordFile": "seed-records-items.json"
+    "recordFile": "databases/inventoryItems.json"
   },
   {
     "databaseId": "patients",
     "recordType": "patient",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/patients.json"
   },
   {
     "databaseId": "symptoms",
     "recordType": "symptom",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/symptoms.json"
   },
   {
     "databaseId": "diagnoses",
     "recordType": "diagnosis",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/diagnoses.json"
   },
   {
     "databaseId": "diagnosisCategories",
     "recordType": "diagnosisCategory",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/diagnosisCategories.json"
   },
   {
     "databaseId": "medicines",
     "recordType": "medicine",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/medicines.json"
   },
   {
     "databaseId": "medicineCategories",
     "recordType": "medicineCategory",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/medicineCategories.json"
   },
   {
     "databaseId": "chatgtpQaEntries",
     "recordType": "chatgtpQaEntry",
     "primaryKey": "id",
-    "allowDelete": false
+    "allowDelete": false,
+    "recordFile": "databases/chatgtpQaEntries.json"
+  },
+  {
+    "databaseId": "chatgtpDailyMessages",
+    "recordType": "chatgtpDailyMessage",
+    "primaryKey": "id",
+    "allowDelete": false,
+    "recordFile": "databases/chatgtpDailyMessages.json"
   },
   {
     "databaseId": "treatments",
     "recordType": "treatment",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/treatments.json"
   },
   {
     "databaseId": "medicalCases",
     "recordType": "medicalCase",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/medicalCases.json"
   },
   {
     "databaseId": "patientDialogueContexts",
     "recordType": "patientDialogueContext",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/patientDialogueContexts.json"
   },
   {
     "databaseId": "medicalAppointments",
     "recordType": "medicalAppointment",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/medicalAppointments.json"
   },
   {
     "databaseId": "npcs",
     "recordType": "npc",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/npcs.json"
   },
   {
     "databaseId": "skills",
     "recordType": "skill",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/skills.json"
   },
   {
     "databaseId": "keywords",
     "recordType": "keyword",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/keywords.json"
   },
   {
     "databaseId": "locations",
     "recordType": "location",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/locations.json"
   },
   {
     "databaseId": "achievements",
     "recordType": "achievement",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/achievements.json"
   },
   {
     "databaseId": "achievementCategories",
     "recordType": "achievementCategory",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/achievementCategories.json"
   },
   {
     "databaseId": "chatgtpSettings",
     "recordType": "chatgtpSettings",
     "primaryKey": "id",
-    "allowDelete": false
+    "allowDelete": false,
+    "recordFile": "databases/chatgtpSettings.json"
+  },
+  {
+    "databaseId": "socialApps",
+    "recordType": "socialApp",
+    "primaryKey": "id",
+    "recordFile": "social-apps.json"
+  },
+  {
+    "databaseId": "dailyChatGtp",
+    "recordType": "dailyChatGtp",
+    "primaryKey": "day",
+    "recordFile": "social-apps.json"
+  },
+  {
+    "databaseId": "dailyImports",
+    "recordType": "dailyImports",
+    "primaryKey": "day",
+    "recordFile": "social-apps.json"
   },
   {
     "databaseId": "endings",
     "recordType": "ending",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/endings.json"
   },
   {
     "databaseId": "specialEvents",
     "recordType": "specialEvent",
-    "primaryKey": "id"
+    "primaryKey": "id",
+    "recordFile": "databases/specialEvents.json"
+  },
+  {
+    "databaseId": "turtleSoupPuzzles",
+    "recordType": "turtleSoupPuzzle",
+    "primaryKey": "id",
+    "recordFile": "databases/turtleSoupPuzzles.json"
   }
 ]

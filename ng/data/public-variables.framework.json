@@ -902,5 +902,16 @@
     "persistent": true,
     "objectTarget": "database:inventoryItems",
     "description": "示例：玩家当前关注/使用中的背包物品引用 {objectType:\"database:inventoryItems\", objectId}，演示 object 类型公共变量指向自定义数据库记录（plan §11.1）。"
+  },
+  {
+    "id": 1002,
+    "name": "playerCollectedData",
+    "type": "json",
+    "persistent": true,
+    "defaultValue": {
+      "keywords": {},
+      "inventoryItems": {}
+    },
+    "description": "玩家收集到的关键词、持有物品及其他 Game 自定义运行时集合的统一公共数据结构。"
   }
 ]

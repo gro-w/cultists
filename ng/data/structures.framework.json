@@ -295,6 +295,15 @@
     ]
   },
   {
+    "id": "chatgtpDailyMessage",
+    "fields": [
+      {"id": "id", "type": "string"},
+      {"id": "day", "type": "integer", "default": 1},
+      {"id": "question", "type": "string", "default": ""},
+      {"id": "answer", "type": "string", "default": ""}
+    ]
+  },
+  {
     "id": "treatment",
     "fields": [
       {
@@ -649,5 +658,46 @@
         "type": "string"
       }
     ]
+  },
+  {
+    "id": "turtleSoupPuzzle",
+    "fields": [
+      {"id": "id", "type": "string"},
+      {"id": "title", "type": "string"},
+      {"id": "story", "type": "string"},
+      {"id": "solution", "type": "string"},
+      {"id": "max_days", "type": "integer"},
+      {"id": "questions_per_day", "type": "integer"},
+      {"id": "reward_npc_id", "type": "string"},
+      {"id": "reward_favorability", "type": "integer"},
+      {"id": "questions", "type": "array"},
+      {"id": "accepted_guesses", "type": "array<string>"},
+      {"id": "required_keywords", "type": "array<string>"},
+      {"id": "forbidden_keywords", "type": "array<string>"},
+      {"id": "success_cg", "type": "string"},
+      {"id": "success_event", "type": "string"},
+      {"id": "fail_event", "type": "string"},
+      {"id": "wrong_guess_message", "type": "string"},
+      {"id": "success_message", "type": "string"}
+    ]
+  },
+  {
+    "id": "socialApp",
+    "fields": [
+      {"id":"id","type":"string"},
+      {"id":"name","type":"string"},
+      {"id":"icon","type":"string"},
+      {"id":"description","type":"string"},
+      {"id":"timeAdvancePerView","type":"integer"},
+      {"id":"posts","type":"array"}
+    ]
+  },
+  {
+    "id":"dailyChatGtp",
+    "fields":[{"id":"day","type":"integer"},{"id":"exchanges","type":"array"}]
+  },
+  {
+    "id":"dailyImports",
+    "fields":[{"id":"day","type":"integer"},{"id":"pairs","type":"array"}]
   }
 ]

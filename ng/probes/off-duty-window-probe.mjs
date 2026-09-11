@@ -28,7 +28,10 @@ const dataStructureManager = new DataStructureManager();
 dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
 const dataStore = new DataStore(dataStructureManager);
 dataStore.loadDefinitions(readJSON("databases.framework.json"));
-dataStore.loadRecordSet(readJSON("seed-records.json"));
+dataStore.loadRecordSet(Object.fromEntries(readJSON("databases.framework.json").map(({ databaseId, recordFile }) => {
+  const value = readJSON(recordFile);
+  return [databaseId, value[databaseId] || []];
+})));
 
 const refResolver = new RuntimeRefResolver();
 const eventBus = new EventBus();

@@ -40,6 +40,10 @@ function isWireRef(value) {
 
 export function createActivityEditorModel({ activityId, blueprint, displayName } = {}) {
   let current = normalizeBlueprint(blueprint || {});
+  Object.values(current.nodes).forEach((node, index) => {
+    if (!Number.isFinite(Number(node.x))) node.x = 80 + (index % 4) * 220;
+    if (!Number.isFinite(Number(node.y))) node.y = 80 + Math.floor(index / 4) * 140;
+  });
   let name = displayName || activityId || "untitled";
   const selection = new Set();
   const history = [];

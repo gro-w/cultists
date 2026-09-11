@@ -7,7 +7,7 @@ import { WindowDefinitionManagerView } from "./WindowDefinitionManagerView.js";
 import { WindowEditorView } from "./WindowEditorView.js";
 import { DesktopIconEditorView } from "./DesktopIconEditorView.js";
 import { DataStructureEditorView } from "./DataStructureEditorView.js";
-import { DatabaseEditorView } from "./DatabaseEditorView.js";
+import { DatabaseEditorView, DatabaseRecordEditorView } from "./DatabaseDebuggerView.js";
 import { PublicVariableEditorView } from "./PublicVariableEditorView.js";
 import { PublicVariableDebuggerView } from "./PublicVariableDebuggerView.js";
 import { OnboardingEditorView } from "./OnboardingEditorView.js";
@@ -15,6 +15,7 @@ import { StartMenuEditorView } from "./StartMenuEditorView.js";
 import { SaveDebuggerView } from "./SaveDebuggerView.js";
 import { BlueprintNodeManagerView } from "./BlueprintNodeManagerView.js";
 import { DataJsonEditorView } from "./DataJsonEditorView.js";
+import { TimeDebuggerView } from "./TimeDebuggerView.js";
 import { updateCustomActivityNode } from "../core/ActivityNodeRegistry.js";
 
 
@@ -32,11 +33,13 @@ const START_MENU_EDITOR_WINDOW_ID = "dev-start-menu-editor";
 const SAVE_DEBUGGER_WINDOW_ID = "dev-save-debugger";
 const BLUEPRINT_NODE_MANAGER_WINDOW_ID = "dev-blueprint-node-manager";
 const DATA_JSON_EDITOR_WINDOW_ID = "dev-data-json-editor";
+const TIME_DEBUGGER_WINDOW_ID = "dev-time-debugger";
 
 const LAUNCHER_WINDOW_ID = "dev-mode-launcher";
 let editorWindowSeq = 0;
 let windowEditorWindowSeq = 0;
 let widgetEventEditorSeq = 0;
+let databaseEditorWindowSeq = 0;
 
 /**
  * DeveloperMode - top-level controller wired into ng/engine.js only when
@@ -65,6 +68,7 @@ export async function initDeveloperMode({
   eventStateRegistry,
   dataLoader,
   saveManager,
+  gameClock,
   customBlueprintNodes = [],
   forceEndWork = null,
 
@@ -143,6 +147,18 @@ export async function initDeveloperMode({
     resizable: true,
     singleInstance: true,
     body: saveDebuggerView.el,
+  });
+
+  const timeDebuggerView = new TimeDebuggerView({ gameClock, forceEndWork });
+  windowDefinitionStore.register({
+    id: TIME_DEBUGGER_WINDOW_ID,
+    title: "时间调试器",
+    icon: "⏱️",
+    width: 420,
+    height: 300,
+    resizable: true,
+    singleInstance: true,
+    body: timeDebuggerView.el,
   });
 
   function openWindowEditor(definition) {
@@ -264,15 +280,30 @@ export async function initDeveloperMode({
     body: structureEditorView.el,
   });
 
-  // Database debugger (plan §9.3/§9.4) - runtime record browser/editor for
-  // the live DataStore, always going through its createRecord/updateRecord/
-  // deleteRecord API (never a direct Map mutation).
-  const databaseEditorView = new DatabaseEditorView({ dataStore, dataStructureManager, dataLoader });
+  // First database window only selects a database. Opening one mounts a
+  // separate record editor so database selection and record selection cannot
+  // overwrite each other's state.
+  const openDatabaseEditor = (databaseId) => {
+    const id = `dev-database-record-editor-${databaseId}-${databaseEditorWindowSeq++}`;
+    const view = new DatabaseRecordEditorView({ dataStore, dataStructureManager, dataLoader, databaseId });
+    const definition = windowDefinitionStore.register({
+      id,
+      title: `数据库项目 - ${databaseId}`,
+      icon: "🗃",
+      width: 900,
+      height: 600,
+      resizable: true,
+      singleInstance: false,
+      body: view.el,
+    });
+    windowManager.open(definition);
+  };
+  const databaseEditorView = new DatabaseEditorView({ dataStore, dataStructureManager, dataLoader, onOpenDatabase: openDatabaseEditor });
   windowDefinitionStore.register({
     id: DATABASE_EDITOR_WINDOW_ID,
     title: "数据库编辑器",
     icon: "🗄",
-    width: 640,
+    width: 440,
     height: 420,
     resizable: true,
     singleInstance: true,
@@ -401,24 +432,25 @@ export async function initDeveloperMode({
   launcherEl.innerHTML = `
     <div class="ng-dev-launcher-section">
       <h4>编辑器（JSON 数据，可存盘）</h4>
-      <button type="button" data-tool="list-manager">🛠 Activity 管理器</button>
-      <button type="button" data-tool="window-manager">🪟 窗口编辑器</button>
-      <button type="button" data-tool="icon-editor">🖱 桌面图标编辑器</button>
-      <button type="button" data-tool="structure-manager">🧱 数据结构管理器</button>
-      <button type="button" data-tool="database-debugger">🗄 数据库编辑器</button>
-      <button type="button" data-tool="public-variable-manager">🌐 公共变量管理器</button>
-      <button type="button" data-tool="onboarding-editor">💡 新手引导编辑器</button>
-      <button type="button" data-tool="start-menu-editor">📋 开始菜单编辑器</button>
-      <button type="button" data-tool="blueprint-node-manager">🔷 蓝图节点管理器</button>
-      <button type="button" data-tool="data-json-editor">🗃 全部 JSON 数据编辑器</button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="list-manager"><span class="ng-dev-icon-glyph">🛠</span><span>Activity 管理器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="window-manager"><span class="ng-dev-icon-glyph">🪟</span><span>窗口编辑器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="icon-editor"><span class="ng-dev-icon-glyph">🖱</span><span>桌面图标编辑器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="structure-manager"><span class="ng-dev-icon-glyph">🧱</span><span>数据结构管理器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="database-debugger"><span class="ng-dev-icon-glyph">🗄</span><span>数据库编辑器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="public-variable-manager"><span class="ng-dev-icon-glyph">🌐</span><span>公共变量管理器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="onboarding-editor"><span class="ng-dev-icon-glyph">💡</span><span>新手引导编辑器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="start-menu-editor"><span class="ng-dev-icon-glyph">📋</span><span>开始菜单编辑器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="blueprint-node-manager"><span class="ng-dev-icon-glyph">🔷</span><span>蓝图节点管理器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="data-json-editor"><span class="ng-dev-icon-glyph">🗃</span><span>全部 JSON 数据编辑器</span></button>
 
     </div>
     <div class="ng-dev-launcher-section">
       <h4>调试器（运行时 / 存档状态）</h4>
-      <button type="button" data-tool="debugger">🐞 活动调试器</button>
-      <button type="button" data-tool="save-debugger">💾 存档调试器</button>
-      <button type="button" data-tool="public-variable-debugger">🧮 公共变量调试器</button>
-      <button type="button" data-tool="force-end-work">⏩ 强制下班</button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="debugger"><span class="ng-dev-icon-glyph">🐞</span><span>活动调试器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="save-debugger"><span class="ng-dev-icon-glyph">💾</span><span>存档调试器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="public-variable-debugger"><span class="ng-dev-icon-glyph">🧮</span><span>公共变量调试器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="time-debugger"><span class="ng-dev-icon-glyph">⏱️</span><span>时间调试器</span></button>
+
     </div>
   `;
   launcherEl.querySelector('[data-tool="list-manager"]').addEventListener("click", () => {
@@ -461,15 +493,16 @@ export async function initDeveloperMode({
   launcherEl.querySelector('[data-tool="public-variable-debugger"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID));
   });
-  launcherEl.querySelector('[data-tool="force-end-work"]').addEventListener("click", () => {
-    forceEndWork?.();
+  launcherEl.querySelector('[data-tool="time-debugger"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(TIME_DEBUGGER_WINDOW_ID));
   });
+
   windowDefinitionStore.register({
     id: LAUNCHER_WINDOW_ID,
     title: "开发人员模式",
     icon: "🛠",
-    width: 300,
-    height: 420,
+    width: 360,
+    height: 620,
     resizable: true,
     singleInstance: true,
     body: launcherEl,
@@ -489,6 +522,7 @@ export async function initDeveloperMode({
     openOnboardingEditor: () => windowManager.open(windowDefinitionStore.get(ONBOARDING_EDITOR_WINDOW_ID)),
     openBlueprintNodeManager: () => windowManager.open(windowDefinitionStore.get(BLUEPRINT_NODE_MANAGER_WINDOW_ID)),
     openDataJsonEditor: () => windowManager.open(windowDefinitionStore.get(DATA_JSON_EDITOR_WINDOW_ID)),
+    openTimeDebugger: () => windowManager.open(windowDefinitionStore.get(TIME_DEBUGGER_WINDOW_ID)),
 
   };
 }

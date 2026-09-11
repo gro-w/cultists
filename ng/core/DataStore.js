@@ -55,7 +55,10 @@ export class DataStore {
 
   /** Bulk-loads a `{ databaseId: records[] }` map (e.g. fetched from `data/seed-records.json`) across every listed database, in file order. */
   loadRecordSet(recordsByDatabase = {}) {
-    Object.entries(recordsByDatabase).forEach(([databaseId, records]) => this.loadRecords(databaseId, records));
+    Object.entries(recordsByDatabase).forEach(([databaseId, records]) => {
+      if (!this.databases.has(databaseId)) return;
+      this.loadRecords(databaseId, records);
+    });
   }
 
 

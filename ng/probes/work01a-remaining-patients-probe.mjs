@@ -20,7 +20,11 @@ import { ActivityDefinitionStore } from "../core/ActivityDefinitionStore.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const activitiesDir = path.join(__dirname, "../data/activities");
-const seedRecords = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/seed-records.json"), "utf8"));
+const databaseDefinitions = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/databases.framework.json"), "utf8"));
+const seedRecords = Object.fromEntries(databaseDefinitions.map(({ databaseId, recordFile }) => {
+  const value = JSON.parse(fs.readFileSync(path.join(__dirname, "../data", recordFile), "utf8"));
+  return [databaseId, value[databaseId] || []];
+}));
 const defaultList = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/activity-lists/default.json"), "utf8"));
 
 function loadDefinition(fileName) {

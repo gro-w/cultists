@@ -1,20 +1,49 @@
 {
   "id": "framework-runtime",
+  "publicStateVariableId": 1002,
   "collections": {
     "achievements": {
       "databaseId": "achievements"
+    },
+    "achievementCategories": {
+      "databaseId": "achievementCategories"
     },
     "achievementStates": {
       "databaseId": "achievements",
       "mergeState": true,
       "keyField": "id"
     },
+    "achievementItems": {
+      "databaseId": "achievements",
+      "mergeState": true,
+      "keyField": "id",
+      "filters": [
+        {"variable":"achievement:filter","field":"unlocked","missingValue":false},
+        {"variable":"achievement:category","field":"category"}
+      ],
+      "defaults": {
+        "unlocked": false,
+        "statusMark": "⬜",
+        "statusClass": "locked",
+        "unlockDate": "",
+        "progressPercent": 0
+      },
+      "progressField": "progress",
+      "progressTargetPath": "trigger.target"
+    },
     "inventoryItems": {
       "databaseId": "inventoryItems",
       "mergeState": true,
       "stateField": "ownedCount",
+      "filterState": true,
       "keyField": "id"
     },
+    "dormDeskItems": {
+      "databaseId": "inventoryItems",
+      "filters": [{"variable":"item:desk","field":"locations","operator":"contains"}],
+      "keyField": "id"
+    },
+    "socialApps": {"databaseId":"socialApps","keyField":"id"},
     "sceneItems": {
       "stateOnly": true
     },
@@ -22,16 +51,34 @@
       "databaseId": "keywords",
       "mergeState": true,
       "stateField": "collected",
+      "filterState": true,
       "keyField": "id"
+    },
+    "clueKeywords": {"databaseId":"keywords","mergeState":true,"stateField":"collected","filterState":true,"keyField":"id","filters":[{"variable":"item:clueCategory","field":"category"}]},
+    "notebookKeywords": {
+      "databaseId": "keywords",
+      "mergeState": true,
+      "stateField": "collected",
+      "filterState": true,
+      "keyField": "id",
+      "sort": {"variable":"settings:notebookSortMode","defaultMode":"pinyin","textField":"content","dayField":"collectedDay","categoryField":"category","group":true,"initialMap":{"发":"F","咳":"K","失":"S","头":"T","眩":"X","神":"S","深":"S","旧":"J","夜":"Y","功":"G","流":"L","高":"G","地":"D"}}
     },
     "chatgtpKeywordOptions": {
       "databaseId": "keywords",
       "mergeState": true,
       "stateField": "collected",
+      "filterState": true,
       "keyField": "id"
     },
     "chatgtpCategories": {
       "databaseId": "diagnosisCategories"
+    },
+    "chatgtpDailyMessages": {
+      "databaseId": "chatgtpDailyMessages",
+      "filters": [
+        {"variable":"gameState:day","field":"day"}
+      ],
+      "keyField": "id"
     },
     "mediaState": {
       "stateOnly": true
@@ -39,11 +86,36 @@
     "spellState": {
       "stateOnly": true
     },
+    "notebookSpells": {
+      "databaseId": "inventoryItems",
+      "nestedField": "spells",
+      "mergeState": true,
+      "filterState": true,
+      "stateField": "learned",
+      "stateCollectionId": "spellState",
+      "keyField": "id"
+    },
     "medicalState": {
       "stateOnly": true
     },
     "eventHistory": {
       "stateOnly": true
+    },
+    "managerStates": {
+      "stateOnly": true
+    },
+    "turtleSoupState": {
+      "stateOnly": true
+    },
+    "calendarDays": {
+      "generatedRange": {
+        "start": 1,
+        "count": 31,
+        "currentVariable": "gameState:day",
+        "unlockedThrough": 7,
+        "restDays": [5],
+        "nightDutyDays": [7]
+      }
     }
   },
   "managers": [
@@ -67,6 +139,7 @@
   ],
   "saveableVariablePrefixes": [
     "gameState:",
+    "turtleSoup:",
     "__"
   ]
 }

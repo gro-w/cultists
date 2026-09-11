@@ -63,7 +63,10 @@ function buildDataGateways() {
   dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
   const dbGateway = new DataStore(dataStructureManager);
   dbGateway.loadDefinitions(readJSON("databases.framework.json"));
-  dbGateway.loadRecordSet(readJSON("seed-records.json"));
+  dbGateway.loadRecordSet(Object.fromEntries(readJSON("databases.framework.json").map(({ databaseId, recordFile }) => {
+    const value = readJSON(recordFile);
+    return [databaseId, value[databaseId] || []];
+  })));
   const pvGateway = new PublicVariableManager(new RuntimeRefResolver(), new EventBus());
   pvGateway.loadDefinitions(readJSON("public-variables.framework.json"));
   return { dbGateway, pvGateway };
@@ -134,7 +137,7 @@ function buildHarness() {
   windowManager.open(offDuty);
   const snapshot = gameClock.snapshot();
   assert.equal(snapshot.day, 1);
-  assert.equal(snapshot.minutes, 480, "off-duty's own onCreate blueprint advances time by 8 hours");
+  assert.equal(snapshot.minutes, 0, "opening off-duty must not advance time");
 }
 
 // --- off-duty-open.json's icon Activity now only opens the window; it must

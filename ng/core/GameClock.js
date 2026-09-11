@@ -8,7 +8,7 @@
  * 通用引擎内写死...专用领域逻辑").
  */
 
-export const GAME_CLOCK_EVENTS = Object.freeze({ changed: "gameClock:changed" });
+export const GAME_CLOCK_EVENTS = Object.freeze({ changed: "gameClock:changed", dayChanged: "gameClock:dayChanged" });
 
 const MINUTES_PER_DAY = 1440;
 
@@ -23,6 +23,7 @@ export class GameClock {
   advance(minutesToAdd) {
     const delta = Math.max(0, Math.floor(Number(minutesToAdd) || 0));
     if (!delta) return this.snapshot();
+    const previousDay = this.day;
     let total = this.minutes + delta;
     while (total >= MINUTES_PER_DAY) {
       total -= MINUTES_PER_DAY;
@@ -30,6 +31,7 @@ export class GameClock {
     }
     this.minutes = total;
     this.eventBus?.emit(GAME_CLOCK_EVENTS.changed, this.snapshot());
+    if (this.day !== previousDay) this.eventBus?.emit(GAME_CLOCK_EVENTS.dayChanged, this.snapshot());
     return this.snapshot();
   }
 
@@ -38,9 +40,11 @@ export class GameClock {
   }
 
   restore({ day, minutes } = {}) {
+    const previousDay = this.day;
     this.day = Math.max(1, Math.floor(Number(day) || 1));
     this.minutes = ((Math.floor(Number(minutes) || 0) % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
     this.eventBus?.emit(GAME_CLOCK_EVENTS.changed, this.snapshot());
+    if (this.day !== previousDay) this.eventBus?.emit(GAME_CLOCK_EVENTS.dayChanged, this.snapshot());
   }
 
   /** "Day N HH:MM" presentation text for the taskbar clock; never reflects the system clock. */

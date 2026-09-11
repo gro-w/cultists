@@ -15,7 +15,7 @@
  * An unresolvable ref surfaces as an explicit `{resolved:false}` result,
  * never silently falling back to some other object.
  */
-const TYPES = new Set(["bool", "smallInteger", "integer", "real", "string", "object"]);
+const TYPES = new Set(["bool", "smallInteger", "integer", "real", "string", "object", "json"]);
 const COMPARISON_OPERATORS = new Set(["eq", "neq", "gt", "gte", "lt", "lte"]);
 const MIN_ID = 0;
 const MAX_ID = 65535;
@@ -119,6 +119,7 @@ export class PublicVariableManager {
     if (definition.type === "smallInteger" || definition.type === "integer") return 0;
     if (definition.type === "real") return 0;
     if (definition.type === "string") return "";
+    if (definition.type === "json") return {};
     return null; // object
   }
 
@@ -158,6 +159,10 @@ export class PublicVariableManager {
         throw new Error(`Global variable ${definition.id} (string) exceeds maxLength ${definition.maxLength}`);
       }
       return value;
+    }
+    if (definition.type === "json") {
+      if (!value || typeof value !== "object") throw new Error(`Global variable ${definition.id} (json) requires an object or array`);
+      return clone(value);
     }
     // object: null (unset) or a {objectType, objectId} reference; never a live object.
     if (value === null || value === undefined) return null;

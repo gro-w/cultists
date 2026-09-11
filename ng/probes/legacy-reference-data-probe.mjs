@@ -2,16 +2,14 @@
 // skills, keywords, locations, achievements (+ achievement categories) —
 // migrated verbatim from data/zh-hans/{npcs,skills,keywords,locations,
 // achievements}.json into ng/data/structures.framework.json + ng/data/databases.framework.json
-// + ng/data/seed-records.json, loaded at boot through the new generic
+// + ng/data/databases/<databaseId>.json, loaded at boot through the new generic
 // `DataStore.loadRecordSet()` seed-content loader (game-manifest.json's
 // `seedRecords` key), exactly like the existing structures/databases/
 // publicVariables config-driven loaders.
 //
-// Deliberately excluded from this slice (deferred to later Phase 8 work,
-// since they require dialogue node types not yet in ActivityNodeRegistry):
-// items.json's embedded investigate/use blueprints, endings.json's
-// embedded blueprint field, and the hierarchical medicines/diagnoses
-// domain (category -> diagnosis tree).
+// The previously deferred domains are now included in the seed/runtime
+// parity checks below: item investigate/use activities, ending activities,
+// and the hierarchical medicines/diagnoses reference tables.
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
@@ -23,8 +21,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(__dirname, "../data");
 const structures = JSON.parse(fs.readFileSync(path.join(dataDir, "structures.framework.json"), "utf8"));
 const databases = JSON.parse(fs.readFileSync(path.join(dataDir, "databases.framework.json"), "utf8"));
-const seedRecords = JSON.parse(fs.readFileSync(path.join(dataDir, "seed-records.json"), "utf8"));
-const legacyDir = path.join(__dirname, "../../data/zh-hans");
+const seedRecords = Object.fromEntries(databases.map(({ databaseId, recordFile }) => {
+  const value = JSON.parse(fs.readFileSync(path.join(dataDir, recordFile), "utf8"));
+  return [databaseId, value[databaseId] || []];
+}));
+const legacyDir = path.join(__dirname, "../../legacy/data/zh-hans");
 
 function legacy(file) {
   return JSON.parse(fs.readFileSync(path.join(legacyDir, file), "utf8"));
@@ -104,6 +105,27 @@ function boot() {
 
   const category = ds.getRecord("achievementCategories", "sanity");
   assert.equal(category.label, "理智值");
+}
+
+// --- formerly deferred domains retain their authored counts and activity
+// payloads ---------------------------------------------------------------
+{
+  const ds = boot();
+  const legacyItems = legacy("items.json").items;
+  const ngItems = JSON.parse(fs.readFileSync(path.join(dataDir, "databases/inventoryItems.json"), "utf8")).inventoryItems;
+  assert.equal(ngItems.length, legacyItems.length);
+  assert.equal(ngItems.reduce((sum, item) => sum + Object.keys(item.activities || {}).length, 0), legacyItems.reduce((sum, item) => sum + Object.keys(item.activities || {}).length, 0));
+
+  const legacyDiagnoses = legacy("diagnoses.json");
+  const legacyMedicines = legacy("medicines.json");
+  assert.equal(ds.countRecords("diagnoses"), legacyDiagnoses.categories.reduce((sum, category) => sum + category.diagnoses.length, 0));
+  assert.equal(ds.countRecords("medicines"), legacyMedicines.medicines.length);
+  assert.equal(ds.countRecords("diagnosisCategories"), legacyDiagnoses.categories.length);
+  assert.equal(ds.countRecords("medicineCategories"), legacyMedicines.categories.length);
+
+  const endingFiles = fs.readdirSync(path.join(dataDir, "activities")).filter((file) => file.startsWith("ending__") && file.endsWith(".json"));
+  assert.equal(endingFiles.length, 15);
+  for (const file of endingFiles) assert.ok(JSON.parse(fs.readFileSync(path.join(dataDir, "activities", file), "utf8")).blueprint);
 }
 
 // --- getRecord/findRecords never return the live seeded record (clone-on-

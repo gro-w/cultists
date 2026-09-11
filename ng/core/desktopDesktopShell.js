@@ -156,7 +156,11 @@ export class DesktopShell {
       if (Array.isArray(value)) return value.map(rewrite);
       if (!value || typeof value !== "object") {
         if (typeof value !== "string") return value;
-        return value.replace(/(\b[a-zA-Z][\w-]*:[\w-]*?)1\b/g, "$1" + suffix);
+        // Dynamic HIS rows carry their instance number in both widget IDs and
+        // variable keys.  Rows added from an already-cloned row must advance
+        // the previous suffix as well; replacing only a literal trailing `1`
+        // made row 3+ share row 2's variables.
+        return value.replace(/((?:[:\-])[A-Za-z_][\w-]*?)(\d+)$/g, `$1${suffix}`);
       }
       return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child)]));
     };
@@ -220,6 +224,7 @@ export class DesktopShell {
       gameClock: this.gameClock,
       eventBus: this.eventBus,
       dialogueViews: this.dialogueViews,
+      windowDefinitionStore: this.windowDefinitionStore,
       valueGraph: definition?.valueGraph,
       conditionContext: this.conditionContext,
       onEvent: (node, eventName, value) => this.runWidgetEvent?.(state.windowId, node.widgetId, eventName, value),

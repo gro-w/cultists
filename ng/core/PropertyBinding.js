@@ -30,7 +30,10 @@ export function resolvePropertyValue(raw, { valueGraph, variableStore, pvGateway
       const runtimePvGateway = pvGateway || variableStore.publicVariableGateway || null;
       return evaluateValueOutput(valueGraph, raw.nodeId, raw.port || "value", variableStore, new Set(), runtimePvGateway, dbGateway, runtimeGateway);
     }
-    if ("variable" in raw) return variableStore ? variableStore.get(raw.variable) : fallback;
+    if ("variable" in raw) {
+      const value = variableStore ? variableStore.get(raw.variable) : undefined;
+      return value ?? fallback;
+    }
   }
   return raw === undefined ? fallback : raw;
 }

@@ -11,6 +11,26 @@
         "y": 60,
         "inputs": {}
       },
+      "pending": {
+        "id": "pending",
+        "type": "getQueueEntryCount",
+        "inputs": {"queueId":"work"}
+      },
+      "hasPending": {
+        "id": "hasPending",
+        "type": "arithmetic",
+        "inputs": {"operator":">","left":{"nodeId":"pending","port":"value"},"right":0}
+      },
+      "branch": {
+        "id": "branch",
+        "type": "branch",
+        "inputs": {"condition":{"nodeId":"hasPending","port":"value"}}
+      },
+      "blocked": {
+        "id": "blocked",
+        "type": "openWindow",
+        "inputs": {"windowId":"off-duty-blocked"}
+      },
       "open": {
         "id": "open",
         "type": "openWindow",
@@ -33,11 +53,32 @@
         "id": "edge-1",
         "fromNodeId": "start",
         "fromPort": "flowOut",
+        "toNodeId": "branch",
+        "toPort": "flowIn"
+        },
+        {
+        "id": "edge-2",
+        "fromNodeId": "branch",
+        "fromPort": "true",
+        "toNodeId": "blocked",
+        "toPort": "flowIn"
+        },
+        {
+        "id": "edge-3",
+        "fromNodeId": "branch",
+        "fromPort": "false",
         "toNodeId": "open",
         "toPort": "flowIn"
-      },
-      {
-        "id": "edge-2",
+        },
+        {
+        "id": "edge-4",
+        "fromNodeId": "blocked",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+        },
+        {
+        "id": "edge-5",
         "fromNodeId": "open",
         "fromPort": "flowOut",
         "toNodeId": "end",

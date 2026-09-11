@@ -2,8 +2,8 @@
 // -> answer entries) migrated via `ng/tools/migrate-legacy-chatgtp-qa.mjs`
 // into ng's generic database (structure `chatgtpQaEntry`, database
 // `chatgtpQaEntries`), stored in its own seed file
-// (`ng/data/seed-records-chatgtp.json`) merged at boot alongside the main
-// `seed-records.json` via `game-manifest.json`'s now-array-capable `seedRecords`
+// (`ng/data/databases/chatgtpQaEntries.json`) merged at boot alongside the
+// other per-database files via `game-manifest.json`'s `seedRecords`
 // key. This probe proves the migrated data loads/validates cleanly at full
 // scale, spot-checks a known legacy entry, and proves the multi-file
 // seedRecords merge itself (both files loading into the same DataStore
@@ -33,7 +33,7 @@ function makeStore() {
 // --- game-manifest.json's seedRecords is the array this migration relies on -
 assert.ok(Array.isArray(engineConfig.seedRecords), "game-manifest.json seedRecords must be an array to merge multiple seed files");
 const seedFiles = [...(engineConfig.seedRecords || []), ...(engineConfig.deferredSeedRecords || [])];
-assert.ok(seedFiles.includes("seed-records-chatgtp.json"));
+assert.ok(seedFiles.includes("databases/chatgtpQaEntries.json"));
 
 // --- every seed file merges into the same DataStore with no collisions ----
 {
@@ -60,7 +60,7 @@ assert.ok(seedFiles.includes("seed-records-chatgtp.json"));
   assert.deepEqual(entry.keywords, ["med_090"]);
 
   // combo lookup is order-independent (sorted key), matching legacy behaviour
-  const comboEntries = (JSON.parse(fs.readFileSync(path.join(__dirname, "../data/seed-records-chatgtp.json"), "utf8"))).chatgtpQaEntries;
+  const comboEntries = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/databases/chatgtpQaEntries.json"), "utf8")).chatgtpQaEntries;
   const twoKeywordSample = comboEntries.find((e) => e.keywords.length === 2);
   assert.ok(twoKeywordSample, "dataset must contain at least one 2-keyword combo entry");
   const forward = entryKey(twoKeywordSample.keywords);

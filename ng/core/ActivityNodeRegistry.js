@@ -33,6 +33,12 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("value"), valueIn("delta", "number")],
   },
+  appendToArrayVariable: {
+    label: "向数组变量追加",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("key", "string"), valueIn("value")],
+  },
   setLocalVariable: {
     label: "设置 Activity 本地变量",
     flowInputs: [flowIn()],
@@ -66,6 +72,12 @@ const definitions = {
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("windowId", "string"), valueIn("skip", "bool")],
+  },
+  closeWindow: {
+    label: "关闭窗口",
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("windowId", "string")],
   },
   addWindowComponent: {
     label: "新增窗口组件",
@@ -206,12 +218,22 @@ const definitions = {
     valueInputs: [valueIn("databaseId", "string"), valueIn("query")],
     valueOutputs: [valueOut("value", "array")],
   },
+  getRecordValue: {
+    label: "读取单条数据库记录",
+    valueInputs: [valueIn("databaseId", "string"), valueIn("key")],
+    valueOutputs: [valueOut("value", "object")],
+  },
   // Generic runtime collection gateway. Domain systems register collections
   // by stable id; the engine does not know achievement/HIS semantics.
   getRuntimeCollection: {
     label: "读取运行时集合",
     valueInputs: [valueIn("collectionId", "string")],
     valueOutputs: [valueOut("value", "array")],
+  },
+  getRuntimeRecord: {
+    label: "读取运行时集合记录",
+    valueInputs: [valueIn("collectionId", "string"), valueIn("recordId")],
+    valueOutputs: [valueOut("value", "object")],
   },
   // Generic join used to combine canonical records with runtime state by id.
   mergeRecords: {
@@ -303,6 +325,11 @@ const definitions = {
   getActivityInstanceCount: {
     label: "读取活动实例数量",
     valueInputs: [valueIn("activityId", "string")],
+    valueOutputs: [valueOut("value", "number")],
+  },
+  getQueueEntryCount: {
+    label: "读取队列未解决活动数量",
+    valueInputs: [valueIn("queueId", "string")],
     valueOutputs: [valueOut("value", "number")],
   },
   insertActivity: {

@@ -1,7 +1,7 @@
 [
   {
-    "iconId": "his",
-    "label": "上班",
+    "iconId": "his-custom",
+    "label": "HIS 医疗系统",
     "glyph": "🏥",
     "order": 0,
     "position": {
@@ -25,6 +25,21 @@
     "blueprintId": "desktop.open-window",
     "inputs": {
       "windowId": "chatgtp"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "social",
+    "label": "夜聊 Messenger",
+    "glyph": "💬",
+    "order": 1,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "dialogue"
     },
     "startMenu": true,
     "engineOwned": false

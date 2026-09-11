@@ -12,6 +12,7 @@
 
 import { resolvePropertyValue } from "./PropertyBinding.js";
 import { evaluateCondition } from "./ConditionEvaluator.js";
+import { resolveAssetPath } from "./AssetPath.js";
 
 const CONTAINER_FLOWS = new Set(["vertical", "horizontal", "grid", "stack"]);
 
@@ -26,7 +27,29 @@ function prop(node, key, ctx, fallback) {
   }, fallback);
 }
 
-/** Apply container layout (flow/gap/padding/align/justify/wrap/minSize/maxSize) as inline CSS. */
+function setHighlightedText(element, text, terms = []) {
+  const source = String(text ?? "");
+  const needles = [...new Set(terms.map((term) => String(term ?? "").trim()).filter(Boolean))];
+  if (!needles.length) {
+    element.textContent = source;
+    return;
+  }
+  const escaped = needles.map((term) => term.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&"));
+  const pattern = new RegExp(`(${escaped.join("|")})`, "gi");
+  const fragment = document.createDocumentFragment();
+  source.split(pattern).forEach((part) => {
+    if (needles.some((needle) => part.toLocaleLowerCase() === needle.toLocaleLowerCase())) {
+      const mark = document.createElement("mark");
+      mark.className = "ng-widget-highlight";
+      mark.textContent = part;
+      fragment.appendChild(mark);
+    } else {
+      fragment.appendChild(document.createTextNode(part));
+    }
+  });
+  element.appendChild(fragment);
+}
+
 function applyContainerStyle(el, node, ctx) {
   const flowValue = prop(node, "flow", ctx, "vertical");
   const flow = CONTAINER_FLOWS.has(flowValue) ? flowValue : "vertical";
@@ -110,16 +133,15 @@ function applyCommonAttrs(el, node, ctx) {
   else el.className = "ng-widget";
   el.classList.add(`ng-widget-${node.type}`);
   if (evaluateCondition(node.activeWhen, ctx.conditionContext || {})) el.classList.add("active");
-  const activityId = node.activityId || findRunActivityId(node.events);
   // An event blueprint may contain a bound activity id (for example HIS
-  // reads the selected patient's dialogueActivityId). It is not an activity
-  // definition id and must not be fed into the generic availability evaluator;
-  // doing so hides the button before the event can start the activity.
-  const implicitAvailability = typeof activityId === "string" && activityId
-    ? { activity: { id: activityId, available: true } }
-    : null;
-  const visible = prop(node, "visible", ctx, true) !== false
-    && evaluateCondition(node.visibleWhen || implicitAvailability, ctx.conditionContext || {});
+  // reads the selected patient's dialogueActivityId). That id is an action
+  // target, not an implicit visibility condition: the definition store may
+  // still be loading when the window renders. Visibility must be explicit in
+  // the layout contract, otherwise valid runActivity buttons disappear.
+  const emptyItems = node.emptyFor ? prop(node, "emptyFor", ctx, []) : null;
+  const visible = (emptyItems === null || (Array.isArray(emptyItems) && emptyItems.length === 0))
+    && prop(node, "visible", ctx, true) !== false
+    && evaluateCondition(node.visibleWhen, ctx.conditionContext || {});
   if (!visible) {
     el.hidden = true;
     // Container widgets set an inline display value (flex/grid) before this
@@ -232,7 +254,7 @@ function renderLeaf(node, ctx) {
     }
     case "image": {
       const img = document.createElement("img");
-      img.src = prop(node, "src", ctx, "") || "";
+      img.src = resolveAssetPath(prop(node, "src", ctx, "") || "");
       img.alt = prop(node, "alt", ctx, "") || "";
       el.appendChild(img);
       break;
@@ -244,6 +266,18 @@ function renderLeaf(node, ctx) {
       console.log("[NG dialogue] render dialogue widget", { widgetId: node.widgetId, displayTo, foundView: Boolean(view), connected: Boolean(view?.el?.isConnected) });
       /* DEV-TOOLS:END */
       if (view?.el) el.appendChild(view.el);
+      break;
+    }
+    case "embeddedWindow": {
+      const definition = ctx.windowDefinitionStore?.get?.(node.windowId);
+      if (definition?.root) {
+        const embeddedCtx = {
+          ...ctx,
+          valueGraph: definition.valueGraph,
+          onEvent: (child, eventName, value) => ctx.onEvent?.({ ...child, widgetId: `${node.widgetId}:${child.widgetId}` }, eventName, value),
+        };
+        el.appendChild(renderWindowRoot(definition.root, embeddedCtx).el);
+      }
       break;
     }
     case "saveLoad": {
@@ -259,9 +293,16 @@ function renderLeaf(node, ctx) {
           const link = document.createElement("a");
           link.href = url;
           link.download = `cultists-ng-save-day${envelope.state.gameClock.day}.json`;
+          link.hidden = true;
+          document.body.appendChild(link);
           link.click();
-          URL.revokeObjectURL(url);
-          status.textContent = "已保存到文件";
+          status.textContent = "下载已触发，请确认文件已落盘";
+          // Keep the anchor and Blob alive through the browser's download
+          // dispatch. Immediate revocation can drop the download silently.
+          window.setTimeout(() => {
+            link.remove();
+            URL.revokeObjectURL(url);
+          }, 1000);
         } catch (error) { status.textContent = `保存失败：${error.message}`; }
       });
       const load = document.createElement("input");
@@ -281,6 +322,47 @@ function renderLeaf(node, ctx) {
       el.append(save, load, status);
       break;
     }
+    case "clueWall": {
+      const items = prop(node, "items", ctx, []) || [];
+      const board = document.createElement("div");
+      board.className = node.className || "ng-clue-wall";
+      const width = Number(node.width || 620);
+      const columns = Number(node.columns || 3);
+      const cellWidth = Number(node.cellWidth || 180);
+      const cellHeight = Number(node.cellHeight || 72);
+      const height = Math.max(cellHeight, Math.ceil(items.length / columns) * cellHeight);
+      board.style.setProperty("--clue-wall-width", `${width}px`);
+      board.style.setProperty("--clue-wall-height", `${height}px`);
+      const positions = new Map(items.map((item, index) => [String(item.id), { x: 12 + (index % columns) * cellWidth, y: 8 + Math.floor(index / columns) * cellHeight }]));
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.classList.add("ng-clue-wall-lines");
+      for (const item of items) {
+        for (const relatedId of item?.relatedIds || []) {
+          const from = positions.get(String(item.id));
+          const to = positions.get(String(relatedId));
+          if (!from || !to) continue;
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", String(from.x + 70));
+          line.setAttribute("y1", String(from.y + 18));
+          line.setAttribute("x2", String(to.x + 70));
+          line.setAttribute("y2", String(to.y + 18));
+          svg.appendChild(line);
+        }
+      }
+      board.appendChild(svg);
+      for (const item of items) {
+        const nodeEl = document.createElement("div");
+        const pos = positions.get(String(item.id));
+        nodeEl.className = node.itemClassName || "ng-clue-wall-node";
+        nodeEl.style.left = `${pos.x}px`;
+        nodeEl.style.top = `${pos.y}px`;
+        nodeEl.textContent = item[node.itemLabelField || "content"] || item.label || item.id || "";
+        board.appendChild(nodeEl);
+      }
+      el.appendChild(board);
+      break;
+    }
     case "list": {
       // `items` may likewise be a bound array of raw database records
       // (e.g. a `findRecords` result written to variableStore by the
@@ -294,18 +376,56 @@ function renderLeaf(node, ctx) {
       // new node type.
       const itemLabelField = node.itemLabelField || "name";
       const itemLabelTemplate = node.itemLabelTemplate || null;
+      const itemMetaTemplate = node.itemMetaTemplate || null;
+      const itemProgressField = node.itemProgressField || null;
       const itemClassField = node.itemClassField || null;
       const itemDisabledField = node.itemDisabledField || null;
+      const itemSecretField = node.itemSecretField || null;
+      const itemSecretUnlockedField = node.itemSecretUnlockedField || "unlocked";
+      const itemIconField = node.itemIconField || null;
+      const itemGroupField = node.itemGroupField || null;
+      const itemProgressOnlyForTriggered = Boolean(node.itemProgressOnlyForTriggered);
+      const highlightBindings = [node.itemHighlightVariable, node.itemHighlightVariable2].filter(Boolean);
+      let previousGroup;
       for (const item of prop(node, "items", ctx, []) || []) {
+        if (itemGroupField && item && typeof item === "object" && item[itemGroupField] !== previousGroup) {
+          const group = document.createElement("div");
+          group.className = node.itemGroupClassName || "ng-widget-list-group";
+          group.textContent = item[itemGroupField];
+          el.appendChild(group);
+          previousGroup = item[itemGroupField];
+        }
         const li = document.createElement(node.itemType === "button" ? "button" : "div");
         if (li.tagName === "BUTTON") li.type = "button";
         const itemClass = item && typeof item === "object" && item.className ? ` ${item.className}` : "";
         const dataClass = itemClassField && item && typeof item === "object" && item[itemClassField] ? ` ${item[itemClassField]}` : "";
         li.className = node.itemClassName ? `ng-widget-list-item ${node.itemClassName}${dataClass}${itemClass}` : `ng-widget-list-item${dataClass}${itemClass}`;
         if (itemDisabledField && item && typeof item === "object") li.disabled = Boolean(item[itemDisabledField]);
-        li.textContent = typeof item === "string" ? item : itemLabelTemplate
+        const secret = item && typeof item === "object" && itemSecretField
+          && Boolean(item[itemSecretField]) && !Boolean(item[itemSecretUnlockedField]);
+        const label = secret ? (node.itemSecretLabel || "？？？？") : typeof item === "string" ? item : itemLabelTemplate
           ? itemLabelTemplate.replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (_, key) => item?.[key] ?? "")
           : item.label ?? item[itemLabelField] ?? "";
+        const displayLabel = itemIconField && item && typeof item === "object" && item[itemIconField]
+          ? `${item[itemIconField]} ${label}`
+          : label;
+        const highlightTerms = highlightBindings.map((binding) => prop({ text: binding }, "text", ctx, ""));
+        setHighlightedText(li, displayLabel, highlightTerms);
+        if (item && typeof item === "object" && itemMetaTemplate) {
+          const meta = document.createElement("span");
+          meta.className = "ng-widget-list-item-meta";
+          meta.textContent = secret ? (node.itemSecretMeta || "探索更多内容以解锁此隐藏成就。") : itemMetaTemplate.replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (_, key) => item?.[key] ?? "");
+          li.appendChild(meta);
+        }
+        if (item && typeof item === "object" && itemProgressField && (!itemProgressOnlyForTriggered || item.trigger?.progress)) {
+          const progress = document.createElement("span");
+          progress.className = "ng-widget-list-item-progress";
+          const fill = document.createElement("span");
+          fill.className = "ng-widget-list-item-progress-fill";
+          fill.style.width = `${Math.max(0, Math.min(100, Number(item[itemProgressField]) || 0))}%`;
+          progress.appendChild(fill);
+          li.appendChild(progress);
+        }
         if (item && typeof item === "object" && item.id !== undefined) {
           li.dataset.itemId = item.id;
           if (ctx.onEvent) li.addEventListener("click", () => ctx.onEvent(node, "onItemClick", item.id));
@@ -364,9 +484,19 @@ export function renderWidgetNode(node, ctx = {}) {
   ctx.widgetEls = ctx.widgetEls || new Map();
   ctx.controlEls = ctx.controlEls || new Map();
   let el;
-  if (node.type === "container" || node.type === "tabs") {
-    el = document.createElement("div");
+  if (node.type === "container" || node.type === "tabs" || node.type === "fieldset" || node.type === "details") {
+    el = document.createElement(node.type === "fieldset" ? "fieldset" : node.type === "details" ? "details" : "div");
     applyContainerStyle(el, node, ctx);
+    if (node.type === "fieldset" && node.legend) {
+      const legend = document.createElement("legend");
+      legend.textContent = prop(node, "legend", ctx, "");
+      el.appendChild(legend);
+    }
+    if (node.type === "details" && node.summary) {
+      const summary = document.createElement("summary");
+      summary.textContent = prop(node, "summary", ctx, "");
+      el.appendChild(summary);
+    }
     for (const child of node.children || []) {
       const childEl = renderWidgetNode(child, ctx);
       applyStackPosition(childEl, child, node, ctx);

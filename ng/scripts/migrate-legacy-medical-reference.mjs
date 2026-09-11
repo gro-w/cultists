@@ -21,7 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const LEGACY_DIR = path.resolve(__dirname, "../../data/zh-hans");
+const LEGACY_DIR = path.resolve(__dirname, "../../legacy/data/zh-hans");
 
 export function convertDiagnoses(legacyDiagnosesJson) {
   const categories = legacyDiagnosesJson.categories || [];

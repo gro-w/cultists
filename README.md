@@ -20,10 +20,10 @@
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-开发运行（推荐编辑数据时使用）：
+开发运行旧版引擎（仅用于兼容性对照）：
 
 ```bash
-node dev-server.js
+node legacy/dev-server.js
 ```
 
 打开：
@@ -47,14 +47,13 @@ http://127.0.0.1:8000/?dev
 ## 项目结构
 
 ```text
-index.html                 入口、桌面、宿舍、主菜单和结局界面
-css/                       Win95、应用、模式和开发工具样式
-js/main.js                 组成根、应用注册和启动流程
-js/core/                   状态、时间、数据、事件、存档和内容系统
-js/apps/                   HIS、Social、ChatGTP、Notebook 等应用
-js/desktop/                桌面、任务栏、宿舍、菜单、结局和开发工具
-data/zh-hans/              当前语言的全部游戏数据
-dev-server.js              本地静态 + JSON REST + SSE 开发服务器
+index.html                 融合引擎入口
+ng/                        融合引擎运行时、NGL 和唯一 NG 数据入口
+legacy/                    旧版引擎、旧版样式、旧版数据和兼容性探针
+legacy/js/                 旧版状态、应用、桌面和开发工具
+legacy/css/                旧版 Win95 与应用样式
+legacy/data/zh-hans/       尚未迁移的旧版语言数据
+legacy/dev-server.js       旧版本地静态 + JSON REST + SSE 开发服务器
 publish.js                 移除开发工具区块的玩家版发布脚本
 docs/                      架构、数据 schema 和协作指南
 ```

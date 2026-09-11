@@ -10,7 +10,8 @@
     "nodes": {
       "records": {"id":"records","type":"findRecordsValue","inputs":{"databaseId":"achievements","query":{}}},
       "states": {"id":"states","type":"getRuntimeCollection","inputs":{"collectionId":"achievementStates"}},
-      "items": {"id":"items","type":"mergeRecords","inputs":{"left":{"nodeId":"records","port":"value"},"right":{"nodeId":"states","port":"value"},"keyField":"id"}}
+      "categories": {"id":"categories","type":"getRuntimeCollection","inputs":{"collectionId":"achievementCategories"}},
+      "items": {"id":"items","type":"getRuntimeCollection","inputs":{"collectionId":"achievementItems"}}
     }
   },
   "root": {
@@ -21,9 +22,20 @@
     "gap": 8,
     "padding": 10,
     "children": [
-      {"widgetId":"achievements-title","type":"label","className":"achievements-title","text":"成就记录"},
-      {"widgetId":"achievements-list","type":"list","className":"ach-list panel-inset","items":{"nodeId":"items","port":"value"},"itemLabelTemplate":"{{statusMark}} {{title}}：{{description}}","itemClassField":"statusClass","itemClassName":"ach-card"},
+      {"widgetId":"achievements-toolbar","type":"container","className":"ach-toolbar","flow":"vertical","gap":4,"children":[
+        {"widgetId":"achievements-tabs","type":"container","className":"ach-tabs","flow":"horizontal","gap":0,"children":[
+          {"widgetId":"achievements-tab-all","type":"button","className":"win95-btn bevel-out ach-tab active","text":"全部","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"achievement:filter","value":"all"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+          {"widgetId":"achievements-tab-unlocked","type":"button","className":"win95-btn bevel-out ach-tab","text":"已解锁","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"achievement:filter","value":true},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+          {"widgetId":"achievements-tab-locked","type":"button","className":"win95-btn bevel-out ach-tab","text":"未解锁","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"achievement:filter","value":false},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
+        ]},
+        {"widgetId":"achievements-category","type":"select","className":"win95-input ach-category-select","options":{"nodeId":"categories","port":"value"},"optionValueField":"id","optionLabelField":"label","placeholder":"所有分类","events":{"onChange":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"achievement:category","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
+      ]},
+      {"widgetId":"achievements-summary","type":"label","className":"ach-summary panel-inset","text":"成就进度"},
+      {"widgetId":"achievements-list","type":"list","className":"ach-list panel-inset","items":{"nodeId":"items","port":"value"},"itemLabelTemplate":"{{statusMark}} {{title}}：{{description}}","itemMetaTemplate":"{{unlockDate}}","itemSecretField":"hidden","itemSecretUnlockedField":"unlocked","itemSecretLabel":"？？？？","itemSecretMeta":"探索更多内容以解锁此隐藏成就。","itemIconField":"icon","itemProgressField":"progressPercent","itemProgressOnlyForTriggered":true,"itemClassField":"statusClass","itemClassName":"ach-card"},
       {"widgetId":"achievements-note","type":"label","className":"status-note","text":"未解锁的成就会在达成条件后记录"}
     ]
+  },
+  "events": {
+    "onCreate": {"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"filter","port":"flowIn"}}},"filter":{"id":"filter","type":"setVariable","inputs":{"key":"achievement:filter","value":"all"},"next":{"flowOut":{"nodeId":"category","port":"flowIn"}}},"category":{"id":"category","type":"setVariable","inputs":{"key":"achievement:category","value":""},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}
   }
 }

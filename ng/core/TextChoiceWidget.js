@@ -1,4 +1,5 @@
 import { DisplayReceiverRegistry } from "./DisplayReceiverRegistry.js";
+import { resolveAssetPath } from "./AssetPath.js";
 
 /**
  * Generic text/choice display widget. It knows only the opaque display
@@ -108,11 +109,12 @@ export class TextChoiceWidget {
   }
 
   _onMedia(payload = {}) {
+    this.el.classList.add("has-media");
     this.el.querySelector(".ng-dialogue-media")?.remove();
     const media = document.createElement(payload.imageData ? "img" : "div");
     media.className = "ng-dialogue-media";
     if (payload.imageData) {
-      media.src = payload.imageData;
+      media.src = resolveAssetPath(payload.imageData);
       media.alt = payload.cgId || payload.imageId || payload.mediaKind || "media";
     } else {
       media.textContent = `媒体：${payload.cgId || payload.imageId || ""}`;
@@ -122,6 +124,7 @@ export class TextChoiceWidget {
 
   _onMediaEnd() {
     this.el.querySelector(".ng-dialogue-media")?.remove();
+    this.el.classList.remove("has-media");
   }
 
   _onComplete(payload = {}) {

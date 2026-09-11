@@ -15,14 +15,20 @@
   "windowManifest": [
     "example.json",
     "off-duty.json",
+    "off-duty-blocked.json",
     "his.json",
+    "item-inspection.json",
+    "clue-wall.json",
     "chatgtp.json",
+    "social-media.json",
     "status.json",
     "achievements.json",
     "calendar.json",
     "locations.json",
+    "location-scene.json",
     "notebook.json",
-    "dialogue.json"
+    "dialogue.json",
+    "turtle-soup.json"
   ],
   "desktopIcons": "desktop-icons.json",
   "blueprintNodes": "blueprint-nodes.framework.json",
@@ -69,12 +75,32 @@
   "databases": "databases.framework.json",
   "publicVariables": "public-variables.framework.json",
   "seedRecords": [
-    "seed-records.json",
-    "seed-records-items.json"
+    "databases/inventoryItems.json",
+    "social-apps.json",
+    "databases/patients.json",
+    "databases/symptoms.json",
+    "databases/diagnoses.json",
+    "databases/diagnosisCategories.json",
+    "databases/medicines.json",
+    "databases/medicineCategories.json",
+    "databases/chatgtpQaEntries.json",
+    "databases/chatgtpDailyMessages.json",
+    "databases/treatments.json",
+    "databases/medicalCases.json",
+    "databases/patientDialogueContexts.json",
+    "databases/medicalAppointments.json",
+    "databases/npcs.json",
+    "databases/skills.json",
+    "databases/keywords.json",
+    "databases/locations.json",
+    "databases/achievements.json",
+    "databases/achievementCategories.json",
+    "databases/chatgtpSettings.json",
+    "databases/endings.json",
+    "databases/specialEvents.json",
+    "databases/turtleSoupPuzzles.json"
   ],
-  "deferredSeedRecords": [
-    "seed-records-chatgtp.json"
-  ],
+  "deferredSeedRecords": [],
   "initialState": {
     "day": 1,
     "clockMinutes": 480,
@@ -85,6 +111,11 @@
     "mental": 100,
     "physical": 100,
     "satiety": 100
+  },
+  "initialVariables": {
+    "turtleSoup:puzzleId": "binbin_turtle_01",
+    "turtleSoup:questionCount": 0,
+    "turtleSoup:message": ""
   },
   "stateBoundary": {
     "rules": {
@@ -115,108 +146,839 @@
   },
   "eventRoutes": [
     {
+      "event": "location:requested",
+      "actions": [
+        {"type":"variable.set","key":"gameState:location","value":{"path":"locationId"}},
+        {"type":"stateBoundary.requestLocation","value":{"path":"locationId"}},
+        {"type":"window.open","windowId":"location-scene"}
+      ]
+    },
+    {
+      "event":"item:inspect",
+      "actions":[{"type":"variable.set","key":"item:activeId","value":{"path":"itemId"}}]
+    },
+    {
+      "event": "turtleSoup:question",
+      "actions": [
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:message",
+          "value": {
+            "path": "questionText"
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "turtle-soup-question",
+            "puzzleId": {
+              "path": "puzzleId"
+            },
+            "questionId": {
+              "path": "questionId"
+            },
+            "questionText": {
+              "path": "questionText"
+            },
+            "answer": {
+              "path": "answer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "event": "turtleSoup:guess-fail",
+      "actions": [
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:message",
+          "value": {
+            "path": "message"
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "turtle-soup-guess-fail",
+            "guess": {
+              "path": "guess"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "event": "gameClock:dayChanged",
+      "actions": [
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:questionCount",
+          "value": 0
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q1",
+          "value": null
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q2",
+          "value": null
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q3",
+          "value": null
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q4",
+          "value": null
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q5",
+          "value": null
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "turtle-soup-day-reset",
+            "day": {
+              "path": "day"
+            }
+          }
+        }
+      ]
+    },
+    {
       "event": "achievement:manager-ready",
-      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"manager-ready","manager":"achievement"}}]
+      "actions": [
+        {
+          "type": "collection.set",
+          "collectionId": "managerStates",
+          "recordId": "achievement",
+          "value": {
+            "manager": "achievement",
+            "status": "ready",
+            "lastRun": "manager-ready"
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "manager-ready",
+            "manager": "achievement"
+          }
+        }
+      ]
     },
     {
       "event": "inventory:manager-ready",
-      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"manager-ready","manager":"inventory"}}]
+      "actions": [
+        {
+          "type": "collection.set",
+          "collectionId": "managerStates",
+          "recordId": "inventory",
+          "value": {
+            "manager": "inventory",
+            "status": "ready",
+            "lastRun": "manager-ready"
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "manager-ready",
+            "manager": "inventory"
+          }
+        }
+      ]
     },
     {
       "event": "keyword:manager-ready",
-      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"manager-ready","manager":"keyword"}}]
+      "actions": [
+        {
+          "type": "collection.set",
+          "collectionId": "managerStates",
+          "recordId": "keyword",
+          "value": {
+            "manager": "keyword",
+            "status": "ready",
+            "lastRun": "manager-ready"
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "manager-ready",
+            "manager": "keyword"
+          }
+        }
+      ]
     },
     {
       "event": "achievement:display",
       "actions": [
-        {"type":"collection.set","collectionId":"achievementStates","recordId":{"path":"achievementId"},"value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked"}},
-        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"achievement","id":{"path":"achievementId"}}}
+        {
+          "type": "collection.set",
+          "collectionId": "achievementStates",
+          "recordId": {
+            "path": "achievementId"
+          },
+          "value": {
+            "unlocked": true,
+            "statusMark": "✅",
+            "statusClass": "unlocked",
+            "unlockDate": {
+              "variable": "gameState:day"
+            }
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "achievement",
+            "id": {
+              "path": "achievementId"
+            }
+          }
+        }
       ]
+    },
+    {
+      "event": "game:study",
+      "actions": [
+        {
+          "type": "collection.incrementField",
+          "collectionId": "achievementStates",
+          "recordId": "study_king",
+          "field": "progress",
+          "value": 1,
+          "unlockAt": 3,
+          "unlockValue": {"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}
+        }
+      ]
+    },
+    {
+      "event": "game:tabletop_session",
+      "actions": [
+        {
+          "type": "collection.incrementField",
+          "collectionId": "achievementStates",
+          "recordId": "tabletop_veteran",
+          "field": "progress",
+          "value": 1,
+          "unlockAt": 3,
+          "unlockValue": {"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}
+        }
+      ]
+    },
+    {
+      "event": "favorability:changed",
+      "condition": {"path":"delta","op":"gt","value":0},
+      "actions": [{"type":"collection.incrementField","collectionId":"achievementStates","recordId":"fav_cumulative_up","field":"progress","value":{"path":"delta"},"unlockAt":50,"unlockValue":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "favorability:changed",
+      "condition": {"path":"delta","op":"lt","value":0},
+      "actions": [{"type":"collection.incrementField","collectionId":"achievementStates","recordId":"fav_cumulative_down","field":"progress","value":{"path":"delta"},"absolute":true,"unlockAt":30,"unlockValue":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:skill_check",
+      "condition": {"path":"outcome","in":["success","criticalSuccess"]},
+      "actions": [{"type":"collection.incrementField","collectionId":"achievementStates","recordId":"skillcheck_cumulative_success","field":"progress","value":1,"unlockAt":5,"unlockValue":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:study",
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"study_first","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:study_night",
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"study_believer","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:tabletop_session",
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"tabletop_first","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:tabletop_skipped",
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"tabletop_skip","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:skill_check",
+      "condition": {"path":"outcome","in":["success","criticalSuccess"]},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"skillcheck_first_success","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:skill_check",
+      "condition": {"path":"outcome","in":["failure","criticalFailure"]},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"skillcheck_first_failure","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:exam_result",
+      "condition": {"path":"score","op":"gte","value":60},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"exam_pass","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "favorability:changed",
+      "condition": {"value":{"gte":100}},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"fav_maxed","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "favorability:changed",
+      "condition": {"value":{"eq":0}},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"fav_zeroed","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "favorability:changed",
+      "condition": {"allAbove":75},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"fav_three_high","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "favorability:changed",
+      "condition": {"allHadPositive":true},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"fav_all_positive","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "ending__triggered",
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"ending_any","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "developer:force_end_work",
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"force_end_work","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:sanity_changed",
+      "condition": {"delta":{"lte":-10}},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"san_fast_drop","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "daynight:changed",
+      "condition": {"day":{"gte":5},"sanity":{"gte":80}},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"san_steady","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:sanity_changed",
+      "condition": {"hadLow":true,"value":{"gte":60}},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"san_recovery","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "gamestate:changed",
+      "condition": {"sanity":{"eq":0}},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"san_zero","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
+      "event": "game:text_read",
+      "condition": {"allRead":true},
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"all_texts_read","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
     },
     {
       "event": "content:inventoryOperation",
       "actions": [
-        {"type":"collection.operation","collectionId":"inventoryItems","recordId":{"path":"itemId"},"operation":"delta","minimum":0,"value":{"path":"count"}},
-        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"inventory","itemId":{"path":"itemId"},"count":{"path":"count"}}}
+        {
+          "type": "collection.operation",
+          "collectionId": "inventoryItems",
+          "recordId": {
+            "path": "itemId"
+          },
+          "operation": "delta",
+          "minimum": 0,
+          "value": {
+            "path": "count"
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "inventory",
+            "itemId": {
+              "path": "itemId"
+            },
+            "count": {
+              "path": "count"
+            }
+          }
+        }
       ]
     },
     {
       "event": "item:used",
       "actions": [
-        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"item-used","payload":{"path":""}}}
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "item-used",
+            "payload": {
+              "path": ""
+            }
+          }
+        }
       ]
     },
     {
       "event": "content:showCg",
       "actions": [
-        {"type":"collection.set","collectionId":"mediaState","recordId":"active","value":{"mode":"cg","cgId":{"path":"cgId"}}},
-        {"type":"display.dispatch","target":"ending-screen","displayType":"media","value":{"mediaKind":"cg","cgId":{"path":"cgId"},"imageData":{"resource":"media","id":{"path":"cgId"},"field":"imageData"}}}
+        {
+          "type": "collection.set",
+          "collectionId": "mediaState",
+          "recordId": "active",
+          "value": {
+            "mode": "cg",
+            "cgId": {
+              "path": "cgId"
+            }
+          }
+        },
+        {
+          "type": "display.dispatch",
+          "target": "ending-screen",
+          "displayType": "media",
+          "value": {
+            "mediaKind": "cg",
+            "cgId": {
+              "path": "cgId"
+            },
+            "imageData": {
+              "resource": "media",
+              "id": {
+                "path": "cgId"
+              },
+              "field": "imageData"
+            }
+          }
+        }
       ]
     },
     {
       "event": "content:endCg",
       "actions": [
-        {"type":"collection.set","collectionId":"mediaState","recordId":"active","value":null},
-        {"type":"display.dispatch","target":"ending-screen","displayType":"media-end","value":{}}
+        {
+          "type": "collection.set",
+          "collectionId": "mediaState",
+          "recordId": "active",
+          "value": null
+        },
+        {
+          "type": "display.dispatch",
+          "target": "ending-screen",
+          "displayType": "media-end",
+          "value": {}
+        }
       ]
     },
     {
       "event": "content:spellLearned",
       "actions": [
-        {"type":"collection.set","collectionId":"spellState","recordId":{"path":"spellId"},"value":{"learned":true,"spellId":{"path":"spellId"}}},
-        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"spell-learned","spellId":{"path":"spellId"}}}
+        {
+          "type": "collection.set",
+          "collectionId": "spellState",
+          "recordId": {
+            "path": "spellId"
+          },
+          "value": {
+            "learned": true,
+            "spellId": {
+              "path": "spellId"
+            }
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "spell-learned",
+            "spellId": {
+              "path": "spellId"
+            }
+          }
+        }
       ]
     },
     {
       "event": "content:spellCast",
       "actions": [
-        {"type":"collection.set","collectionId":"spellState","recordId":"last","value":{"operation":"cast","spellId":{"path":"spellId"},"eventId":{"path":"eventId"},"choiceId":{"path":"choiceId"}}},
-        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"spell-cast","spellId":{"path":"spellId"},"eventId":{"path":"eventId"}}}
+        {
+          "type": "collection.set",
+          "collectionId": "spellState",
+          "recordId": "last",
+          "value": {
+            "operation": "cast",
+            "spellId": {
+              "path": "spellId"
+            },
+            "eventId": {
+              "path": "eventId"
+            },
+            "choiceId": {
+              "path": "choiceId"
+            }
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "spell-cast",
+            "spellId": {
+              "path": "spellId"
+            },
+            "eventId": {
+              "path": "eventId"
+            }
+          }
+        }
       ]
     },
     {
       "event": "content:spellEffect",
       "actions": [
-        {"type":"collection.set","collectionId":"spellState","recordId":"last","value":{"operation":"effect","spellId":{"path":"spellId"},"eventId":{"path":"eventId"},"choiceId":{"path":"choiceId"}}},
-        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"spell-effect","spellId":{"path":"spellId"},"eventId":{"path":"eventId"}}}
+        {
+          "type": "collection.set",
+          "collectionId": "spellState",
+          "recordId": "last",
+          "value": {
+            "operation": "effect",
+            "spellId": {
+              "path": "spellId"
+            },
+            "eventId": {
+              "path": "eventId"
+            },
+            "choiceId": {
+              "path": "choiceId"
+            }
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "spell-effect",
+            "spellId": {
+              "path": "spellId"
+            },
+            "eventId": {
+              "path": "eventId"
+            }
+          }
+        }
       ]
     },
     {
       "event": "content:showImage",
       "actions": [
-        {"type":"collection.set","collectionId":"mediaState","recordId":"active","value":{"mode":"image","image":{"path":"image"},"displayTo":{"path":"displayTo"}}},
-        {"type":"display.dispatch","target":{"path":"displayTo"},"displayType":"media","value":{"mediaKind":"image","image":{"path":"image"}}}
+        {
+          "type": "collection.set",
+          "collectionId": "mediaState",
+          "recordId": "active",
+          "value": {
+            "mode": "image",
+            "image": {
+              "path": "image"
+            },
+            "displayTo": {
+              "path": "displayTo"
+            }
+          }
+        },
+        {
+          "type": "display.dispatch",
+          "target": {
+            "path": "displayTo"
+          },
+          "displayType": "media",
+          "value": {
+            "mediaKind": "image",
+            "image": {
+              "path": "image"
+            }
+          }
+        }
       ]
     },
     {
       "event": "activity:ending",
       "actions": [
-        {"type":"variable.set","key":"gameState:endingId","value":{"path":"endingId"}},
-        {"type":"collection.set","collectionId":"mediaState","recordId":"ending","value":{"endingId":{"path":"endingId"},"displayTo":{"path":"displayTo"}}},
-        {"type":"display.dispatch","target":{"path":"displayTo"},"displayType":"ending","value":{"endingId":{"path":"endingId"}}}
+        {
+          "type": "variable.set",
+          "key": "gameState:endingId",
+          "value": {
+            "path": "endingId"
+          }
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "mediaState",
+          "recordId": "ending",
+          "value": {
+            "endingId": {
+              "path": "endingId"
+            },
+            "displayTo": {
+              "path": "displayTo"
+            }
+          }
+        },
+        {
+          "type": "display.dispatch",
+          "target": {
+            "path": "displayTo"
+          },
+          "displayType": "ending",
+          "value": {
+            "endingId": {
+              "path": "endingId"
+            }
+          }
+        }
       ]
     },
     {
       "event": "content:hisSelectPatient",
-      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-select-patient","payload":{"path":""}}}]
+      "actions": [
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "his-select-patient",
+            "payload": {
+              "path": ""
+            }
+          }
+        }
+      ]
     },
     {
       "event": "content:hisRenderDiagnosis",
-      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-render-diagnosis","payload":{"path":""}}}]
+      "actions": [
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "his-render-diagnosis",
+            "payload": {
+              "path": ""
+            }
+          }
+        }
+      ]
     },
     {
       "event": "content:hisRenderPrescription",
-      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-render-prescription","payload":{"path":""}}}]
+      "actions": [
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "his-render-prescription",
+            "payload": {
+              "path": ""
+            }
+          }
+        }
+      ]
     },
     {
       "event": "content:hisRefresh",
-      "actions": [{"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-refresh","query":{"path":"query"}}}]
+      "actions": [
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "his-refresh",
+            "query": {
+              "path": "query"
+            }
+          }
+        }
+      ]
     },
     {
       "event": "content:hisSubmit",
       "actions": [
-        {"type":"collection.set","collectionId":"medicalState","recordId":"lastSubmission","value":{"submitted":true,"patientId":{"path":"patientId"},"case":{"path":"case"},"resultMessage":{"path":"resultMessage"}}},
-        {"type":"collection.append","collectionId":"eventHistory","value":{"kind":"his-submit","patientId":{"path":"patientId"},"caseId":{"path":"case.id"},"correct":{"path":"case.correct"},"bonus":{"path":"case.bonus"},"commission":{"path":"case.commission"}}}
+        {
+          "type": "collection.set",
+          "collectionId": "medicalState",
+          "recordId": "lastSubmission",
+          "value": {
+            "submitted": true,
+            "patientId": {
+              "path": "patientId"
+            },
+            "case": {
+              "path": "case"
+            },
+            "resultMessage": {
+              "path": "resultMessage"
+            }
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "his-submit",
+            "patientId": {
+              "path": "patientId"
+            },
+            "caseId": {
+              "path": "case.id"
+            },
+            "correct": {
+              "path": "case.correct"
+            },
+            "bonus": {
+              "path": "case.bonus"
+            },
+            "commission": {
+              "path": "case.commission"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "event": "turtleSoup:day-finished",
+      "actions": [
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:message",
+          "value": "今天先到这里，明天继续。"
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "turtle-soup-day-finished",
+            "puzzleId": {
+              "path": "puzzleId"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "event": "turtleSoup:guess-fail",
+      "actions": [
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:message",
+          "value": "彬彬摇了摇头：还差一点。"
+        },
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:progress",
+          "value": "猜谜失败：可以继续提问。"
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": "guess",
+          "value": {
+            "puzzleId": {
+              "path": "puzzleId"
+            },
+            "correct": false,
+            "message": "彬彬摇了摇头：还差一点。"
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "turtle-soup-guess",
+            "puzzleId": {
+              "path": "puzzleId"
+            },
+            "correct": false
+          }
+        }
+      ]
+    },
+    {
+      "event": "turtleSoup:question",
+      "actions": [
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:message",
+          "value": {
+            "path": "answer"
+          }
+        },
+        {
+          "type": "variable.set",
+          "key": "turtleSoup:progress",
+          "value": {
+            "path": "questionId"
+          }
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": "active",
+          "value": {
+            "puzzleId": {
+              "path": "puzzleId"
+            },
+            "lastQuestionId": {
+              "path": "questionId"
+            },
+            "lastQuestionText": {
+              "path": "questionText"
+            },
+            "lastAnswer": {
+              "path": "answer"
+            }
+          }
+        },
+        {
+          "type": "collection.set",
+          "collectionId": "turtleSoupState",
+          "recordId": {
+            "path": "questionId"
+          },
+          "value": {
+            "asked": true,
+            "answer": {
+              "path": "answer"
+            },
+            "questionText": {
+              "path": "questionText"
+            }
+          }
+        },
+        {
+          "type": "collection.append",
+          "collectionId": "eventHistory",
+          "value": {
+            "kind": "turtle-soup-question",
+            "puzzleId": {
+              "path": "puzzleId"
+            },
+            "questionId": {
+              "path": "questionId"
+            },
+            "answer": {
+              "path": "answer"
+            }
+          }
+        }
       ]
     }
   ]

@@ -1,0 +1,113 @@
+{
+  "endings": [
+    {
+      "id": "组一辈子少年乐队！",
+      "title": "组一辈子少年乐队！",
+      "displayName": "好结局（阿伟线）：组一辈子少年乐队！",
+      "icon": "🎸",
+      "text": "你和阿伟组了一辈子少年乐队。",
+      "priority": 100,
+      "activityId": "ending__组一辈子少年乐队！"
+    },
+    {
+      "id": "游戏王の福利",
+      "title": "游戏王の福利",
+      "displayName": "好结局（阿杰线）：游戏王の福利",
+      "text": "你和阿杰一起拍摄了女装福利视频。",
+      "activityId": "ending__游戏王の福利"
+    },
+    {
+      "id": "pl现实魅惑大成功",
+      "title": "pl现实魅惑大成功",
+      "displayName": "好结局（彬彬线）：pl现实魅惑大成功",
+      "text": "你接受了彬彬的情谊，加入了永生者的行列。",
+      "blueprintActivityId": "彬彬献祭事件",
+      "activityId": "ending__pl现实魅惑大成功"
+    },
+    {
+      "id": "摇滚不死",
+      "title": "摇滚不死",
+      "displayName": "坏结局（阿伟线）：摇滚不死",
+      "text": "你没能逃离阿伟的摇滚与献祭。",
+      "activityId": "ending__摇滚不死"
+    },
+    {
+      "id": "混沌一瞥",
+      "title": "无尽玩笑",
+      "displayName": "坏结局（阿杰线）：无尽玩笑",
+      "text": "你看见了阿杰的真实面目。",
+      "activityId": "ending__混沌一瞥"
+    },
+    {
+      "id": "牺牲之血",
+      "title": "面对未知的命运",
+      "displayName": "坏结局（彬彬线）：面对未知的命运",
+      "text": "你拒绝成为怪物，独自面对未知的命运。",
+      "blueprintActivityId": "彬彬献祭事件",
+      "activityId": "ending__牺牲之血"
+    },
+    {
+      "id": "正常结局",
+      "title": "正常结局",
+      "displayName": "正常结局：接受注定的终局",
+      "text": "你接受了死亡的终局，放下了徒劳的逃亡。",
+      "activityId": "ending__正常结局"
+    },
+    {
+      "id": "异常结局",
+      "title": "异常结局",
+      "displayName": "异常结局：被未知的力量吞没",
+      "text": "你试图用禁忌的力量逃离追逐，却被疯狂与海流一同吞没。",
+      "activityId": "ending__异常结局"
+    },
+    {
+      "id": "药物过量",
+      "title": "药物过量",
+      "displayName": "药物过量",
+      "text": "药物过量",
+      "activityId": "ending__药物过量"
+    },
+    {
+      "id": "蹈海",
+      "title": "蹈海",
+      "displayName": "坏结局：蹈海",
+      "text": "你接受了鱼群与海洋的终局。",
+      "activityId": "ending__蹈海"
+    },
+    {
+      "id": "万物终亡",
+      "title": "万物终亡",
+      "displayName": "万物终亡",
+      "text": "万物终亡",
+      "activityId": "ending__万物终亡"
+    },
+    {
+      "id": "现实=现实",
+      "title": "现实=现实",
+      "displayName": "真结局：现实=现实",
+      "text": "你终于看见了现实。",
+      "activityId": "ending__现实=现实"
+    },
+    {
+      "id": "自杀结局",
+      "title": "自杀结局",
+      "text": "致病术反噬了施术者。",
+      "displayName": "自杀结局",
+      "activityId": "ending__自杀结局"
+    },
+    {
+      "id": "入院快乐",
+      "title": "入院快乐",
+      "displayName": "入院快乐",
+      "text": "你被送进医院接受治疗。",
+      "activityId": "ending__入院快乐"
+    },
+    {
+      "id": "凡俗",
+      "title": "凡俗",
+      "displayName": "好结局：凡俗",
+      "text": "宿舍里充满了快活的空气。",
+      "activityId": "ending__凡俗"
+    }
+  ]
+}

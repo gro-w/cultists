@@ -1,228 +1,203 @@
 // DEV-TOOLS:START
 import { writeDataFile } from "./devApi.js";
 import { ActivityEditorView } from "./ActivityEditorView.js";
-/**
- * DatabaseEditorView - persistent editor for canonical JSON-backed records. It
- * §9.3 "不能在 UI 中直接改数据库绕过 API"). Lists every registered
- * database, browses its records as a table, and supports creating,
- * editing and deleting records - but exclusively through
- * `DataStore.createRecord/updateRecord/deleteRecord`, never by reaching
- * into its internal Map, so validation and clone-on-write semantics are
- * never bypassed even from developer tools.
- */
+
+const clone = (value) => structuredClone(value);
+
+function primaryKeyOf(dataStore, databaseId, record) {
+  const db = dataStore.listDatabases().find((entry) => entry.databaseId === databaseId);
+  return record?.[db?.primaryKey || "id"];
+}
+
+/** First window: choose a database, then open its record editor in a new window. */
 export class DatabaseEditorView {
-  constructor({ dataStore, dataStructureManager, dataLoader } = {}) {
+  constructor({ dataStore, dataStructureManager, dataLoader, onOpenDatabase } = {}) {
     this.dataStore = dataStore;
     this.dataStructureManager = dataStructureManager;
     this.dataLoader = dataLoader;
+    this.onOpenDatabase = onOpenDatabase;
     this.selectedDatabaseId = null;
     this._buildDom();
     this.render();
   }
 
   _buildDom() {
-    const el = document.createElement("div");
-    el.className = "ng-list-manager";
-    el.innerHTML = `
-      <div class="ng-list-manager-lists">
-        <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="refresh">刷新</button>
-          <button type="button" data-action="save-database">保存数据库 JSON</button>
-        </div>
-        <div class="ng-list-manager-list-items"></div>
+    this.el = document.createElement("div");
+    this.el.className = "ng-database-selector-editor";
+    this.el.innerHTML = `
+      <div class="ng-database-selector-toolbar">
+        <button type="button" data-action="refresh">刷新</button>
+        <button type="button" data-action="open">打开</button>
+        <span class="ng-editor-status"></span>
       </div>
-      <div class="ng-list-manager-activities">
-        <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-record">新建记录</button>
-          <span class="ng-editor-status"></span>
-        </div>
-        <div class="ng-database-debugger-records"></div>
-      </div>
-    `;
-    this.el = el;
-    this.listEl = el.querySelector(".ng-list-manager-list-items");
-    this.recordsEl = el.querySelector(".ng-database-debugger-records");
-    this.statusEl = el.querySelector(".ng-editor-status");
-    el.querySelector('[data-action="refresh"]').addEventListener("click", () => this.render());
-    el.querySelector('[data-action="save-database"]').addEventListener("click", () => this._saveDatabase());
-    el.querySelector('[data-action="new-record"]').addEventListener("click", () => {
+      <div class="ng-database-selector-list"></div>`;
+    this.listEl = this.el.querySelector(".ng-database-selector-list");
+    this.statusEl = this.el.querySelector(".ng-editor-status");
+    this.el.querySelector('[data-action="refresh"]').addEventListener("click", () => this.render());
+    this.el.querySelector('[data-action="open"]').addEventListener("click", () => {
       if (!this.selectedDatabaseId) return;
-      try {
-        this.dataStore.createRecord(this.selectedDatabaseId, {});
-        this.render();
-      } catch (err) {
-        this.statusEl.textContent = `创建失败: ${err.message}`;
-      }
+      this.onOpenDatabase?.(this.selectedDatabaseId);
     });
   }
 
-  async _saveDatabase() {
-    if (!this.selectedDatabaseId) return;
-    try {
-      const db = this.dataStore.listDatabases().find((entry) => entry.databaseId === this.selectedDatabaseId);
-      const fileName = db?.recordFile || "seed-records.json";
-      const source = await this.dataLoader.loadJSON(fileName, { cache: false });
-      const merged = { ...(source || {}) };
-      merged[this.selectedDatabaseId] = this.dataStore.findRecords(this.selectedDatabaseId, {});
-      await writeDataFile(fileName, JSON.stringify(merged, null, 2));
-      await writeDataFile("databases.framework.json", JSON.stringify(this.dataStore.listDatabases().map(({ recordCount, ...definition }) => definition), null, 2));
-      this.statusEl.textContent = `已写入 ${fileName} 和 databases.framework.json`;
-    } catch (error) {
-      this.statusEl.textContent = `写入失败: ${error.message}`;
+  render() {
+    const databases = this.dataStore.listDatabases();
+    if (!this.selectedDatabaseId || !databases.some((db) => db.databaseId === this.selectedDatabaseId)) {
+      this.selectedDatabaseId = databases[0]?.databaseId || null;
     }
+    this.listEl.replaceChildren();
+    databases.forEach((db) => {
+      const row = document.createElement("button");
+      row.type = "button";
+      row.className = `ng-database-selector-row${db.databaseId === this.selectedDatabaseId ? " selected" : ""}`;
+      row.dataset.databaseId = db.databaseId;
+      row.textContent = `${db.databaseId}（${db.recordCount} 条）`;
+      row.addEventListener("click", () => { this.selectedDatabaseId = db.databaseId; this.render(); });
+      row.addEventListener("dblclick", () => this.onOpenDatabase?.(db.databaseId));
+      this.listEl.appendChild(row);
+    });
+    this.statusEl.textContent = this.selectedDatabaseId ? `已选择：${this.selectedDatabaseId}` : "没有已注册的数据库";
+  }
+}
+
+/** Second window: choose records on the left and edit one record on the right. */
+export class DatabaseRecordEditorView {
+  constructor({ dataStore, dataStructureManager, dataLoader, databaseId } = {}) {
+    this.dataStore = dataStore;
+    this.dataStructureManager = dataStructureManager;
+    this.dataLoader = dataLoader;
+    this.databaseId = databaseId;
+    this.selectedKey = null;
+    this._buildDom();
+    this.render();
+  }
+
+  _buildDom() {
+    this.el = document.createElement("div");
+    this.el.className = "ng-database-record-editor";
+    this.el.innerHTML = `
+      <aside class="ng-database-record-list">
+        <div class="ng-database-record-list-toolbar">
+          <button type="button" data-action="add" title="新增项目">＋</button>
+          <button type="button" data-action="copy" title="复制项目">⧉</button>
+          <button type="button" data-action="delete" title="删除项目">−</button>
+          <button type="button" data-action="save-file" title="写入数据库文件">💾</button>
+        </div>
+        <div class="ng-database-record-items"></div>
+      </aside>
+      <main class="ng-database-record-inspector">
+        <div class="ng-database-record-toolbar"><strong class="ng-database-record-title"></strong><span class="ng-editor-status"></span></div>
+        <div class="ng-database-record-fields"></div>
+      </main>`;
+    this.listEl = this.el.querySelector(".ng-database-record-items");
+    this.fieldsEl = this.el.querySelector(".ng-database-record-fields");
+    this.titleEl = this.el.querySelector(".ng-database-record-title");
+    this.statusEl = this.el.querySelector(".ng-editor-status");
+    this.el.querySelector('[data-action="add"]').addEventListener("click", () => this.addRecord());
+    this.el.querySelector('[data-action="copy"]').addEventListener("click", () => this.copyRecord());
+    this.el.querySelector('[data-action="delete"]').addEventListener("click", () => this.deleteRecord());
+    this.el.querySelector('[data-action="save-file"]').addEventListener("click", () => this.saveDatabase());
+  }
+
+  _db() { return this.dataStore.listDatabases().find((entry) => entry.databaseId === this.databaseId); }
+  _records() { return this.dataStore.findRecords(this.databaseId, {}); }
+
+  addRecord() {
+    try {
+      const record = this.dataStore.createRecord(this.databaseId, {});
+      this.selectedKey = primaryKeyOf(this.dataStore, this.databaseId, record);
+      this.render();
+    } catch (error) { this.statusEl.textContent = `新增失败：${error.message}`; }
+  }
+
+  copyRecord() {
+    const source = this._records().find((record) => primaryKeyOf(this.dataStore, this.databaseId, record) === this.selectedKey);
+    if (!source) return;
+    try {
+      const db = this._db();
+      const copy = { ...clone(source) };
+      delete copy[db.primaryKey];
+      const record = this.dataStore.createRecord(this.databaseId, copy);
+      this.selectedKey = primaryKeyOf(this.dataStore, this.databaseId, record);
+      this.render();
+    } catch (error) { this.statusEl.textContent = `复制失败：${error.message}`; }
+  }
+
+  deleteRecord() {
+    if (this.selectedKey == null) return;
+    try {
+      this.dataStore.deleteRecord(this.databaseId, this.selectedKey);
+      this.selectedKey = null;
+      this.render();
+    } catch (error) { this.statusEl.textContent = `删除失败：${error.message}`; }
   }
 
   render() {
-    this.listEl.innerHTML = "";
-    const databases = this.dataStore.listDatabases();
-    if (!this.selectedDatabaseId && databases.length) this.selectedDatabaseId = databases[0].databaseId;
-    for (const db of databases) {
-      const row = document.createElement("div");
-      row.className = "ng-list-manager-list-item" + (db.databaseId === this.selectedDatabaseId ? " selected" : "");
-      row.textContent = `${db.databaseId} (${db.recordCount})`;
-      row.addEventListener("click", () => { this.selectedDatabaseId = db.databaseId; this.render(); });
+    const records = this._records();
+    if (!records.some((record) => primaryKeyOf(this.dataStore, this.databaseId, record) === this.selectedKey)) {
+      this.selectedKey = records[0] ? primaryKeyOf(this.dataStore, this.databaseId, records[0]) : null;
+    }
+    this.listEl.replaceChildren();
+    records.forEach((record) => {
+      const key = primaryKeyOf(this.dataStore, this.databaseId, record);
+      const row = document.createElement("button");
+      row.type = "button";
+      row.className = `ng-database-record-item${key === this.selectedKey ? " selected" : ""}`;
+      row.dataset.recordKey = key;
+      row.textContent = String(record.name || record.displayName || key);
+      row.addEventListener("click", () => { this.selectedKey = key; this.render(); });
       this.listEl.appendChild(row);
-    }
-    this._renderRecords();
+    });
+    this.renderInspector(records.find((record) => primaryKeyOf(this.dataStore, this.databaseId, record) === this.selectedKey));
   }
 
-  _renderRecords() {
-    this.recordsEl.innerHTML = "";
-    if (!this.selectedDatabaseId) {
-      this.recordsEl.textContent = "没有已注册的数据库";
-      return;
+  renderInspector(record) {
+    this.fieldsEl.replaceChildren();
+    const db = this._db();
+    this.titleEl.textContent = `${this.databaseId} / ${this.selectedKey ?? "未选择项目"}`;
+    if (!record || !db) return;
+    const structure = this.dataStructureManager?.get(db.recordType);
+    const controls = new Map();
+    for (const field of structure?.fields || Object.keys(record).map((id) => ({ id, type: "string" }))) {
+      if (field.type === "activity") continue;
+      const label = document.createElement("label");
+      label.className = "ng-database-record-field";
+      const caption = document.createElement("span");
+      caption.textContent = `${field.id}（${field.type}）`;
+      const control = ["bool"].includes(field.type) ? document.createElement("input") : document.createElement(["array", "object"].includes(field.type) || field.type.startsWith("array<") ? "textarea" : "input");
+      if (field.type === "bool") { control.type = "checkbox"; control.checked = Boolean(record[field.id]); }
+      else if (["integer", "smallInteger", "real"].includes(field.type)) { control.type = "number"; control.step = field.type === "real" ? "any" : "1"; control.value = record[field.id] ?? ""; }
+      else if (["array", "object"].includes(field.type) || field.type.startsWith("array<")) { control.rows = 4; control.value = JSON.stringify(record[field.id] ?? (field.type === "object" ? {} : []), null, 2); }
+      else { control.type = "text"; control.value = record[field.id] ?? ""; }
+      controls.set(field.id, { control, field });
+      label.append(caption, control); this.fieldsEl.appendChild(label);
     }
-    const records = this.dataStore.findRecords(this.selectedDatabaseId, {});
-    const db = this.dataStore.listDatabases().find((entry) => entry.databaseId === this.selectedDatabaseId);
-    const structure = this.dataStructureManager?.get(db?.recordType);
-    for (const record of records) {
-      const row = document.createElement("div");
-      row.className = "ng-window-editor-structure-row";
-
-      const fields = document.createElement("div");
-      fields.className = "ng-database-record-fields";
-      const controls = new Map();
-      for (const field of structure?.fields || Object.keys(record).map((id) => ({ id, type: "string" }))) {
-        const label = document.createElement("label");
-        label.className = "ng-window-editor-field";
-        const caption = document.createElement("span");
-        caption.textContent = `${field.id} (${field.type})`;
-        let control;
-        const value = record[field.id];
-        if (field.type === "activity") {
-          const activityMap = value && typeof value === "object" ? structuredClone(value) : {};
-          const activityIds = Object.keys(activityMap);
-          const activitySelect = document.createElement("select");
-          const activityEditorHost = document.createElement("div");
-          activityEditorHost.className = "ng-embedded-activity-editor";
-          const addActivityButton = document.createElement("button");
-          addActivityButton.type = "button";
-          addActivityButton.textContent = "新增内嵌 Activity";
-          const mountActivity = (activityId) => {
-            activityEditorHost.replaceChildren();
-            if (!activityId) return;
-            const editor = new ActivityEditorView({
-              activityId: `${this.selectedDatabaseId}:${this._primaryKeyOf(record)}:${field.id}:${activityId}`,
-              blueprint: activityMap[activityId] || {},
-              displayName: activityId,
-              onSaveToMemory: (blueprint) => {
-                activityMap[activityId] = blueprint;
-                this.dataStore.updateRecord(this.selectedDatabaseId, this._primaryKeyOf(record), { [field.id]: activityMap });
-                this.statusEl.textContent = `内嵌 Activity「${activityId}」已保存`;
-              },
-            });
-            activityEditorHost.appendChild(editor.el);
-          };
-          for (const activityId of activityIds) {
-            const option = document.createElement("option");
-            option.value = activityId;
-            option.textContent = activityId;
-            activitySelect.appendChild(option);
-          }
-          activitySelect.addEventListener("change", () => mountActivity(activitySelect.value));
-          addActivityButton.addEventListener("click", () => {
-            const activityId = prompt("内嵌 Activity id:");
-            if (!activityId || activityMap[activityId]) return;
-            activityMap[activityId] = {};
-            const option = document.createElement("option");
-            option.value = activityId;
-            option.textContent = activityId;
-            activitySelect.appendChild(option);
-            activitySelect.value = activityId;
-            mountActivity(activityId);
-          });
-          const activityEditor = document.createElement("div");
-          activityEditor.append(activitySelect, addActivityButton, activityEditorHost);
-          label.append(caption, activityEditor);
-          fields.appendChild(label);
-          mountActivity(activitySelect.value);
-          continue;
-        } else if (field.type === "bool") {
-          control = document.createElement("input");
-          control.type = "checkbox";
-          control.checked = Boolean(value);
-        } else if (["integer", "smallInteger", "real"].includes(field.type)) {
-          control = document.createElement("input");
-          control.type = "number";
-          control.step = field.type === "real" ? "any" : "1";
-          control.value = value ?? "";
-        } else if (field.type === "array" || field.type.startsWith("array<") || field.type === "object") {
-          control = document.createElement("textarea");
-          control.rows = 2;
-          control.value = JSON.stringify(value ?? (field.type === "object" ? {} : []), null, 2);
-        } else {
-          control = document.createElement("input");
-          control.type = "text";
-          control.value = value ?? "";
-        }
-        control.dataset.fieldId = field.id;
-        controls.set(field.id, { control, field });
-        label.append(caption, control);
-        fields.appendChild(label);
-      }
-
-      const saveButton = document.createElement("button");
-      saveButton.type = "button";
-      saveButton.textContent = "保存修改";
-      saveButton.addEventListener("click", () => {
-        try {
-          const patch = {};
-          for (const [fieldId, { control, field }] of controls) {
-            if (field.type === "bool") patch[fieldId] = control.checked;
-            else if (["integer", "smallInteger"].includes(field.type)) patch[fieldId] = Number(control.value);
-            else if (field.type === "real") patch[fieldId] = Number(control.value);
-            else if (field.type === "activity") continue;
-            else if (field.type === "array" || field.type.startsWith("array<") || field.type === "object") patch[fieldId] = JSON.parse(control.value || (field.type === "object" ? "{}" : "[]"));
-            else patch[fieldId] = control.value;
-          }
-          this.dataStore.updateRecord(this.selectedDatabaseId, this._primaryKeyOf(record), patch);
-          this.statusEl.textContent = "已更新";
-          this.render();
-        } catch (err) {
-          this.statusEl.textContent = `更新失败: ${err.message}`;
-        }
-      });
-
-      const deleteButton = document.createElement("button");
-      deleteButton.type = "button";
-      deleteButton.textContent = "删除";
-      deleteButton.addEventListener("click", () => {
-        try {
-          this.dataStore.deleteRecord(this.selectedDatabaseId, this._primaryKeyOf(record));
-          this.render();
-        } catch (err) {
-          this.statusEl.textContent = `删除失败: ${err.message}`;
-        }
-      });
-
-      row.append(fields, saveButton, deleteButton);
-      this.recordsEl.appendChild(row);
-    }
+    const save = document.createElement("button"); save.type = "button"; save.textContent = "保存项目";
+    save.addEventListener("click", () => {
+      try {
+        const patch = {};
+        controls.forEach(({ control, field }, id) => {
+          if (field.type === "bool") patch[id] = control.checked;
+          else if (["integer", "smallInteger", "real"].includes(field.type)) patch[id] = Number(control.value);
+          else if (["array", "object"].includes(field.type) || field.type.startsWith("array<")) patch[id] = JSON.parse(control.value || (field.type === "object" ? "{}" : "[]"));
+          else patch[id] = control.value;
+        });
+        this.dataStore.updateRecord(this.databaseId, this.selectedKey, patch);
+        this.statusEl.textContent = "已保存到内存";
+        this.render();
+      } catch (error) { this.statusEl.textContent = `保存失败：${error.message}`; }
+    });
+    this.fieldsEl.appendChild(save);
   }
 
-  _primaryKeyOf(record) {
-    const db = this.dataStore.listDatabases().find((entry) => entry.databaseId === this.selectedDatabaseId);
-    return record[db?.primaryKey || "id"];
+  async saveDatabase() {
+    const db = this._db();
+    if (!db) return;
+    try {
+      const value = { [this.databaseId]: this._records() };
+      await writeDataFile(db.recordFile, JSON.stringify(value, null, 2));
+      this.statusEl.textContent = `已写入 ${db.recordFile}`;
+    } catch (error) { this.statusEl.textContent = `写入失败：${error.message}`; }
   }
 }
 

@@ -42,12 +42,11 @@ export function isDevEntry(search = typeof location !== "undefined" ? location.s
 }
 
 export async function bootstrap(rootEl) {
-  const dataLoader = new DataLoader();
-  const coreLoader = new DataLoader({ root: "" });
+  const dataLoader = new DataLoader({ root: new URL("../data/", import.meta.url).href });
   const windowManager = new WindowManager(eventBus);
   const windowDefinitions = new WindowDefinitionStore(dataLoader);
   const config = await dataLoader.loadJSON("game-manifest.json");
-  if (config.contentRoot) dataLoader.setRoot(config.contentRoot);
+  if (config.contentRoot) dataLoader.setRoot(new URL(config.contentRoot, new URL("../", import.meta.url)).href);
   const frameworkManifest = await dataLoader.loadJSON(config.frameworkManifest, { optional: true }) || {};
   const mediaData = await dataLoader.loadJSON("media.json", { optional: true }) || {};
   const resources = {
@@ -74,6 +73,18 @@ export async function bootstrap(rootEl) {
     rules: config.stateBoundary?.rules || {},
   });
   const variableStore = new VariableStore(eventBus);
+  Object.entries(config.initialVariables || {}).forEach(([key, value]) => {
+    variableStore.set(key, value);
+  });
+  const syncStateBoundaryVariables = ({ current } = {}) => {
+    if (current && typeof current.location === "string") {
+      variableStore.set("stateBoundary:location", current.location);
+      variableStore.set("gameState:location", current.location);
+    }
+    if (current && Number.isFinite(Number(current.day))) variableStore.set("gameState:day", Number(current.day));
+  };
+  eventBus.on("stateBoundary:changed", syncStateBoundaryVariables);
+  syncStateBoundaryVariables({ current: stateBoundary.snapshot() });
   const structures = new DataStructureManager();
   const dataStore = new DataStore(structures);
   const refResolver = new RuntimeRefResolver();
@@ -112,14 +123,23 @@ export async function bootstrap(rootEl) {
     refResolver.register(`database:${databaseId}`, (key) => dataStore.getRecord(databaseId, key));
   }
   const frameworkRuntimeDefinition = await dataLoader.loadJSON(frameworkManifest.documents?.runtimeCollections || config.frameworkCollections, { optional: true }) || {};
-  const runtimeCollections = new RuntimeCollectionRegistry({ dataStore, eventBus });
+  const runtimeCollections = new RuntimeCollectionRegistry({
+    dataStore,
+    eventBus,
+    variableStore,
+    publicVariableManager: publicVariables,
+    publicStateVariableId: frameworkRuntimeDefinition.publicStateVariableId ?? null,
+  });
   runtimeCollections.loadDefinitions(frameworkRuntimeDefinition.collections || {});
   const runtimeGateway = {
     getCollection: (collectionId) => runtimeCollections.get(collectionId),
+    getRecord: (collectionId, recordId) => runtimeCollections.getRecord(collectionId, recordId),
     setCollectionValue: (collectionId, recordId, value) => runtimeCollections.set(collectionId, recordId, value),
     mutateCollection: (collectionId, recordId, operation, value) => runtimeCollections.mutate(collectionId, recordId, operation, value),
     operateCollection: (collectionId, recordId, options) => runtimeCollections.operation(collectionId, recordId, options),
+    incrementField: (collectionId, recordId, field, delta) => runtimeCollections.incrementField(collectionId, recordId, field, delta),
     appendCollectionValue: (collectionId, value) => runtimeCollections.appendCollectionValue(collectionId, value),
+    listEntries: (queueId, filters) => queues.listEntries(queueId, filters),
   };
   const content = {
     runtimeGateway,
@@ -138,9 +158,17 @@ export async function bootstrap(rootEl) {
   // developer entry can never be supplied or configured by the game package.
   iconManager.unregister("dev-mode-launcher-icon");
   const dialogueRegistry = new DisplayReceiverRegistry();
+  const globalMediaView = new TextChoiceWidget({
+    eventBus,
+    variableStore,
+    displayReceiverRegistry: dialogueRegistry,
+    displayTo: "ending-screen",
+  });
+  globalMediaView.el.classList.add("ng-global-media-view");
   runtimeGateway.dispatchDisplay = (target, payload) => dialogueRegistry.dispatch(target, payload);
   content.installDisplayReceivers?.({ dialogueRegistry });
   const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway, dialogueRegistry, content.customWidgetFactories);
+  rootEl.appendChild(globalMediaView.el);
   // Paint icons before loading the Activity catalogue. The catalogue can be
   // large; taskbar and desktop must become visible as one initial surface.
   shell.mountIcons(iconManager);
@@ -232,8 +260,10 @@ export async function bootstrap(rootEl) {
     variableStore,
     runtimeGateway,
     displayRegistry: dialogueRegistry,
+    stateBoundary,
     resources,
     runActivity,
+    windowGateway: (windowId) => shell.openWindow(windowId),
     routes: config.eventRoutes || [],
   }).start();
   content.bindRuntime?.({ runActivity });
@@ -244,12 +274,20 @@ export async function bootstrap(rootEl) {
     return execution.run({
       queue, definition, instance, variableStore,
       timeGateway: (minutes) => timeService.consume(minutes, { source: "activity" }),
-      windowGateway: (id) => shell.openWindow(id),
+      windowGateway: (id, instance, node) => {
+        if (node?.type === "closeWindow") {
+          const state = windowManager.getByWindowId(id);
+          if (state) windowManager.close(state.instanceId);
+          return state;
+        }
+        return shell.openWindow(id);
+      },
       activityGateway: (id, target, source, node, payload) => node?.type === "insertActivity" ? enqueueActivity(id, target || "main", payload) : runActivity(id, target || "main"),
         eventGateway: (name, payload) => {
         /* DEV-TOOLS:START */
         console.log("[NG dialogue] eventGateway", name, payload);
         /* DEV-TOOLS:END */
+        if (name.startsWith("display:")) runtimeGateway.dispatchDisplay(payload?.displayTo, { ...payload, type: name.slice("display:".length) });
         eventBus.emit(name, payload);
       }, dbGateway: dataStore,
       pvGateway: publicVariables, eventStateGateway: eventState, apiGateway,
@@ -327,6 +365,11 @@ export async function bootstrap(rootEl) {
       eventStateRegistry: eventState,
       dataLoader,
       saveManager,
+      gameClock,
+      forceEndWork: () => {
+        eventBus.emit("developer:force_end_work", { source: "time-debugger" });
+        shell.openWindow("off-duty");
+      },
       refreshIcons: () => shell.refreshIcons(),
     });
     iconManager.register({
@@ -349,5 +392,3 @@ export async function bootstrap(rootEl) {
   }
   return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, contentPackage: content, eventRouter, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, stateBoundary, iconManager, saveManager, eventStateRegistry: eventState };
 }
-
-if (typeof document !== "undefined") document.addEventListener("DOMContentLoaded", () => bootstrap(document.getElementById("ng-root")));

@@ -1,6 +1,32 @@
 import { createActivityRunner } from "./ActivityRunner.js";
 import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
 
+function scopedVariableStore(globalStore, instance, eventBus) {
+  return {
+    get(key) {
+      if (String(key).startsWith("__local:")) return instance.localVariables?.[String(key).slice(8)];
+      return globalStore?.get(key);
+    },
+    set(key, value) {
+      if (String(key).startsWith("__local:")) {
+        instance.localVariables = instance.localVariables || {};
+        instance.localVariables[String(key).slice(8)] = structuredClone(value);
+        eventBus?.emit("activity:local-variable-changed", { instanceId: instance.instanceId, key: String(key).slice(8), value });
+        return;
+      }
+      globalStore?.set(key, value);
+    },
+    delta(key, amount) {
+      if (String(key).startsWith("__local:")) {
+        const current = Number(this.get(key)) || 0;
+        this.set(key, current + (Number(amount) || 0));
+        return;
+      }
+      globalStore?.delta(key, amount);
+    },
+  };
+}
+
 /**
  * ActivityExecutionService - owns ActivityRunner lifetimes. Guarantees a
  * terminal event (`completed`/`cancelled`/`failed`) is emitted at most once
@@ -22,7 +48,7 @@ export class ActivityExecutionService {
     const runner = createActivityRunner({
       definition,
       instance,
-      variableStore,
+      variableStore: scopedVariableStore(variableStore, instance, this.eventBus),
       eventBus: this.eventBus,
       timeGateway,
       windowGateway,

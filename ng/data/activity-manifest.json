@@ -633,6 +633,30 @@
       "file": "work01a-patient7.json"
     },
     {
+      "id": "turtle_soup_question_soup01_q1",
+      "file": "turtle_soup_question_soup01_q1.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q2",
+      "file": "turtle_soup_question_soup01_q2.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q3",
+      "file": "turtle_soup_question_soup01_q3.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q4",
+      "file": "turtle_soup_question_soup01_q4.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q5",
+      "file": "turtle_soup_question_soup01_q5.json"
+    },
+    {
+      "id": "turtle_soup_guess",
+      "file": "turtle_soup_guess.json"
+    },
+    {
       "id": "work01a-patient7-start",
       "file": "work01a-patient7-start.json"
     }

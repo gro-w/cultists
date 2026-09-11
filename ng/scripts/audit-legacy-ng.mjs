@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
-const legacyDir = path.join(root, "data", "zh-hans");
+const legacyDir = path.join(root, "legacy", "data", "zh-hans");
 const ngDir = path.join(root, "ng", "data");
 
 function walk(dir) {
@@ -57,7 +57,14 @@ function collectBlueprints(value, jsonPath = "$") {
 }
 
 function summarizeTree(dir) {
-  const files = walk(dir).filter((file) => file.endsWith(".json"));
+  const files = walk(dir).filter((file) => {
+    if (!file.endsWith(".json")) return false;
+    if (dir !== ngDir) return true;
+    const relative = path.relative(dir, file).replaceAll(path.sep, "/");
+    // The preserved source package proves authored-data retention, but it is
+    // not canonical runtime content and must not inflate parity counts.
+    return !relative.startsWith("game-content/legacy/") && relative !== "game-content/legacy-content-index.json";
+  });
   const rows = [];
   const nodeTypes = {};
   const ids = new Set();
@@ -141,9 +148,9 @@ function markdown(report) {
 const legacy = summarizeTree(legacyDir);
 const ng = summarizeTree(ngDir);
 const source = [
-  { label: "Legacy data loaders", files: sourceMatches(path.join(root, "js"), /loadJSON|fetch\(/) },
+  { label: "Legacy data loaders", files: sourceMatches(path.join(root, "legacy", "js"), /loadJSON|fetch\(/) },
   { label: "ng data loading", files: sourceMatches(path.join(root, "ng"), /loadManifest|loadRecordSet|fetch\(/) },
-  { label: "Legacy developer editors", files: sourceMatches(path.join(root, "js"), /Dev[A-Za-z]+Editor|DeveloperMode/) },
+  { label: "Legacy developer editors", files: sourceMatches(path.join(root, "legacy", "js"), /Dev[A-Za-z]+Editor|DeveloperMode/) },
   { label: "ng developer tools", files: sourceMatches(path.join(root, "ng"), /DEV-TOOLS|DeveloperMode|EditorView/) },
 ];
 const report = { legacy, ng, source };

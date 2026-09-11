@@ -19,7 +19,10 @@ import { DataStore } from "../core/DataStore.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const structures = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/structures.framework.json"), "utf8"));
 const databases = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/databases.framework.json"), "utf8"));
-const seedRecords = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/seed-records.json"), "utf8"));
+const seedRecords = Object.fromEntries(databases.map(({ databaseId, recordFile }) => {
+  const value = JSON.parse(fs.readFileSync(path.join(__dirname, "../data", recordFile), "utf8"));
+  return [databaseId, value[databaseId] || []];
+}));
 
 function makeStore() {
   const dataStructureManager = new DataStructureManager();

@@ -15,9 +15,10 @@
       {
         "widgetId": "dialogue-panel",
         "type": "dialogue",
-        "displayTo": "his-app",
+        "displayTo": "dorm-bottom",
         "displayAliases": [
-          "dorm-bottom"
+          "his-app",
+          "default"
         ],
         "className": "dialogue-panel panel-inset"
       }

@@ -1,0 +1,126 @@
+{
+  "id": "turtle_soup_guess",
+  "type": "specialEvent",
+  "displayName": "海龟汤猜谜",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "guess": {
+        "id": "guess",
+        "type": "getVariable",
+        "inputs": {
+          "key": "turtleSoup:guess"
+        }
+      },
+      "match1": {
+        "id": "match1",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "=",
+          "left": {
+            "nodeId": "guess",
+            "port": "value"
+          },
+          "right": "他曾经误食了亲人的肉"
+        }
+      },
+      "match2": {
+        "id": "match2",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "=",
+          "left": {
+            "nodeId": "guess",
+            "port": "value"
+          },
+          "right": "海难获救后喝到的是亲人肉，后来发现真相"
+        }
+      },
+      "matches": {
+        "id": "matches",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "or",
+          "left": {
+            "nodeId": "match1",
+            "port": "value"
+          },
+          "right": {
+            "nodeId": "match2",
+            "port": "value"
+          }
+        }
+      },
+      "branch": {
+        "id": "branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "matches",
+            "port": "value"
+          }
+        }
+      },
+      "success": {
+        "id": "success",
+        "type": "runActivity",
+        "inputs": {
+          "activityId": "event__binbin_turtle_success",
+          "queueId": "social"
+        }
+      },
+      "failEvent": {
+        "id": "failEvent",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "turtleSoup:guess-fail",
+          "payload": {
+            "puzzleId": "binbin_turtle_01"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "branch",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "branch",
+        "fromPort": "true",
+        "toNodeId": "success",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "branch",
+        "fromPort": "false",
+        "toNodeId": "failEvent",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "success",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "failEvent",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

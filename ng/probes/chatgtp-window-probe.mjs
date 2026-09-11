@@ -31,9 +31,12 @@ const dataStructureManager = new DataStructureManager();
 dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
 const dataStore = new DataStore(dataStructureManager);
 dataStore.loadDefinitions(readJSON("databases.framework.json"));
-dataStore.loadRecordSet(readJSON("seed-records.json"));
-const chatgtpSeed = readJSON("seed-records-chatgtp.json");
-dataStore.loadRecordSet(chatgtpSeed);
+const databaseDefinitions = readJSON("databases.framework.json");
+const chatgtpSeed = readJSON("databases/chatgtpQaEntries.json");
+dataStore.loadRecordSet(Object.fromEntries(databaseDefinitions.map(({ databaseId, recordFile }) => {
+  const value = readJSON(recordFile);
+  return [databaseId, value[databaseId] || []];
+})));
 
 const refResolver = new RuntimeRefResolver();
 const eventBus = new EventBus();
@@ -90,7 +93,22 @@ const CHATGTP_SAN_VARIABLE_ID = 5;
     const { ok, errors } = validateBlueprint(bp);
     assert.equal(ok, true, `${label}: ${errors?.join("；")}`);
   }
-  assert.equal(blueprints.length, 5, "expected onCreate + source/category/keyword/query blueprints");
+  assert.equal(blueprints.length, 9, "expected onCreate + source/category/keyword1/keyword2/query and legacy selector blueprints");
+  assert.ok(findWidget(chatgtp.root, "chatgtp-keyword2-select"), "expected second keyword selector");
+  for (const widgetId of ["chatgtp-disease-row", "chatgtp-medicine-row", "chatgtp-notebook-row"]) {
+    assert.ok(findWidget(chatgtp.root, widgetId), `expected legacy selector row: ${widgetId}`);
+  }
+}
+
+// --- legacy disease/medicine/notebook rows feed the shared keyword state ---
+for (const [widgetId, variable, value] of [
+  ["chatgtp-disease-select", "chatgtp:keyword1", "disease-keyword"],
+  ["chatgtp-medicine-select", "chatgtp:keyword2", "medicine-keyword"],
+  ["chatgtp-notebook-select", "chatgtp:keyword1", "notebook-keyword"],
+]) {
+  variableStore.set("event:value", value);
+  runBlueprint(findWidget(chatgtp.root, widgetId).events.onChange, `${widgetId}Change`);
+  assert.equal(variableStore.get(variable), value);
 }
 
 // --- onCreate loads keywords + settings, resets query state ---------------
@@ -110,6 +128,7 @@ variableStore.set("event:value", comboEntry.keywords[0]);
 runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword1-select").events.onChange, "keywordChange");
 runBlueprint(findWidget(chatgtp.root, "chatgtp-query").events.onClick, "query1");
 assert.equal(variableStore.get("chatgtp:answer"), comboEntry.answer);
+assert.deepEqual(variableStore.get("chatgtp:history"), [comboEntry.answer]);
 assert.equal(publicVariableManager.get(CHATGTP_SAN_VARIABLE_ID), startingSan - variableStore.get("chatgtp:settings").sanCostPerQuery);
 
 // --- an unmatched combo falls back gracefully, still costs SAN ------------
@@ -119,6 +138,7 @@ runBlueprint(findWidget(chatgtp.root, "chatgtp-keyword1-select").events.onChange
 runBlueprint(findWidget(chatgtp.root, "chatgtp-query").events.onClick, "queryMiss");
 assert.notEqual(variableStore.get("chatgtp:answer"), comboEntry.answer);
 assert.ok(variableStore.get("chatgtp:answer").length > 0);
+assert.equal(variableStore.get("chatgtp:history").length, 2);
 assert.equal(publicVariableManager.get(CHATGTP_SAN_VARIABLE_ID), sanBeforeMiss - variableStore.get("chatgtp:settings").sanCostPerQuery);
 
 // --- SAN depleted -> offline answer, no further SAN cost ------------------

@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { downloadTextFile, writeDataFile } from "./devApi.js";
 import { registerCustomActivityNode, unregisterCustomActivityNode } from "../core/ActivityNodeRegistry.js";
 
@@ -28,9 +29,9 @@ export class BlueprintNodeManagerView {
     this.el.innerHTML = `
       <div class="ng-blueprint-node-manager-list">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new">新建蓝图节点</button>
-          <button type="button" data-action="copy">复制</button>
-          <button type="button" data-action="delete">删除</button>
+          <button type="button" data-action="new">${t("legacy.41f289b10d18")}</button>
+          <button type="button" data-action="copy">${t("legacy.4edd1d00875d")}</button>
+          <button type="button" data-action="delete">${t("legacy.3755f56f2f83")}</button>
         </div>
         <div data-role="items"></div>
       </div>
@@ -44,9 +45,9 @@ export class BlueprintNodeManagerView {
   }
 
   create() {
-    const id = prompt("蓝图节点 ID（只能使用字母、数字、下划线、冒号和短横线）:");
+    const id = prompt(t("legacy.8cb077e8d362"));
     if (!id || this.nodes.some((node) => node.id === id)) return;
-    if (!/^[a-zA-Z][\w:-]*$/.test(id)) return alert("ID 格式无效");
+    if (!/^[a-zA-Z][\w:-]*$/.test(id)) return alert(t("legacy.b28a0976574b"));
     const node = { id, label: id, flowInputs: [{ name: "flowIn", kind: "flow" }], flowOutputs: [{ name: "flowOut", kind: "flow" }], valueInputs: [], valueOutputs: [], blueprint: starterBlueprint() };
     this.nodes.push(node);
     registerCustomActivityNode(node);
@@ -57,7 +58,7 @@ export class BlueprintNodeManagerView {
   copy() {
     const source = this.nodes.find((node) => node.id === this.selectedId);
     if (!source) return;
-    const id = prompt("复制为:", `${source.id}-copy`);
+    const id = prompt(t("legacy.9489917637a8"), `${source.id}-copy`);
     if (!id || this.nodes.some((node) => node.id === id)) return;
     const node = structuredClone({ ...source, id });
     this.nodes.push(node);
@@ -68,7 +69,7 @@ export class BlueprintNodeManagerView {
 
   remove() {
     const index = this.nodes.findIndex((node) => node.id === this.selectedId);
-    if (index < 0 || !confirm(`删除蓝图节点“${this.selectedId}”？`)) return;
+    if (index < 0 || !confirm(`${t("legacy.4565f561c5e7")}${this.selectedId}”？`)) return;
     unregisterCustomActivityNode(this.selectedId);
     this.nodes.splice(index, 1);
     this.selectedId = null;
@@ -83,7 +84,7 @@ export class BlueprintNodeManagerView {
       node.valueInputs = JSON.parse(fields.valueInputs.value || "[]");
       node.valueOutputs = JSON.parse(fields.valueOutputs.value || "[]");
     } catch (error) {
-      alert(`接口 JSON 无效: ${error.message}`);
+      alert(`${t("legacy.0c870112c3ca")}JSON ${t("legacy.eb645ab4619f")}: ${error.message}`);
       return false;
     }
     registerCustomActivityNode(node);
@@ -104,21 +105,21 @@ export class BlueprintNodeManagerView {
     }
     const node = this.nodes.find((entry) => entry.id === this.selectedId);
     if (!node) {
-      this.detailEl.textContent = "选择一个自定义蓝图节点，或新建一个节点";
+      this.detailEl.textContent = t("legacy.3b4e41b92a01");
       return;
     }
     this.detailEl.innerHTML = `
       <h3>${node.label || node.id}</h3>
-      <label>显示名 <input data-field="label" value=""></label>
-      <label>流程输入 <textarea data-field="flowInputs"></textarea></label>
-      <label>流程输出 <textarea data-field="flowOutputs"></textarea></label>
-      <label>数值输入 <textarea data-field="valueInputs"></textarea></label>
-      <label>数值输出 <textarea data-field="valueOutputs"></textarea></label>
+      <label>${t("legacy.7f32e700e161")}<input data-field="label" value=""></label>
+      <label>${t("legacy.c089e608a8b6")}<textarea data-field="flowInputs"></textarea></label>
+      <label>${t("legacy.221ff1dcaa93")}<textarea data-field="flowOutputs"></textarea></label>
+      <label>${t("legacy.acc9b9bec891")}<textarea data-field="valueInputs"></textarea></label>
+      <label>${t("legacy.80ecc53ba8bf")}<textarea data-field="valueOutputs"></textarea></label>
       <div class="ng-list-manager-toolbar">
-        <button type="button" data-action="save-memory">保存到内存</button>
-        <button type="button" data-action="open">打开蓝图编辑器</button>
-        <button type="button" data-action="download">下载 JSON</button>
-        <button type="button" data-action="write-disk">写入磁盘</button>
+        <button type="button" data-action="save-memory">${t("legacy.b02ae67098e2")}</button>
+        <button type="button" data-action="open">${t("legacy.fdc61e4938b6")}</button>
+        <button type="button" data-action="download">${t("legacy.3f10b573ee1b")}JSON</button>
+        <button type="button" data-action="write-disk">${t("legacy.81ee3266b03d")}</button>
       </div>
     `;
     const fields = Object.fromEntries([...this.detailEl.querySelectorAll("[data-field]")].map((field) => [field.dataset.field, field]));
@@ -128,7 +129,7 @@ export class BlueprintNodeManagerView {
     this.detailEl.querySelector('[data-action="open"]').addEventListener("click", () => this.openEditor(node));
     this.detailEl.querySelector('[data-action="download"]').addEventListener("click", () => downloadTextFile(`blueprint-node-${node.id}.json`, `${JSON.stringify(node, null, 2)}\n`));
     this.detailEl.querySelector('[data-action="write-disk"]').addEventListener("click", async () => {
-      try { await writeDataFile("blueprint-nodes.framework.json", `${JSON.stringify(this.nodes, null, 2)}\n`); } catch (error) { alert(`写入失败: ${error.message}`); }
+      try { await writeDataFile("blueprint-nodes.framework.json", `${JSON.stringify(this.nodes, null, 2)}\n`); } catch (error) { alert(`${t("legacy.e92dc2256061")}: ${error.message}`); }
     });
   }
 }

@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { PointerInteraction } from "../core/desktopPointerInteraction.js";
 import { listActivityNodeTypes, getActivityNodeDefinition, listActivityNodePorts, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
 import { createActivityEditorModel } from "./ActivityEditorModel.js";
@@ -45,16 +46,16 @@ export class ActivityEditorView {
     el.tabIndex = 0;
     el.innerHTML = `
       <div class="ng-editor-toolbar">
-        <button type="button" data-action="undo" title="撤销">撤销</button>
-        <button type="button" data-action="redo" title="重做">重做</button>
-        <button type="button" data-action="copy" title="复制选中 (Ctrl/Cmd+C)">复制</button>
-        <button type="button" data-action="paste" title="粘贴 (Ctrl/Cmd+V)">粘贴</button>
-        <button type="button" data-action="delete-selected" title="删除选中 (Delete)">删除选中</button>
-        <button type="button" data-action="validate" title="校验">校验</button>
-        <button type="button" data-action="auto-layout" title="自动排布">自动排布</button>
-        <button type="button" data-action="save" title="保存到内存">保存到内存</button>
-        <button type="button" data-action="download" title="下载 JSON">下载</button>
-        <button type="button" data-action="write-disk" title="写入磁盘">写入磁盘</button>
+        <button type="button" data-action="undo" title="${t("legacy.9fcefd8dc81e")}">${t("legacy.9fcefd8dc81e")}</button>
+        <button type="button" data-action="redo" title="${t("legacy.1238f0d36361")}">${t("legacy.1238f0d36361")}</button>
+        <button type="button" data-action="copy" title="${t("legacy.bbda8e0907ff")}(Ctrl/Cmd+C)">${t("legacy.4edd1d00875d")}</button>
+        <button type="button" data-action="paste" title="${t("legacy.5cc0f8acca4d")}(Ctrl/Cmd+V)">${t("legacy.de7fb7d3cf47")}</button>
+        <button type="button" data-action="delete-selected" title="${t("legacy.7e8b0e5b4ebb")}(Delete)">${t("legacy.42b7a0e01134")}</button>
+        <button type="button" data-action="validate" title="${t("legacy.20feeceade52")}">${t("legacy.20feeceade52")}</button>
+        <button type="button" data-action="auto-layout" title="${t("legacy.5b91bd71e136")}">${t("legacy.5b91bd71e136")}</button>
+        <button type="button" data-action="save" title="${t("legacy.b02ae67098e2")}">${t("legacy.b02ae67098e2")}</button>
+        <button type="button" data-action="download" title="${t("legacy.3f10b573ee1b")}JSON">${t("legacy.2b9d013177da")}</button>
+        <button type="button" data-action="write-disk" title="${t("legacy.81ee3266b03d")}">${t("legacy.81ee3266b03d")}</button>
         <span class="ng-editor-zoom-tools">
           <button type="button" data-action="zoom-out">－</button>
           <span class="ng-editor-zoom-label">100%</span>
@@ -125,7 +126,7 @@ export class ActivityEditorView {
     this.el.querySelector('[data-action="copy"]').addEventListener("click", () => {
       if (!this.model.getSelection().length) return;
       this._clipboard = this.model.copySelected();
-      this._setStatus(`已复制 ${this._clipboard.nodes.length} 个节点`);
+      this._setStatus(`${t("legacy.d7a0f5842769")}${this._clipboard.nodes.length} ${t("legacy.df2dd979aa20")}`);
     });
     this.el.querySelector('[data-action="paste"]').addEventListener("click", () => {
       if (!this._clipboard) return;
@@ -138,7 +139,7 @@ export class ActivityEditorView {
     });
     this.el.querySelector('[data-action="validate"]').addEventListener("click", () => {
       const result = this.model.validateForSave();
-      this._setStatus(result.ok ? "校验通过" : `校验失败: ${result.errors.join("；")}`, !result.ok);
+      this._setStatus(result.ok ? t("legacy.7035f86dd0f0") : `${t("legacy.2da7449d8887")}: ${result.errors.join("；")}`, !result.ok);
     });
     this.el.querySelector('[data-action="save"]').addEventListener("click", () => this._save());
     this.el.querySelector('[data-action="auto-layout"]').addEventListener("click", () => {
@@ -167,25 +168,25 @@ export class ActivityEditorView {
   _save() {
     const result = this.model.validateForSave();
     if (!result.ok) {
-      this._setStatus(`未保存，校验失败: ${result.errors.join("；")}`, true);
+      this._setStatus(`${t("legacy.b3d3b2cd3e4b")}: ${result.errors.join("；")}`, true);
       return false;
     }
     this.onSaveToMemory(this.model.exportBlueprint());
-    this._setStatus("已保存到内存");
+    this._setStatus(t("legacy.bedc3c6afcd3"));
     return true;
   }
 
   async _writeToDisk() {
     if (!this.dataFileName) {
-      this._setStatus("此 Activity 未关联磁盘文件，无法写入", true);
+      this._setStatus(t("legacy.eacc36abad94"), true);
       return;
     }
     if (!this._save()) return;
     try {
       await writeDataFile(this.dataFileName, this.model.toDownloadPayload());
-      this._setStatus(`已写入 ${this.dataFileName}`);
+      this._setStatus(`${t("legacy.a39837537e98")}${this.dataFileName}`);
     } catch (error) {
-      this._setStatus(`写入失败: ${error.message}`, true);
+      this._setStatus(`${t("legacy.e92dc2256061")}: ${error.message}`, true);
     }
   }
 
@@ -206,7 +207,7 @@ export class ActivityEditorView {
       } else if (isModifier && e.key.toLowerCase() === "c" && this.model.getSelection().length) {
         e.preventDefault();
         this._clipboard = this.model.copySelected();
-        this._setStatus(`已复制 ${this._clipboard.nodes.length} 个节点`);
+        this._setStatus(`${t("legacy.d7a0f5842769")}${this._clipboard.nodes.length} ${t("legacy.df2dd979aa20")}`);
       } else if (isModifier && e.key.toLowerCase() === "v" && this._clipboard) {
         e.preventDefault();
         this.model.pasteNodes(this._clipboard);
@@ -324,12 +325,12 @@ export class ActivityEditorView {
     const portName = portEl.dataset.portName;
     const direction = portEl.dataset.portDirection;
     if (direction !== "output") {
-      this._setStatus("请从输出引脚开始连线", true);
+      this._setStatus(t("legacy.0c138dbaf35b"), true);
       return; // connections are always dragged from an output port, matching the old engine
     }
     const fromNodeId = nodeId;
     const fromPort = portName;
-    this._setStatus("连线：拖动到匹配的输入引脚");
+    this._setStatus(t("legacy.e3b7edb8bb15"));
     this._connectionDragPointer.start({
       onMove: (moveEvent) => this._drawTempConnection(portEl, moveEvent.clientX, moveEvent.clientY),
       onEnd: (upEvent) => {
@@ -340,7 +341,7 @@ export class ActivityEditorView {
           const toNodeId = targetPort.closest(".ng-editor-node").dataset.nodeId;
           const toPort = targetPort.dataset.portName;
           const result = this.model.connect(fromNodeId, fromPort, toNodeId, toPort);
-          this._setStatus(result.ok ? "已连接" : `引脚类型不匹配：${result.error}`, !result.ok);
+          this._setStatus(result.ok ? t("legacy.65fe35c45e4e") : `${t("legacy.0a4585b3ca34")}${result.error}`, !result.ok);
           if (result.ok) this._renderConnections();
         } else {
           this._setStatus("");
@@ -473,7 +474,7 @@ export class ActivityEditorView {
       return;
     }
     if (selection.length > 1) {
-      this.inspectorEl.textContent = `已选中 ${selection.length} 个节点`;
+      this.inspectorEl.textContent = `${t("legacy.ef1a32a96e17")}${selection.length} ${t("legacy.df2dd979aa20")}`;
       return;
     }
     const node = this.model.getNode(selection[0]);
@@ -493,7 +494,7 @@ export class ActivityEditorView {
       const currentTarget = node.next?.[flowPort.name];
       const emptyOption = document.createElement("option");
       emptyOption.value = "";
-      emptyOption.textContent = "（未连接）";
+      emptyOption.textContent = t("legacy.c9c0846fc7ce");
       select.appendChild(emptyOption);
       for (const target of this._listFlowInputTargets()) {
         const option = document.createElement("option");
@@ -528,7 +529,7 @@ export class ActivityEditorView {
       const select = document.createElement("select");
       const constantOption = document.createElement("option");
       constantOption.value = "";
-      constantOption.textContent = "常量";
+      constantOption.textContent = t("legacy.cec3d5c5996b");
       select.appendChild(constantOption);
       for (const source of this._listValueSources(valuePort)) {
         const option = document.createElement("option");
@@ -568,7 +569,7 @@ export class ActivityEditorView {
     }
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
-    deleteButton.textContent = "删除节点";
+    deleteButton.textContent = t("legacy.ff37dc39f935");
     deleteButton.addEventListener("click", () => {
       this.model.deleteNode(node.id);
       this.render();
@@ -602,7 +603,7 @@ export class ActivityEditorView {
   _renderActivityMetadata() {
     const title = document.createElement("div");
     title.className = "ng-editor-inspector-title";
-    title.textContent = "活动元数据";
+    title.textContent = t("legacy.2e2c4f99fc53");
     this.inspectorEl.appendChild(title);
 
     const nameRow = document.createElement("label");
@@ -639,12 +640,12 @@ export class ActivityEditorView {
 
     const startRow = document.createElement("div");
     startRow.className = "ng-editor-inspector-row";
-    startRow.innerHTML = `<span>startNodeId</span><span>${this.model.startNodeId ?? "（无）"}</span>`;
+    startRow.innerHTML = `<span>startNodeId</span><span>${this.model.startNodeId ?? `（${t("legacy.6e7400e98d2f")}`}</span>`;
     this.inspectorEl.appendChild(startRow);
 
     const countRow = document.createElement("div");
     countRow.className = "ng-editor-inspector-row";
-    countRow.innerHTML = `<span>节点数</span><span>${this.model.nodeCount}</span>`;
+    countRow.innerHTML = `<span>${t("legacy.c4fdaf4d2a8e")}</span><span>${this.model.nodeCount}</span>`;
     this.inspectorEl.appendChild(countRow);
   }
 

@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 /** Visual runtime-save debugger. It never edits or writes canonical game JSON. */
 export class SaveDebuggerView {
   constructor({ saveManager } = {}) {
@@ -7,10 +8,10 @@ export class SaveDebuggerView {
     this.el.className = "ng-dev-save-debugger";
     this.el.innerHTML = `
       <div class="ng-dev-toolbar">
-        <button type="button" data-action="read">读取当前运行时</button>
-        <button type="button" data-action="apply">应用修改</button>
+        <button type="button" data-action="read">${t("legacy.09e57168614c")}</button>
+        <button type="button" data-action="apply">${t("legacy.df385b3b9f95")}</button>
       </div>
-      <p class="ng-dev-help">这里只修改存档中的运行时状态。日历列表、成就列表、数据库记录和其他游戏 JSON 不属于存档。</p>
+      <p class="ng-dev-help">${t("legacy.d9e6375884e5")}JSON ${t("legacy.34c64b2b4026")}</p>
       <div class="ng-save-debugger-fields" data-role="fields"></div>
       <output data-role="status"></output>
     `;
@@ -51,44 +52,44 @@ export class SaveDebuggerView {
       const state = envelope.state;
       this.fieldsEl.replaceChildren();
 
-      const clock = this._section("游戏时间");
-      clock.append(this._field("日期", state.gameClock.day, "gameClock.day", "number"));
-      clock.append(this._field("分钟", state.gameClock.minutes, "gameClock.minutes", "number"));
+      const clock = this._section(t("legacy.467ce31a8417"));
+      clock.append(this._field(t("legacy.b6fed9af8313"), state.gameClock.day, "gameClock.day", "number"));
+      clock.append(this._field(t("legacy.28bf227b9bf7"), state.gameClock.minutes, "gameClock.minutes", "number"));
       this.fieldsEl.append(clock);
 
-      const gameState = this._section("游戏运行状态");
+      const gameState = this._section(t("legacy.547e60af7794"));
       for (const key of ["day", "phase", "duty", "location", "energy", "mental", "physical", "satiety"]) {
         const value = state.gameState[key];
         gameState.append(this._field(key, value, `gameState.${key}`, typeof value === "number" ? "number" : "text"));
       }
       this.fieldsEl.append(gameState);
 
-      const variables = this._section("活动变量（不含派生 UI 数据）");
+      const variables = this._section(t("legacy.6d480f049924"));
       for (const [key, value] of Object.entries(state.variables)) {
         const type = typeof value === "boolean" ? "checkbox" : (typeof value === "number" ? "number" : (value && typeof value === "object" ? "textarea" : "text"));
         const display = type === "textarea" ? JSON.stringify(value, null, 2) : value;
         variables.append(this._field(key, display, `variables.${key}`, type));
       }
-      if (!Object.keys(state.variables).length) variables.append(document.createTextNode("无可保存的活动变量"));
+      if (!Object.keys(state.variables).length) variables.append(document.createTextNode(t("legacy.0bfe114481a7")));
       this.fieldsEl.append(variables);
 
-      const publicVariables = this._section("公共变量");
+      const publicVariables = this._section(t("legacy.4f0efc6ac572"));
       const definitions = new Map(this.saveManager.publicVariableManager?.list().map((item) => [String(item.id), item]) || []);
       for (const [id, value] of Object.entries(state.publicVariables)) {
         const definition = definitions.get(id);
-        const label = definition ? `${definition.name} (#${id})` : `变量 #${id}`;
+        const label = definition ? `${definition.name} (#${id})` : `${t("legacy.c812a722713f")}#${id}`;
         const type = typeof value === "boolean" ? "checkbox" : (typeof value === "number" ? "number" : (value && typeof value === "object" ? "textarea" : "text"));
         const display = type === "textarea" ? JSON.stringify(value, null, 2) : value;
         publicVariables.append(this._field(label, display, `publicVariables.${id}`, type));
       }
       this.fieldsEl.append(publicVariables);
 
-      const summary = this._section("由系统恢复的运行时结构");
-      summary.append(document.createTextNode(`活动队列：${Object.keys(state.queues || {}).length} 个；窗口：${(state.windows || []).length} 个；运行时存储：${Object.keys(state.runtime || {}).length} 个`));
+      const summary = this._section(t("legacy.beb255c18677"));
+      summary.append(document.createTextNode(`${t("legacy.bc41610e4666")}${Object.keys(state.queues || {}).length} ${t("legacy.49572aa2ae35")}${(state.windows || []).length} ${t("legacy.e2a6453021ca")}${Object.keys(state.runtime || {}).length} ${t("legacy.f7b2a6ee68ec")}`));
       this.fieldsEl.append(summary);
-      this.statusEl.textContent = "已读取运行时状态";
+      this.statusEl.textContent = t("legacy.28d6effd89bd");
     } catch (error) {
-      this.statusEl.textContent = `读取失败: ${error.message}`;
+      this.statusEl.textContent = `${t("legacy.d9f607a20068")}: ${error.message}`;
     }
   }
 
@@ -113,10 +114,10 @@ export class SaveDebuggerView {
         else if (group === "publicVariables") envelope.state.publicVariables[key] = value;
       }
       this.saveManager.restore(envelope);
-      this.statusEl.textContent = "已应用运行时修改；未写入数据库或游戏 JSON";
+      this.statusEl.textContent = t("legacy.e1a5cef1136b");
       this.read();
     } catch (error) {
-      this.statusEl.textContent = `应用失败，当前状态未改变: ${error.message}`;
+      this.statusEl.textContent = `${t("legacy.64c04880b21f")}: ${error.message}`;
     }
   }
 }

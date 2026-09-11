@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * DataStructureManager - plan §9.2's "结构 schema": a registry of
  * data-structure definitions (field name/type/required/default), used to
@@ -68,7 +69,7 @@ export class DataStructureManager {
 
   /** Registers (or replaces) a structure definition; returns the stored definition. */
   register(definition) {
-    if (!definition?.id) throw new Error("DataStructureManager.register requires an `id`");
+    if (!definition?.id) throw new Error(t("error.8238fd728d4a"));
     if (!Array.isArray(definition.fields)) throw new Error(`Structure "${definition.id}" must declare a \`fields\` array`);
     for (const field of definition.fields) {
       if (!field?.id) throw new Error(`Structure "${definition.id}" has a field with no \`id\``);
@@ -119,33 +120,33 @@ export class DataStructureManager {
   /** Validates a record against a structure's field types/required flags. Never mutates `record`. Returns { ok, errors }. */
   validateRecord(structureId, record = {}) {
     const structure = this.get(structureId);
-    if (!structure) return { ok: false, errors: [`未知结构: ${structureId}`] };
+    if (!structure) return { ok: false, errors: [`${t("legacy.528e4841bf64")}: ${structureId}`] };
     const errors = [];
     for (const field of structure.fields) {
       const value = record[field.id];
       const present = value !== undefined && value !== null;
       if (!present) {
-        if (field.required) errors.push(`字段 ${field.id} 是必填项`);
+        if (field.required) errors.push(`${t("legacy.7cf814385877")}${field.id} ${t("legacy.bd01b67cff18")}`);
         continue;
       }
       const itemType = parseArrayItemType(field.type);
       if (field.type === "activity") {
-        if (!isEmbeddedActivityValue(value)) errors.push(`字段 ${field.id} 必须是 Activity blueprint 或 Activity 映射`);
+        if (!isEmbeddedActivityValue(value)) errors.push(`${t("legacy.7cf814385877")}${field.id} ${t("legacy.319566b285d6")}Activity blueprint ${t("legacy.9328a8532ede")}Activity ${t("legacy.43353e0245e0")}`);
         continue;
       }
       if (itemType || field.type === "array") {
         if (!Array.isArray(value)) {
-          errors.push(`字段 ${field.id} 必须是数组`);
+          errors.push(`${t("legacy.7cf814385877")}${field.id} ${t("legacy.ae5def43e0de")}`);
         } else if (itemType) {
           const validator = SCALAR_VALIDATORS[itemType];
           value.forEach((item, index) => {
-            if (validator && !validator(item)) errors.push(`字段 ${field.id}[${index}] 类型必须是 ${itemType}`);
+            if (validator && !validator(item)) errors.push(`${t("legacy.7cf814385877")}${field.id}[${index}] ${t("legacy.a3943eecebe8")}${itemType}`);
           });
         }
         continue;
       }
       const validator = SCALAR_VALIDATORS[field.type];
-      if (validator && !validator(value)) errors.push(`字段 ${field.id} 类型必须是 ${field.type}`);
+      if (validator && !validator(value)) errors.push(`${t("legacy.7cf814385877")}${field.id} ${t("legacy.a3943eecebe8")}${field.type}`);
     }
     return { ok: errors.length === 0, errors };
   }

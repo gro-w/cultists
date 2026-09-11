@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 /**
  * WindowDefinitionManagerView - lists loaded window definitions and opens
  * each one in a WindowEditorView (plan §7). Operates directly on the live
@@ -35,10 +36,10 @@ export class WindowDefinitionManagerView {
     el.innerHTML = `
       <div class="ng-list-manager-lists" style="width:100%;">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new">新建窗口</button>
-          <button type="button" data-action="duplicate">复制窗口</button>
-          <button type="button" data-action="delete">删除窗口</button>
-          <span class="ng-editor-status">双击一个窗口定义以在 WYSIWYG 编辑器中打开</span>
+          <button type="button" data-action="new">${t("legacy.7dd1b16c1a3b")}</button>
+          <button type="button" data-action="duplicate">${t("legacy.8fcd42990517")}</button>
+          <button type="button" data-action="delete">${t("legacy.3feeec112412")}</button>
+          <span class="ng-editor-status">${t("legacy.8121d2e98d77")}WYSIWYG ${t("legacy.de52b1ca16dc")}</span>
         </div>
         <div class="ng-list-manager-list-items"></div>
       </div>
@@ -48,9 +49,9 @@ export class WindowDefinitionManagerView {
     this.statusEl = el.querySelector(".ng-editor-status");
 
     el.querySelector('[data-action="new"]').addEventListener("click", () => {
-      const id = prompt("新窗口 ID:");
+      const id = prompt(t("legacy.580a4fff7e38"));
       if (!id) return;
-      if (this.windowDefinitionStore.get(id)) { this.statusEl.textContent = `窗口 "${id}" 已存在`; return; }
+      if (this.windowDefinitionStore.get(id)) { this.statusEl.textContent = `${t("legacy.02f536ce5393")}"${id}" ${t("legacy.a867d42ddf26")}`; return; }
       this.windowDefinitionStore.register(defaultWindowDefinition(id));
       this.selectedId = id;
       this.render();
@@ -59,9 +60,9 @@ export class WindowDefinitionManagerView {
       if (!this.selectedId) return;
       const source = this.windowDefinitionStore.get(this.selectedId);
       if (!source) return;
-      const id = prompt("新窗口 ID:", `${this.selectedId}-copy`);
+      const id = prompt(t("legacy.580a4fff7e38"), `${this.selectedId}-copy`);
       if (!id) return;
-      if (this.windowDefinitionStore.get(id)) { this.statusEl.textContent = `窗口 "${id}" 已存在`; return; }
+      if (this.windowDefinitionStore.get(id)) { this.statusEl.textContent = `${t("legacy.02f536ce5393")}"${id}" ${t("legacy.a867d42ddf26")}`; return; }
       this.windowDefinitionStore.register({ ...JSON.parse(JSON.stringify(source)), id });
       this.selectedId = id;
       this.render();
@@ -83,7 +84,7 @@ export class WindowDefinitionManagerView {
     for (const definition of this.windowDefinitionStore.list().filter((definition) => definition.root)) {
       const item = document.createElement("div");
       item.className = "ng-list-manager-list-item" + (definition.id === this.selectedId ? " selected" : "");
-      item.textContent = `${definition.id}${definition.fullscreen ? " (全屏)" : ""}`;
+      item.textContent = `${definition.id}${definition.fullscreen ? ` (${t("legacy.93c44f6b1b28")})` : ""}`;
       item.addEventListener("click", () => { this.selectedId = definition.id; this.render(); });
       item.addEventListener("dblclick", () => this.openEditor(definition));
       this.itemsEl.appendChild(item);

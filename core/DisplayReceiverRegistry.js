@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /** Routes opaque Activity display events to the currently mounted receiver for a data-declared target. */
 export class DisplayReceiverRegistry {
   constructor() {
@@ -8,7 +9,7 @@ export class DisplayReceiverRegistry {
 
   register(target, receiver) {
     target = this._target(target);
-    if (!target || !receiver || typeof receiver.handle !== "function") throw new Error("Display receiver requires a target and handle(payload)");
+    if (!target || !receiver || typeof receiver.handle !== "function") throw new Error(t("error.3e276326c833"));
     this.receivers.set(target, receiver);
     this.lastTarget = target;
     /* DEV-TOOLS:START */

@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * DataStore - plan §9.3's "数据库": in-memory record collections keyed by
  * `databaseId`, validated against a `DataStructureManager` structure on
@@ -25,7 +26,7 @@ export class DataStore {
   }
 
   registerDatabase({ databaseId, recordType, primaryKey = "id", allowDelete = true, recordFile = "seed-records.json" }) {
-    if (!databaseId) throw new Error("DataStore.registerDatabase requires a databaseId");
+    if (!databaseId) throw new Error(t("error.501444e950dc"));
     if (!this.dataStructureManager.get(recordType)) throw new Error(`Unknown recordType structure: ${recordType}`);
     this.databases.set(databaseId, { databaseId, recordType, primaryKey, allowDelete, recordFile, records: new Map(), seq: 1 });
     return this.databases.get(databaseId);

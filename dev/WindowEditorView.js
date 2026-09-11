@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { createWindowEditorModel } from "./WindowEditorModel.js";
 import { renderWindowRoot } from "../core/WidgetLayoutRenderer.js";
 import { isBoundValue } from "../core/PropertyBinding.js";
@@ -41,16 +42,16 @@ export class WindowEditorView {
     el.tabIndex = 0;
     el.innerHTML = `
       <div class="ng-editor-toolbar">
-        <button type="button" data-action="undo" title="撤销">撤销</button>
-        <button type="button" data-action="redo" title="重做">重做</button>
+        <button type="button" data-action="undo" title="${t("legacy.9fcefd8dc81e")}">${t("legacy.9fcefd8dc81e")}</button>
+        <button type="button" data-action="redo" title="${t("legacy.1238f0d36361")}">${t("legacy.1238f0d36361")}</button>
         <select class="ng-window-editor-add-type"></select>
-        <button type="button" data-action="add" title="向选中容器添加组件">添加</button>
-        <button type="button" data-action="add-tab" title="向选中选项卡容器添加选项卡">添加选项卡</button>
-        <button type="button" data-action="duplicate" title="复制选中">复制</button>
-        <button type="button" data-action="delete" title="删除选中 (Delete)">删除选中</button>
-        <button type="button" data-action="save" title="保存到内存">保存到内存</button>
-        <button type="button" data-action="download" title="下载 JSON">下载</button>
-        <button type="button" data-action="write-disk" title="写入磁盘">写入磁盘</button>
+        <button type="button" data-action="add" title="${t("legacy.ebd5dd943c92")}">${t("legacy.94191ce210d3")}</button>
+        <button type="button" data-action="add-tab" title="${t("legacy.20e94ec10fb3")}">${t("legacy.afa85f9c9cd3")}</button>
+        <button type="button" data-action="duplicate" title="${t("legacy.4584c49b2881")}">${t("legacy.4edd1d00875d")}</button>
+        <button type="button" data-action="delete" title="${t("legacy.7e8b0e5b4ebb")}(Delete)">${t("legacy.42b7a0e01134")}</button>
+        <button type="button" data-action="save" title="${t("legacy.b02ae67098e2")}">${t("legacy.b02ae67098e2")}</button>
+        <button type="button" data-action="download" title="${t("legacy.3f10b573ee1b")}JSON">${t("legacy.2b9d013177da")}</button>
+        <button type="button" data-action="write-disk" title="${t("legacy.81ee3266b03d")}">${t("legacy.81ee3266b03d")}</button>
         <span class="ng-editor-status"></span>
       </div>
       <div class="ng-window-editor-body">
@@ -106,16 +107,16 @@ export class WindowEditorView {
 
   _save() {
     this.onSaveToMemory(this.model.toDefinition());
-    this.statusEl.textContent = "已保存到内存";
+    this.statusEl.textContent = t("legacy.bedc3c6afcd3");
   }
 
   async _writeDisk() {
     if (!this.dataFileName) return;
     try {
       await writeDataFile(this.dataFileName, JSON.stringify(this.model.toDefinition(), null, 2));
-      this.statusEl.textContent = "已写入磁盘";
+      this.statusEl.textContent = t("legacy.d4371481b26a");
     } catch (err) {
-      this.statusEl.textContent = `写入失败: ${err.message}`;
+      this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${err.message}`;
     }
   }
 
@@ -280,11 +281,11 @@ export class WindowEditorView {
     if (this.openValueBlueprintEditor) {
       const graphButton = document.createElement("button");
       graphButton.type = "button";
-      graphButton.textContent = "编辑组件数值蓝图";
-      graphButton.title = "创建/编辑组件属性和内容使用的数值输出图";
+      graphButton.textContent = t("legacy.3079067d88f0");
+      graphButton.title = t("legacy.039b8514593b");
       graphButton.addEventListener("click", () => this.openValueBlueprintEditor({
         blueprint: this.model.definition.valueGraph || {},
-        displayName: `${this.model.definition.id || "window"} 数值蓝图`,
+        displayName: `${this.model.definition.id || "window"} ${t("legacy.f6cf556d44a8")}`,
         onSaveToMemory: (blueprint) => {
           this.model.definition.valueGraph = blueprint;
           this.render();
@@ -304,7 +305,7 @@ export class WindowEditorView {
         const bindToggle = document.createElement("input");
         bindToggle.type = "checkbox";
         bindToggle.className = "ng-window-editor-field-bind-toggle";
-        bindToggle.title = "通过变量取值而非固定值 (窗口/组件属性也都可以通过蓝图指定)";
+        bindToggle.title = t("legacy.d648e52c700c");
         bindToggle.checked = bound;
         bindToggle.addEventListener("change", () => {
           const patch = bindToggle.checked
@@ -318,7 +319,7 @@ export class WindowEditorView {
       const input = document.createElement(field.type === "checkbox" ? "input" : field.type === "select" ? "select" : "input");
       if (bound) {
         input.type = "text";
-        input.placeholder = "变量名 或 @蓝图节点:端口";
+        input.placeholder = t("legacy.f6fff4b55164");
         input.value = rawValue.variable || (rawValue.nodeId ? `@${rawValue.nodeId}:${rawValue.port || "value"}` : "");
       } else if (field.type === "checkbox") {
         input.type = "checkbox";
@@ -362,11 +363,11 @@ export class WindowEditorView {
   _appendValueGraphButton() {
     const graphButton = document.createElement("button");
     graphButton.type = "button";
-    graphButton.textContent = "编辑组件数值蓝图";
-    graphButton.title = "创建/编辑组件属性和内容使用的数值输出图";
+    graphButton.textContent = t("legacy.3079067d88f0");
+    graphButton.title = t("legacy.039b8514593b");
     graphButton.addEventListener("click", () => this.openValueBlueprintEditor({
       blueprint: this.model.definition.valueGraph || {},
-      displayName: `${this.model.definition.id || "window"} 数值蓝图`,
+      displayName: `${this.model.definition.id || "window"} ${t("legacy.f6cf556d44a8")}`,
       onSaveToMemory: (blueprint) => {
         this.model.definition.valueGraph = blueprint;
         this.render();
@@ -402,11 +403,11 @@ export class WindowEditorView {
     const stackParent = Boolean(entry?.parent && entry.parent.flow === "stack");
     const section = document.createElement("div");
     section.className = "ng-window-editor-geometry";
-    section.innerHTML = "<h4>位置 (x/y)</h4>";
+    section.innerHTML = t("legacy.ee8c24009f69");
     if (!stackParent) {
       const note = document.createElement("div");
       note.className = "ng-editor-empty";
-      note.textContent = entry?.parent ? `父容器 flow="${entry.parent.flow || "vertical"}"，x/y 不生效（仅 stack 容器内可自由拖动定位）` : "根节点没有父容器，x/y 不生效";
+      note.textContent = entry?.parent ? `${t("legacy.8186bfa982cc")}flow="${entry.parent.flow || "vertical"}"，x/y ${t("legacy.0693a940628e")}stack ${t("legacy.8f2b9a19b740")}` : t("legacy.16260f48b60c");
       section.appendChild(note);
       this.inspectorEl.appendChild(section);
       return;
@@ -420,7 +421,7 @@ export class WindowEditorView {
       const bindToggle = document.createElement("input");
       bindToggle.type = "checkbox";
       bindToggle.checked = bound;
-      bindToggle.title = "通过数值蓝图输出驱动位置";
+      bindToggle.title = t("legacy.77071646e7f4");
       bindToggle.addEventListener("change", () => {
         this.model.updateWidgetProps(node.widgetId, { [key]: bindToggle.checked ? { variable: "" } : 0 });
         this._renderInspector();
@@ -428,7 +429,7 @@ export class WindowEditorView {
       row.appendChild(bindToggle);
       input.type = bound ? "text" : "number";
       input.value = bound ? (node[key].variable || (node[key].nodeId ? `@${node[key].nodeId}:${node[key].port || "value"}` : "")) : (Number.isFinite(node[key]) ? node[key] : 0);
-      if (bound) input.placeholder = "变量名 或 @节点:端口";
+      if (bound) input.placeholder = t("legacy.b8b53421a2d0");
       input.addEventListener("input", () => {
         this.model.updateWidgetProps(node.widgetId, { [key]: bound ? this._parseBinding(input.value) : Number(input.value) || 0 });
         this._renderPreview();
@@ -461,17 +462,17 @@ export class WindowEditorView {
     if (!eventNames.length) return;
     const section = document.createElement("div");
     section.className = "ng-window-editor-events";
-    section.innerHTML = "<h4>事件蓝图</h4>";
+    section.innerHTML = t("legacy.69840b476d34");
     for (const eventName of eventNames) {
       const row = document.createElement("div");
       row.className = "ng-window-editor-event-row";
       const bound = Boolean(node.events?.[eventName]);
       const status = document.createElement("span");
-      status.textContent = `${eventName}: ${bound ? "已绑定" : "未绑定"}`;
+      status.textContent = `${eventName}: ${bound ? t("legacy.b3addb5e3f54") : t("legacy.3bf179d8d045")}`;
       row.appendChild(status);
       const editButton = document.createElement("button");
       editButton.type = "button";
-      editButton.textContent = "编辑蓝图";
+      editButton.textContent = t("legacy.140e881a82ed");
       editButton.disabled = !this.openEventBlueprintEditor;
       editButton.addEventListener("click", () => {
         this.openEventBlueprintEditor(node.events?.[eventName] || null, `${node.widgetId}.${eventName}`, (blueprint) => {
@@ -483,7 +484,7 @@ export class WindowEditorView {
       if (bound) {
         const clearButton = document.createElement("button");
         clearButton.type = "button";
-        clearButton.textContent = "清除";
+        clearButton.textContent = t("legacy.7b15e5e8e7bd");
         clearButton.addEventListener("click", () => {
           this.model.updateWidgetProps(node.widgetId, { events: { ...(node.events || {}), [eventName]: null } });
           this._renderInspector();
@@ -512,7 +513,7 @@ export class WindowEditorView {
         const bindToggle = document.createElement("input");
         bindToggle.type = "checkbox";
         bindToggle.className = "ng-window-editor-field-bind-toggle";
-        bindToggle.title = "通过变量取值而非固定值";
+        bindToggle.title = t("legacy.8804ed6582cc");
         bindToggle.checked = bound;
         bindToggle.addEventListener("change", () => {
           this.model.updateWindowProps({ [field.key]: bindToggle.checked ? { variable: "" } : "" });
@@ -523,7 +524,7 @@ export class WindowEditorView {
       const input = document.createElement(field.type === "select" ? "select" : "input");
       if (bound) {
         input.type = "text";
-        input.placeholder = "变量名 或 @蓝图节点:端口";
+        input.placeholder = t("legacy.f6fff4b55164");
         input.value = rawValue.variable || (rawValue.nodeId ? `@${rawValue.nodeId}:${rawValue.port || "value"}` : "");
       } else if (field.type === "checkbox") {
         input.type = "checkbox";
@@ -601,7 +602,7 @@ export class WindowEditorView {
       return [...common,
         { key: "items", label: "items", type: "text", value: JSON.stringify(node.items || []), bindable: true },
         { key: "itemLabelField", label: "itemLabelField", type: "text", value: node.itemLabelField || "name", bindable: true },
-        { key: "itemType", label: "itemType", type: "select", value: node.itemType || "div", options: [{"value":"div","label":"普通列表项"},{"value":"button","label":"按钮列表项"}] },
+        { key: "itemType", label: "itemType", type: "select", value: node.itemType || "div", options: [{"value":"div","label":t("legacy.bdd8f1cd734c")},{"value":"button","label":t("legacy.d1bc1cb89952")}] },
         { key: "itemDisabledField", label: "itemDisabledField", type: "text", value: node.itemDisabledField || "", bindable: true },
         { key: "itemLabelTemplate", label: "itemLabelTemplate", type: "text", value: node.itemLabelTemplate || "", bindable: true },
         { key: "itemClassField", label: "itemClassField", type: "text", value: node.itemClassField || "", bindable: true },

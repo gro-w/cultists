@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { normalizeBlueprint, validateBlueprint } from "../core/ActivityValidator.js";
 import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
 
@@ -176,12 +177,12 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
   function connect(fromNodeId, fromPort, toNodeId, toPort) {
     const fromNode = current.nodes[fromNodeId];
     const toNode = current.nodes[toNodeId];
-    if (!fromNode || !toNode) return { ok: false, error: "未知节点" };
+    if (!fromNode || !toNode) return { ok: false, error: t("legacy.e27f1d70eab1") };
     const sourcePort = getActivityNodePort(fromNode.type, "output", fromPort);
     const targetPort = getActivityNodePort(toNode.type, "input", toPort);
-    if (!sourcePort) return { ok: false, error: `节点 ${fromNodeId} 没有输出端口 ${fromPort}` };
-    if (!targetPort) return { ok: false, error: `节点 ${toNodeId} 没有输入端口 ${toPort}` };
-    if (!arePortsCompatible(sourcePort, targetPort)) return { ok: false, error: "端口类型不兼容" };
+    if (!sourcePort) return { ok: false, error: `${t("legacy.fa002d2c545a")}${fromNodeId} ${t("legacy.1a053b86935d")}${fromPort}` };
+    if (!targetPort) return { ok: false, error: `${t("legacy.fa002d2c545a")}${toNodeId} ${t("legacy.7d5b5439d87a")}${toPort}` };
+    if (!arePortsCompatible(sourcePort, targetPort)) return { ok: false, error: t("legacy.612b75fb27de") };
     pushHistory();
     if (sourcePort.kind === "flow") {
       fromNode.next[fromPort] = { nodeId: toNodeId, port: toPort };
@@ -400,7 +401,7 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
 
   /** Renames the activity's own stable id (plan follow-up: "蓝图id可以编辑"). Only mutates the editor's in-memory model; the caller is responsible for reconciling any external registry (list membership, file name, window title) that indexes by the old id. */
   function setActivityId(nextId) {
-    if (!nextId) throw new Error("activityId 不能为空");
+    if (!nextId) throw new Error(t("legacy.39333cde4964"));
     activityId = nextId;
   }
 

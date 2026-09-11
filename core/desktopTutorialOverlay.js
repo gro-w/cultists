@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * TutorialOverlay - the visual half of the onboarding mechanic: a raw DOM
  * overlay (not a window, mounted once directly onto document.body exactly
@@ -16,7 +17,7 @@ export class TutorialOverlay {
     this.root = root || document.createElement("div");
     if (!root) document.body.appendChild(this.root);
     this.root.className = "tutorial-overlay hidden";
-    this.root.innerHTML = `<div class="tutorial-highlight" aria-hidden="true"></div><div class="tutorial-card" role="dialog" aria-live="polite"><strong class="tutorial-title"></strong><p class="tutorial-text"></p><div class="tutorial-actions"><button type="button" class="win95-btn bevel-out tutorial-ok">知道了</button><button type="button" class="win95-btn bevel-out tutorial-dismiss">以后不再提示</button></div></div>`;
+    this.root.innerHTML = `<div class="tutorial-highlight" aria-hidden="true"></div><div class="tutorial-card" role="dialog" aria-live="polite"><strong class="tutorial-title"></strong><p class="tutorial-text"></p><div class="tutorial-actions"><button type="button" class="win95-btn bevel-out tutorial-ok">${t("legacy.cb63c62e50f8")}</button><button type="button" class="win95-btn bevel-out tutorial-dismiss">${t("legacy.446ddd6f97e8")}</button></div></div>`;
     this.highlight = this.root.querySelector(".tutorial-highlight");
     this.card = this.root.querySelector(".tutorial-card");
     this.title = this.root.querySelector(".tutorial-title");

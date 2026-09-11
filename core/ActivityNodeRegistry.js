@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * ActivityNodeRegistry - the generic, domain-agnostic Blueprint node types
  * available in ng/ Phase 2. Per the plan's risk mitigation (§15 风险 F),
@@ -19,45 +20,45 @@ const valueIn = (name, type = "any") => ({ name, kind: VALUE, type });
 const valueOut = (name = "value", type = "any") => ({ name, kind: VALUE, type });
 
 const definitions = {
-  flowStart: { label: "流程起始", flowOutputs: [flowOut()] },
-  activityEnd: { label: "活动结束", flowInputs: [flowIn()] },
+  flowStart: { label: t("legacy.693c26d62889"), flowOutputs: [flowOut()] },
+  activityEnd: { label: t("legacy.ed342f86a3bc"), flowInputs: [flowIn()] },
   macroReturn: {
-    label: "宏流程返回",
+    label: t("legacy.b4a854b31384"),
     flowInputs: [flowIn()],
     flowOutputs: [],
     valueInputs: [valueIn("port", "string")],
   },
   setVariable: {
-    label: "设置变量",
+    label: t("legacy.6e5239637e0c"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("value"), valueIn("delta", "number")],
   },
   appendToArrayVariable: {
-    label: "向数组变量追加",
+    label: t("legacy.043ad239c775"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("value")],
   },
   setLocalVariable: {
-    label: "设置 Activity 本地变量",
+    label: t("legacy.ce29aad2927d"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("value"), valueIn("delta", "number")],
   },
   getLocalVariable: {
-    label: "读取 Activity 本地变量",
+    label: t("legacy.eebde94655b3"),
     valueInputs: [valueIn("key", "string")],
     valueOutputs: [valueOut("value")],
   },
   branch: {
-    label: "条件分支",
+    label: t("legacy.315a7ec1a389"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut("true"), flowOut("false")],
     valueInputs: [valueIn("condition", "bool")],
   },
   blockUntil: {
-    label: "阻塞直到",
+    label: t("legacy.48c0c0187e50"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("equals"), valueIn("condition", "bool")],
@@ -68,31 +69,31 @@ const definitions = {
   // desktop icon's) open a window definition by id and then keep going,
   // e.g. into a consumeTime node - see plan §7.4's "下班" example flow.
   openWindow: {
-    label: "打开窗口",
+    label: t("legacy.51886c677f15"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("windowId", "string"), valueIn("skip", "bool")],
   },
   closeWindow: {
-    label: "关闭窗口",
+    label: t("legacy.51daeffe4774"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("windowId", "string")],
   },
   addWindowComponent: {
-    label: "新增窗口组件",
+    label: t("legacy.11c5c12f4e3e"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut("onCreate", true), flowOut("onClick", true), flowOut("onChange", true), flowOut("onFocus", true), flowOut("onBlur", true), flowOut("onDestroy", true)],
     valueInputs: [valueIn("windowId", "string"), valueIn("parentId", "string"), valueIn("componentId", "string"), valueIn("componentType", "string"), valueIn("publicVariableId", "number"), valueIn("resultVariable", "string"), valueIn("maxCount", "number"), valueIn("x", "number"), valueIn("y", "number"), valueIn("width", "number"), valueIn("height", "number"), valueIn("text", "string"), valueIn("enabled", "bool"), valueIn("properties")],
   },
   removeWindowComponent: {
-    label: "删除窗口组件",
+    label: t("legacy.c2b00e60ff9e"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("windowId", "string"), valueIn("componentId", "string")],
   },
   getWindowLayout: {
-    label: "获取窗口布局",
+    label: t("legacy.c6861e5817a0"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("windowId", "string"), valueIn("resultVariable", "string")],
@@ -101,7 +102,7 @@ const definitions = {
   // enqueues and runs another Activity definition on a given queue, without
   // the caller needing to know anything about that Activity's own flow.
   runActivity: {
-    label: "运行 Activity",
+    label: t("legacy.0f72ed20b9d6"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("activityId", "string"), valueIn("queueId", "string")],
@@ -110,7 +111,7 @@ const definitions = {
   // blueprint announce a domain-agnostic event other systems can subscribe
   // to, without baking any specific event name into the engine.
   emitEvent: {
-    label: "发出事件",
+    label: t("legacy.bb6bcbd35472"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("eventName", "string"), valueIn("payload")],
@@ -119,7 +120,7 @@ const definitions = {
   // blueprint may call a registered API; API IDs and domain meaning belong
   // to the content package.
   callApi: {
-    label: "调用内容 API",
+    label: t("legacy.d9959e1d286e"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("apiId", "string"), valueIn("payload"), valueIn("resultVariable", "string")],
@@ -132,37 +133,37 @@ const definitions = {
   // flow nodes.
   // createRecord follows the generic database action definitions below.
   createRecord: {
-    label: "创建记录",
+    label: t("legacy.01d7074e8aaa"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("databaseId", "string"), valueIn("data"), valueIn("resultVariable", "string")],
   },
   getRecord: {
-    label: "读取记录",
+    label: t("legacy.9937f7ef9f5a"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("databaseId", "string"), valueIn("key"), valueIn("resultVariable", "string")],
   },
   updateRecord: {
-    label: "更新记录",
+    label: t("legacy.04a590354c37"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("databaseId", "string"), valueIn("key"), valueIn("patch"), valueIn("resultVariable", "string")],
   },
   deleteRecord: {
-    label: "删除记录",
+    label: t("legacy.8f22c9908ed4"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("databaseId", "string"), valueIn("key"), valueIn("resultVariable", "string")],
   },
   findRecords: {
-    label: "查找记录",
+    label: t("legacy.8d11a338921f"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("databaseId", "string"), valueIn("query"), valueIn("resultVariable", "string")],
   },
   countRecords: {
-    label: "统计记录",
+    label: t("legacy.83be2b31f1e8"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("databaseId", "string"), valueIn("query"), valueIn("resultVariable", "string")],
@@ -173,7 +174,7 @@ const definitions = {
   // (plan §6.2 value-port wiring). Kept intentionally domain-agnostic
   // (arithmetic + generic variable read) per §15 风险 F.
   arithmetic: {
-    label: "运算",
+    label: t("legacy.ec7885eb376d"),
     valueInputs: [valueIn("operator", "string"), valueIn("left"), valueIn("right")],
     valueOutputs: [valueOut("value")],
   },
@@ -183,12 +184,12 @@ const definitions = {
   // alphabetically-first of two chosen keyword ids" with only comparison +
   // this node, no dedicated sort/min node.
   conditionalValue: {
-    label: "条件取值",
+    label: t("legacy.923a2dfed0b9"),
     valueInputs: [valueIn("condition", "bool"), valueIn("whenTrue"), valueIn("whenFalse")],
     valueOutputs: [valueOut("value")],
   },
   getVariable: {
-    label: "读取变量",
+    label: t("legacy.f8e5337b5ffe"),
     valueInputs: [valueIn("key", "string")],
     valueOutputs: [valueOut("value")],
   },
@@ -197,47 +198,47 @@ const definitions = {
   // `getVariable` for structured values, so a widget property can display
   // e.g. a selected patient's `name` without a domain-specific node.
   getProperty: {
-    label: "读取属性",
+    label: t("legacy.8e985c2ca438"),
     valueInputs: [valueIn("value"), valueIn("key", "string")],
     valueOutputs: [valueOut("value")],
   },
   getStructureDefinition: {
-    label: "读取自定义数据结构",
+    label: t("legacy.9644e3813f1b"),
     valueInputs: [valueIn("structureId", "string")],
     valueOutputs: [valueOut("value", "object")],
   },
   getDatabaseDefinition: {
-    label: "读取数据库定义",
+    label: t("legacy.93d335882077"),
     valueInputs: [valueIn("databaseId", "string")],
     valueOutputs: [valueOut("value", "object")],
   },
   // Pure database read for widget/value bindings. Unlike findRecords (a flow
   // action), this node can feed a list/table property directly.
   findRecordsValue: {
-    label: "读取数据库记录列表",
+    label: t("legacy.ec6b58250498"),
     valueInputs: [valueIn("databaseId", "string"), valueIn("query")],
     valueOutputs: [valueOut("value", "array")],
   },
   getRecordValue: {
-    label: "读取单条数据库记录",
+    label: t("legacy.64fd2cb41a6b"),
     valueInputs: [valueIn("databaseId", "string"), valueIn("key")],
     valueOutputs: [valueOut("value", "object")],
   },
   // Generic runtime collection gateway. Domain systems register collections
   // by stable id; the engine does not know achievement/HIS semantics.
   getRuntimeCollection: {
-    label: "读取运行时集合",
+    label: t("legacy.ea05ffcf2cf1"),
     valueInputs: [valueIn("collectionId", "string")],
     valueOutputs: [valueOut("value", "array")],
   },
   getRuntimeRecord: {
-    label: "读取运行时集合记录",
+    label: t("legacy.5d19d125c946"),
     valueInputs: [valueIn("collectionId", "string"), valueIn("recordId")],
     valueOutputs: [valueOut("value", "object")],
   },
   // Generic join used to combine canonical records with runtime state by id.
   mergeRecords: {
-    label: "合并记录状态",
+    label: t("legacy.7fd924483907"),
     valueInputs: [valueIn("left", "array"), valueIn("right", "array"), valueIn("keyField", "string")],
     valueOutputs: [valueOut("value", "array")],
   },
@@ -247,7 +248,7 @@ const definitions = {
   // prescription"/"pick a keyword" button appending to a variableStore
   // array one click at a time with no domain-specific node type.
   arrayAppend: {
-    label: "数组追加",
+    label: t("legacy.4090ada38c26"),
     valueInputs: [valueIn("array"), valueIn("item")],
     valueOutputs: [valueOut("value")],
   },
@@ -256,17 +257,27 @@ const definitions = {
   // integer/real/string/object) through `pvGateway`, distinct from the
   // generic per-run `variableStore` string-keyed nodes above.
   getPublicVariable: {
-    label: "读取公共变量",
+    label: t("legacy.232052be43ac"),
     valueInputs: [valueIn("id", "number")],
     valueOutputs: [valueOut("value")],
   },
+  getLanguage: {
+    label: t("legacy.a2940bd2808e"),
+    valueOutputs: [valueOut("value", "string")],
+  },
+  setLanguage: {
+    label: t("legacy.125477fbbed8"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("language", "string")],
+  },
   publicVariableCondition: {
-    label: "公共变量条件",
+    label: t("legacy.f8faae90af41"),
     valueInputs: [valueIn("id", "number"), valueIn("op", "string"), valueIn("value")],
     valueOutputs: [valueOut("value", "bool")],
   },
   applyPublicVariableEffect: {
-    label: "应用公共变量效果",
+    label: t("legacy.908400ca4f67"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("id", "number"), valueIn("value"), valueIn("delta", "number"), valueIn("toggle", "bool"), valueIn("setObjectRef")],
@@ -280,7 +291,7 @@ const definitions = {
   // resets the key and continues. Omitting `continueKey` auto-advances
   // immediately, for non-interactive/automated narration.
   text: {
-    label: "显示文本",
+    label: t("legacy.f3d19e228143"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("speaker", "string"), valueIn("text", "string"), valueIn("displayTo", "string"), valueIn("keywordIds"), valueIn("continueKey", "string")],
@@ -297,7 +308,7 @@ const definitions = {
   // `optionCount` of them to be wired (plan §15 风险 F: still domain-agnostic
   // — nothing here references dialogue/item/medical content).
   choice: {
-    label: "选择分支",
+    label: t("legacy.499802de56f4"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut("option0"), flowOut("option1"), flowOut("option2"), flowOut("option3"), flowOut("option4"), flowOut("option5")],
     valueInputs: [valueIn("options"), valueIn("optionCount", "number"), valueIn("selectionKey", "string"), valueIn("displayTo", "string")],
@@ -311,29 +322,29 @@ const definitions = {
   // check) and reads its `condition`/`expires`/`expiresAt` inputs directly
   // via the same generic `resolveInput` helper flow nodes already use.
   prerequisite: {
-    label: "前置条件",
+    label: t("legacy.cf1747c9f0ed"),
     valueInputs: [valueIn("condition", "bool")],
   },
   activityExpiry: {
-    label: "活动过期",
+    label: t("legacy.a1fe6159c2f5"),
     valueInputs: [valueIn("expires", "bool"), valueIn("expiresAt", "number")],
   },
   getGameTime: {
-    label: "读取游戏时间",
+    label: t("legacy.812ea53a8728"),
     valueOutputs: [valueOut("value", "number")],
   },
   getActivityInstanceCount: {
-    label: "读取活动实例数量",
+    label: t("legacy.137795627288"),
     valueInputs: [valueIn("activityId", "string")],
     valueOutputs: [valueOut("value", "number")],
   },
   getQueueEntryCount: {
-    label: "读取队列未解决活动数量",
+    label: t("legacy.765eac64581e"),
     valueInputs: [valueIn("queueId", "string")],
     valueOutputs: [valueOut("value", "number")],
   },
   insertActivity: {
-    label: "插入活动",
+    label: t("legacy.611b518dad60"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("activityId", "string"), valueIn("queue", "string"), valueIn("addTime", "number")],
@@ -341,14 +352,14 @@ const definitions = {
 
 
   segmentBranch: {
-    label: "区间分支",
+    label: t("legacy.38864483be46"),
     flowInputs: [flowIn()],
     flowOutputs: ["default", ...Array.from({ length: 32 }, (_, index) => `segment${index}`)].map(flowOut),
     valueInputs: [valueIn("value", "number"), valueIn("branchCount", "number"), ...Array.from({ length: 33 }, (_, index) => valueIn(`boundary${index}`, "number"))],
   },
 
   markEventState: {
-    label: "标记状态事件",
+    label: t("legacy.7d3ff4ae2359"),
     flowInputs: [flowIn()],
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("id", "string")],
@@ -362,7 +373,7 @@ export function listActivityNodeTypes() {
 }
 
 export function registerCustomActivityNode(node) {
-  if (!node?.id || !/^[a-zA-Z][\w:-]*$/.test(node.id)) throw new Error("Custom blueprint node id is invalid");
+  if (!node?.id || !/^[a-zA-Z][\w:-]*$/.test(node.id)) throw new Error(t("error.e595d5709b6b"));
   if (definitions[node.id]) throw new Error(`Cannot replace engine blueprint node: ${node.id}`);
   if (!classifyActivityNodePorts(node)) throw new Error(`Custom blueprint node ${node.id} does not match one of the four node categories`);
   const definition = {

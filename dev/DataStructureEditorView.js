@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
 
 const FIELD_TYPES = ["bool", "smallInteger", "integer", "real", "string", "objectRef", "array", "array<string>", "array<number>", "object", "activity"];
@@ -25,15 +26,15 @@ export class DataStructureEditorView {
     el.innerHTML = `
       <div class="ng-list-manager-lists">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-structure">新建结构</button>
-          <button type="button" data-action="delete-structure">删除结构</button>
+          <button type="button" data-action="new-structure">${t("legacy.e00a6a41fccc")}</button>
+          <button type="button" data-action="delete-structure">${t("legacy.fa06526a2ba2")}</button>
         </div>
         <div class="ng-list-manager-list-items"></div>
       </div>
       <div class="ng-list-manager-activities">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-field">新增字段</button>
-          <button type="button" data-action="save">写入磁盘</button>
+          <button type="button" data-action="new-field">${t("legacy.1687c80b946f")}</button>
+          <button type="button" data-action="save">${t("legacy.81ee3266b03d")}</button>
           <span class="ng-editor-status"></span>
         </div>
         <div class="ng-window-editor-structure ng-data-structure-fields"></div>
@@ -45,7 +46,7 @@ export class DataStructureEditorView {
     this.statusEl = el.querySelector(".ng-editor-status");
 
     el.querySelector('[data-action="new-structure"]').addEventListener("click", () => {
-      const id = prompt("新结构 id:");
+      const id = prompt(t("legacy.8b7b42ae7a1c"));
       if (!id) return;
       this.dataStructureManager.register({ id, displayName: id, fields: [] });
       this.selectedId = id;
@@ -60,7 +61,7 @@ export class DataStructureEditorView {
     el.querySelector('[data-action="new-field"]').addEventListener("click", () => {
       const structure = this.dataStructureManager.get(this.selectedId);
       if (!structure) return;
-      const fieldId = prompt("新字段 id:");
+      const fieldId = prompt(t("legacy.4eb3fef0c28d"));
       if (!fieldId) return;
       structure.fields.push({ id: fieldId, type: "string", required: false });
       this.render();
@@ -68,9 +69,9 @@ export class DataStructureEditorView {
     el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
         await writeDataFile("structures.framework.json", JSON.stringify(this.dataStructureManager.toJSON(), null, 2));
-        this.statusEl.textContent = "已写入磁盘";
+        this.statusEl.textContent = t("legacy.d4371481b26a");
       } catch (err) {
-        this.statusEl.textContent = `写入失败: ${err.message}`;
+        this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${err.message}`;
       }
     });
   }
@@ -91,7 +92,7 @@ export class DataStructureEditorView {
     this.fieldsEl.innerHTML = "";
     const structure = this.dataStructureManager.get(this.selectedId);
     if (!structure) {
-      this.fieldsEl.textContent = "选择一个结构以编辑字段";
+      this.fieldsEl.textContent = t("legacy.f3a699bb5dab");
       return;
     }
     for (const field of structure.fields) {
@@ -100,7 +101,7 @@ export class DataStructureEditorView {
 
       const idInput = document.createElement("input");
       idInput.value = field.id;
-      idInput.title = "字段 id";
+      idInput.title = t("legacy.f20322fe4406");
       idInput.addEventListener("change", () => { field.id = idInput.value; this.render(); });
 
       const typeSelect = document.createElement("select");
@@ -118,7 +119,7 @@ export class DataStructureEditorView {
       requiredCheckbox.type = "checkbox";
       requiredCheckbox.checked = Boolean(field.required);
       requiredCheckbox.addEventListener("change", () => { field.required = requiredCheckbox.checked; });
-      requiredLabel.append(requiredCheckbox, " 必填");
+      requiredLabel.append(requiredCheckbox, t("legacy.a65510ab54e6"));
 
       const defaultInput = document.createElement("input");
       defaultInput.placeholder = "default (JSON)";
@@ -128,13 +129,13 @@ export class DataStructureEditorView {
         try {
           field.default = JSON.parse(defaultInput.value);
         } catch (err) {
-          this.statusEl.textContent = `default 不是合法 JSON: ${err.message}`;
+          this.statusEl.textContent = `default ${t("legacy.3695562d4879")}JSON: ${err.message}`;
         }
       });
 
       const removeButton = document.createElement("button");
       removeButton.type = "button";
-      removeButton.textContent = "删除";
+      removeButton.textContent = t("legacy.3755f56f2f83");
       removeButton.addEventListener("click", () => {
         structure.fields = structure.fields.filter((f) => f !== field);
         this.render();

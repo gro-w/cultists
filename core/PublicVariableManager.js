@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * PublicVariableManager - plan §10 "公共变量管理器": a registry of typed,
  * ID-addressed public variables (distinct from the generic per-Activity
@@ -79,7 +80,7 @@ export class PublicVariableManager {
   }
 
   registerSyncSource(sourceId, read) {
-    if (!sourceId || typeof read !== "function") throw new Error("Public variable sync source requires an id and reader");
+    if (!sourceId || typeof read !== "function") throw new Error(t("error.7664f0b3f52f"));
     this.syncSources.set(sourceId, read);
     this.syncFromSources();
   }

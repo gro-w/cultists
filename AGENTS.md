@@ -23,6 +23,8 @@
 - 不得包含患者、物品、日历、宿舍、NPC、成就、结局、剧情或具体应用语义。
 - 工作时间、`phase`、`duty`、`location`、上下班/睡眠边界和工作状态机不属于 core；它们必须由 framework 通过 NGL 与数据实现。core 只提供可复用的时钟、状态存储、Activity 和能力网关。
 - 新增能力必须说明 owner、输入输出契约、权限与副作用、snapshot/restore（如需持久化）和确定性探针；上层只能通过公开的通用 API 或 NGL 节点使用它。
+- core 自有 UI/错误字符串必须存放在 `core/i18n/xx-xx.js` locale 模块；语言状态由 core 的 i18n 管理器拥有，使用 `getLanguage` 数值节点读取、`setLanguage` 流程节点设置，并通过 snapshot/restore 持久化。
+- core 与开发人员模式中的用户可见文本必须通过 `core/i18n/index.js` 的 `t()` 读取；locale 模块是字符串的唯一存储位置。协议 ID、CSS 类名、事件名、节点类型和数据字段名不翻译。
 
 ### `framework`
 

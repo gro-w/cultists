@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
 
 /**
@@ -26,16 +27,16 @@ export class DesktopIconEditorView {
     el.innerHTML = `
       <div class="ng-list-manager-lists">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-icon">新建图标</button>
-          <button type="button" data-action="delete-icon">删除图标</button>
-          <button type="button" data-action="move-up">上移</button>
-          <button type="button" data-action="move-down">下移</button>
+          <button type="button" data-action="new-icon">${t("legacy.513aac24b45e")}</button>
+          <button type="button" data-action="delete-icon">${t("legacy.e258ac14cdab")}</button>
+          <button type="button" data-action="move-up">${t("legacy.8a0c839791d3")}</button>
+          <button type="button" data-action="move-down">${t("legacy.05c46fa3b77c")}</button>
         </div>
         <div class="ng-list-manager-list-items"></div>
       </div>
       <div class="ng-list-manager-activities">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="save">写入磁盘</button>
+          <button type="button" data-action="save">${t("legacy.81ee3266b03d")}</button>
           <span class="ng-editor-status"></span>
         </div>
         <div class="ng-window-editor-fields"></div>
@@ -47,7 +48,7 @@ export class DesktopIconEditorView {
     this.statusEl = el.querySelector(".ng-editor-status");
 
     el.querySelector('[data-action="new-icon"]').addEventListener("click", () => {
-      const iconId = prompt("新图标 iconId:");
+      const iconId = prompt(t("legacy.8c83fa406322"));
       if (!iconId) return;
       this.iconManager.register({ iconId, label: iconId, blueprintId: "desktop.open-window", inputs: {} });
       this.selectedIconId = iconId;
@@ -64,9 +65,9 @@ export class DesktopIconEditorView {
     el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
         await writeDataFile("desktop-icons.json", JSON.stringify(this.iconManager.toJSON(), null, 2));
-        this.statusEl.textContent = "已写入磁盘";
+        this.statusEl.textContent = t("legacy.d4371481b26a");
       } catch (err) {
-        this.statusEl.textContent = `写入失败: ${err.message}`;
+        this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${err.message}`;
       }
     });
   }
@@ -106,7 +107,7 @@ export class DesktopIconEditorView {
     this.fieldsEl.innerHTML = "";
     const icon = this.iconManager.get(this.selectedIconId);
     if (!icon) {
-      this.fieldsEl.textContent = "选择一个图标以编辑";
+      this.fieldsEl.textContent = t("legacy.4a00c4dcd29a");
       return;
     }
     const makeField = (label, value, onChange, type = "text") => {
@@ -120,9 +121,9 @@ export class DesktopIconEditorView {
       row.appendChild(input);
       this.fieldsEl.appendChild(row);
     };
-    makeField("显示名", icon.label, (value) => this.iconManager.setLabel(icon.iconId, value));
+    makeField(t("legacy.c10bbf5ddd2d"), icon.label, (value) => this.iconManager.setLabel(icon.iconId, value));
     makeField("Logo (emoji/text)", icon.glyph, (value) => this.iconManager.setLogo(icon.iconId, value));
-    makeField("位置模式", icon.position.mode, (value) => {
+    makeField(t("legacy.b163026b09d6"), icon.position.mode, (value) => {
       if (value === "free") this.iconManager.setFreePosition(icon.iconId, icon.position.x || 0, icon.position.y || 0);
       else this.iconManager.reorder(icon.iconId, icon.order);
     });
@@ -135,7 +136,7 @@ export class DesktopIconEditorView {
       try {
         this.iconManager.setBlueprint(icon.iconId, icon.blueprintId, JSON.parse(value || "{}"));
       } catch (err) {
-        this.statusEl.textContent = `inputs 不是合法 JSON: ${err.message}`;
+        this.statusEl.textContent = `inputs ${t("legacy.3695562d4879")}JSON: ${err.message}`;
       }
     }, "textarea");
   }

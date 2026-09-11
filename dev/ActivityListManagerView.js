@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile, downloadTextFile } from "./devApi.js";
 
 /**
@@ -22,16 +23,16 @@ export class ActivityListManagerView {
     el.innerHTML = `
       <div class="ng-list-manager-lists">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-list">新建列表</button>
-          <button type="button" data-action="duplicate-list">复制列表</button>
-          <button type="button" data-action="rename-list">重命名</button>
+          <button type="button" data-action="new-list">${t("legacy.438667ea28fa")}</button>
+          <button type="button" data-action="duplicate-list">${t("legacy.b3d30939f4e1")}</button>
+          <button type="button" data-action="rename-list">${t("legacy.1cd80fd7a8b3")}</button>
         </div>
         <div class="ng-list-manager-list-items"></div>
       </div>
       <div class="ng-list-manager-activities">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-activity">新建 Activity</button>
-          <button type="button" data-action="duplicate-activity">复制 Activity</button>
+          <button type="button" data-action="new-activity">${t("legacy.9a4cd058d43e")}Activity</button>
+          <button type="button" data-action="duplicate-activity">${t("legacy.c844fa567d20")}Activity</button>
         </div>
         <div class="ng-list-manager-activity-items"></div>
       </div>
@@ -40,22 +41,22 @@ export class ActivityListManagerView {
     this.listItemsEl = el.querySelector(".ng-list-manager-list-items");
     this.activityItemsEl = el.querySelector(".ng-list-manager-activity-items");
     el.querySelector('[data-action="new-list"]').addEventListener("click", () => {
-      const id = prompt("新列表 ID:");
+      const id = prompt(t("legacy.8ecbc28570df"));
       if (id) { this.model.createList(id); this.render(); }
     });
     el.querySelector('[data-action="duplicate-list"]').addEventListener("click", () => {
       if (!this.selectedListId) return;
-      const id = prompt("新列表 ID:");
+      const id = prompt(t("legacy.8ecbc28570df"));
       if (id) { this.model.duplicateList(this.selectedListId, id); this.render(); }
     });
     el.querySelector('[data-action="rename-list"]').addEventListener("click", () => {
       if (!this.selectedListId || this.model.isBuiltInList(this.selectedListId)) return;
-      const id = prompt("重命名为:", this.selectedListId);
+      const id = prompt(t("legacy.119398dad774"), this.selectedListId);
       if (id) { this.model.renameList(this.selectedListId, id); this.selectedListId = id; this.render(); }
     });
     el.querySelector('[data-action="new-activity"]').addEventListener("click", () => {
       if (!this.selectedListId) return;
-      const id = prompt("新 Activity ID:");
+      const id = prompt(t("legacy.0659b6caf010"));
       if (id) {
         this.model.createActivity(this.selectedListId, id, {
           startNodeId: "start",
@@ -71,7 +72,7 @@ export class ActivityListManagerView {
     el.querySelector('[data-action="duplicate-activity"]').addEventListener("click", () => {
       const source = this.activityItemsEl.querySelector(".ng-list-manager-activity.selected")?.dataset.activityId;
       if (!this.selectedListId || !source) return;
-      const id = prompt("新 Activity ID:");
+      const id = prompt(t("legacy.0659b6caf010"));
       if (id) { this.model.duplicateActivity(this.selectedListId, source, id); this.render(); }
     });
   }
@@ -104,13 +105,13 @@ export class ActivityListManagerView {
     row.dataset.activityId = activity.id;
     row.innerHTML = `
       <span class="ng-list-manager-activity-name">${activity.displayName}</span>
-      <label><input type="checkbox" data-flag="timeLoaded" ${activity.timeLoaded ? "checked" : ""}/> 按时间加载</label>
-      <label><input type="checkbox" data-flag="autoRun" ${activity.autoRun ? "checked" : ""}/> 自动运行</label>
-      <button type="button" data-action="open">编辑</button>
-      <button type="button" data-action="download">下载</button>
-      <button type="button" data-action="write-disk">写入磁盘</button>
-      <button type="button" data-action="remove-from-list">从列表移除</button>
-      <button type="button" data-action="delete-file">删除文件</button>
+      <label><input type="checkbox" data-flag="timeLoaded" ${activity.timeLoaded ? "checked" : ""}/> ${t("legacy.becc63f8ae39")}</label>
+      <label><input type="checkbox" data-flag="autoRun" ${activity.autoRun ? "checked" : ""}/> ${t("legacy.3736f7e25eb4")}</label>
+      <button type="button" data-action="open">${t("legacy.a7f814c0a40d")}</button>
+      <button type="button" data-action="download">${t("legacy.2b9d013177da")}</button>
+      <button type="button" data-action="write-disk">${t("legacy.81ee3266b03d")}</button>
+      <button type="button" data-action="remove-from-list">${t("legacy.4e4edc033de6")}</button>
+      <button type="button" data-action="delete-file">${t("legacy.935cd54eecaa")}</button>
     `;
     row.addEventListener("click", (e) => {
       if (e.target.closest("input,button")) return;
@@ -131,7 +132,7 @@ export class ActivityListManagerView {
       try {
         await writeDataFile(`activities/${activity.id}.json`, this.model.exportActivityJSON(activity.id));
       } catch (error) {
-        alert(`写入失败: ${error.message}`);
+        alert(`${t("legacy.e92dc2256061")}: ${error.message}`);
       }
     });
     row.querySelector('[data-action="remove-from-list"]').addEventListener("click", () => {
@@ -139,7 +140,7 @@ export class ActivityListManagerView {
       this.render();
     });
     row.querySelector('[data-action="delete-file"]').addEventListener("click", () => {
-      if (!confirm(`确定删除 Activity 定义 "${activity.id}"？此操作会将其从所有列表移除。`)) return;
+      if (!confirm(`${t("legacy.b71806bdfa0d")}Activity ${t("legacy.d21edc4832bc")}"${activity.id}"？${t("legacy.548b5e8d6d46")}`)) return;
       this.model.deleteActivityDefinition(activity.id);
       this.render();
     });

@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * DesktopIconManager - plan §8.1/§8.2's icon layout + double-click routing
  * model. Every icon is a plain data record:
@@ -22,7 +23,7 @@ export class DesktopIconManager {
   }
 
   register(icon) {
-    if (!icon?.iconId) throw new Error("DesktopIconManager.register requires an iconId");
+    if (!icon?.iconId) throw new Error(t("error.84614b33f867"));
     if (!icon.blueprintId) throw new Error(`Icon "${icon.iconId}" must declare a blueprintId`);
     const position = icon.position && icon.position.mode ? icon.position : { mode: "grid" };
     this.icons.set(icon.iconId, {

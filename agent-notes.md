@@ -57,7 +57,8 @@ node dev-server.js --port 8001 --lang zh-hans
 | `DataStore`、`DataStructureManager`、`PublicVariableManager`、`LocalVariableManager` | canonical 数据、结构定义、公共变量定义和 Activity 本地变量命名定义；本地值属于实例 |
 | `SaveManager`、`VariableStore`、`EventStateRegistry` | 存档、运行时变量、事件状态和恢复 |
 | `data/activities/`、`data/windows/`、`data/databases/` | NGL Activity、窗口定义和游戏数据库 |
-| `dev/`、`dev-server.js` | 开发编辑器、调试器和本地数据写盘 |
+- `dev/`、`dev-server.js` | 开发编辑器、调试器和本地数据写盘 |
+- `core/i18n/`、`dev/I18nManagerView.js` | Core 与开发人员模式 locale modules、统一 `t()` 取词、语言状态和开发人员语言管理器 |
 
 业务行为应进入 Activity 蓝图和数据，不应在窗口或入口脚本中新增业务副作用。需要原生能力时，按 `game → framework → core` 方向抽象为通用能力。
 
@@ -70,6 +71,8 @@ node dev-server.js --port 8001 --lang zh-hans
 - 公共变量、数据库、窗口、Activity 和存档各有边界；数据库编辑器写 canonical 数据，存档调试器只改运行时存档。
 - 本地变量管理器写 `data/local-variables.framework.json` 的定义，不保存实例值；活动调试器才允许实时修改具体实例的 `localVariables`。
 - 详细 schema 以实际 `data/*.json` 和对应 loader/validator 为准；修改 schema 时必须同步编辑器、运行器、调试器和探针。
+- Core 自有字符串放在 `core/i18n/xx-xx.js` locale 模块中；`I18nManager` 管理当前/启用语言并纳入存档，Activity 可通过 `getLanguage` 与 `setLanguage` 节点访问。
+- core 与 dev 的用户可见字符串通过 `core/i18n/index.js` 的 `t()` 访问；协议 ID、事件名、CSS 类名、节点类型和数据字段名保持稳定，不作为翻译文本。
 
 ## 常用验证
 

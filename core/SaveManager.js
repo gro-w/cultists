@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * SaveManager - the single owner of the save/restore boundary (plan §12
  * "存档系统"). Produces/consumes a versioned envelope:
@@ -105,22 +106,22 @@ export class SaveManager {
 
   /** Validates envelope shape/format/version without mutating anything; throws with a descriptive message on any problem. */
   _validate(envelope) {
-    if (!isPlainObject(envelope)) throw new Error("Save data is not a valid object");
+    if (!isPlainObject(envelope)) throw new Error(t("error.8a863f4231ae"));
     if (envelope.format !== SAVE_FORMAT) throw new Error(`Unknown save format: ${envelope.format}`);
     if (envelope.version !== SAVE_FORMAT_VERSION) throw new Error(`Unsupported save version: ${envelope.version} (expected ${SAVE_FORMAT_VERSION})`);
     const state = envelope.state;
-    if (!isPlainObject(state)) throw new Error("Save data is missing state");
-    if (!isPlainObject(state.gameClock)) throw new Error("Save data is missing gameClock state");
+    if (!isPlainObject(state)) throw new Error(t("error.811f3d654c18"));
+    if (!isPlainObject(state.gameClock)) throw new Error(t("error.cf1f3decd914"));
 
-    if (!isPlainObject(state.variables)) throw new Error("Save data is missing variables state");
-    if (!isPlainObject(state.publicVariables)) throw new Error("Save data is missing publicVariables state");
+    if (!isPlainObject(state.variables)) throw new Error(t("error.327d0229944f"));
+    if (!isPlainObject(state.publicVariables)) throw new Error(t("error.8927e49fb766"));
 
-    if (!isPlainObject(state.queues)) throw new Error("Save data is missing queues state");
-    if (!Array.isArray(state.windows)) throw new Error("Save data is missing windows state");
-    if (!Array.isArray(state.desktopIcons)) throw new Error("Save data is missing desktopIcons state");
-    if (!isPlainObject(state.onboarding)) throw new Error("Save data is missing onboarding state");
-    if (!isPlainObject(state.providers)) throw new Error("Save data is missing providers state");
-    if (!isPlainObject(state.runtime)) throw new Error("Save data is missing runtime state");
+    if (!isPlainObject(state.queues)) throw new Error(t("error.a102f79c5ad2"));
+    if (!Array.isArray(state.windows)) throw new Error(t("error.efa8dccb1c3c"));
+    if (!Array.isArray(state.desktopIcons)) throw new Error(t("error.8bca35f224da"));
+    if (!isPlainObject(state.onboarding)) throw new Error(t("error.9473c8d9f55e"));
+    if (!isPlainObject(state.providers)) throw new Error(t("error.259ba6024a9a"));
+    if (!isPlainObject(state.runtime)) throw new Error(t("error.898897bbe786"));
     return state;
   }
 
@@ -134,7 +135,7 @@ export class SaveManager {
    * §12.3 "恢复失败不覆盖当前有效状态").
    */
   restore(envelope) {
-    if (this._restoring) throw new Error("A restore is already in progress");
+    if (this._restoring) throw new Error(t("error.316eef60ff1e"));
     const state = this._validate(envelope);
     this._restoring = true;
     try {

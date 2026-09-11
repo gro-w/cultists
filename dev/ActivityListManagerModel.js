@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 /**
  * ActivityListManagerModel - DOM-independent state for the "Activity 列表
  * 管理器" developer window (plan §6.1). Owns Activity *lists* (which
@@ -19,13 +20,13 @@ export function createActivityListManagerModel() {
   const activities = new Map(); // activityId -> { id, displayName, blueprint, timeLoaded, autoRun, listId }
 
   function registerList(list) {
-    if (!list || !list.id) throw new Error("Activity list requires an id");
+    if (!list || !list.id) throw new Error(t("error.00706e81f518"));
     lists.set(list.id, { id: list.id, activityIds: [...(list.activityIds || [])] });
     return lists.get(list.id);
   }
 
   function registerActivity(listId, definition, meta = {}) {
-    if (!definition || !definition.id) throw new Error("Activity definition requires an id");
+    if (!definition || !definition.id) throw new Error(t("error.6ce7ea0c5850"));
     activities.set(definition.id, {
       id: definition.id,
       displayName: definition.displayName || definition.id,
@@ -67,7 +68,7 @@ export function createActivityListManagerModel() {
   }
 
   function renameList(listId, newListId) {
-    if (isBuiltInList(listId)) throw new Error("内置 default 列表不能重命名");
+    if (isBuiltInList(listId)) throw new Error(t("legacy.6048ce671500"));
     const list = lists.get(listId);
     if (!list) throw new Error(`Unknown activity list: ${listId}`);
     if (lists.has(newListId)) throw new Error(`Activity list "${newListId}" already exists`);
@@ -81,7 +82,7 @@ export function createActivityListManagerModel() {
   }
 
   function removeList(listId) {
-    if (isBuiltInList(listId)) throw new Error("内置 default 列表不能删除");
+    if (isBuiltInList(listId)) throw new Error(t("legacy.81774c11020e"));
     return lists.delete(listId);
   }
 

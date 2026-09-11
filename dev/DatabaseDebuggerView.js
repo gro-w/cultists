@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
 import { ActivityEditorView } from "./ActivityEditorView.js";
 
@@ -26,8 +27,8 @@ export class DatabaseEditorView {
     this.el.className = "ng-database-selector-editor";
     this.el.innerHTML = `
       <div class="ng-database-selector-toolbar">
-        <button type="button" data-action="refresh">刷新</button>
-        <button type="button" data-action="open">打开</button>
+        <button type="button" data-action="refresh">${t("legacy.38108eaa1d32")}</button>
+        <button type="button" data-action="open">${t("legacy.65fc81e16119")}</button>
         <span class="ng-editor-status"></span>
       </div>
       <div class="ng-database-selector-list"></div>`;
@@ -51,12 +52,12 @@ export class DatabaseEditorView {
       row.type = "button";
       row.className = `ng-database-selector-row${db.databaseId === this.selectedDatabaseId ? " selected" : ""}`;
       row.dataset.databaseId = db.databaseId;
-      row.textContent = `${db.databaseId}（${db.recordCount} 条）`;
+      row.textContent = `${db.databaseId}（${db.recordCount} ${t("legacy.372545bb9e8e")}`;
       row.addEventListener("click", () => { this.selectedDatabaseId = db.databaseId; this.render(); });
       row.addEventListener("dblclick", () => this.onOpenDatabase?.(db.databaseId));
       this.listEl.appendChild(row);
     });
-    this.statusEl.textContent = this.selectedDatabaseId ? `已选择：${this.selectedDatabaseId}` : "没有已注册的数据库";
+    this.statusEl.textContent = this.selectedDatabaseId ? `${t("legacy.9c5605840c67")}${this.selectedDatabaseId}` : t("legacy.0c64a3dc077d");
   }
 }
 
@@ -78,10 +79,10 @@ export class DatabaseRecordEditorView {
     this.el.innerHTML = `
       <aside class="ng-database-record-list">
         <div class="ng-database-record-list-toolbar">
-          <button type="button" data-action="add" title="新增项目">＋</button>
-          <button type="button" data-action="copy" title="复制项目">⧉</button>
-          <button type="button" data-action="delete" title="删除项目">−</button>
-          <button type="button" data-action="save-file" title="写入数据库文件">💾</button>
+          <button type="button" data-action="add" title="${t("legacy.3f6da571c706")}">＋</button>
+          <button type="button" data-action="copy" title="${t("legacy.d6ba3a9ab8e1")}">⧉</button>
+          <button type="button" data-action="delete" title="${t("legacy.8dd153b49f26")}">−</button>
+          <button type="button" data-action="save-file" title="${t("legacy.cd94cdb2b03b")}">💾</button>
         </div>
         <div class="ng-database-record-items"></div>
       </aside>
@@ -107,7 +108,7 @@ export class DatabaseRecordEditorView {
       const record = this.dataStore.createRecord(this.databaseId, {});
       this.selectedKey = primaryKeyOf(this.dataStore, this.databaseId, record);
       this.render();
-    } catch (error) { this.statusEl.textContent = `新增失败：${error.message}`; }
+    } catch (error) { this.statusEl.textContent = `${t("legacy.1bd8bc7cc1b7")}${error.message}`; }
   }
 
   copyRecord() {
@@ -120,7 +121,7 @@ export class DatabaseRecordEditorView {
       const record = this.dataStore.createRecord(this.databaseId, copy);
       this.selectedKey = primaryKeyOf(this.dataStore, this.databaseId, record);
       this.render();
-    } catch (error) { this.statusEl.textContent = `复制失败：${error.message}`; }
+    } catch (error) { this.statusEl.textContent = `${t("legacy.db4f6b3a4c3b")}${error.message}`; }
   }
 
   deleteRecord() {
@@ -129,7 +130,7 @@ export class DatabaseRecordEditorView {
       this.dataStore.deleteRecord(this.databaseId, this.selectedKey);
       this.selectedKey = null;
       this.render();
-    } catch (error) { this.statusEl.textContent = `删除失败：${error.message}`; }
+    } catch (error) { this.statusEl.textContent = `${t("legacy.2b5829a325d7")}${error.message}`; }
   }
 
   render() {
@@ -154,7 +155,7 @@ export class DatabaseRecordEditorView {
   renderInspector(record) {
     this.fieldsEl.replaceChildren();
     const db = this._db();
-    this.titleEl.textContent = `${this.databaseId} / ${this.selectedKey ?? "未选择项目"}`;
+    this.titleEl.textContent = `${this.databaseId} / ${this.selectedKey ?? t("legacy.2e2bb61ef72f")}`;
     if (!record || !db) return;
     const structure = this.dataStructureManager?.get(db.recordType);
     const controls = new Map();
@@ -172,7 +173,7 @@ export class DatabaseRecordEditorView {
       controls.set(field.id, { control, field });
       label.append(caption, control); this.fieldsEl.appendChild(label);
     }
-    const save = document.createElement("button"); save.type = "button"; save.textContent = "保存项目";
+    const save = document.createElement("button"); save.type = "button"; save.textContent = t("legacy.61bc0b0ca8b1");
     save.addEventListener("click", () => {
       try {
         const patch = {};
@@ -183,9 +184,9 @@ export class DatabaseRecordEditorView {
           else patch[id] = control.value;
         });
         this.dataStore.updateRecord(this.databaseId, this.selectedKey, patch);
-        this.statusEl.textContent = "已保存到内存";
+        this.statusEl.textContent = t("legacy.bedc3c6afcd3");
         this.render();
-      } catch (error) { this.statusEl.textContent = `保存失败：${error.message}`; }
+      } catch (error) { this.statusEl.textContent = `${t("legacy.b12163000cd3")}${error.message}`; }
     });
     this.fieldsEl.appendChild(save);
   }
@@ -196,8 +197,8 @@ export class DatabaseRecordEditorView {
     try {
       const value = { [this.databaseId]: this._records() };
       await writeDataFile(db.recordFile, JSON.stringify(value, null, 2));
-      this.statusEl.textContent = `已写入 ${db.recordFile}`;
-    } catch (error) { this.statusEl.textContent = `写入失败：${error.message}`; }
+      this.statusEl.textContent = `${t("legacy.a39837537e98")}${db.recordFile}`;
+    } catch (error) { this.statusEl.textContent = `${t("legacy.8b046d23e43c")}${error.message}`; }
   }
 }
 

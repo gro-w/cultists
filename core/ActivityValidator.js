@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "./ActivityNodeRegistry.js";
 
 /**
@@ -62,17 +63,17 @@ export function validateBlueprint(raw) {
   const entries = Object.entries(blueprint.nodes);
 
   const starts = entries.filter(([, node]) => node.type === "flowStart");
-  if (starts.length !== 1) errors.push(`流程起始节点必须恰好有一个，当前为 ${starts.length} 个`);
-  if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push("缺少有效的流程起始节点");
-  if (blueprint.startNodeId && blueprint.nodes[blueprint.startNodeId]?.type !== "flowStart") errors.push("流程起点必须是起始节点");
+  if (starts.length !== 1) errors.push(`${t("legacy.7ee8757a4386")}${starts.length} ${t("legacy.f7b2a6ee68ec")}`);
+  if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push(t("legacy.1b75d4308c3d"));
+  if (blueprint.startNodeId && blueprint.nodes[blueprint.startNodeId]?.type !== "flowStart") errors.push(t("legacy.30e2f42e49e5"));
 
   const ends = entries.filter(([, node]) => node.type === "activityEnd");
-  if (!ends.length) errors.push("流程必须至少有一个活动结束节点");
+  if (!ends.length) errors.push(t("legacy.44fc63aa163b"));
 
   for (const [id, node] of entries) {
-    if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
+    if (node.id !== id) errors.push(`${t("legacy.19ff6f856978")}${id} ${t("legacy.0bbe6b12e4a0")}id ${node.id} ${t("legacy.ea88dc52f534")}`);
     const definition = getActivityNodeDefinition(node.type);
-    if (!definition) { errors.push(`节点 ${id} 使用未知类型 ${node.type}`); continue; }
+    if (!definition) { errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.f1854a26d944")}${node.type}`); continue; }
 
     if (node.type !== "activityEnd") {
       // `choice` over-provisions a fixed static port list (option0..
@@ -84,13 +85,13 @@ export function validateBlueprint(raw) {
         : flowPorts("output", definition);
       for (const port of outputPorts) {
         const target = node.next?.[port.name];
-        if (!port.optional && !target?.nodeId) { errors.push(`节点 ${id} 的流程输出 ${port.name} 未连接`); continue; }
+        if (!port.optional && !target?.nodeId) { errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.b48518042a33")}${port.name} ${t("legacy.f2f3e9803ccb")}`); continue; }
         if (!target?.nodeId) continue;
         const targetNode = blueprint.nodes[target.nodeId];
         const targetPort = targetNode ? getActivityNodePort(targetNode.type, "input", target.port) : null;
-        if (!targetNode) errors.push(`节点 ${id} 的流程输出 ${port.name} 指向不存在的节点`);
-        else if (!targetPort) errors.push(`节点 ${id} 的流程输出 ${port.name} 指向的输入引脚不存在`);
-        else if (!arePortsCompatible(port, targetPort)) errors.push(`节点 ${id} 的流程输出 ${port.name} 端口类型不兼容`);
+        if (!targetNode) errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.b48518042a33")}${port.name} ${t("legacy.ae5abd4df760")}`);
+        else if (!targetPort) errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.b48518042a33")}${port.name} ${t("legacy.407fe78b2fc8")}`);
+        else if (!arePortsCompatible(port, targetPort)) errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.b48518042a33")}${port.name} ${t("legacy.612b75fb27de")}`);
       }
     }
 
@@ -99,9 +100,9 @@ export function validateBlueprint(raw) {
       const sourceNode = blueprint.nodes[rawInput.nodeId];
       const sourcePort = sourceNode ? getActivityNodePort(sourceNode.type, "output", rawInput.port) : null;
       const targetPort = getActivityNodePort(node.type, "input", inputName);
-      if (!sourceNode || !sourcePort) { errors.push(`节点 ${id} 的输入 ${inputName} 引用了不存在的数值输出`); continue; }
-      if (sourcePort.kind !== "value" || targetPort?.kind !== "value") { errors.push(`节点 ${id} 的输入 ${inputName} 只能连接数值输出`); continue; }
-      if (!arePortsCompatible(sourcePort, targetPort)) errors.push(`节点 ${id} 的输入 ${inputName} 端口类型不兼容`);
+      if (!sourceNode || !sourcePort) { errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.941ec8d30763")}${inputName} ${t("legacy.66ffdc123efa")}`); continue; }
+      if (sourcePort.kind !== "value" || targetPort?.kind !== "value") { errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.941ec8d30763")}${inputName} ${t("legacy.4940f4034d08")}`); continue; }
+      if (!arePortsCompatible(sourcePort, targetPort)) errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.941ec8d30763")}${inputName} ${t("legacy.612b75fb27de")}`);
     }
   }
 
@@ -121,7 +122,7 @@ export function validateBlueprint(raw) {
     }
   }
   entries.forEach(([id, node]) => {
-    if (isReachabilityRequired(node.type) && !reachable.has(id)) errors.push(`流程节点 ${id} 不可从流程起始到达`);
+    if (isReachabilityRequired(node.type) && !reachable.has(id)) errors.push(`${t("legacy.a82a4b19507e")}${id} ${t("legacy.283b7e424931")}`);
   });
 
   return { ok: errors.length === 0, errors, blueprint };

@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import { validateBlueprint } from "./ActivityValidator.js";
 import { DataLoader } from "./DataLoader.js";
 
@@ -14,7 +15,7 @@ export class ActivityDefinitionStore {
   }
 
   register(definition) {
-    if (!definition || !definition.id) throw new Error("Activity definition requires an id");
+    if (!definition || !definition.id) throw new Error(t("error.6ce7ea0c5850"));
     const validation = validateBlueprint(definition.blueprint);
     if (!validation.ok) throw new Error(`Invalid blueprint for activity "${definition.id}": ${validation.errors.join("；")}`);
     const registered = { ...definition, blueprint: validation.blueprint };

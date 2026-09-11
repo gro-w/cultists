@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * LocalVariableManager owns names/types for Activity-local variables only.
  * Values never live here: each Activity instance owns its own localVariables
@@ -17,7 +18,7 @@ export class LocalVariableManager {
 
   register(raw = {}) {
     const id = String(raw.id ?? "").trim();
-    if (!id) throw new Error("Local variable id is required");
+    if (!id) throw new Error(t("error.9170f3080c58"));
     if (!TYPES.has(raw.type)) throw new Error(`Local variable ${id} has unknown type "${raw.type}"`);
     if (this.definitions.has(id)) throw new Error(`Local variable ${id} already registered`);
     const definition = {

@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * WindowManager - sole owner of "打开的窗口及几何信息" (open windows and their
  * geometry), per the Phase 1 state-ownership table in
@@ -287,12 +288,12 @@ export class WindowManager {
    * Runner...替换队列与实例 snapshot 后再恢复 Runner").
    */
   restoreInstances(instances = []) {
-    if (!Array.isArray(instances)) throw new Error("Invalid window instance snapshot");
+    if (!Array.isArray(instances)) throw new Error(t("error.59f7ad31a924"));
     const next = new Map();
     let maxSeq = _instanceIdCounter;
     for (const raw of instances) {
       if (!raw || typeof raw.instanceId !== "string" || typeof raw.windowId !== "string" || next.has(raw.instanceId)) {
-        throw new Error("Invalid or duplicate window instance");
+        throw new Error(t("error.dd0667e62363"));
       }
       next.set(raw.instanceId, { ...raw, openOrder: raw.openOrder ?? ++_openOrderCounter });
       _openOrderCounter = Math.max(_openOrderCounter, next.get(raw.instanceId).openOrder);

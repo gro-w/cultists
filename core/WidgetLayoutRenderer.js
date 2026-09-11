@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * WidgetLayoutRenderer - the single DOM renderer for a window's widget
  * tree, shared verbatim between the runtime WindowFrame and the WYSIWYG
@@ -171,7 +172,7 @@ function renderLeaf(node, ctx) {
       const hh = String(Math.floor(snapshot.minutes / 60)).padStart(2, "0");
       const mm = String(snapshot.minutes % 60).padStart(2, "0");
       el.textContent = node.format === "his"
-        ? `第${snapshot.day}天 · ${snapshot.minutes >= 360 && snapshot.minutes < 1080 ? "白天" : "夜晚"} · ${hh}:${mm}`
+        ? `${t("legacy.dae828fe4fb7")}${snapshot.day}${t("legacy.42d8a93c482e")}${snapshot.minutes >= 360 && snapshot.minutes < 1080 ? t("legacy.9dd6c2d4dee4") : t("legacy.640265ca584f")} · ${hh}:${mm}`
         : `Day ${snapshot.day} ${hh}:${mm}`;
       break;
     }
@@ -285,7 +286,7 @@ function renderLeaf(node, ctx) {
       const status = document.createElement("p");
       const save = document.createElement("button");
       save.type = "button";
-      save.textContent = "保存到文件";
+      save.textContent = t("legacy.4a88d2ab0b37");
       save.addEventListener("click", () => {
         try {
           const envelope = saveManager.snapshot();
@@ -296,14 +297,14 @@ function renderLeaf(node, ctx) {
           link.hidden = true;
           document.body.appendChild(link);
           link.click();
-          status.textContent = "下载已触发，请确认文件已落盘";
+          status.textContent = t("legacy.bba041846129");
           // Keep the anchor and Blob alive through the browser's download
           // dispatch. Immediate revocation can drop the download silently.
           window.setTimeout(() => {
             link.remove();
             URL.revokeObjectURL(url);
           }, 1000);
-        } catch (error) { status.textContent = `保存失败：${error.message}`; }
+        } catch (error) { status.textContent = `${t("legacy.b12163000cd3")}${error.message}`; }
       });
       const load = document.createElement("input");
       load.type = "file";
@@ -313,8 +314,8 @@ function renderLeaf(node, ctx) {
         if (!file) return;
         const reader = new FileReader();
         reader.onload = () => {
-          try { saveManager.restore(JSON.parse(String(reader.result))); status.textContent = "已加载存档"; }
-          catch (error) { status.textContent = `加载失败：${error.message}`; }
+          try { saveManager.restore(JSON.parse(String(reader.result))); status.textContent = t("legacy.80193fbd3be6"); }
+          catch (error) { status.textContent = `${t("legacy.e6d921116cbe")}${error.message}`; }
           load.value = "";
         };
         reader.readAsText(file);
@@ -414,7 +415,7 @@ function renderLeaf(node, ctx) {
         if (item && typeof item === "object" && itemMetaTemplate) {
           const meta = document.createElement("span");
           meta.className = "ng-widget-list-item-meta";
-          meta.textContent = secret ? (node.itemSecretMeta || "探索更多内容以解锁此隐藏成就。") : itemMetaTemplate.replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (_, key) => item?.[key] ?? "");
+          meta.textContent = secret ? (node.itemSecretMeta || t("legacy.e7688c715821")) : itemMetaTemplate.replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (_, key) => item?.[key] ?? "");
           li.appendChild(meta);
         }
         if (item && typeof item === "object" && itemProgressField && (!itemProgressOnlyForTriggered || item.trigger?.progress)) {
@@ -433,7 +434,7 @@ function renderLeaf(node, ctx) {
             const button = document.createElement("button");
             button.type = "button";
             button.className = action.className || "win95-btn bevel-out ng-list-item-action";
-            button.textContent = action.label || action.id || "操作";
+            button.textContent = action.label || action.id || t("legacy.f3ea6d345e2a");
             button.addEventListener("click", (event) => {
               event.stopPropagation();
               ctx.onEvent?.(node, action.eventName || action.id, item.id);
@@ -480,7 +481,7 @@ function renderLeaf(node, ctx) {
  * a side effect so callers can look up any node's rendered element.
  */
 export function renderWidgetNode(node, ctx = {}) {
-  if (!node) throw new Error("renderWidgetNode requires a node");
+  if (!node) throw new Error(t("error.068ffe82d88e"));
   ctx.widgetEls = ctx.widgetEls || new Map();
   ctx.controlEls = ctx.controlEls || new Map();
   let el;
@@ -509,7 +510,7 @@ export function renderWidgetNode(node, ctx = {}) {
       add.type = "button";
       add.className = "win95-btn bevel-out his-prescription-copy";
       add.textContent = "+";
-      add.title = "添加药品行";
+      add.title = t("legacy.ca5fdcf1e498");
       add.addEventListener("click", (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -522,7 +523,7 @@ export function renderWidgetNode(node, ctx = {}) {
       remove.type = "button";
       remove.className = "win95-btn bevel-out his-prescription-delete";
       remove.textContent = "−";
-      remove.title = "删除药品行";
+      remove.title = t("legacy.fcd6a3765d0c");
       remove.addEventListener("click", (event) => {
         event.preventDefault();
         event.stopPropagation();

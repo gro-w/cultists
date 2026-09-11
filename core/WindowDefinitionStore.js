@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import { DataLoader } from "./DataLoader.js";
 
 /**
@@ -18,7 +19,7 @@ export class WindowDefinitionStore {
   /** Register a definition object (id, title, width, height, body, ...). */
   register(definition) {
     if (!definition || !definition.id) {
-      throw new Error("Window definition requires an id");
+      throw new Error(t("error.fd47610c013e"));
     }
     this._definitions.set(definition.id, definition);
     return definition;

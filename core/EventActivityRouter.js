@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * Generic data-driven event router.
  *
@@ -135,13 +136,13 @@ export class EventActivityRouter {
         this.variableStore.set(action.key, value);
         return value;
       case "stateBoundary.requestLocation":
-        if (!this.stateBoundary?.requestLocation) throw new Error("State boundary location gateway is unavailable");
+        if (!this.stateBoundary?.requestLocation) throw new Error(t("error.32015cd92a9d"));
         return this.stateBoundary.requestLocation(value);
       case "event.emit":
         this.eventBus.emit(action.event, value);
         return value;
       case "window.open":
-        if (!this.windowGateway) throw new Error("window.open requires a window gateway");
+        if (!this.windowGateway) throw new Error(t("error.0167a8164d4d"));
         return this.windowGateway(resolve(action.windowId, payload, this.variableStore, this.resources));
       case "display.dispatch": {
         const displayPayload = { ...(value || {}), type: action.displayType || value?.type };

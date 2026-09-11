@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
 
 const VARIABLE_TYPES = ["bool", "smallInteger", "integer", "real", "string", "object"];
@@ -27,14 +28,14 @@ export class PublicVariableEditorView {
     el.innerHTML = `
       <div class="ng-list-manager-lists">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-variable">新建变量</button>
-          <button type="button" data-action="delete-variable">删除变量</button>
+          <button type="button" data-action="new-variable">${t("legacy.1a02bb8174f1")}</button>
+          <button type="button" data-action="delete-variable">${t("legacy.adeb3e9f7a1e")}</button>
         </div>
         <div class="ng-list-manager-list-items"></div>
       </div>
       <div class="ng-list-manager-activities">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="save">写入磁盘</button>
+          <button type="button" data-action="save">${t("legacy.81ee3266b03d")}</button>
           <span class="ng-editor-status"></span>
         </div>
         <div class="ng-window-editor-structure ng-public-variable-fields"></div>
@@ -46,7 +47,7 @@ export class PublicVariableEditorView {
     this.statusEl = el.querySelector(".ng-editor-status");
 
     el.querySelector('[data-action="new-variable"]').addEventListener("click", () => {
-      const idText = prompt("新变量 id (0..65535):");
+      const idText = prompt(t("legacy.f0bee7a65e66"));
       if (idText === null) return;
       const id = Number(idText);
       try {
@@ -54,7 +55,7 @@ export class PublicVariableEditorView {
         this.selectedId = id;
         this.render();
       } catch (err) {
-        this.statusEl.textContent = `新建失败: ${err.message}`;
+        this.statusEl.textContent = `${t("legacy.8ee577b59537")}: ${err.message}`;
       }
     });
     el.querySelector('[data-action="delete-variable"]').addEventListener("click", () => {
@@ -66,9 +67,9 @@ export class PublicVariableEditorView {
     el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
         await writeDataFile("public-variables.framework.json", JSON.stringify(this.publicVariableManager.toJSON(), null, 2));
-        this.statusEl.textContent = "已写入磁盘";
+        this.statusEl.textContent = t("legacy.d4371481b26a");
       } catch (err) {
-        this.statusEl.textContent = `写入失败: ${err.message}`;
+        this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${err.message}`;
       }
     });
   }
@@ -89,7 +90,7 @@ export class PublicVariableEditorView {
     this.fieldsEl.innerHTML = "";
     const definition = this.publicVariableManager.definition(this.selectedId);
     if (!definition) {
-      this.fieldsEl.textContent = "选择一个公共变量以编辑";
+      this.fieldsEl.textContent = t("legacy.2b5485098643");
       return;
     }
     const row = document.createElement("div");
@@ -97,7 +98,7 @@ export class PublicVariableEditorView {
 
     const nameInput = document.createElement("input");
     nameInput.value = definition.name;
-    nameInput.title = "名称";
+    nameInput.title = t("legacy.1be7ae4fc257");
     nameInput.addEventListener("change", () => { definition.name = nameInput.value; });
 
     const typeSelect = document.createElement("select");
@@ -115,14 +116,14 @@ export class PublicVariableEditorView {
     persistentCheckbox.type = "checkbox";
     persistentCheckbox.checked = definition.persistent !== false;
     persistentCheckbox.addEventListener("change", () => { definition.persistent = persistentCheckbox.checked; });
-    persistentLabel.append(persistentCheckbox, " 持久化");
+    persistentLabel.append(persistentCheckbox, t("legacy.cdfbe4037b69"));
 
     const readOnlyLabel = document.createElement("label");
     const readOnlyCheckbox = document.createElement("input");
     readOnlyCheckbox.type = "checkbox";
     readOnlyCheckbox.checked = Boolean(definition.readOnly);
     readOnlyCheckbox.addEventListener("change", () => { definition.readOnly = readOnlyCheckbox.checked; });
-    readOnlyLabel.append(readOnlyCheckbox, " 只读");
+    readOnlyLabel.append(readOnlyCheckbox, t("legacy.909d52f4766a"));
 
     const minInput = document.createElement("input");
     minInput.placeholder = "min";

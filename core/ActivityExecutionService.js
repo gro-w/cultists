@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import { createActivityRunner } from "./ActivityRunner.js";
 import { ACTIVITY_EVENTS } from "./ActivityEvents.js";
 
@@ -92,7 +93,7 @@ export class ActivityExecutionService {
 
   /** Public lifecycle/queue surface for custom manager Activities. */
   append(queue, options) {
-    if (!queue) throw new Error("ActivityExecutionService.append requires a queue");
+    if (!queue) throw new Error(t("error.cfb9042df3bb"));
     return queue.append(options);
   }
 

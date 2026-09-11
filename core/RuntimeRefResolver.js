@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * RuntimeRefResolver - plan §10.1's "受注册引用" resolver for `object`-typed
  * public variables. Domains (Activity instances, Activity queues, custom
@@ -16,7 +17,7 @@ export class RuntimeRefResolver {
 
   /** Registers (or replaces) the resolver function for one `objectType`. */
   register(objectType, resolveFn) {
-    if (!objectType) throw new Error("RuntimeRefResolver.register requires an objectType");
+    if (!objectType) throw new Error(t("error.aa84c8e7f191"));
     if (typeof resolveFn !== "function") throw new Error(`RuntimeRefResolver resolver for "${objectType}" must be a function`);
     this.resolvers.set(objectType, resolveFn);
   }

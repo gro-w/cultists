@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * Generic runtime collection registry.
  *
@@ -26,7 +27,7 @@ export class RuntimeCollectionRegistry {
 
   register(id, definition = {}) {
     const key = String(id || "");
-    if (!key) throw new Error("Runtime collection id is required");
+    if (!key) throw new Error(t("error.78673a4953fd"));
     this.definitions.set(key, structuredClone(definition));
     if (!this.state.has(key)) this.state.set(key, new Map());
   }
@@ -58,7 +59,7 @@ export class RuntimeCollectionRegistry {
         return {
           id: String(day),
           day,
-          label: locked ? "未解锁" : rest ? "休息日" : night ? "夜班值班" : "工作日",
+          label: locked ? t("legacy.b25a509d561f") : rest ? t("legacy.743a4ad0dd4c") : night ? t("legacy.30240403bd20") : t("legacy.27b4a6aed2c5"),
           statusClass: classes,
           locked,
         };
@@ -163,7 +164,7 @@ export class RuntimeCollectionRegistry {
     return sorted.map((record) => {
       const raw = record?.[field];
       const groupTitle = mode === "day"
-        ? (raw == null || raw === "" ? "未知天数" : `第 ${raw} 天`)
+        ? (raw == null || raw === "" ? t("legacy.a6f829887504") : `${t("legacy.f495347d6acf")}${raw} ${t("legacy.c3304d1e49e3")}`)
         : mode === "category"
           ? String(raw || "misc")
           : groupKey(record);

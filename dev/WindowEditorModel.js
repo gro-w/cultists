@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 /**
  * WindowEditorModel - DOM-independent state for the custom window WYSIWYG
  * editor (plan §7). The only canonical model saved is the window
@@ -25,8 +26,8 @@ function defaultWidget(type) {
   const widgetId = `${type}-${++_widgetSeq}`;
   const base = { widgetId, type };
   if (type === "container" || type === "tabs") return { ...base, flow: "vertical", gap: 4, padding: 4, children: [] };
-  if (type === "label") return { ...base, text: "文本" };
-  if (type === "button") return { ...base, text: "按钮" };
+  if (type === "label") return { ...base, text: t("legacy.f1926e9b3365") };
+  if (type === "button") return { ...base, text: t("legacy.a6a6eaa2f18b") };
   if (type === "spacer") return base;
   return { ...base, value: "" };
 }
@@ -38,7 +39,7 @@ function defaultRoot() {
 export function createWindowEditorModel({ definition } = {}) {
   let current = cloneValue(definition) || {
     id: "untitled",
-    title: "未命名窗口",
+    title: t("legacy.17b0f4225e1f"),
     mode: "window",
     fullscreen: false,
     geometry: { x: 80, y: 60, width: 480, height: 320 },
@@ -156,7 +157,7 @@ export function createWindowEditorModel({ definition } = {}) {
       flow: "vertical",
       gap: 4,
       padding: 4,
-      tabLabel: `选项卡 ${parentEntry.node.children.length + 1}`,
+      tabLabel: `${t("legacy.195ff70cf92a")}${parentEntry.node.children.length + 1}`,
       children: [],
     };
     parentEntry.node.children = parentEntry.node.children || [];

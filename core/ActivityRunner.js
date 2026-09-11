@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * ActivityRunner - node-by-node interpreter for a single Activity
  * instance's Blueprint (plan §13 Phase 2). Kept generic: the only node
@@ -21,7 +22,7 @@ import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
 
 const ONE_SHOT_NODE_TYPES = new Set([
   "setVariable", "setLocalVariable", "openWindow", "closeWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
-  "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect", "markEventState",
+  "setLanguage", "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect", "markEventState",
 ]);
 const MAX_STEPS = 1000;
 
@@ -63,30 +64,30 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       break;
     }
     case "getStructureDefinition":
-      if (!dbGateway?.getStructureDefinition) throw new Error("Node getStructureDefinition requires a dbGateway");
+      if (!dbGateway?.getStructureDefinition) throw new Error(t("error.ed9feb0cd2b5"));
       result = dbGateway.getStructureDefinition(read("structureId"));
       break;
     case "getDatabaseDefinition":
-      if (!dbGateway?.getDatabaseDefinition) throw new Error("Node getDatabaseDefinition requires a dbGateway");
+      if (!dbGateway?.getDatabaseDefinition) throw new Error(t("error.e67bc821c260"));
       result = dbGateway.getDatabaseDefinition(read("databaseId"));
       break;
     case "findRecordsValue": {
-      if (!dbGateway) throw new Error("Node findRecordsValue requires a dbGateway");
+      if (!dbGateway) throw new Error(t("error.fa59af2e3c80"));
       result = dbGateway.findRecords(read("databaseId"), read("query", {}));
       break;
     }
     case "getRecordValue": {
-      if (!dbGateway?.getRecord) throw new Error("Node getRecordValue requires a dbGateway");
+      if (!dbGateway?.getRecord) throw new Error(t("error.535cdca40f3a"));
       result = dbGateway.getRecord(read("databaseId"), read("key"));
       break;
     }
     case "getRuntimeCollection": {
-      if (!runtimeGateway?.getCollection) throw new Error("Node getRuntimeCollection requires a runtimeGateway");
+      if (!runtimeGateway?.getCollection) throw new Error(t("error.81a602d97338"));
       result = runtimeGateway.getCollection(read("collectionId")) || [];
       break;
     }
     case "getRuntimeRecord": {
-      if (!runtimeGateway?.getRecord) throw new Error("Node getRuntimeRecord requires a runtimeGateway");
+      if (!runtimeGateway?.getRecord) throw new Error(t("error.ad111936dc7e"));
       result = runtimeGateway.getRecord(read("collectionId"), read("recordId"));
       break;
     }
@@ -110,19 +111,23 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       result = variableStore.get(`__activityCount:${read("activityId")}`) ?? 0;
       break;
     case "getQueueEntryCount":
-      if (!runtimeGateway?.listEntries) throw new Error("Node getQueueEntryCount requires an activity queue gateway");
+      if (!runtimeGateway?.listEntries) throw new Error(t("error.a54f6a6d6d07"));
       result = runtimeGateway.listEntries(read("queueId"), { status: "unresolved" }).length;
       break;
     case "addWindowComponent":
       result = variableStore.get(`__nodeResult:${node.id}:componentId`) ?? null;
       break;
     case "getPublicVariable": {
-      if (!pvGateway) throw new Error("Node getPublicVariable requires a pvGateway");
+      if (!pvGateway) throw new Error(t("error.df5e69e177f6"));
       result = pvGateway.get(read("id"));
       break;
     }
+    case "getLanguage":
+      if (!runtimeGateway?.getLanguage) throw new Error(t("error.a8ffd3686ba6"));
+      result = runtimeGateway.getLanguage();
+      break;
     case "publicVariableCondition": {
-      if (!pvGateway) throw new Error("Node publicVariableCondition requires a pvGateway");
+      if (!pvGateway) throw new Error(t("error.3a14abbd1474"));
       result = pvGateway.evaluateCondition({ id: read("id"), op: read("op", "eq"), value: read("value") });
       break;
     }
@@ -168,8 +173,8 @@ function applyArithmetic(operator, left, right) {
     case "+": return Number(left) + Number(right);
     case "-": return Number(left) - Number(right);
     case "*": return Number(left) * Number(right);
-    case "/": if (Number(right) === 0) throw new Error("Division by zero"); return Number(left) / Number(right);
-    case "%": if (Number(right) === 0) throw new Error("Division by zero"); return Number(left) % Number(right);
+    case "/": if (Number(right) === 0) throw new Error(t("error.50a314209c54")); return Number(left) / Number(right);
+    case "%": if (Number(right) === 0) throw new Error(t("error.50a314209c54")); return Number(left) % Number(right);
     case "and": return Boolean(left) && Boolean(right);
     case "or": return Boolean(left) || Boolean(right);
     case "xor": return Boolean(left) !== Boolean(right);
@@ -331,6 +336,11 @@ export function createActivityRunner({
         }
         return { next: nextFlow(blueprint, node) };
       }
+      case "setLanguage": {
+        if (!runtimeGateway?.setLanguage) throw new Error(t("error.70e51cb62f01"));
+        runtimeGateway.setLanguage(resolveInput(blueprint, node, "language", variableStore, "", undefined, pvGateway, dbGateway, runtimeGateway));
+        return { next: nextFlow(blueprint, node) };
+      }
       case "branch": {
         const condition = Boolean(resolveInput(blueprint, node, "condition", variableStore, false, undefined, pvGateway, dbGateway, runtimeGateway));
         return { next: nextFlow(blueprint, node, condition ? "true" : "false") };
@@ -359,7 +369,7 @@ export function createActivityRunner({
         return { next: nextFlow(blueprint, node) };
       }
       case "addWindowComponent": {
-        if (!apiGateway?.call) throw new Error("Node addWindowComponent requires an apiGateway");
+        if (!apiGateway?.call) throw new Error(t("error.cbac236a53f6"));
         const publicVariableId = resolveInput(blueprint, node, "publicVariableId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway);
         const rawProperties = node.inputs?.properties;
         const componentProperties = rawProperties && typeof rawProperties === "object" && !Array.isArray(rawProperties) && !Object.prototype.hasOwnProperty.call(rawProperties, "nodeId") && !Object.prototype.hasOwnProperty.call(rawProperties, "variable")
@@ -388,7 +398,7 @@ export function createActivityRunner({
         return { next: nextFlow(blueprint, node, "onCreate") || nextFlow(blueprint, node) };
       }
       case "removeWindowComponent": {
-        if (!apiGateway?.call) throw new Error("Node removeWindowComponent requires an apiGateway");
+        if (!apiGateway?.call) throw new Error(t("error.feb2a3be2247"));
         apiGateway.call("window.removeComponent", {
           windowId: resolveInput(blueprint, node, "windowId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
           componentId: resolveInput(blueprint, node, "componentId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
@@ -396,7 +406,7 @@ export function createActivityRunner({
         return { next: nextFlow(blueprint, node) };
       }
       case "getWindowLayout": {
-        if (!apiGateway?.call) throw new Error("Node getWindowLayout requires an apiGateway");
+        if (!apiGateway?.call) throw new Error(t("error.a6702f0f6b54"));
         const result = apiGateway.call("window.getLayout", { windowId: resolveInput(blueprint, node, "windowId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway) });
         const resultVariable = resolveInput(blueprint, node, "resultVariable", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway);
         if (resultVariable) variableStore.set(resultVariable, result);
@@ -426,7 +436,7 @@ export function createActivityRunner({
         return { next: nextFlow(blueprint, node) };
       }
       case "callApi": {
-        if (!apiGateway?.call) throw new Error("Node callApi requires an apiGateway");
+        if (!apiGateway?.call) throw new Error(t("error.a389d5090bf1"));
         const apiId = resolveInput(blueprint, node, "apiId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         const payload = resolveInput(blueprint, node, "payload", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway);
         const result = apiGateway.call(apiId, payload, instance, node);
@@ -631,7 +641,7 @@ export function createActivityRunner({
         : null;
       onCheckpoint(instance);
     }
-    if (guard >= MAX_STEPS) throw new Error("Activity flow exceeded the maximum step count");
+    if (guard >= MAX_STEPS) throw new Error(t("error.eba2b6ab7973"));
     finish("completed");
   }
 

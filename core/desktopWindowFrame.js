@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import { PointerInteraction } from "./desktopPointerInteraction.js";
 import { renderWindowRoot } from "./WidgetLayoutRenderer.js";
 
@@ -90,21 +91,21 @@ export class WindowFrame {
     el.innerHTML = `
       <div class="ng-titlebar">
         <div class="ng-titlebar-title">
-          <span class="ng-titlebar-icon" tabindex="0" role="button" aria-haspopup="true" aria-label="系统菜单">${state.icon || "🗔"}</span>
+          <span class="ng-titlebar-icon" tabindex="0" role="button" aria-haspopup="true" aria-label="${t("legacy.16069f6a8ba3")}">${state.icon || "🗔"}</span>
           <span class="ng-title"></span>
         </div>
         <div class="ng-window-controls">
-          <button type="button" class="bevel-out ng-window-control ng-min" title="最小化" aria-label="最小化">_</button>
-          <button type="button" class="bevel-out ng-window-control ng-max" title="最大化" aria-label="最大化">□</button>
-          <button type="button" class="bevel-out ng-window-control ng-close" title="关闭" aria-label="关闭">✕</button>
+          <button type="button" class="bevel-out ng-window-control ng-min" title="${t("legacy.ca8223c5fc42")}" aria-label="${t("legacy.ca8223c5fc42")}">_</button>
+          <button type="button" class="bevel-out ng-window-control ng-max" title="${t("legacy.da2d806e5ff9")}" aria-label="${t("legacy.da2d806e5ff9")}">□</button>
+          <button type="button" class="bevel-out ng-window-control ng-close" title="${t("legacy.6c14bd7f6f9e")}" aria-label="${t("legacy.6c14bd7f6f9e")}">✕</button>
         </div>
       </div>
       <div class="ng-system-menu" hidden>
-        <button type="button" class="ng-system-menu-item" data-window-command="restore">还原</button>
-        <button type="button" class="ng-system-menu-item" data-window-command="move">移动</button>
-        <button type="button" class="ng-system-menu-item" data-window-command="minimize">最小化</button>
-        <button type="button" class="ng-system-menu-item" data-window-command="maximize">最大化</button>
-        <button type="button" class="ng-system-menu-item ng-system-menu-close" data-window-command="close">关闭</button>
+        <button type="button" class="ng-system-menu-item" data-window-command="restore">${t("legacy.457d449ce1d4")}</button>
+        <button type="button" class="ng-system-menu-item" data-window-command="move">${t("legacy.591f3aa55fda")}</button>
+        <button type="button" class="ng-system-menu-item" data-window-command="minimize">${t("legacy.ca8223c5fc42")}</button>
+        <button type="button" class="ng-system-menu-item" data-window-command="maximize">${t("legacy.da2d806e5ff9")}</button>
+        <button type="button" class="ng-system-menu-item ng-system-menu-close" data-window-command="close">${t("legacy.6c14bd7f6f9e")}</button>
       </div>
       <div class="ng-body"></div>
       ${state.resizable ? RESIZE_HANDLES.map((dir) => `<div class="ng-resize-handle ng-resize-${dir}" data-resize="${dir}"></div>`).join("") : ""}
@@ -308,7 +309,7 @@ export class WindowFrame {
       // state changes. Changing it to a Unicode restore glyph changes the
       // button's baseline and no longer matches the legacy title bar.
       maxButton.textContent = "□";
-      maxButton.title = state.maximized ? "还原" : "最大化";
+      maxButton.title = state.maximized ? t("legacy.457d449ce1d4") : t("legacy.da2d806e5ff9");
       maxButton.setAttribute("aria-label", maxButton.title);
     }
   }

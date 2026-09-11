@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * DataLoader - the single content-loading boundary for ng.
  *
@@ -8,7 +9,7 @@
  */
 export class DataLoader {
   constructor({ root = "data/", fetchImpl = globalThis.fetch?.bind(globalThis) } = {}) {
-    if (typeof fetchImpl !== "function") throw new Error("DataLoader requires a fetch implementation");
+    if (typeof fetchImpl !== "function") throw new Error(t("error.f2bf38a7cfbe"));
     this.root = root.endsWith("/") ? root : `${root}/`;
     this.fetchImpl = fetchImpl;
     this.cache = new Map();

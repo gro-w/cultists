@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import { createActivityInstance, cloneActivityInstance } from "./ActivityInstance.js";
 
 /**
@@ -16,7 +17,7 @@ export class ActivityQueue {
 
   /** Append a new instance for `activityId` and return the created instance. */
   append({ activityId, instanceId, currentNodeId, payload = null, receivedDay = null, receivedTime = null, receivedPhase = null } = {}) {
-    if (!activityId) throw new Error("ActivityQueue.append requires an activityId");
+    if (!activityId) throw new Error(t("error.37554c5966cc"));
     const sequence = (this._sequence.get(activityId) || 0) + 1;
     this._sequence.set(activityId, sequence);
     const instance = createActivityInstance({
@@ -89,14 +90,14 @@ export class ActivityQueue {
   }
 
   restore(entries = []) {
-    if (!Array.isArray(entries)) throw new Error("Invalid activity queue snapshot");
+    if (!Array.isArray(entries)) throw new Error(t("error.fcbb38a38162"));
     const seen = new Set();
     this.entries = entries.map((entry) => {
       if (!entry || typeof entry !== "object" || typeof entry.activityId !== "string" || !entry.activityId) {
-        throw new Error("Invalid activity instance");
+        throw new Error(t("error.5e231e810e63"));
       }
       if (typeof entry.instanceId !== "string" || !entry.instanceId || seen.has(entry.instanceId)) {
-        throw new Error("Invalid or duplicate activity instance ID");
+        throw new Error(t("error.4339352ad20c"));
       }
       seen.add(entry.instanceId);
       const restored = cloneActivityInstance(entry);

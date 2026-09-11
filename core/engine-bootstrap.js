@@ -37,6 +37,9 @@ import { DisplayReceiverRegistry } from "./DisplayReceiverRegistry.js";
 import { registerCustomActivityNode } from "./ActivityNodeRegistry.js";
 import { createApiRegistry } from "./engine-api.js";
 import { EventActivityRouter } from "./EventActivityRouter.js";
+import { I18nManager } from "./i18n/I18nManager.js";
+import { setActiveI18nManager } from "./i18n/index.js";
+import { t } from "./i18n/index.js";
 
 export function isDevEntry(search = typeof location !== "undefined" ? location.search : "") {
   return search === "?dev";
@@ -74,6 +77,8 @@ export async function bootstrap(rootEl) {
     rules: config.stateBoundary?.rules || {},
   });
   const variableStore = new VariableStore(eventBus);
+  const i18n = new I18nManager({ eventBus, language: config.language || "zh-cn", supportedLanguages: config.supportedLanguages });
+  setActiveI18nManager(i18n);
   Object.entries(config.initialVariables || {}).forEach(([key, value]) => {
     variableStore.set(key, value);
   });
@@ -147,6 +152,8 @@ export async function bootstrap(rootEl) {
     incrementField: (collectionId, recordId, field, delta) => runtimeCollections.incrementField(collectionId, recordId, field, delta),
     appendCollectionValue: (collectionId, value) => runtimeCollections.appendCollectionValue(collectionId, value),
     listEntries: (queueId, filters) => queues.listEntries(queueId, filters),
+    getLanguage: () => i18n.getLanguage(),
+    setLanguage: (language) => i18n.setLanguage(language),
   };
   const content = {
     runtimeGateway,
@@ -202,7 +209,7 @@ export async function bootstrap(rootEl) {
   const saveManager = new SaveManager({
     gameClock, variableStore, publicVariableManager: publicVariables,
     activityQueueRegistry: queues, windowManager, desktopIconManager: iconManager,
-    eventStateRegistry: eventState, stateProviders: { ...content.stateProviders, stateBoundary }, runtimeStores: content.runtimeStores,
+    eventStateRegistry: eventState, stateProviders: { ...content.stateProviders, stateBoundary, i18n }, runtimeStores: content.runtimeStores,
     saveableVariable: content.saveableVariable,
     activityExecutionService: null, resumePendingActivities: () => {}, engineVersion: config.version,
   });
@@ -374,6 +381,7 @@ export async function bootstrap(rootEl) {
       publicVariableManager: publicVariables,
       localVariableManager: localVariables,
       eventStateRegistry: eventState,
+      i18n,
       dataLoader,
       saveManager,
       gameClock,
@@ -386,7 +394,7 @@ export async function bootstrap(rootEl) {
     iconManager.register({
       iconId: "dev-mode-launcher-icon",
       glyph: "🛠️",
-      label: "开发人员模式",
+      label: t("legacy.5e276d748766"),
       blueprintId: "desktop.open-window",
       inputs: { windowId: "dev-mode-launcher" },
       engineOwned: true,
@@ -401,5 +409,5 @@ export async function bootstrap(rootEl) {
     const instance = enqueueActivity(startup.activityId, startup.queueId || "main");
     if (instance) consumer.consume(startup.queueId || "main");
   }
-  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, contentPackage: content, eventRouter, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, stateBoundary, iconManager, saveManager, eventStateRegistry: eventState };
+  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, i18n, contentPackage: content, eventRouter, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, stateBoundary, iconManager, saveManager, eventStateRegistry: eventState };
 }

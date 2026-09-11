@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 /**
  * Live game-clock debugger. This is a development-only view: it changes the
  * generic GameClock through its public restore/advance API and never writes
@@ -12,20 +13,20 @@ export class TimeDebuggerView {
     this.el.className = "ng-dev-time-debugger";
     this.el.innerHTML = `
       <div class="ng-dev-debugger-row">
-        <strong>当前游戏时间</strong>
+        <strong>${t("legacy.6a7cfee34c75")}</strong>
         <output data-role="current"></output>
       </div>
-      <label class="ng-dev-debugger-row">天数
+      <label class="ng-dev-debugger-row">${t("legacy.f02ba3a54679")}
         <input data-role="day" type="number" min="1" step="1" value="1">
       </label>
-      <label class="ng-dev-debugger-row">时间
+      <label class="ng-dev-debugger-row">${t("legacy.89b4aa6364ce")}
         <input data-role="time" type="time" value="08:00" step="60">
       </label>
       <div class="ng-dev-debugger-actions">
-        <button type="button" data-action="set">设置游戏时间</button>
-        <button type="button" data-action="advance20">推进 20 分钟</button>
-        <button type="button" data-action="advance60">推进 60 分钟</button>
-        <button type="button" data-action="forceEndWork">强制下班并打开下班模式</button>
+        <button type="button" data-action="set">${t("legacy.e6403871dc21")}</button>
+        <button type="button" data-action="advance20">${t("legacy.1d171c7b3ca1")}20 ${t("legacy.28bf227b9bf7")}</button>
+        <button type="button" data-action="advance60">${t("legacy.1d171c7b3ca1")}60 ${t("legacy.28bf227b9bf7")}</button>
+        <button type="button" data-action="forceEndWork">${t("legacy.f5392cbb745f")}</button>
       </div>
       <p data-role="status" class="ng-dev-debugger-status"></p>
     `;
@@ -53,17 +54,17 @@ export class TimeDebuggerView {
     const day = Math.max(1, Math.floor(Number(this.dayEl.value) || 1));
     const [hours, minutes] = String(this.timeEl.value || "00:00").split(":").map(Number);
     if (!Number.isFinite(hours) || !Number.isFinite(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      this.statusEl.textContent = "时间格式无效";
+      this.statusEl.textContent = t("legacy.a8325cf6860b");
       return;
     }
     this.gameClock?.restore({ day, minutes: hours * 60 + minutes });
-    this.statusEl.textContent = "游戏时间已设置";
+    this.statusEl.textContent = t("legacy.1c87b82d97b1");
     this.render();
   }
 
   advance(minutes) {
     this.gameClock?.advance(minutes);
-    this.statusEl.textContent = `游戏时间已推进 ${minutes} 分钟`;
+    this.statusEl.textContent = `${t("legacy.111daa12b8b4")}${minutes} ${t("legacy.28bf227b9bf7")}`;
     this.render();
   }
 }

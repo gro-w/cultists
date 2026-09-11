@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
 
 /**
@@ -26,15 +27,15 @@ export class OnboardingEditorView {
     el.innerHTML = `
       <div class="ng-list-manager-lists">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="new-hint">新建提示</button>
-          <button type="button" data-action="delete-hint">删除提示</button>
+          <button type="button" data-action="new-hint">${t("legacy.1056316eb368")}</button>
+          <button type="button" data-action="delete-hint">${t("legacy.930d1cd89578")}</button>
         </div>
         <div class="ng-list-manager-list-items"></div>
       </div>
       <div class="ng-list-manager-activities">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="preview">预览此提示</button>
-          <button type="button" data-action="save">写入磁盘</button>
+          <button type="button" data-action="preview">${t("legacy.3198b1f10022")}</button>
+          <button type="button" data-action="save">${t("legacy.81ee3266b03d")}</button>
           <span class="ng-editor-status"></span>
         </div>
         <div class="ng-window-editor-fields"></div>
@@ -46,10 +47,10 @@ export class OnboardingEditorView {
     this.statusEl = el.querySelector(".ng-editor-status");
 
     el.querySelector('[data-action="new-hint"]').addEventListener("click", () => {
-      const id = prompt("新提示 id:");
+      const id = prompt(t("legacy.44dee332806c"));
       if (!id) return;
       if (this._hints().some((hint) => hint.id === id)) {
-        this.statusEl.textContent = `提示 id "${id}" 已存在`;
+        this.statusEl.textContent = `${t("legacy.8ba8335fe501")}id "${id}" ${t("legacy.a867d42ddf26")}`;
         return;
       }
       const hints = [...this._hints(), { id, trigger: "", completeOn: "", target: "", title: "", text: "" }];
@@ -71,9 +72,9 @@ export class OnboardingEditorView {
     el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
         await writeDataFile("onboarding.json", JSON.stringify(this._hints(), null, 2));
-        this.statusEl.textContent = "已写入磁盘";
+        this.statusEl.textContent = t("legacy.d4371481b26a");
       } catch (err) {
-        this.statusEl.textContent = `写入失败: ${err.message}`;
+        this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${err.message}`;
       }
     });
   }
@@ -106,7 +107,7 @@ export class OnboardingEditorView {
     this.fieldsEl.innerHTML = "";
     const hint = this._hints().find((h) => h.id === this.selectedHintId);
     if (!hint) {
-      this.fieldsEl.textContent = "选择一个提示以编辑";
+      this.fieldsEl.textContent = t("legacy.3ac2ec38d85b");
       return;
     }
     const makeField = (label, key, type = "text") => {
@@ -124,11 +125,11 @@ export class OnboardingEditorView {
       row.appendChild(input);
       this.fieldsEl.appendChild(row);
     };
-    makeField("触发里程碑 (trigger)", "trigger");
-    makeField("完成里程碑 (completeOn)", "completeOn");
-    makeField("目标 CSS 选择器 (target)", "target");
-    makeField("标题 (title)", "title");
-    makeField("正文 (text)", "text", "textarea");
+    makeField(t("legacy.639c44f03e8e"), "trigger");
+    makeField(t("legacy.479d221dbadd"), "completeOn");
+    makeField(t("legacy.6788250b065a"), "target");
+    makeField(t("legacy.3f760554e45f"), "title");
+    makeField(t("legacy.c4c98e32e9e7"), "text", "textarea");
   }
 }
 

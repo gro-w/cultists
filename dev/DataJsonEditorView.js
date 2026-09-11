@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
 
 function clone(value) {
@@ -54,13 +55,13 @@ export class DataJsonEditorView {
     el.className = "ng-list-manager ng-data-json-editor";
     el.innerHTML = `
       <div class="ng-list-manager-lists">
-        <div class="ng-list-manager-toolbar"><input type="search" data-role="filter" placeholder="筛选 JSON 文件" /></div>
+        <div class="ng-list-manager-toolbar"><input type="search" data-role="filter" placeholder="${t("legacy.cd72ec0f53cd")}JSON ${t("legacy.49deaf7da20d")}" /></div>
         <div class="ng-list-manager-list-items"></div>
       </div>
       <div class="ng-list-manager-activities">
         <div class="ng-list-manager-toolbar">
-          <strong data-role="filename">选择 JSON 文件</strong>
-          <button type="button" data-action="save">保存 JSON</button>
+          <strong data-role="filename">${t("legacy.63b2603c5b9d")}JSON ${t("legacy.49deaf7da20d")}</strong>
+          <button type="button" data-action="save">${t("legacy.a48ea55015f4")}JSON</button>
           <span class="ng-editor-status"></span>
         </div>
         <div class="ng-data-json-tree" data-role="tree"></div>
@@ -97,14 +98,14 @@ export class DataJsonEditorView {
       this.renderList();
       this.renderTree();
     } catch (error) {
-      this.statusEl.textContent = `读取失败: ${error.message}`;
+      this.statusEl.textContent = `${t("legacy.d9f607a20068")}: ${error.message}`;
     }
   }
 
   renderTree() {
     this.treeEl.innerHTML = "";
     if (this.draft === null || this.draft === undefined) {
-      this.treeEl.textContent = "选择一个 JSON 文件";
+      this.treeEl.textContent = t("legacy.0f849360133e");
       return;
     }
     this.treeEl.appendChild(this.renderValue(this.draft, [], "root"));
@@ -121,14 +122,14 @@ export class DataJsonEditorView {
         const child = this.renderValue(item, [...path, index], `[${index}]`);
         const remove = document.createElement("button");
         remove.type = "button";
-        remove.textContent = "删除";
+        remove.textContent = t("legacy.3755f56f2f83");
         remove.addEventListener("click", () => { this.draft = deleteAt(this.draft, [...path, index]); this.renderTree(); });
         child.appendChild(remove);
         row.appendChild(child);
       });
       const add = document.createElement("button");
       add.type = "button";
-      add.textContent = "新增字符串项";
+      add.textContent = t("legacy.92909a50d97e");
       add.addEventListener("click", () => { this.draft = setAt(this.draft, path, [...value, ""]); this.renderTree(); });
       row.appendChild(add);
       return row;
@@ -138,16 +139,16 @@ export class DataJsonEditorView {
         const child = this.renderValue(childValue, [...path, key], key);
         const remove = document.createElement("button");
         remove.type = "button";
-        remove.textContent = "删除属性";
+        remove.textContent = t("legacy.f49294e6c8bc");
         remove.addEventListener("click", () => { this.draft = deleteAt(this.draft, [...path, key]); this.renderTree(); });
         child.appendChild(remove);
         row.appendChild(child);
       }
       const addKey = document.createElement("button");
       addKey.type = "button";
-      addKey.textContent = "新增字符串属性";
+      addKey.textContent = t("legacy.6dca5a34884b");
       addKey.addEventListener("click", () => {
-        const key = prompt("属性名:");
+        const key = prompt(t("legacy.a0c9218e4629"));
         if (!key || Object.prototype.hasOwnProperty.call(value, key)) return;
         this.draft = setAt(this.draft, path, { ...value, [key]: "" });
         this.renderTree();
@@ -177,9 +178,9 @@ export class DataJsonEditorView {
     if (!this.selectedPath) return;
     try {
       await writeDataFile(this.selectedPath, `${JSON.stringify(this.draft, null, 2)}\n`);
-      this.statusEl.textContent = "已写入磁盘";
+      this.statusEl.textContent = t("legacy.d4371481b26a");
     } catch (error) {
-      this.statusEl.textContent = `写入失败: ${error.message}`;
+      this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${error.message}`;
     }
   }
 }

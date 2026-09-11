@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import { DisplayReceiverRegistry } from "./DisplayReceiverRegistry.js";
 import { resolveAssetPath } from "./AssetPath.js";
 
@@ -82,7 +83,7 @@ export class TextChoiceWidget {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "ng-dialogue-continue";
-      button.textContent = "继续";
+      button.textContent = t("legacy.1fc1afc5c55e");
       button.addEventListener("click", () => this.variableStore?.set(payload.continueKey, true));
       this.controlsEl.appendChild(button);
     }
@@ -117,7 +118,7 @@ export class TextChoiceWidget {
       media.src = resolveAssetPath(payload.imageData);
       media.alt = payload.cgId || payload.imageId || payload.mediaKind || "media";
     } else {
-      media.textContent = `媒体：${payload.cgId || payload.imageId || ""}`;
+      media.textContent = `${t("legacy.a50e2b80c5ef")}${payload.cgId || payload.imageId || ""}`;
     }
     this.el.insertBefore(media, this.transcriptEl);
   }

@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * Generic, data-driven state boundary owner.
  *
@@ -15,7 +16,7 @@ const MINUTES_PER_DAY = 1440;
 
 export class StateBoundaryService {
   constructor({ gameClock, timeService, eventBus = null, initialState = {}, rules = {} } = {}) {
-    if (!gameClock || !timeService) throw new Error("StateBoundaryService requires gameClock and timeService");
+    if (!gameClock || !timeService) throw new Error(t("error.4bb16e49f05a"));
     this.gameClock = gameClock;
     this.timeService = timeService;
     this.eventBus = eventBus;
@@ -64,11 +65,11 @@ export class StateBoundaryService {
   snapshot() { return { ...this.state, settledDays: [...this.settledDays].sort((a, b) => a - b) }; }
 
   restore(snapshot = {}) {
-    if (!snapshot || typeof snapshot !== "object") throw new Error("Invalid state boundary snapshot");
+    if (!snapshot || typeof snapshot !== "object") throw new Error(t("error.6b14856a17f5"));
     const restored = { ...this.state, ...snapshot };
-    if (!Number.isInteger(restored.day) || restored.day < 1) throw new Error("Invalid state boundary day");
-    if (![this.rules.dayPhase, this.rules.nightPhase].includes(restored.phase)) throw new Error("Invalid state boundary phase");
-    if (typeof restored.duty !== "string" || typeof restored.location !== "string") throw new Error("Invalid state boundary state");
+    if (!Number.isInteger(restored.day) || restored.day < 1) throw new Error(t("error.b509e5fd3124"));
+    if (![this.rules.dayPhase, this.rules.nightPhase].includes(restored.phase)) throw new Error(t("error.ccaa49de7821"));
+    if (typeof restored.duty !== "string" || typeof restored.location !== "string") throw new Error(t("error.2322433db705"));
     this.state = { ...restored };
     delete this.state.settledDays;
     this.settledDays = new Set((snapshot.settledDays || []).filter((day) => Number.isInteger(day) && day >= 1));

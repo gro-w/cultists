@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 /**
  * PublicVariableDebuggerView - runtime debugger for the live
  * `PublicVariableManager` (plan §10.3-equivalent runtime inspection,
@@ -23,7 +24,7 @@ export class PublicVariableDebuggerView {
     el.innerHTML = `
       <div class="ng-list-manager-activities" style="width:100%">
         <div class="ng-list-manager-toolbar">
-          <button type="button" data-action="refresh">刷新</button>
+          <button type="button" data-action="refresh">${t("legacy.38108eaa1d32")}</button>
           <span class="ng-editor-status"></span>
         </div>
         <div class="ng-database-debugger-records ng-public-variable-debugger-rows"></div>
@@ -68,7 +69,7 @@ export class PublicVariableDebuggerView {
 
     const setButton = document.createElement("button");
     setButton.type = "button";
-    setButton.textContent = "设置";
+    setButton.textContent = t("legacy.7debf9cb0372");
     setButton.disabled = Boolean(definition.readOnly);
     setButton.addEventListener("click", () => {
       if (definition.type === "bool") return; // checkbox applies immediately on change
@@ -78,7 +79,7 @@ export class PublicVariableDebuggerView {
           const ref = JSON.parse(input.value);
           this._apply(definition, ref, true);
         } catch (err) {
-          this.statusEl.textContent = `设置失败: ${err.message}`;
+          this.statusEl.textContent = `${t("legacy.7f77f4569549")}: ${err.message}`;
         }
         return;
       }
@@ -93,10 +94,10 @@ export class PublicVariableDebuggerView {
     try {
       if (isObjectRef) this.publicVariableManager.setObjectRef(definition.id, value);
       else this.publicVariableManager.set(definition.id, value);
-      this.statusEl.textContent = "已更新";
+      this.statusEl.textContent = t("legacy.112f98675ee2");
       this.render();
     } catch (err) {
-      this.statusEl.textContent = `更新失败: ${err.message}`;
+      this.statusEl.textContent = `${t("legacy.8f8818f05bfa")}: ${err.message}`;
     }
   }
 }

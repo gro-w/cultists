@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
 
 /** Edits the Start menu projection of the canonical desktop icon registry. */
@@ -12,15 +13,15 @@ export class StartMenuEditorView {
   _buildDom() {
     this.el = document.createElement("div");
     this.el.className = "ng-start-menu-editor";
-    this.el.innerHTML = `<div class="ng-list-manager-toolbar"><button type="button" data-action="save">写入磁盘</button><span class="ng-editor-status"></span></div><div class="ng-start-menu-editor-list"></div>`;
+    this.el.innerHTML = `<div class="ng-list-manager-toolbar"><button type="button" data-action="save">${t("legacy.81ee3266b03d")}</button><span class="ng-editor-status"></span></div><div class="ng-start-menu-editor-list"></div>`;
     this.listEl = this.el.querySelector(".ng-start-menu-editor-list");
     this.statusEl = this.el.querySelector(".ng-editor-status");
     this.el.querySelector('[data-action="save"]').addEventListener("click", async () => {
       try {
         await writeDataFile("desktop-icons.json", JSON.stringify(this.iconManager.toJSON(), null, 2));
-        this.statusEl.textContent = "已写入磁盘";
+        this.statusEl.textContent = t("legacy.d4371481b26a");
       } catch (error) {
-        this.statusEl.textContent = `写入失败: ${error.message}`;
+        this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${error.message}`;
       }
     });
   }

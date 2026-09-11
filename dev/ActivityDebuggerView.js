@@ -1,4 +1,5 @@
 // DEV-TOOLS:START
+import { t } from "../core/i18n/index.js";
 import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 
 /** Live runtime Activity inspector. All mutations go through queue/execution APIs. */
@@ -18,7 +19,7 @@ export class ActivityDebuggerView {
   _buildDom() {
     const el = document.createElement("div");
     el.className = "ng-activity-debugger";
-    el.innerHTML = `<div class="ng-debugger-toolbar"><button data-action="refresh">刷新</button><select data-role="new-activity"></select><select data-role="new-queue"></select><button data-action="create">创建并入队</button><span class="ng-debugger-status"></span></div><div class="ng-debugger-body"></div>`;
+    el.innerHTML = `<div class="ng-debugger-toolbar"><button data-action="refresh">${t("legacy.38108eaa1d32")}</button><select data-role="new-activity"></select><select data-role="new-queue"></select><button data-action="create">${t("legacy.df0ec16d44ca")}</button><span class="ng-debugger-status"></span></div><div class="ng-debugger-body"></div>`;
     this.el = el;
     this.bodyEl = el.querySelector(".ng-debugger-body");
     this.statusEl = el.querySelector(".ng-debugger-status");
@@ -43,7 +44,7 @@ export class ActivityDebuggerView {
     if (selectedQueue) queueSelect.value = selectedQueue;
     this.bodyEl.innerHTML = "";
     for (const queue of this.activityQueueRegistry?.list() || []) this.bodyEl.appendChild(this.renderQueue(queue));
-    this.statusEl.textContent = `实时更新 · ${new Date().toLocaleTimeString()}`;
+    this.statusEl.textContent = `${t("legacy.0f4f88883db6")}${new Date().toLocaleTimeString()}`;
   }
 
   escape(value) { return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;"); }
@@ -61,11 +62,11 @@ export class ActivityDebuggerView {
     section.className = "ng-debugger-queue";
     const title = document.createElement("div");
     title.className = "ng-debugger-queue-title";
-    title.textContent = `队列: ${queue.queueId}${queue.nonBlocking ? " (非阻塞)" : ""} - ${queue.entries.length} 个实例`;
+    title.textContent = `${t("legacy.cd35413f05e7")}: ${queue.queueId}${queue.nonBlocking ? ` (${t("legacy.654667ec1887")})` : ""} - ${queue.entries.length} ${t("legacy.88aba736b142")}`;
     section.appendChild(title);
     const table = document.createElement("table");
     table.className = "ng-debugger-table";
-    table.innerHTML = "<thead><tr><th>instance</th><th>activity</th><th>状态</th><th>执行节点</th><th>本地变量</th><th>队列操作</th></tr></thead><tbody></tbody>";
+    table.innerHTML = t("legacy.396cced3a4f6");
     const tbody = table.querySelector("tbody");
     queue.entries.forEach((entry) => tbody.appendChild(this.renderEntry(queue, entry)));
     section.appendChild(table);
@@ -88,10 +89,10 @@ export class ActivityDebuggerView {
     });
     Object.entries(localValues).forEach(([key, value]) => {
       const input = document.createElement("input"); input.value = typeof value === "object" ? JSON.stringify(value) : value ?? ""; input.title = key;
-      input.addEventListener("change", () => { let next = input.value; try { next = typeof value === "object" ? JSON.parse(next) : next; } catch { this.statusEl.textContent = "本地变量 JSON 无效"; return; } this.activityExecutionService?.setLocalVariable(entry.instanceId, key, next); });
+      input.addEventListener("change", () => { let next = input.value; try { next = typeof value === "object" ? JSON.parse(next) : next; } catch { this.statusEl.textContent = t("legacy.3017a64eb407"); return; } this.activityExecutionService?.setLocalVariable(entry.instanceId, key, next); });
       const label = document.createElement("label"); label.textContent = `${key}: `; label.appendChild(input); local.appendChild(label);
     });
-    const remove = document.createElement("button"); remove.textContent = "移出队列"; remove.addEventListener("click", () => this.activityQueueRegistry.removeEntry(queue.queueId, entry.instanceId));
+    const remove = document.createElement("button"); remove.textContent = t("legacy.e1ab0153ef20"); remove.addEventListener("click", () => this.activityQueueRegistry.removeEntry(queue.queueId, entry.instanceId));
     const cells = [entry.instanceId, entry.activityId, statusSelect, nodeSelect, local, remove];
     cells.forEach((value) => { const cell = document.createElement("td"); if (typeof value === "string") cell.textContent = value; else cell.appendChild(value); row.appendChild(cell); });
     return row;

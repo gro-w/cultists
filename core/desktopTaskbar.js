@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 /**
  * Taskbar - renders task buttons for every open window and a clock. Reads
  * window state from WindowManager only; never mutates it directly except
@@ -17,7 +18,7 @@ export class Taskbar {
   _buildDom() {
     this.rootEl.innerHTML = `
       <button type="button" class="start-button bevel-out">
-        <span class="start-icon">🗔</span><span>开始</span>
+        <span class="start-icon">🗔</span><span>${t("legacy.79cc871ca992")}</span>
       </button>
       <div class="start-menu" hidden></div>
       <div class="taskbar-tasks"></div>
@@ -57,7 +58,7 @@ export class Taskbar {
     const regularApps = apps.filter(({ icon }) => icon.iconId !== "off-duty");
     const heading = document.createElement("div");
     heading.className = "start-menu-group-title";
-    heading.textContent = "应用";
+    heading.textContent = t("legacy.4562024ddec7");
     this.startMenuEl.appendChild(heading);
     for (const entry of regularApps) {
       this._appendStartMenuItem(entry);

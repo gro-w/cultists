@@ -29,7 +29,6 @@
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
-const url = require("node:url");
 
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, "data");
@@ -113,7 +112,9 @@ function handleApi(req, res, pathname, query) {
 }
 
 const server = http.createServer((req, res) => {
-  const { pathname, query } = url.parse(req.url, true);
+  const requestUrl = new URL(req.url, `http://${HOST}`);
+  const pathname = requestUrl.pathname;
+  const query = Object.fromEntries(requestUrl.searchParams);
   if (pathname.startsWith("/api/")) return handleApi(req, res, pathname, query);
   serveStatic(req, res, pathname);
 });

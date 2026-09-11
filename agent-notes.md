@@ -26,7 +26,7 @@ data/                      canonical framework/game 数据
 media/                     历史宣传资源和设计稿
 ```
 
-当前 manifest 的主要连接关系：`game-manifest.json` → `framework-manifest.json`、`activity-manifest.json`、窗口 manifest、数据库、公共变量和 Activity 列表。默认 Activity 是 `default`，队列定义包含 `work`、`social`、`managers`、`main` 以及窗口/Widget/桌面事件队列。
+当前 manifest 的主要连接关系：`game-manifest.json` → `framework-manifest.json`、`activity-manifest.json`、窗口 manifest、数据库、公共变量、本地变量和 Activity 列表。默认 Activity 是 `default`，队列定义包含 `work`、`social`、`managers`、`main` 以及窗口/Widget/桌面事件队列。
 
 ## 本地运行
 
@@ -54,7 +54,7 @@ node dev-server.js --port 8001 --lang zh-hans
 | framework 的时间/状态 Activity 与数据 | 工作时间、`phase`、`duty`、`location`、时间推进、上下班/睡眠边界和工作状态机 |
 | `GameClock` 等 core 基础设施 | 提供与具体工作语义无关的确定性时钟和状态存储能力 |
 | `WindowManager`、`WindowDefinitionStore`、桌面模块 | 桌面、窗口、Widget 和布局 |
-| `DataStore`、`DataStructureManager`、`PublicVariableManager` | canonical 数据、结构定义和公共变量 |
+| `DataStore`、`DataStructureManager`、`PublicVariableManager`、`LocalVariableManager` | canonical 数据、结构定义、公共变量定义和 Activity 本地变量命名定义；本地值属于实例 |
 | `SaveManager`、`VariableStore`、`EventStateRegistry` | 存档、运行时变量、事件状态和恢复 |
 | `data/activities/`、`data/windows/`、`data/databases/` | NGL Activity、窗口定义和游戏数据库 |
 | `dev/`、`dev-server.js` | 开发编辑器、调试器和本地数据写盘 |
@@ -68,6 +68,7 @@ node dev-server.js --port 8001 --lang zh-hans
 - 玩家可见计时和持久化副作用通过 Activity 执行。工作、社交、管理器和主队列由 manifest 配置，不能在入口中按业务语义偷偷插入 Activity。
 - 游戏内容使用稳定 ID。窗口、Activity、数据库、公共变量和资源之间通过 manifest/schema 连接。
 - 公共变量、数据库、窗口、Activity 和存档各有边界；数据库编辑器写 canonical 数据，存档调试器只改运行时存档。
+- 本地变量管理器写 `data/local-variables.framework.json` 的定义，不保存实例值；活动调试器才允许实时修改具体实例的 `localVariables`。
 - 详细 schema 以实际 `data/*.json` 和对应 loader/validator 为准；修改 schema 时必须同步编辑器、运行器、调试器和探针。
 
 ## 常用验证

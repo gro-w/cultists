@@ -25,6 +25,7 @@ import { buildBuiltinIconBlueprint } from "./BuiltinIconBlueprints.js";
 import { DataStructureManager } from "./DataStructureManager.js";
 import { DataStore } from "./DataStore.js";
 import { PublicVariableManager } from "./PublicVariableManager.js";
+import { LocalVariableManager } from "./LocalVariableManager.js";
 import { RuntimeRefResolver } from "./RuntimeRefResolver.js";
 import { SaveManager } from "./SaveManager.js";
 import { EventStateRegistry } from "./EventStateRegistry.js";
@@ -89,6 +90,7 @@ export async function bootstrap(rootEl) {
   const dataStore = new DataStore(structures);
   const refResolver = new RuntimeRefResolver();
   const publicVariables = new PublicVariableManager(refResolver, eventBus);
+  const localVariables = new LocalVariableManager(eventBus);
   variableStore.publicVariableGateway = publicVariables;
   const eventStateConfig = frameworkManifest.documents?.eventState || {};
   const eventState = new EventStateRegistry({ eventBus, events: eventStateConfig.events });
@@ -108,6 +110,11 @@ export async function bootstrap(rootEl) {
   if (frameworkManifest.documents?.publicVariables || config.publicVariables) {
     const value = await dataLoader.loadJSON(frameworkManifest.documents?.publicVariables || config.publicVariables, { optional: true });
     if (value) publicVariables.loadDefinitions(value);
+  }
+  const localVariableDocument = frameworkManifest.documents?.localVariables || config.localVariables;
+  if (localVariableDocument) {
+    const value = await dataLoader.loadJSON(localVariableDocument, { optional: true });
+    if (value) localVariables.loadDefinitions(value);
   }
   publicVariables.registerSyncSource("gameClock.totalMinutes", () => (gameClock.day - 1) * 1440 + gameClock.minutes);
   eventBus.on("gameClock:changed", () => publicVariables.syncFromSources());
@@ -188,7 +195,7 @@ export async function bootstrap(rootEl) {
   const entries = [...ids].map((id) => manifestEntries.get(id)).filter(Boolean);
   if (entries.length) await activityDefinitions.loadManifest(entries, "activities/");
 
-  const queues = new ActivityQueueRegistry();
+  const queues = new ActivityQueueRegistry(eventBus);
   for (const definition of config.queues || []) {
     if (definition?.id) queues.register(definition.id, { nonBlocking: Boolean(definition.nonBlocking) });
   }
@@ -249,6 +256,7 @@ export async function bootstrap(rootEl) {
       return null;
     }
     const instance = queue.append({ activityId });
+    eventBus.emit(ACTIVITY_EVENTS.appended, { queueId, instance: { ...instance } });
     const runner = executeActivity({ queue, definition, instance });
     /* DEV-TOOLS:START */
     console.log("[NG dialogue] runActivity started", { activityId, queueId, instanceId: instance.instanceId, runner: Boolean(runner) });
@@ -297,6 +305,7 @@ export async function bootstrap(rootEl) {
     const validation = validateBlueprint(blueprint);
     if (!validation.ok) throw new Error(`Invalid blueprint ${activityId}: ${validation.errors.join("；")}`);
     const instance = queue.append({ activityId });
+    eventBus.emit(ACTIVITY_EVENTS.appended, { queueId: queue.queueId, instance: { ...instance } });
     return executeActivity({ queue, definition: { id: activityId, blueprint: validation.blueprint }, instance });
   }
   content.registerApis?.(apiGateway, { activityDefinitionStore: activityDefinitions, enqueueActivity });
@@ -353,6 +362,7 @@ export async function bootstrap(rootEl) {
       windowDefinitionStore: windowDefinitions,
       activityQueueRegistry: queues,
       activityDefinitionStore: activityDefinitions,
+      activityExecutionService: execution,
       eventBus,
       variableStore,
       pvGateway: publicVariables,
@@ -362,6 +372,7 @@ export async function bootstrap(rootEl) {
       dataStructureManager: structures,
       dataStore,
       publicVariableManager: publicVariables,
+      localVariableManager: localVariables,
       eventStateRegistry: eventState,
       dataLoader,
       saveManager,

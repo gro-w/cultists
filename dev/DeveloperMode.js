@@ -10,6 +10,7 @@ import { DataStructureEditorView } from "./DataStructureEditorView.js";
 import { DatabaseEditorView, DatabaseRecordEditorView } from "./DatabaseDebuggerView.js";
 import { PublicVariableEditorView } from "./PublicVariableEditorView.js";
 import { PublicVariableDebuggerView } from "./PublicVariableDebuggerView.js";
+import { LocalVariableEditorView } from "./LocalVariableEditorView.js";
 import { OnboardingEditorView } from "./OnboardingEditorView.js";
 import { StartMenuEditorView } from "./StartMenuEditorView.js";
 import { SaveDebuggerView } from "./SaveDebuggerView.js";
@@ -28,6 +29,7 @@ const STRUCTURE_MANAGER_WINDOW_ID = "dev-structure-manager";
 const DATABASE_EDITOR_WINDOW_ID = "dev-database-editor";
 const PUBLIC_VARIABLE_MANAGER_WINDOW_ID = "dev-public-variable-manager";
 const PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID = "dev-public-variable-debugger";
+const LOCAL_VARIABLE_MANAGER_WINDOW_ID = "dev-local-variable-manager";
 const ONBOARDING_EDITOR_WINDOW_ID = "dev-onboarding-editor";
 const START_MENU_EDITOR_WINDOW_ID = "dev-start-menu-editor";
 const SAVE_DEBUGGER_WINDOW_ID = "dev-save-debugger";
@@ -56,6 +58,7 @@ export async function initDeveloperMode({
   windowDefinitionStore,
   activityQueueRegistry,
   activityDefinitionStore,
+  activityExecutionService,
   eventBus,
   variableStore,
   pvGateway,
@@ -65,6 +68,7 @@ export async function initDeveloperMode({
   dataStructureManager,
   dataStore,
   publicVariableManager,
+  localVariableManager,
   eventStateRegistry,
   dataLoader,
   saveManager,
@@ -125,7 +129,7 @@ export async function initDeveloperMode({
   // The debugger only needs live runtime pieces (queue registry + event
   // bus), so it's fine to build it even if the caller doesn't pass them in
   // (e.g. an older bootstrap ordering); it just shows an empty queue list.
-  const debuggerView = new ActivityDebuggerView({ activityQueueRegistry, activityDefinitionStore, eventBus });
+  const debuggerView = new ActivityDebuggerView({ activityQueueRegistry, activityDefinitionStore, activityExecutionService, localVariableManager, eventBus });
   windowDefinitionStore.register({
     id: DEBUGGER_WINDOW_ID,
     title: "活动调试器",
@@ -341,6 +345,18 @@ export async function initDeveloperMode({
     body: publicVariableDebuggerView.el,
   });
 
+  const localVariableEditorView = new LocalVariableEditorView({ localVariableManager });
+  windowDefinitionStore.register({
+    id: LOCAL_VARIABLE_MANAGER_WINDOW_ID,
+    title: "本地变量管理器",
+    icon: "📍",
+    width: 680,
+    height: 420,
+    resizable: true,
+    singleInstance: true,
+    body: localVariableEditorView.el,
+  });
+
   // Onboarding hint editor (Phase 8 新手引导) - visual editor for
   // onboarding.json, shared with the live OnboardingManager so a "预览"
   // click immediately re-shows a hint through the real TutorialOverlay.
@@ -438,6 +454,7 @@ export async function initDeveloperMode({
       <button type="button" class="ng-dev-desktop-icon" data-tool="structure-manager"><span class="ng-dev-icon-glyph">🧱</span><span>数据结构管理器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="database-debugger"><span class="ng-dev-icon-glyph">🗄</span><span>数据库编辑器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="public-variable-manager"><span class="ng-dev-icon-glyph">🌐</span><span>公共变量管理器</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="local-variable-manager"><span class="ng-dev-icon-glyph">📍</span><span>本地变量管理器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="onboarding-editor"><span class="ng-dev-icon-glyph">💡</span><span>新手引导编辑器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="start-menu-editor"><span class="ng-dev-icon-glyph">📋</span><span>开始菜单编辑器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="blueprint-node-manager"><span class="ng-dev-icon-glyph">🔷</span><span>蓝图节点管理器</span></button>
@@ -473,6 +490,9 @@ export async function initDeveloperMode({
   });
   launcherEl.querySelector('[data-tool="public-variable-manager"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_MANAGER_WINDOW_ID));
+  });
+  launcherEl.querySelector('[data-tool="local-variable-manager"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(LOCAL_VARIABLE_MANAGER_WINDOW_ID));
   });
   launcherEl.querySelector('[data-tool="onboarding-editor"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(ONBOARDING_EDITOR_WINDOW_ID));
@@ -519,6 +539,7 @@ export async function initDeveloperMode({
     openSaveDebugger: () => windowManager.open(windowDefinitionStore.get(SAVE_DEBUGGER_WINDOW_ID)),
     openPublicVariableManager: () => windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_MANAGER_WINDOW_ID)),
     openPublicVariableDebugger: () => windowManager.open(windowDefinitionStore.get(PUBLIC_VARIABLE_DEBUGGER_WINDOW_ID)),
+    openLocalVariableManager: () => windowManager.open(windowDefinitionStore.get(LOCAL_VARIABLE_MANAGER_WINDOW_ID)),
     openOnboardingEditor: () => windowManager.open(windowDefinitionStore.get(ONBOARDING_EDITOR_WINDOW_ID)),
     openBlueprintNodeManager: () => windowManager.open(windowDefinitionStore.get(BLUEPRINT_NODE_MANAGER_WINDOW_ID)),
     openDataJsonEditor: () => windowManager.open(windowDefinitionStore.get(DATA_JSON_EDITOR_WINDOW_ID)),

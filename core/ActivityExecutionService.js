@@ -105,7 +105,14 @@ export class ActivityExecutionService {
   }
 
   update(queue, instanceId, patch) {
+    const runner = this.get(instanceId);
+    if (runner && Object.prototype.hasOwnProperty.call(patch, "currentNodeId")) runner.setCurrentNode(patch.currentNodeId);
+    if (runner && Object.prototype.hasOwnProperty.call(patch, "status")) runner.setStatus(patch.status);
     return queue?.update(instanceId, patch) || false;
+  }
+
+  setLocalVariable(instanceId, key, value) {
+    return this.get(instanceId)?.setLocalVariable(key, value) || false;
   }
 
   complete(queue, instanceId) {

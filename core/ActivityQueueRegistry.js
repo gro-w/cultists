@@ -6,7 +6,8 @@ import { ActivityQueue } from "./ActivityQueue.js";
  * §16 decision 2: `default/default` auto-enqueues into `main`).
  */
 export class ActivityQueueRegistry {
-  constructor() {
+  constructor(eventBus = null) {
+    this.eventBus = eventBus;
     this.queues = new Map();
     this.register("main", { nonBlocking: true });
   }
@@ -24,7 +25,9 @@ export class ActivityQueueRegistry {
   /** Generic queue API exposed to blueprints and developer tools. */
   append(queueId, options) {
     const queue = this.get(queueId) || this.register(queueId);
-    return queue.append(options);
+    const instance = queue.append(options);
+    this.eventBus?.emit("activity:appended", { queueId, instance: { ...instance } });
+    return instance;
   }
 
   listEntries(queueId, filters) {
@@ -40,19 +43,31 @@ export class ActivityQueueRegistry {
   }
 
   updateEntry(queueId, instanceId, patch) {
-    return this.get(queueId)?.update(instanceId, patch) || false;
+    const queue = this.get(queueId);
+    const ok = queue?.update(instanceId, patch) || false;
+    if (ok) this.eventBus?.emit("activity:changed", { queueId, instance: { ...queue.get(instanceId) } });
+    return ok;
   }
 
   completeEntry(queueId, instanceId) {
-    return this.get(queueId)?.complete(instanceId) || false;
+    const queue = this.get(queueId);
+    const ok = queue?.complete(instanceId) || false;
+    if (ok) this.eventBus?.emit("activity:changed", { queueId, instance: { ...queue.get(instanceId) } });
+    return ok;
   }
 
   cancelEntry(queueId, instanceId) {
-    return this.get(queueId)?.cancel(instanceId) || false;
+    const queue = this.get(queueId);
+    const ok = queue?.cancel(instanceId) || false;
+    if (ok) this.eventBus?.emit("activity:changed", { queueId, instance: { ...queue.get(instanceId) } });
+    return ok;
   }
 
   removeEntry(queueId, instanceId) {
-    return this.get(queueId)?.remove(instanceId) || false;
+    const queue = this.get(queueId);
+    const ok = queue?.remove(instanceId) || false;
+    if (ok) this.eventBus?.emit("activity:changed", { queueId, instanceId, removed: true });
+    return ok;
   }
 
   list() {

@@ -41,6 +41,7 @@
 ## NGL 与运行时约束
 
 - 蓝图语言统一称为 **NGL（NG Language）**。编辑器、schema 校验器、运行器、调试器和数据迁移工具必须遵守同一节点、端口、连线、局部变量和公共变量契约。
+- 本地变量管理器只登记本地变量的稳定 ID、名称和类型；变量值必须保存在单个 Activity 实例的 `localVariables` 中，不得通过管理器或公共变量跨实例共享。
 - Activity 是玩家可见计时和可持久化副作用的统一入口；窗口/App 负责发起请求和显示结果，不直接修改游戏状态或推进游戏时间。
 - 游戏时间必须是确定性的游戏状态，不使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
 - framework 的默认游戏状态为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`；工作窗口为 `[08:00, 16:00)`。`phase`、`duty`、`location` 是 framework 的独立字段，恢复存档时必须保持一致。
@@ -60,7 +61,8 @@
 
 - 开发人员模式、编辑器、调试器和本地写盘能力只能在开发环境使用；入口严格判断 `?dev`，不能把任意查询串视为开发模式。
 - 开发专用代码使用 `DEV-TOOLS:START` / `DEV-TOOLS:END` 标记（CSS/HTML 使用对应注释形式）。业务成就和业务数据不是开发人员模式内容，不能因发布清理而删除。
-- canonical 数据编辑器必须校验 schema，并明确区分“保存到内存”“下载”和“写入磁盘”；存档调试器只能修改存档/运行时状态，不能把数据库内容写入存档。
+- canonical 数据编辑器必须校验 schema，并明确区分“保存到内存”“下载”和“写入磁盘”；存档调试器只能修改存档/运行时状态，不能把数据库内容写入存档调试器。
+- 活动调试器必须订阅 Activity 生命周期事件实时刷新，并通过运行时 API 修改实例节点、状态、本地变量和队列，不得直接改写隐藏的 runner/Map。
 - ChatGTP QA 和 Turtle Soup 的运行时 canonical owner 分别是 `data/databases/chatgtpQaEntries.json` 与 `data/databases/turtleSoupPuzzles.json`；不得重新注册已删除的 seed/native 重复副本。
 - 发布版必须移除开发工具、编辑器、调试入口、本地写盘服务器和迁移工具，同时保留运行时所需的 framework/game 数据与 core 能力。
 

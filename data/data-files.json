@@ -204,6 +204,7 @@
     "framework-runtime.framework.json",
     "game-manifest.json",
     "item-placements.json",
+    "local-variables.framework.json",
     "media.json",
     "onboarding.json",
     "public-variables.framework.json",

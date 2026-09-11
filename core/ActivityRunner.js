@@ -642,12 +642,16 @@ export function createActivityRunner({
   function pause() {
     if (instance.status === "resolved") return false;
     paused = true;
+    instance.status = "paused";
+    onCheckpoint(instance);
     return true;
   }
 
   function resume() {
     if (!paused) return false;
     paused = false;
+    instance.status = "unresolved";
+    onCheckpoint(instance);
     run(instance.currentNodeId);
     return true;
   }
@@ -664,7 +668,32 @@ export function createActivityRunner({
     return true;
   }
 
-  return { start, pause, resume, cancel, instance };
+  function setLocalVariable(key, value) {
+    const normalized = String(key);
+    localValues.set(normalized, structuredClone(value));
+    instance.localVariables = Object.fromEntries(localValues);
+    onCheckpoint(instance);
+    return true;
+  }
+
+  function setCurrentNode(nodeId) {
+    if (!blueprint.nodes[nodeId]) return false;
+    instance.currentNodeId = nodeId;
+    instance.currentStep = { nodeId, type: blueprint.nodes[nodeId].type, status: "pending" };
+    onCheckpoint(instance);
+    return true;
+  }
+
+  function setStatus(status) {
+    if (!["unresolved", "paused", "failed", "resolved"].includes(status)) return false;
+    if (status === "paused") { paused = true; instance.status = "paused"; }
+    else if (status === "unresolved") { paused = false; instance.status = "unresolved"; }
+    else instance.status = status;
+    onCheckpoint(instance);
+    return true;
+  }
+
+  return { start, pause, resume, cancel, setLocalVariable, setCurrentNode, setStatus, instance };
 }
 
 export default createActivityRunner;

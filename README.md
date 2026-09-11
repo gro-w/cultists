@@ -7,7 +7,7 @@
 ## 主要特点
 
 - 原生 HTML、CSS 和 ES modules，无框架、无 bundler、无构建步骤
-- JSON 与 NGL 蓝图驱动的 Activity、对话、医疗、物品、关键词、成就、结局和公共变量
+- JSON 与 NGL 蓝图驱动的 Activity、对话、医疗、物品、关键词、成就、结局、公共变量和 Activity 本地变量
 - Windows 95 风格桌面、任务栏、开始菜单、窗口和数据驱动应用
 - 医院工作与宿舍生活两种场景，以及工作、社交、管理器和主活动队列
 - 确定性的游戏时钟：普通行动默认推进 20 分钟，睡眠和跨日按明确边界结算
@@ -54,7 +54,7 @@ probes/                    确定性探针
 media/                     历史宣传资源和设计稿
 ```
 
-`data/` 中的 canonical 内容由 `data/game-manifest.json` 配置；旧版 `data/game-content/` 已完成迁移并从仓库删除。Activity 定义位于 `data/activities/`，窗口定义位于 `data/windows/`，数据库位于 `data/databases/`。
+`data/` 中的 canonical 内容由 `data/game-manifest.json` 配置；旧版 `data/game-content/` 已完成迁移并从仓库删除。Activity 定义位于 `data/activities/`，窗口定义位于 `data/windows/`，数据库位于 `data/databases/`；本地变量命名定义位于 `data/local-variables.framework.json`，值只存在于各 Activity 实例。
 
 ## 三层引擎
 

@@ -10,6 +10,7 @@ export const ACTIVITY_EVENTS = Object.freeze({
   completed: "activity:completed",
   cancelled: "activity:cancelled",
   failed: "activity:failed",
+  localVariableChanged: "activity:local-variable-changed",
 });
 
 export default ACTIVITY_EVENTS;

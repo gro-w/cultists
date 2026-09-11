@@ -1,10 +1,6 @@
 {
-  "day": {
-    "workMinutes": 480
-  },
-  "night": {
-    "nightMinutes": 960
-  },
+  "day": { "workMinutes": 480 },
+  "night": { "nightMinutes": 960 },
   "fullSleepMinutes": 480,
   "insufficientSleepMinutes": 360,
   "sanRecoveryPerSleepHour": 5,

@@ -15,7 +15,7 @@ import EventBus from "../core/EventBus.js";
 import { VariableStore } from "../core/VariableStore.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const legacyDir = path.join(__dirname, "../legacy/data/zh-hans");
+const legacyDir = path.join(__dirname, "../data/game-content/legacy/zh-hans");
 
 function* findBlueprints(value) {
   if (!value || typeof value !== "object") return;

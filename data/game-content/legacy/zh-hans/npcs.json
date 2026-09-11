@@ -13,17 +13,17 @@
           "height": 66,
           "offsetX": 0,
           "offsetY": 0,
-          "imageData": "assets/npc_ajie_portraits_0_6f62a86edebb.png"
+          "imageData": "data/assets/npc_ajie_portraits_0_6f62a86edebb.png"
         }
       ],
       "endingPortraits": [
         {
           "endingId": "游戏王の福利",
-          "imageData": "assets/npc_ajie_endingPortraits_0_ce0fa970d754.png"
+          "imageData": "data/assets/npc_ajie_endingPortraits_0_ce0fa970d754.png"
         },
         {
           "endingId": "无尽玩笑",
-          "imageData": "assets/npc_ajie_endingPortraits_1_7603ee1b4256.png"
+          "imageData": "data/assets/npc_ajie_endingPortraits_1_7603ee1b4256.png"
         }
       ]
     },
@@ -40,7 +40,7 @@
           "height": 66,
           "offsetX": 0,
           "offsetY": 0,
-          "imageData": "assets/npc_awei_portraits_0_a9334250e042.png"
+          "imageData": "data/assets/npc_awei_portraits_0_a9334250e042.png"
         },
         {
           "sanMin": 1,
@@ -48,7 +48,7 @@
           "height": 66,
           "offsetX": 0,
           "offsetY": 0,
-          "imageData": "assets/npc_awei_portraits_1_b65bcdd113b9.png"
+          "imageData": "data/assets/npc_awei_portraits_1_b65bcdd113b9.png"
         },
         {
           "sanMin": 0,
@@ -56,7 +56,7 @@
           "height": 66,
           "offsetX": 0,
           "offsetY": 0,
-          "imageData": "assets/npc_awei_portraits_0_a9334250e042.png"
+          "imageData": "data/assets/npc_awei_portraits_0_a9334250e042.png"
         }
       ],
       "endingPortraits": []
@@ -74,7 +74,7 @@
           "height": 66,
           "offsetX": 0,
           "offsetY": 0,
-          "imageData": "assets/npc_binbin_portraits_0_3e9f7feebe2c.png"
+          "imageData": "data/assets/npc_binbin_portraits_0_3e9f7feebe2c.png"
         },
         {
           "sanMin": 1,
@@ -82,7 +82,7 @@
           "height": 66,
           "offsetX": 0,
           "offsetY": 0,
-          "imageData": "assets/npc_binbin_portraits_1_389fec679871.png"
+          "imageData": "data/assets/npc_binbin_portraits_1_389fec679871.png"
         },
         {
           "sanMin": 0,
@@ -90,7 +90,7 @@
           "height": 66,
           "offsetX": 0,
           "offsetY": 0,
-          "imageData": "assets/npc_binbin_portraits_0_3e9f7feebe2c.png"
+          "imageData": "data/assets/npc_binbin_portraits_0_3e9f7feebe2c.png"
         }
       ],
       "endingPortraits": []

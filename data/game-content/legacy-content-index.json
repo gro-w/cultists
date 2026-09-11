@@ -5,17 +5,25 @@
   "generatedBy": "tools/migration/migrate-legacy-game-content.mjs",
   "counts": {
     "json": 54,
-    "assets": 80,
-    "localization": 2
+    "assets": 0,
+    "localization": 0
   },
   "records": [
     {
       "source": "zh-hans/achievements.json",
       "target": "data/game-content/legacy/zh-hans/achievements.json",
       "kind": "game-data",
-      "sha256": "9e0c5744e80282644ba28946fc1bae996b4637c65eced732daf91a3eea2d26c9",
+      "sha256": "054800f57f128296847bc7eafba15e20322672bd26ae94b5ac140061d5b2ee4a",
       "topLevel": "object",
       "recordCount": 2
+    },
+    {
+      "source": "zh-hans/app_his_custom.json",
+      "target": "data/game-content/legacy/zh-hans/app_his_custom.json",
+      "kind": "game-data",
+      "sha256": "2ffa2d004432c8b3f1fac888cd6a61c5d0105e05476d9b248c3660ecdac83906",
+      "topLevel": "object",
+      "recordCount": 11
     },
     {
       "source": "zh-hans/applist.json",
@@ -24,14 +32,6 @@
       "sha256": "63e5952f07ed549f669f5660d70d0abed1767ed849d71583e76761ac17b6cb5e",
       "topLevel": "array",
       "recordCount": 1
-    },
-    {
-      "source": "zh-hans/app_his_custom.json",
-      "target": "data/game-content/legacy/zh-hans/app_his_custom.json",
-      "kind": "game-data",
-      "sha256": "ad0eae5e1df7927b370477892a5a46b8d07f78f111ec1aa982b24964b3ef35be",
-      "topLevel": "object",
-      "recordCount": 11
     },
     {
       "source": "zh-hans/bgm.json",
@@ -45,7 +45,7 @@
       "source": "zh-hans/calendar.json",
       "target": "data/game-content/legacy/zh-hans/calendar.json",
       "kind": "game-data",
-      "sha256": "2bdc328e4419efde506eeaf9c43efa2f8fff1b7979daeffa3df1afc08e4381a5",
+      "sha256": "2dbca91545ce889688a896db019ba35afd8ccd29a916fc5f1a0854c87a21ffb8",
       "topLevel": "object",
       "recordCount": 3
     },
@@ -53,7 +53,7 @@
       "source": "zh-hans/cg.json",
       "target": "data/game-content/legacy/zh-hans/cg.json",
       "kind": "game-data",
-      "sha256": "bbec02b8d50069e23e43fe613dd94b5d24df5f4ab26bfcf6265d4e9c09c2d452",
+      "sha256": "5b687c807de2d26d3da4258030adf7358ed81e8c99d2fe39f7a0221448e3972a",
       "topLevel": "object",
       "recordCount": 1
     },
@@ -98,18 +98,18 @@
       "recordCount": 111
     },
     {
-      "source": "zh-hans/items.json",
-      "target": "data/game-content/legacy/zh-hans/items.json",
-      "kind": "game-data",
-      "sha256": "2c855f65c08e01a8de9c37f5ecacebc62be9b7358e727c24d5c5fdec23a577de",
-      "topLevel": "object",
-      "recordCount": 1
-    },
-    {
       "source": "zh-hans/item_placements.json",
       "target": "data/game-content/legacy/zh-hans/item_placements.json",
       "kind": "game-data",
       "sha256": "9437f6f2db40a6992b323f7318b4dc2912fd9a5fcc4a8feea505b747e854653d",
+      "topLevel": "object",
+      "recordCount": 1
+    },
+    {
+      "source": "zh-hans/items.json",
+      "target": "data/game-content/legacy/zh-hans/items.json",
+      "kind": "game-data",
+      "sha256": "5fe24527ed49766fdd8b5aceb188ba5385645305ed64e775137d31503dcf7a6e",
       "topLevel": "object",
       "recordCount": 1
     },
@@ -125,7 +125,7 @@
       "source": "zh-hans/locations.json",
       "target": "data/game-content/legacy/zh-hans/locations.json",
       "kind": "game-data",
-      "sha256": "45237446d2ea5697071973a7773ee4ba2e2c061283fc9709f774a888a0520227",
+      "sha256": "c1c9cd85bec84ddd20d7b8fc16bd9b0c2068293a9801748863449303264be46a",
       "topLevel": "object",
       "recordCount": 1
     },
@@ -149,7 +149,7 @@
       "source": "zh-hans/medicines.json",
       "target": "data/game-content/legacy/zh-hans/medicines.json",
       "kind": "game-data",
-      "sha256": "21f5364d7fd9268a62c338b21241fa3ec43a716c830491c740bb1a1c8ba683d5",
+      "sha256": "43f43398b0b468e95a5b8b69a6f3e34e529e7e30dd92d85cb63cfd0991906b46",
       "topLevel": "object",
       "recordCount": 2
     },
@@ -157,7 +157,7 @@
       "source": "zh-hans/npcs.json",
       "target": "data/game-content/legacy/zh-hans/npcs.json",
       "kind": "game-data",
-      "sha256": "65a1d9899697a3c8a7b86e64cce488c120fa7127f10018e2598cf44dd805bc71",
+      "sha256": "82e1d8a8aa1f43cf93b6106b67b2b755447684cd820e538e96c3336112472c5c",
       "topLevel": "object",
       "recordCount": 1
     },
@@ -165,7 +165,7 @@
       "source": "zh-hans/skills.json",
       "target": "data/game-content/legacy/zh-hans/skills.json",
       "kind": "game-data",
-      "sha256": "2cc4cdfa28cfb5c266564fb67ceb8ef8f7aa4b7d0ad0cd079c41e8a4ae980e90",
+      "sha256": "f1a610fb945ce0fa779ef1089f666065cf7f40fd2e034ca4b0fa7f1dfb48ce24",
       "topLevel": "object",
       "recordCount": 1
     },
@@ -282,6 +282,14 @@
       "recordCount": 2
     },
     {
+      "source": "zh-hans/social_apps.json",
+      "target": "data/game-content/legacy/zh-hans/social_apps.json",
+      "kind": "game-data",
+      "sha256": "01d2d94bbadfaa05decea856fb0feeceab352ae0bc5ab68140acf7926d769466",
+      "topLevel": "object",
+      "recordCount": 2
+    },
+    {
       "source": "zh-hans/socialpub.json",
       "target": "data/game-content/legacy/zh-hans/socialpub.json",
       "kind": "game-data",
@@ -290,18 +298,10 @@
       "recordCount": 1
     },
     {
-      "source": "zh-hans/social_apps.json",
-      "target": "data/game-content/legacy/zh-hans/social_apps.json",
-      "kind": "game-data",
-      "sha256": "eb62d369fb7153fceb1ac59f6c91e109ab84ab94cef3b0a92143026baa2e4569",
-      "topLevel": "object",
-      "recordCount": 2
-    },
-    {
       "source": "zh-hans/special_events.json",
       "target": "data/game-content/legacy/zh-hans/special_events.json",
       "kind": "game-data",
-      "sha256": "567bb596ac210655c1aac5116d6c0372926ab1bb40a1f1fadb90a26eecd39114",
+      "sha256": "fcb2f52ddeab5b839f51ab4772dfd26083910b573276695e8b67bbaafc4208fb",
       "topLevel": "object",
       "recordCount": 1
     },
@@ -309,7 +309,7 @@
       "source": "zh-hans/time_rules.json",
       "target": "data/game-content/legacy/zh-hans/time_rules.json",
       "kind": "game-data",
-      "sha256": "51cf1952db8625455b29b19344be68e025764e423709936e0c61e6284e4a5dda",
+      "sha256": "f437ed0b4d6df54bf8e0c5b9f33a4228e435f29b0c72526629210bc6c5ba9c5e",
       "topLevel": "object",
       "recordCount": 7
     },
@@ -317,7 +317,7 @@
       "source": "zh-hans/turtle_soups.json",
       "target": "data/game-content/legacy/zh-hans/turtle_soups.json",
       "kind": "game-data",
-      "sha256": "87cef8f20a078a858e16d3791003104da64c02a5c54972d964a24489cb4c40d8",
+      "sha256": "781d6b8519413410429fbef519b4bcf593c90218625a1c93efa207f3d11209c3",
       "topLevel": "object",
       "recordCount": 1
     },
@@ -440,498 +440,6 @@
       "sha256": "c8f27dab0f98e864810a80481cc9b14e66eee042c04805d1bfa58829ccbf1843",
       "topLevel": "object",
       "recordCount": 1
-    },
-    {
-      "source": "assets/bg_dorm.svg",
-      "target": "data/assets/bg_dorm.svg",
-      "kind": "game-asset",
-      "sha256": "c3065dae5a0ad54600a47bdc2782dec1a5e268063beafadc199ae41ac76e4291"
-    },
-    {
-      "source": "assets/blueprint_editor_crop.png",
-      "target": "data/assets/blueprint_editor_crop.png",
-      "kind": "game-asset",
-      "sha256": "f81d7003e5ad6918ff9a501bdf02ba1adfa4944189d9e291576671c001191d1f"
-    },
-    {
-      "source": "assets/cg_cg_awei_band_ending_f2e30278c619.jpg",
-      "target": "data/assets/cg_cg_awei_band_ending_f2e30278c619.jpg",
-      "kind": "game-asset",
-      "sha256": "f2e30278c619ec08387debdf9520b75460e9843e4656dd33be6768ffc8d5c5d6"
-    },
-    {
-      "source": "assets/cg_cg_binbin_turtle_01_fde3be50d313.jpg",
-      "target": "data/assets/cg_cg_binbin_turtle_01_fde3be50d313.jpg",
-      "kind": "game-asset",
-      "sha256": "fde3be50d313d5b3cfaba13182f8747ad3533518b65f207a810137da3108d91b"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_1_5db51a6fc44c.jpg",
-      "target": "data/assets/cg_cg_ewexmk_1_5db51a6fc44c.jpg",
-      "kind": "game-asset",
-      "sha256": "5db51a6fc44c69f7840c16eb7159c358750be8f67d6738b9ebdf17d8bd1d939d"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_2_9ce4bd092a96.jpg",
-      "target": "data/assets/cg_cg_ewexmk_2_9ce4bd092a96.jpg",
-      "kind": "game-asset",
-      "sha256": "9ce4bd092a96c36aeadf8c2f333a6063e6c6b06e082e97c785cddedd04857ddb"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_3_c255a6b0f96d.jpg",
-      "target": "data/assets/cg_cg_ewexmk_3_c255a6b0f96d.jpg",
-      "kind": "game-asset",
-      "sha256": "c255a6b0f96deb3cd78f8c9c354d4bcf7dc7a361d97bc166f5df678724ee86f9"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_4_009eb7bffab4.jpg",
-      "target": "data/assets/cg_cg_ewexmk_4_009eb7bffab4.jpg",
-      "kind": "game-asset",
-      "sha256": "009eb7bffab49fa7250f04a7c2308d59619a71939bcc63adc0e0d6eddba57e82"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_5_22d76e96d4a6.jpg",
-      "target": "data/assets/cg_cg_ewexmk_5_22d76e96d4a6.jpg",
-      "kind": "game-asset",
-      "sha256": "22d76e96d4a6d820134e4b87d20190362ff0e0ffc5388ad536d4abbd00f47118"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_6_6afbee50fc35.jpg",
-      "target": "data/assets/cg_cg_ewexmk_6_6afbee50fc35.jpg",
-      "kind": "game-asset",
-      "sha256": "6afbee50fc353eaaa6556f3d6e7ab474035f1c38a1160e2e83d51fac4f1d15e0"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_7_6793ec1e2b10.jpg",
-      "target": "data/assets/cg_cg_ewexmk_7_6793ec1e2b10.jpg",
-      "kind": "game-asset",
-      "sha256": "6793ec1e2b10d7c88fa6693d38a372e9a23e9dd2c5ea59b919fff98efd041001"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_9_baf0e87bb8e8.jpg",
-      "target": "data/assets/cg_cg_ewexmk_9_baf0e87bb8e8.jpg",
-      "kind": "game-asset",
-      "sha256": "baf0e87bb8e8f3447c25bc527c5bd47991acd06e3c14ae982cc51f871e045242"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_a_368c431db7ab.jpg",
-      "target": "data/assets/cg_cg_ewexmk_a_368c431db7ab.jpg",
-      "kind": "game-asset",
-      "sha256": "368c431db7ab1a44f82e97db355121f9406ae4f563723cc31e5d3b44d90ea77c"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_b_32bf31a79baa.jpg",
-      "target": "data/assets/cg_cg_ewexmk_b_32bf31a79baa.jpg",
-      "kind": "game-asset",
-      "sha256": "32bf31a79baaf34d4eef45d493a1abe820ffc504a3a8bcfcae126a15a988f249"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_c_452f45a9c294.jpg",
-      "target": "data/assets/cg_cg_ewexmk_c_452f45a9c294.jpg",
-      "kind": "game-asset",
-      "sha256": "452f45a9c294f223b332de037d73bedf74793d88b3440bf57afe249387bab167"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_d_2ce9d303f97c.jpg",
-      "target": "data/assets/cg_cg_ewexmk_d_2ce9d303f97c.jpg",
-      "kind": "game-asset",
-      "sha256": "2ce9d303f97cabff5d6cc04ea57a3cbc99a82ea24e6893da31958614c5343bfa"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_e_1fdd1a6964d4.jpg",
-      "target": "data/assets/cg_cg_ewexmk_e_1fdd1a6964d4.jpg",
-      "kind": "game-asset",
-      "sha256": "1fdd1a6964d49db82af11d9c03fd391b6127af931796aaaef1ed3ccc0649f22b"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_f_cfb9cc7593b3.jpg",
-      "target": "data/assets/cg_cg_ewexmk_f_cfb9cc7593b3.jpg",
-      "kind": "game-asset",
-      "sha256": "cfb9cc7593b33d821a34b580bffc5fa177d2f20991ef8d127d8936784b8dd87a"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_g_f0d317787bad.jpg",
-      "target": "data/assets/cg_cg_ewexmk_g_f0d317787bad.jpg",
-      "kind": "game-asset",
-      "sha256": "f0d317787bad711bc8051dbef0582c791240c99da6c5c60ae554711741669ba8"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_h_dc32973788f0.jpg",
-      "target": "data/assets/cg_cg_ewexmk_h_dc32973788f0.jpg",
-      "kind": "game-asset",
-      "sha256": "dc32973788f06db9ac847e417b8b378ad1b98a63832c6272c6f71a4213a81b34"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_i_36327bc2fcf6.jpg",
-      "target": "data/assets/cg_cg_ewexmk_i_36327bc2fcf6.jpg",
-      "kind": "game-asset",
-      "sha256": "36327bc2fcf6e0738b0e2404e56eb1efbbad3099c0732d766a62f652e80e8d1c"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_j_e20967677751.jpg",
-      "target": "data/assets/cg_cg_ewexmk_j_e20967677751.jpg",
-      "kind": "game-asset",
-      "sha256": "e209676777518ffbecd0a2ddee10197fde12a8b6c5ac89cc267b784531f24817"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_k_ccbd339872ea.jpg",
-      "target": "data/assets/cg_cg_ewexmk_k_ccbd339872ea.jpg",
-      "kind": "game-asset",
-      "sha256": "ccbd339872ea9c49d413a0035c0b37b4bf02b6f1d5b46312fa474227b3672f28"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_n_4c4f057a5f91.jpg",
-      "target": "data/assets/cg_cg_ewexmk_n_4c4f057a5f91.jpg",
-      "kind": "game-asset",
-      "sha256": "4c4f057a5f91e1474691211b8ddc8a3fe03d7434662bd145621dc1c291994a9a"
-    },
-    {
-      "source": "assets/cg_cg_ewexmk_o_3404a33cd8a8.jpg",
-      "target": "data/assets/cg_cg_ewexmk_o_3404a33cd8a8.jpg",
-      "kind": "game-asset",
-      "sha256": "3404a33cd8a8e13ce5a2882db7976d971c46d5e936a34e041b5b75c10c72e15e"
-    },
-    {
-      "source": "assets/cg_cg_ewqdjt_p_a798be2d8496.jpg",
-      "target": "data/assets/cg_cg_ewqdjt_p_a798be2d8496.jpg",
-      "kind": "game-asset",
-      "sha256": "a798be2d849661b93c872c572bf146faba909db7800a7c1f73fcc781400b3bfa"
-    },
-    {
-      "source": "assets/cg_cg_exrn4m_1_ecf66b3d164a.jpg",
-      "target": "data/assets/cg_cg_exrn4m_1_ecf66b3d164a.jpg",
-      "kind": "game-asset",
-      "sha256": "ecf66b3d164a0830ff4c2e6b9baba0462d529d569e20500a9697a584962dfe6b"
-    },
-    {
-      "source": "assets/cg_cg_exruzh_4_3cd72f6844c5.jpg",
-      "target": "data/assets/cg_cg_exruzh_4_3cd72f6844c5.jpg",
-      "kind": "game-asset",
-      "sha256": "3cd72f6844c51b435487440a1d5036b5d1b1988b998b04b2a9ce871e68236388"
-    },
-    {
-      "source": "assets/cg_cg_exrzfp_5_e39ea303b6be.jpg",
-      "target": "data/assets/cg_cg_exrzfp_5_e39ea303b6be.jpg",
-      "kind": "game-asset",
-      "sha256": "e39ea303b6bef11750f078eba781ede76a03bf52e039498028a42312feba277f"
-    },
-    {
-      "source": "assets/cg_cg_extit1_7_8dda1cff4bbf.jpg",
-      "target": "data/assets/cg_cg_extit1_7_8dda1cff4bbf.jpg",
-      "kind": "game-asset",
-      "sha256": "8dda1cff4bbfe528e8fef08d9ec27012435e39fb92220d0b148309b1d2dd75ae"
-    },
-    {
-      "source": "assets/cg_cg_ey7w5j_8_a844f04fb3c3.jpg",
-      "target": "data/assets/cg_cg_ey7w5j_8_a844f04fb3c3.jpg",
-      "kind": "game-asset",
-      "sha256": "a844f04fb3c375a57fd0c9aa64b2ba21c4bf8703e87ecf20729fb2508af0be0c"
-    },
-    {
-      "source": "assets/cg_cg_test1_9ce062fc6db2.jpg",
-      "target": "data/assets/cg_cg_test1_9ce062fc6db2.jpg",
-      "kind": "game-asset",
-      "sha256": "9ce062fc6db2e8b75bf424fc667c68f3a4a0853eac7390721f43a24ffda77ea3"
-    },
-    {
-      "source": "assets/char01_01.png",
-      "target": "data/assets/char01_01.png",
-      "kind": "game-asset",
-      "sha256": "4627abde390d8bbd0f5fba01550ce9f5b8c193d6fad538f5cdb764a4a5c27c04"
-    },
-    {
-      "source": "assets/char01_01_stage.png",
-      "target": "data/assets/char01_01_stage.png",
-      "kind": "game-asset",
-      "sha256": "871e107cd74500fcd58de46f49d6e2c52778682b24b94d183b1b1e2ab5bcef06"
-    },
-    {
-      "source": "assets/char_ajie_01.png",
-      "target": "data/assets/char_ajie_01.png",
-      "kind": "game-asset",
-      "sha256": "5049120286d3a0cd0197afdf053ae55ea0feaac4831ad2b6f78756f0d5e06682"
-    },
-    {
-      "source": "assets/char_ajie_game.png",
-      "target": "data/assets/char_ajie_game.png",
-      "kind": "game-asset",
-      "sha256": "7d4ae27c3a60c2262b18edf3ed60faef169c84aeb5d9a6cca337d087b1f13b1f"
-    },
-    {
-      "source": "assets/char_awei_01.png",
-      "target": "data/assets/char_awei_01.png",
-      "kind": "game-asset",
-      "sha256": "519c24ec520f9643cb85ef8477c055bf2c4c7f5d9da8b72ca16d30845704044a"
-    },
-    {
-      "source": "assets/char_binbin_01.png",
-      "target": "data/assets/char_binbin_01.png",
-      "kind": "game-asset",
-      "sha256": "1f5d61541c6e9a597dba03c503a50b0632699fcfe8d16b5177b82a8f6b193537"
-    },
-    {
-      "source": "assets/item_book_blue_love_b0aab3731a9a.jpg",
-      "target": "data/assets/item_book_blue_love_b0aab3731a9a.jpg",
-      "kind": "game-asset",
-      "sha256": "b0aab3731a9a20f7ed15edd4f7c38b98b53b19bfb88568f603b0f9226de5fce1"
-    },
-    {
-      "source": "assets/item_book_coc7_7773850fb36a.jpg",
-      "target": "data/assets/item_book_coc7_7773850fb36a.jpg",
-      "kind": "game-asset",
-      "sha256": "7773850fb36a36be915ca1a9b45c84300dfda47fdb90d760cb037d9d863268a7"
-    },
-    {
-      "source": "assets/item_book_coc7_d10dfd3fbabb.jpg",
-      "target": "data/assets/item_book_coc7_d10dfd3fbabb.jpg",
-      "kind": "game-asset",
-      "sha256": "d10dfd3fbabbc5c5f27d55ba91ed7a1d8b8a3d29e84943b2a3dea05dd574c852"
-    },
-    {
-      "source": "assets/item_book_innsmouth_1a28a7530f9e.jpg",
-      "target": "data/assets/item_book_innsmouth_1a28a7530f9e.jpg",
-      "kind": "game-asset",
-      "sha256": "1a28a7530f9ebd9cd4adb09f8e1c5ad1f1b2ca1701ed6ed2ac3e7009dac7c25d"
-    },
-    {
-      "source": "assets/item_book_innsmouth_556ee63102f7.jpg",
-      "target": "data/assets/item_book_innsmouth_556ee63102f7.jpg",
-      "kind": "game-asset",
-      "sha256": "556ee63102f7c91c861d6ec7c26f2fc4514a96eb07e511e21538fa8aa646b84c"
-    },
-    {
-      "source": "assets/item_book_moon_472e02008b36.jpg",
-      "target": "data/assets/item_book_moon_472e02008b36.jpg",
-      "kind": "game-asset",
-      "sha256": "472e02008b3671c4ee1e60dcc7ee579315a1be3d449260612c2c6c8c66279133"
-    },
-    {
-      "source": "assets/item_book_moon_87c2afcddbe3.jpg",
-      "target": "data/assets/item_book_moon_87c2afcddbe3.jpg",
-      "kind": "game-asset",
-      "sha256": "87c2afcddbe30ccf2214764a9ab78530fdb6ad28326ab0f130d42744c1e316d1"
-    },
-    {
-      "source": "assets/item_book_nahan_0_15_90cc2136c4e4.jpg",
-      "target": "data/assets/item_book_nahan_0_15_90cc2136c4e4.jpg",
-      "kind": "game-asset",
-      "sha256": "90cc2136c4e4f603b269aba7df8e6c1ac6e0b9d122b8c1d3bc025c6b17c49928"
-    },
-    {
-      "source": "assets/item_book_nahan_0_58e0c48144f6.jpg",
-      "target": "data/assets/item_book_nahan_0_58e0c48144f6.jpg",
-      "kind": "game-asset",
-      "sha256": "58e0c48144f681f95b2c997878c49dbd7cf170a8403ddb682f660de49b9213d9"
-    },
-    {
-      "source": "assets/item_book_nahan_15_30_90cc2136c4e4.jpg",
-      "target": "data/assets/item_book_nahan_15_30_90cc2136c4e4.jpg",
-      "kind": "game-asset",
-      "sha256": "90cc2136c4e4f603b269aba7df8e6c1ac6e0b9d122b8c1d3bc025c6b17c49928"
-    },
-    {
-      "source": "assets/item_book_nahan_30_50_90cc2136c4e4.jpg",
-      "target": "data/assets/item_book_nahan_30_50_90cc2136c4e4.jpg",
-      "kind": "game-asset",
-      "sha256": "90cc2136c4e4f603b269aba7df8e6c1ac6e0b9d122b8c1d3bc025c6b17c49928"
-    },
-    {
-      "source": "assets/item_book_nahan_50_70_33d406c8077c.jpg",
-      "target": "data/assets/item_book_nahan_50_70_33d406c8077c.jpg",
-      "kind": "game-asset",
-      "sha256": "33d406c8077ce5b34e8f0c9606f409326772c83ae3f6dee65fecd4ee3f34e54f"
-    },
-    {
-      "source": "assets/item_book_nahan_70_90_58e0c48144f6.jpg",
-      "target": "data/assets/item_book_nahan_70_90_58e0c48144f6.jpg",
-      "kind": "game-asset",
-      "sha256": "58e0c48144f681f95b2c997878c49dbd7cf170a8403ddb682f660de49b9213d9"
-    },
-    {
-      "source": "assets/item_book_nahan_90_58e0c48144f6.jpg",
-      "target": "data/assets/item_book_nahan_90_58e0c48144f6.jpg",
-      "kind": "game-asset",
-      "sha256": "58e0c48144f681f95b2c997878c49dbd7cf170a8403ddb682f660de49b9213d9"
-    },
-    {
-      "source": "assets/item_book_wangxb_0_15_1bef75d29e4a.jpg",
-      "target": "data/assets/item_book_wangxb_0_15_1bef75d29e4a.jpg",
-      "kind": "game-asset",
-      "sha256": "1bef75d29e4a026e11fe254b61e8dd826a5634d2a32cbef75eeba2a8963bf0e0"
-    },
-    {
-      "source": "assets/item_book_wangxb_0_f20fc5e6966c.jpg",
-      "target": "data/assets/item_book_wangxb_0_f20fc5e6966c.jpg",
-      "kind": "game-asset",
-      "sha256": "f20fc5e6966c9f7025b0680d63ee20115df578561b30afc1da8cf9e29d3c3101"
-    },
-    {
-      "source": "assets/item_book_wangxb_15_30_1bef75d29e4a.jpg",
-      "target": "data/assets/item_book_wangxb_15_30_1bef75d29e4a.jpg",
-      "kind": "game-asset",
-      "sha256": "1bef75d29e4a026e11fe254b61e8dd826a5634d2a32cbef75eeba2a8963bf0e0"
-    },
-    {
-      "source": "assets/item_book_wangxb_30_50_f20fc5e6966c.jpg",
-      "target": "data/assets/item_book_wangxb_30_50_f20fc5e6966c.jpg",
-      "kind": "game-asset",
-      "sha256": "f20fc5e6966c9f7025b0680d63ee20115df578561b30afc1da8cf9e29d3c3101"
-    },
-    {
-      "source": "assets/item_book_wangxb_50_70_f20fc5e6966c.jpg",
-      "target": "data/assets/item_book_wangxb_50_70_f20fc5e6966c.jpg",
-      "kind": "game-asset",
-      "sha256": "f20fc5e6966c9f7025b0680d63ee20115df578561b30afc1da8cf9e29d3c3101"
-    },
-    {
-      "source": "assets/item_book_wangxb_70_90_f20fc5e6966c.jpg",
-      "target": "data/assets/item_book_wangxb_70_90_f20fc5e6966c.jpg",
-      "kind": "game-asset",
-      "sha256": "f20fc5e6966c9f7025b0680d63ee20115df578561b30afc1da8cf9e29d3c3101"
-    },
-    {
-      "source": "assets/item_book_wangxb_90_f20fc5e6966c.jpg",
-      "target": "data/assets/item_book_wangxb_90_f20fc5e6966c.jpg",
-      "kind": "game-asset",
-      "sha256": "f20fc5e6966c9f7025b0680d63ee20115df578561b30afc1da8cf9e29d3c3101"
-    },
-    {
-      "source": "assets/item_frozen_meat_8aa14925a808.png",
-      "target": "data/assets/item_frozen_meat_8aa14925a808.png",
-      "kind": "game-asset",
-      "sha256": "8aa14925a8082fcf2e94de6a5d3bd754fc2b0a3bc22c9d23e233de7888b91774"
-    },
-    {
-      "source": "assets/item_ketchup_09bbc40fbbaf.png",
-      "target": "data/assets/item_ketchup_09bbc40fbbaf.png",
-      "kind": "game-asset",
-      "sha256": "09bbc40fbbaf273e1118e3396bd790c2d4c55029c76a4fba6f1f0464dabccf3c"
-    },
-    {
-      "source": "assets/item_necklace_ajie_427e67402772.png",
-      "target": "data/assets/item_necklace_ajie_427e67402772.png",
-      "kind": "game-asset",
-      "sha256": "427e67402772ea5cf97dae340e1d883a4260991a8dffbac3d9f996331f43acd6"
-    },
-    {
-      "source": "assets/item_pasta_82b5fd22b666.png",
-      "target": "data/assets/item_pasta_82b5fd22b666.png",
-      "kind": "game-asset",
-      "sha256": "82b5fd22b66625b374fe38a29236e0080bb047558cebbdf9a3a3646a62f6c692"
-    },
-    {
-      "source": "assets/item_perfume_2a8a198f25c5.png",
-      "target": "data/assets/item_perfume_2a8a198f25c5.png",
-      "kind": "game-asset",
-      "sha256": "2a8a198f25c5e824c3234e777b8804a15e2f599315369882814a6bb0aa6ffcf9"
-    },
-    {
-      "source": "assets/item_poster_jesus_27a09bdc9c33.jpg",
-      "target": "data/assets/item_poster_jesus_27a09bdc9c33.jpg",
-      "kind": "game-asset",
-      "sha256": "27a09bdc9c33e951726541c10c8e718387eca6be5f605fd4500f2251884e637f"
-    },
-    {
-      "source": "assets/item_poster_jesus_56ebb65431a6.jpg",
-      "target": "data/assets/item_poster_jesus_56ebb65431a6.jpg",
-      "kind": "game-asset",
-      "sha256": "56ebb65431a61dea5f8bdf0f5aff24b9875581a53423d3104c32a654fb0f9a27"
-    },
-    {
-      "source": "assets/item_salt_bag_cc1c5ddd741b.png",
-      "target": "data/assets/item_salt_bag_cc1c5ddd741b.png",
-      "kind": "game-asset",
-      "sha256": "cc1c5ddd741b9b670e4e9844f98ee7bf79624d68d4d6b813379de6c07c461b6f"
-    },
-    {
-      "source": "assets/item_statue_ajie_7d79d0e6b40a.png",
-      "target": "data/assets/item_statue_ajie_7d79d0e6b40a.png",
-      "kind": "game-asset",
-      "sha256": "7d79d0e6b40a71496b94ad9016b27591eb1be90cb48ac02f6e2f39b905f1c129"
-    },
-    {
-      "source": "assets/item_statue_ajie_cfd6d37ca00a.png",
-      "target": "data/assets/item_statue_ajie_cfd6d37ca00a.png",
-      "kind": "game-asset",
-      "sha256": "cfd6d37ca00a0ddc43379066ab548d46384b69cf60a7b1b56cf94ac886f59f4a"
-    },
-    {
-      "source": "assets/item_swastika_029dad2dcbfe.png",
-      "target": "data/assets/item_swastika_029dad2dcbfe.png",
-      "kind": "game-asset",
-      "sha256": "029dad2dcbfe9abc4003d54ca7665d4215a2013f5809505e4ec67f31e36b32f8"
-    },
-    {
-      "source": "assets/location_dorm_ecf66b3d164a.jpg",
-      "target": "data/assets/location_dorm_ecf66b3d164a.jpg",
-      "kind": "game-asset",
-      "sha256": "ecf66b3d164a0830ff4c2e6b9baba0462d529d569e20500a9697a584962dfe6b"
-    },
-    {
-      "source": "assets/npc_ajie_endingPortraits_0_ce0fa970d754.png",
-      "target": "data/assets/npc_ajie_endingPortraits_0_ce0fa970d754.png",
-      "kind": "game-asset",
-      "sha256": "ce0fa970d75409d9d2156e25950b677e58267668e79aae9c8f2e8c432412720a"
-    },
-    {
-      "source": "assets/npc_ajie_endingPortraits_1_7603ee1b4256.png",
-      "target": "data/assets/npc_ajie_endingPortraits_1_7603ee1b4256.png",
-      "kind": "game-asset",
-      "sha256": "7603ee1b42562699859bf05542f0d8bcedd6d5ee11e1c88676ff58290e66c878"
-    },
-    {
-      "source": "assets/npc_ajie_portraits_0_6f62a86edebb.png",
-      "target": "data/assets/npc_ajie_portraits_0_6f62a86edebb.png",
-      "kind": "game-asset",
-      "sha256": "6f62a86edebb28de1f21a9071d3be71d86d9606a15eabb55ea8fbe91008bef27"
-    },
-    {
-      "source": "assets/npc_awei_portraits_0_a9334250e042.png",
-      "target": "data/assets/npc_awei_portraits_0_a9334250e042.png",
-      "kind": "game-asset",
-      "sha256": "a9334250e04226fd3e7853c96c2cee04d4c07644cca444e82c01e8450562c106"
-    },
-    {
-      "source": "assets/npc_awei_portraits_1_b65bcdd113b9.png",
-      "target": "data/assets/npc_awei_portraits_1_b65bcdd113b9.png",
-      "kind": "game-asset",
-      "sha256": "b65bcdd113b97515ab32fc4ec61602481bcd9914b3be6cd39d0dac50f2a8f1e8"
-    },
-    {
-      "source": "assets/npc_binbin_portraits_0_3e9f7feebe2c.png",
-      "target": "data/assets/npc_binbin_portraits_0_3e9f7feebe2c.png",
-      "kind": "game-asset",
-      "sha256": "3e9f7feebe2c7d3f59ab3e948923731794b741f4fdfecf3b49a346d72e543d71"
-    },
-    {
-      "source": "assets/npc_binbin_portraits_1_389fec679871.png",
-      "target": "data/assets/npc_binbin_portraits_1_389fec679871.png",
-      "kind": "game-asset",
-      "sha256": "389fec67987123b0b1c1a9888bfce06016ec11a808a55e60f95fd642a5f45f0f"
-    },
-    {
-      "source": "assets/player_portrait.png",
-      "target": "data/assets/player_portrait.png",
-      "kind": "game-asset",
-      "sha256": "4627abde390d8bbd0f5fba01550ce9f5b8c193d6fad538f5cdb764a4a5c27c04"
-    },
-    {
-      "source": "assets/sarasa-fixed-sc-regular.ttf",
-      "target": "data/assets/sarasa-fixed-sc-regular.ttf",
-      "kind": "game-asset",
-      "sha256": "d0ceb023c52acf52dd754c038a9af82ffde5e9dcc23bb7a4b49f8a45e7163b35"
-    },
-    {
-      "source": "languages.json",
-      "target": "data/game-content/legacy/localization/languages.json",
-      "kind": "game-localization",
-      "sha256": "7c5ef1dcdb01ca695049d57ba3f9896e5dcb1b0400c5ee3e338a854f67b5333f"
-    },
-    {
-      "source": "strings.zh_hans.json",
-      "target": "data/game-content/legacy/localization/strings.zh_hans.json",
-      "kind": "game-localization",
-      "sha256": "d6c02349db81c3b4ea4fde9b26c6f72ca47c46c3eec14ab76bcc7cbf01a6ef8f"
     }
   ]
 }

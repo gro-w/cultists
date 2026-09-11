@@ -7,10 +7,7 @@
       "category": "special",
       "hidden": false,
       "icon": "⏱️",
-      "trigger": {
-        "event": "developer:force_end_work",
-        "once": true
-      }
+      "trigger": { "event": "developer:force_end_work", "once": true }
     },
     {
       "id": "study_first",
@@ -19,10 +16,7 @@
       "category": "study",
       "hidden": false,
       "icon": "📖",
-      "trigger": {
-        "event": "game:study",
-        "once": true
-      }
+      "trigger": { "event": "game:study", "once": true }
     },
     {
       "id": "study_believer",
@@ -31,10 +25,7 @@
       "category": "study",
       "hidden": false,
       "icon": "🕯️",
-      "trigger": {
-        "event": "game:study_night",
-        "once": true
-      }
+      "trigger": { "event": "game:study_night", "once": true }
     },
     {
       "id": "study_king",
@@ -43,11 +34,7 @@
       "category": "study",
       "hidden": false,
       "icon": "👑",
-      "trigger": {
-        "event": "game:study",
-        "progress": true,
-        "target": 3
-      }
+      "trigger": { "event": "game:study", "progress": true, "target": 3 }
     },
     {
       "id": "exam_pass",
@@ -56,14 +43,7 @@
       "category": "study",
       "hidden": false,
       "icon": "🎓",
-      "trigger": {
-        "event": "game:exam_result",
-        "condition": {
-          "score": {
-            "gte": 60
-          }
-        }
-      }
+      "trigger": { "event": "game:exam_result", "condition": { "score": { "gte": 60 } } }
     },
     {
       "id": "fav_first_up",
@@ -72,15 +52,7 @@
       "category": "favorability",
       "hidden": false,
       "icon": "💛",
-      "trigger": {
-        "event": "favorability:changed",
-        "condition": {
-          "delta": {
-            "gt": 0
-          }
-        },
-        "once": true
-      }
+      "trigger": { "event": "favorability:changed", "condition": { "delta": { "gt": 0 } }, "once": true }
     },
     {
       "id": "fav_first_down",
@@ -89,15 +61,7 @@
       "category": "favorability",
       "hidden": false,
       "icon": "💔",
-      "trigger": {
-        "event": "favorability:changed",
-        "condition": {
-          "delta": {
-            "lt": 0
-          }
-        },
-        "once": true
-      }
+      "trigger": { "event": "favorability:changed", "condition": { "delta": { "lt": 0 } }, "once": true }
     },
     {
       "id": "fav_cumulative_up",
@@ -111,11 +75,7 @@
         "progress": true,
         "progressKey": "cumulative_up",
         "target": 50,
-        "condition": {
-          "delta": {
-            "gt": 0
-          }
-        },
+        "condition": { "delta": { "gt": 0 } },
         "progressDelta": "delta"
       }
     },
@@ -131,11 +91,7 @@
         "progress": true,
         "progressKey": "cumulative_down",
         "target": 30,
-        "condition": {
-          "delta": {
-            "lt": 0
-          }
-        },
+        "condition": { "delta": { "lt": 0 } },
         "progressDelta": "delta_abs"
       }
     },
@@ -146,15 +102,7 @@
       "category": "favorability",
       "hidden": false,
       "icon": "❤️",
-      "trigger": {
-        "event": "favorability:changed",
-        "condition": {
-          "value": {
-            "gte": 100
-          }
-        },
-        "once": true
-      }
+      "trigger": { "event": "favorability:changed", "condition": { "value": { "gte": 100 } }, "once": true }
     },
     {
       "id": "fav_zeroed",
@@ -163,15 +111,7 @@
       "category": "favorability",
       "hidden": false,
       "icon": "🚫",
-      "trigger": {
-        "event": "favorability:changed",
-        "condition": {
-          "value": {
-            "eq": 0
-          }
-        },
-        "once": true
-      }
+      "trigger": { "event": "favorability:changed", "condition": { "value": { "eq": 0 } }, "once": true }
     },
     {
       "id": "fav_three_high",
@@ -180,12 +120,7 @@
       "category": "favorability",
       "hidden": false,
       "icon": "🏆",
-      "trigger": {
-        "event": "favorability:changed",
-        "condition": {
-          "allAbove": 75
-        }
-      }
+      "trigger": { "event": "favorability:changed", "condition": { "allAbove": 75 } }
     },
     {
       "id": "fav_all_positive",
@@ -194,12 +129,7 @@
       "category": "favorability",
       "hidden": false,
       "icon": "🌈",
-      "trigger": {
-        "event": "favorability:changed",
-        "condition": {
-          "allHadPositive": true
-        }
-      }
+      "trigger": { "event": "favorability:changed", "condition": { "allHadPositive": true } }
     },
     {
       "id": "tabletop_first",
@@ -208,10 +138,7 @@
       "category": "tabletop",
       "hidden": false,
       "icon": "🎲",
-      "trigger": {
-        "event": "game:tabletop_session",
-        "once": true
-      }
+      "trigger": { "event": "game:tabletop_session", "once": true }
     },
     {
       "id": "tabletop_veteran",
@@ -220,11 +147,7 @@
       "category": "tabletop",
       "hidden": false,
       "icon": "🎭",
-      "trigger": {
-        "event": "game:tabletop_session",
-        "progress": true,
-        "target": 3
-      }
+      "trigger": { "event": "game:tabletop_session", "progress": true, "target": 3 }
     },
     {
       "id": "tabletop_skip",
@@ -233,10 +156,7 @@
       "category": "tabletop",
       "hidden": false,
       "icon": "🕊️",
-      "trigger": {
-        "event": "game:tabletop_skipped",
-        "once": true
-      },
+      "trigger": { "event": "game:tabletop_skipped", "once": true },
       "todo": "触发条件：当有跑团支线但玩家选择刷题时，由调度逻辑 emit game:tabletop_skipped"
     },
     {
@@ -248,12 +168,7 @@
       "icon": "🎯",
       "trigger": {
         "event": "game:skill_check",
-        "condition": {
-          "outcome": [
-            "success",
-            "criticalSuccess"
-          ]
-        },
+        "condition": { "outcome": ["success", "criticalSuccess"] },
         "once": true
       }
     },
@@ -268,12 +183,7 @@
         "event": "game:skill_check",
         "progress": true,
         "target": 5,
-        "condition": {
-          "outcome": [
-            "success",
-            "criticalSuccess"
-          ]
-        }
+        "condition": { "outcome": ["success", "criticalSuccess"] }
       }
     },
     {
@@ -285,12 +195,7 @@
       "icon": "🎲",
       "trigger": {
         "event": "game:skill_check",
-        "condition": {
-          "outcome": [
-            "failure",
-            "criticalFailure"
-          ]
-        },
+        "condition": { "outcome": ["failure", "criticalFailure"] },
         "once": true
       }
     },
@@ -303,11 +208,7 @@
       "icon": "💀",
       "trigger": {
         "event": "game:skill_check",
-        "condition": {
-          "outcome": [
-            "criticalFailure"
-          ]
-        },
+        "condition": { "outcome": ["criticalFailure"] },
         "once": true
       }
     },
@@ -318,10 +219,7 @@
       "category": "ending",
       "hidden": false,
       "icon": "🌙",
-      "trigger": {
-        "event": "ending:triggered",
-        "once": true
-      }
+      "trigger": { "event": "ending:triggered", "once": true }
     },
     {
       "id": "san_fast_drop",
@@ -332,11 +230,7 @@
       "icon": "🧠",
       "trigger": {
         "event": "game:sanity_changed",
-        "condition": {
-          "delta": {
-            "lte": -10
-          }
-        },
+        "condition": { "delta": { "lte": -10 } },
         "once": true
       },
       "sanDropThreshold": 10
@@ -350,14 +244,7 @@
       "icon": "🛡️",
       "trigger": {
         "event": "daynight:changed",
-        "condition": {
-          "day": {
-            "gte": 5
-          },
-          "sanity": {
-            "gte": 80
-          }
-        },
+        "condition": { "day": { "gte": 5 }, "sanity": { "gte": 80 } },
         "once": true
       }
     },
@@ -370,12 +257,7 @@
       "icon": "✨",
       "trigger": {
         "event": "game:sanity_changed",
-        "condition": {
-          "hadLow": true,
-          "value": {
-            "gte": 60
-          }
-        },
+        "condition": { "hadLow": true, "value": { "gte": 60 } },
         "once": true
       },
       "sanLowThreshold": 30,
@@ -390,11 +272,7 @@
       "icon": "👁️",
       "trigger": {
         "event": "gamestate:changed",
-        "condition": {
-          "sanity": {
-            "eq": 0
-          }
-        },
+        "condition": { "sanity": { "eq": 0 } },
         "once": true
       }
     },
@@ -405,12 +283,7 @@
       "category": "exploration",
       "hidden": false,
       "icon": "📚",
-      "trigger": {
-        "event": "game:text_read",
-        "condition": {
-          "allRead": true
-        }
-      },
+      "trigger": { "event": "game:text_read", "condition": { "allRead": true } },
       "todo": "触发条件：需要 ActivityData 提供 totalNodeCount，由 AchievementManager 与 readNodeIds 的大小比对"
     }
   ],

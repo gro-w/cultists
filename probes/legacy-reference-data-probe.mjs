@@ -25,13 +25,11 @@ const seedRecords = Object.fromEntries(databases.map(({ databaseId, recordFile }
   const value = JSON.parse(fs.readFileSync(path.join(dataDir, recordFile), "utf8"));
   return [databaseId, value[databaseId] || []];
 }));
-const legacyDir = path.join(__dirname, "../legacy/data/zh-hans");
 const migratedDir = path.join(__dirname, "../data/game-content/legacy/zh-hans");
 
 function legacy(file) {
   const migratedPath = path.join(migratedDir, file);
-  const sourcePath = fs.existsSync(migratedPath) ? migratedPath : path.join(legacyDir, file);
-  return JSON.parse(fs.readFileSync(sourcePath, "utf8"));
+  return JSON.parse(fs.readFileSync(migratedPath, "utf8"));
 }
 
 function boot() {

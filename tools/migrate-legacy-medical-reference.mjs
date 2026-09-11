@@ -21,12 +21,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const LEGACY_DIR = path.resolve(__dirname, "../legacy/data/zh-hans");
 const MIGRATED_DIR = path.resolve(__dirname, "../data/game-content/legacy/zh-hans");
-const sourcePath = (file) => {
-  const migrated = path.join(MIGRATED_DIR, file);
-  return fs.existsSync(migrated) ? migrated : path.join(LEGACY_DIR, file);
-};
+const sourcePath = (file) => path.join(MIGRATED_DIR, file);
 
 export function convertDiagnoses(legacyDiagnosesJson) {
   const categories = legacyDiagnosesJson.categories || [];
@@ -79,7 +75,7 @@ export function buildSeedRecordSet({ diagnosesJson, medicinesJson }) {
 }
 
 function main() {
-  const diagnosesJson = JSON.parse(fs.readFileSync(path.join(LEGACY_DIR, "diagnoses.json"), "utf8"));
+  const diagnosesJson = JSON.parse(fs.readFileSync(sourcePath("diagnoses.json"), "utf8"));
   const medicinesJson = JSON.parse(fs.readFileSync(sourcePath("medicines.json"), "utf8"));
   const recordSet = buildSeedRecordSet({ diagnosesJson, medicinesJson });
   process.stdout.write(JSON.stringify(recordSet, null, 2) + "\n");

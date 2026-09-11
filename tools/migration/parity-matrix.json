@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedFrom": {
-    "legacy": "legacy/data/zh-hans + legacy/js",
+    "legacy": "data/game-content/legacy/zh-hans + legacy/js",
     "ng": "ng/data",
     "plan": "2026-09-10_081823-engine-merge-plan.md"
   },
@@ -12,7 +12,7 @@
       "ngCount": 29,
       "status": "covered",
       "sources": [
-        "legacy/data/zh-hans/items.json"
+        "data/game-content/legacy/zh-hans/items.json"
       ],
       "targets": [
         "data/seed-records-items.json"
@@ -24,7 +24,7 @@
       "ngCount": 5,
       "status": "covered",
       "sources": [
-        "legacy/data/zh-hans/items.json#spells"
+        "data/game-content/legacy/zh-hans/items.json#spells"
       ],
       "targets": [
         "data/seed-records-items.json#spells"
@@ -42,8 +42,8 @@
       },
       "status": "covered",
       "sources": [
-        "legacy/data/zh-hans/diagnoses.json",
-        "legacy/data/zh-hans/medicines.json"
+        "data/game-content/legacy/zh-hans/diagnoses.json",
+        "data/game-content/legacy/zh-hans/medicines.json"
       ],
       "targets": [
         "data/seed-records.json"
@@ -56,7 +56,7 @@
       "registeredCount": 65,
       "status": "covered-with-explicit-mappings",
       "sources": [
-        "legacy/data/zh-hans/work*.json"
+        "data/game-content/legacy/zh-hans/work*.json"
       ],
       "targets": [
         "data/activities/patient_*.json",
@@ -70,7 +70,7 @@
       "ngCount": 18,
       "status": "covered-with-domain-mappings",
       "sources": [
-        "legacy/data/zh-hans/social*.json"
+        "data/game-content/legacy/zh-hans/social*.json"
       ],
       "targets": [
         "data/activities/social*.json",

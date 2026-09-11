@@ -235,7 +235,7 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
   const args = process.argv.slice(2);
   if (args[0] === "--report") {
-    const targetDir = path.resolve(args[1] || path.join(__dirname, "../legacy/data/zh-hans"));
+    const targetDir = path.resolve(args[1] || path.join(__dirname, "../data/game-content/legacy/zh-hans"));
     runReport(targetDir);
   } else if (args[0] === "--write") {
     const targetDir = path.resolve(args[1] || path.join(__dirname, "../data/content/zh-hans"));

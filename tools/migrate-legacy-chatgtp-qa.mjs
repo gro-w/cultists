@@ -40,7 +40,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const LEGACY_PATH = path.resolve(__dirname, "../legacy/data/zh-hans/chatgtp_qa.json");
+const LEGACY_PATH = path.resolve(__dirname, "../data/game-content/legacy/zh-hans/chatgtp_qa.json");
 const SEED_OUT_PATH = path.resolve(__dirname, "../data/seed-records-chatgtp.json");
 const SETTINGS_OUT_PATH = path.resolve(__dirname, "../data/chatgtp-settings.json");
 

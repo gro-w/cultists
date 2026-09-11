@@ -60,10 +60,10 @@
         {
           "sanMin": null,
           "sanMax": null,
-          "image": "assets/location_dorm_ecf66b3d164a.jpg"
+          "image": "data/assets/location_dorm_ecf66b3d164a.jpg"
         }
       ],
-      "backgroundImage": "assets/location_dorm_ecf66b3d164a.jpg"
+      "backgroundImage": "data/assets/location_dorm_ecf66b3d164a.jpg"
     },
     {
       "id": "hospital",

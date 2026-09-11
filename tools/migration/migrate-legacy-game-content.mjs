@@ -5,10 +5,10 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const sourceData = path.join(root, "legacy", "data");
-const targetRoot = path.join(root, "ng", "data", "game-content", "legacy");
-const targetAssets = path.join(root, "ng", "data", "assets");
-const dataFilesPath = path.join(root, "ng", "data", "data-files.json");
-const indexPath = path.join(root, "ng", "data", "game-content", "legacy-content-index.json");
+const targetRoot = path.join(root, "data", "game-content", "legacy");
+const targetAssets = path.join(root, "data", "assets");
+const dataFilesPath = path.join(root, "data", "data-files.json");
+const indexPath = path.join(root, "data", "game-content", "legacy-content-index.json");
 const sourceRootFiles = ["languages.json", "strings.zh_hans.json"];
 const sourceRootFileSet = new Set(sourceRootFiles);
 

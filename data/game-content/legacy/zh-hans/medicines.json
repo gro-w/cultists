@@ -4,7 +4,7 @@
       "id": "med_paracetamol",
       "name": "对乙酰氨基酚",
       "effect": "解热镇痛，用于发热与轻中度疼痛",
-      "commission": 30,
+      "commission": 30.0,
       "price": 300,
       "applicableDiagnosisIds": [
         "cough",
@@ -23,7 +23,7 @@
       "id": "med_cough_syrup",
       "name": "止咳糖浆",
       "effect": "缓解咳嗽症状",
-      "commission": 25,
+      "commission": 25.0,
       "price": 250,
       "applicableDiagnosisIds": [
         "acute_bronchitis",
@@ -297,7 +297,7 @@
       "name": "盐酸氨酚曲马多",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "acute_gastritis",
         "chest_pain",
@@ -350,7 +350,7 @@
       "name": "西替利嗪",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "acute_nasopharyngitis",
         "allergic_rhinitis",
@@ -499,7 +499,7 @@
       "name": "沙丁胺醇",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "asthma_unspecified",
         "chronic_obstructive_pulmonary_disease"
@@ -538,7 +538,7 @@
       "name": "糠酸莫米松鼻喷雾剂",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "acute_maxillary_sinusitis",
         "acute_nasopharyngitis",
@@ -722,7 +722,7 @@
       "name": "头孢曲松",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "acute_bronchitis",
         "acute_cystitis",
@@ -784,7 +784,7 @@
       "name": "罗红霉素",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "acute_bronchitis",
         "acute_cystitis",
@@ -945,7 +945,7 @@
       "name": "泛昔洛韦",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "herpes_zoster"
       ],
@@ -981,7 +981,7 @@
       "name": "恩替卡韦",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "chronic_hepatitis_b"
       ],
@@ -1107,7 +1107,7 @@
       "name": "枯草杆菌二联活菌",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "infectious_gastroenteritis",
         "irritable_bowel_syndrome",
@@ -1146,7 +1146,7 @@
       "name": "开塞露",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "constipation",
         "hemorrhoids"
@@ -1308,7 +1308,7 @@
       "name": "枸橼酸铋钾",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "acute_gastritis",
         "constipation",
@@ -1353,7 +1353,7 @@
       "name": "曲美布汀",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "gastroesophageal_reflux",
         "irritable_bowel_syndrome",
@@ -1513,7 +1513,7 @@
       "name": "氯沙坦",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "angina_pectoris",
         "atherosclerotic_heart_disease",
@@ -1564,7 +1564,7 @@
       "name": "依那普利",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "angina_pectoris",
         "atherosclerotic_heart_disease",
@@ -1721,7 +1721,7 @@
       "name": "格列美脲",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "type1_diabetes",
         "type2_diabetes"
@@ -1760,7 +1760,7 @@
       "name": "西格列汀",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "type1_diabetes",
         "type2_diabetes"
@@ -1898,7 +1898,7 @@
       "name": "羟氯喹",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "rheumatoid_arthritis"
       ],
@@ -1934,7 +1934,7 @@
       "name": "秋水仙碱",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "gout"
       ],
@@ -2058,7 +2058,7 @@
       "name": "琥珀酸亚铁",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "chronic_kidney_disease",
         "iron_deficiency_anemia",
@@ -2098,7 +2098,7 @@
       "name": "碘伏",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "cellulitis",
         "soft_tissue_contusion"
@@ -2238,7 +2238,7 @@
       "name": "玻璃酸钠滴眼液",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 390,
-      "commission": 39,
+      "commission": 39.0,
       "applicableDiagnosisIds": [
         "dry_eye"
       ],
@@ -2274,7 +2274,7 @@
       "name": "金霉素眼膏",
       "effect": "用于常见症状的对症或专科治疗（游戏资料）",
       "price": 20,
-      "commission": 2,
+      "commission": 2.0,
       "applicableDiagnosisIds": [
         "bacterial_conjunctivitis"
       ],

@@ -1,0 +1,32 @@
+{
+  "id": "achievement",
+  "displayName": "成就活动",
+  "activityIds": [
+    "achievement__force_end_work",
+    "achievement__all_texts_read",
+    "achievement__ending_any",
+    "achievement__exam_pass",
+    "achievement__fav_all_positive",
+    "achievement__fav_cumulative_down",
+    "achievement__fav_cumulative_up",
+    "achievement__fav_first_down",
+    "achievement__fav_first_up",
+    "achievement__fav_maxed",
+    "achievement__fav_three_high",
+    "achievement__fav_zeroed",
+    "achievement__san_fast_drop",
+    "achievement__san_recovery",
+    "achievement__san_steady",
+    "achievement__san_zero",
+    "achievement__skillcheck_critical_failure",
+    "achievement__skillcheck_cumulative_success",
+    "achievement__skillcheck_first_failure",
+    "achievement__skillcheck_first_success",
+    "achievement__study_believer",
+    "achievement__study_first",
+    "achievement__study_king",
+    "achievement__tabletop_first",
+    "achievement__tabletop_skip",
+    "achievement__tabletop_veteran"
+  ]
+}

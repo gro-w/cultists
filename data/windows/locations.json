@@ -1,0 +1,24 @@
+{
+  "id": "locations",
+  "title": "去往位置",
+  "icon": "🗺️",
+  "width": 360,
+  "height": 300,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "locations-root",
+    "className": "app-locations",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "children": [
+      {"widgetId":"locations-title","type":"label","text":"选择要前往的位置"},
+      {"widgetId":"location-hospital","type":"button","text":"🏥 医院","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"location:requested","payload":{"locationId":"hospital"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"location-restaurant","type":"button","text":"🍲 火锅店","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"location:requested","payload":{"locationId":"restaurant"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"location-seaside","type":"button","text":"🌊 海边","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"location:requested","payload":{"locationId":"seaside"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"locations-note","type":"label","text":"前往位置不额外消耗时间"}
+    ]
+  }
+}

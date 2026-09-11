@@ -1,0 +1,451 @@
+{
+  "id": "social04a_ajie_chat",
+  "type": "other",
+  "displayName": "闲聊池",
+  "queueId": "social",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "n1": {
+        "id": "n1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "回来了？今天怎么样？",
+          "continueKey": "dlg:n1:continue"
+        }
+      },
+      "n2": {
+        "id": "n2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "还行，接诊了几个病人……就那样。你呢？",
+          "continueKey": "dlg:n2:continue"
+        }
+      },
+      "n3": {
+        "id": "n3",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "我也还行。不过我买到了很好吃的酸奶，黏黏的，你要不要来一罐？",
+          "continueKey": "dlg:n3:continue"
+        }
+      },
+      "choice4": {
+        "id": "choice4",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "好啊，给我一罐吧。"
+            },
+            {
+              "label": "听起来有点恶心……还是算了。"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice4:select"
+        }
+      },
+      "choice4_op0": {
+        "id": "choice4_op0",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": 5,
+          "id": 0
+        }
+      },
+      "n5": {
+        "id": "n5",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "今晚还打《第二十四人格》吗？",
+          "continueKey": "dlg:n5:continue"
+        }
+      },
+      "n6": {
+        "id": "n6",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "我觉得我还是不该喜欢打什么游戏，会影响我刷题的。",
+          "continueKey": "dlg:n6:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "consume_time_20_1": {
+        "id": "consume_time_20_1",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_2": {
+        "id": "consume_time_20_2",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_3": {
+        "id": "consume_time_20_3",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 90,
+        "y": 40
+      },
+      "consume_time_20_4": {
+        "id": "consume_time_20_4",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_5": {
+        "id": "consume_time_20_5",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_6": {
+        "id": "consume_time_20_6",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_7": {
+        "id": "consume_time_20_7",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_8": {
+        "id": "consume_time_20_8",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 90,
+        "y": 40
+      },
+      "consume_time_20_9": {
+        "id": "consume_time_20_9",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_10": {
+        "id": "consume_time_20_10",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_11": {
+        "id": "consume_time_20_11",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_12": {
+        "id": "consume_time_20_12",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": false
+        },
+        "x": 80,
+        "y": 260
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 6720
+        },
+        "x": 80,
+        "y": 360
+      },
+      "__social_gate_global_100": {
+        "id": "__social_gate_global_100",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 100
+        },
+        "x": 80,
+        "y": 80
+      },
+      "favor_check": {
+        "id": "favor_check",
+        "type": "branch",
+        "inputs": {},
+        "x": 2500,
+        "y": 160
+      },
+      "favor_global": {
+        "id": "favor_global",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 40
+        },
+        "x": 2300,
+        "y": 80
+      },
+      "favor_compare": {
+        "id": "favor_compare",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": ">",
+          "right": 49
+        },
+        "x": 2400,
+        "y": 80
+      },
+      "tabletop_invite": {
+        "id": "tabletop_invite",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "那晚上一起打桌游吗？",
+          "continueKey": "dlg:tabletop_invite:continue"
+        },
+        "x": 2700,
+        "y": 80
+      },
+      "tabletop_reply": {
+        "id": "tabletop_reply",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "待会儿有空我就来。",
+          "continueKey": "dlg:tabletop_reply:continue"
+        },
+        "x": 2950,
+        "y": 80
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "n1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n1",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_1",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_2",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_3",
+        "fromPort": "flowOut",
+        "toNodeId": "n2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n2",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_4",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_5",
+        "fromPort": "flowOut",
+        "toNodeId": "n3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n3",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_6",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_7",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_8",
+        "fromPort": "flowOut",
+        "toNodeId": "choice4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice4",
+        "fromPort": "option0",
+        "toNodeId": "choice4_op0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice4_op0",
+        "fromPort": "flowOut",
+        "toNodeId": "n5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n5",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_9",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_9",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_10",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_11",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_12",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_12",
+        "fromPort": "flowOut",
+        "toNodeId": "n6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "__social_gate_global_100",
+        "fromPort": "value",
+        "toNodeId": "__prerequisite__",
+        "toPort": "condition"
+      },
+      {
+        "fromNodeId": "n6",
+        "fromPort": "flowOut",
+        "toNodeId": "favor_check",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "favor_global",
+        "fromPort": "value",
+        "toNodeId": "favor_compare",
+        "toPort": "left"
+      },
+      {
+        "fromNodeId": "favor_compare",
+        "fromPort": "value",
+        "toNodeId": "favor_check",
+        "toPort": "condition"
+      },
+      {
+        "fromNodeId": "favor_check",
+        "fromPort": "true",
+        "toNodeId": "tabletop_invite",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "tabletop_invite",
+        "fromPort": "flowOut",
+        "toNodeId": "tabletop_reply",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "tabletop_reply",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "favor_check",
+        "fromPort": "false",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice4",
+        "fromPort": "option1",
+        "toNodeId": "n5",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

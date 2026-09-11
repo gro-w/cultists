@@ -1,0 +1,656 @@
+{
+  "id": "status",
+  "title": "状态与属性",
+  "icon": "📊",
+  "width": 440,
+  "height": 500,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "san": {
+        "id": "san",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 1
+        }
+      },
+      "money": {
+        "id": "money",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 2
+        }
+      },
+      "gameTime": {
+        "id": "gameTime",
+        "type": "getGameTime",
+        "inputs": {}
+      },
+      "sanText": {
+        "id": "sanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "理智（SAN）：",
+          "right": {
+            "nodeId": "san",
+            "port": "value"
+          }
+        }
+      },
+      "moneyText": {
+        "id": "moneyText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "金钱：",
+          "right": {
+            "nodeId": "money",
+            "port": "value"
+          }
+        }
+      },
+      "timeText": {
+        "id": "timeText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "游戏时间（分钟）：",
+          "right": {
+            "nodeId": "gameTime",
+            "port": "value"
+          }
+        }
+      },
+      "location": {
+        "id": "location",
+        "type": "getVariable",
+        "inputs": {
+          "key": "stateBoundary:location"
+        }
+      },
+      "locationText": {
+        "id": "locationText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "当前位置：",
+          "right": {
+            "nodeId": "location",
+            "port": "value"
+          }
+        }
+      },
+      "inventory": {
+        "id": "inventory",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "inventoryItems"
+        }
+      }
+    }
+  },
+  "root": {
+    "widgetId": "status-root",
+    "className": "app-status",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "children": [
+      {
+        "widgetId": "status-tabs",
+        "type": "container",
+        "className": "status-tabs",
+        "flow": "horizontal",
+        "gap": 4,
+        "children": [
+          {
+            "widgetId": "status-tab-state",
+            "type": "button",
+            "className": "win95-btn bevel-out",
+            "activeWhen": {
+              "variable": "status:tab",
+              "value": "state",
+              "op": "eq"
+            },
+            "text": "状态",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "set",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "set": {
+                    "id": "set",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "status:tab",
+                      "value": "state"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "status-tab-items",
+            "type": "button",
+            "className": "win95-btn bevel-out",
+            "activeWhen": {
+              "variable": "status:tab",
+              "value": "items",
+              "op": "eq"
+            },
+            "text": "物品",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "set",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "set": {
+                    "id": "set",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "status:tab",
+                      "value": "items"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "status-tab-settings",
+            "type": "button",
+            "className": "win95-btn bevel-out",
+            "activeWhen": {
+              "variable": "status:tab",
+              "value": "settings",
+              "op": "eq"
+            },
+            "text": "设置",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "set",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "set": {
+                    "id": "set",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "status:tab",
+                      "value": "settings"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "mark",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "mark": {
+                    "id": "mark",
+                    "type": "markEventState",
+                    "inputs": {
+                      "id": "status_settings_opened"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "status-san",
+        "type": "label",
+        "className": "status-compatibility-node",
+        "text": {
+          "nodeId": "sanText",
+          "port": "value"
+        },
+        "visible": false
+      },
+      {
+        "widgetId": "status-state-panel",
+        "type": "container",
+        "className": "status-tab-panel panel-inset",
+        "flow": "vertical",
+        "gap": 5,
+        "visibleWhen": {
+          "variable": "status:tab",
+          "value": "state",
+          "op": "eq"
+        },
+        "children": [
+          {
+            "widgetId": "status-heading",
+            "type": "label",
+            "className": "status-heading",
+            "text": "主角状态"
+          },
+          {
+            "widgetId": "status-san-value",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "sanText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-money",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "moneyText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-time",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "timeText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-location",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "locationText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-note",
+            "type": "label",
+            "className": "status-note",
+            "text": "时间和金钱随游戏状态实时更新"
+          }
+        ]
+      },
+      {
+        "widgetId": "status-items-panel",
+        "type": "container",
+        "className": "status-tab-panel panel-inset",
+        "flow": "vertical",
+        "gap": 5,
+        "visibleWhen": {
+          "variable": "status:tab",
+          "value": "items",
+          "op": "eq"
+        },
+        "children": [
+          {
+            "widgetId": "status-items-title",
+            "type": "label",
+            "text": "物品栏"
+          },
+          {
+            "widgetId": "status-items-list",
+            "type": "list",
+            "className": "item-list",
+            "items": {
+              "nodeId": "inventory",
+              "port": "value"
+            },
+            "itemLabelTemplate": "{{icon}} {{name}} × {{count}}",
+            "itemClassName": "item-row",
+            "itemActions": [
+              {
+                "id": "inspect",
+                "label": "调查",
+                "eventName": "onInspect"
+              },
+              {
+                "id": "use",
+                "label": "使用",
+                "eventName": "onUse"
+              }
+            ],
+            "events": {
+              "onInspect": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "call",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "call": {
+                    "id": "call",
+                    "type": "callApi",
+                    "inputs": {
+                      "apiId": "engine.itemAction",
+                      "payload": {
+                        "itemId": {
+                          "variable": "event:value"
+                        },
+                        "action": "inspect"
+                      }
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              },
+              "onUse": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "call",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "call": {
+                    "id": "call",
+                    "type": "callApi",
+                    "inputs": {
+                      "apiId": "engine.itemAction",
+                      "payload": {
+                        "itemId": {
+                          "variable": "event:value"
+                        },
+                        "action": "use"
+                      }
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "status-settings-panel",
+        "type": "container",
+        "className": "status-tab-panel panel-inset",
+        "flow": "vertical",
+        "gap": 8,
+        "visibleWhen": {
+          "variable": "status:tab",
+          "value": "settings",
+          "op": "eq"
+        },
+        "children": [
+          {
+            "widgetId": "settings-title",
+            "type": "label",
+            "text": "设置与存档"
+          },
+          {
+            "widgetId": "settings-language-label",
+            "type": "label",
+            "text": "当前语言"
+          },
+          {
+            "widgetId": "settings-language",
+            "type": "select",
+            "className": "settings-control",
+            "options": [
+              {
+                "value": "zh-hans",
+                "label": "简体中文"
+              },
+              {
+                "value": "en",
+                "label": "English"
+              }
+            ],
+            "value": {
+              "variable": "settings:language"
+            },
+            "events": {
+              "onChange": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "set",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "set": {
+                    "id": "set",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "settings:language",
+                      "value": {
+                        "variable": "event:value"
+                      }
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "settings-sort-label",
+            "type": "label",
+            "text": "当前笔记本排序"
+          },
+          {
+            "widgetId": "settings-sort",
+            "type": "select",
+            "className": "settings-control",
+            "options": [
+              {
+                "value": "pinyin",
+                "label": "按拼音首字母"
+              },
+              {
+                "value": "day",
+                "label": "按收集时间"
+              }
+            ],
+            "value": {
+              "variable": "settings:notebookSortMode"
+            },
+            "events": {
+              "onChange": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "set",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "set": {
+                    "id": "set",
+                    "type": "setVariable",
+                    "inputs": {
+                      "key": "settings:notebookSortMode",
+                      "value": {
+                        "variable": "event:value"
+                      }
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "settings-note",
+            "type": "label",
+            "text": "设置和存档已合并到这里。"
+          },
+          {
+            "widgetId": "settings-save-load",
+            "type": "saveLoad",
+            "className": "save-load-controls"
+          }
+        ]
+      }
+    ]
+  },
+  "events": {
+    "onCreate": {
+      "startNodeId": "start",
+      "nodes": {
+        "start": {
+          "id": "start",
+          "type": "flowStart",
+          "inputs": {},
+          "next": {
+            "flowOut": {
+              "nodeId": "tab",
+              "port": "flowIn"
+            }
+          }
+        },
+        "tab": {
+          "id": "tab",
+          "type": "setVariable",
+          "inputs": {
+            "key": "status:tab",
+            "value": "state"
+          },
+          "next": {
+            "flowOut": {
+              "nodeId": "end",
+              "port": "flowIn"
+            }
+          }
+        },
+        "end": {
+          "id": "end",
+          "type": "activityEnd",
+          "inputs": {}
+        }
+      }
+    }
+  }
+}

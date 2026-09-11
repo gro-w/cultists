@@ -1,0 +1,57 @@
+{
+  "id": "his__his-filter-diagnosis",
+  "type": "hisCustom",
+  "displayName": "his-filter-diagnosis",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "render": {
+        "id": "render",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:hisRenderDiagnosis",
+          "payload": {}
+        }
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "render",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "render",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

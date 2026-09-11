@@ -1,0 +1,14 @@
+{
+  "id":"social-media",
+  "title":"社交媒体",
+  "icon":"📱",
+  "width":520,
+  "height":360,
+  "resizable":true,
+  "singleInstance":true,
+  "valueGraph":{"nodes":{"apps":{"id":"apps","type":"getRuntimeCollection","inputs":{"collectionId":"socialApps"}}}},
+  "root":{"widgetId":"social-media-root","type":"container","flow":"vertical","gap":8,"padding":10,"className":"app-social-media","children":[
+    {"widgetId":"social-media-title","type":"label","text":"社交媒体"},
+    {"widgetId":"social-media-list","type":"list","className":"social-media-list panel-inset","items":{"nodeId":"apps","port":"value"},"itemLabelTemplate":"{{icon}} {{name}}","itemMetaTemplate":"{{description}}","itemClassName":"social-media-entry"}
+  ]}
+}

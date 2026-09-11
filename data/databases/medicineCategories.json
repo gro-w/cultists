@@ -1,0 +1,347 @@
+{
+  "medicineCategories": [
+    {
+      "id": "analgesic",
+      "name": "解热镇痛药",
+      "medicineIds": [
+        "med_paracetamol",
+        "med_001",
+        "med_002",
+        "med_003",
+        "med_004",
+        "med_005",
+        "med_006",
+        "med_007",
+        "med_008",
+        "med_009",
+        "med_010"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_j",
+        "icd_k",
+        "icd_m",
+        "icd_n",
+        "icd_r",
+        "icd_s",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antiallergic",
+      "name": "抗过敏药",
+      "medicineIds": [
+        "med_012",
+        "med_013",
+        "med_014",
+        "med_015"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l"
+      ]
+    },
+    {
+      "id": "respiratory",
+      "name": "呼吸系统用药",
+      "medicineIds": [
+        "med_cough_syrup",
+        "med_011",
+        "med_016",
+        "med_017",
+        "med_018",
+        "med_019",
+        "med_020",
+        "med_021",
+        "med_022",
+        "med_023",
+        "med_024",
+        "med_025",
+        "med_026",
+        "med_027",
+        "med_028",
+        "med_029"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_r",
+        "icd_u"
+      ]
+    },
+    {
+      "id": "antibacterial",
+      "name": "抗菌药",
+      "medicineIds": [
+        "med_030",
+        "med_031",
+        "med_032",
+        "med_033",
+        "med_034",
+        "med_035",
+        "med_036",
+        "med_037",
+        "med_038",
+        "med_039",
+        "med_040",
+        "med_041",
+        "med_042",
+        "med_043",
+        "med_044",
+        "med_045",
+        "med_046"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_h",
+        "icd_j",
+        "icd_l",
+        "icd_n"
+      ]
+    },
+    {
+      "id": "antiviral",
+      "name": "抗病毒药",
+      "medicineIds": [
+        "med_047",
+        "med_048",
+        "med_049",
+        "med_050",
+        "med_051",
+        "med_052"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_j"
+      ]
+    },
+    {
+      "id": "antifungal",
+      "name": "抗真菌药",
+      "medicineIds": [
+        "med_053",
+        "med_054",
+        "med_055",
+        "med_056",
+        "med_057",
+        "med_058"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a"
+      ]
+    },
+    {
+      "id": "gastrointestinal",
+      "name": "消化系统用药",
+      "medicineIds": [
+        "med_059",
+        "med_060",
+        "med_061",
+        "med_062",
+        "med_063",
+        "med_064",
+        "med_065",
+        "med_066",
+        "med_067",
+        "med_068",
+        "med_069",
+        "med_070",
+        "med_071",
+        "med_072",
+        "med_073",
+        "med_074",
+        "med_075",
+        "med_076",
+        "med_077",
+        "med_078",
+        "med_079"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_k"
+      ]
+    },
+    {
+      "id": "cardiovascular",
+      "name": "心血管用药",
+      "medicineIds": [
+        "med_080",
+        "med_081",
+        "med_082",
+        "med_083",
+        "med_084",
+        "med_085",
+        "med_086",
+        "med_087",
+        "med_088",
+        "med_089",
+        "med_090",
+        "med_091",
+        "med_092",
+        "med_093",
+        "med_094",
+        "med_095"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_i"
+      ]
+    },
+    {
+      "id": "lipid_lowering",
+      "name": "调脂药",
+      "medicineIds": [
+        "med_096",
+        "med_097",
+        "med_098",
+        "med_099"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_i"
+      ]
+    },
+    {
+      "id": "antidiabetic",
+      "name": "降糖药",
+      "medicineIds": [
+        "med_100",
+        "med_101",
+        "med_102",
+        "med_103",
+        "med_104",
+        "med_105",
+        "med_106"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "thyroid",
+      "name": "甲状腺用药",
+      "medicineIds": [
+        "med_107",
+        "med_108",
+        "med_109"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e"
+      ]
+    },
+    {
+      "id": "steroid_immunomodulator",
+      "name": "糖皮质激素与免疫调节药",
+      "medicineIds": [
+        "med_110",
+        "med_111",
+        "med_112",
+        "med_113",
+        "med_114",
+        "med_115"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_j",
+        "icd_l",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "bone_gout",
+      "name": "骨代谢与痛风用药",
+      "medicineIds": [
+        "med_116",
+        "med_117",
+        "med_118",
+        "med_119",
+        "med_120",
+        "med_121"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_m"
+      ]
+    },
+    {
+      "id": "dermatology",
+      "name": "皮肤科用药",
+      "medicineIds": [
+        "med_129",
+        "med_130",
+        "med_131",
+        "med_132",
+        "med_133",
+        "med_134",
+        "med_135",
+        "med_136",
+        "med_137",
+        "med_138",
+        "med_139"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_k",
+        "icd_l",
+        "icd_s"
+      ]
+    },
+    {
+      "id": "ophthalmology",
+      "name": "眼科用药",
+      "medicineIds": [
+        "med_140",
+        "med_141",
+        "med_142",
+        "med_143",
+        "med_144"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_h"
+      ]
+    },
+    {
+      "id": "neurology",
+      "name": "神经系统用药",
+      "medicineIds": [
+        "med_145",
+        "med_146",
+        "med_147",
+        "med_148"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_a",
+        "icd_g",
+        "icd_h",
+        "icd_m",
+        "icd_r"
+      ]
+    },
+    {
+      "id": "psychiatry",
+      "name": "精神科用药",
+      "medicineIds": [
+        "med_149",
+        "med_150"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_f"
+      ]
+    },
+    {
+      "id": "supplement",
+      "name": "维生素与电解质补充剂",
+      "medicineIds": [
+        "med_122",
+        "med_123",
+        "med_124",
+        "med_125",
+        "med_126",
+        "med_127",
+        "med_128"
+      ],
+      "correspondingDiseaseCategoryIds": [
+        "icd_e",
+        "icd_h",
+        "icd_n"
+      ]
+    }
+  ]
+}

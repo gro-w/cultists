@@ -1,0 +1,22 @@
+{
+  "id": "off-duty-blocked",
+  "title": "无法下班",
+  "icon": "⚠️",
+  "width": 360,
+  "height": 180,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "off-duty-blocked-root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 10,
+    "padding": 12,
+    "className": "app-off-duty-blocked",
+    "children": [
+      {"widgetId":"off-duty-blocked-message","type":"label","text":"您当前有未看完的病人，不能下班。","className":"off-duty-blocked-message"},
+      {"widgetId":"off-duty-blocked-hint","type":"label","text":"请先完成当前患者批次，再次尝试下班。","className":"off-duty-blocked-hint"},
+      {"widgetId":"off-duty-blocked-close","type":"button","text":"确定","className":"win95-btn bevel-out","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"close","port":"flowIn"}}},"close":{"id":"close","type":"closeWindow","inputs":{"windowId":"off-duty-blocked"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
+    ]
+  }
+}

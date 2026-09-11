@@ -1,0 +1,395 @@
+{
+  "id": "social04a_awei_chat",
+  "type": "other",
+  "displayName": "闲聊池",
+  "queueId": "social",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "n1": {
+        "id": "n1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "今天你也不准备吃饭吗？",
+          "continueKey": "dlg:n1:continue"
+        }
+      },
+      "n2": {
+        "id": "n2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "等我打个电话……*能不能再宽限两天？我没想赖着不还。……*唉，后天就要还尾款了。",
+          "continueKey": "dlg:n2:continue"
+        }
+      },
+      "n3": {
+        "id": "n3",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "现在你还差多少钱？",
+          "continueKey": "dlg:n3:continue"
+        }
+      },
+      "n4": {
+        "id": "n4",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "别提了。",
+          "continueKey": "dlg:n4:continue"
+        }
+      },
+      "choice5": {
+        "id": "choice5",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "加油吧。"
+            },
+            {
+              "label": "你不是明天就要还了吗？"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice5:select"
+        }
+      },
+      "choice5_op0": {
+        "id": "choice5_op0",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": 5,
+          "id": 41
+        }
+      },
+      "choice5_op1": {
+        "id": "choice5_op1",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": 5,
+          "id": 0
+        }
+      },
+      "n6": {
+        "id": "n6",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "怎么会，你别吓唬我。",
+          "continueKey": "dlg:n6:continue"
+        }
+      },
+      "n7": {
+        "id": "n7",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "明明昨天你说是后天来着……",
+          "continueKey": "dlg:n7:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "consume_time_20_1": {
+        "id": "consume_time_20_1",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_2": {
+        "id": "consume_time_20_2",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_3": {
+        "id": "consume_time_20_3",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_4": {
+        "id": "consume_time_20_4",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_5": {
+        "id": "consume_time_20_5",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_6": {
+        "id": "consume_time_20_6",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_7": {
+        "id": "consume_time_20_7",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_8": {
+        "id": "consume_time_20_8",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_9": {
+        "id": "consume_time_20_9",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_10": {
+        "id": "consume_time_20_10",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "consume_time_20_11": {
+        "id": "consume_time_20_11",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 30,
+        "y": 40
+      },
+      "consume_time_20_12": {
+        "id": "consume_time_20_12",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 60,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": false
+        },
+        "x": 80,
+        "y": 260
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 6720
+        },
+        "x": 80,
+        "y": 360
+      },
+      "__social_gate_global_101": {
+        "id": "__social_gate_global_101",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 101
+        },
+        "x": 80,
+        "y": 80
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "n1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n1",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_1",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_2",
+        "fromPort": "flowOut",
+        "toNodeId": "n2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n2",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_3",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_4",
+        "fromPort": "flowOut",
+        "toNodeId": "n3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n3",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_5",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_6",
+        "fromPort": "flowOut",
+        "toNodeId": "n4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n4",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_7",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_8",
+        "fromPort": "flowOut",
+        "toNodeId": "choice5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice5",
+        "fromPort": "option0",
+        "toNodeId": "choice5_op0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice5",
+        "fromPort": "option1",
+        "toNodeId": "choice5_op1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n6",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_9",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_9",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice5_op0",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_10",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_11",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_12",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_12",
+        "fromPort": "flowOut",
+        "toNodeId": "n7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n7",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "__social_gate_global_101",
+        "fromPort": "value",
+        "toNodeId": "__prerequisite__",
+        "toPort": "condition"
+      },
+      {
+        "fromNodeId": "choice5_op1",
+        "fromPort": "flowOut",
+        "toNodeId": "n6",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

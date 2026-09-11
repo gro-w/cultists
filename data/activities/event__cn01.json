@@ -1,0 +1,63 @@
+{
+  "id": "event__与海之子对话",
+  "type": "specialEvent",
+  "displayName": "与海之子对话",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "text": {
+        "id": "text",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "海水在呼唤你。你听见了海之子的低语。",
+          "continueKey": "dlg:text:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 80,
+        "y": 240
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 80,
+        "y": 360
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "text",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "text",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

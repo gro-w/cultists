@@ -1,0 +1,771 @@
+{
+  "id": "ending__牺牲之血",
+  "type": "ending",
+  "displayName": "面对未知的命运",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "n000": {
+        "id": "n000",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_f"
+          }
+        },
+        "x": 340,
+        "y": 40
+      },
+      "n001": {
+        "id": "n001",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "一个陌生的房间里。",
+          "continueKey": "dlg:n001:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "n002": {
+        "id": "n002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "你醒了？",
+          "continueKey": "dlg:n002:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "n003": {
+        "id": "n003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "彬彬？头……有点晕……我刚才是低血糖晕倒了吗？",
+          "continueKey": "dlg:n003:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "n004": {
+        "id": "n004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "是也不是。",
+          "continueKey": "dlg:n004:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "n005": {
+        "id": "n005",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我怎么什么都看不见？等一下……你把我绑在椅子上了？你……要做什么？",
+          "continueKey": "dlg:n005:continue"
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "n006": {
+        "id": "n006",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "猜猜看呢？就像以前玩海龟汤的时候一样。",
+          "continueKey": "dlg:n006:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "n007": {
+        "id": "n007",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……",
+          "continueKey": "dlg:n007:continue"
+        },
+        "x": 2440,
+        "y": 40
+      },
+      "n008": {
+        "id": "n008",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "需要我重新讲一遍【规则】吗？你可以问任何问题，我只会回答是、不是、是也不是三种答案。限时10次。",
+          "continueKey": "dlg:n008:continue"
+        },
+        "x": 2740,
+        "y": 40
+      },
+      "n009": {
+        "id": "n009",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "怎么了，不想玩吗？猜错或不猜，都有惩罚。而且，你不是已经开始怀疑我了吗？你的调查笔记，并没有藏得很好呢。",
+          "continueKey": "dlg:n009:continue"
+        },
+        "x": 3040,
+        "y": 40
+      },
+      "n010": {
+        "id": "n010",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你……你到底是什么人？",
+          "continueKey": "dlg:n010:continue"
+        },
+        "x": 3340,
+        "y": 40
+      },
+      "n011": {
+        "id": "n011",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "违规警告一次。你只能问能用是或否回答的问题。下次，可就不只是警告了。",
+          "continueKey": "dlg:n011:continue"
+        },
+        "x": 3640,
+        "y": 40
+      },
+      "n012": {
+        "id": "n012",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你是大衮密教的教徒吗？",
+          "continueKey": "dlg:n012:continue"
+        },
+        "x": 3940,
+        "y": 40
+      },
+      "n013": {
+        "id": "n013",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "是也不是。",
+          "continueKey": "dlg:n013:continue"
+        },
+        "x": 4240,
+        "y": 40
+      },
+      "n014": {
+        "id": "n014",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你是大衮密教的教主吗？",
+          "continueKey": "dlg:n014:continue"
+        },
+        "x": 4540,
+        "y": 40
+      },
+      "n015": {
+        "id": "n015",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "哈哈哈哈哈哈哈哈哈，是。",
+          "continueKey": "dlg:n015:continue"
+        },
+        "x": 4840,
+        "y": 40
+      },
+      "n016": {
+        "id": "n016",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你想把我作为祭品献祭？",
+          "continueKey": "dlg:n016:continue"
+        },
+        "x": 5140,
+        "y": 40
+      },
+      "n017": {
+        "id": "n017",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "不是。",
+          "continueKey": "dlg:n017:continue"
+        },
+        "x": 5440,
+        "y": 40
+      },
+      "n018": {
+        "id": "n018",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你想杀死我，把我的血肉作为深潜秘药的材料？",
+          "continueKey": "dlg:n018:continue"
+        },
+        "x": 5740,
+        "y": 40
+      },
+      "n019": {
+        "id": "n019",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "是，也不是。",
+          "continueKey": "dlg:n019:continue"
+        },
+        "x": 6040,
+        "y": 40
+      },
+      "n020": {
+        "id": "n020",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "你只是想杀死我……因为我曾冒犯过你？",
+          "continueKey": "dlg:n020:continue"
+        },
+        "x": 6340,
+        "y": 40
+      },
+      "n021": {
+        "id": "n021",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "不是。",
+          "continueKey": "dlg:n021:continue"
+        },
+        "x": 6640,
+        "y": 40
+      },
+      "n022": {
+        "id": "n022",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "真相是这样的。",
+          "continueKey": "dlg:n022:continue"
+        },
+        "x": 6940,
+        "y": 40
+      },
+      "n023": {
+        "id": "n023",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "我在你的腿部注射了麻醉剂，所以你动不了，也不会感到痛。我蒙上你的双眼，只是不想让你看到我如今的样子，以免你受到惊吓。",
+          "continueKey": "dlg:n023:continue"
+        },
+        "x": 7240,
+        "y": 40
+      },
+      "n024": {
+        "id": "n024",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "放心，只是断一双腿，多少人天生就失去双腿，这样所谓的“残缺”却激发了他们求生的意志。进步的意志。在装上义体之后，他们比所谓“健全”之人更高，更快，更强。",
+          "continueKey": "dlg:n024:continue"
+        },
+        "x": 7540,
+        "y": 40
+      },
+      "n025": {
+        "id": "n025",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "我们的计划只是智慧种族进步的一环。一人无足轻重的牺牲——甚至并非付出生命的代价，就能带来整个文明更伟大的利益。这难道不值得吗？",
+          "continueKey": "dlg:n025:continue"
+        },
+        "x": 7840,
+        "y": 40
+      },
+      "n026": {
+        "id": "n026",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "随我来吧，你的牺牲会被永远铭记，因你也会服下秘药，发下三重誓言，加入永生者的行列，永永远远做我的朋友。——不仅是朋友，我对你的情谊，早已超过“朋友”这种关系符号可以指代的一切。",
+          "continueKey": "dlg:n026:continue"
+        },
+        "x": 8140,
+        "y": 40
+      },
+      "n027": {
+        "id": "n027",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "让仪式开始吧。",
+          "continueKey": "dlg:n027:continue"
+        },
+        "x": 8440,
+        "y": 40
+      },
+      "n028": {
+        "id": "n028",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "Ia! Dagon! Iii! Hydra!",
+          "continueKey": "dlg:n028:continue"
+        },
+        "x": 8740,
+        "y": 40
+      },
+      "n029": {
+        "id": "n029",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "“““非人勤以求知，知者勤以求人，其知者非求人，实乃出而逐人。其刻深无情者，有如鹰犬逐兔。”””",
+          "continueKey": "dlg:n029:continue"
+        },
+        "x": 9040,
+        "y": 40
+      },
+      "n030": {
+        "id": "n030",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "为我扫清这片迷雾——让我得以窥见真实——",
+          "continueKey": "dlg:n030:continue"
+        },
+        "x": 9340,
+        "y": 40
+      },
+      "n031": {
+        "id": "n031",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "圣盐，圣盐，降福于这仪式，无使活人之身化为盐柱。",
+          "continueKey": "dlg:n031:continue"
+        },
+        "x": 9640,
+        "y": 40
+      },
+      "n032": {
+        "id": "n032",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "圣香，圣香，降福于这仪式，令活人之心如波形长存。",
+          "continueKey": "dlg:n032:continue"
+        },
+        "x": 9940,
+        "y": 40
+      },
+      "n033": {
+        "id": "n033",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "血肉，血肉，被迫献出，为这仪式付出轻如鱼鳞之代价。",
+          "continueKey": "dlg:n033:continue"
+        },
+        "x": 10240,
+        "y": 40
+      },
+      "n034": {
+        "id": "n034",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "Ia! Dagon! Iii! Hydra! 藉由大衮之印，完成这仪式，制成使活人超脱凡体之深潜秘药。",
+          "continueKey": "dlg:n034:continue"
+        },
+        "x": 10540,
+        "y": 40
+      },
+      "n035": {
+        "id": "n035",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……",
+          "continueKey": "dlg:n035:continue"
+        },
+        "x": 10840,
+        "y": 40
+      },
+      "n036": {
+        "id": "n036",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "仪式已成。现在我给你两个选择——一是发下三重誓言，加入永生者的行列，永永远远做我的朋友。二是，二是，接受你注定的终局……",
+          "continueKey": "dlg:n036:continue"
+        },
+        "x": 11140,
+        "y": 40
+      },
+      "n037": {
+        "id": "n037",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不……不……我宁愿死，死在你的手中，也不愿意变成怪物……",
+          "continueKey": "dlg:n037:continue"
+        },
+        "x": 11440,
+        "y": 40
+      },
+      "n038": {
+        "id": "n038",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "我计划了那么多，却仍旧没能让你接受我的情谊。",
+          "continueKey": "dlg:n038:continue"
+        },
+        "x": 11740,
+        "y": 40
+      },
+      "n039": {
+        "id": "n039",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "binbin",
+          "text": "无论如何，是时候让你看见真相了。",
+          "continueKey": "dlg:n039:continue"
+        },
+        "x": 12040,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 12340,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "n000",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n000",
+        "fromPort": "flowOut",
+        "toNodeId": "n001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n001",
+        "fromPort": "flowOut",
+        "toNodeId": "n002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n002",
+        "fromPort": "flowOut",
+        "toNodeId": "n003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n003",
+        "fromPort": "flowOut",
+        "toNodeId": "n004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n004",
+        "fromPort": "flowOut",
+        "toNodeId": "n005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n005",
+        "fromPort": "flowOut",
+        "toNodeId": "n006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n006",
+        "fromPort": "flowOut",
+        "toNodeId": "n007",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n007",
+        "fromPort": "flowOut",
+        "toNodeId": "n008",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n008",
+        "fromPort": "flowOut",
+        "toNodeId": "n009",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n009",
+        "fromPort": "flowOut",
+        "toNodeId": "n010",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n010",
+        "fromPort": "flowOut",
+        "toNodeId": "n011",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n011",
+        "fromPort": "flowOut",
+        "toNodeId": "n012",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n012",
+        "fromPort": "flowOut",
+        "toNodeId": "n013",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n013",
+        "fromPort": "flowOut",
+        "toNodeId": "n014",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n014",
+        "fromPort": "flowOut",
+        "toNodeId": "n015",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n015",
+        "fromPort": "flowOut",
+        "toNodeId": "n016",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n016",
+        "fromPort": "flowOut",
+        "toNodeId": "n017",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n017",
+        "fromPort": "flowOut",
+        "toNodeId": "n018",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n018",
+        "fromPort": "flowOut",
+        "toNodeId": "n019",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n019",
+        "fromPort": "flowOut",
+        "toNodeId": "n020",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n020",
+        "fromPort": "flowOut",
+        "toNodeId": "n021",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n021",
+        "fromPort": "flowOut",
+        "toNodeId": "n022",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n022",
+        "fromPort": "flowOut",
+        "toNodeId": "n023",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n023",
+        "fromPort": "flowOut",
+        "toNodeId": "n024",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n024",
+        "fromPort": "flowOut",
+        "toNodeId": "n025",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n025",
+        "fromPort": "flowOut",
+        "toNodeId": "n026",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n026",
+        "fromPort": "flowOut",
+        "toNodeId": "n027",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n027",
+        "fromPort": "flowOut",
+        "toNodeId": "n028",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n028",
+        "fromPort": "flowOut",
+        "toNodeId": "n029",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n029",
+        "fromPort": "flowOut",
+        "toNodeId": "n030",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n030",
+        "fromPort": "flowOut",
+        "toNodeId": "n031",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n031",
+        "fromPort": "flowOut",
+        "toNodeId": "n032",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n032",
+        "fromPort": "flowOut",
+        "toNodeId": "n033",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n033",
+        "fromPort": "flowOut",
+        "toNodeId": "n034",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n034",
+        "fromPort": "flowOut",
+        "toNodeId": "n035",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n035",
+        "fromPort": "flowOut",
+        "toNodeId": "n036",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n036",
+        "fromPort": "flowOut",
+        "toNodeId": "n037",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n037",
+        "fromPort": "flowOut",
+        "toNodeId": "n038",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n038",
+        "fromPort": "flowOut",
+        "toNodeId": "n039",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n039",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

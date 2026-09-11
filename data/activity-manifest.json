@@ -1,0 +1,664 @@
+{
+  "activityIds": [
+    {
+      "id": "achievement__force_end_work",
+      "file": "achievement__force_end_work.json"
+    },
+    {
+      "id": "achievement__all_texts_read",
+      "file": "achievement__all_texts_read.json"
+    },
+
+    {
+      "id": "achievement__ending_any",
+      "file": "achievement__ending_any.json"
+    },
+    {
+      "id": "achievement__exam_pass",
+      "file": "achievement__exam_pass.json"
+    },
+    {
+      "id": "achievement__fav_all_positive",
+      "file": "achievement__fav_all_positive.json"
+    },
+    {
+      "id": "achievement__fav_cumulative_down",
+      "file": "achievement__fav_cumulative_down.json"
+    },
+    {
+      "id": "achievement__fav_cumulative_up",
+      "file": "achievement__fav_cumulative_up.json"
+    },
+    {
+      "id": "achievement__fav_first_down",
+      "file": "achievement__fav_first_down.json"
+    },
+    {
+      "id": "achievement__fav_first_up",
+      "file": "achievement__fav_first_up.json"
+    },
+    {
+      "id": "achievement__fav_maxed",
+      "file": "achievement__fav_maxed.json"
+    },
+    {
+      "id": "achievement__fav_three_high",
+      "file": "achievement__fav_three_high.json"
+    },
+    {
+      "id": "achievement__fav_zeroed",
+      "file": "achievement__fav_zeroed.json"
+    },
+    {
+      "id": "achievement__san_fast_drop",
+      "file": "achievement__san_fast_drop.json"
+    },
+    {
+      "id": "achievement__san_recovery",
+      "file": "achievement__san_recovery.json"
+    },
+    {
+      "id": "achievement__san_steady",
+      "file": "achievement__san_steady.json"
+    },
+    {
+      "id": "achievement__san_zero",
+      "file": "achievement__san_zero.json"
+    },
+    {
+      "id": "achievement__skillcheck_critical_failure",
+      "file": "achievement__skillcheck_critical_failure.json"
+    },
+    {
+      "id": "achievement__skillcheck_cumulative_success",
+      "file": "achievement__skillcheck_cumulative_success.json"
+    },
+    {
+      "id": "achievement__skillcheck_first_failure",
+      "file": "achievement__skillcheck_first_failure.json"
+    },
+    {
+      "id": "achievement__skillcheck_first_success",
+      "file": "achievement__skillcheck_first_success.json"
+    },
+    {
+      "id": "achievement__study_believer",
+      "file": "achievement__study_believer.json"
+    },
+    {
+      "id": "achievement__study_first",
+      "file": "achievement__study_first.json"
+    },
+    {
+      "id": "achievement__study_king",
+      "file": "achievement__study_king.json"
+    },
+    {
+      "id": "achievement__tabletop_first",
+      "file": "achievement__tabletop_first.json"
+    },
+    {
+      "id": "achievement__tabletop_skip",
+      "file": "achievement__tabletop_skip.json"
+    },
+    {
+      "id": "achievement__tabletop_veteran",
+      "file": "achievement__tabletop_veteran.json"
+    },
+    {
+      "id": "achievement-manager",
+      "file": "achievement-manager.framework.json"
+    },
+    {
+      "id": "inventory-manager",
+      "file": "inventory-manager.framework.json"
+    },
+    {
+      "id": "keyword-manager",
+      "file": "keyword-manager.framework.json"
+    },
+    {
+      "id": "patient-queue-manager",
+      "file": "patient-queue-manager.json"
+    },
+    {
+      "id": "social-story-manager",
+      "file": "social-story-manager.json"
+    },
+    {
+      "id": "default",
+      "file": "default.json"
+    },
+    {
+      "id": "use-item",
+      "file": "use-item.json"
+    },
+    {
+      "id": "spell-learn",
+      "file": "spell-learn.json"
+    },
+    {
+      "id": "spell-cast",
+      "file": "spell-cast.json"
+    },
+
+    {
+      "id": "dorm_activity_day1",
+      "file": "dorm_activity_day1.json"
+    },
+    {
+      "id": "dorm_activity_day2",
+      "file": "dorm_activity_day2.json"
+    },
+    {
+      "id": "dorm_activity_day3",
+      "file": "dorm_activity_day3.json"
+    },
+    {
+      "id": "dorm_activity_day4",
+      "file": "dorm_activity_day4.json"
+    },
+    {
+      "id": "dorm_activity_day5",
+      "file": "dorm_activity_day5.json"
+    },
+    {
+      "id": "ending__pl现实魅惑大成功",
+      "file": "ending__cn01.json"
+    },
+    {
+      "id": "ending__万物终亡",
+      "file": "ending__cn02.json"
+    },
+    {
+      "id": "ending__入院快乐",
+      "file": "ending__cn03.json"
+    },
+    {
+      "id": "ending__凡俗",
+      "file": "ending__cn04.json"
+    },
+    {
+      "id": "ending__异常结局",
+      "file": "ending__cn05.json"
+    },
+    {
+      "id": "ending__摇滚不死",
+      "file": "ending__cn06.json"
+    },
+    {
+      "id": "ending__正常结局",
+      "file": "ending__cn07.json"
+    },
+    {
+      "id": "ending__混沌一瞥",
+      "file": "ending__cn08.json"
+    },
+    {
+      "id": "ending__游戏王の福利",
+      "file": "ending__cn09.json"
+    },
+    {
+      "id": "ending__牺牲之血",
+      "file": "ending__cn10.json"
+    },
+    {
+      "id": "ending__现实=现实",
+      "file": "ending__cn11.json"
+    },
+    {
+      "id": "ending__组一辈子少年乐队！",
+      "file": "ending__cn12.json"
+    },
+    {
+      "id": "ending__自杀结局",
+      "file": "ending__cn13.json"
+    },
+    {
+      "id": "ending__药物过量",
+      "file": "ending__cn14.json"
+    },
+    {
+      "id": "ending__蹈海",
+      "file": "ending__cn15.json"
+    },
+    {
+      "id": "event__binbin_turtle_fail",
+      "file": "event__binbin_turtle_fail.json"
+    },
+    {
+      "id": "event__binbin_turtle_success",
+      "file": "event__binbin_turtle_success.json"
+    },
+    {
+      "id": "event__与海之子对话",
+      "file": "event__cn01.json"
+    },
+    {
+      "id": "event__彬彬献祭事件",
+      "file": "event__cn02.json"
+    },
+    {
+      "id": "event__悔恨之泪",
+      "file": "event__cn03.json"
+    },
+    {
+      "id": "event__追逐",
+      "file": "event__cn04.json"
+    },
+    {
+      "id": "event__游戏王の荣耀",
+      "file": "event__cn08.json"
+    },
+    {
+      "id": "event__一切谜锁都解开了",
+      "file": "event__cn09.json"
+    },
+    {
+      "id": "event__追逐事件",
+      "file": "event__cn05.json"
+    },
+    {
+      "id": "event__长眠的克苏鲁候汝入梦",
+      "file": "event__cn06.json"
+    },
+    {
+      "id": "event__长眠的克苏鲁候汝入梦事件",
+      "file": "event__cn07.json"
+    },
+    {
+      "id": "his__his-filter-diagnosis",
+      "file": "his__his-filter-diagnosis.json"
+    },
+    {
+      "id": "his__his-initialize",
+      "file": "his__his-initialize.json"
+    },
+    {
+      "id": "his__his-search",
+      "file": "his__his-search.json"
+    },
+    {
+      "id": "his__his-select-patient",
+      "file": "his__his-select-patient.json"
+    },
+    {
+      "id": "his__his-submit",
+      "file": "his__his-submit.json"
+    },
+    {
+      "id": "medical-appointment-watcher",
+      "file": "medical-appointment-watcher.json"
+    },
+    {
+      "id": "medical_complaint_work",
+      "file": "medical_complaint_work.json"
+    },
+    {
+      "id": "medical_riot_work",
+      "file": "medical_riot_work.json"
+    },
+    {
+      "id": "off-duty-open",
+      "file": "off-duty-open.json"
+    },
+
+    {
+      "id": "patient_02_01_gingivitis",
+      "file": "patient_02_01_gingivitis.json"
+    },
+    {
+      "id": "patient_02_02_plantar_fasciitis",
+      "file": "patient_02_02_plantar_fasciitis.json"
+    },
+    {
+      "id": "patient_02_03_hyperthyroidism",
+      "file": "patient_02_03_hyperthyroidism.json"
+    },
+    {
+      "id": "patient_02_04_hypothyroidism",
+      "file": "patient_02_04_hypothyroidism.json"
+    },
+    {
+      "id": "patient_02_05_vitamin_b12_deficiency_anemia",
+      "file": "patient_02_05_vitamin_b12_deficiency_anemia.json"
+    },
+    {
+      "id": "patient_02_06_iron_deficiency_anemia",
+      "file": "patient_02_06_iron_deficiency_anemia.json"
+    },
+    {
+      "id": "patient_02_07_dry_eye",
+      "file": "patient_02_07_dry_eye.json"
+    },
+    {
+      "id": "patient_03_01_bacterial_conjunctivitis",
+      "file": "patient_03_01_bacterial_conjunctivitis.json"
+    },
+    {
+      "id": "patient_03_02_ulcerative_colitis",
+      "file": "patient_03_02_ulcerative_colitis.json"
+    },
+    {
+      "id": "patient_03_03_hemorrhoids",
+      "file": "patient_03_03_hemorrhoids.json"
+    },
+    {
+      "id": "patient_03_04_kidney_stone",
+      "file": "patient_03_04_kidney_stone.json"
+    },
+    {
+      "id": "patient_03_05_benign_prostatic_hyperplasia",
+      "file": "patient_03_05_benign_prostatic_hyperplasia.json"
+    },
+    {
+      "id": "patient_03_06_nausea_vomiting",
+      "file": "patient_03_06_nausea_vomiting.json"
+    },
+    {
+      "id": "patient_03_07_lymphadenopathy",
+      "file": "patient_03_07_lymphadenopathy.json"
+    },
+    {
+      "id": "patient_04_01_orthostatic_hypotension",
+      "file": "patient_04_01_orthostatic_hypotension.json"
+    },
+    {
+      "id": "patient_04_02_closed_foot_fracture",
+      "file": "patient_04_02_closed_foot_fracture.json"
+    },
+    {
+      "id": "patient_04_03_gingivitis",
+      "file": "patient_04_03_gingivitis.json"
+    },
+    {
+      "id": "patient_04_04_plantar_fasciitis",
+      "file": "patient_04_04_plantar_fasciitis.json"
+    },
+    {
+      "id": "patient_04_05_hyperthyroidism",
+      "file": "patient_04_05_hyperthyroidism.json"
+    },
+    {
+      "id": "patient_04_06_hypothyroidism",
+      "file": "patient_04_06_hypothyroidism.json"
+    },
+    {
+      "id": "patient_04_07_vitamin_b12_deficiency_anemia",
+      "file": "patient_04_07_vitamin_b12_deficiency_anemia.json"
+    },
+    {
+      "id": "patient_06_01_nausea_vomiting",
+      "file": "patient_06_01_nausea_vomiting.json"
+    },
+    {
+      "id": "patient_06_02_lymphadenopathy",
+      "file": "patient_06_02_lymphadenopathy.json"
+    },
+    {
+      "id": "patient_06_03_orthostatic_hypotension",
+      "file": "patient_06_03_orthostatic_hypotension.json"
+    },
+    {
+      "id": "patient_06_04_closed_foot_fracture",
+      "file": "patient_06_04_closed_foot_fracture.json"
+    },
+    {
+      "id": "patient_06_05_gingivitis",
+      "file": "patient_06_05_gingivitis.json"
+    },
+    {
+      "id": "patient_06_06_plantar_fasciitis",
+      "file": "patient_06_06_plantar_fasciitis.json"
+    },
+    {
+      "id": "patient_06_07_hyperthyroidism",
+      "file": "patient_06_07_hyperthyroidism.json"
+    },
+    {
+      "id": "patient_07_01_hypothyroidism",
+      "file": "patient_07_01_hypothyroidism.json"
+    },
+    {
+      "id": "patient_07_02_vitamin_b12_deficiency_anemia",
+      "file": "patient_07_02_vitamin_b12_deficiency_anemia.json"
+    },
+    {
+      "id": "patient_07_03_iron_deficiency_anemia",
+      "file": "patient_07_03_iron_deficiency_anemia.json"
+    },
+    {
+      "id": "patient_07_04_dry_eye",
+      "file": "patient_07_04_dry_eye.json"
+    },
+    {
+      "id": "patient_07_05_bacterial_conjunctivitis",
+      "file": "patient_07_05_bacterial_conjunctivitis.json"
+    },
+    {
+      "id": "patient_07_06_ulcerative_colitis",
+      "file": "patient_07_06_ulcerative_colitis.json"
+    },
+    {
+      "id": "patient_07_07_hemorrhoids",
+      "file": "patient_07_07_hemorrhoids.json"
+    },
+    {
+      "id": "patient_08_01_kidney_stone",
+      "file": "patient_08_01_kidney_stone.json"
+    },
+    {
+      "id": "patient_08_02_benign_prostatic_hyperplasia",
+      "file": "patient_08_02_benign_prostatic_hyperplasia.json"
+    },
+    {
+      "id": "patient_08_03_nausea_vomiting",
+      "file": "patient_08_03_nausea_vomiting.json"
+    },
+    {
+      "id": "patient_08_04_lymphadenopathy",
+      "file": "patient_08_04_lymphadenopathy.json"
+    },
+    {
+      "id": "patient_08_05_orthostatic_hypotension",
+      "file": "patient_08_05_orthostatic_hypotension.json"
+    },
+    {
+      "id": "patient_08_06_closed_foot_fracture",
+      "file": "patient_08_06_closed_foot_fracture.json"
+    },
+    {
+      "id": "patient_08_07_gingivitis",
+      "file": "patient_08_07_gingivitis.json"
+    },
+    {
+      "id": "patient_extra_02_a_08",
+      "file": "patient_extra_02_a_08.json"
+    },
+    {
+      "id": "patient_extra_03_a_08",
+      "file": "patient_extra_03_a_08.json"
+    },
+    {
+      "id": "patient_extra_03_a_09",
+      "file": "patient_extra_03_a_09.json"
+    },
+    {
+      "id": "patient_extra_06_a_08",
+      "file": "patient_extra_06_a_08.json"
+    },
+    {
+      "id": "patient_extra_06_a_09",
+      "file": "patient_extra_06_a_09.json"
+    },
+    {
+      "id": "patient_extra_07_a_08",
+      "file": "patient_extra_07_a_08.json"
+    },
+    {
+      "id": "patient_extra_07_b_08",
+      "file": "patient_extra_07_b_08.json"
+    },
+    {
+      "id": "patient_extra_07_b_09",
+      "file": "patient_extra_07_b_09.json"
+    },
+
+    {
+      "id": "social01b_ajie_honor_of_kings",
+      "file": "social01b_ajie_honor_of_kings.json"
+    },
+    {
+      "id": "social01b_awei_headphones",
+      "file": "social01b_awei_headphones.json"
+    },
+    {
+      "id": "social02a_ajie_chat",
+      "file": "social02a_ajie_chat.json"
+    },
+    {
+      "id": "social02a_awei_chat",
+      "file": "social02a_awei_chat.json"
+    },
+    {
+      "id": "social02b_dorm_invite",
+      "file": "social02b_dorm_invite.json"
+    },
+    {
+      "id": "social03b_ajie_24_personality_high",
+      "file": "social03b_ajie_24_personality_high.json"
+    },
+    {
+      "id": "social03b_ajie_24_personality_low",
+      "file": "social03b_ajie_24_personality_low.json"
+    },
+    {
+      "id": "social03b_awei_tail_high",
+      "file": "social03b_awei_tail_high.json"
+    },
+    {
+      "id": "social03b_awei_tail_low",
+      "file": "social03b_awei_tail_low.json"
+    },
+    {
+      "id": "social04a_ajie_chat",
+      "file": "social04a_ajie_chat.json"
+    },
+    {
+      "id": "social04a_awei_chat",
+      "file": "social04a_awei_chat.json"
+    },
+    {
+      "id": "social04b_dorm_invite",
+      "file": "social04b_dorm_invite.json"
+    },
+    {
+      "id": "social05b_ajie_goods_high",
+      "file": "social05b_ajie_goods_high.json"
+    },
+    {
+      "id": "social05b_ajie_goods_low",
+      "file": "social05b_ajie_goods_low.json"
+    },
+    {
+      "id": "social05b_awei_record_high",
+      "file": "social05b_awei_record_high.json"
+    },
+    {
+      "id": "social05b_awei_record_low",
+      "file": "social05b_awei_record_low.json"
+    },
+    {
+      "id": "social06a_ajie_chat",
+      "file": "social06a_ajie_chat.json"
+    },
+    {
+      "id": "social06a_awei_chat",
+      "file": "social06a_awei_chat.json"
+    },
+    {
+      "id": "use-item",
+      "file": "use-item.json"
+    },
+    {
+      "id": "work01a-patient1",
+      "file": "work01a-patient1.json"
+    },
+    {
+      "id": "work01a-patient1-start",
+      "file": "work01a-patient1-start.json"
+    },
+    {
+      "id": "work01a-patient2",
+      "file": "work01a-patient2.json"
+    },
+    {
+      "id": "work01a-patient2-start",
+      "file": "work01a-patient2-start.json"
+    },
+    {
+      "id": "work01a-patient3",
+      "file": "work01a-patient3.json"
+    },
+    {
+      "id": "work01a-patient3-start",
+      "file": "work01a-patient3-start.json"
+    },
+    {
+      "id": "work01a-patient4",
+      "file": "work01a-patient4.json"
+    },
+    {
+      "id": "work01a-patient4-start",
+      "file": "work01a-patient4-start.json"
+    },
+    {
+      "id": "work01a-patient5",
+      "file": "work01a-patient5.json"
+    },
+    {
+      "id": "work01a-patient5-start",
+      "file": "work01a-patient5-start.json"
+    },
+    {
+      "id": "work01a-patient6",
+      "file": "work01a-patient6.json"
+    },
+    {
+      "id": "work01a-patient6-start",
+      "file": "work01a-patient6-start.json"
+    },
+    {
+      "id": "work01a-patient7",
+      "file": "work01a-patient7.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q1",
+      "file": "turtle_soup_question_soup01_q1.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q2",
+      "file": "turtle_soup_question_soup01_q2.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q3",
+      "file": "turtle_soup_question_soup01_q3.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q4",
+      "file": "turtle_soup_question_soup01_q4.json"
+    },
+    {
+      "id": "turtle_soup_question_soup01_q5",
+      "file": "turtle_soup_question_soup01_q5.json"
+    },
+    {
+      "id": "turtle_soup_guess",
+      "file": "turtle_soup_guess.json"
+    },
+    {
+      "id": "work01a-patient7-start",
+      "file": "work01a-patient7-start.json"
+    }
+  ]
+}

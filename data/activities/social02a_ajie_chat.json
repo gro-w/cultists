@@ -1,0 +1,391 @@
+{
+  "id": "social02a_ajie_chat",
+  "type": "other",
+  "displayName": "闲聊池",
+  "queueId": "social",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 220
+      },
+      "greeting": {
+        "id": "greeting",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "回来了？工作累吗？",
+          "continueKey": "dlg:greeting:continue"
+        },
+        "x": 260,
+        "y": 220
+      },
+      "reply_tired": {
+        "id": "reply_tired",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "挺累的。",
+          "continueKey": "dlg:reply_tired:continue"
+        },
+        "x": 520,
+        "y": 220
+      },
+      "comfort": {
+        "id": "comfort",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "累就对了，舒服是留给死人的……哦不，留给神的。",
+          "continueKey": "dlg:comfort:continue"
+        },
+        "x": 780,
+        "y": 220
+      },
+      "question": {
+        "id": "question",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "什么意思？",
+          "continueKey": "dlg:question:continue"
+        },
+        "x": 1080,
+        "y": 220
+      },
+      "deflect": {
+        "id": "deflect",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "没什么。最近阿伟买了新耳机，他估计又要吃土了。",
+          "continueKey": "dlg:deflect:continue"
+        },
+        "x": 1360,
+        "y": 220
+      },
+      "reply_record": {
+        "id": "reply_record",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "他不才还完那张限量唱片的尾款吗？",
+          "continueKey": "dlg:reply_record:continue"
+        },
+        "x": 1640,
+        "y": 220
+      },
+      "gossip": {
+        "id": "gossip",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "对啊。你看他黑眼圈那么重，估计是没忍住买了，买完又后悔。你要不要借他点钱？",
+          "continueKey": "dlg:gossip:continue"
+        },
+        "x": 1920,
+        "y": 220
+      },
+      "reply_maybe": {
+        "id": "reply_maybe",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "player",
+          "text": "……我有机会问问他。",
+          "continueKey": "dlg:reply_maybe:continue"
+        },
+        "x": 2200,
+        "y": 220
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 2480,
+        "y": 220
+      },
+      "consume_time_20_1": {
+        "id": "consume_time_20_1",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 290,
+        "y": 260
+      },
+      "consume_time_20_2": {
+        "id": "consume_time_20_2",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 320,
+        "y": 260
+      },
+      "consume_time_20_3": {
+        "id": "consume_time_20_3",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 550,
+        "y": 260
+      },
+      "consume_time_20_4": {
+        "id": "consume_time_20_4",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 810,
+        "y": 260
+      },
+      "consume_time_20_5": {
+        "id": "consume_time_20_5",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 840,
+        "y": 260
+      },
+      "consume_time_20_6": {
+        "id": "consume_time_20_6",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1110,
+        "y": 260
+      },
+      "consume_time_20_7": {
+        "id": "consume_time_20_7",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1390,
+        "y": 260
+      },
+      "consume_time_20_8": {
+        "id": "consume_time_20_8",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1420,
+        "y": 260
+      },
+      "consume_time_20_9": {
+        "id": "consume_time_20_9",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1670,
+        "y": 260
+      },
+      "consume_time_20_10": {
+        "id": "consume_time_20_10",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1950,
+        "y": 260
+      },
+      "consume_time_20_11": {
+        "id": "consume_time_20_11",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 1980,
+        "y": 260
+      },
+      "consume_time_20_12": {
+        "id": "consume_time_20_12",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        },
+        "x": 2230,
+        "y": 260
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": false
+        },
+        "x": 80,
+        "y": 240
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 3840
+        },
+        "x": 80,
+        "y": 360
+      },
+      "__social_gate_global_100": {
+        "id": "__social_gate_global_100",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 100
+        },
+        "x": 80,
+        "y": 80
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "greeting",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "greeting",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_1",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_2",
+        "fromPort": "flowOut",
+        "toNodeId": "reply_tired",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "reply_tired",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_3",
+        "fromPort": "flowOut",
+        "toNodeId": "comfort",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "comfort",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_4",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_5",
+        "fromPort": "flowOut",
+        "toNodeId": "question",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "question",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_6",
+        "fromPort": "flowOut",
+        "toNodeId": "deflect",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "deflect",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_7",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_8",
+        "fromPort": "flowOut",
+        "toNodeId": "reply_record",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "reply_record",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_9",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_9",
+        "fromPort": "flowOut",
+        "toNodeId": "gossip",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "gossip",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_10",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_10",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_11",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_11",
+        "fromPort": "flowOut",
+        "toNodeId": "consume_time_20_12",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "consume_time_20_12",
+        "fromPort": "flowOut",
+        "toNodeId": "reply_maybe",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "reply_maybe",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "__social_gate_global_100",
+        "fromPort": "value",
+        "toNodeId": "__prerequisite__",
+        "toPort": "condition"
+      }
+    ]
+  }
+}

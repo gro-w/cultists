@@ -1,0 +1,89 @@
+{
+  "specialEvents": [
+    {
+      "id": "悔恨之泪",
+      "activityId": "event__悔恨之泪"
+    },
+    {
+      "id": "游戏王の荣耀"
+    },
+    {
+      "id": "一切谜锁都解开了"
+    },
+    {
+      "id": "长眠的克苏鲁候汝入梦",
+      "npcId": "binbin",
+      "activityId": "event__长眠的克苏鲁候汝入梦"
+    },
+    {
+      "id": "与海之子对话",
+      "npcId": "binbin",
+      "activityId": "event__与海之子对话"
+    },
+    {
+      "id": "追逐",
+      "npcId": "binbin",
+      "phase": "night",
+      "startDay": 7,
+      "endDay": 7,
+      "condition": {
+        "id": 1,
+        "op": "gt",
+        "value": 256
+      },
+      "activityId": "event__追逐"
+    },
+    {
+      "id": "binbin_turtle_success",
+      "npcId": "binbin",
+      "phase": "night",
+      "startDay": 1,
+      "endDay": 7,
+      "activityId": "event__binbin_turtle_success"
+    },
+    {
+      "id": "binbin_turtle_fail",
+      "npcId": "binbin",
+      "phase": "night",
+      "startDay": 1,
+      "endDay": 7,
+      "activityId": "event__binbin_turtle_fail"
+    },
+    {
+      "id": "彬彬献祭事件",
+      "npcId": "binbin",
+      "phase": "night",
+      "startDay": 1,
+      "endDay": 7,
+      "condition": {
+        "id": 1,
+        "op": "lt",
+        "value": 50
+      },
+      "activityId": "event__彬彬献祭事件"
+    },
+    {
+      "id": "追逐事件",
+      "npcId": "binbin",
+      "phase": "day",
+      "startDay": 7,
+      "endDay": 7,
+      "autoTrigger": true,
+      "condition": {
+        "id": 1,
+        "op": "lt",
+        "value": 50
+      },
+      "activityId": "event__追逐事件"
+    },
+    {
+      "id": "长眠的克苏鲁候汝入梦事件",
+      "queueId": "social",
+      "phase": "night",
+      "startDay": 1,
+      "endDay": 7,
+      "npcId": "binbin",
+      "activityId": "event__长眠的克苏鲁候汝入梦事件"
+    }
+  ]
+}

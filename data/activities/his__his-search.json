@@ -1,0 +1,57 @@
+{
+  "id": "his__his-search",
+  "type": "hisCustom",
+  "displayName": "his-search",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "refresh": {
+        "id": "refresh",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:hisRefresh",
+          "payload": {}
+        }
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "refresh",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "refresh",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

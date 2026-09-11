@@ -1,0 +1,30 @@
+{
+  "id": "notebook",
+  "title": "笔记本",
+  "icon": "📓",
+  "width": 420,
+  "height": 500,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {"nodes":{"items":{"id":"items","type":"getRuntimeCollection","inputs":{"collectionId":"notebookKeywords"}},"spells":{"id":"spells","type":"getRuntimeCollection","inputs":{"collectionId":"notebookSpells"}},"showKeywords":{"id":"showKeywords","type":"arithmetic","inputs":{"operator":"not","left":{"variable":"notebook:showSpells"}}}}},
+  "root": {
+    "widgetId": "notebook-root",
+    "className": "app-notebook",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 6,
+    "padding": 8,
+    "children": [
+      {"widgetId":"notebook-tabs","type":"container","className":"notebook-tabs","flow":"horizontal","gap":0,"children":[
+        {"widgetId":"notebook-keyword-tab","type":"button","className":"win95-btn notebook-tab active","text":"🔑 关键词","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"notebook:showSpells","value":false},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+        {"widgetId":"notebook-spell-tab","type":"button","className":"win95-btn notebook-tab","text":"✨ 法术","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"notebook:showSpells","value":true},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
+      ]},
+      {"widgetId":"notebook-list","type":"list","className":"notebook-list panel-inset","visible":{"nodeId":"showKeywords","port":"value"},"items":{"nodeId":"items","port":"value"},"itemLabelField":"content","itemMetaTemplate":"（{{source}}）","itemGroupField":"groupTitle","itemGroupClassName":"notebook-section-title","itemClassName":"notebook-entry","itemActions":[{"id":"delete","label":"删除","className":"win95-btn bevel-out notebook-delete-btn","eventName":"onDelete"}],"events":{"onItemClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"remember","port":"flowIn"}}},"remember":{"id":"remember","type":"setVariable","inputs":{"key":"chatgtp:keyword1","value":{"variable":"event:value"}},"next":{"flowOut":{"nodeId":"open","port":"flowIn"}}},"open":{"id":"open","type":"openWindow","inputs":{"windowId":"chatgtp"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}},"onDelete":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"remove","port":"flowIn"}}},"remove":{"id":"remove","type":"collection.set","inputs":{"collectionId":"keywords","recordId":{"variable":"event:value"},"value":null},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+      {"widgetId":"notebook-spell-note","type":"label","className":"notebook-spell-note","visible":{"variable":"notebook:showSpells"},"text":"施放消耗 5 SAN。施放通过主要活动执行，不额外消耗普通行动时间。"},
+      {"widgetId":"notebook-spell-list","type":"list","className":"notebook-list panel-inset","visible":{"variable":"notebook:showSpells"},"items":{"nodeId":"spells","port":"value"},"itemLabelField":"name","itemMetaTemplate":"来自《{{sourceName}}》　{{description}}　⏱ 学习 4h · 💀 施放 5 SAN","itemClassName":"notebook-spell-entry","itemActions":[{"id":"cast","label":"施放","className":"win95-btn bevel-out notebook-cast-btn","eventName":"onCast"}],"events":{"onCast":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"run","port":"flowIn"}}},"run":{"id":"run","type":"runActivity","inputs":{"activityId":"spell-cast","queueId":"desktop-icons"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},      {"widgetId":"notebook-keyword-empty","type":"label","className":"notebook-empty","visible":{"nodeId":"showKeywords","port":"value"},"emptyFor":{"nodeId":"items","port":"value"},"text":"尚未收集任何关键词。在对话中点击高亮词汇即可收集。"},
+      {"widgetId":"notebook-spell-empty","type":"label","className":"notebook-empty","visible":{"variable":"notebook:showSpells"},"emptyFor":{"nodeId":"spells","port":"value"},"text":"尚未学习任何法术。"},
+      {"widgetId":"notebook-spell-empty-hint","type":"label","className":"notebook-spell-empty-hint","visible":{"variable":"notebook:showSpells"},"emptyFor":{"nodeId":"spells","port":"value"},"text":"在 0< SAN≤50 时使用可学习的书籍即可开始学习。"}
+    ]
+  },
+  "events":{"onCreate":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"notebook:showSpells","value":false},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}
+}

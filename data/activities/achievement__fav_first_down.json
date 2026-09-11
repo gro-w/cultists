@@ -1,0 +1,47 @@
+{
+  "id": "achievement__fav_first_down",
+  "type": "achievement",
+  "displayName": "关系裂痕",
+  "achievementId": "fav_first_down",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "unlock": {
+        "id": "unlock",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "achievement:display",
+          "payload": {
+            "achievementId": "fav_first_down"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "unlock",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "unlock",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

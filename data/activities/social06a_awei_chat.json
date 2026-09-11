@@ -1,0 +1,243 @@
+{
+  "id": "social06a_awei_chat",
+  "type": "other",
+  "displayName": "闲聊池",
+  "queueId": "social",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "line_0": {
+        "id": "line_0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "没有猿道耳机的生活空虚吗？",
+          "continueKey": "dlg:line_0:continue"
+        }
+      },
+      "line_1": {
+        "id": "line_1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "对。不过也没什么。空虚就是常态。",
+          "continueKey": "dlg:line_1:continue"
+        }
+      },
+      "line_2": {
+        "id": "line_2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "后悔吗？为了一起去吃火锅退掉耳机。",
+          "continueKey": "dlg:line_2:continue"
+        }
+      },
+      "time_2": {
+        "id": "time_2",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "line_3": {
+        "id": "line_3",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "本来就是要退掉的，何谈后悔。但是……",
+          "continueKey": "dlg:line_3:continue"
+        }
+      },
+      "line_4": {
+        "id": "line_4",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "但是什么？",
+          "continueKey": "dlg:line_4:continue"
+        }
+      },
+      "line_5": {
+        "id": "line_5",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "但是有点后悔和你一起去吃火锅……",
+          "continueKey": "dlg:line_5:continue"
+        }
+      },
+      "time_5": {
+        "id": "time_5",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "line_6": {
+        "id": "line_6",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "为什么？你换口味了吗？",
+          "continueKey": "dlg:line_6:continue"
+        }
+      },
+      "line_7": {
+        "id": "line_7",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "算了，当我没说。明天你就要值夜班了，是不是？",
+          "continueKey": "dlg:line_7:continue"
+        }
+      },
+      "line_8": {
+        "id": "line_8",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "是啊，我还有点期待呢。",
+          "continueKey": "dlg:line_8:continue"
+        }
+      },
+      "time_8": {
+        "id": "time_8",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "line_9": {
+        "id": "line_9",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿伟",
+          "text": "哈哈，那祝你明天夜班一切顺利吧。",
+          "continueKey": "dlg:line_9:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "prerequisite": {
+        "id": "prerequisite",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "expiry": {
+        "id": "expiry",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 10079
+        }
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "line_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_0",
+        "fromPort": "flowOut",
+        "toNodeId": "line_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_1",
+        "fromPort": "flowOut",
+        "toNodeId": "line_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_2",
+        "fromPort": "flowOut",
+        "toNodeId": "time_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_2",
+        "fromPort": "flowOut",
+        "toNodeId": "line_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_3",
+        "fromPort": "flowOut",
+        "toNodeId": "line_4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_4",
+        "fromPort": "flowOut",
+        "toNodeId": "line_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_5",
+        "fromPort": "flowOut",
+        "toNodeId": "time_5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_5",
+        "fromPort": "flowOut",
+        "toNodeId": "line_6",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_6",
+        "fromPort": "flowOut",
+        "toNodeId": "line_7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_7",
+        "fromPort": "flowOut",
+        "toNodeId": "line_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_8",
+        "fromPort": "flowOut",
+        "toNodeId": "time_8",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_8",
+        "fromPort": "flowOut",
+        "toNodeId": "line_9",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_9",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

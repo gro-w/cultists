@@ -1,0 +1,137 @@
+[
+  {
+    "iconId": "his-custom",
+    "label": "HIS 医疗系统",
+    "glyph": "🏥",
+    "order": 0,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "his"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "chatgtp",
+    "label": "ChatGTP",
+    "glyph": "🤖",
+    "order": 1,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "chatgtp"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "social",
+    "label": "夜聊 Messenger",
+    "glyph": "💬",
+    "order": 1,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "dialogue"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "notebook",
+    "label": "笔记本",
+    "glyph": "📓",
+    "order": 2,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "notebook"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "status",
+    "label": "状态与属性",
+    "glyph": "📊",
+    "order": 3,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "status"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "achievements",
+    "label": "成就",
+    "glyph": "🏆",
+    "order": 4,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "achievements"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "calendar",
+    "label": "日历",
+    "glyph": "📅",
+    "order": 5,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "calendar"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "locations",
+    "label": "去往位置",
+    "glyph": "🗺️",
+    "order": 6,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.open-window",
+    "inputs": {
+      "windowId": "locations"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "off-duty",
+    "label": "下班",
+    "glyph": "🌙",
+    "order": 9,
+    "position": {
+      "mode": "grid"
+    },
+    "blueprintId": "desktop.run-activity",
+    "inputs": {
+      "activityId": "off-duty-open"
+    },
+    "startMenu": true,
+    "engineOwned": false
+  }
+]

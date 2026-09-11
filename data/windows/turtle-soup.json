@@ -1,0 +1,404 @@
+{
+  "id": "turtle-soup",
+  "title": "彬彬支线——海龟汤",
+  "icon": "🐢",
+  "width": 560,
+  "height": 560,
+  "resizable": true,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "turtle-soup-root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "className": "app-turtle-soup",
+    "children": [
+      {
+        "widgetId": "turtle-soup-title",
+        "type": "label",
+        "text": {"nodeId":"puzzleTitle","port":"value"},
+        "className": "turtle-soup-title"
+      },
+      {
+        "widgetId": "turtle-soup-progress",
+        "type": "label",
+        "text": {
+          "variable": "turtleSoup:progress"
+        },
+        "className": "turtle-soup-progress"
+      },
+      {
+        "widgetId": "turtle-soup-story",
+        "type": "fieldset",
+        "legend": "汤面",
+        "className": "turtle-soup-story",
+        "children": [
+          {"widgetId":"turtle-soup-story-text","type":"label","text":{"nodeId":"puzzleStory","port":"value"},"className":"turtle-soup-story-text"}
+        ]
+      },
+      {
+        "widgetId": "turtle-soup-guess",
+        "type": "textarea",
+        "value": {
+          "variable": "turtleSoup:guess"
+        },
+        "placeholder": "写下你认为的汤底",
+        "className": "turtle-soup-guess",
+        "events": {
+          "onChange": {
+            "startNodeId": "start",
+            "nodes": {
+              "start": {
+                "id": "start",
+                "type": "flowStart",
+                "inputs": {},
+                "next": {
+                  "flowOut": {
+                    "nodeId": "set",
+                    "port": "flowIn"
+                  }
+                }
+              },
+              "set": {
+                "id": "set",
+                "type": "setVariable",
+                "inputs": {
+                  "key": "turtleSoup:guess",
+                  "value": {
+                    "variable": "event:value"
+                  }
+                },
+                "next": {
+                  "flowOut": {
+                    "nodeId": "end",
+                    "port": "flowIn"
+                  }
+                }
+              },
+              "end": {
+                "id": "end",
+                "type": "activityEnd",
+                "inputs": {}
+              }
+            }
+          }
+        }
+      },
+      {
+        "widgetId": "turtle-soup-submit",
+        "type": "button",
+        "text": "猜汤底",
+        "className": "win95-btn bevel-out",
+        "events": {
+          "onClick": {
+            "startNodeId": "start",
+            "nodes": {
+              "start": {
+                "id": "start",
+                "type": "flowStart",
+                "inputs": {},
+                "next": {
+                  "flowOut": {
+                    "nodeId": "run",
+                    "port": "flowIn"
+                  }
+                }
+              },
+              "run": {
+                "id": "run",
+                "type": "runActivity",
+                "inputs": {
+                  "activityId": "turtle_soup_guess",
+                  "queueId": "main"
+                },
+                "next": {
+                  "flowOut": {
+                    "nodeId": "end",
+                    "port": "flowIn"
+                  }
+                }
+              },
+              "end": {
+                "id": "end",
+                "type": "activityEnd",
+                "inputs": {}
+              }
+            }
+          }
+        }
+      },
+      {
+        "widgetId": "turtle-soup-state",
+        "type": "label",
+        "text": {
+          "variable": "turtleSoup:message"
+        },
+        "className": "turtle-soup-state"
+      },
+      {
+        "widgetId": "turtle-soup-history",
+        "type": "details",
+        "summary": "已经问过的问题",
+        "className": "turtle-soup-history",
+        "children": [
+          {"widgetId":"turtle-soup-history-list","type":"list","items":{"nodeId":"history","port":"value"},"itemLabelTemplate":"{{questionText}}　彬彬：{{answer}}","itemClassName":"turtle-soup-history-item"}
+        ]
+      },
+      {
+        "widgetId":"turtle-soup-finish-day",
+        "type":"button",
+        "text":"结束今天",
+        "className":"win95-btn bevel-out turtle-soup-finish-day",
+        "events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"turtleSoup:day-finished","payload":{"puzzleId":{"variable":"turtleSoup:puzzleId"}}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}
+      },
+      {
+        "widgetId": "turtle-soup-questions",
+        "type": "container",
+        "flow": "vertical",
+        "gap": 4,
+        "className": "turtle-soup-questions",
+        "children": [
+          {
+            "widgetId": "turtle-soup-question-soup01_q1",
+            "type": "button",
+            "enabled": {"nodeId":"q1Enabled","port":"value"},
+            "text": "？ 这碗汤是人肉汤吗？",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "turtle_soup_question_soup01_q1",
+                      "queueId": "main"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "turtle-soup-question-soup01_q2",
+            "type": "button",
+            "enabled": {"nodeId":"q2Enabled","port":"value"},
+            "text": "？ 他以前喝过类似的汤吗？",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "turtle_soup_question_soup01_q2",
+                      "queueId": "main"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "turtle-soup-question-soup01_q3",
+            "type": "button",
+            "enabled": {"nodeId":"q3Enabled","port":"value"},
+            "text": "？ 他曾经遭遇海难吗？",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "turtle_soup_question_soup01_q3",
+                      "queueId": "main"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "turtle-soup-question-soup01_q4",
+            "type": "button",
+            "enabled": {"nodeId":"q4Enabled","port":"value"},
+            "text": "？ 他当年喝到的汤确实来自亲人吗？",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "turtle_soup_question_soup01_q4",
+                      "queueId": "main"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "turtle-soup-question-soup01_q5",
+            "type": "button",
+            "enabled": {"nodeId":"q5Enabled","port":"value"},
+            "text": "？ 真相和误食亲人的肉有关吗？",
+            "events": {
+              "onClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "run",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "run": {
+                    "id": "run",
+                    "type": "runActivity",
+                    "inputs": {
+                      "activityId": "turtle_soup_question_soup01_q5",
+                      "queueId": "main"
+                    },
+                    "next": {
+                      "flowOut": {
+                        "nodeId": "end",
+                        "port": "flowIn"
+                      }
+                    }
+                  },
+                  "end": {
+                    "id": "end",
+                    "type": "activityEnd",
+                    "inputs": {}
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "valueGraph": {
+    "nodes": {
+      "puzzle": {"id":"puzzle","type":"getRecordValue","inputs":{"databaseId":"turtleSoupPuzzles","key":{"variable":"turtleSoup:puzzleId"}}},
+      "puzzleTitle": {"id":"puzzleTitle","type":"getProperty","inputs":{"value":{"nodeId":"puzzle","port":"value"},"key":"title"}},
+      "puzzleStory": {"id":"puzzleStory","type":"getProperty","inputs":{"value":{"nodeId":"puzzle","port":"value"},"key":"story"}},
+      "history": {"id":"history","type":"getRuntimeCollection","inputs":{"collectionId":"eventHistory"}},
+      "q1State": {"id":"q1State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q1"}},
+      "q2State": {"id":"q2State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q2"}},
+      "q3State": {"id":"q3State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q3"}},
+      "q4State": {"id":"q4State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q4"}},
+      "q5State": {"id":"q5State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q5"}},
+      "q1Asked": {"id":"q1Asked","type":"getProperty","inputs":{"value":{"nodeId":"q1State","port":"value"},"key":"asked"}},
+      "q2Asked": {"id":"q2Asked","type":"getProperty","inputs":{"value":{"nodeId":"q2State","port":"value"},"key":"asked"}},
+      "q3Asked": {"id":"q3Asked","type":"getProperty","inputs":{"value":{"nodeId":"q3State","port":"value"},"key":"asked"}},
+      "q4Asked": {"id":"q4Asked","type":"getProperty","inputs":{"value":{"nodeId":"q4State","port":"value"},"key":"asked"}},
+      "q5Asked": {"id":"q5Asked","type":"getProperty","inputs":{"value":{"nodeId":"q5State","port":"value"},"key":"asked"}},
+      "q1Enabled": {"id":"q1Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q1Asked","port":"value"}}},
+      "q2Enabled": {"id":"q2Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q2Asked","port":"value"}}},
+      "q3Enabled": {"id":"q3Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q3Asked","port":"value"}}},
+      "q4Enabled": {"id":"q4Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q4Asked","port":"value"}}},
+      "q5Enabled": {"id":"q5Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q5Asked","port":"value"}}}
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "id": "social04b_dorm_invite",
+  "type": "other",
+  "displayName": "宿舍集体活动邀请",
+  "queueId": "social",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "line": {
+        "id": "line",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "阿杰：下班后别一个人闷着，快来参加我们的宿舍集体活动吧~",
+          "continueKey": "dlg:line:continue"
+        }
+      },
+      "time": {
+        "id": "time",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "insert_dorm_activity": {
+        "id": "insert_dorm_activity",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "dorm_activity_day4",
+          "addTime": {
+            "nodeId": "current_game_time",
+            "port": "value"
+          },
+          "queue": "social",
+          "respectPrerequisite": true,
+          "protectFromExpiry": false
+        }
+      },
+      "current_game_time": {
+        "id": "current_game_time",
+        "type": "getGameTime",
+        "inputs": {}
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "activity_count": {
+        "id": "activity_count",
+        "type": "getActivityInstanceCount",
+        "inputs": {
+          "activityId": "dorm_activity_day4"
+        }
+      },
+      "activity_available": {
+        "id": "activity_available",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "eq",
+          "right": 0
+        }
+      },
+      "activity_guard": {
+        "id": "activity_guard",
+        "type": "branch",
+        "inputs": {}
+      },
+      "prerequisite": {
+        "id": "prerequisite",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "activityExpiry": {
+        "id": "activityExpiry",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 7199
+        }
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "line",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line",
+        "fromPort": "flowOut",
+        "toNodeId": "time",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time",
+        "fromPort": "flowOut",
+        "toNodeId": "activity_guard",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "activity_count",
+        "fromPort": "value",
+        "toNodeId": "activity_available",
+        "toPort": "left"
+      },
+      {
+        "fromNodeId": "activity_available",
+        "fromPort": "value",
+        "toNodeId": "activity_guard",
+        "toPort": "condition"
+      },
+      {
+        "fromNodeId": "activity_guard",
+        "fromPort": "false",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "activity_guard",
+        "fromPort": "true",
+        "toNodeId": "insert_dorm_activity",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "insert_dorm_activity",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

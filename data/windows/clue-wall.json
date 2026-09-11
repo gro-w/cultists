@@ -1,0 +1,18 @@
+{
+  "id":"clue-wall",
+  "title":"线索墙",
+  "icon":"🧵",
+  "width":680,
+  "height":460,
+  "resizable":true,
+  "singleInstance":true,
+  "valueGraph":{"nodes":{"clues":{"id":"clues","type":"getRuntimeCollection","inputs":{"collectionId":"clueKeywords"}}}},
+  "root":{"widgetId":"clue-wall-root","type":"container","flow":"vertical","gap":8,"padding":10,"className":"app-clue-wall","children":[
+    {"widgetId":"clue-wall-title","type":"label","text":"线索墙"},
+    {"widgetId":"clue-wall-note","type":"label","text":"红线表示目前已发现线索之间的关联。"},
+    {"widgetId":"clue-wall-list","type":"clueWall","className":"ng-clue-wall","items":{"nodeId":"clues","port":"value"},"itemLabelField":"content","itemClassName":"ng-clue-wall-node"},
+    {"widgetId":"clue-wall-empty","type":"label","text":"还没有足够的线索。与 NPC 交互或调查物品来收集线索。","emptyFor":{"nodeId":"clues","port":"value"}},
+    {"widgetId":"clue-wall-close","type":"button","text":"关闭","className":"win95-btn bevel-out","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"close","port":"flowIn"}}},"close":{"id":"close","type":"closeWindow","inputs":{"windowId":"clue-wall"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
+  ]},
+  "events":{"onCreate":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"item:clueCategory","value":"clue"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}
+}

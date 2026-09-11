@@ -1,0 +1,200 @@
+{
+  "id": "event__追逐",
+  "type": "specialEvent",
+  "displayName": "追逐",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "intro": {
+        "id": "intro",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "追逐开始了。你必须在混乱中做出选择。",
+          "continueKey": "dlg:intro:continue"
+        }
+      },
+      "choice": {
+        "id": "choice",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "施放支配术"
+            },
+            {
+              "label": "对万字符施放旧印开光术"
+            },
+            {
+              "label": "什么也不做"
+            }
+          ],
+          "optionCount": 3,
+          "selectionKey": "dlg:choice:select"
+        }
+      },
+      "domination": {
+        "id": "domination",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:spellCast",
+          "payload": {
+            "spellId": "book_coc7__0",
+            "eventId": "追逐",
+            "choiceId": "cast_domination"
+          }
+        }
+      },
+      "seal": {
+        "id": "seal",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:spellCast",
+          "payload": {
+            "spellId": "book_moon__0",
+            "eventId": "追逐",
+            "choiceId": "seal_activation"
+          }
+        }
+      },
+      "sealChoice": {
+        "id": "sealChoice",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "使用万字符",
+              "next": "sealUse"
+            },
+            {
+              "label": "放弃使用",
+              "next": "end"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:sealChoice:select"
+        }
+      },
+      "sealUse": {
+        "id": "sealUse",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:spellEffect",
+          "payload": {
+            "spellId": "book_moon__0",
+            "eventId": "追逐",
+            "choiceId": "use_talisman"
+          }
+        }
+      },
+      "plain": {
+        "id": "plain",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "你选择了谨慎应对。",
+          "continueKey": "dlg:plain:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 80,
+        "y": 240
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 80,
+        "y": 360
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "intro",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "intro",
+        "fromPort": "flowOut",
+        "toNodeId": "choice",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option0",
+        "toNodeId": "domination",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option1",
+        "toNodeId": "seal",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice",
+        "fromPort": "option2",
+        "toNodeId": "plain",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "domination",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "seal",
+        "fromPort": "flowOut",
+        "toNodeId": "sealChoice",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "sealChoice",
+        "fromPort": "option0",
+        "toNodeId": "sealUse",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "sealChoice",
+        "fromPort": "option1",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "sealUse",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "plain",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

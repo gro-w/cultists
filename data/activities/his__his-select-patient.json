@@ -1,0 +1,85 @@
+{
+  "id": "his__his-select-patient",
+  "type": "hisCustom",
+  "displayName": "his-select-patient",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "select": {
+        "id": "select",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:hisSelectPatient",
+          "payload": {}
+        }
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        }
+      },
+      "diagnosis": {
+        "id": "diagnosis",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:hisRenderDiagnosis",
+          "payload": {}
+        }
+      },
+      "prescription": {
+        "id": "prescription",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:hisRenderPrescription",
+          "payload": {}
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "select",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "select",
+        "fromPort": "flowOut",
+        "toNodeId": "diagnosis",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "diagnosis",
+        "fromPort": "flowOut",
+        "toNodeId": "prescription",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "prescription",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

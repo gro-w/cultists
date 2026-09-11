@@ -1,129 +1,76 @@
 # AGENTS.md
 
-本文件是所有 coding agent 的项目合同。修改前先阅读相关代码、数据 schema 和调用点；不要凭文件名猜接口。
+本文件是项目的编码代理合同，只记录必须遵守的规则。项目背景、目录索引、开发命令和实现说明见 [`agent-notes.md`](agent-notes.md)；面向人类读者的项目介绍见 [`README.md`](README.md)。本项目主要协助 **Cultists 引擎**（`core` 与 `framework`）开发，以及将 `game` 层内容适配、迁移到新引擎。
 
-## 项目边界
+## 基本规则
 
-- 项目是 `surrounded by cultists`（《完蛋，我被邪教徒包围了！》）。
-- 使用原生 HTML/CSS/ES6 modules；无构建步骤、无框架、无 `package.json`。
-- `index.html` 是唯一浏览器入口，模拟 Win95 桌面、任务栏、开始菜单、应用窗口和宿舍模式。
-- 游戏内容放在 `data/<lang>/` 的 JSON 中；代码只引用稳定 ID。
-- 所有文本文件必须使用 LF 换行。
+- 所有文本文件使用 LF 换行。
+- 使用原生 HTML、CSS 和 ES modules；除非任务明确需要，不引入框架、构建步骤或第三方依赖。
+- 不提交、打印或读取凭据、令牌和 `.env` 文件；发现敏感内容时以 `[REDACTED]` 表示。
+- 修改前读取相关代码、数据 schema、调用点和现有文档，不凭文件名猜接口。
+- 数据驱动的内容使用稳定 ID；持久化数据不得使用显示名称、翻译文本或语言目录作为 ID。
+- UI 外壳字符串使用现有国际化机制；剧情、角色和其他游戏内容放在数据文件中。
+- 保持现有目录和模块边界；无关重构、顺手格式化和兼容层回填都不属于默认范围。
 
-## 字体与素材许可证
+## 融合引擎三层架构
 
-- 除非用户明确且强烈要求使用特定版权字体，否则任何项目默认只使用许可证明确允许商业使用的开源、免费字体。
-- 不得因为系统预装、常见或视觉效果合适就直接使用版权字体；新增字体前必须确认其授权范围，并将字体文件和来源放在项目可审计的位置。
-- 字体选择应覆盖页面正文、标题、表单控件、伪元素、开发工具和生成的发布版本；不能只替换部分界面。
+旧引擎和 NG 引擎已经合并为当前唯一的 **Cultists 引擎**。`core`、`framework`、`game` 是同一引擎中的三层，不是两套并行运行时。日常开发重点是 Cultists 引擎本身（`core`、`framework`）和 `game` 内容迁移/适配。
 
-## 启动方式
+### `core`
 
-只读静态服务器：
+- `core` 是唯一允许使用原生 JavaScript 实现的平台层。
+- 只提供与具体游戏无关的宿主能力：桌面与窗口运行时、Activity/NGL 执行与调度、节点/端口/连线校验、数据加载、通用变量与存档基础设施、事件总线、通用 Widget/DOM 能力、输入输出和受控能力网关，以及开发模式的宿主入口。
+- 不得包含患者、物品、日历、宿舍、NPC、成就、结局、剧情或具体应用语义。
+- 工作时间、`phase`、`duty`、`location`、上下班/睡眠边界和工作状态机不属于 core；它们必须由 framework 通过 NGL 与数据实现。core 只提供可复用的时钟、状态存储、Activity 和能力网关。
+- 新增能力必须说明 owner、输入输出契约、权限与副作用、snapshot/restore（如需持久化）和确定性探针；上层只能通过公开的通用 API 或 NGL 节点使用它。
 
-```bash
-python3 -m http.server 8000 --bind 127.0.0.1
-```
+### `framework`
 
-开发服务器（支持开发人员模式直接写 JSON）：
+- `framework` 实现可复用的预制系统和通用 UI 行为，必须使用 NGL 蓝图及数据文件，不得新增业务 JavaScript。工作时间、`phase`、`duty`、`location`、上下班/睡眠边界、工作状态机和通用时间规则都属于 framework。
+- 需要宿主能力时，先在 `core` 增加领域无关的能力，再通过类型安全的 NGL 节点调用；禁止为单个业务添加 JavaScript 快捷入口。
+- framework 不得依赖 game，也不得把具体游戏概念写进 core。
 
-```bash
-node dev-server.js
-node dev-server.js --port 8001 --lang zh-hans
-```
+### `game`
 
-打开 `http://127.0.0.1:8000/?dev`（或实际端口）。`dev-server.js` 只绑定本机，没有认证，不得暴露到公网。
+- `game` 实现本项目的医疗、患者、宿舍、日历、社交、物品、成就、结局、应用、剧情和业务 Activity，必须使用 NGL 蓝图及数据文件。
+- 不得在 game 中新增原生 JavaScript 业务模块、业务管理器或绕过 Activity 执行系统的副作用。
+- 业务数据、蓝图定义、窗口定义和能力注册通过稳定 ID 与明确 schema 连接。
 
-## 开发服务器 API
+依赖方向只能是 `game → framework → core`。`core` 不得依赖上层，`framework` 不得依赖 game。Cultists 引擎入口只负责启动 core、加载 framework/game 内容清单并把默认 Activity 放入默认队列；后续业务调度必须由已运行的管理器 Activity 通过 NGL Activity API 显式完成。
 
-| 方法 | 路径 | 行为 |
-| --- | --- | --- |
-| `GET` | `/api/files` | 列出 `data/<lang>/` 中的 JSON |
-| `GET` | `/api/file?f=<name>` | 读取已存在的 JSON |
-| `POST` | `/api/file?f=<name>` | 校验 JSON 后原子覆盖已存在文件 |
-| `GET` | `/api/events` | SSE 文件变化通知 |
+## NGL 与运行时约束
 
-开发模式启动后，`DataLoader` 会探测 `/api/files`；探测成功时从 API 读取数据。`DeveloperMode` 的「写入磁盘」按钮调用 POST，SSE 会清理 DataLoader 缓存。浏览器端没有权限写任意新文件；服务器端路径穿越也会被拒绝。
+- 蓝图语言统一称为 **NGL（NG Language）**。编辑器、schema 校验器、运行器、调试器和数据迁移工具必须遵守同一节点、端口、连线、局部变量和公共变量契约。
+- Activity 是玩家可见计时和可持久化副作用的统一入口；窗口/App 负责发起请求和显示结果，不直接修改游戏状态或推进游戏时间。
+- 游戏时间必须是确定性的游戏状态，不使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
+- framework 的默认游戏状态为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`；工作窗口为 `[08:00, 16:00)`。`phase`、`duty`、`location` 是 framework 的独立字段，恢复存档时必须保持一致。
+- 普通成功行动默认推进 20 分钟；长时间成本按现有 Activity/NGL 约定拆分，不在 UI 层偷偷推进时间。
+- 存档恢复、跨日、睡眠、医疗、收入支出、队列和动态 Activity 的所有状态变化必须有明确 owner 和恢复顺序。
+- 蓝图节点只能使用项目定义的合法端口组合；新增节点必须同时通过 schema 校验、运行时探针和相关编辑器验证。
 
-## 架构规则
+## 数据、版权和字体
 
-核心模块采用“class + singleton”导出方式：
+- Cultists 引擎（`core` 与 `framework`）使用根目录 [`copying.txt`](copying.txt) 中的 BSD 2-Clause License。新增或修改的引擎代码、引擎数据、文档和工具不得引入与该许可证冲突的内容。
+- `game` 层的游戏内容保留版权，不因 Cultists 引擎使用 BSD 2-Clause License 而自动获得开源或再分发许可。除非内容文件另有明确声明，游戏剧情、角色、医疗内容、对话、图片、音频、视频、数据和其他内容资产均不得擅自复制、修改、再分发或用于其他项目。
+- 外部代码、数据、图片、音频、视频和字体必须先确认许可证允许本项目用途，并保留来源、版权声明和许可证文本或链接；不能因为素材“免费”就默认可以商用或再分发。
+- 字体只允许使用许可证明确允许商业使用和再分发的免费开源字体。新增字体必须记录来源、许可证和适用范围，并覆盖正文、标题、控件、伪元素、开发工具和发布版本；未经确认不得使用版权字体。
+- 不把翻译文本、患者姓名或其他显示内容当作持久化标识。语言切换必须保持稳定 ID 和存档兼容。
 
-```js
-class ExampleManager { /* ... */ }
-export const exampleManager = new ExampleManager();
-export default ExampleManager;
-```
+## 开发工具与发布
 
-跨模块变化优先使用 `js/core/EventBus.js`，避免不必要的循环依赖。新增核心全局状态时必须定义 owner、snapshot/restore（如需持久化）和事件语义。
+- 开发人员模式、编辑器、调试器和本地写盘能力只能在开发环境使用；入口严格判断 `?dev`，不能把任意查询串视为开发模式。
+- 开发专用代码使用 `DEV-TOOLS:START` / `DEV-TOOLS:END` 标记（CSS/HTML 使用对应注释形式）。业务成就和业务数据不是开发人员模式内容，不能因发布清理而删除。
+- canonical 数据编辑器必须校验 schema，并明确区分“保存到内存”“下载”和“写入磁盘”；存档调试器只能修改存档/运行时状态，不能把数据库内容写入存档。
+- ChatGTP QA 和 Turtle Soup 的运行时 canonical owner 分别是 `data/databases/chatgtpQaEntries.json` 与 `data/databases/turtleSoupPuzzles.json`；不得重新注册已删除的 seed/native 重复副本。
+- 发布版必须移除开发工具、编辑器、调试入口、本地写盘服务器和迁移工具，同时保留运行时所需的 framework/game 数据与 core 能力。
 
-### 核心模块职责
+## 修改与验证
 
-| 模块 | 责任 |
-| --- | --- |
-| `GameState` | day、clockMinutes、phase、duty、location、energy、mental、physical、satiety |
-| `DayNightSystem` | 上班/下班/睡眠、工作日/休息日、最终阶段 |
-| `TimeService` | 唯一普通游戏时间推进与阶段结算 owner；处理 20 分钟行动、物品/法术时间、睡眠日结 |
-| `ScheduleData` | 加载 `workXXa/b` 和 `socialXXa/b`，按时间追加队列 |
-| `ScheduleQueue` | 独立 `workQueue`、`socialQueue` 和非阻塞 `mainQueue` |
-| `ItemManager` | 物品定义、背包、调查、使用条件/效果 |
-| `ItemPlacementManager` | 场景物品摆放、可见条件、拾取/放回 |
-| `GlobalVariableManager` | 公共变量定义、值、条件比较、效果、存档快照 |
-| `SpellManager` | 学习/施放法术 |
-| `KeywordManager` | 关键词定义、收集和笔记本来源 |
-| `DialogueRunner` | HIS/Social 共用对话树执行 |
-| `DialogueEffects` | 对话节点 onShow 的共享副作用 |
-| `EndingManager` | 事件、对话、道具、属性和最终阶段结局 |
-| `SaveManager` | v15 URL 存档、公共变量、法术、CG 和窗口布局恢复 |
-
-## 状态机不变量
-
-- 初始为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`。
-- 工作窗口严格是 `[08:00, 16:00)`；天文白昼 `[06:00, 18:00)`，两者不可混用。
-- 普通成功行动默认推进 20 分钟；不要使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
-- 所有玩家可见的计时操作（ChatGTP 查询、HIS 提交、物品调查/使用、法术学习/施放）必须先创建活动实例，再由 `ActivityRunner` 或 `ItemActivityRuntime` 执行；副作用和时间推进不得由 App 直接调用。
-- 法术学习活动的顺序固定为“`consumeTime(240)` → `spellOperation` 调整已学习状态”。NPC 离线也必须通过 realtime 活动完成状态切换及后果。
-- phase、duty、location 是独立字段；存档恢复时必须保持派生关系一致。
-- 工作/夜班未完成的当前批次分别阻塞下班/睡觉；`entries: []` 是显式空批次，不是缺失数据。
-- 午夜增加游戏日期；到次日 `08:00` 只结算一次睡眠、医疗、收入支出和睡眠债。
-- 修改时间边界、行动费用或状态字段时，必须检查所有 App、快捷入口、存档恢复和事件订阅。
-
-## 数据规则
-
-- 通过 `dataLoader.loadJSON("file.json")` 加载，禁止硬编码 `data/zh-hans/`。
-- UI 外壳字符串走 `i18n.t()` 并维护 `data/strings.<lang>.json`；剧情和内容直接放语言数据目录。
-- 关键词内容只能来自 `keywords.json`；对话关键词通过 `[[keyword_id]]` 标记引用。
-- NPC 使用稳定 `npcId`；不要把角色显示名当作持久化 ID。
-- 公共变量文件顶层是数组；ID 唯一、非负整数；类型只能是 `bool`、`number`、`decimal`、`string`；number/decimal 范围 `0..256`，decimal 精确到小数点后 2 位。
-- 公共变量 ID `0..99` 是系统预留，必须存在且不能通过开发人员模式删改；其中 `1` 为主角 SAN、`2` 为金钱、`5` 为 ChatGTP SAN、`20..39` 为主角技能点、`40..59` 为 NPC 好感度、`60..79` 为 NPC SAN。
-- 条件支持 `condition`/`globalVariableCondition`、`globalVariables`、`all`、`any` 和 `eq/neq/gt/gte/lt/lte`。
-- 公共变量效果使用 `value`，number/decimal 才能使用 `delta`。
-- 书籍法术放在物品的 `spells` 数组；学习 240 分钟，施放默认消耗 5 SAN。代码存在不代表当前数据已有法术。
-
-完整字段示例见 `docs/DATA-SCHEMAS.md`，状态与事件流见 `docs/ARCHITECTURE.md`。
-
-## 开发人员模式边界
-
-所有仅开发版代码必须使用明确标记：
-
-```text
-// DEV-TOOLS:START
-// DEV-TOOLS:END
-```
-
-CSS/HTML 使用相应注释形式。开发入口必须严格判断 `?dev`，不能把普通查询串当开发模式。新增开发数据编辑器应校验 schema；「保存到内存」「下载」「写入磁盘」语义必须区分清楚。
-
-## 存档规则
-
-- 当前 `SaveManager` 格式为 v24，保存游戏状态、TimeService、工作/社交/主要三个队列、医疗、关键词、背包、NPC 状态、好感度、场景物品、结局、公共变量、法术、动态活动、CG 和窗口布局。对话进度与状态由活动实例负责，不再单独保存。改变 payload 或编码布局时要评估是否提升版本；旧版本不应静默迁移。新增可恢复窗口时，将 appId 追加到 `WINDOW_APP_IDS`，并在 `main.js` 注册 launcher。
-
-## 修改、验证和发布
-
-1. 读取 `AGENTS.md`、相关模块、数据 schema、事件订阅和所有调用点。
-2. 使用 `patch`/`write_file` 修改，不做无关重构；绝不读取、打印或提交凭据，若发现凭据必须替换为 `[REDACTED]`。
-3. 修改 JS 后执行 `node --check`；修改 JSON 后执行 Python JSON 校验；始终执行 `git diff --check`。
-4. 复杂状态改动要写确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
-5. 发布玩家版执行 `node publish.js`，检查 `publish/` 不含 `DEV-TOOLS`、`DeveloperMode` 或 `dev-server.js`，并执行 `node --check publish/js/main.js`。
-6. 不要主动打开浏览器做 UI 验证，除非用户明确要求或提供必须复现的步骤；静态检查和脚本探针结果要如实报告。
-7. 不要提交、push、改写历史或创建 PR，除非用户明确要求；若用户要求交付，按改动规模选择直接 Conventional Commit 或独立分支 + PR。
-
-项目没有测试框架、linter 或 bundler，不要凭空添加依赖。更多命令和协作细节见 `docs/DEVELOPMENT.md`。
+1. 使用 `patch` 或 `write_file` 修改，只改任务需要的文件。
+2. 每次对代码、数据 schema、引擎架构、层职责、开发命令、版权或发布行为做出修改后，必须检查并同步更新 `AGENTS.md`、`agent-notes.md` 和 `README.md`。三份文档分别保持：代理规则、代理补充信息、人类阅读介绍；不能只更新其中一份。
+3. 文档同步必须在同一个修改任务中完成，并检查三份文档之间的引擎名称、`core/framework/game` 边界、许可证和命令没有矛盾；纯文档修改也要检查是否影响另外两份。
+4. 修改 JavaScript 后执行 `node --check`；修改 JSON 后用 Python `json.load()` 全量校验；始终执行 `git diff --check`。
+5. 状态、存档、Activity 或边界改动必须增加或运行确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
+6. 需要验证发布产物时执行 `node tools/verify-publish.js`；该命令会生成并检查发布产物、检查入口语法，然后无论成功失败都删除 `publish/`。确认产物不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口。
+7. 静态检查、探针和浏览器交互验证要分别如实报告；没有真实运行就不能声称 UI 已验证。
+8. 除非用户明确要求，不创建 PR。

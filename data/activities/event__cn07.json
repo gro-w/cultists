@@ -1,0 +1,1629 @@
+{
+  "id": "event__长眠的克苏鲁候汝入梦事件",
+  "type": "specialEvent",
+  "displayName": "长眠的克苏鲁候汝入梦事件",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "cg_001": {
+        "id": "cg_001",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_5"
+          }
+        }
+      },
+      "line_002": {
+        "id": "line_002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "鱼群。",
+          "continueKey": "dlg:line_002:continue"
+        }
+      },
+      "line_003": {
+        "id": "line_003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "汹涌不断浪潮翻滚无边无际的海洋，与其中的，同样无边无际的鱼群。",
+          "continueKey": "dlg:line_003:continue"
+        }
+      },
+      "line_004": {
+        "id": "line_004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我这是在做梦？",
+          "continueKey": "dlg:line_004:continue"
+        }
+      },
+      "cg_005": {
+        "id": "cg_005",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_i"
+          }
+        }
+      },
+      "line_006": {
+        "id": "line_006",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "普世沦丧。",
+          "continueKey": "dlg:line_006:continue"
+        }
+      },
+      "line_007": {
+        "id": "line_007",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "大衮",
+          "text": "克总发糖。",
+          "continueKey": "dlg:line_007:continue"
+        }
+      },
+      "line_008": {
+        "id": "line_008",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "伟大的神明啊，你们所言甚是。不过在继续讨论之前，你能告诉我 1,522,605,027、922,533,360、535,618,378、132,637,429、718,068,114、961,380,688、657,908,494、580,122,963、258,952,897、654,000,350、692,006,139 这个数的两个最大质因数是什么吗？",
+          "continueKey": "dlg:line_008:continue"
+        }
+      },
+      "line_009": {
+        "id": "line_009",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "普世沦丧。",
+          "continueKey": "dlg:line_009:continue"
+        }
+      },
+      "line_010": {
+        "id": "line_010",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "大衮",
+          "text": "克总发糖。",
+          "continueKey": "dlg:line_010:continue"
+        }
+      },
+      "line_011": {
+        "id": "line_011",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "伟大的神明啊，求您垂怜，解决这个困扰我已久的难题。",
+          "continueKey": "dlg:line_011:continue"
+        }
+      },
+      "line_012": {
+        "id": "line_012",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "普世沦丧。",
+          "continueKey": "dlg:line_012:continue"
+        }
+      },
+      "line_013": {
+        "id": "line_013",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "大衮",
+          "text": "克总发糖。",
+          "continueKey": "dlg:line_013:continue"
+        }
+      },
+      "line_014": {
+        "id": "line_014",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "这里还有其他古老的存在通晓凡俗的言语吗？",
+          "continueKey": "dlg:line_014:continue"
+        }
+      },
+      "cg_015": {
+        "id": "cg_015",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_2"
+          }
+        }
+      },
+      "line_016": {
+        "id": "line_016",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "听到此话，大衮的身影渐渐隐去，而母神海德拉的恐怖形象逐渐显现。",
+          "continueKey": "dlg:line_016:continue"
+        }
+      },
+      "line_017": {
+        "id": "line_017",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "那照耀中华的月亮，",
+          "continueKey": "dlg:line_017:continue"
+        }
+      },
+      "line_018": {
+        "id": "line_018",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "天河里的困倦月亮。",
+          "continueKey": "dlg:line_018:continue"
+        }
+      },
+      "line_019": {
+        "id": "line_019",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "被柳叶搅乱的月光",
+          "continueKey": "dlg:line_019:continue"
+        }
+      },
+      "line_020": {
+        "id": "line_020",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "宛如千千的银鱼",
+          "continueKey": "dlg:line_020:continue"
+        }
+      },
+      "line_021": {
+        "id": "line_021",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "照在黑暗的浅滩；",
+          "continueKey": "dlg:line_021:continue"
+        }
+      },
+      "line_022": {
+        "id": "line_022",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "墓地和破庙的瓦片亮如碎波，",
+          "continueKey": "dlg:line_022:continue"
+        }
+      },
+      "line_023": {
+        "id": "line_023",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "空中的点点浮云就像龙鳞。",
+          "continueKey": "dlg:line_023:continue"
+        }
+      },
+      "line_024": {
+        "id": "line_024",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "我不明白。",
+          "continueKey": "dlg:line_024:continue"
+        }
+      },
+      "line_025": {
+        "id": "line_025",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "抑或让你的灯光于夜半的时间",
+          "continueKey": "dlg:line_025:continue"
+        }
+      },
+      "line_026": {
+        "id": "line_026",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "点亮在孤单的高塔，让我看见，",
+          "continueKey": "dlg:line_026:continue"
+        }
+      },
+      "line_027": {
+        "id": "line_027",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "在那里，我会经常遥望大熊座，",
+          "continueKey": "dlg:line_027:continue"
+        }
+      },
+      "line_028": {
+        "id": "line_028",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "三重伟大者赫尔墨斯在我身边；",
+          "continueKey": "dlg:line_028:continue"
+        }
+      },
+      "line_029": {
+        "id": "line_029",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "或者是柏拉图的灵魂降下九天，",
+          "continueKey": "dlg:line_029:continue"
+        }
+      },
+      "line_030": {
+        "id": "line_030",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "向我揭示，哪些世界、或哪些辽阔疆土",
+          "continueKey": "dlg:line_030:continue"
+        }
+      },
+      "line_031": {
+        "id": "line_031",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "会包容永恒的心灵，当她已摒弃",
+          "continueKey": "dlg:line_031:continue"
+        }
+      },
+      "line_032": {
+        "id": "line_032",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "这个名为肉身的居间。",
+          "continueKey": "dlg:line_032:continue"
+        }
+      },
+      "line_033": {
+        "id": "line_033",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "如果您不想屈尊回答凡人的问题，就请随心所欲降下启示吧。",
+          "continueKey": "dlg:line_033:continue"
+        }
+      },
+      "line_034": {
+        "id": "line_034",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "普世沦丧。",
+          "continueKey": "dlg:line_034:continue"
+        }
+      },
+      "line_035": {
+        "id": "line_035",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "有时也请让华丽的悲剧",
+          "continueKey": "dlg:line_035:continue"
+        }
+      },
+      "line_036": {
+        "id": "line_036",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "裹上君主的柩衣掠过眼前，",
+          "continueKey": "dlg:line_036:continue"
+        }
+      },
+      "line_037": {
+        "id": "line_037",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "将底比斯或佩洛普斯的家谱",
+          "continueKey": "dlg:line_037:continue"
+        }
+      },
+      "line_038": {
+        "id": "line_038",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "又或神圣的特洛伊故事向我展现。",
+          "continueKey": "dlg:line_038:continue"
+        }
+      },
+      "line_039": {
+        "id": "line_039",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "至少诗是美的，谢谢您。",
+          "continueKey": "dlg:line_039:continue"
+        }
+      },
+      "line_040": {
+        "id": "line_040",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "听见的乐声虽好，但若听不见",
+          "continueKey": "dlg:line_040:continue"
+        }
+      },
+      "line_041": {
+        "id": "line_041",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "却更美；所以，吹吧，柔情的风笛……",
+          "continueKey": "dlg:line_041:continue"
+        }
+      },
+      "line_042": {
+        "id": "line_042",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "等暮年使这一世代都凋落，",
+          "continueKey": "dlg:line_042:continue"
+        }
+      },
+      "line_043": {
+        "id": "line_043",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "海德拉",
+          "text": "只有你如旧；在另外的一些",
+          "continueKey": "dlg:line_043:continue"
+        }
+      },
+      "line_044": {
+        "id": "line_044",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "忧伤中，你会抚慰后人说",
+          "text": "",
+          "continueKey": "dlg:line_044:continue"
+        }
+      },
+      "line_045": {
+        "id": "line_045",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "忧伤中，你会抚慰后人说",
+          "text": "“美即是真，真即是美，”这就包括",
+          "continueKey": "dlg:line_045:continue"
+        }
+      },
+      "line_046": {
+        "id": "line_046",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "忧伤中，你会抚慰后人说",
+          "text": "你们所知道、和该知道的一切。",
+          "continueKey": "dlg:line_046:continue"
+        }
+      },
+      "line_047": {
+        "id": "line_047",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "吟诵完诗歌，海德拉的身影渐渐隐去，而父神大衮的恐怖形象逐渐显现。",
+          "continueKey": "dlg:line_047:continue"
+        }
+      },
+      "line_048": {
+        "id": "line_048",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "普世沦丧。",
+          "continueKey": "dlg:line_048:continue"
+        }
+      },
+      "line_049": {
+        "id": "line_049",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "大衮",
+          "text": "克总发糖。",
+          "continueKey": "dlg:line_049:continue"
+        }
+      },
+      "line_050": {
+        "id": "line_050",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "伟大之克苏鲁啊，您还想降下哪些启示吗？我尤其想问的是，为何宇宙的本质充满敌意，物理规律无法满足活人的需求，而盲目痴愚的阿撒托斯只满足于在颤栗黑洞的至高宫廷聆听沉闷的鼓声和单调的风笛？",
+          "continueKey": "dlg:line_050:continue"
+        }
+      },
+      "cg_051": {
+        "id": "cg_051",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewqdjt_p"
+          }
+        }
+      },
+      "line_052": {
+        "id": "line_052",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你曾进到海源，或在深渊的隐密处行走吗？",
+          "continueKey": "dlg:line_052:continue"
+        }
+      },
+      "line_053": {
+        "id": "line_053",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "死亡的门曾向你显露吗？死荫的门你曾见过吗？",
+          "continueKey": "dlg:line_053:continue"
+        }
+      },
+      "line_054": {
+        "id": "line_054",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "地的广大你能明透吗？你若全知道，只管说吧。",
+          "continueKey": "dlg:line_054:continue"
+        }
+      },
+      "line_055": {
+        "id": "line_055",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "光明的居所从何而至？黑暗的本位在于何处？",
+          "continueKey": "dlg:line_055:continue"
+        }
+      },
+      "line_056": {
+        "id": "line_056",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能带到本境，能看明其室之路吗？",
+          "continueKey": "dlg:line_056:continue"
+        }
+      },
+      "line_057": {
+        "id": "line_057",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能系住昴星的结吗？能解开参星的带吗？",
+          "continueKey": "dlg:line_057:continue"
+        }
+      },
+      "line_058": {
+        "id": "line_058",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能按时领出十二宫吗？能引导北斗和随它的众星吗？",
+          "continueKey": "dlg:line_058:continue"
+        }
+      },
+      "line_059": {
+        "id": "line_059",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你知道天的定例吗？能使地归在天的权下吗？",
+          "continueKey": "dlg:line_059:continue"
+        }
+      },
+      "line_060": {
+        "id": "line_060",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能向云彩扬起声来，使倾盆的雨遮盖你吗？",
+          "continueKey": "dlg:line_060:continue"
+        }
+      },
+      "line_061": {
+        "id": "line_061",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能发出闪电，叫它行去，使它对你说，我们在这里。",
+          "continueKey": "dlg:line_061:continue"
+        }
+      },
+      "line_062": {
+        "id": "line_062",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能用鱼钩钓上利维坦吗？能用绳子压下它的舌头吗？",
+          "continueKey": "dlg:line_062:continue"
+        }
+      },
+      "line_063": {
+        "id": "line_063",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能用绳索穿它的鼻子吗？能用钩穿它的腮骨吗？",
+          "continueKey": "dlg:line_063:continue"
+        }
+      },
+      "line_064": {
+        "id": "line_064",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它岂向你连连恳求，说柔和的话吗？",
+          "continueKey": "dlg:line_064:continue"
+        }
+      },
+      "line_065": {
+        "id": "line_065",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "岂肯与你立约，使你拿它永远作奴仆吗？",
+          "continueKey": "dlg:line_065:continue"
+        }
+      },
+      "line_066": {
+        "id": "line_066",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你岂可拿它当雀鸟玩耍吗？岂可为你的幼女将它拴住吗？",
+          "continueKey": "dlg:line_066:continue"
+        }
+      },
+      "line_067": {
+        "id": "line_067",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "搭伙的渔夫岂可拿它当货物吗？能把它分给商人吗？",
+          "continueKey": "dlg:line_067:continue"
+        }
+      },
+      "line_068": {
+        "id": "line_068",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你能用倒钩枪扎满它的皮，能用鱼叉叉满它的头吗？",
+          "continueKey": "dlg:line_068:continue"
+        }
+      },
+      "line_069": {
+        "id": "line_069",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "你按手在它身上，想与它争战，就不再这样行吧。",
+          "continueKey": "dlg:line_069:continue"
+        }
+      },
+      "line_070": {
+        "id": "line_070",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "人指望捉拿它是徒然的。一见它，岂不丧胆吗？",
+          "continueKey": "dlg:line_070:continue"
+        }
+      },
+      "line_071": {
+        "id": "line_071",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "没有那么凶猛的人敢惹它。这样，谁能在我面前站立得住呢？",
+          "continueKey": "dlg:line_071:continue"
+        }
+      },
+      "line_072": {
+        "id": "line_072",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "谁先给我什么，使我偿还呢？天下万物都是我的。",
+          "continueKey": "dlg:line_072:continue"
+        }
+      },
+      "line_073": {
+        "id": "line_073",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "论到利维坦的肢体和其大力，并美好的骨骼，我不能缄默不言。",
+          "continueKey": "dlg:line_073:continue"
+        }
+      },
+      "line_074": {
+        "id": "line_074",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "谁能剥它的外衣？谁能进它上下牙骨之间呢？",
+          "continueKey": "dlg:line_074:continue"
+        }
+      },
+      "line_075": {
+        "id": "line_075",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "谁能开它的腮颊？它牙齿四围是可畏的。",
+          "continueKey": "dlg:line_075:continue"
+        }
+      },
+      "line_076": {
+        "id": "line_076",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它以坚固的鳞甲为可夸，紧紧合闭，封得严密。",
+          "continueKey": "dlg:line_076:continue"
+        }
+      },
+      "line_077": {
+        "id": "line_077",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "这鳞甲一一相连，甚至气不得透入其间，",
+          "continueKey": "dlg:line_077:continue"
+        }
+      },
+      "line_078": {
+        "id": "line_078",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "都是互相联络，胶结，不能分离。",
+          "continueKey": "dlg:line_078:continue"
+        }
+      },
+      "line_079": {
+        "id": "line_079",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它打喷嚏就发出光来。它眼睛好像早晨的光线。",
+          "continueKey": "dlg:line_079:continue"
+        }
+      },
+      "line_080": {
+        "id": "line_080",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "从它口中发出烧着的火把，与飞迸的火星。",
+          "continueKey": "dlg:line_080:continue"
+        }
+      },
+      "line_081": {
+        "id": "line_081",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "从它鼻孔冒出烟来，如烧开的锅和点着的芦苇。",
+          "continueKey": "dlg:line_081:continue"
+        }
+      },
+      "line_082": {
+        "id": "line_082",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它的气点着煤炭，有火焰从它口中发出。",
+          "continueKey": "dlg:line_082:continue"
+        }
+      },
+      "line_083": {
+        "id": "line_083",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它颈项中存着劲力。在它面前的都恐吓蹦跳。",
+          "continueKey": "dlg:line_083:continue"
+        }
+      },
+      "line_084": {
+        "id": "line_084",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它的肉块互相联络，紧贴其身，不能摇动。",
+          "continueKey": "dlg:line_084:continue"
+        }
+      },
+      "line_085": {
+        "id": "line_085",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它的心结实如石头，如下磨石那样结实。",
+          "continueKey": "dlg:line_085:continue"
+        }
+      },
+      "line_086": {
+        "id": "line_086",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它一起来，勇士都惊恐，心里慌乱，便都昏迷。",
+          "continueKey": "dlg:line_086:continue"
+        }
+      },
+      "line_087": {
+        "id": "line_087",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "人若用刀，用枪，用标枪，用尖枪扎它，都是无用。",
+          "continueKey": "dlg:line_087:continue"
+        }
+      },
+      "line_088": {
+        "id": "line_088",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它以铁为干草，以铜为烂木。",
+          "continueKey": "dlg:line_088:continue"
+        }
+      },
+      "line_089": {
+        "id": "line_089",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "箭不能恐吓它使它逃避。弹石在它看为碎秸。",
+          "continueKey": "dlg:line_089:continue"
+        }
+      },
+      "line_090": {
+        "id": "line_090",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "棍棒算为禾秸。它嗤笑短枪飕的响声。",
+          "continueKey": "dlg:line_090:continue"
+        }
+      },
+      "line_091": {
+        "id": "line_091",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它肚腹下如尖瓦片，它如钉耙经过淤泥。",
+          "continueKey": "dlg:line_091:continue"
+        }
+      },
+      "line_092": {
+        "id": "line_092",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它使深渊开滚如锅，使洋海如锅中的膏油。",
+          "continueKey": "dlg:line_092:continue"
+        }
+      },
+      "line_093": {
+        "id": "line_093",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "它行的路随后发光，令人想深渊如同白发。",
+          "continueKey": "dlg:line_093:continue"
+        }
+      },
+      "line_094": {
+        "id": "line_094",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "在地上没有像它造的那样，无所惧怕。",
+          "continueKey": "dlg:line_094:continue"
+        }
+      },
+      "line_095": {
+        "id": "line_095",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "克苏鲁",
+          "text": "凡高大的，它无不藐视。它在骄傲的水族上作王。",
+          "continueKey": "dlg:line_095:continue"
+        }
+      },
+      "line_096": {
+        "id": "line_096",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "大衮",
+          "text": "克总发糖。",
+          "continueKey": "dlg:line_096:continue"
+        }
+      },
+      "line_097": {
+        "id": "line_097",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "感谢您的启示。",
+          "continueKey": "dlg:line_097:continue"
+        }
+      },
+      "cg_098": {
+        "id": "cg_098",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_k"
+          }
+        }
+      },
+      "line_099": {
+        "id": "line_099",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "梦境结束了。",
+          "continueKey": "dlg:line_099:continue"
+        }
+      },
+      "ending": {
+        "id": "ending",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "activity:ending",
+          "payload": {
+            "endingId": "现实=现实",
+            "displayTo": "default"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_001",
+        "fromPort": "flowOut",
+        "toNodeId": "line_002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_002",
+        "fromPort": "flowOut",
+        "toNodeId": "line_003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_003",
+        "fromPort": "flowOut",
+        "toNodeId": "line_004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_004",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_005",
+        "fromPort": "flowOut",
+        "toNodeId": "line_006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_006",
+        "fromPort": "flowOut",
+        "toNodeId": "line_007",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_007",
+        "fromPort": "flowOut",
+        "toNodeId": "line_008",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_008",
+        "fromPort": "flowOut",
+        "toNodeId": "line_009",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_009",
+        "fromPort": "flowOut",
+        "toNodeId": "line_010",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_010",
+        "fromPort": "flowOut",
+        "toNodeId": "line_011",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_011",
+        "fromPort": "flowOut",
+        "toNodeId": "line_012",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_012",
+        "fromPort": "flowOut",
+        "toNodeId": "line_013",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_013",
+        "fromPort": "flowOut",
+        "toNodeId": "line_014",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_014",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_015",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_015",
+        "fromPort": "flowOut",
+        "toNodeId": "line_016",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_016",
+        "fromPort": "flowOut",
+        "toNodeId": "line_017",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_017",
+        "fromPort": "flowOut",
+        "toNodeId": "line_018",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_018",
+        "fromPort": "flowOut",
+        "toNodeId": "line_019",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_019",
+        "fromPort": "flowOut",
+        "toNodeId": "line_020",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_020",
+        "fromPort": "flowOut",
+        "toNodeId": "line_021",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_021",
+        "fromPort": "flowOut",
+        "toNodeId": "line_022",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_022",
+        "fromPort": "flowOut",
+        "toNodeId": "line_023",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_023",
+        "fromPort": "flowOut",
+        "toNodeId": "line_024",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_024",
+        "fromPort": "flowOut",
+        "toNodeId": "line_025",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_025",
+        "fromPort": "flowOut",
+        "toNodeId": "line_026",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_026",
+        "fromPort": "flowOut",
+        "toNodeId": "line_027",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_027",
+        "fromPort": "flowOut",
+        "toNodeId": "line_028",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_028",
+        "fromPort": "flowOut",
+        "toNodeId": "line_029",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_029",
+        "fromPort": "flowOut",
+        "toNodeId": "line_030",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_030",
+        "fromPort": "flowOut",
+        "toNodeId": "line_031",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_031",
+        "fromPort": "flowOut",
+        "toNodeId": "line_032",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_032",
+        "fromPort": "flowOut",
+        "toNodeId": "line_033",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_033",
+        "fromPort": "flowOut",
+        "toNodeId": "line_034",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_034",
+        "fromPort": "flowOut",
+        "toNodeId": "line_035",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_035",
+        "fromPort": "flowOut",
+        "toNodeId": "line_036",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_036",
+        "fromPort": "flowOut",
+        "toNodeId": "line_037",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_037",
+        "fromPort": "flowOut",
+        "toNodeId": "line_038",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_038",
+        "fromPort": "flowOut",
+        "toNodeId": "line_039",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_039",
+        "fromPort": "flowOut",
+        "toNodeId": "line_040",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_040",
+        "fromPort": "flowOut",
+        "toNodeId": "line_041",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_041",
+        "fromPort": "flowOut",
+        "toNodeId": "line_042",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_042",
+        "fromPort": "flowOut",
+        "toNodeId": "line_043",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_043",
+        "fromPort": "flowOut",
+        "toNodeId": "line_044",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_044",
+        "fromPort": "flowOut",
+        "toNodeId": "line_045",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_045",
+        "fromPort": "flowOut",
+        "toNodeId": "line_046",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_046",
+        "fromPort": "flowOut",
+        "toNodeId": "line_047",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_047",
+        "fromPort": "flowOut",
+        "toNodeId": "line_048",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_048",
+        "fromPort": "flowOut",
+        "toNodeId": "line_049",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_049",
+        "fromPort": "flowOut",
+        "toNodeId": "line_050",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_050",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_051",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_051",
+        "fromPort": "flowOut",
+        "toNodeId": "line_052",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_052",
+        "fromPort": "flowOut",
+        "toNodeId": "line_053",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_053",
+        "fromPort": "flowOut",
+        "toNodeId": "line_054",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_054",
+        "fromPort": "flowOut",
+        "toNodeId": "line_055",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_055",
+        "fromPort": "flowOut",
+        "toNodeId": "line_056",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_056",
+        "fromPort": "flowOut",
+        "toNodeId": "line_057",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_057",
+        "fromPort": "flowOut",
+        "toNodeId": "line_058",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_058",
+        "fromPort": "flowOut",
+        "toNodeId": "line_059",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_059",
+        "fromPort": "flowOut",
+        "toNodeId": "line_060",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_060",
+        "fromPort": "flowOut",
+        "toNodeId": "line_061",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_061",
+        "fromPort": "flowOut",
+        "toNodeId": "line_062",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_062",
+        "fromPort": "flowOut",
+        "toNodeId": "line_063",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_063",
+        "fromPort": "flowOut",
+        "toNodeId": "line_064",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_064",
+        "fromPort": "flowOut",
+        "toNodeId": "line_065",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_065",
+        "fromPort": "flowOut",
+        "toNodeId": "line_066",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_066",
+        "fromPort": "flowOut",
+        "toNodeId": "line_067",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_067",
+        "fromPort": "flowOut",
+        "toNodeId": "line_068",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_068",
+        "fromPort": "flowOut",
+        "toNodeId": "line_069",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_069",
+        "fromPort": "flowOut",
+        "toNodeId": "line_070",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_070",
+        "fromPort": "flowOut",
+        "toNodeId": "line_071",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_071",
+        "fromPort": "flowOut",
+        "toNodeId": "line_072",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_072",
+        "fromPort": "flowOut",
+        "toNodeId": "line_073",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_073",
+        "fromPort": "flowOut",
+        "toNodeId": "line_074",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_074",
+        "fromPort": "flowOut",
+        "toNodeId": "line_075",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_075",
+        "fromPort": "flowOut",
+        "toNodeId": "line_076",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_076",
+        "fromPort": "flowOut",
+        "toNodeId": "line_077",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_077",
+        "fromPort": "flowOut",
+        "toNodeId": "line_078",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_078",
+        "fromPort": "flowOut",
+        "toNodeId": "line_079",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_079",
+        "fromPort": "flowOut",
+        "toNodeId": "line_080",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_080",
+        "fromPort": "flowOut",
+        "toNodeId": "line_081",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_081",
+        "fromPort": "flowOut",
+        "toNodeId": "line_082",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_082",
+        "fromPort": "flowOut",
+        "toNodeId": "line_083",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_083",
+        "fromPort": "flowOut",
+        "toNodeId": "line_084",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_084",
+        "fromPort": "flowOut",
+        "toNodeId": "line_085",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_085",
+        "fromPort": "flowOut",
+        "toNodeId": "line_086",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_086",
+        "fromPort": "flowOut",
+        "toNodeId": "line_087",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_087",
+        "fromPort": "flowOut",
+        "toNodeId": "line_088",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_088",
+        "fromPort": "flowOut",
+        "toNodeId": "line_089",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_089",
+        "fromPort": "flowOut",
+        "toNodeId": "line_090",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_090",
+        "fromPort": "flowOut",
+        "toNodeId": "line_091",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_091",
+        "fromPort": "flowOut",
+        "toNodeId": "line_092",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_092",
+        "fromPort": "flowOut",
+        "toNodeId": "line_093",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_093",
+        "fromPort": "flowOut",
+        "toNodeId": "line_094",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_094",
+        "fromPort": "flowOut",
+        "toNodeId": "line_095",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_095",
+        "fromPort": "flowOut",
+        "toNodeId": "line_096",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_096",
+        "fromPort": "flowOut",
+        "toNodeId": "line_097",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_097",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_098",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_098",
+        "fromPort": "flowOut",
+        "toNodeId": "line_099",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_099",
+        "fromPort": "flowOut",
+        "toNodeId": "ending",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "ending",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

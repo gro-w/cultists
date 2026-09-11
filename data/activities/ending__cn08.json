@@ -1,0 +1,411 @@
+{
+  "id": "ending__混沌一瞥",
+  "type": "ending",
+  "displayName": "无尽玩笑",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "cg_001": {
+        "id": "cg_001",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_exrn4m_1"
+          }
+        },
+        "x": 340,
+        "y": 40
+      },
+      "line_002": {
+        "id": "line_002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "刚才阿杰约我去漫展，说会给我一个惊喜，还叫我带上相机。是什么惊喜呢？",
+          "continueKey": "dlg:line_002:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "line_003": {
+        "id": "line_003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "总觉得有些不安。但是，现在它们越来越怀疑我了。这可能是我找出真相的最后一次机会了。",
+          "continueKey": "dlg:line_003:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "line_004": {
+        "id": "line_004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "不管了，先坐地铁去漫展那里。",
+          "continueKey": "dlg:line_004:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "line_005": {
+        "id": "line_005",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "这真的值得吗？",
+          "continueKey": "dlg:line_005:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "cg_006": {
+        "id": "cg_006",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_3"
+          }
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "line_007": {
+        "id": "line_007",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "Surprise！我是始终面带微笑潜行到你身边的混沌(少女)，奈亚拉托提普向你问好~",
+          "continueKey": "dlg:line_007:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "line_008": {
+        "id": "line_008",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "啊……啊？",
+          "continueKey": "dlg:line_008:continue"
+        },
+        "x": 2440,
+        "y": 40
+      },
+      "line_009": {
+        "id": "line_009",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "你怎么了？感觉……魂不守舍的。是害怕了吗？",
+          "continueKey": "dlg:line_009:continue"
+        },
+        "x": 2740,
+        "y": 40
+      },
+      "line_010": {
+        "id": "line_010",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "……你是……",
+          "continueKey": "dlg:line_010:continue"
+        },
+        "x": 3040,
+        "y": 40
+      },
+      "line_011": {
+        "id": "line_011",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "害怕我？",
+          "continueKey": "dlg:line_011:continue"
+        },
+        "x": 3340,
+        "y": 40
+      },
+      "line_012": {
+        "id": "line_012",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "根本没认出来我的形象？",
+          "continueKey": "dlg:line_012:continue"
+        },
+        "x": 3640,
+        "y": 40
+      },
+      "line_013": {
+        "id": "line_013",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "还是说……你已经认出我了，但是却故意不承认呢？",
+          "continueKey": "dlg:line_013:continue"
+        },
+        "x": 3940,
+        "y": 40
+      },
+      "line_014": {
+        "id": "line_014",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "因为眼前所见过于【混沌】，你产生了反射性的羞耻与逃避本能。彻底僵住了呢。看到了真实的我——看到了全部的真相——却欺骗自己没有看到。还是不愿意接受我呢。",
+          "continueKey": "dlg:line_014:continue"
+        },
+        "x": 4240,
+        "y": 40
+      },
+      "line_015": {
+        "id": "line_015",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "奈亚拉托提普……",
+          "continueKey": "dlg:line_015:continue"
+        },
+        "x": 4540,
+        "y": 40
+      },
+      "line_016": {
+        "id": "line_016",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "正是在下。",
+          "continueKey": "dlg:line_016:continue"
+        },
+        "x": 4840,
+        "y": 40
+      },
+      "line_017": {
+        "id": "line_017",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈——",
+          "continueKey": "dlg:line_017:continue"
+        },
+        "x": 5140,
+        "y": 40
+      },
+      "line_018": {
+        "id": "line_018",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "祂喉中扯出一声尖厉的，令人疯狂的非人长笑。",
+          "continueKey": "dlg:line_018:continue"
+        },
+        "x": 5440,
+        "y": 40
+      },
+      "line_019": {
+        "id": "line_019",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "narrator",
+          "text": "原来是祂。我知道，我一直都知道，我看到了，却欺骗自己没有看到。祂就是邪教计划的幕后黑手——与深潜者做了不可告人的交易——或者祂根本没打算帮它们，只是想拿我取乐……笑的正是我自己。",
+          "continueKey": "dlg:line_019:continue"
+        },
+        "x": 5740,
+        "y": 40
+      },
+      "line_020": {
+        "id": "line_020",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "阿杰",
+          "text": "怎么不说话了？喂喂，你，疯了吗？疯了就不好笑了哦。",
+          "continueKey": "dlg:line_020:continue"
+        },
+        "x": 6040,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 6340,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_001",
+        "fromPort": "flowOut",
+        "toNodeId": "line_002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_002",
+        "fromPort": "flowOut",
+        "toNodeId": "line_003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_003",
+        "fromPort": "flowOut",
+        "toNodeId": "line_004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_004",
+        "fromPort": "flowOut",
+        "toNodeId": "line_005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_005",
+        "fromPort": "flowOut",
+        "toNodeId": "cg_006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "cg_006",
+        "fromPort": "flowOut",
+        "toNodeId": "line_007",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_007",
+        "fromPort": "flowOut",
+        "toNodeId": "line_008",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_008",
+        "fromPort": "flowOut",
+        "toNodeId": "line_009",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_009",
+        "fromPort": "flowOut",
+        "toNodeId": "line_010",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_010",
+        "fromPort": "flowOut",
+        "toNodeId": "line_011",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_011",
+        "fromPort": "flowOut",
+        "toNodeId": "line_012",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_012",
+        "fromPort": "flowOut",
+        "toNodeId": "line_013",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_013",
+        "fromPort": "flowOut",
+        "toNodeId": "line_014",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_014",
+        "fromPort": "flowOut",
+        "toNodeId": "line_015",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_015",
+        "fromPort": "flowOut",
+        "toNodeId": "line_016",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_016",
+        "fromPort": "flowOut",
+        "toNodeId": "line_017",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_017",
+        "fromPort": "flowOut",
+        "toNodeId": "line_018",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_018",
+        "fromPort": "flowOut",
+        "toNodeId": "line_019",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_019",
+        "fromPort": "flowOut",
+        "toNodeId": "line_020",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "line_020",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

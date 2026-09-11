@@ -1,0 +1,47 @@
+{
+  "id": "achievement__fav_all_positive",
+  "type": "achievement",
+  "displayName": "雨露均沾",
+  "achievementId": "fav_all_positive",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "unlock": {
+        "id": "unlock",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "achievement:display",
+          "payload": {
+            "achievementId": "fav_all_positive"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "unlock",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "unlock",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

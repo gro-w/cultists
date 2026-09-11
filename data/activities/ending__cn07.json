@@ -1,0 +1,177 @@
+{
+  "id": "ending__正常结局",
+  "type": "ending",
+  "displayName": "正常结局",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {},
+        "x": 40,
+        "y": 40
+      },
+      "n000": {
+        "id": "n000",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "content:showCg",
+          "payload": {
+            "cgId": "cg_ewexmk_h"
+          }
+        },
+        "x": 340,
+        "y": 40
+      },
+      "n001": {
+        "id": "n001",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "已经没有别的办法了，我只能接受现实。我将被这些恐怖的邪教徒当成祭品，死亡是我注定的结局。",
+          "continueKey": "dlg:n001:continue"
+        },
+        "x": 640,
+        "y": 40
+      },
+      "n002": {
+        "id": "n002",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "阿撒托斯发发慈悲！赐予我我无痛的昏迷，让我无需经历流血之苦……",
+          "continueKey": "dlg:n002:continue"
+        },
+        "x": 940,
+        "y": 40
+      },
+      "n003": {
+        "id": "n003",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "就在这濒临死亡的一刻，我才真正悟到，生死轮转即是不可变更、四海皆准的自然规律。万物终将灭亡。死是凉爽的夏夜，可供人无忧地安眠，而试图逃离死亡的行为正如强迫自己悖逆身体的自然节律，是一种邪恶的病态，为一切正常人所不容。",
+          "continueKey": "dlg:n003:continue"
+        },
+        "x": 1240,
+        "y": 40
+      },
+      "n004": {
+        "id": "n004",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "就算我即将死于邪教徒之手，我也知道我有一点比他们强：我的认知是完全正常的，而它们则深陷于病态的执念中，无法接受自然的规律。",
+          "continueKey": "dlg:n004:continue"
+        },
+        "x": 1540,
+        "y": 40
+      },
+      "n005": {
+        "id": "n005",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "这些邪教徒的阴谋是无法得逞的。即使它们完成仪式，服下秘药，终有一天它们也会像我一样别无选择地走向生命的消逝，无法逃离死亡的终局。",
+          "continueKey": "dlg:n005:continue"
+        },
+        "x": 1840,
+        "y": 40
+      },
+      "n006": {
+        "id": "n006",
+        "type": "text",
+        "inputs": {
+          "displayTo": "ending-screen",
+          "speaker": "player",
+          "text": "是时候放手了……",
+          "continueKey": "dlg:n006:continue"
+        },
+        "x": 2140,
+        "y": 40
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {},
+        "x": 2440,
+        "y": 40
+      },
+      "__prerequisite__": {
+        "id": "__prerequisite__",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        },
+        "x": 40,
+        "y": 205
+      },
+      "__activity_expiry__": {
+        "id": "__activity_expiry__",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": false,
+          "expiresAt": 0
+        },
+        "x": 40,
+        "y": 370
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "n000",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n000",
+        "fromPort": "flowOut",
+        "toNodeId": "n001",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n001",
+        "fromPort": "flowOut",
+        "toNodeId": "n002",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n002",
+        "fromPort": "flowOut",
+        "toNodeId": "n003",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n003",
+        "fromPort": "flowOut",
+        "toNodeId": "n004",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n004",
+        "fromPort": "flowOut",
+        "toNodeId": "n005",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n005",
+        "fromPort": "flowOut",
+        "toNodeId": "n006",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "n006",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

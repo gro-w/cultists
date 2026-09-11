@@ -1,0 +1,19 @@
+{
+  "id":"item-inspection",
+  "title":"调查铺位",
+  "icon":"🔎",
+  "width":520,
+  "height":420,
+  "resizable":true,
+  "singleInstance":true,
+  "valueGraph":{"nodes":{"items":{"id":"items","type":"getRuntimeCollection","inputs":{"collectionId":"dormDeskItems"}},"active":{"id":"active","type":"getRuntimeRecord","inputs":{"collectionId":"dormDeskItems","recordId":{"variable":"item:activeId"}}},"activeName":{"id":"activeName","type":"getProperty","inputs":{"value":{"nodeId":"active","port":"value"},"key":"name"}},"activeDescription":{"id":"activeDescription","type":"getProperty","inputs":{"value":{"nodeId":"active","port":"value"},"key":"description"}},"activeVariants":{"id":"activeVariants","type":"getProperty","inputs":{"value":{"nodeId":"active","port":"value"},"key":"sanVariants"}},"activeVariant":{"id":"activeVariant","type":"getProperty","inputs":{"value":{"nodeId":"activeVariants","port":"value"},"key":"70-90"}},"activeImage":{"id":"activeImage","type":"getProperty","inputs":{"value":{"nodeId":"activeVariant","port":"value"},"key":"image"}}}},
+  "root":{"widgetId":"item-inspection-root","type":"container","flow":"vertical","gap":8,"padding":10,"className":"app-item-inspection","children":[
+    {"widgetId":"item-inspection-title","type":"label","text":"调查室友铺位上的物品"},
+    {"widgetId":"item-inspection-hint","type":"label","text":"点击物品查看其调查信息。"},
+    {"widgetId":"item-inspection-active-name","type":"label","text":{"nodeId":"activeName","port":"value"},"className":"item-inspection-active-name"},
+    {"widgetId":"item-inspection-active-image","type":"image","src":{"nodeId":"activeImage","port":"value"},"alt":"物品图片","className":"item-inspection-active-image"},
+    {"widgetId":"item-inspection-active-description","type":"label","text":{"nodeId":"activeDescription","port":"value"},"className":"item-inspection-active-description"},
+    {"widgetId":"item-inspection-list","type":"list","className":"item-inspection-list panel-inset","items":{"nodeId":"items","port":"value"},"itemLabelField":"name","itemMetaTemplate":"{{description}}","itemClassName":"item-inspection-entry","events":{"onItemClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"item:inspect","payload":{"itemId":{"variable":"event:value"}}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+    {"widgetId":"item-inspection-close","type":"button","text":"关闭","className":"win95-btn bevel-out","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"close","port":"flowIn"}}},"close":{"id":"close","type":"closeWindow","inputs":{"windowId":"item-inspection"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
+  ]}
+}

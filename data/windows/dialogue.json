@@ -1,0 +1,27 @@
+{
+  "id": "dialogue",
+  "title": "对话",
+  "icon": "💬",
+  "width": 520,
+  "height": 320,
+  "resizable": true,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "dialogue-root",
+    "type": "container",
+    "flow": "vertical",
+    "padding": 8,
+    "children": [
+      {
+        "widgetId": "dialogue-panel",
+        "type": "dialogue",
+        "displayTo": "dorm-bottom",
+        "displayAliases": [
+          "his-app",
+          "default"
+        ],
+        "className": "dialogue-panel panel-inset"
+      }
+    ]
+  }
+}

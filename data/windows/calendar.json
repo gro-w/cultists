@@ -1,0 +1,36 @@
+{
+  "id": "calendar",
+  "title": "日历",
+  "icon": "📅",
+  "width": 460,
+  "height": 500,
+  "resizable": true,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "calendar-root",
+    "className": "app-calendar",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 6,
+    "padding": 8,
+    "children": [
+      {"widgetId":"calendar-summary","type":"container","className":"calendar-summary panel-inset","flow":"horizontal","gap":8,"children":[
+        {"widgetId":"calendar-summary-title","type":"label","className":"calendar-summary-title","text":"实习日历"},
+        {"widgetId":"calendar-summary-detail","type":"label","className":"calendar-summary-detail","text":"共 7 天 · 休息日 1 天 · 夜班值班日 1 天"}
+      ]},
+      {"widgetId":"calendar-legend","type":"container","className":"calendar-legend","flow":"horizontal","gap":8,"children":[
+        {"widgetId":"calendar-legend-rest","type":"label","className":"calendar-legend-item calendar-rest-legend","text":"休息日"},
+        {"widgetId":"calendar-legend-night","type":"label","className":"calendar-legend-item calendar-night-legend","text":"夜班值班日"},
+        {"widgetId":"calendar-legend-current","type":"label","className":"calendar-legend-item calendar-current-legend","text":"今天"},
+        {"widgetId":"calendar-legend-locked","type":"label","className":"calendar-legend-item calendar-locked-legend","text":"未解锁"}
+      ]},
+      {"widgetId":"calendar-note","type":"label","className":"calendar-locked-notice","text":"第 8–31 天未解锁，敬请期待完整版发布"},
+      {"widgetId":"calendar-grid","type":"list","className":"calendar-grid","items":{"nodeId":"days","port":"value"},"itemLabelTemplate":"{{day}} {{label}}","itemClassField":"statusClass","itemClassName":"calendar-day"}
+    ]
+  },
+  "valueGraph": {
+    "nodes": {
+      "days": {"id":"days","type":"getRuntimeCollection","inputs":{"collectionId":"calendarDays"}}
+    }
+  }
+}

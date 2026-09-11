@@ -1,0 +1,384 @@
+{
+  "id": "social05b_ajie_goods_low",
+  "type": "other",
+  "displayName": "【谷子店】",
+  "queueId": "social",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "t0": {
+        "id": "t0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "你要跟我一起去逛逛吗？",
+          "continueKey": "dlg:t0:continue"
+        }
+      },
+      "t1": {
+        "id": "t1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "你要去哪？",
+          "continueKey": "dlg:t1:continue"
+        }
+      },
+      "t2": {
+        "id": "t2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "或许去买两个手办。",
+          "continueKey": "dlg:t2:continue"
+        }
+      },
+      "time_0": {
+        "id": "time_0",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "t4": {
+        "id": "t4",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "那是什么东西？好玩吗？",
+          "continueKey": "dlg:t4:continue"
+        }
+      },
+      "t5": {
+        "id": "t5",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "不是拿来玩的，是一种为了满足精神需要的小玩偶。",
+          "continueKey": "dlg:t5:continue"
+        }
+      },
+      "time_1": {
+        "id": "time_1",
+        "type": "framework:consumeTime",
+        "inputs": {
+          "minutes": 20
+        }
+      },
+      "t7": {
+        "id": "t7",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "走吧，我们去看看。",
+          "continueKey": "dlg:t7:continue"
+        }
+      },
+      "choice_0": {
+        "id": "choice_0",
+        "type": "choice",
+        "inputs": {
+          "options": [
+            {
+              "label": "手办有什么用？",
+              "next": "choice_0_op0"
+            },
+            {
+              "label": "那是什么东西？好玩吗？",
+              "next": "choice_0_op1"
+            }
+          ],
+          "optionCount": 2,
+          "selectionKey": "dlg:choice_0:select"
+        }
+      },
+      "choice_0_join": {
+        "id": "choice_0_join",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "旁白",
+          "text": "（场景继续）",
+          "continueKey": "dlg:choice_0_join:continue"
+        }
+      },
+      "choice_0_op0": {
+        "id": "choice_0_op0",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": -10,
+          "id": 40
+        }
+      },
+      "choice_0_op0_t0": {
+        "id": "choice_0_op0_t0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "没什么用，就是放在桌上。",
+          "continueKey": "dlg:choice_0_op0_t0:continue"
+        }
+      },
+      "choice_0_op0_t1": {
+        "id": "choice_0_op0_t1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "那你买它干什么？",
+          "continueKey": "dlg:choice_0_op0_t1:continue"
+        }
+      },
+      "choice_0_op0_t2": {
+        "id": "choice_0_op0_t2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "放在桌上啊，就是这样。",
+          "continueKey": "dlg:choice_0_op0_t2:continue"
+        }
+      },
+      "choice_0_op1": {
+        "id": "choice_0_op1",
+        "type": "applyPublicVariableEffect",
+        "inputs": {
+          "delta": 10,
+          "id": 40
+        }
+      },
+      "choice_0_op1_t0": {
+        "id": "choice_0_op1_t0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "不是拿来玩的，是一种为了满足精神需要的小玩偶。",
+          "continueKey": "dlg:choice_0_op1_t0:continue"
+        }
+      },
+      "after_0": {
+        "id": "after_0",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "好诡异的店面，所有人都低着头不说话。",
+          "continueKey": "dlg:after_0:continue"
+        }
+      },
+      "after_1": {
+        "id": "after_1",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "只需要挑选就可以了。",
+          "continueKey": "dlg:after_1:continue"
+        }
+      },
+      "after_2": {
+        "id": "after_2",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "挑选这些肉色的片状物吗？",
+          "continueKey": "dlg:after_2:continue"
+        }
+      },
+      "after_3": {
+        "id": "after_3",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "阿杰",
+          "text": "这些就是谷子。",
+          "continueKey": "dlg:after_3:continue"
+        }
+      },
+      "after_4": {
+        "id": "after_4",
+        "type": "text",
+        "inputs": {
+          "displayTo": "dorm-bottom",
+          "speaker": "主控",
+          "text": "听起来像粮食的名字。",
+          "continueKey": "dlg:after_4:continue"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      },
+      "prerequisite": {
+        "id": "prerequisite",
+        "type": "prerequisite",
+        "inputs": {
+          "condition": true
+        }
+      },
+      "expiry": {
+        "id": "expiry",
+        "type": "activityExpiry",
+        "inputs": {
+          "expires": true,
+          "expiresAt": 8639
+        }
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "t0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t0",
+        "fromPort": "flowOut",
+        "toNodeId": "t1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t1",
+        "fromPort": "flowOut",
+        "toNodeId": "t2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t2",
+        "fromPort": "flowOut",
+        "toNodeId": "time_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_0",
+        "fromPort": "flowOut",
+        "toNodeId": "t4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t4",
+        "fromPort": "flowOut",
+        "toNodeId": "t5",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t5",
+        "fromPort": "flowOut",
+        "toNodeId": "time_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "time_1",
+        "fromPort": "flowOut",
+        "toNodeId": "t7",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "t7",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0",
+        "fromPort": "option0",
+        "toNodeId": "choice_0_op0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op0_t0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0_t0",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op0_t1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0_t1",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op0_t2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op0_t2",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_join",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0",
+        "fromPort": "option1",
+        "toNodeId": "choice_0_op1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op1",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_op1_t0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_op1_t0",
+        "fromPort": "flowOut",
+        "toNodeId": "choice_0_join",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "choice_0_join",
+        "fromPort": "flowOut",
+        "toNodeId": "after_0",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_0",
+        "fromPort": "flowOut",
+        "toNodeId": "after_1",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_1",
+        "fromPort": "flowOut",
+        "toNodeId": "after_2",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_2",
+        "fromPort": "flowOut",
+        "toNodeId": "after_3",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_3",
+        "fromPort": "flowOut",
+        "toNodeId": "after_4",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "after_4",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

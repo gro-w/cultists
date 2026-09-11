@@ -19,10 +19,10 @@
 - `framework` 只能用 NGL 在 `core` 通用能力之上实现预制系统，例如时间、输入输出、资源、数值、物品、角色、窗口和通用 UI 行为。预制系统不得通过原生 JavaScript 偷渡专用副作用；需要宿主能力时，必须先在 `core` 增加可复用、与领域无关的能力网关和类型安全 NGL 节点。
 - `game` 只能用 NGL 和数据实现具体游戏内容、业务 Activity、管理器 Activity、患者、宿舍、日历、社交、物品、成就、结局、应用和剧情。`game` 不得新增原生 JavaScript 业务模块，也不得把业务语义反向写入 `core` 或以 JavaScript 绕过 Activity 执行系统。
 - 如果 `framework` 或 `game` 需要原生 JavaScript 才能完成的能力，必须将其抽象为通用 core 能力，并通过公开的 NGL 节点、值端口、流程端口或能力网关调用；禁止在上层添加只服务单一业务的 JavaScript 快捷入口。新增 core 能力必须定义 owner、输入输出契约、权限/副作用、snapshot/restore（如需持久化）和确定性探针。
-- `ng/engine.js` 只能启动 core 并加载 NGL framework/game 内容包；内容 bootstrap、业务调度和业务初始化必须由 NGL Activity 完成。发布版必须剔除开发人员模式代码、编辑器和调试入口，同时保留 framework/game 的 NGL 数据和运行时所需的 core 通用能力。
+- `core/engine.js` 只能启动 core 并加载 NGL framework/game 内容包；内容 bootstrap、业务调度和业务初始化必须由 NGL Activity 完成。发布版必须剔除开发人员模式代码、编辑器和调试入口，同时保留 framework/game 的 NGL 数据和运行时所需的 core 通用能力。
 - 三层依赖方向只能是 `game → framework → core`；禁止 `core → framework`、`core → game` 或 `framework → game`。数据、蓝图定义和能力注册必须通过稳定 ID 与明确 schema 连接，不得通过原生 JavaScript 直接跨层调用。
 - 引擎 ready 时只允许把配置中的 default Activity 加入 default 队列；后续调度必须由已运行的管理器 Activity 通过蓝图 Activity API 显式完成。引擎不得依据日历、患者、社交或成就语义自行创建或插入 Activity。
-- `ng/engine.js` 只能作为平台入口加载内容包并启动平台；
+- `core/engine.js` 只能作为平台入口加载内容包并启动平台；
 - 开发人员模式入口不得进入发布数据或发布产物。业务成就不是开发人员模式内容，必须保留在业务数据和发布版中，并能通过存档进入发布版。
 
 

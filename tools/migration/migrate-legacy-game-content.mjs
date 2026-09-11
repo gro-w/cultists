@@ -89,7 +89,7 @@ for (const name of sourceRootFiles) {
 const index = {
   schemaVersion: 1,
   sourceRoot: "legacy/data",
-  targetRoot: "ng/data/game-content/legacy",
+  targetRoot: "data/game-content/legacy",
   generatedBy: "tools/migration/migrate-legacy-game-content.mjs",
   counts: {
     json: records.filter((record) => record.kind === "game-data").length,
@@ -107,7 +107,7 @@ const registered = new Set(dataFiles.files.filter((file) => (
   && file !== "game-content/legacy-content-index.json"
 )));
 for (const record of records.filter((record) => record.kind !== "game-asset")) {
-  const relative = record.target.slice("ng/data/".length);
+  const relative = record.target.slice("data/".length);
   if (!relative.startsWith("game-content/legacy/") && relative !== "game-content/legacy-content-index.json") {
     registered.add(relative);
   }

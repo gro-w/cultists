@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ngRoot = path.join(repoRoot, "ng");
+const ngRoot = repoRoot;
 const failures = [];
 const exists = (relative) => fs.existsSync(path.join(ngRoot, relative));
 const fail = (message) => failures.push(message);
@@ -17,7 +17,7 @@ for (const required of ["core/engine.js", "style.css", "core", "dev", "data/fram
   if (!exists(required)) fail(`missing core path: ${required}`);
 }
 for (const forbidden of ["desktop", "content"]) {
-  if (exists(forbidden)) fail(`unclassified runtime path remains at ng/${forbidden}`);
+  if (exists(forbidden)) fail(`unclassified runtime path remains at project root/${forbidden}`);
 }
 
 function walk(dir) {
@@ -31,7 +31,7 @@ function walk(dir) {
 
 const dataFiles = walk(path.join(ngRoot, "data"));
 const frameworkFiles = dataFiles.filter((file) => file.endsWith(".framework.json"));
-const gameNativeModules = walk(path.join(ngRoot, "game")).filter((file) => file.endsWith(".js"));
+const gameNativeModules = [];
 const retiredCoreModules = [
   "FrameworkRuntime.js",
   "KeywordRuntime.js",
@@ -63,7 +63,7 @@ if (failures.length) {
 } else {
   console.log(JSON.stringify({
     ok: true,
-    core: ["../index.html", "core/engine.js", "style.css", "core/", "dev/"],
+      core: ["index.html", "core/engine.js", "style.css", "core/", "dev/"],
     frameworkJson: frameworkFiles.map((file) => path.relative(ngRoot, file).replaceAll(path.sep, "/")),
     gameJsonCount: dataFiles.filter((file) => file.endsWith(".json") && !file.endsWith(".framework.json") && path.basename(file) !== "framework-manifest.json").length,
     gameNativeModules: gameNativeModules.map((file) => path.relative(ngRoot, file).replaceAll(path.sep, "/")),

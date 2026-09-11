@@ -15,7 +15,7 @@
         "legacy/data/zh-hans/items.json"
       ],
       "targets": [
-        "ng/data/seed-records-items.json"
+        "data/seed-records-items.json"
       ]
     },
     {
@@ -27,7 +27,7 @@
         "legacy/data/zh-hans/items.json#spells"
       ],
       "targets": [
-        "ng/data/seed-records-items.json#spells"
+        "data/seed-records-items.json#spells"
       ]
     },
     {
@@ -46,7 +46,7 @@
         "legacy/data/zh-hans/medicines.json"
       ],
       "targets": [
-        "ng/data/seed-records.json"
+        "data/seed-records.json"
       ]
     },
     {
@@ -59,8 +59,8 @@
         "legacy/data/zh-hans/work*.json"
       ],
       "targets": [
-        "ng/data/activities/patient_*.json",
-        "ng/data/activity-lists/medical.json"
+        "data/activities/patient_*.json",
+        "data/activity-lists/medical.json"
       ],
       "note": "All discovered patient activity IDs are registered; legacy entries map through day/patient IDs."
     },
@@ -73,8 +73,8 @@
         "legacy/data/zh-hans/social*.json"
       ],
       "targets": [
-        "ng/data/activities/social*.json",
-        "ng/data/activities/dorm_activity_day*.json"
+        "data/activities/social*.json",
+        "data/activities/dorm_activity_day*.json"
       ],
       "note": "social05a and socialpub map to dorm_activity_day5 and dorm_activity_day1; empty legacy batches remain explicit."
     },
@@ -89,7 +89,7 @@
         "data/zh-hans/socialpub.json"
       ],
       "targets": [
-        "ng/data/activities/dorm_activity_day*.json"
+        "data/activities/dorm_activity_day*.json"
       ]
     },
     {
@@ -101,7 +101,7 @@
         "data/zh-hans/endings.json"
       ],
       "targets": [
-        "ng/data/activities/ending__cn*.json"
+        "data/activities/ending__cn*.json"
       ]
     },
     {
@@ -113,7 +113,7 @@
         "data/zh-hans/achievements.json"
       ],
       "targets": [
-        "ng/data/activities/achievement__*.json"
+        "data/activities/achievement__*.json"
       ]
     },
     {
@@ -125,8 +125,8 @@
         "data/zh-hans/time_rules.json"
       ],
       "targets": [
-        "ng/data/calendar-rules.json",
-        "ng/data/activity-calendar.json"
+        "data/calendar-rules.json",
+        "data/activity-calendar.json"
       ]
     },
     {
@@ -140,7 +140,7 @@
         "data/zh-hans/app_his_custom.json"
       ],
       "targets": [
-        "ng/data/windows/*.json"
+        "data/windows/*.json"
       ]
     },
     {
@@ -153,9 +153,9 @@
         "js/desktop/LocationScene.js"
       ],
       "targets": [
-        "ng/data/windows/locations.json",
-        "ng/data/game-manifest.json#eventRoutes[location:requested]",
-        "ng/core/StateBoundaryService.js"
+        "data/windows/locations.json",
+        "data/game-manifest.json#eventRoutes[location:requested]",
+        "core/StateBoundaryService.js"
       ],
       "note": "Chromium verified the production path: opening 去往位置, selecting 海边, and observing 状态与属性 update from 当前位置：work to 当前位置：seaside."
     },
@@ -169,9 +169,9 @@
         "data/zh-hans/social_apps.json"
       ],
       "targets": [
-        "ng/data/social-apps.json",
-        "ng/data/windows/dialogue.json",
-        "ng/data/activities/social*.json"
+        "data/social-apps.json",
+        "data/windows/dialogue.json",
+        "data/activities/social*.json"
       ],
       "note": "Social media content is represented by canonical social-app records and dialogue Activity data; no standalone legacy app launcher is retained."
     },
@@ -185,10 +185,10 @@
         "js/core/TurtleSoupManager.js"
       ],
       "targets": [
-        "ng/data/turtle-soup-puzzles.json",
-        "ng/data/windows/turtle-soup.json",
-        "ng/data/activities/turtle_soup_question_*.json",
-        "ng/data/activities/turtle_soup_guess.json"
+        "data/turtle-soup-puzzles.json",
+        "data/windows/turtle-soup.json",
+        "data/activities/turtle_soup_question_*.json",
+        "data/activities/turtle_soup_guess.json"
       ],
       "note": "Canonical data and deterministic feedback probes pass; full browser questioning, guessing, reward, reset, and save/restore path remains unverified."
     },
@@ -202,7 +202,7 @@
         "js/desktop/Taskbar.js"
       ],
       "targets": [
-        "ng/data/desktop-icons.json"
+        "data/desktop-icons.json"
       ]
     },
     {
@@ -225,20 +225,20 @@
         "data/assets/*"
       ],
       "targets": [
-        "ng/data/game-content/legacy/*.json",
-        "ng/data/game-content/legacy/localization/*.json",
-        "ng/data/assets/*",
-        "ng/data/game-content/legacy-content-index.json"
+        "data/game-content/legacy/*.json",
+        "data/game-content/legacy/localization/*.json",
+        "data/assets/*",
+        "data/game-content/legacy-content-index.json"
       ],
       "note": "All authored legacy JSON, localization files, and assets are preserved in the Game content package; executable behavior remains tracked by the domain rows above."
     }
   ],
   "unmapped": [],
   "validation": {
-    "activityManifest": "ng/data/activity-manifest.json",
+    "activityManifest": "data/activity-manifest.json",
     "boundaryAudit": "tools/audit-ng-layer-boundary.mjs",
     "probes": [
-      "ng/probes/*.mjs",
+      "probes/*.mjs",
       "scripts/probe-*.mjs"
     ]
   }

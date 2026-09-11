@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const root = path.resolve("ng/data");
+const root = path.resolve("data");
 let changed = 0;
 function visit(value) {
   if (Array.isArray(value)) { value.forEach(visit); return; }

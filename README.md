@@ -48,14 +48,14 @@ http://127.0.0.1:8000/?dev
 
 ```text
 index.html                 融合引擎入口
-ng/                        融合引擎运行时、NGL 和唯一 NG 数据入口
-legacy/                    旧版引擎、旧版样式、旧版数据和兼容性探针
-legacy/js/                 旧版状态、应用、桌面和开发工具
-legacy/css/                旧版 Win95 与应用样式
-legacy/data/zh-hans/       尚未迁移的旧版语言数据
-legacy/dev-server.js       旧版本地静态 + JSON REST + SSE 开发服务器
+core/                      NG Core 运行时与平台组合根
+data/                      Framework/Game NGL 数据与资源
+dev/                       开发人员模式和 canonical 数据编辑器
+probes/                    确定性探针（非运行时）
+tools/                    迁移、审计和开发脚本（非运行时）
+legacy/data/               尚未完成迁移的旧版数据源
+media/                     保留的历史海报和宣传资源
 publish.js                 移除开发工具区块的玩家版发布脚本
-docs/                      架构、数据 schema 和协作指南
 ```
 
 ## 核心系统

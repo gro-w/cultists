@@ -140,7 +140,7 @@ export async function launchNotebookApp() {
     contentEl.innerHTML = "";
     const note = document.createElement("p");
     note.style.cssText = "font-size:11px;color:#888;margin:0 0 10px;";
-    note.textContent = "施放消耗 5 SAN。施放通过主要日程执行，不额外消耗普通行动时间。";
+    note.textContent = "施放消耗 5 SAN。施放通过主要活动执行，不额外消耗普通行动时间。";
     contentEl.appendChild(note);
 
     spells.forEach((spell) => {

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { getScheduleNodeDefinition, getScheduleNodePort, SCHEDULE_NODE_TYPES } from "../js/core/ScheduleNodeRegistry.js";
+import { getScheduleNodeDefinition, getScheduleNodePort, ACTIVITY_NODE_TYPES } from "../js/core/ScheduleNodeRegistry.js";
 import { validateBlueprint } from "../js/core/ScheduleBlueprint.js";
 
 globalThis.localStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
@@ -31,11 +31,11 @@ function makeBlueprint(n) {
   return { startNodeId: "start", nodes, connections };
 }
 
-assert.ok(SCHEDULE_NODE_TYPES.includes("randomBranch"));
+assert.ok(ACTIVITY_NODE_TYPES.includes("randomBranch"));
 assert.deepEqual(getScheduleNodeDefinition("randomBranch"), {
   label: "随机分支",
   flowInputs: [{ name: "flowIn", kind: "flow", type: null }],
-  flowOutputs: [],
+  flowOutputs: [{ name: "default", kind: "flow", type: null }],
   valueInputs: [{ name: "n", kind: "value", type: "number" }],
 });
 const randomNode = { id: "random", type: "randomBranch", inputs: { n: 3 }, outputs: {} };

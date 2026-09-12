@@ -38,17 +38,17 @@ export function validateBlueprint(raw) {
     if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`先决条件节点不能有流程引脚：${id}`);
   });
   const expiries = entries.filter(([, node]) => node.type === "scheduleExpiry");
-  if (expiries.length !== 1) errors.push(`蓝图必须有且只有一个日程过期节点，当前为 ${expiries.length} 个`);
+  if (expiries.length !== 1) errors.push(`蓝图必须有且只有一个活动过期节点，当前为 ${expiries.length} 个`);
   expiries.forEach(([id, node]) => {
     const definition = getScheduleNodeDefinition(node.type);
-    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`日程过期节点不能有流程引脚：${id}`);
+    if (definition?.flowInputs?.length || definition?.flowOutputs?.length) errors.push(`活动过期节点不能有流程引脚：${id}`);
   });
   const starts = entries.filter(([, node]) => node.type === "flowStart");
   if (starts.length !== 1) errors.push(`流程起始节点必须恰好有一个，当前为 ${starts.length} 个`);
   if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push("缺少有效的流程起始节点");
   if (blueprint.startNodeId && blueprint.nodes[blueprint.startNodeId]?.type !== "flowStart") errors.push("流程起点必须是起点节点");
   const ends = entries.filter(([, node]) => node.type === "scheduleEnd");
-  if (!ends.length) errors.push("流程必须至少有一个日程结束节点");
+  if (!ends.length) errors.push("流程必须至少有一个活动结束节点");
 
   for (const [id, node] of entries) {
     if (!getScheduleNodeDefinition(node.type)) errors.push(`节点 ${id} 使用未知类型 ${node.type}`);
@@ -58,8 +58,9 @@ export function validateBlueprint(raw) {
     if (node.id !== id) errors.push(`节点键 ${id} 与节点 id ${node.id} 不一致`);
     if (node.type === "randomBranch" && Object.prototype.hasOwnProperty.call(node.inputs || {}, "n")) {
       const count = node.inputs.n;
-      if (!Number.isSafeInteger(count) || count < 1 || count > 32) errors.push(`随机分支 ${id} 的 n 必须是 1–32 的整数`);
-      else for (let index = 0; index < count; index += 1) {
+      const dynamic = count && typeof count === "object";
+      if (!dynamic && (!Number.isSafeInteger(count) || count < 1 || count > 32)) errors.push(`随机分支 ${id} 的 n 必须是 1–32 的整数`);
+      else if (!dynamic) for (let index = 0; index < count; index += 1) {
         if (!blueprint.connections.some((connection) => connection.fromNodeId === id && connection.fromPort === `flowOut${index}`)) errors.push(`随机分支 ${id} 的 flowOut${index} 未连接`);
       }
     }
@@ -87,7 +88,7 @@ export function validateBlueprint(raw) {
         || Boolean(node.next)
         || Boolean(node.normalNext || node.abnormalNext)
         || (node.type === "choice" && (node.options || []).some((option) => option.next));
-      if (!hasNext) errors.push(`流程终点 ${id} 必须是日程结束节点`);
+      if (!hasNext) errors.push(`流程终点 ${id} 必须是活动结束节点`);
     }
   });
 
@@ -170,7 +171,7 @@ export function migrateDialogueTree(tree) {
   const connections = [];
   Object.entries(source.nodes || {}).forEach(([id, node]) => {
     const textId = `text:${id}`;
-    nodes[textId] = { ...node, id: textId, type: "text", inputs: { speaker: node.speaker || "npc", text: node.text || "" }, outputs: {} };
+    nodes[textId] = { ...node, id: textId, type: "text", inputs: { speaker: node.speaker || "npc", text: node.text || "", ...(node.displayTo || node.inputs?.displayTo ? { displayTo: node.displayTo || node.inputs.displayTo } : {}) }, outputs: {} };
     if (id === source.start) connections.push({ fromNodeId: "start", fromPort: "flowOut", toNodeId: textId, toPort: "flowIn" });
     const options = Array.isArray(node.options) ? node.options : [];
     if (options.length) {

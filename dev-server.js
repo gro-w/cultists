@@ -22,8 +22,9 @@
  * All API routes set CORS headers so the page can call them even if the
  * origin differs (e.g. a browser opened from a different port).
  *
- * Only files that already exist inside data/<lang>/ are accessible; path
- * traversal is rejected.  This is a local-dev tool, not a production server.
+ * Existing files are writable, and the controlled custom-window namespace
+ * (applist.json/app_*.json) may also be created by the visual editor.
+ * Path traversal is rejected. This is a local-dev tool, not a production server.
  *
  * DEV-TOOLS blocks: this file is excluded from publish.js (it is listed in
  * the copy-tree skip list via its own name check) — but it contains no
@@ -207,8 +208,9 @@ function handleReadFile(res, filename) {
 async function handleWriteFile(req, res, filename) {
   const filePath = safeDataPath(filename);
   if (!filePath) return jsonResponse(res, 400, { error: "Invalid filename." });
-  // Only allow overwriting files that already exist (no creating arbitrary new files)
-  if (!fs.existsSync(filePath)) return jsonResponse(res, 404, { error: `${filename} not found.` });
+  // The editor may create only its own two controlled data families.
+  const canCreate = filename === "applist.json" || /^app_[a-z][a-z0-9_-]{1,48}\.json$/.test(filename);
+  if (!fs.existsSync(filePath) && !canCreate) return jsonResponse(res, 404, { error: `${filename} not found.` });
 
   let body;
   try {

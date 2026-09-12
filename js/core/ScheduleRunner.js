@@ -1,16 +1,15 @@
 import { normalizeBlueprint, validateBlueprint } from "./ScheduleBlueprint.js";
 import { ScheduleValueEvaluator } from "./ScheduleValueEvaluator.js";
-import { timeService } from "./TimeService.js";
-import { scheduleData } from "./ScheduleData.js";
 import { itemManager } from "./ItemManager.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
-import { modifyStatValue } from "./ScheduleValueAccess.js";
 import { eventBus } from "./EventBus.js";
 import { applyDialogueOnShow } from "./DialogueEffects.js";
 import { spellManager } from "./SpellManager.js";
-import { spellEffectManager } from "./SpellEffectManager.js";
 import { keywordManager } from "./KeywordManager.js";
-import { endingManager } from "./EndingManager.js";
+import { displayReceiverManager } from "./DisplayReceiverManager.js";
+import { scheduleEffectExecutor } from "./ScheduleEffectExecutor.js";
+import { scheduleQueueRegistry } from "./ScheduleQueueRegistry.js";
+import { ACTIVITY_EVENTS } from "./ScheduleEvents.js";
 
 const STATUS = Object.freeze({ nonexistent: 0, unresolved: 1, resolved: 2, pending: 1, completed: 2 });
 
@@ -24,11 +23,22 @@ function inputValue(blueprint, node, name, evaluator, fallback) {
 
 function nextFlow(blueprint, node, port = "flowOut") {
   const connection = (blueprint.connections || []).find((item) => item.fromNodeId === node.id && item.fromPort === port);
-  return connection?.toNodeId || node.next || null;
+  return connection ? connection.toNodeId : (port === "flowOut" ? node.next || null : null);
+}
+
+function nextDynamicFlow(blueprint, node, port) {
+  const selected = (blueprint.connections || []).find((item) => item.fromNodeId === node.id && item.fromPort === port);
+  if (selected) return selected.toNodeId;
+  const fallback = (blueprint.connections || []).find((item) => item.fromNodeId === node.id && item.fromPort === "default");
+  return fallback?.toNodeId || null;
+}
+
+function hasFlowConnection(blueprint, node, port) {
+  return (blueprint.connections || []).some((item) => item.fromNodeId === node.id && item.fromPort === port);
 }
 
 export class ScheduleRunner {
-  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, onItemInspection = () => {}, appId = "schedule", readOnly = false, random = Math.random } = {}) {
+  constructor({ definition, instance, appendLine = () => {}, optionsEl = null, onComplete = () => {}, onCheckpoint = () => {}, onItemInspection = () => {}, appId = "schedule", queueId = null, readOnly = false, random = Math.random, choiceClassName = "", onChoiceAvailable = () => {}, onChoiceSelected = () => {}, decorateChoice = () => {}, effects = scheduleEffectExecutor } = {}) {
     this.definition = definition || {};
     this.instance = instance || { status: "unresolved", transcript: [] };
     if (this.instance.status === "pending" || this.instance.status === "completed") this.instance.status = this.instance.status === "completed" ? "resolved" : "unresolved";
@@ -41,9 +51,17 @@ export class ScheduleRunner {
     this.onCheckpoint = onCheckpoint;
     this.onItemInspection = onItemInspection;
     this.appId = appId;
+    this.queueId = queueId;
+    this.choiceClassName = choiceClassName;
+    this.onChoiceAvailable = onChoiceAvailable;
+    this.onChoiceSelected = onChoiceSelected;
+    this.decorateChoice = decorateChoice;
+    this.effects = effects;
     this.readOnly = readOnly || this.instance.status === "resolved";
     this._waitUntilUnsubscribers = [];
     this._waitUntilEvaluating = false;
+    this._cancelled = false;
+    this._paused = false;
     this.evaluator = new ScheduleValueEvaluator(this.blueprint, {
       scheduleStatus: (instanceId) => this._scheduleStatus(instanceId),
       scheduleInstanceCount: (scheduleId) => this._scheduleInstanceCount(scheduleId),
@@ -53,6 +71,8 @@ export class ScheduleRunner {
   }
 
   start(nodeId = this.instance.currentNodeId || this.blueprint.startNodeId) {
+    if (this._cancelled) return { ok: false, cancelled: true };
+    if (this._paused) return { ok: false, paused: true };
     if (this.instance.status === "resolved") {
       this._renderTranscript();
       return { ok: true, readOnly: true };
@@ -62,13 +82,14 @@ export class ScheduleRunner {
   }
 
   _run(nodeId) {
+    if (this._cancelled || this._paused) return;
     let current = nodeId;
     let guard = 0;
     while (current && guard++ < 1000) {
       const node = this.blueprint.nodes?.[current];
       if (!node) throw new Error(`Unknown flow node: ${current}`);
       if (!globalVariableManager.matches(node.condition || node.globalVariableCondition)) {
-        this.appendLine("npc", String(this.definition.name || this.definition.id || "日程"), "（当前条件不满足，无法继续。）");
+        this.appendLine("npc", String(this.definition.name || this.definition.id || "活动"), "（当前条件不满足，无法继续。）");
         this._resolve();
         return;
       }
@@ -87,7 +108,7 @@ export class ScheduleRunner {
         return;
       }
       if (result?.wait) {
-        const next = result.next || nextFlow(this.blueprint, node);
+        const next = Object.prototype.hasOwnProperty.call(result, "next") ? result.next : nextFlow(this.blueprint, node);
         this.instance.executedNodeIds.push(node.id);
         this.instance.currentNodeId = next || null;
         this.onCheckpoint(this.instance);
@@ -99,7 +120,9 @@ export class ScheduleRunner {
         return;
       }
       if (result?.stop) return;
-      current = result?.next || nextFlow(this.blueprint, node);
+      current = result && Object.prototype.hasOwnProperty.call(result, "next")
+        ? result.next
+        : nextFlow(this.blueprint, node);
       this.instance.executedNodeIds.push(node.id);
       this.instance.currentNodeId = current || null;
       this.onCheckpoint(this.instance);
@@ -109,7 +132,10 @@ export class ScheduleRunner {
   }
 
   _execute(node) {
-    const get = (name, fallback) => inputValue(this.blueprint, node, name, this.evaluator, fallback);
+    const get = (name, fallback) => inputValue(this.blueprint, node, name, this.evaluator,
+      Object.prototype.hasOwnProperty.call(this.definition.inputValues || {}, name)
+        ? this.definition.inputValues[name]
+        : fallback);
     if (node.onShow && node.type !== "statOperation") {
       applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
     }
@@ -119,9 +145,18 @@ export class ScheduleRunner {
       case "text": {
         const speaker = get("speaker", node.speaker || "npc");
         const text = String(get("text", node.text || ""));
-        this._record({ type: "text", speaker, text });
+        const displayTo = String(get("displayTo", node.displayTo || "legacy"));
+        this._record({ type: "text", speaker, text, displayTo });
         if (this.definition.kind === "medicalIncident") this.instance.lastScheduleText = text;
-        this.appendLine(speaker, speaker === "player" ? "我" : String(speaker), text);
+        const displayPayload = {
+          type: "text", speaker, label: speaker === "player" ? "我" : String(speaker), text,
+          definition: this.definition, instance: this.instance, node,
+        };
+        if (!displayReceiverManager.dispatch(displayTo, displayPayload)) {
+          // Legacy blueprints remain playable while they are migrated. This
+          // fallback is an adapter, not queue-specific presentation logic.
+          this.appendLine(speaker, displayPayload.label, text);
+        }
         if (this.definition.action === "investigate" && Array.isArray(node.keywordIds)) {
           this._emitInspection(node, text);
         }
@@ -133,7 +168,7 @@ export class ScheduleRunner {
         if (!Number.isSafeInteger(n) || n < 1 || n > 32) throw new Error("Random branch count n must be an integer from 1 to 32");
         const index = Math.min(n - 1, Math.floor(this.random() * n));
         this.instance.lastRandomBranch = { count: n, index };
-        return { next: nextFlow(this.blueprint, node, `flowOut${index}`) };
+        return { next: nextDynamicFlow(this.blueprint, node, `flowOut${index}`) };
       }
       case "waitUntil": {
         if (!Boolean(get("condition", false))) return { waitUntil: true };
@@ -151,29 +186,54 @@ export class ScheduleRunner {
         this.instance.lastDiceCheck = { roll, target: n, skillValue: n, outcome };
         return { next: nextFlow(this.blueprint, node, outcome) };
       }
-      case "ending": endingManager.trigger(String(get("endingId", ""))); return {};
-      case "consumeTime": timeService.advanceBy(get("minutes", 0)); return {};
+      case "ending": this.effects.ending(String(get("endingId", ""))); return {};
+      case "consumeTime": this.effects.consumeTime(get("minutes", 0)); return {};
       case "setGlobal": {
         const id = get("variableId");
         const delta = get("delta", undefined);
-        if (delta !== undefined) globalVariableManager.modify(id, delta);
-        else globalVariableManager.set(id, get("value"));
+        this.effects.setGlobal(id, get("value"), delta);
         return {};
       }
       case "insertSchedule": {
-        const result = scheduleData.addSchedule(get("scheduleId"), get("addTime"), get("queue"), {
+        const result = this.effects.insertSchedule(get("scheduleId"), get("addTime"), get("queue"), {
           respectPrerequisite: get("respectPrerequisite", true),
           protectFromExpiry: get("protectFromExpiry", false),
         });
-        if (!result.ok) throw new Error(`Insert schedule failed: ${result.reason}`);
+        if (result && result.ok === false) throw new Error(`Insert schedule failed: ${result.reason}`);
         return {};
       }
-      case "showCg": eventBus.emit("schedule:cg", { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
-      case "endCg":  eventBus.emit("schedule:end_cg", { instanceId: this.instance.instanceId }); return {};
+      case "showCg": eventBus.emit(ACTIVITY_EVENTS.cg, { cgId: String(get("cgId", "")), instanceId: this.instance.instanceId }); return {};
+      case "endCg":  eventBus.emit(ACTIVITY_EVENTS.endCg, { instanceId: this.instance.instanceId }); return {};
       case "showImage": {
         const image = String(get("image", ""));
+        const displayTo = String(get("displayTo", node.displayTo || "item-inspection"));
         this.instance.inspectionImage = image || null;
-        if (image) eventBus.emit("schedule:image", { image, itemId: this.definition.itemId, instanceId: this.instance.instanceId });
+        if (image) {
+          const payload = { type: "image", image, itemId: this.definition.itemId, instanceId: this.instance.instanceId, definition: this.definition, node };
+          displayReceiverManager.dispatch(displayTo, payload);
+          eventBus.emit(ACTIVITY_EVENTS.image, payload);
+        }
+        return {};
+      }
+      case "uiSetText": {
+        this.effects.uiSetText(String(get("widgetId", "")), String(get("value", "")));
+        return {};
+      }
+      case "uiSetValue": {
+        this.effects.uiSetValue(String(get("widgetId", "")), get("value", ""));
+        return {};
+      }
+      case "uiSetOptions": {
+        this.effects.uiSetOptions(String(get("widgetId", "")), get("options", []));
+        return {};
+      }
+      case "hisRefresh": this.effects.hisRefresh?.(String(get("query", ""))); return {};
+      case "hisSelectPatient": this.effects.hisSelectPatient?.(String(get("patientId", ""))); return {};
+      case "hisRenderDiagnosis": this.effects.hisRenderDiagnosis?.(); return {};
+      case "hisRenderPrescription": this.effects.hisRenderPrescription?.(); return {};
+      case "hisSubmit": {
+        const result = this.effects.hisSubmit?.(String(get("diagnosisId", "")), get("medicineIds", []));
+        if (result) this.instance.result = result;
         return {};
       }
       case "segmentBranch": {
@@ -185,30 +245,26 @@ export class ScheduleRunner {
           throw new Error("Segment branch boundaries must be finite and descending");
         }
         const index = boundaries.findIndex((upper, boundaryIndex) => value <= upper && value > boundaries[boundaryIndex + 1]);
-        const selected = index < 0 ? (value <= boundaries[count] ? count - 1 : 0) : index;
-        return { next: nextFlow(this.blueprint, node, `segment${selected}`) };
+        if (index < 0) return { next: nextDynamicFlow(this.blueprint, node, "default") };
+        return { next: nextDynamicFlow(this.blueprint, node, `segment${index}`) };
       }
       case "inventoryOperation": {
         const itemId = String(get("itemId", ""));
         const count = Number(get("count", 0));
-        if (!Number.isInteger(count)) throw new Error("Inventory operation count must be an integer");
-        if (count > 0) itemManager.add(itemId, count);
-        else if (count < 0) itemManager.remove(itemId, -count);
-        else itemManager.remove(itemId, itemManager.count(itemId));
+        this.effects.inventory(itemId, count);
         return {};
       }
       case "statOperation": {
-        modifyStatValue(get("statId", ""), get("delta", 0));
+        this.effects.stat(get("statId", ""), get("delta", 0));
         if (node.onShow) applyDialogueOnShow(node, this.definition.npcId || this.definition.actorId || this.definition.id);
         return {};
       }
       case "spellOperation": {
-        const learned = spellManager.learn(node.spell || node.inputs?.spell);
-        if (!learned && node.requireNew !== false) throw new Error("Spell is already known or invalid");
+        this.effects.spellOperation(node.spell || node.inputs?.spell, node.requireNew !== false);
         return {};
       }
       case "spellCast": {
-        const result = spellManager.cast(get("spellId", ""), {
+        const result = this.effects.cast(get("spellId", ""), {
           target: get("target", ""),
           eventId: get("eventId", this.definition.id),
           choiceId: get("choiceId", ""),
@@ -218,9 +274,7 @@ export class ScheduleRunner {
         return {};
       }
       case "spellEffect": {
-        const spell = spellManager.all().find((item) => item.id === get("spellId", ""));
-        if (!spell) throw new Error("Unknown learned spell");
-        const result = spellEffectManager.handleCast(spell, {
+        const result = this.effects.spellEffect(get("spellId", ""), {
           target: get("target", ""),
           eventId: get("eventId", this.definition.id),
           choiceId: get("choiceId", ""),
@@ -250,8 +304,9 @@ export class ScheduleRunner {
     if (!this.optionsEl) throw new Error("Choice node requires an options container");
     this.optionsEl.innerHTML = "";
     const storedOptions = node.options || node.branches || [];
-    const branchCount = Number.isInteger(Number(node.inputs?.branchCount))
-      ? Math.max(0, Math.min(32, Number(node.inputs.branchCount)))
+    const branchCountValue = inputValue(this.blueprint, node, "branchCount", this.evaluator, storedOptions.length);
+    const branchCount = Number.isSafeInteger(Number(branchCountValue))
+      ? Math.max(0, Math.min(32, Number(branchCountValue)))
       : storedOptions.length;
     const options = Array.from({ length: Math.max(branchCount, storedOptions.length) }, (_, index) => ({
       ...(storedOptions[index] || {}),
@@ -270,12 +325,8 @@ export class ScheduleRunner {
         ? this.evaluator.evaluateNode(labelConnection.fromNodeId, labelConnection.fromPort)
         : (option.label || option.text || "");
       button.textContent = String(label);
-      if (this.appId === "his-patient") {
-        button.classList.add("dialogue-choice-option");
-        if (/既往史/.test(button.textContent) && /用药/.test(button.textContent)) {
-          button.dataset.onboardingChoice = "history-medication";
-        }
-      }
+      if (this.choiceClassName) button.classList.add(this.choiceClassName);
+      this.decorateChoice(button, { option, node, index });
       button.addEventListener("click", () => {
         if (this.readOnly) return;
         this._record({ type: "choice", index, label: button.textContent });
@@ -284,17 +335,18 @@ export class ScheduleRunner {
         this.optionsEl.innerHTML = "";
         // Typed blueprint connections are authoritative. Legacy option.next
         // values may refer to pre-migration node IDs that no longer exist.
-        const next = nextFlow(this.blueprint, node, `option${index}`)
-          || option.next || option.target;
+        const next = hasFlowConnection(this.blueprint, node, `option${index}`)
+          ? nextDynamicFlow(this.blueprint, node, `option${index}`)
+          : (option.next || option.target || null);
         this.instance.executedNodeIds.push(node.id);
         this.instance.currentNodeId = next || null;
         this.onCheckpoint(this.instance);
         this._run(next);
-        if (this.appId === "his-patient") eventBus.emit("his:dialogue_choice_selected", { instanceId: this.instance.instanceId, nodeId: node.id, optionIndex: index });
+        this.onChoiceSelected({ instanceId: this.instance.instanceId, nodeId: node.id, optionIndex: index });
       });
       this.optionsEl.appendChild(button);
     });
-    if (this.appId === "his-patient") eventBus.emit("his:dialogue_choice_available", { instanceId: this.instance.instanceId, nodeId: node.id });
+    this.onChoiceAvailable({ instanceId: this.instance.instanceId, nodeId: node.id });
     this.onCheckpoint(this.instance);
   }
 
@@ -320,21 +372,25 @@ export class ScheduleRunner {
 
   _renderTranscript() {
     (this.instance.transcript || []).forEach((record) => {
-      if (record.type === "text") this.appendLine(record.speaker, record.speaker === "player" ? "我" : String(record.speaker), record.text);
+      if (record.type === "text") {
+        const label = record.speaker === "player" ? "我" : String(record.speaker);
+        const payload = { ...record, label, definition: this.definition, instance: this.instance };
+        if (!displayReceiverManager.dispatch(record.displayTo || "legacy", payload)) this.appendLine(record.speaker, label, record.text);
+      }
       if (record.type === "choice") this.appendLine("player", "我", record.label);
     });
   }
 
   _resolve() {
-    if (this.instance.status === "resolved") return;
+    if (this._cancelled || this.instance.status === "resolved") return;
     this._clearWaitUntil();
     this.instance.waitingNodeId = null;
     this.instance.status = "resolved";
     this.instance.currentNodeId = null;
     this.onCheckpoint(this.instance);
     this.onComplete(this.instance);
-    eventBus.emit("schedule:resolved", { appId: this.appId, instance: this.instance });
-    eventBus.emit("schedule:completed", { appId: this.appId, instance: this.instance });
+    eventBus.emit(ACTIVITY_EVENTS.resolved, { appId: this.appId, queueId: this.queueId, instanceId: this.instance.instanceId, instance: this.instance });
+    eventBus.emit(ACTIVITY_EVENTS.completed, { appId: this.appId, queueId: this.queueId, instanceId: this.instance.instanceId, instance: this.instance });
   }
 
   _subscribeWaitUntil(nodeId) {
@@ -348,7 +404,10 @@ export class ScheduleRunner {
       if (this._waitUntilEvaluating || this.instance.status === "resolved") return;
       this._waitUntilEvaluating = true;
       try {
-        if (this.blueprint.nodes?.[nodeId]) this._run(nodeId);
+        if (this.blueprint.nodes?.[nodeId]) {
+          this.evaluator.invalidate();
+          this._run(nodeId);
+        }
       } finally {
         this._waitUntilEvaluating = false;
       }
@@ -360,17 +419,36 @@ export class ScheduleRunner {
     this._waitUntilUnsubscribers.splice(0).forEach((unsubscribe) => unsubscribe());
   }
 
+  cancel() {
+    if (this._cancelled) return;
+    this._cancelled = true;
+    this._clearWaitUntil();
+    if (this.optionsEl) this.optionsEl.innerHTML = "";
+  }
+
+  pause() {
+    if (this._cancelled || this.instance.status === "resolved") return false;
+    this._paused = true;
+    return true;
+  }
+
+  resume() {
+    if (this._cancelled || this.instance.status === "resolved") return false;
+    this._paused = false;
+    this._run(this.instance.waitingNodeId || this.instance.currentNodeId || this.blueprint.startNodeId);
+    return true;
+  }
+
   _scheduleStatus(instanceId) {
-    const queues = ["work", "social", "main"];
-    const status = queues.map((id) => scheduleData.queue(id).statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
+    const status = scheduleQueueRegistry.list().map((queue) => queue.statusOf(instanceId)).find((value) => value !== "nonexistent") || "nonexistent";
     return STATUS[status] ?? STATUS.nonexistent;
   }
 
   _scheduleInstanceCount(scheduleId) {
-    return ["work", "social", "main"].reduce((total, queueId) => total + scheduleData.queue(queueId).countBySchedule(scheduleId), 0);
+    return scheduleQueueRegistry.list().reduce((total, queue) => total + queue.countBySchedule(scheduleId), 0);
   }
 }
 
 export function createScheduleRunner(options) { return new ScheduleRunner(options); }
-export { STATUS as SCHEDULE_STATUS };
+export { STATUS as ACTIVITY_STATUS };
 export default ScheduleRunner;

@@ -1,0 +1,10 @@
+{
+  "id":"off-duty-demo",
+  "title":"下班模式示例",
+  "logo":"🌙",
+  "mode":"window",
+  "fullscreen":false,
+  "geometry":{"x":120,"y":80,"width":640,"height":420},
+  "root":{"id":"root","type":"container","flow":"vertical","gap":8,"padding":10,"children":[{"widgetId":"heading","type":"label","text":"下班模式示例"},{"widgetId":"continue","type":"button","text":"继续"}]},
+  "events":{"onCreate":null,"onDestroy":null}
+}

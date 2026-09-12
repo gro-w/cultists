@@ -26,6 +26,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郭心怡",
               "text": "医生您好，我叫郭心怡，今年47岁。最近主要是[[symptom_127]]，还伴有[[symptom_130]]，所以来医院看看。"
             },
@@ -71,6 +72,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郭心怡",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_127]]，同时还有[[symptom_153]]，活动或休息时都会感觉到。"
             },
@@ -92,6 +94,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郭心怡",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:hypothyroidism:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -113,6 +116,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郭心怡",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_130]]比较明显；这几天也注意到[[symptom_153]]，因此有些担心。"
             },
@@ -134,6 +138,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },
@@ -295,6 +300,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "赵可欣",
               "text": "医生您好，我叫赵可欣，今年20岁。最近主要是[[symptom_180]]，还伴有[[symptom_182]]，所以来医院看看。"
             },
@@ -340,6 +346,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "赵可欣",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_180]]，同时还有[[symptom_153]]，活动或休息时都会感觉到。"
             },
@@ -361,6 +368,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "赵可欣",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:vitamin_b12_deficiency_anemia:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -382,6 +390,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "赵可欣",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_182]]比较明显；这几天也注意到[[symptom_153]]，因此有些担心。"
             },
@@ -403,6 +412,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },
@@ -564,6 +574,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "孙梦瑶",
               "text": "医生您好，我叫孙梦瑶，今年34岁。最近主要是[[symptom_180]]，还伴有[[symptom_182]]，所以来医院看看。"
             },
@@ -609,6 +620,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "孙梦瑶",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_180]]，同时还有[[symptom_198]]，活动或休息时都会感觉到。"
             },
@@ -630,6 +642,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "孙梦瑶",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:iron_deficiency_anemia:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -651,6 +664,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "孙梦瑶",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_182]]比较明显；这几天也注意到[[symptom_198]]，因此有些担心。"
             },
@@ -672,6 +686,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },
@@ -833,6 +848,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭俊杰",
               "text": "医生您好，我叫彭俊杰，今年37岁。最近主要是[[symptom_054]]，还伴有[[symptom_055]]，所以来医院看看。"
             },
@@ -878,6 +894,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭俊杰",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_054]]，同时还有[[symptom_058]]，活动或休息时都会感觉到。"
             },
@@ -899,6 +916,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭俊杰",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:dry_eye:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -920,6 +938,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭俊杰",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_055]]比较明显；这几天也注意到[[symptom_058]]，因此有些担心。"
             },
@@ -941,6 +960,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },
@@ -1102,6 +1122,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郑心怡",
               "text": "医生您好，我叫郑心怡，今年33岁。最近主要是[[symptom_055]]，还伴有[[symptom_056]]，所以来医院看看。"
             },
@@ -1147,6 +1168,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郑心怡",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_055]]，同时还有[[symptom_058]]，活动或休息时都会感觉到。"
             },
@@ -1168,6 +1190,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郑心怡",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:bacterial_conjunctivitis:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -1189,6 +1212,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "郑心怡",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_056]]比较明显；这几天也注意到[[symptom_058]]，因此有些担心。"
             },
@@ -1210,6 +1234,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },
@@ -1371,6 +1396,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "沈嘉诚",
               "text": "医生您好，我叫沈嘉诚，今年32岁。最近主要是[[symptom_173]]，还伴有[[symptom_174]]，所以来医院看看。"
             },
@@ -1416,6 +1442,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "沈嘉诚",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_173]]，同时还有[[symptom_177]]，活动或休息时都会感觉到。"
             },
@@ -1437,6 +1464,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "沈嘉诚",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:ulcerative_colitis:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -1458,6 +1486,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "沈嘉诚",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_174]]比较明显；这几天也注意到[[symptom_177]]，因此有些担心。"
             },
@@ -1479,6 +1508,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },
@@ -1640,6 +1670,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "宋清妍",
               "text": "医生您好，我叫宋清妍，今年45岁。最近主要是[[symptom_173]]，还伴有[[symptom_177]]，所以来医院看看。"
             },
@@ -1685,6 +1716,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "宋清妍",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_173]]，同时还有[[symptom_179]]，活动或休息时都会感觉到。"
             },
@@ -1706,6 +1738,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "宋清妍",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:hemorrhoids:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -1727,6 +1760,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "宋清妍",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_177]]比较明显；这几天也注意到[[symptom_179]]，因此有些担心。"
             },
@@ -1748,6 +1782,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },
@@ -1909,6 +1944,7 @@
             "id": "intro",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭嘉诚",
               "text": "医生您好，我叫彭嘉诚，今年45岁。最近主要是[[symptom_173]]，还伴有[[symptom_177]]，所以来医院看看。"
             },
@@ -1954,6 +1990,7 @@
             "id": "answer_symptom",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭嘉诚",
               "text": "症状大约持续了几天，时轻时重。最明显的是[[symptom_173]]，同时还有[[symptom_179]]，活动或休息时都会感觉到。"
             },
@@ -1975,6 +2012,7 @@
             "id": "answer_history",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭嘉诚",
               "text": "我以前没有确诊过严重疾病，但家里有人得过[[disease:hemorrhoids:normal]]。最近只自己买过一些常用药，没有长期规律服药。"
             },
@@ -1996,6 +2034,7 @@
             "id": "answer_risk",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "彭嘉诚",
               "text": "目前没有昏厥或剧烈出血，只是[[symptom_177]]比较明显；这几天也注意到[[symptom_179]]，因此有些担心。"
             },
@@ -2017,6 +2056,7 @@
             "id": "closing",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "player",
               "text": "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。"
             },

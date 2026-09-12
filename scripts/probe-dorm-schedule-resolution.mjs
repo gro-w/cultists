@@ -24,7 +24,7 @@ globalThis.document = { createElement: (tag) => new Element(tag) };
 const root = "data/zh-hans";
 const read = (file) => JSON.parse(fs.readFileSync(`${root}/${file}`, "utf8"));
 const definitions = [
-  ...read("socialpub.json").entries.filter((entry) => entry.id.startsWith("dorm_activity_day")),
+  ...read("socialpub.json").entries.filter((entry) => entry.id.startsWith("dorm_schedule_day")),
   ...read("social05a.json").entries,
 ];
 globalVariableManager.replaceDefinitions(read("global_variables.json"), { emit: false });
@@ -48,7 +48,7 @@ for (const definition of definitions) {
     onComplete: (current) => socialQueue.complete(current.instanceId),
   });
   runner.start();
-  if (definition.id !== "dorm_activity_day5") {
+  if (definition.id !== "dorm_schedule_day5") {
     assert.ok(optionsEl.children.length >= 2, `${definition.id}: initial choice missing`);
     optionsEl.children[1].click();
   }
@@ -62,7 +62,7 @@ for (const definition of definitions) {
   console.log(`${definition.id}: resolved (${lines.length} lines)`);
 }
 
-for (const definition of definitions.filter((entry) => entry.id !== "dorm_activity_day5")) {
+for (const definition of definitions.filter((entry) => entry.id !== "dorm_schedule_day5")) {
   const day = Number(definition.id.match(/day(\d+)/)?.[1] || 1);
   gameState.restore({ day, clockMinutes: 16 * 60, phase: "night", duty: "off-duty", location: "dorm", sanity: 100, roommateSuspicion: 0 });
   timeService.startPhase("night", 0);
@@ -80,6 +80,6 @@ for (const definition of definitions.filter((entry) => entry.id !== "dorm_activi
     optionsEl.children[0].click();
   }
   assert.equal(socialQueue.statusOf(instance.instanceId), "resolved");
-  assert.equal(globalVariableManager.get(103 + day), true, `${definition.id}: study branch must set activity state`);
+  assert.equal(globalVariableManager.get(103 + day), true, `${definition.id}: study branch must set schedule state`);
 }
-console.log("dorm activity resolution probe: ok");
+console.log("dorm schedule resolution probe: ok");

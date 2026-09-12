@@ -1,8 +1,9 @@
 import { eventBus } from "./EventBus.js";
 import { dataLoader } from "./DataLoader.js";
 import { gameState } from "./GameState.js";
-import { scheduleData } from "./ScheduleData.js";
-import { medicalCaseManager } from "./MedicalCaseManager.js";
+import "./ScheduleClockCoordinator.js";
+import "./MedicalClockCoordinator.js";
+
 
 const ACTION_INTERVAL_MINUTES = 20;
 
@@ -74,12 +75,7 @@ class TimeService {
     if (previousPhase === "day" && gameState.phase === "night" && gameState.duty === "on-duty") {
       gameState.setDuty("off-duty");
     }
-    scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
     if (crossesEight) this.settleAtEight({ day: Math.floor(eightOClock / 1440), sleepMinutes: 0, phaseSettlement });
-    medicalCaseManager.processDue(gameState.day, gameState.clockMinutes).forEach((request) => {
-      const result = scheduleData.enqueueMedicalIncident(request);
-      if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
-    });
     this._syncClock();
     if (previousPhase !== gameState.phase) {
       eventBus.emit("daynight:changed", {
@@ -98,19 +94,11 @@ class TimeService {
   advanceTo(day, minutes, { sleepMinutes = 0, automatic = false } = {}) {
     const previousPhase = gameState.phase;
     if (minutes === 8 * 60 && Number(day) > gameState.day) {
-      medicalCaseManager.processDue(Number(day), minutes).forEach((request) => {
-        const result = scheduleData.enqueueMedicalIncident(request);
-        if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
-      });
       const phaseSettlement = this.settlePhase("night");
       this.settleAtEight({ day: Number(day), sleepMinutes, phaseSettlement });
     }
     gameState.setClock(day, minutes);
-    scheduleData.advanceTo(gameState.day, gameState.clockMinutes);
-    medicalCaseManager.processDue(gameState.day, gameState.clockMinutes).forEach((request) => {
-      const result = scheduleData.enqueueMedicalIncident(request);
-      if (result.ok) medicalCaseManager.submissions.get(request.submission.patientId).processed = true;
-    });
+
     this._syncClock();
     if (previousPhase !== gameState.phase) {
       eventBus.emit("daynight:changed", {
@@ -137,7 +125,7 @@ class TimeService {
     this.startPhase(phase, phase === "day"
       ? Math.max(0, targetMinutes - 8 * 60)
       : (targetMinutes >= 16 * 60 ? targetMinutes - 16 * 60 : targetMinutes + 8 * 60));
-    scheduleData.advanceTo(targetDay, targetMinutes);
+
     eventBus.emit("daynight:changed", {
       day: targetDay,
       phase,
@@ -176,8 +164,7 @@ class TimeService {
       if (sleepDebtSanLoss) gameState.modify({ sanity: -sleepDebtSanLoss });
       this.insufficientSleepStreak = 0;
     }
-    const medical = medicalCaseManager.settleDay(day - 1);
-    const result = { day, sleepMinutes: safeSleepMinutes, recoveredSan, sleepDebtSanLoss, medical, phaseSettlement };
+    const result = { day, sleepMinutes: safeSleepMinutes, recoveredSan, sleepDebtSanLoss, medical: [], phaseSettlement };
     eventBus.emit("day:settled", result);
     return result;
   }

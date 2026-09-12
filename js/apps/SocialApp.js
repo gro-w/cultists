@@ -5,7 +5,7 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 
 import { scheduleData } from "../core/ScheduleData.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { scheduleExecutionService } from "../core/ScheduleExecutionService.js";
 import { npcStateManager } from "../core/NpcStateManager.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { socialQueue } from "../core/ScheduleQueue.js";
@@ -134,22 +134,20 @@ export async function launchSocialApp() {
     }
 
     if (!contact.queueEntry) {
-      bubblesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      bubblesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为活动蓝图。）</p>";
       return;
     }
-    const runner = createScheduleRunner({
+    scheduleExecutionService.run({
+      queue: socialQueue,
       definition: contact,
       instance: contact.queueEntry,
       appendLine: (speaker, label, text) => appendBubble(speaker === "npc" ? "npc" : "me", text),
       optionsEl,
       appId: "social",
-      onCheckpoint: (instance) => {
-        return socialQueue.updateInstance(instance.instanceId, instance);
-      },
       onComplete: (instance) => socialQueue.complete(instance.instanceId),
     });
 
-    runner.start();
+
   }
 
   async function renderCurrentEntry() {

@@ -1,6 +1,6 @@
-# 日程蓝图语法与节点参考
+# 活动蓝图语法与节点参考
 
-本文档描述当前项目实际实现的对象式日程蓝图。节点定义以
+本文档描述当前项目实际实现的对象式活动蓝图。节点定义以
 `js/core/ScheduleNodeRegistry.js` 为准；校验规则以
 `js/core/ScheduleBlueprint.js` 为准；运行时行为以
 `js/core/ScheduleRunner.js` 和 `js/core/ScheduleValueEvaluator.js` 为准。
@@ -9,12 +9,12 @@
 
 ## 1. 蓝图是什么
 
-蓝图是一个有向图，由流程节点、数值节点和两种类型的连接组成。普通日程
+蓝图是一个有向图，由流程节点、数值节点和两种类型的连接组成。普通活动
 文件的一个条目通常把蓝图放在 `blueprint` 字段；物品等宿主对象则把蓝图
 放在 `schedules.investigate`、`schedules.use`、`schedules.obtain` 或
 `schedules.lose` 中。
 
-历史数据中的 `dialogueTree` 仅在兼容迁移边界读取；新日程条目必须使用
+历史数据中的 `dialogueTree` 仅在兼容迁移边界读取；新活动条目必须使用
 `blueprint`。
 
 最小蓝图如下：
@@ -146,11 +146,29 @@
 ### 2.5 动态端口
 
 `choice` 和 `segmentBranch` 的端口数量由节点的 `inputs.branchCount` 决定；
-`randomBranch` 的流程输出数量由节点的 `inputs.n` 决定。
+`randomBranch` 的流程输出数量由节点的 `inputs.n` 决定。两个值都可以通过值连接在运行时读取公共变量等动态来源；当数量不是静态整数时，编辑器保留已存在的动态连线，并始终显示 `default`。
 动态端口不是任意字符串：数量改变时必须同步删除越界端口、越界连接以及
-越界的兼容数据。
+越界的兼容数据。所有流程输出数量由值输入决定的节点都固定提供一个
+`default`（默认流程输出）端口；当运行时命中的动态端口不存在连接时，才沿
+该端口继续，已命中的动态端口连接优先。`default` 本身可以不连接，此时该
+分支结束当前流程。
 
 ### 2.6 节点条件与显示效果
+
+`text`（显示文字）和 `showImage`（显示图片）节点通过 `inputs.displayTo`
+声明接收器目标，不应根据所在队列推断显示位置。当前内置目标为：
+
+| `displayTo` | 接收器 |
+| --- | --- |
+| `his-app` | HIS 应用的对话区域 |
+| `dorm-bottom` | 宿舍场景底栏 |
+| `ending-screen` | 结局独立场景 |
+| `item-inspection` | 物品调查旁侧面板 |
+
+界面在自身生命周期内注册对应接收器，活动执行器只发送展示消息。新增
+展示载体时，应新增目标和接收器，而不是在活动队列或节点执行器中增加
+队列特判。旧蓝图缺少该字段时仍通过兼容适配器显示，但新建节点必须选择
+明确目标。
 
 部分节点支持通用的：
 
@@ -164,7 +182,7 @@
 "globalVariableCondition": { "...": "..." }
 ```
 
-运行器在进入节点前检查条件；条件不满足时结束当前日程。`text` 等显示节点
+运行器在进入节点前检查条件；条件不满足时结束当前活动。`text` 等显示节点
 还可以使用：
 
 ```json
@@ -183,7 +201,7 @@
 | 类型 | 类别 | 作用 |
 | --- | --- | --- |
 | `flowStart` | 流程 | 流程入口 |
-| `scheduleEnd` | 流程 | 结束日程 |
+| `scheduleEnd` | 流程 | 结束活动 |
 | `text` | 流程/显示 | 显示一行文字并等待继续 |
 | `choice` | 流程/交互 | 显示选项并按选择分支 |
 | `randomBranch` | 流程 | 按 `n` 随机选择一个流程分支 |
@@ -193,7 +211,7 @@
 | `consumeTime` | 流程/状态 | 推进游戏时间 |
 | `setGlobal` | 流程/状态 | 设置公共变量 |
 | `ending` | 流程/效果 | 触发指定结局 |
-| `insertSchedule` | 流程/状态 | 向日程队列插入日程；可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`） |
+| `insertSchedule` | 流程/状态 | 向活动队列插入活动；可传入 `respectPrerequisite`（默认 `true`）和 `protectFromExpiry`（默认 `false`） |
 | `showCg` | 流程/显示 | 发出显示 CG 事件 |
 | `endCg` | 流程/显示 | 结束当前 CG 显示 |
 | `showImage` | 流程/显示 | 发出显示图片事件 |
@@ -204,17 +222,17 @@
 | `arithmetic` | 数值 | 执行运算并输出值 |
 | `getGlobal` | 数值 | 读取公共变量 |
 | `getInventory` | 数值 | 读取背包数量 |
-| `getScheduleStatus` | 数值 | 读取日程实例状态 |
-| `getScheduleInstanceCount` | 数值 | 读取日程实例数量 |
+| `getScheduleStatus` | 数值 | 读取活动实例状态 |
+| `getScheduleInstanceCount` | 数值 | 读取活动实例数量 |
 | `getGameTime` | 数值 | 读取当前游戏绝对分钟 |
 | `prerequisite` | 控制 | 必须存在且只能有一个的先决条件节点；无输出引脚，仅接收 `condition`，输入为 `true` 才允许 Social 条目插入 |
-| `scheduleExpiry` | 控制 | 必须存在且只能有一个的日程过期节点；无输出引脚，仅接收 `expires` 和 `expiresAt`；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
+| `scheduleExpiry` | 控制 | 必须存在且只能有一个的活动过期节点；无输出引脚，仅接收 `expires` 和 `expiresAt`；默认 `expires=false`，启用后当前时间超过 `expiresAt` 时强制解决实例 |
 
 ### 4.12 Social 插入先决条件
 
-Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点没有任何输出引脚，也不得包含流程引脚，只能接收 `condition` 数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
+Social 日期活动表条目所在的完整蓝图必须包含且只能有一个 `prerequisite` 节点。它不会提前创建实例，而是在日期和时间到达、正式加入 `socialQueue` 之前求值。该节点没有任何输出引脚，也不得包含流程引脚，只能接收 `condition` 数值输入；输入为严格 `true` 时才插入，`false`、结构校验失败和运行时错误都会明确跳过。普通蓝图仍必须有且仅有一个 `flowStart`，所有流程末端必须是 `scheduleEnd`。
 
-### 4.13 日程过期
+### 4.13 活动过期
 
 完整蓝图必须包含且只能有一个 `scheduleExpiry` 节点。节点没有任何输出引脚，也没有流程输入/输出引脚，包含两个数值输入：`expires` 表示是否启用过期，`expiresAt` 表示绝对游戏分钟。新建模板默认将 `expires` 固定为 `false`；`expires` 不是严格的 `true` 时实例不会过期，启用后统一游戏时间推进到大于 `expiresAt` 时，未解决实例被队列强制标记为 `resolved`，并记录 `resolutionReason="expired"`。
 
@@ -244,11 +262,11 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 作用：蓝图唯一入口；
 - 语义：从 `startNodeId` 开始执行，不产生副作用。
 
-### 4.2 `scheduleEnd`：日程结束
+### 4.2 `scheduleEnd`：活动结束
 
 - 输入：`flowIn`（流程）；
 - 输出：无；
-- 作用：结束当前日程实例；
+- 作用：结束当前活动实例；
 - 语义：设置实例为已解决，清除 `currentNodeId`，触发完成/解决事件。
   如果配置了 `onShow`，结束前仍可应用其显示效果。
 
@@ -260,7 +278,7 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 常用字段：`speaker`、`text`、`onShow`、`keywordIds`；物品调查蓝图可在结果
   文本节点上使用 `keywordIds`，由运行器统一收集关键词并回调调查结果；
 - 作用：显示一行文字；
-- 语义：记录文本到日程实例 transcript，调用界面回调，然后等待玩家继续。
+- 语义：记录文本到活动实例 transcript，调用界面回调，然后等待玩家继续。
   没有界面选项容器的实时/无头调用会自动继续。
 
 示例：
@@ -277,7 +295,7 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 ### 4.4 `choice`：点击分支
 
 - 输入：`flowIn`（流程）；
-- 输出：动态的 `option0` … `optionN-1`（流程）；
+- 输出：动态的 `option0` … `optionN-1`（流程），以及固定的 `default`（默认流程输出）；
 - 值输入：`branchCount`（数字）；
 - 动态值输入：`label0` … `labelN-1`（字符串）；
 - 兼容字段：`options` 或 `branches` 数组；
@@ -305,7 +323,7 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 
 - 输入：`flowIn`（流程）；
 - 值输入：`n`（数字）；
-- 输出：动态的 `flowOut0` … `flowOutN-1`（流程）；
+- 输出：动态的 `flowOut0` … `flowOutN-1`（流程），以及固定的 `default`（默认流程输出）；
 - `n` 必须是 1–32 的安全整数；
 - 运行器使用注入的随机源均匀选择一个输出，并记录本次选择的 `count` 与
   `index` 到实例的 `lastRandomBranch`；
@@ -315,7 +333,12 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 例如 `n=3` 时，节点必须提供并连接 `flowOut0`、`flowOut1`、`flowOut2`。
 编辑器修改 `n` 时会移除超出新数量的输出连线。
 
-### 4.6 `branch`：逻辑分支
+### 4.6 `segmentBranch`：分段分支
+
+- 输出：动态的 `segment0` … `segmentN-1`（流程），以及固定的 `default`（默认流程输出）；
+- 当数值未匹配任何有效区间，或命中的分段没有流程连接时，使用 `default`。
+
+### 4.7 `branch`：逻辑分支
 
 - 输入：`flowIn`（流程）；
 - 输出：`false`、`true`（流程）；
@@ -328,10 +351,10 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
 - 值输入：`condition`（布尔值）；
-- 作用：在条件满足前暂停当前日程实例；
+- 作用：在条件满足前暂停当前活动实例；
 - 语义：条件为 `false` 时保留当前节点并阻塞，不执行下游节点；当输入值
   变为 `true` 时结束阻塞，节点只完成一次并沿 `flowOut` 继续。条件来自
-  公共变量、主角数值、背包、日程状态等会发出状态变化事件的值时，运行器
+  公共变量、主角数值、背包、活动状态等会发出状态变化事件的值时，运行器
   会在相关状态变化后重新求值。该节点不消耗游戏时间。
 
 ### 4.7 `diceCheck`：骰子检定
@@ -367,13 +390,13 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 作用：调用 `GlobalVariableManager.set()` 设置公共变量，或调用 `modify()` 应用数字增量；
 - 语义：值的类型和变量 ID 必须符合公共变量定义。
 
-### 4.10 `insertSchedule`：插入日程
+### 4.10 `insertSchedule`：插入活动
 
 - 输入：`flowIn`（流程）；
 - 输出：`flowOut`（流程）；
 - 值输入：`scheduleId`（字符串）、`addTime`（数字）、`queue`（字符串）、`respectPrerequisite`（布尔，默认 `true`）、`protectFromExpiry`（布尔，默认 `false`）；
-- 作用：调用 `ScheduleData.addSchedule()` 向指定队列追加日程；
-- 语义：插入失败会终止当前节点执行并报告原因。`respectPrerequisite=false` 时忽略目标蓝图的先决条件并直接创建实例；`protectFromExpiry=true` 时实例不会被目标蓝图的 `scheduleExpiry` 节点过期。队列应使用项目支持的日程队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
+- 作用：调用 `ScheduleData.addSchedule()` 向指定队列追加活动；
+- 语义：插入失败会终止当前节点执行并报告原因。`respectPrerequisite=false` 时忽略目标蓝图的先决条件并直接创建实例；`protectFromExpiry=true` 时实例不会被目标蓝图的 `scheduleExpiry` 节点过期。队列应使用项目支持的活动队列 ID，例如 `work` 或 `social`，不能凭空创建队列。
 
 ### 4.11 `showCg`：显示 CG
 
@@ -381,7 +404,7 @@ Social 日期日程表条目所在的完整蓝图必须包含且只能有一个 
 - 输出：`flowOut`（流程）；
 - 值输入：`cgId`（字符串）；
 - 作用：发出 `schedule:cg` 事件；
-- 语义：事件携带 `cgId` 和当前日程实例 ID；实际图片/界面由订阅者处理。
+- 语义：事件携带 `cgId` 和当前活动实例 ID；实际图片/界面由订阅者处理。
 
 ### 4.12 `endCg`：结束 CG
 
@@ -545,18 +568,18 @@ segment2: 0 < value <= 30
 }
 ```
 
-### 5.5 `getScheduleStatus`：日程状态
+### 5.5 `getScheduleStatus`：活动状态
 
 - 输出：`value`（数字）；
 - 值输入：`instanceId`（字符串）；
-- 作用：读取日程实例状态。运行时状态数字映射为：`unresolved/pending=1`、
+- 作用：读取活动实例状态。运行时状态数字映射为：`unresolved/pending=1`、
   `resolved/completed=2`、不存在为 `0`。
 
-### 5.6 `getScheduleInstanceCount`：日程实例数量
+### 5.6 `getScheduleInstanceCount`：活动实例数量
 
 - 输出：`value`（数字）；
 - 值输入：`scheduleId`（字符串）；
-- 作用：统计三个队列中该日程 ID 的实例数量。
+- 作用：统计三个队列中该活动 ID 的实例数量。
 
 ### 5.7 `getGameTime`：当前游戏时间
 
@@ -571,7 +594,7 @@ segment2: 0 < value <= 30
 
 条件由公共变量管理器解释，支持单条件、`all`、`any` 和比较操作
 `eq`、`neq`、`gt`、`gte`、`lt`、`lte`。条件失败不会执行节点后续副作用，当前
-日程直接解决。
+活动直接解决。
 
 ### 6.2 使用物品
 
@@ -661,15 +684,15 @@ segment2 ─┘
 蓝图编辑器必须从 `ScheduleNodeRegistry` 生成端口和输入控件；不要在编辑器
 中另行硬编码节点端口。保存时应保留节点 ID、连接方向、动态端口数据和坐标。
 
-运行时的权威执行身份是队列中的日程实例，而不是界面 transcript。普通、临时
-和实时日程都应经过相应的队列和 `ScheduleRunner` 路径；物品调查/使用使用
-`mainQueue`。应用层负责创建/触发日程和展示结果，不应绕过蓝图直接推进时间
+运行时的权威执行身份是队列中的活动实例，而不是界面 transcript。普通、临时
+和实时活动都应经过相应的队列和 `ScheduleRunner` 路径；物品调查/使用使用
+`mainQueue`。应用层负责创建/触发活动和展示结果，不应绕过蓝图直接推进时间
 或重复应用效果。
 
-`data/<lang>/maininit.json` 是主要日程初始化表，格式为 `{ "entries": [] }`。
+`data/<lang>/maininit.json` 是主要活动初始化表，格式为 `{ "entries": [] }`。
 游戏加载数据后会把其中每个条目作为 `mainQueue` 的初始实例加入；启动时由
-`MainScheduleRuntime` 统一创建 `ScheduleRunner` 执行。`data/<lang>/mainpub.json` 注册主要公共日程定义；通过 `insertSchedule`
-插入 `queue="main"` 的日程也由同一运行时执行。需要等待游戏状态变化时，应使用
+`MainScheduleRuntime` 统一创建 `ScheduleRunner` 执行。`data/<lang>/mainpub.json` 注册主要公共活动定义；通过 `insertSchedule`
+插入 `queue="main"` 的活动也由同一运行时执行。需要等待游戏状态变化时，应使用
 `waitUntil` 连接通用取值节点，不要在应用层增加专用时间或成就监听器。
 
 蓝图变更后至少运行：

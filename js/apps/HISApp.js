@@ -6,7 +6,7 @@ import { gameState } from "../core/GameState.js";
 import { eventBus } from "../core/EventBus.js";
 
 import { scheduleData } from "../core/ScheduleData.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { scheduleExecutionService } from "../core/ScheduleExecutionService.js";
 
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { medicalCaseManager } from "../core/MedicalCaseManager.js";
@@ -14,6 +14,7 @@ import { OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { workQueue } from "../core/ScheduleQueue.js";
 import { mainQueue } from "../core/ScheduleQueue.js";
 import { runItemSchedule } from "../core/ItemScheduleRuntime.js";
+import { displayReceiverManager } from "../core/DisplayReceiverManager.js";
 
 const dialogueKeywordIds = (tree) => {
   if (typeof keywordManager.idsFromDialogueTree === "function") return keywordManager.idsFromDialogueTree(tree);
@@ -167,14 +168,16 @@ export async function launchHISApp() {
       p.innerHTML = `<strong>${speakerLabel}:</strong> ${text}`;
       linesEl.replaceChildren(p);
     };
-    createScheduleRunner({
+    const offDisplay = displayReceiverManager.register("his-app", ({ speaker, label, text }) => appendLine(speaker, label, text));
+    scheduleExecutionService.run({
+      queue: workQueue,
       definition: incident,
       instance: incident,
       appendLine,
       optionsEl,
       appId: "his",
-      onCheckpoint: (instance) => workQueue.updateInstance(incidentInstanceId, instance),
       onComplete: (instance) => {
+        offDisplay();
         workQueue.complete(incidentInstanceId);
         renderCurrentEntry();
       },
@@ -214,22 +217,27 @@ export async function launchHISApp() {
     }
 
     if (!patient.queueEntry) {
-      linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      linesEl.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为活动蓝图。）</p>";
       return keywordAvailable;
     }
-    const runner = createScheduleRunner({
+    const offDisplay = displayReceiverManager.register("his-app", ({ speaker, label, text }) => appendLine(speaker, label, text));
+    scheduleExecutionService.run({
+      queue: workQueue,
       definition: patient,
       instance: patient.queueEntry,
       appendLine,
       optionsEl,
       appId: "his-patient",
-      onCheckpoint: (instance) => {
-        return workQueue.updateInstance(instance.instanceId, instance);
+      choiceClassName: "dialogue-choice-option",
+      onChoiceAvailable: (detail) => eventBus.emit("his:dialogue_choice_available", detail),
+      onChoiceSelected: (detail) => eventBus.emit("his:dialogue_choice_selected", detail),
+      decorateChoice: (button) => {
+        if (/既往史/.test(button.textContent) && /用药/.test(button.textContent)) {
+          button.dataset.onboardingChoice = "history-medication";
+        }
       },
-      onComplete: (instance) => workQueue.complete(instance.instanceId),
+      onComplete: (instance) => { offDisplay(); workQueue.complete(instance.instanceId); },
     });
-
-    runner.start();
     return keywordAvailable;
 
   }

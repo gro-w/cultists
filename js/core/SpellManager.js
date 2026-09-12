@@ -1,5 +1,6 @@
 import { eventBus } from "./EventBus.js";
 import { gameState } from "./GameState.js";
+import { ACTIVITY_EVENTS } from "./ScheduleEvents.js";
 
 /**
  * SpellManager — singleton holding the protagonist's learned spells.
@@ -58,24 +59,16 @@ class SpellManager {
   }
 
   /**
-   * Learn a spell. Returns false if already known (idempotent — the dialog
-   * can safely call this without pre-checking).
+   * Apply a completed spell-learning schedule. Returns false if already known
+   * (idempotent so replayed schedule nodes cannot duplicate the spell).
    * @param {object} spell  Full spell object as described above.
    * @returns {boolean} true if newly learned, false if already known.
    */
-  learn(spell) {
+  applyLearn(spell) {
     if (!spell || !spell.id) return false;
     if (this.spells.some((s) => s.id === spell.id)) return false;
     this.spells.push({ ...spell });
     eventBus.emit("spells:changed", this.snapshot());
-    eventBus.emit("schedule:triggered", {
-      source: "spell",
-      spell: this.spells[this.spells.length - 1],
-      action: "obtain",
-      scheduleId: `${spell.id}:obtain`,
-      blueprint: spell.schedules?.obtain || null,
-      context: { spell: this.spells[this.spells.length - 1] },
-    });
     return true;
   }
 
@@ -92,7 +85,7 @@ class SpellManager {
       this.seasideCastDay = gameState.day;
       eventBus.emit("spells:changed", this.snapshot());
     }
-    eventBus.emit("schedule:triggered", {
+    eventBus.emit(ACTIVITY_EVENTS.requested, {
       source: "spell",
       spell,
       action: "use",

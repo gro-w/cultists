@@ -1,0 +1,5 @@
+[
+  {"id":"item","displayName":"物品","fields":[{"id":"name","type":"string","required":true},{"id":"quantity","type":"smallInteger","default":1},{"id":"tags","type":"array","default":[]}]},
+  {"id":"patient","displayName":"患者","fields":[{"id":"name","type":"string","required":true},{"id":"caseId","type":"string","required":true},{"id":"status","type":"string","default":"open"}]},
+  {"id":"medicalCase","displayName":"病例","fields":[{"id":"diagnosis","type":"string","required":true},{"id":"severity","type":"smallInteger","default":0}]}
+]

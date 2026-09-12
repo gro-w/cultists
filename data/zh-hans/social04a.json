@@ -20,6 +20,7 @@
             "id": "n1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "回来了？今天怎么样？"
             },
@@ -29,6 +30,7 @@
             "id": "n2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "还行，接诊了几个病人……就那样。你呢？"
             },
@@ -38,6 +40,7 @@
             "id": "n3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "我也还行。不过我买到了很好吃的酸奶，黏黏的，你要不要来一罐？"
             },
@@ -74,6 +77,7 @@
             "id": "n5",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "今晚还打《第二十四人格》吗？"
             },
@@ -83,6 +87,7 @@
             "id": "n6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "我觉得我还是不该喜欢打什么游戏，会影响我刷题的。"
             },
@@ -278,6 +283,7 @@
             "id": "tabletop_invite",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿杰",
               "text": "那晚上一起打桌游吗？"
             },
@@ -289,6 +295,7 @@
             "id": "tabletop_reply",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "待会儿有空我就来。"
             },
@@ -489,6 +496,7 @@
             "id": "n1",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "今天你也不准备吃饭吗？"
             },
@@ -498,6 +506,7 @@
             "id": "n2",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "等我打个电话……*能不能再宽限两天？我没想赖着不还。……*唉，后天就要还尾款了。"
             },
@@ -507,6 +516,7 @@
             "id": "n3",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "现在你还差多少钱？"
             },
@@ -516,6 +526,7 @@
             "id": "n4",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "别提了。"
             },
@@ -561,6 +572,7 @@
             "id": "n6",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "阿伟",
               "text": "怎么会，你别吓唬我。"
             },
@@ -570,6 +582,7 @@
             "id": "n7",
             "type": "text",
             "inputs": {
+              "displayTo": "dorm-bottom",
               "speaker": "player",
               "text": "明明昨天你说是后天来着……"
             },

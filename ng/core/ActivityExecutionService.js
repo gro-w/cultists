@@ -1,0 +1,9 @@
+import { ScheduleRunner } from "./ScheduleRunner.js";
+import { ScheduleInstance } from "./ScheduleInstance.js";
+export class ScheduleExecutionService {
+  constructor({ definitions, queues, nodes, eventBus, effects = {}, presentation = {} } = {}) { this.definitions = definitions; this.queues = queues; this.nodes = nodes; this.eventBus = eventBus; this.effects = effects; this.presentation = presentation; this.runners = new Map(); }
+  create({ definitionId, queueId = "main", inputs = {}, payload = {} }) { const definition = this.definitions.get(definitionId); if (!definition) throw new Error(`Unknown schedule definition: ${definitionId}`); const instance = new ScheduleInstance({ definitionId, definitionVersion: definition.version || 1, queueId, inputs, payload }); this.queues.append(instance); this.eventBus?.emit("schedule:created", { instanceId: instance.instanceId, queueId, definitionId }); return instance; }
+  start(instance) { const runner = new ScheduleRunner({ instance, definition: this.definitions.get(instance.definitionId), nodes: this.nodes, eventBus: this.eventBus, effects: this.effects, presentation: this.presentation, onDone: () => this.finish(instance) }); this.runners.set(instance.instanceId, runner); runner.start(); return runner; }
+  finish(instance) { if (!instance.terminalEmitted) instance.transition("resolved"); this.queues.get(instance.queueId).complete(instance.instanceId, instance.result); this.runners.delete(instance.instanceId); this.eventBus?.emit("schedule:completed", { instanceId: instance.instanceId, queueId: instance.queueId, definitionId: instance.definitionId }); }
+  cancel(id) { const runner = this.runners.get(id); if (runner) runner.cancel(); const instance = runner?.instance; if (instance && !instance.terminalEmitted) { instance.transition("cancelled"); this.eventBus?.emit("schedule:cancelled", { instanceId: id, queueId: instance.queueId }); } }
+}

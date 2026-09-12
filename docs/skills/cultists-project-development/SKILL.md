@@ -20,17 +20,17 @@ metadata:
 ## When to Use
 
 - 开始任何本项目的二次开发、bug 修复、数据制作或架构修改；
-- 修改 `GameState`、时间、日程、对话、NPC、物品、存档、开发工具或发布脚本；
+- 修改 `GameState`、时间、活动、对话、NPC、物品、存档、开发工具或发布脚本；
 - 将剧本、事件、患者问诊或物品行为转换为 JSON/蓝图；
 - 修改桌面窗口、任务栏、宿舍模式或应用入口；
 - 需要判断某个状态字段、队列、数据文件或事件是否可以删除。
 
-专项剧本转换可继续加载 `docs/skills/game-schedule-patient-dialogue/SKILL.md` 和 `docs/SKILL-SCRIPT-TO-SCHEDULE-BLUEPRINT.md`。本技能优先规定项目全局边界和验证纪律。
+专项剧本转换可继续加载 `docs/skills/game-schedule-patient-dialogue/SKILL.md` 和 `docs/SKILL-SCRIPT-TO-ACTIVITY-BLUEPRINT.md`。本技能优先规定项目全局边界和验证纪律。
 
 ## Non-negotiable behavior
 
 1. 修改前先读取 `AGENTS.md`、相关文档、目标模块、数据 schema、调用点和事件订阅；不要凭文件名猜接口。
-2. 先追踪权威 owner，再修改调用方。时间由 `TimeService`，公共变量由 `GlobalVariableManager`，队列由 `ScheduleQueue`，日程执行由 `ScheduleRunner`，存档由 `SaveManager` 负责。
+2. 先追踪权威 owner，再修改调用方。时间由 `TimeService`，公共变量由 `GlobalVariableManager`，队列由 `ScheduleQueue`，活动执行由 `ScheduleRunner`，存档由 `SaveManager` 负责。
 3. 不要为了让一个调用“能跑”而新增第二套状态、时间、存档或副作用路径。
 4. 内容放数据，通用行为放代码；不要把角色名、对白、关键词、物品效果或剧情条件硬编码到应用 UI。
 5. 修改已有文件使用 `patch`；创建完整的新文件使用 `write_file`。保持 LF 换行，只触碰任务范围。
@@ -45,7 +45,7 @@ metadata:
 首次接触仓库时按以下顺序使用 `read_file`、`search_files` 和 `terminal`：
 
 1. 读取根目录 `AGENTS.md`；
-2. 读取 `README.md`、`docs/ARCHITECTURE.md`、`docs/DATA-SCHEMAS.md`、`docs/SCHEDULE-BLUEPRINTS.md`；
+2. 读取 `README.md`、`docs/ARCHITECTURE.md`、`docs/DATA-SCHEMAS.md`、`docs/ACTIVITY-BLUEPRINTS.md`；
 3. 检查 `git status --short`、当前分支和最近改动，不依赖会话开始时的快照；
 4. 根据任务搜索符号定义和全部调用点，而不是只打开一个同名文件；
 5. 确认语言目录、目标数据文件、加载器和发布脚本；
@@ -54,10 +54,10 @@ metadata:
 项目入口是 `index.html`。主要代码区域包括：
 
 - `js/main.js`：启动、桌面、任务栏、应用 launcher 和宿舍模式协调；
-- `js/core/`：状态、时间、队列、日程、数据加载、存档、公共变量、NPC 和事件基础设施；
+- `js/core/`：状态、时间、队列、活动、数据加载、存档、公共变量、NPC 和事件基础设施；
 - `js/apps/`：Social、HIS、ChatGTP 等应用层；
 - `js/desktop/`：宿舍、开发工具、桌面窗口和调试器；
-- `data/<lang>/`：语言相关的剧情、角色、日程、关键词、物品、结局和规则；
+- `data/<lang>/`：语言相关的剧情、角色、活动、关键词、物品、结局和规则；
 - `css/`：玩家 UI 和开发人员模式样式；
 - `publish.js`：从源代码生成玩家版 `publish/`。
 
@@ -97,20 +97,20 @@ metadata:
 - 初始状态是第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`；实际代码若已改变，先以代码和数据为准并更新文档。
 - 工作窗口严格是 `[08:00, 16:00)`；天文白昼 `[06:00, 18:00)`，二者不能混用。
 - 普通成功行动默认推进 20 分钟；不能用 `Date`、`getHours()`、浏览器 timer 或系统时间控制游戏时钟。
-- 任何玩家可见的计时操作必须先创建日程实例，再由 `ScheduleRunner` 或对应 runtime 执行。
+- 任何玩家可见的计时操作必须先创建活动实例，再由 `ScheduleRunner` 或对应 runtime 执行。
 - `consumeTime` 通过 `TimeService.advanceBy()` 推进游戏时间；不要在 App 点击处理器中直接追加同等时间作为隐藏副作用。
-- 在恰好 `16:00` 时，状态边界、phase、duty、location 和日程加载必须保持一致；不要只更新时钟。
+- 在恰好 `16:00` 时，状态边界、phase、duty、location 和活动加载必须保持一致；不要只更新时钟。
 - 下班/睡觉的阻塞规则来自 `ScheduleData` 的 pending batch；不要通过 UI 绕过普通阻塞，除非功能明确是开发调试器行为。
 - 午夜到次日 `08:00` 只结算一次睡眠、医疗、收入支出和睡眠债；不要在多个监听器重复结算。
 - 睡眠阈值和 SAN 规则必须读取 `data/<lang>/time_rules.json` 及 `TimeService` 的实际逻辑。
 
-修改时间边界、行动费用、睡眠规则或状态字段时，必须检查所有 App、快捷入口、存档恢复、日程运行器和事件订阅。
+修改时间边界、行动费用、睡眠规则或状态字段时，必须检查所有 App、快捷入口、存档恢复、活动运行器和事件订阅。
 
 ## Queue and schedule architecture
 
 当前队列是三个独立队列：
 
-- `workQueue`：工作/HIS 类日程；
+- `workQueue`：工作/HIS 类活动；
 - `socialQueue`：下班、宿舍和 Social NPC 对话；
 - `mainQueue`：非阻塞初始化、公共主流程以及迁移后的 ChatGTP 查询等。
 
@@ -125,7 +125,7 @@ metadata:
 3. 不因点击一个已经 resolved 的视觉 actor 就无条件创建新实例；
 4. 找不到 pending 实例时显示无新对话，并保持队列长度不变；
 5. checkpoint 和完成标记更新精确的 `instanceId`；
-6. `mainQueue` 仅用于初始化和明确的 main 日程。
+6. `mainQueue` 仅用于初始化和明确的 main 活动。
 
 ## Data and content rules
 
@@ -136,7 +136,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 常见数据文件包括：
 
 - `npcs.json`、`skills.json`：角色和技能 roster；
-- `workXXa/b.json`、`socialXXa/b.json`：日期/阶段日程；
+- `workXXa/b.json`、`socialXXa/b.json`：日期/阶段活动；
 - `workpub.json`、`socialpub.json`：公共 Work/Social 定义；
 - `maininit.json`、`mainpub.json`：主流程初始化和公共定义；
 - `keywords.json`、`chatgtp_qa.json`：关键词和问答；
@@ -155,7 +155,7 @@ UI 外壳字符串走 `i18n.t()` 和 `data/strings.<lang>.json`；对白、剧�
 
 ## Blueprint authoring
 
-蓝图的权威资料是 `docs/SCHEDULE-BLUEPRINTS.md`，实际节点以 `js/core/ScheduleNodeRegistry.js` 为准，验证以 `ScheduleBlueprint.js` 为准，执行以 `ScheduleRunner.js` 和 `ScheduleValueEvaluator.js` 为准。
+蓝图的权威资料是 `docs/ACTIVITY-BLUEPRINTS.md`，实际节点以 `js/core/ScheduleNodeRegistry.js` 为准，验证以 `ScheduleBlueprint.js` 为准，执行以 `ScheduleRunner.js` 和 `ScheduleValueEvaluator.js` 为准。
 
 新蓝图使用：
 
@@ -274,7 +274,7 @@ node --check publish/js/main.js
 - 所有可达节点被覆盖；
 - 所有路径都到 `scheduleEnd`；
 - 对每条路径统计 `consumeTime.inputs.minutes`；
-- 节点 ID 的重复检查按单个蓝图进行，日程条目 ID 才按项目范围检查。
+- 节点 ID 的重复检查按单个蓝图进行，活动条目 ID 才按项目范围检查。
 
 ### Source/data probes
 

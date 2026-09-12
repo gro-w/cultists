@@ -1,5 +1,5 @@
 import { eventBus } from "./EventBus.js";
-import { createScheduleRunner } from "./ScheduleRunner.js";
+import { scheduleExecutionService } from "./ScheduleExecutionService.js";
 import { mainQueue } from "./ScheduleQueue.js";
 import { timeService } from "./TimeService.js";
 import { gameState } from "./GameState.js";
@@ -7,6 +7,7 @@ import { itemManager } from "./ItemManager.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { npcStateManager } from "./NpcStateManager.js";
 import { medicalCaseManager } from "./MedicalCaseManager.js";
+import { displayReceiverManager } from "./DisplayReceiverManager.js";
 
 
 let sequence = 0;
@@ -54,36 +55,43 @@ export function runItemSchedule(payload = {}) {
     instance = queue.getInstance(instance.instanceId) || instance;
   }
   if (!payload.blueprint) {
-    const effect = payload.context?.effect || payload.effect || {};
-    const effectResult = applyEffect(effect);
-    timeService.advanceBy(Number(payload.context?.timeMinutes || payload.context?.effect?.timeAdvance || payload.timeMinutes || 0));
-    if (payload.source === "spell" && (payload.action === "use" || payload.action === "cast")) {
-      eventBus.emit("spell:cast", { spell: payload.context?.spell || payload.spell, context: payload.context || {} });
-    }
-    if (payload.source === "npc") eventBus.emit("npc:offline", { actorId: payload.actorId });
-    queue.complete(instance.instanceId);
-    payload.context?.onComplete?.({ ...instance, result: effectResult });
-    return { ok: true, instance };
+    const resolved = scheduleExecutionService.executeImmediate({
+      queue,
+      instance,
+      execute: () => {
+        const effect = payload.context?.effect || payload.effect || {};
+        const effectResult = applyEffect(effect);
+        timeService.advanceBy(Number(payload.context?.timeMinutes || payload.context?.effect?.timeAdvance || payload.timeMinutes || 0));
+        if (payload.source === "spell" && (payload.action === "use" || payload.action === "cast")) {
+          eventBus.emit("spell:cast", { spell: payload.context?.spell || payload.spell, context: payload.context || {} });
+        }
+        if (payload.source === "npc") eventBus.emit("npc:offline", { actorId: payload.actorId });
+        return effectResult;
+      },
+      onComplete: (next, result) => payload.context?.onComplete?.({ ...next, result }),
+    });
+    return resolved ? { ok: true, instance: resolved } : { ok: false, reason: "schedule execution unavailable" };
   }
-  const runner = createScheduleRunner({
+  const offDisplay = displayReceiverManager.register("item-inspection", ({ type, image }) => {
+    if (type === "image" && image) instance.inspectionImage = image;
+  });
+  const runner = scheduleExecutionService.run({
+    queue,
     definition,
     instance,
     appId: "item",
     appendLine: () => {},
-    onCheckpoint: (next) => queue.updateInstance(instance.instanceId, next),
+
     onItemInspection: (result) => payload.context?.onInspection?.(result),
     onComplete: (next) => {
+      offDisplay();
       queue.complete(instance.instanceId);
       payload.context?.onComplete?.(next);
     },
   });
-  return runner.start();
+  return runner ? { ok: true } : { ok: false, reason: "schedule execution unavailable" };
 }
 
 export const itemScheduleRuntime = {
-  subscribe() {
-    return eventBus.on("schedule:triggered", runItemSchedule);
-  },
+  run: runItemSchedule,
 };
-
-itemScheduleRuntime.subscribe();

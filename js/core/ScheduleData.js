@@ -5,6 +5,7 @@ import { npcStateManager } from "./NpcStateManager.js";
 import { calendarData } from "./CalendarData.js";
 import { gameState } from "./GameState.js";
 import { workQueue, socialQueue, mainQueue } from "./ScheduleQueue.js";
+import { scheduleQueueRegistry } from "./ScheduleQueueRegistry.js";
 import { globalVariableManager } from "./GlobalVariableManager.js";
 import { itemManager } from "./ItemManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
@@ -17,6 +18,7 @@ const CHECKPOINTS = [
   { suffix: "a", time: 8 * 60 },
   { suffix: "b", time: 16 * 60 },
 ];
+let temporarySequence = 0;
 
 function inRange(value, min, max) {
   return (min == null || value >= Number(min)) && (max == null || value <= Number(max));
@@ -177,7 +179,7 @@ class ScheduleData {
       return;
     }
     this._appendThrough(target);
-    this._appendScheduledThrough(target);
+    this._appendQueuedThrough(target);
     this._expireInstances(target);
     this._appendAutoSpecialEvents();
     this.lastAbsoluteMinute = target;
@@ -273,7 +275,7 @@ class ScheduleData {
   }
 
   _expireInstances(target) {
-    for (const queue of [workQueue, socialQueue, mainQueue]) {
+    for (const queue of scheduleQueueRegistry.all()) {
       for (const instance of queue.getPending()) {
         const blueprint = instance.payload?.blueprint || instance.blueprint || instance.payload?.dialogueTree || instance.dialogueTree;
         const node = Object.values(blueprint?.nodes || {}).find((candidate) => candidate.type === "scheduleExpiry");
@@ -290,7 +292,7 @@ class ScheduleData {
     }
   }
 
-  _appendScheduledThrough(target) {
+  _appendQueuedThrough(target) {
     const ready = this.pendingAdds.filter((request) => request.addTime <= target);
     this.pendingAdds = this.pendingAdds.filter((request) => request.addTime > target);
     ready.sort((a, b) => a.addTime - b.addTime);
@@ -372,7 +374,7 @@ class ScheduleData {
     const target = Number(addTime);
     const maxAbsoluteMinute = MAX_GAME_DAYS * 1440 + 1439;
     if (!Number.isInteger(target) || target < 0 || target > maxAbsoluteMinute || target % 20 !== 0) return { ok: false, reason: "invalidAddTime" };
-    if (queueId !== undefined && !["work", "social", "main"].includes(queueId)) return { ok: false, reason: "invalidQueue" };
+    if (queueId !== undefined && !scheduleQueueRegistry.has(queueId)) return { ok: false, reason: "invalidQueue" };
     const request = {
       scheduleId,
       addTime: target,
@@ -381,12 +383,12 @@ class ScheduleData {
       protectFromExpiry: options.protectFromExpiry === true,
     };
     this.pendingAdds.push(request);
-    if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendScheduledThrough(this.lastAbsoluteMinute);
+    if (this.lastAbsoluteMinute != null && target <= this.lastAbsoluteMinute) this._appendQueuedThrough(this.lastAbsoluteMinute);
     return { ok: true, request };
   }
 
   queue(queueId) {
-    return { work: workQueue, social: socialQueue, main: mainQueue }[queueId] || mainQueue;
+    return scheduleQueueRegistry.get(queueId);
   }
 
   definition(scheduleId) {
@@ -427,7 +429,7 @@ class ScheduleData {
     const day = Number.isInteger(received.day) ? received.day : gameState.day;
     const time = Number.isInteger(received.time) ? received.time : gameState.clockMinutes;
     const targetQueueId = queueId || "main";
-    const scheduleId = `temporary:${Date.now()}`;
+    const scheduleId = `temporary:${++temporarySequence}`;
     const [instance] = this.queue(targetQueueId).append({
       scheduleId,
       payload: { id: scheduleId, blueprint: JSON.parse(JSON.stringify(blueprint)) },
@@ -468,11 +470,11 @@ class ScheduleData {
     return entries;
   }
 
-  snapshotScheduled() {
+  snapshotQueued() {
     return this.pendingAdds.map((entry) => ({ ...entry }));
   }
 
-  restoreScheduled(entries = []) {
+  restoreQueued(entries = []) {
     this.pendingAdds = Array.isArray(entries)
       ? entries.filter((entry) => this.scheduleById.has(entry?.scheduleId)).map((entry) => ({ ...entry }))
       : [];

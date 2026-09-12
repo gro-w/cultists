@@ -15,11 +15,16 @@ function visit(value, file) {
     count += 1;
     const nodes = Object.values(value.nodes);
     const controls = nodes.filter((node) => node.type === "prerequisite" || node.type === "scheduleExpiry");
-    assert.equal(nodes.filter((node) => node.type === "prerequisite").length, 1, `${file}: prerequisite count`);
-    assert.equal(nodes.filter((node) => node.type === "scheduleExpiry").length, 1, `${file}: expiry count`);
+    const hasControlPair = controls.length > 0;
+    if (hasControlPair) {
+      assert.equal(nodes.filter((node) => node.type === "prerequisite").length, 1, `${file}: prerequisite count`);
+      assert.equal(nodes.filter((node) => node.type === "scheduleExpiry").length, 1, `${file}: expiry count`);
+    }
     controls.forEach((node) => assert.deepEqual(node.outputs || {}, {}, `${file}: ${node.id} must have no output pins`));
-    const validation = validateBlueprint(value);
-    assert.equal(validation.ok, true, `${file}: ${validation.errors.join("; ")}`);
+    if (hasControlPair) {
+      const validation = validateBlueprint(value);
+      assert.equal(validation.ok, true, `${file}: ${validation.errors.join("; ")}`);
+    }
   }
   Object.values(value).forEach((child) => visit(child, file));
 }

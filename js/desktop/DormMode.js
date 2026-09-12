@@ -8,7 +8,7 @@ import { npcStateManager } from "../core/NpcStateManager.js";
 import { itemManager } from "../core/ItemManager.js";
 import { itemPlacementManager } from "../core/ItemPlacementManager.js";
 import { saveManager } from "../core/SaveManager.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { scheduleExecutionService } from "../core/ScheduleExecutionService.js";
 import { socialQueue } from "../core/ScheduleQueue.js";
 import { dayNightSystem } from "../core/DayNightSystem.js";
 import { launchChatGTPApp } from "../apps/ChatGTPApp.js";
@@ -16,6 +16,7 @@ import { renderInspectResult } from "../core/InspectFormat.js";
 import { checkSkill, OUTCOME_LABELS } from "../core/DiceCheck.js";
 import { locationSystem } from "../core/LocationSystem.js";
 import { cgManager } from "../core/CGManager.js";
+import { displayReceiverManager } from "../core/DisplayReceiverManager.js";
 
 const roommateImage = (npcId) => ({
   ajie: "data/assets/char_ajie_01.png",
@@ -247,7 +248,7 @@ export default class DormMode {
       this._npcStrip.appendChild(btn);
     });
 
-    // Blueprint-driven social activities have no NPC owner.  Expose them as
+    // Blueprint-driven social schedules have no NPC owner.  Expose them as
     // ordinary pending social schedules instead of trying to route them
     // through a roommate portrait.
     socialQueue.getPending()
@@ -915,7 +916,7 @@ export default class DormMode {
     }
     const definition = pending.payload || actor;
     if (!definition.blueprint) {
-      lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为日程蓝图。）</p>";
+      lines.innerHTML = "<p class=\"dialogue-end\">（该内容尚未转换为活动蓝图。）</p>";
       return;
     }
     this._showScheduleDialogue(definition, pending, keywordDefs, { lines, options, npcId });
@@ -936,7 +937,14 @@ export default class DormMode {
         `宿舍-${definition.name || definition.id || "活动"}`,
       );
     const npcId = context.npcId || definition.npcId || definition.actorId || definition.id;
-    const runner = createScheduleRunner({
+    const offDisplay = displayReceiverManager.register("dorm-bottom", ({ speaker, label, text }) => {
+      const line = document.createElement("p");
+      line.innerHTML = `<strong>${label}:</strong> ${keywordManager.renderHighlightedText(text, resolvedKeywordDefs)}`;
+      lines.replaceChildren(line);
+      keywordManager.bindHighlights(line, resolvedKeywordDefs);
+    });
+    scheduleExecutionService.run({
+      queue: socialQueue,
       definition,
       instance: pending,
       appendLine: (speaker, label, text) => {
@@ -947,13 +955,12 @@ export default class DormMode {
       },
       optionsEl: options,
       appId: "dorm",
-      onCheckpoint: (next) => socialQueue.updateInstance(pending.instanceId, next),
       onComplete: () => {
+        offDisplay();
         socialQueue.complete(pending.instanceId);
         if (context.npcId) eventBus.emit("dorm:interaction", { npcId });
       },
     });
-    runner.start();
   }
 
   // ── Bed / sleep ─────────────────────────────────────────────────────────────

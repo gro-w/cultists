@@ -29,6 +29,7 @@ import { DevDormComputerTab } from "./DevDormComputerTab.js";
 import { DevCGEditorTab } from "./DevCGEditorTab.js";
 import { DevTurtleSoupEditorTab } from "./DevTurtleSoupEditorTab.js";
 import { DEDICATED_EDITOR_CLASSES } from "./DevDedicatedDataEditors.js";
+import { DevCustomWindowManager } from "./DevCustomWindowEditor.js";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const esc = (value) => String(value ?? "").replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char]));
@@ -41,7 +42,7 @@ const GLOBAL_VARIABLE_VISIBILITY = {
   meaningful: "不看没有意义的系统公共变量",
   all: "不隐藏系统公共变量",
 };
-const SCHEDULE_CATEGORIES = { calendar: "日历日程", public: "公共日程", special: "特殊事件日程", ending: "结局日程", embedded: "物品与法术内嵌日程" };
+const ACTIVITY_CATEGORIES = { calendar: "日历活动", public: "公共活动", special: "特殊事件活动", ending: "结局活动", embedded: "物品与法术内嵌活动" };
 const KEYWORD_CATEGORY_LABELS = {
   disease: "疾病",
   "disease-category": "疾病类别",
@@ -79,7 +80,7 @@ function scheduleNodeContent(node) {
   if (!node) return "";
   if (node.type === "text") return node.inputs?.text ?? node.text ?? "";
   if (node.type === "choice") return "选项节点";
-  if (node.type === "scheduleEnd") return "日程结束";
+  if (node.type === "scheduleEnd") return "活动结束";
   if (node.type === "flowStart") return "流程开始";
   return node.label || node.type || "流程节点";
 }
@@ -106,7 +107,7 @@ export function launchDatabaseApp() {
 export const launchDeveloperMode = launchDatabaseApp;
 
 export class DeveloperMode {
-  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._turtleSoupEditorTab = null; this._structuredEditorTab = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
+  constructor(root, win, renderShell = true) { this.root = root; this.win = win; this.docs = new Map(); this.qaDraft = null; this.qaPage = 1; this.qaCategory = ""; this._globalVariableVisibility = "meaningful"; this._globalVariableRadioName = `global-variable-visibility-${++developerModeInstanceId}`; this._devServerActive = false; this._sse = null; this._itemEditorTab = null; this._dialogueEditorTab = null; this._bgmEditorTab = null; this._locationEditorTab = null; this._dormComputerTab = null; this._cgEditorTab = null; this._turtleSoupEditorTab = null; this._structuredEditorTab = null; this._customWindowManager = null; this._activeRuntimeMethod = null; this._runtimeRefreshQueued = false; this._runtimeUnsubs = []; this._bindRuntimeRefresh(); if (renderShell) this.render(); }
   _bindRuntimeRefresh() {
     const events = ["time:changed", "gamestate:changed", "daynight:changed", "day:settled", "schedule:appended", "schedule:changed", "schedule:resolved", "schedule:completed", "items:changed", "item-placements:changed", "keyword:collected", "keyword:new", "keyword:removed", "spells:changed", "npcState:changed", "favorability:changed", "global-variable:changed", "global-variables:changed", "medical:submitted", "medical:incident", "medical:incomeChanged", "ending:triggered", "ending:restored", "ending:reset", "achievement:unlocked", "achievements:reset", "npcState:restored", "favorability:restored", "global-variables:restored", "medical:restored"];
     events.forEach((event) => this._runtimeUnsubs.push(eventBus.on(event, () => this._queueRuntimeRefresh())));
@@ -128,10 +129,11 @@ export class DeveloperMode {
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
       ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["公共变量定义", "🔢", "tab-global-variables"],
-      ["物品与法术编辑器", "📦", "tab-item-editor"], ["日程编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
+      ["物品与法术编辑器", "📦", "tab-item-editor"], ["活动编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
+      ["自定义窗口管理器", "🪟", "tab-custom-windows"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
     ];
-    const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC状态", "👤", "tab-npc-state"], ["日程与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
+    const runtimeIcons = [["时间与读档", "🕒", "tab-state"], ["玩家与资源", "🎒", "tab-inventory"], ["NPC状态", "👤", "tab-npc-state"], ["活动与队列", "📋", "tab-schedules"], ["世界与场景", "🌐", "tab-world"], ["医疗与结局", "⚕️", "tab-medical-ending"]];
     this.root.innerHTML = `<section class="dev-app-section dev-database-section"><div class="dev-app-heading"><strong>数据库 App</strong><span>静态数据编辑器。蓝色表示仍在开发，灰色表示较为成熟；双击图标在新窗口打开。</span></div><div class="dev-app-grid">${dataIcons.map(([label, glyph, action]) => icon(label, glyph, action, matureActions.has(action) ? "mature" : "data")).join("")}</div></section><section class="dev-app-section dev-debugger-section"><div class="dev-app-heading dev-runtime-heading"><strong>调试器</strong><span>观察或修改当前游戏运行时变量。双击图标在新窗口打开。</span></div><div class="dev-app-grid">${runtimeIcons.map(([label, glyph, action]) => icon(label, glyph, action, "runtime")).join("")}</div></section><div class="dev-status" data-dev-status>开发人员模式就绪。</div>`;
     this.bindPanel();
   }
@@ -192,7 +194,7 @@ export class DeveloperMode {
 
   openScheduleEditor(scheduleId) {
     const entry = scheduleData.catalog().find((candidate) => candidate.id === scheduleId);
-    if (!entry) return this.setStatus(`找不到日程定义：${scheduleId}`, true);
+    if (!entry) return this.setStatus(`找不到活动定义：${scheduleId}`, true);
     const type = entry.category === "special" ? "event" : entry.category === "ending" ? "ending" : "schedule";
     const id = type === "schedule" ? entry.sourceFile : scheduleId;
     const host = document.createElement("div");
@@ -218,7 +220,7 @@ export class DeveloperMode {
     const editor = new DeveloperMode(root, win, false);
     root.innerHTML = `<div class="dev-editor-window-heading"><strong>${esc(title)}</strong><span>${kind === "data" ? "数据库 App" : "调试器"}</span></div><div class="dev-status" data-dev-status>正在加载…</div><div class="dev-panel" data-dev-panel></div>`;
     win.element?.addEventListener("remove", () => editor._unmountEditorTabs(), { once: true });
-    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-turtle-soup": "showTurtleSoupEditor", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
+    const methods = { "tab-cg-editor": "showCGEditor", "tab-keywords": "showKeywords", "tab-chatgtp": "showChatgtp", "tab-npcs": "showNpcs", "tab-global-variables": "showGlobalVariables", "tab-item-editor": "showItemEditor", "tab-dialogue-editor": "showDialogueEditor", "tab-bgm-editor": "showBgmEditor", "tab-location-editor": "showLocationEditor", "tab-dorm-computer": "showDormComputerEditor", "tab-turtle-soup": "showTurtleSoupEditor", "tab-custom-windows": "showCustomWindows", "tab-state": "showState", "tab-npc-state": "showNpcState", "tab-inventory": "showInventory", "tab-schedules": "showSchedules", "tab-world": "showWorld", "tab-medical-ending": "showMedicalEnding" };
     if (methods[action]) {
       editor._unmountEditorTabs();
       Promise.resolve(editor[methods[action]]()).catch((error) => editor.setStatus(`加载失败：${error.message}`, true));
@@ -232,11 +234,11 @@ export class DeveloperMode {
     const child = new DevDialogueEditorTab(this, { workspace: false, temporaryScope: {
       onSave: (blueprint) => {
         const result = scheduleData.createTemporaryInstance(blueprint, queueId);
-        this.setStatus(result.ok ? `临时日程已插入 ${result.queueId} 队列。` : "临时日程插入失败。", !result.ok);
+        this.setStatus(result.ok ? `临时活动已插入 ${result.queueId} 队列。` : "临时活动插入失败。", !result.ok);
         return result;
       },
     } });
-    const win = windowManager.createWindow({ title: "临时日程编辑器", icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
+    const win = windowManager.createWindow({ title: "临时活动编辑器", icon: "🧩", width: Math.max(500, window.innerWidth - 20), height: Math.max(300, window.innerHeight - 20), x: 0, y: 0, content: host, onClose: () => child.unmount() });
     win.el?.classList.add("dev-blueprint-window");
     host.innerHTML = child.html(); child.mount(host.querySelector(".dev-de-root"));
     win.el?.addEventListener("remove", () => child.unmount(), { once: true });
@@ -286,6 +288,13 @@ export class DeveloperMode {
     this.root.querySelector("[data-dev-panel]").innerHTML = this._dialogueEditorTab.html();
     this.bindPanel();
     this._dialogueEditorTab.mount(this.root.querySelector(".dev-de-root"));
+  }
+
+  async showCustomWindows() {
+    this._unmountEditorTabs();
+    this._setPanelKind("data");
+    this._customWindowManager = new DevCustomWindowManager(this);
+    await this._customWindowManager.mount(this.root.querySelector("[data-dev-panel]"));
   }
 
   showBgmEditor() {
@@ -375,7 +384,7 @@ export class DeveloperMode {
     this._activeRuntimeMethod = "showNpcState";
     const actors = [{ id: "chatgtp", name: "ChatGTP", favorability: null }, ...npcStateManager.npcs.map((npc) => ({ id: npc.id, name: npc.name, favorability: favorabilityManager.get(npc.id) }))];
     const rows = actors.map((actor) => `<tr data-npc-state-row="${esc(actor.id)}"><td>${esc(actor.name)}<br><code>${esc(actor.id)}</code></td><td><input data-npc-san type="number" min="0" max="256" value="${npcStateManager.get(actor.id)}"></td><td>${actor.favorability == null ? "—" : `<input data-npc-favor type="number" min="0" max="256" value="${actor.favorability}">`}<br><small>曾增加：${actor.favorability == null ? "—" : favorabilityManager.snapshot().hadPositive?.includes(actor.id) ? "是" : "否"}</small></td><td>${npcStateManager.isOffline(actor.id) ? "离线" : npcStateManager.isDistressed(actor.id) ? "不稳定" : "在线"}${npcStateManager.snapshot().pendingOffline?.includes(actor.id) ? "（待离线）" : ""}</td></tr>`).join("");
-    this.panel(`<section class="dev-section"><h3>NPC 状态</h3><p>通过 NPC 状态和好感度所有者 API 修改运行时值；日程实例负责对话进度与状态。</p><table class="dev-table"><thead><tr><th>角色</th><th>SAN</th><th>好感度</th><th>当前状态</th></tr></thead><tbody>${rows}</tbody></table><label><input data-force-offline type="checkbox"> 将 SAN 不高于离线阈值的角色强制设为离线</label><div>${button("应用 NPC 状态", "apply-npc-state")}</div></section>`, "data");
+    this.panel(`<section class="dev-section"><h3>NPC 状态</h3><p>通过 NPC 状态和好感度所有者 API 修改运行时值；活动实例负责对话进度与状态。</p><table class="dev-table"><thead><tr><th>角色</th><th>SAN</th><th>好感度</th><th>当前状态</th></tr></thead><tbody>${rows}</tbody></table><label><input data-force-offline type="checkbox"> 将 SAN 不高于离线阈值的角色强制设为离线</label><div>${button("应用 NPC 状态", "apply-npc-state")}</div></section>`, "data");
   }
 
   showInventory() {
@@ -401,13 +410,13 @@ export class DeveloperMode {
     await scheduleData.init();
     const category = this._scheduleCatalogCategory || "calendar";
     const catalog = scheduleData.catalog(category);
-    const categoryOptions = Object.entries(SCHEDULE_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
+    const categoryOptions = Object.entries(ACTIVITY_CATEGORIES).map(([id, label]) => `<option value="${id}" ${id === category ? "selected" : ""}>${label}</option>`).join("");
     const scheduleOptions = catalog.map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}（${esc(entry.queueId)}）</option>`).join("");
-    const queueOptions = [["", "默认（按日程定义；临时日程默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
+    const queueOptions = [["", "默认（按活动定义；临时活动默认 main）"], ["main", "main（主要）"], ["work", "work"], ["social", "social"]].map(([id, label]) => `<option value="${id}">${label}</option>`).join("");
     const queues = [["main", mainQueue], ["work", workQueue], ["social", socialQueue]];
-    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>日程</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-schedule="${esc(entry.scheduleId)}">${esc(entry.scheduleId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
-    const scheduled = scheduleData.snapshotScheduled();
-    this.panel(`<section class="dev-section"><h3>日程与队列</h3><p>显示主要、工作和社交三个独立队列及日程实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建日程实例</strong><label>日程表 <select data-schedule-category>${categoryOptions}</select></label><label>日程 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无日程）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时日程", "insert-temporary-schedule")}</div><p>选择“默认”时使用日程定义所属队列；临时日程没有所属定义，默认进入 main 主要队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加日程 ${scheduled.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${scheduled.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加日程</li>"}</ul></section>${sections}`);
+    const sections = queues.map(([id, queue]) => `<section class="dev-section"><h3>${id} 队列（${queue.getAll().length}）</h3><table class="dev-table"><thead><tr><th>实例</th><th>活动</th><th>状态</th><th>当前流程节点</th><th>接收时间</th><th>操作</th></tr></thead><tbody>${queue.getAll().map((entry) => { const blueprint = normalizeBlueprint(entry.payload?.blueprint || entry.payload || entry); const currentNodeId = entry.currentNodeId || blueprint.startNodeId || "未开始"; const currentNode = blueprint.nodes?.[currentNodeId]; const jump = entry.status === "resolved" ? "" : `<select data-schedule-jump="${esc(entry.instanceId)}">${scheduleNodeOptions(entry)}</select> ${button("强制跳转", `jump-queue-${id}-${entry.instanceId}`)}`; return `<tr><td><code>${esc(entry.instanceId)}</code></td><td><button type="button" class="win95-btn dev-btn" data-open-schedule="${esc(entry.scheduleId)}">${esc(entry.scheduleId)}</button></td><td>${esc(entry.status)}</td><td><code>${esc(currentNodeId)}</code><br><span>${esc(scheduleNodeContent(currentNode) || "—")}</span></td><td>${entry.receivedDay || "—"} / ${entry.receivedTime ?? "—"}</td><td>${entry.status === "resolved" ? button("标记未解决", `reopen-queue-${id}-${entry.instanceId}`) : `${button("标记已解决", `resolve-queue-${id}-${entry.instanceId}`)} ${jump}`}</td></tr>`; }).join("") || "<tr><td colspan=6>空</td></tr>"}</tbody></table></section>`).join("");
+    const queued = scheduleData.snapshotQueued();
+    this.panel(`<section class="dev-section"><h3>活动与队列</h3><p>显示主要、工作和社交三个独立队列及活动实例。未完成实例会记录当前流程节点，可标记已解决、标记未解决，或选择节点 ID（同时显示节点内容）后强制跳转。</p><div class="dev-schedule-create"><strong>插入新建活动实例</strong><label>活动表 <select data-schedule-category>${categoryOptions}</select></label><label>活动 <select data-schedule-definition>${scheduleOptions || "<option value=\"\">（该类别暂无活动）</option>"}</select></label><label>目标队列 <select data-schedule-queue>${queueOptions}</select></label>${button("新建", "create-schedule-instance")} ${button("插入临时活动", "insert-temporary-schedule")}</div><p>选择“默认”时使用活动定义所属队列；临时活动没有所属定义，默认进入 main 主要队列。ScheduleData：已触发时段 ${scheduleData.fired?.size || 0}；待追加活动 ${queued.length}；最近绝对分钟 ${scheduleData.lastAbsoluteMinute ?? "无"}</p><ul>${queued.map((entry) => `<li><code>${esc(entry.scheduleId)}</code> → ${entry.addTime}（${esc(entry.queueId || "默认队列")}）</li>`).join("") || "<li>暂无动态追加活动</li>"}</ul></section>${sections}`);
     this.root.querySelector("[data-schedule-category]")?.addEventListener("change", (event) => { this._scheduleCatalogCategory = event.target.value; this.showSchedules(); });
   }
 
@@ -874,7 +883,7 @@ export class DeveloperMode {
       const scheduleId = this.root.querySelector("[data-schedule-definition]")?.value;
       const queueId = this.root.querySelector("[data-schedule-queue]")?.value || undefined;
       const result = await scheduleData.createInstance(scheduleId, queueId);
-      this.setStatus(result.ok ? `日程实例 ${result.instance.instanceId} 已插入 ${result.queueId} 队列。` : `新建日程失败：${result.reason}`, !result.ok);
+      this.setStatus(result.ok ? `活动实例 ${result.instance.instanceId} 已插入 ${result.queueId} 队列。` : `新建活动失败：${result.reason}`, !result.ok);
       return this.showSchedules();
     }
     if (action === "insert-temporary-schedule") {
@@ -886,7 +895,7 @@ export class DeveloperMode {
       const queues = { main: mainQueue, work: workQueue, social: socialQueue };
       const queue = queues[queueAction[2]];
       const ok = queue.updateInstance(queueAction[3], { status: queueAction[1] === "resolve" ? "resolved" : "unresolved" });
-      this.setStatus(ok ? "日程实例状态已更新。" : "未找到日程实例。", !ok);
+      this.setStatus(ok ? "活动实例状态已更新。" : "未找到活动实例。", !ok);
       return this.showSchedules();
     }
     const jumpAction = action.match(/^jump-queue-(main|work|social)-(.+)$/);
@@ -904,7 +913,7 @@ export class DeveloperMode {
           currentNodeId: nodeId,
           executedNodeIds: (entry.executedNodeIds || []).filter((id) => id !== nodeId),
         }));
-      this.setStatus(ok ? `日程实例已强制跳转到节点 ${nodeId}。` : "强制跳转失败：实例或流程节点无效。", !ok);
+      this.setStatus(ok ? `活动实例已强制跳转到节点 ${nodeId}。` : "强制跳转失败：实例或流程节点无效。", !ok);
       return this.showSchedules();
     }
     const placementAction = action.match(/^toggle-placement-(.+)$/);

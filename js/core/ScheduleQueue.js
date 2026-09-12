@@ -1,8 +1,13 @@
 import { eventBus } from "./EventBus.js";
-import { globalVariableManager } from "./GlobalVariableManager.js";
+import { ACTIVITY_EVENTS } from "./ScheduleEvents.js";
 
 const globalSequenceBySchedule = new Map();
 const VALID_STATUSES = new Set(["unresolved", "resolved"]);
+
+function cloneData(value) {
+  if (value == null) return value;
+  return JSON.parse(JSON.stringify(value));
+}
 
 class ScheduleQueue {
   constructor(queueId, options = {}) {
@@ -22,8 +27,9 @@ class ScheduleQueue {
       globalSequenceBySchedule.set(scheduleId, sequence + 1);
       return {
         ...entry,
+        queueId: this.queueId,
         scheduleId,
-        payload: entry.payload || entry,
+        payload: cloneData(entry.payload || entry),
         instanceId: entry.instanceId || `${scheduleId}:${sequence + 1}`,
         status: entry.status === "resolved" || entry.status === "completed" ? "resolved" : "unresolved",
         currentNodeId: entry.currentNodeId || entry.payload?.currentNodeId || entry.payload?.blueprint?.startNodeId || entry.payload?.startNodeId || null,
@@ -32,7 +38,7 @@ class ScheduleQueue {
       };
     });
     this.entries.push(...added);
-    if (added.length) eventBus.emit("schedule:appended", { queueId: this.queueId, entries: added });
+    if (added.length) eventBus.emit(ACTIVITY_EVENTS.appended, { queueId: this.queueId, entries: added });
     return added;
   }
 
@@ -40,11 +46,7 @@ class ScheduleQueue {
     const entry = this.entries.find((item) => item.instanceId === instanceId);
     if (!entry) return false;
     entry.status = "resolved";
-    if (this.queueId === "social") {
-      const variableId = { ajie: 100, awei: 101 }[entry.payload?.npcId || entry.npcId];
-      if (variableId !== undefined && globalVariableManager.definition(variableId)) globalVariableManager.set(variableId, true);
-    }
-    eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
+    eventBus.emit(ACTIVITY_EVENTS.changed, { queueId: this.queueId, entry });
     return true;
   }
 
@@ -53,7 +55,7 @@ class ScheduleQueue {
     if (!entry || entry.status !== "unresolved") return false;
     entry.status = "resolved";
     entry.resolutionReason = "expired";
-    eventBus.emit("schedule:changed", { queueId: this.queueId, entry, expired: true });
+    eventBus.emit(ACTIVITY_EVENTS.changed, { queueId: this.queueId, entry, expired: true });
     return true;
   }
 
@@ -61,7 +63,7 @@ class ScheduleQueue {
     const entry = this.entries.find((item) => item.instanceId === instanceId);
     if (!entry) return false;
     Object.assign(entry, patch);
-    eventBus.emit("schedule:changed", { queueId: this.queueId, entry });
+    eventBus.emit(ACTIVITY_EVENTS.changed, { queueId: this.queueId, entry });
     return true;
   }
 
@@ -112,8 +114,15 @@ class ScheduleQueue {
       if (typeof entry.instanceId !== "string" || !entry.instanceId || seen.has(entry.instanceId)) {
         throw new Error("Invalid or duplicate schedule instance ID");
       }
+      if (entry.queueId != null && entry.queueId !== this.queueId) throw new Error("Schedule instance queue mismatch");
       if (!VALID_STATUSES.has(entry.status)) throw new Error("Invalid schedule instance status");
+      if (!entry.payload || typeof entry.payload !== "object" || Array.isArray(entry.payload)) throw new Error("Invalid schedule definition payload");
+      if (entry.currentNodeId != null && typeof entry.currentNodeId !== "string") throw new Error("Invalid schedule current node");
       if (!Array.isArray(entry.transcript)) throw new Error("Invalid schedule transcript");
+      if (entry.executedNodeIds !== undefined
+        && (!Array.isArray(entry.executedNodeIds) || entry.executedNodeIds.some((id) => typeof id !== "string"))) {
+        throw new Error("Invalid executed schedule nodes");
+      }
       seen.add(entry.instanceId);
       return { ...entry, queueId: this.queueId, executedNodeIds: Array.isArray(entry.executedNodeIds) ? [...entry.executedNodeIds] : [], transcript: [...entry.transcript] };
     });
@@ -125,7 +134,7 @@ class ScheduleQueue {
       this.sequenceBySchedule.set(scheduleId, Math.max(this.sequenceBySchedule.get(scheduleId) || 0, next));
       globalSequenceBySchedule.set(scheduleId, Math.max(globalSequenceBySchedule.get(scheduleId) || 0, next));
     });
-    eventBus.emit("schedule:changed", { queueId: this.queueId });
+    eventBus.emit(ACTIVITY_EVENTS.changed, { queueId: this.queueId });
   }
 
   snapshot() {

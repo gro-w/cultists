@@ -28,6 +28,7 @@
             "id": "dialogue0",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "医生，药吃了好几天，症状一点都没减轻，你们到底有没有认真看病？"
             },
@@ -39,6 +40,7 @@
             "id": "dialogue1",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "我照着处方按时吃药，病情却越来越严重，这让我怎么相信你们？"
             },
@@ -50,6 +52,7 @@
             "id": "dialogue2",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "这药不仅没效果，还让我整晚睡不着，你们必须给我一个解释。"
             },
@@ -92,6 +95,7 @@
             "id": "persuaded",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "系统",
               "text": "你成功说服了对方，对方暂时平静下来并离开了。"
             },
@@ -154,6 +158,7 @@
             "id": "fineText",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "系统",
               "text": "你未能平息对方的愤怒，你被罚款了100元。"
             },
@@ -165,6 +170,7 @@
             "id": "doubleFineText",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "系统",
               "text": "你的辩解反而激起了对方的怒火，你被罚款了200元。"
             },
@@ -176,6 +182,7 @@
             "id": "dialogue3",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "复诊的时候你说很快会好，现在一点起色都没有，是不是误诊了？"
             },
@@ -187,6 +194,7 @@
             "id": "dialogue4",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "我们花钱来治病，不是来试药的，这个治疗结果太让人失望了。"
             },
@@ -198,6 +206,7 @@
             "id": "dialogue5",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "药盒上的说明和你说的不一样，我吃出不舒服谁来负责？"
             },
@@ -209,6 +218,7 @@
             "id": "dialogue6",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "我已经跑了三趟医院，问题还是没有解决，你们的医生能不能上点心？"
             },
@@ -220,6 +230,7 @@
             "id": "dialogue7",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "你开的药让我胃疼得更厉害了，之前为什么不把风险说清楚？"
             },
@@ -231,6 +242,7 @@
             "id": "dialogue8",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "病人一直在受罪，你们却只会让我们继续等，今天必须说明白。"
             },
@@ -242,6 +254,7 @@
             "id": "dialogue9",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "检查结果出来这么久了还没人解释，这种服务也太不负责任了。"
             },
@@ -253,6 +266,7 @@
             "id": "dialogue10",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "我按你说的换了药，反而出现了新的症状，你们是不是把人当实验品？"
             },
@@ -264,6 +278,7 @@
             "id": "dialogue11",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "同样的病别人都能治好，为什么到了你这里就一直拖着？"
             },
@@ -275,6 +290,7 @@
             "id": "dialogue12",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "你们承诺的治疗效果完全没有出现，这笔钱是不是该退给我们？"
             },
@@ -286,6 +302,7 @@
             "id": "dialogue13",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "我问了好几次注意事项都没人说，现在出了问题就想装作不知道？"
             },
@@ -297,6 +314,7 @@
             "id": "dialogue14",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "病情明明在恶化，你还说这是正常反应，我不能接受这个说法。"
             },
@@ -308,6 +326,7 @@
             "id": "dialogue15",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "今天不给出明确的处理办法，我就要向医院和有关部门投诉。"
             },
@@ -319,6 +338,7 @@
             "id": "dialogue16",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "处方上的剂量是不是写错了？病人吃完之后整个人都不对劲。"
             },
@@ -330,6 +350,7 @@
             "id": "dialogue17",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "我们相信你的专业判断才接受治疗，现在结果这样，你必须承担责任。"
             },
@@ -341,6 +362,7 @@
             "id": "dialogue18",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "这次看病既浪费时间又花了冤枉钱，你们至少应该认真道歉。"
             },
@@ -352,6 +374,7 @@
             "id": "dialogue19",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者",
               "text": "我只想知道病什么时候能好，你们不能每次都用几句话把我打发走。"
             },
@@ -705,6 +728,7 @@
             "id": "dialogue0",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "你们把人治成这样还敢说没问题？今天不把责任说清楚谁也别想走！"
             },
@@ -716,6 +740,7 @@
             "id": "dialogue1",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "我家人因为你开的药出了大事，你们医院必须马上给个交代！"
             },
@@ -727,6 +752,7 @@
             "id": "dialogue2",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "你是不是根本没看清病情就乱开药？出了人命你赔得起吗？"
             },
@@ -830,6 +856,7 @@
             "id": "riotFineText",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "系统",
               "text": "你未能平息家属的愤怒，医院被罚款了600元。"
             },
@@ -841,6 +868,7 @@
             "id": "riotLargeText",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "系统",
               "text": "你的辩解暂时稳住了家属，但医院仍被罚款了300元。"
             },
@@ -852,6 +880,7 @@
             "id": "riotDeathText",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "系统",
               "text": "你的解释彻底激怒了家属，医闹失控了。"
             },
@@ -863,6 +892,7 @@
             "id": "dialogue3",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "我们把病人交给你们，你们却把他越治越糟，今天必须负责！"
             },
@@ -874,6 +904,7 @@
             "id": "dialogue4",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "别拿什么正常反应来糊弄人，病人现在这个样子就是你们的错！"
             },
@@ -885,6 +916,7 @@
             "id": "dialogue5",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "你们这不是治病，是在拿我家人的命开玩笑，我绝不会善罢甘休！"
             },
@@ -896,6 +928,7 @@
             "id": "dialogue6",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "检查和处方都是你们开的，现在出了问题还想把责任推给我们？"
             },
@@ -907,6 +940,7 @@
             "id": "dialogue7",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "我家人躺在病床上受罪，你们却一个个躲着不见，谁给我解释？"
             },
@@ -918,6 +952,7 @@
             "id": "dialogue8",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "如果你们不给赔偿，我现在就把这件事闹到所有人都知道！"
             },
@@ -929,6 +964,7 @@
             "id": "dialogue9",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "这家医院到底有没有规矩？庸医害人还不肯承认错误！"
             },
@@ -940,6 +976,7 @@
             "id": "dialogue10",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "你们说药没问题，那为什么人吃完之后会突然恶化？"
             },
@@ -951,6 +988,7 @@
             "id": "dialogue11",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "今天谁也别想用一句道歉打发我们，必须给出实际的解决办法！"
             },
@@ -962,6 +1000,7 @@
             "id": "dialogue12",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "我已经忍了这么久，你们还敢说这是病人自己的原因？"
             },
@@ -973,6 +1012,7 @@
             "id": "dialogue13",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "你开的药让病人差点出事，出了这种医疗事故谁承担后果？"
             },
@@ -984,6 +1024,7 @@
             "id": "dialogue14",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "我们不是来听推诿的，院长和负责医生都必须出来面对我们！"
             },
@@ -995,6 +1036,7 @@
             "id": "dialogue15",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "你们的治疗方案害得病人更严重，这笔账今天一定要算清楚！"
             },
@@ -1006,6 +1048,7 @@
             "id": "dialogue16",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "别以为穿着白大褂就可以不负责任，病人的命不是你们的试错成本！"
             },
@@ -1017,6 +1060,7 @@
             "id": "dialogue17",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "我家人现在生死未卜，你们还在这里互相推责，简直欺人太甚！"
             },
@@ -1028,6 +1072,7 @@
             "id": "dialogue18",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "如果医院不给我们满意答复，我就让所有媒体和监管部门来评评理！"
             },
@@ -1039,6 +1084,7 @@
             "id": "dialogue19",
             "type": "text",
             "inputs": {
+              "displayTo": "his-app",
               "speaker": "患者家属",
               "text": "你们今天要是不给个说法，我就把这间医院闹个天翻地覆！"
             },

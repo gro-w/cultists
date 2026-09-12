@@ -18,6 +18,7 @@ import { onboardingManager } from "./OnboardingManager.js";
 import { MAX_GAME_DAYS } from "./GameRules.js";
 import { turtleSoupManager } from "./TurtleSoupManager.js";
 import { itemEffectHistory } from "./ItemEffectHistory.js";
+import { mainScheduleRuntime } from "./MainScheduleRuntime.js";
 
 // v17 = v16 plus TurtleSoup branch state.
 // v18 = v17 plus the active ending ID and priority.
@@ -26,7 +27,8 @@ import { itemEffectHistory } from "./ItemEffectHistory.js";
 // v21 = v20 plus the migration of medical money ownership to global variable 2.
 // v22 = v21 plus fixed complaint/riot arrival times.
 // v23 = v22 plus persisted item/object effect history.
-const SAVE_FORMAT_VERSION = 23;
+// v24 = v23 plus the schedule schema migration.
+const SAVE_FORMAT_VERSION = 24;
 
 /** Fixed order used to encode a window's appId as a single byte index. */
 const WINDOW_APP_IDS = ["his", "social", "chatgtp", "notebook", "status", "settings", "achievements", "calendar"];
@@ -41,7 +43,7 @@ function base64UrlDecode(str) {
 }
 
 /**
- * SaveManager packs the complete v22 game state into a version-prefixed JSON
+ * SaveManager packs the complete v24 game state into a version-prefixed JSON
  * payload and exports the bytes as a downloaded file. Loading reverses the
  * process from a user-selected File object.
  */
@@ -101,6 +103,7 @@ class SaveManager {
       return true;
     } catch (err) {
       endingManager.endRestore();
+      mainScheduleRuntime.endRestore();
       console.error("[SaveManager] Failed to load save string:", err);
       return false;
     }
@@ -114,6 +117,7 @@ class SaveManager {
       return true;
     } catch (err) {
       endingManager.endRestore();
+      mainScheduleRuntime.endRestore();
       console.error("[SaveManager] Failed to load save file:", err);
       return false;
     }
@@ -134,7 +138,7 @@ class SaveManager {
       windows: windowManager.windowSnapshot().map(({ appId, x, y }) => ({ appId, x, y })),
       spells: spellManager.all(),
       spellUsage: spellManager.usageSnapshot(),
-      scheduledAdds: scheduleData.snapshotScheduled(),
+      queuedAdds: scheduleData.snapshotQueued(),
       favorability: favorabilityManager.snapshot(),
       itemPlacements: itemPlacementManager.snapshot(),
       ending: endingManager.snapshot(),
@@ -175,6 +179,7 @@ class SaveManager {
       throw new Error("Save belongs to an unsupported game day");
     }
     endingManager.beginRestore();
+    mainScheduleRuntime.beginRestore();
     try {
       const globalVariables = payload.globalVariables || [];
       const hasGlobalVariable = (id) => globalVariables.some((entry) => Number(entry.id) === id);
@@ -186,7 +191,7 @@ class SaveManager {
       workQueue.restore(payload.workQueue);
       socialQueue.restore(payload.socialQueue);
       mainQueue.restore(payload.mainQueue || []);
-      scheduleData.restoreScheduled(payload.scheduledAdds || []);
+      scheduleData.restoreQueued(payload.queuedAdds || []);
       keywordManager.restoreCollected(payload.keywords || []);
       itemManager.restoreInventory(payload.inventory || []);
       spellManager.restore(payload.spells || []);
@@ -211,6 +216,7 @@ class SaveManager {
       this._restoreWindows(Array.isArray(payload.windows) ? payload.windows : []);
     } finally {
       endingManager.endRestore();
+      mainScheduleRuntime.endRestore();
     }
     return;
   }

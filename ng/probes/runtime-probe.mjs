@@ -1,0 +1,12 @@
+import { EventBus } from "../core/EventBus.js";
+import { createDefaultNodeRegistry } from "../core/ScheduleNodeRegistry.js";
+import { ScheduleValidator } from "../core/ScheduleValidator.js";
+import { ScheduleDefinitionStore } from "../core/ScheduleDefinitionStore.js";
+import { ScheduleQueueRegistry } from "../core/ScheduleQueueRegistry.js";
+import { ScheduleExecutionService } from "../core/ScheduleExecutionService.js";
+import { PublicVariableManager } from "../core/PublicVariableManager.js";
+const bus = new EventBus(); const vars = new PublicVariableManager(bus); vars.register({ id: 0, name: "probe", type: "smallInteger", defaultValue: 0, min: 0, max: 255 });
+const nodes = createDefaultNodeRegistry(); const validator = new ScheduleValidator(nodes); const definition = { id: "probe", version: 1, entry: "start", nodes: [{ id: "start", type: "start" }, { id: "set", type: "setVariable", data: { variableId: 0, value: 7 } }, { id: "end", type: "end" }], connections: [{ id: "a", from: { node: "start", port: "next" }, to: { node: "set", port: "in" } }, { id: "b", from: { node: "set", port: "next" }, to: { node: "end", port: "in" } }] };
+if (!validator.validate(definition).valid) throw new Error("valid definition rejected"); const invalid = validator.validate({ ...definition, nodes: [{ id: "start", type: "missing" }, ...definition.nodes.slice(1)] }); if (invalid.valid) throw new Error("invalid node accepted");
+const definitions = new ScheduleDefinitionStore(); definitions.register(definition); const queues = new ScheduleQueueRegistry(bus); queues.register({ queueId: "main" }); const execution = new ScheduleExecutionService({ definitions, queues, nodes, eventBus: bus, effects: { setVariable: (node) => vars.set(node.data.variableId, node.data.value) } }); const instance = execution.create({ definitionId: "probe" }); execution.start(instance);
+if (vars.get(0) !== 7 || instance.status !== "resolved" || queues.get("main").entries.length !== 1) throw new Error("schedule execution failed"); console.log("PASS: Schedule validation, queue identity and setVariable execution");

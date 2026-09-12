@@ -18,7 +18,8 @@ import { gameState } from "./core/GameState.js";
 import { achievementManager } from "./core/AchievementManager.js";
 import { spellManager } from "./core/SpellManager.js";
 import "./core/SpellLearnDialog.js"; // side-effect: wires book:learnSpell handler
-import "./core/ItemScheduleRuntime.js"; // side-effect: executes item-owned schedules
+import "./core/ScheduleTriggerRouter.js"; // routes domain schedule requests
+import "./core/SocialSchedulePolicy.js"; // side-effect: social completion consequences
 import { mainScheduleRuntime } from "./core/MainScheduleRuntime.js";
 
 import { medicalCaseManager } from "./core/MedicalCaseManager.js";
@@ -45,6 +46,7 @@ import { launchSettingsApp } from "./apps/SettingsApp.js";
 import { launchAchievementsApp } from "./apps/AchievementsApp.js";
 import { launchCalendarApp } from "./apps/CalendarApp.js";
 import { launchTurtleSoup } from "./apps/TurtleSoupApp.js";
+import { launchCustomWindowApp } from "./apps/CustomWindowApp.js";
 import { turtleSoupManager } from "./core/TurtleSoupManager.js";
 // DEV-TOOLS:START
 import { launchDeveloperMode } from "./desktop/DeveloperMode.js";
@@ -113,6 +115,7 @@ let locationScene = null;
 
 const APP_REGISTRY = [
   { id: "his", label: () => i18n.t("apps.his", "HIS 医疗系统"), icon: "🏥", launch: () => launchHISApp() },
+  { id: "his_custom", label: "自定义 HIS 原型", icon: "🏥", launch: () => launchCustomWindowApp("his_custom") },
   { id: "social", label: () => i18n.t("apps.social", "夜聊 Messenger"), icon: "💬", launch: () => launchSocialApp() },
   { id: "chatgtp", label: () => i18n.t("apps.chatgtp", "ChatGTP"), icon: "🤖", launch: () => launchChatGTPApp() },
   { id: "notebook", label: () => i18n.t("apps.notebook", "关键词笔记本"), icon: "📓", launch: () => launchNotebookApp() },
@@ -241,8 +244,9 @@ document.addEventListener("DOMContentLoaded", () => {
       boot();
       const mainMenu = new MainMenu(document.getElementById("main-menu"), {
    onNewGame: () => {
-     window.history.replaceState(null, "", window.location.pathname);
-     onboardingManager.startNewGame();
+    window.history.replaceState(null, "", window.location.pathname);
+    onboardingManager.startNewGame();
+    mainScheduleRuntime.activate();
         },
         onLoadSaveFile: async (file) => {
           const ok = await saveManager.loadFromFile(file);
@@ -252,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
               icon: "⚠️",
             });
           }
+          else mainScheduleRuntime.activate();
           return ok;
         },
       });
@@ -259,6 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // DEV-TOOLS:START
         if (developerMode) {
           mainMenu.hide();
+          mainScheduleRuntime.activate();
           launchDeveloperMode();
         } else
         // DEV-TOOLS:END

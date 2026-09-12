@@ -1,0 +1,10 @@
+export class PublicVariableManager {
+  constructor(eventBus) { this.eventBus = eventBus; this.definitions = new Map(); this.values = new Map(); }
+  register(definition) { if (!Number.isInteger(definition.id) || definition.id < 0 || definition.id > 65535) throw new Error(`Invalid variable id: ${definition.id}`); if (this.definitions.has(definition.id)) throw new Error(`Duplicate variable id: ${definition.id}`); this.definitions.set(definition.id, structuredClone(definition)); this.values.set(definition.id, this.normalize(definition, definition.defaultValue)); }
+  normalize(definition, value) { const type = definition.type; if (type === "bool") { if (typeof value !== "boolean") throw new Error(`Expected bool for ${definition.id}`); return value; } if (["smallInteger", "integer", "real"].includes(type)) { if (typeof value !== "number" || !Number.isFinite(value) || (type !== "real" && !Number.isInteger(value))) throw new Error(`Expected number for ${definition.id}`); if (definition.min != null && value < definition.min || definition.max != null && value > definition.max) throw new Error(`Out of range: ${definition.id}`); return value; } if (type === "string") { if (typeof value !== "string") throw new Error(`Expected string for ${definition.id}`); return value; } if (type === "object") return value == null ? null : structuredClone(value); throw new Error(`Unknown variable type: ${type}`); }
+  set(id, value) { const definition = this.definitions.get(id); if (!definition || definition.readOnly) throw new Error(`Unknown or read-only variable: ${id}`); const next = this.normalize(definition, value); const previous = this.values.get(id); this.values.set(id, next); this.eventBus?.emit("variable:changed", { id, previous, value: next }); return next; }
+  increment(id, delta) { const value = this.values.get(id); return this.set(id, value + delta); }
+  get(id) { return this.values.get(id); }
+  snapshot() { return Object.fromEntries(this.values); }
+  restore(values = {}) { for (const [id, value] of Object.entries(values)) if (this.definitions.has(Number(id))) this.values.set(Number(id), this.normalize(this.definitions.get(Number(id)), value)); }
+}

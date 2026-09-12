@@ -4,7 +4,8 @@ import { dataLoader } from "../core/DataLoader.js";
 import { eventBus } from "../core/EventBus.js";
 import { scheduleData } from "../core/ScheduleData.js";
 import { mainQueue } from "../core/ScheduleQueue.js";
-import { createScheduleRunner } from "../core/ScheduleRunner.js";
+import { scheduleExecutionService } from "../core/ScheduleExecutionService.js";
+import { displayReceiverManager } from "../core/DisplayReceiverManager.js";
 
 /**
  * EndingScreen - full-page overlay shown when EndingManager fires any
@@ -53,7 +54,7 @@ export default class EndingScreen {
         <div class="ending-screen-panel">
           <div class="ending-screen-icon">${def.icon || "🌑"}</div>
           <h2 class="ending-screen-title">${def.title || ""}</h2>
-          <div class="ending-schedule-status">正在加载结局日程……</div>
+          <div class="ending-schedule-status">正在加载结局活动……</div>
           <div class="ending-schedule-log" aria-live="polite"></div>
           <div class="dialogue-options ending-schedule-options"></div>
           <div class="ending-final hidden">
@@ -144,7 +145,7 @@ export default class EndingScreen {
       if (pendingLines.length === 0) logEl.replaceChildren();
       const speakerLabels = { player: "主控", awei: "阿伟", binbin: "彬彬", narrator: "旁白" };
       const speakerIds = { 主控: "player", 彬彬: "binbin", 旁白: "narrator" };
-      const fallbackSpeaker = speakerLabels[speaker] || label || speaker || "日程";
+      const fallbackSpeaker = speakerLabels[speaker] || label || speaker || "活动";
       String(text ?? "").split(/\r?\n/).forEach((rawLine) => {
         const content = rawLine.trim();
         if (!content) return;
@@ -160,30 +161,31 @@ export default class EndingScreen {
 
     scheduleData.createInstance(playbackScheduleId, "main").then(({ ok, instance, reason }) => {
       if (token !== this._runToken) return;
-      if (!ok || !instance) throw new Error(`无法创建结局日程：${reason || "unknown"}`);
+      if (!ok || !instance) throw new Error(`无法创建结局活动：${reason || "unknown"}`);
       instance.currentNodeId = playbackDefinition.blueprint?.startNodeId
         || playbackDefinition.startNodeId
         || null;
       instance.executedNodeIds = [];
       instance.transcript = [];
-      const runner = createScheduleRunner({
+      const offDisplay = displayReceiverManager.register("ending-screen", ({ speaker, label, text }) => appendLine(speaker, label, text));
+      scheduleExecutionService.run({
+        queue: mainQueue,
         definition: playbackDefinition,
         instance,
         appendLine,
         optionsEl,
         appId: "ending",
-        onCheckpoint: (next) => mainQueue.updateInstance(instance.instanceId, next),
         onComplete: (next) => {
+          offDisplay();
           mainQueue.complete(next.instanceId);
-          if (statusEl) statusEl.textContent = "结局日程已完成";
+          if (statusEl) statusEl.textContent = "结局活动已完成";
           finish();
         },
       });
-      runner.start();
     }).catch((error) => {
       if (token !== this._runToken) return;
       console.error("[EndingScreen] Failed to execute ending blueprint:", error);
-      if (statusEl) statusEl.textContent = "结局日程执行失败，已显示结局结果";
+      if (statusEl) statusEl.textContent = "结局活动执行失败，已显示结局结果";
       finish();
     });
   }

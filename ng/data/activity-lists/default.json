@@ -1,0 +1,16 @@
+{
+  "id": "default",
+  "schedules": [
+    {
+      "id": "default",
+      "autoRun": true,
+      "entry": "start"
+    },
+    {
+      "id": "item-use-example"
+    },
+    {
+      "id": "medical-demo"
+    }
+  ]
+}

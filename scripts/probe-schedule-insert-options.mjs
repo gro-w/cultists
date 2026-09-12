@@ -23,12 +23,12 @@ socialQueue.restore([]);
 
 const respected = scheduleData.addSchedule("probe-insert", 100, "social");
 assert.equal(respected.ok, true);
-scheduleData._appendScheduledThrough(100);
+scheduleData._appendQueuedThrough(100);
 assert.equal(socialQueue.getPending().length, 0, "default insertion must respect a false prerequisite");
 
 const bypassed = scheduleData.addSchedule("probe-insert", 120, "social", { respectPrerequisite: false });
 assert.equal(bypassed.ok, true);
-scheduleData._appendScheduledThrough(120);
+scheduleData._appendQueuedThrough(120);
 assert.equal(socialQueue.getPending().length, 1, "respectPrerequisite=false must bypass the prerequisite");
 assert.equal(socialQueue.current().protectFromExpiry, undefined);
 
@@ -37,7 +37,7 @@ const protectedRequest = scheduleData.addSchedule("probe-insert", 140, "social",
   protectFromExpiry: true,
 });
 assert.equal(protectedRequest.ok, true);
-scheduleData._appendScheduledThrough(140);
+scheduleData._appendQueuedThrough(140);
 assert.equal(socialQueue.getPending().length, 2);
 assert.equal(socialQueue.getPending().at(-1).protectFromExpiry, true);
 

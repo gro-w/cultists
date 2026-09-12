@@ -1,6 +1,9 @@
 // CL2 export for activity his__his-initialize
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart();
 
 refresh: emitEvent("content:hisRefresh", {"query":""});

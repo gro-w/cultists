@@ -1,6 +1,9 @@
 // CL2 export for activity patient_extra_02_a_08
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,260
 
 intro: text("his-app", "高文博", "医生您好，我叫高文博，今年37岁。最近主要是[[symptom_054]]，还伴有[[symptom_055]]，所以来医院看看。", "dlg:intro:continue"); // @cl2.pos 260,260

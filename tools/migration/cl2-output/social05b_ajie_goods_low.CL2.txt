@@ -1,6 +1,9 @@
 // CL2 export for activity social05b_ajie_goods_low
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue expiry__value: activityExpiry[true, 8639];
+reusablevalue prerequisite__value: prerequisite[true];
+
 start: flowStart();
 
 t0: text("dorm-bottom", "阿杰", "你要跟我一起去逛逛吗？", "dlg:t0:continue");

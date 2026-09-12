@@ -1,6 +1,9 @@
 // CL2 export for activity patient_02_03_hyperthyroidism
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,260
 
 intro: text("his-app", "罗泽阳", "医生您好，我叫罗泽阳，今年63岁。最近主要是[[symptom_120]]，还伴有[[symptom_121]]，所以来医院看看。", "dlg:intro:continue"); // @cl2.pos 260,260

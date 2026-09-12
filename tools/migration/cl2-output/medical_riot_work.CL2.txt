@@ -1,6 +1,8 @@
 // CL2 export for activity medical_riot_work
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __activity_expiry____value: activityExpiry[false, 0];
+reusablevalue __prerequisite____value: prerequisite[true];
 reusablevalue skill__value: getPublicVariable[22];
 
 start: flowStart(); // @cl2.pos 100,100

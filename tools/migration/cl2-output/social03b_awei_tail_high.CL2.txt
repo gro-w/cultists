@@ -1,6 +1,8 @@
 // CL2 export for activity social03b_awei_tail_high
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[__social_gate_compare_41__value[]];
+reusablevalue __schedule_expiry____value: activityExpiry[true, 5760];
 reusablevalue __social_gate_compare_41__value: arithmetic[">", __social_gate_global_41__value[], 49];
 reusablevalue __social_gate_global_41__value: getGlobal[41];
 reusablevalue current_game_time__value: getGameTime[];

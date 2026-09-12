@@ -1,6 +1,9 @@
 // CL2 export for activity work01a-patient4
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,260
 
 openDialogueWindow: openWindow("dialogue"); // @cl2.pos 140,220

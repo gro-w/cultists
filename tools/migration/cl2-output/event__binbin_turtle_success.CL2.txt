@@ -1,6 +1,9 @@
 // CL2 export for activity event__binbin_turtle_success
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart();
 
 text: text("ending-screen", "binbin", "你终于猜到了。接下来，我有一件东西想让你看。", "dlg:text:continue");

@@ -1,6 +1,8 @@
 // CL2 export for activity social01b_ajie_honor_of_kings
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[true, 2880];
 reusablevalue current_game_time__value: getGameTime[];
 reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
 reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day1"];

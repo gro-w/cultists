@@ -1,6 +1,9 @@
 // CL2 export for activity ending__现实=现实
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,40
 
 line_001: text("ending-screen", "player", "世界似乎变得不同了。", "dlg:line_001:continue"); // @cl2.pos 340,40

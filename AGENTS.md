@@ -56,7 +56,7 @@
 - Activity 的对话 transcript 可随实例保存，并通过通用回放能力向声明的 display receiver 重放；回放只能发送已保存的显示事件，不得重新执行蓝图或产生时间、资源和剧情副作用。
 - 蓝图节点只能使用项目定义的合法端口组合；新增节点必须同时通过 schema 校验、运行时探针和相关编辑器验证。
 - CL2（Cultists Blueprint & Script Language 2）统一脚本图语言目前是设计草案，规范见 [`docs/cl2-language.md`](docs/cl2-language.md)；当前运行时仍以 NGL 蓝图和现有数据契约为准。CL2 采用显式节点 ID、`option<x>` 分支、`default` 默认出口、纯值函数和 `if` 回边，不得在未完成解析器、编辑器、运行时和迁移验证前声称已完成格式迁移。
-- `tools/migration/blueprint_to_cl2.py` 是离线导出器：读取 `data/activities/*.json`，写出 `*.CL2.txt` 和 `conversion-report.json`，不得替代当前 NGL loader，也不得原地修改 canonical JSON；有损或无法对应的旧端口必须保留在报告中。
+- `tools/migration/blueprint_to_cl2.py` 是离线导出器：读取 `data/activities/*.json`，写出 `*.CL2.txt` 和 `conversion-report.json`，不得替代当前 NGL loader，也不得原地修改 canonical JSON；转换时必须区分流程节点、数值节点、流程起始节点和数值接收节点，第 4 类使用 `inputvalue` 表达；有损或无法对应的旧端口必须保留在报告中。
 
 ## 数据、版权和字体
 

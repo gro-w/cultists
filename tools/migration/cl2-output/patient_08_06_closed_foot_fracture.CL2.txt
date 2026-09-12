@@ -1,6 +1,9 @@
 // CL2 export for activity patient_08_06_closed_foot_fracture
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,260
 
 intro: text("his-app", "赵诗涵", "医生您好，我叫赵诗涵，今年63岁。最近主要是[[symptom_185]]，还伴有[[symptom_188]]，所以来医院看看。", "dlg:intro:continue"); // @cl2.pos 260,260

@@ -1,6 +1,9 @@
 // CL2 export for activity ending__牺牲之血
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,40
 
 n000: emitEvent("content:showCg", {"cgId":"cg_ewexmk_f"}); // @cl2.pos 340,40

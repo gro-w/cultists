@@ -1,6 +1,9 @@
 // CL2 export for activity event__与海之子对话
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart();
 
 text: text("ending-screen", "binbin", "海水在呼唤你。你听见了海之子的低语。", "dlg:text:continue");

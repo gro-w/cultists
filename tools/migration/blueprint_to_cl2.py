@@ -19,6 +19,9 @@ FLOW_PORTS = {"flowIn", "flowOut", "true", "false", "default"}
 RESERVED_IDS = {"default", "option", "reusablevalue", "end"}
 VALUE_ONLY_TYPES = {
     "arithmetic", "conditionalValue", "getVariable", "getGlobal", "getProperty",
+    "getStructureDefinition", "getDatabaseDefinition", "findRecordsValue", "getRecordValue",
+    "getRuntimeCollection", "getRuntimeRecord", "mergeRecords", "arrayAppend",
+    "getPublicVariable", "getLanguage", "publicVariableCondition",
     "arrayGet", "arrayAppend", "getPublicVariable", "getLanguage",
     "publicVariableCondition", "getGameTime", "getActivityInstanceCount",
     "getQueueEntryCount", "getScheduleInstanceCount", "prerequisite", "activityExpiry",
@@ -107,6 +110,64 @@ def _normalize(blueprint: dict[str, Any], diagnostics: list[str]) -> tuple[dict[
     return nodes, start
 
 
+def _declared_pins(node: dict[str, Any], key: str) -> list[Any] | None:
+    """Return an explicitly declared pin list, if the node carries one."""
+    if key not in node:
+        return None
+    value = node.get(key)
+    return value if isinstance(value, list) else []
+
+
+def _classify_nodes(nodes: dict[str, dict[str, Any]], diagnostics: list[str]) -> dict[str, str]:
+    """Classify nodes using the four legal blueprint pin combinations.
+
+    Activity JSON normally stores connections rather than a full node-port
+    declaration, so missing declarations are inferred from normalized incoming
+    flow edges, outgoing flow edges, value inputs, and the registry's known
+    value-only node types. Explicit pin arrays, when present on a custom node,
+    take precedence over those fallbacks.
+    """
+    incoming_flow: set[str] = set()
+    for node in nodes.values():
+        for target in (node.get("next") or {}).values():
+            if isinstance(target, dict) and target.get("nodeId") in nodes:
+                incoming_flow.add(target["nodeId"])
+
+    categories: dict[str, str] = {}
+    for node_id, node in nodes.items():
+        node_type = node.get("type", "unknown")
+        flow_inputs = _declared_pins(node, "flowInputs")
+        flow_outputs = _declared_pins(node, "flowOutputs")
+        value_inputs = _declared_pins(node, "valueInputs")
+        value_outputs = _declared_pins(node, "valueOutputs")
+
+        has_flow_input = bool(flow_inputs) if flow_inputs is not None else node_id in incoming_flow
+        has_flow_output = bool(flow_outputs) if flow_outputs is not None else bool(node.get("next"))
+        has_value_input = bool(value_inputs) if value_inputs is not None else bool(node.get("inputs"))
+        has_value_output = bool(value_outputs) if value_outputs is not None else node_type in VALUE_ONLY_TYPES
+
+        if node_type == "flowStart":
+            has_flow_input = False
+            has_flow_output = True
+            has_value_output = False
+
+        if has_flow_input and has_value_output:
+            diagnostics.append(f"{node_id}: flow input and value output cannot coexist")
+            categories[node_id] = "invalid"
+        elif has_flow_input:
+            categories[node_id] = "flow"
+        elif has_value_output:
+            categories[node_id] = "value"
+        elif has_flow_output:
+            categories[node_id] = "start"
+        elif has_value_input:
+            categories[node_id] = "receiver"
+        else:
+            diagnostics.append(f"{node_id}: node has no recognizable blueprint pin combination")
+            categories[node_id] = "invalid"
+    return categories
+
+
 def _flow_label(port: str, node: dict[str, Any], diagnostics: list[str]) -> str:
     if port in {"flowOut", "default"}:
         return "default"
@@ -149,6 +210,7 @@ def convert_activity(activity: dict[str, Any]) -> ConversionResult:
     if not start or start not in nodes:
         diagnostics.append(f"start node is missing: {start!r}")
 
+    categories = _classify_nodes(nodes, diagnostics)
     value_sources: dict[tuple[str, str], None] = {}
     for node in nodes.values():
         for raw_input in (node.get("inputs") or {}).values():
@@ -156,10 +218,11 @@ def convert_activity(activity: dict[str, Any]) -> ConversionResult:
                 source_id = raw_input["nodeId"]
                 source_port = raw_input.get("port", "value")
                 if source_id in nodes:
-                    value_sources[(source_id, source_port)] = None
+                    if categories.get(source_id) == "value":
+                        value_sources[(source_id, source_port)] = None
                 else:
                     diagnostics.append(f"{node['id']}: value input references missing node {source_id!r}")
-        if node.get("type") in VALUE_ONLY_TYPES and node.get("type") not in {"prerequisite", "activityExpiry"}:
+        if categories.get(node["id"]) == "value":
             value_sources.setdefault((node["id"], "value"), None)
 
     def value_expr(value: Any) -> str:
@@ -185,11 +248,18 @@ def convert_activity(activity: dict[str, Any]) -> ConversionResult:
     if value_sources:
         lines.append("")
 
-    node_ids = list(nodes)
-    flow_node_ids = [node_id for node_id, node in nodes.items() if node.get("type") not in VALUE_ONLY_TYPES]
+    receiver_ids = [node_id for node_id, category in categories.items() if category == "receiver"]
+    for node_id in receiver_ids:
+        node = nodes[node_id]
+        node_type = node.get("type", "unknown")
+        lines.append(f"inputvalue {_safe_id(node_id)}: {node_type}{node_args(node, bracket=True)};")
+    if receiver_ids:
+        lines.append("")
+
+    flow_node_ids = [node_id for node_id, category in categories.items() if category in {"flow", "start"}]
     for index, (node_id, node) in enumerate(nodes.items()):
         node_type = node.get("type", "unknown")
-        if node_type in VALUE_ONLY_TYPES:
+        if categories.get(node_id) not in {"flow", "start"}:
             continue
         if node_type == "activityEnd":
             function = "end"

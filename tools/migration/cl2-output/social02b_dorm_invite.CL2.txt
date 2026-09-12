@@ -2,6 +2,8 @@
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
 reusablevalue current_game_time__value: getGameTime[];
+reusablevalue prerequisite__value: prerequisite[true];
+reusablevalue scheduleExpiry__value: activityExpiry[true, 4319];
 reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
 reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day2"];
 

@@ -1,6 +1,9 @@
 // CL2 export for activity social05b_awei_record_low
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue expiry__value: activityExpiry[true, 8639];
+reusablevalue prerequisite__value: prerequisite[true];
+
 start: flowStart();
 
 t0: text("dorm-bottom", "阿伟", "我要去唱片店，怎么，你也要来吗？", "dlg:t0:continue");

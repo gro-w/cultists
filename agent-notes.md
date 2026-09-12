@@ -30,7 +30,7 @@ media/                     历史宣传资源和设计稿
 
 CL2（Cultists Blueprint & Script Language 2）统一脚本图语言的设计草案位于 `docs/cl2-language.md`。它是直接等效于 Blueprint Graph 的文本表示，不以 JSON 作为第二份 canonical 图定义：流程节点必须有显式 ID，流程边使用 `option<x>` 和 `default`，纯值节点使用方括号函数和 `reusablevalue`，循环通过 `if` 回边表达。当前运行时仍使用 NGL，CL2 只有在解析器、编辑器、运行时和迁移验证完成后才能替换现有格式。
 
-离线蓝图导出器位于 `tools/migration/blueprint_to_cl2.py`。可运行 `python3 tools/migration/blueprint_to_cl2.py data/activities tools/migration/cl2-output`，输出每个 Activity 的 `*.CL2.txt` 与 `conversion-report.json`；该工具只做迁移/export，不修改 `data/activities`，报告中的 diagnostics 表示旧蓝图端口或目标无法无损映射到 CL2 草案。
+- 离线蓝图导出器位于 `tools/migration/blueprint_to_cl2.py`。可运行 `python3 tools/migration/blueprint_to_cl2.py data/activities tools/migration/cl2-output`，输出每个 Activity 的 `*.CL2.txt` 与 `conversion-report.json`；该工具只做迁移/export，不修改 `data/activities`，并按四类引脚组合转换流程节点、数值节点、流程起始节点和数值接收节点。数值接收节点输出 `inputvalue <id>: <value-expression>;`，报告中的 diagnostics 表示旧蓝图端口或目标无法无损映射到 CL2 草案。
 
 设置窗口已迁移到 `data/windows/settings.json`，由桌面图标 `settings` 打开；四项设置分别绑定 `settings:bgmVolume`、`settings:notebookSortMode`、`settings:confirmPhaseChange` 和 core 语言节点。该窗口不新增业务 JavaScript。
 

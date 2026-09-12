@@ -1,6 +1,9 @@
 // CL2 export for activity dorm_activity_day5
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue prerequisite__value: prerequisite[true];
+reusablevalue scheduleExpiry__value: activityExpiry[true, 8639];
+
 start: flowStart();
 
 line_0: text("dorm-bottom", "主控", "之前我们来吃的时候锅底里有这些东西吗？？", "dlg:line_0:continue");

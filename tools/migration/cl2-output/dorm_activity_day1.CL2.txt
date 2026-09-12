@@ -9,6 +9,8 @@ reusablevalue __invite_cmp_42__value: arithmetic["gte", __invite_get_42__value[]
 reusablevalue __invite_get_40__value: getPublicVariable[40];
 reusablevalue __invite_get_41__value: getPublicVariable[41];
 reusablevalue __invite_get_42__value: getPublicVariable[42];
+reusablevalue prerequisite__value: prerequisite[__invite_any__value[]];
+reusablevalue scheduleExpiry__value: activityExpiry[true, 2879];
 
 start: flowStart();
 

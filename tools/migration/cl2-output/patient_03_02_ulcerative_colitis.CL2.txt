@@ -1,6 +1,9 @@
 // CL2 export for activity patient_03_02_ulcerative_colitis
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,260
 
 intro: text("his-app", "郑嘉诚", "医生您好，我叫郑嘉诚，今年49岁。最近主要是[[symptom_173]]，还伴有[[symptom_174]]，所以来医院看看。", "dlg:intro:continue"); // @cl2.pos 260,260

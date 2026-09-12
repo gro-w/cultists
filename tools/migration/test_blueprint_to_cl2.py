@@ -30,9 +30,47 @@ class BlueprintToCl2Tests(unittest.TestCase):
         result = convert_activity(activity)
         self.assertEqual(result.diagnostics, [])
         self.assertIn("reusablevalue read__value: getPublicVariable[7];", result.text)
+        self.assertIn("start: flowStart()", result.text)
         self.assertIn("branch(read__value[])", result.text)
         self.assertNotIn("default end;", result.text)
         self.assertIn("// @cl2.pos 1,2", result.text)
+
+    def test_converts_value_receiver_to_inputvalue(self):
+        activity = {
+            "id": "receiver",
+            "blueprint": {
+                "startNodeId": "start",
+                "nodes": {
+                    "start": {
+                        "id": "start",
+                        "type": "flowStart",
+                        "inputs": {},
+                        "next": {"flowOut": {"nodeId": "consume", "port": "flowIn"}},
+                    },
+                    "consume": {
+                        "id": "consume",
+                        "type": "consumeValue",
+                        "inputs": {
+                            "value": {
+                                "nodeId": "compare",
+                                "port": "value",
+                            }
+                        },
+                        "next": {"flowOut": {"nodeId": "end", "port": "flowIn"}},
+                    },
+                    "compare": {
+                        "id": "compare",
+                        "type": "math",
+                        "inputs": {"operator": "gte", "left": 4, "right": 2},
+                    },
+                    "end": {"id": "end", "type": "activityEnd", "inputs": {}},
+                },
+            },
+        }
+        result = convert_activity(activity)
+        self.assertEqual(result.diagnostics, [])
+        self.assertIn('inputvalue compare: math["gte", 4, 2];', result.text)
+        self.assertNotIn("compare: math(", result.text)
 
     def test_directory_conversion_writes_cl2_files_and_report(self):
         with tempfile.TemporaryDirectory() as temp:

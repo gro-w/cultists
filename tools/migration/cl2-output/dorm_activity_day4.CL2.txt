@@ -13,6 +13,8 @@ reusablevalue check_0__value: getPublicVariable[113];
 reusablevalue check_1__value: getPublicVariable[110];
 reusablevalue check_2__value: getPublicVariable[111];
 reusablevalue check_3__value: getPublicVariable[112];
+reusablevalue prerequisite__value: prerequisite[__invite_any__value[]];
+reusablevalue scheduleExpiry__value: activityExpiry[true, 7199];
 
 start: flowStart();
 

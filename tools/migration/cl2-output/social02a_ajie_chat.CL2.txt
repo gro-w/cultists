@@ -1,6 +1,8 @@
 // CL2 export for activity social02a_ajie_chat
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[__social_gate_global_100__value[]];
+reusablevalue __schedule_expiry____value: activityExpiry[true, 3840];
 reusablevalue __social_gate_global_100__value: getPublicVariable[100];
 
 start: flowStart(); // @cl2.pos 40,220

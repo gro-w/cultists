@@ -1,6 +1,9 @@
 // CL2 export for activity event__悔恨之泪
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 n_26.6nj: flowStart(); // @cl2.pos 40,40
 
 n_5l.pvt: text("ending-screen", "npc", "对，一攒够钱我就买了——终于能给挚爱的Pink Floyd一个“容器”，还挺高兴的。", "dlg:n_5l.pvt:continue") {

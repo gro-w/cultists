@@ -1,6 +1,9 @@
 // CL2 export for activity event__追逐事件
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart();
 
 cg_dorm: emitEvent("content:showCg", {"cgId":"cg_exrn4m_1"});

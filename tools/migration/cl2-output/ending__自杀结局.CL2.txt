@@ -1,6 +1,9 @@
 // CL2 export for activity ending__自杀结局
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 80,80
 
 text: text("ending-screen", "narrator", "致病术反噬了施术者。", "dlg:text:continue"); // @cl2.pos 80,220

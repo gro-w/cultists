@@ -1,6 +1,9 @@
 // CL2 export for activity ending__组一辈子少年乐队！
 // Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
 
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
 start: flowStart(); // @cl2.pos 40,40
 
 intro_01: text("ending-screen", "player", "你们的乐队，名字是叫“赞”是吧，似乎要在六道口黑暗学术bar首演了？", "dlg:intro_01:continue"); // @cl2.pos 340,40

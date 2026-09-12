@@ -30,6 +30,12 @@
 6. 所有旧 JSON 图来源都必须盘点：Activity 文件、窗口/Widget lifecycle inline blueprints、`BuiltinIconBlueprints.js`、自定义节点嵌套 blueprint、结构/数据库定义中的 use blueprint，以及任何 probe fixture。
 7. 迁移期可以保留只读 JSON adapter 作为离线对照和回滚工具；最终发布运行时和编辑器不得依赖 NGL JSON loader、旧 JSON editor export 或旧连接格式。
 8. 游戏行为仍按 `game → framework → core` 分层；CL2 parser/runtime 属于 core 通用能力，不能把患者、SAN、日期、NPC 或剧情判断硬编码进 CL2 parser/Runner。
+9. 蓝图节点按引脚类型组合严格划分为四类；不存在第五类节点。流程输入引脚与数值输出引脚不能同时存在。
+   - **流程节点：** 有流程输入；可有流程输出和数值输入；没有数值输出。
+   - **数值节点：** 有数值输出；可有数值输入；没有流程输入和流程输出。
+   - **流程起始节点：** 没有流程输入和数值输出；有流程输出；可有数值输入。
+   - **数值接收节点：** 没有流程输入、数值输出和流程输出；有数值输入。
+10. CL2 的 `reusablevalue` 表示可复用的数值产生式；第 4 类数值接收节点必须使用 `inputvalue` 语句表达其输入绑定，例如 `inputvalue a1: math['gte', getlocalvar[1], 4];`。`inputvalue` 不产生流程边，也不能被当作流程节点或数值节点执行。
 
 ---
 
@@ -61,6 +67,19 @@ BlueprintGraph
 ```
 
 Graph 字段可以沿用当前 Runner 所需的 `nodes/startNodeId/next/inputs` 形状，但必须由 CL2 parser 在内存中产生；不能把它重新写成 Activity JSON。
+
+### 四类节点的统一分类契约
+
+parser、validator、serializer、Runner 和编辑器必须共享同一个 `classifyNodePins(nodeDefinition)` 结果，而不能各自根据节点名称推断类别。分类前先检查互斥条件：只要同时出现流程输入引脚和数值输出引脚，立即报告非法节点；随后按以下完整判定表分类：
+
+| 类别 | 流程输入 | 流程输出 | 数值输入 | 数值输出 | CL2 表达 |
+| --- | --- | --- | --- | --- | --- |
+| 流程节点 | 有 | 有或无 | 有或无 | 无 | 流程语句/流程调用 |
+| 数值节点 | 无 | 无 | 有或无 | 有 | `reusablevalue` 或值表达式 |
+| 流程起始节点 | 无 | 有 | 有或无 | 无 | 流程入口语句 |
+| 数值接收节点 | 无 | 无 | 有 | 无 | `inputvalue name: value-expression;` |
+
+验证器必须拒绝不属于这四类的节点。特别是“无任何引脚”“只有流程输入和数值输出”“只有流程输入但同时声明数值输出”等组合必须产生稳定错误码。`inputvalue` 的左侧名称必须绑定到对应数值接收节点的 stable ID/输入槽；右侧表达式必须通过普通 value parser 和注册表校验。
 
 ### Activity 非图元数据
 
@@ -104,10 +123,11 @@ Graph 字段可以沿用当前 Runner 所需的 `nodes/startNodeId/next/inputs` 
 **Steps：**
 
 1. 扫描所有 JSON 中的 `blueprint`、`events`、`onCreate`、`onDestroy`、`onClick`、`onChange`、`use` 和嵌套 blueprint。
-2. 分别统计 source file、Activity ID、node type、flow port、value port、stable node ID、引用方和目标文件。
-3. 记录当前 `node.next`/`inputs` 与旧 `connections` 的形状，记录所有隐式 successor 依赖。
-4. 对每条 Activity 记录当前 `validateBlueprint` 结果、可达节点数、终止节点数和失败原因。
-5. 保存清单，不修改 canonical 文件。
+2. 分别统计 source file、Activity ID、node type、flow input/output port、value input/output port、stable node ID、引用方和目标文件。
+3. 对每个节点依据四类引脚组合分类，单独列出非法组合、空引脚组合和同时具有流程输入/数值输出的组合。
+4. 记录当前 `node.next`/`inputs` 与旧 `connections` 的形状，记录所有隐式 successor 依赖及第 4 类数值接收节点的输入绑定。
+5. 对每条 Activity 记录当前 `validateBlueprint` 结果、可达节点数、终止节点数和失败原因。
+6. 保存清单，不修改 canonical 文件。
 
 **验证：**
 
@@ -140,9 +160,10 @@ python3 -c 'import json; json.load(open("tools/migration/cl2-migration-inventory
 5. 隐式 default 的下一个节点是“下一个流程节点”还是任意声明；建议明确为下一个 flow declaration，并让纯值声明不参与 successor 计算。
 6. `option<1,3,5>` 和 `option<1...4>` 的 lexer/parser 展开时机。
 7. `@cl2.pos`、`@cl2.note`、普通注释和未知注释的保存策略。
-8. 错误恢复：单个节点语法错误时保留后续可解析节点和原始诊断。
+8. `inputvalue a1: math['gte', getlocalvar[1], 4];` 的完整语法：左侧接收节点 ID/输入槽、右侧 value expression、前向 reusable value 引用、重复绑定和未连接必填数值输入的规则。
+9. 错误恢复：单个节点语法错误时保留后续可解析节点和原始诊断；非法引脚组合必须在 parser/validator 中以同一错误码报告。
 
-**验证：** 为每条语法写 parser red probe，再实现 lexer/parser 后转绿；至少覆盖完整示例、隐式 default、dice 端口、纯值嵌套、循环、注释和错误行列号。
+**验证：** 为每条语法写 parser red probe，再实现 lexer/parser 后转绿；至少覆盖完整示例、隐式 default、dice 端口、四类节点的最小实例、`inputvalue`、纯值嵌套、循环、注释和错误行列号。
 
 **完成条件：** `docs/cl2-language.md` 不再把这些关键规则留作未决假设；parser probe 能输出稳定 AST/Graph 和精确 source location。
 
@@ -164,13 +185,14 @@ python3 -c 'import json; json.load(open("tools/migration/cl2-migration-inventory
 **实施要点：**
 
 1. lexer 产生 token、行、列、原始文本范围；不能用正则一次性吞掉整个文件。
-2. parser 生成 Document 和 runtime Graph；流程函数不能嵌套在流程函数参数中，纯函数必须走 value AST。
+2. parser 生成 Document 和 runtime Graph；流程函数不能嵌套在流程函数参数中，纯函数必须走 value AST。`inputvalue` 生成数值接收绑定，不生成可调度的 flow/value producer 节点。
 3. 对显式 flow edge 直接建立 `next`；省略 default 时把下一个 flow declaration 解析为隐式 default，但在 Graph 中标记 `implicit: true`，避免 serializer 把隐式边误写成显式边。
 4. `reusablevalue` 建立命名 value entry，执行拓扑排序和循环检测。
-5. parser 解析 `@cl2.pos`、`@cl2.note`，保留 stable ID 和 source location。
-6. validator 复用 `ActivityNodeRegistry` 的端口契约，但错误必须增加 `path:line:column`、node ID、port 名称和错误码。
-7. serializer 默认使用隐式 default；只有显式边不是声明顺序下一个流程节点、或作者明确要求保留 explicit default 时，才输出 `default target;`。
-8. serializer 对 node ID、registered function ID、string literal 和 object literal 使用稳定转义；重复 serialize 不得产生无意义 diff。
+5. parser 解析 `inputvalue <node-or-slot>: <value-expression>;`，将右侧表达式连接到指定数值输入；不把它改写成 `reusablevalue`，以保留第 4 类节点的语义。
+6. parser 解析 `@cl2.pos`、`@cl2.note`，保留 stable ID 和 source location。
+7. validator 复用 `ActivityNodeRegistry` 的端口契约，但错误必须增加 `path:line:column`、node ID、port 名称和错误码；先执行四类节点分类，再验证各类允许的边。
+8. serializer 默认使用隐式 default；只有显式边不是声明顺序下一个流程节点、或作者明确要求保留 explicit default 时，才输出 `default target;`。
+9. serializer 对 node ID、registered function ID、string literal、object literal 和 `inputvalue` 左侧绑定使用稳定转义；重复 serialize 不得产生无意义 diff。
 
 **验证命令：**
 
@@ -183,7 +205,7 @@ node probes/cl2-parser-probe.mjs
 node probes/cl2-roundtrip-probe.mjs
 ```
 
-**完成条件：** `parse(serialize(parse(source)))` 的 Graph、端口、稳定 ID、位置和显式/隐式 default 语义一致；错误文件仍返回 partial document 和诊断。
+**完成条件：** `parse(serialize(parse(source)))` 的 Graph、四类节点分类、端口、稳定 ID、位置、`inputvalue` 绑定和显式/隐式 default 语义一致；错误文件仍返回 partial document 和诊断。
 
 ---
 
@@ -202,12 +224,14 @@ node probes/cl2-roundtrip-probe.mjs
 
 1. 先读取 preservation mirror，禁止在 source JSON 上原地转换。
 2. 使用与运行时相同的 CL2 serializer/parser，而不是 Python 工具自行定义第二套语法。
-3. 处理当前已确认的 dice 映射：`largeSuccess → option<1>`、`success → option<2>`、`failure → option<3>`、`largeFailure → default`。
-4. 对可安全省略的 default 使用隐式 default；如果目标不是下一个流程节点，保留显式 default。
-5. 对每个 source node 建立 source ID → CL2 node ID 对照；不允许因显示名称、翻译文本或文件名变化而改 stable ID。
-6. 对每个无法映射的 node、port、metadata、nested blueprint 输出 blocked diagnostic，不得生成看似可运行的半截文件。
-7. 重新 parse 每个生成的 CL2，并与源 Graph 做结构比较：节点数、stable ID、流程出口、值边、终止节点、位置、metadata 和可达性分别比较。
-8. 只有 `blocked=0`、`parse errors=0`、结构差异已分类且行为 probe 通过，才允许进入 canonical replacement。
+3. 按四类节点契约转换 source node；流程输入/输出、数值输入/输出必须与注册表定义一致。
+4. 处理当前已确认的 dice 映射：`largeSuccess → option<1>`、`success → option<2>`、`failure → option<3>`、`largeFailure → default`。
+5. 对第 4 类数值接收节点生成 `inputvalue <stable-id-or-slot>: <value-expression>;`，不得错误地输出 `reusablevalue` 或制造虚假的 flow edge。
+6. 对可安全省略的 default 使用隐式 default；如果目标不是下一个流程节点，保留显式 default。
+7. 对每个 source node 建立 source ID → CL2 node ID 对照；不允许因显示名称、翻译文本或文件名变化而改 stable ID。
+8. 对每个无法映射的 node、port、metadata、nested blueprint 输出 blocked diagnostic，不得生成看似可运行的半截文件。
+9. 重新 parse 每个生成的 CL2，并与源 Graph 做结构比较：节点类别、节点数、stable ID、流程出口、值边、`inputvalue` 绑定、终止节点、位置、metadata 和可达性分别比较。
+10. 只有 `blocked=0`、`parse errors=0`、结构差异已分类且行为 probe 通过，才允许进入 canonical replacement。
 
 **验证：**
 
@@ -270,10 +294,12 @@ node probes/cl2-migration-parity-probe.mjs
 
 1. 将 Runner 的输入命名从 `definition.blueprint` 改成 `definition.graph` 或明确的 `definition.document.graph`，同时保留一个短期内部 adapter，避免 UI/queue 直接持有 JSON source。
 2. 将 `nextFlow()` 改为消费 parser 解析出的 explicit/implicit successor；隐式 default 必须在 parser/Graph 构造时解析，Runner 不按字符串文件重新推断。
-3. 将 `evaluateValueOutput()` 改为消费纯值 AST/Graph，保持现有 stack cycle guard、`pvGateway`、`dbGateway`、`runtimeGateway` 和 nested custom node 语义。
-4. 将 `MAX_STEPS`、pause/resume、wait、one-shot executedNodeIds、transcript、checkpoint、cancel、complete 保持不变，逐项增加 CL2 probe。
-5. 对 `framework:diceCheck`、random branch、choice、range、switch 做边界/极值/缺少出口测试，确认 default fallback 与 CL2 端口契约一致。
-6. 所有副作用仍通过现有 injected gateways；不得为了适配 CL2 在 Runner 增加 game-specific 分支。
+3. 将 `evaluateValueOutput()` 改为消费纯值 AST/Graph；数值接收节点的 `inputvalue` 绑定只在其所属节点执行前解析为输入值，不创建额外执行步骤。
+4. Runner 启动前验证每个节点已经通过四类分类；流程调度只允许流程节点和流程起始节点，值求值只允许数值节点，数值接收节点只允许作为有数值输入的接收方。
+5. 保持现有 stack cycle guard、`pvGateway`、`dbGateway`、`runtimeGateway` 和 nested custom node 语义。
+6. 将 `MAX_STEPS`、pause/resume、wait、one-shot executedNodeIds、transcript、checkpoint、cancel、complete 保持不变，逐项增加 CL2 probe。
+7. 对 `framework:diceCheck`、random branch、choice、range、switch 做边界/极值/缺少出口测试，确认 default fallback 与 CL2 端口契约一致。
+8. 所有副作用仍通过现有 injected gateways；不得为了适配 CL2 在 Runner 增加 game-specific 分支。
 
 **保存/恢复要求：**
 
@@ -282,7 +308,7 @@ node probes/cl2-migration-parity-probe.mjs
 - 如果 CL2 文件缺少已保存的 node ID，恢复必须显式失败并报告迁移诊断，不能跳到下一个节点或按文本行号猜测。
 - 为旧存档保留一次性 `saveVersion` adapter；adapter 只转换存档字段，不重新执行旧 NGL 蓝图。
 
-**完成条件：** 现有 Activity runtime probe 全部通过，且至少覆盖初始节点、普通 action、choice、dice 四出口、value wire、pause/resume、save/restore、失败路径和循环退出。
+**完成条件：** 现有 Activity runtime probe 全部通过，且至少覆盖四类节点、`inputvalue` 数值接收、初始节点、普通 action、choice、dice 四出口、value wire、pause/resume、save/restore、失败路径和循环退出。
 
 ---
 
@@ -433,8 +459,10 @@ node probes/cl2-migration-parity-probe.mjs
 
 - [ ] 所有 CL2 文件 lexer/parser 可加载。
 - [ ] 所有 node ID 唯一、稳定且无显示文本派生。
-- [ ] 注册 node type、输入端口、flow 输出、value 类型均通过 validator。
+- [ ] 每个节点都能按四类引脚契约分类；非法组合和流程输入/数值输出共存均被拒绝。
+- [ ] 注册 node type、流程输入/输出端口、数值输入/输出端口、value 类型均通过 validator。
 - [ ] `option<x>`、`default`、隐式 default、dice 四出口、未连接 branch fallback 均有测试。
+- [ ] `inputvalue` 可表达第 4 类数值接收节点，绑定对象、输入槽、右侧 value expression 和重复绑定错误均有测试。
 - [ ] reusable value 无循环依赖，纯函数不产生副作用。
 - [ ] 不可达节点、无限环、无终止出口和缺失目标都报告 source location。
 - [ ] serializer 往返不丢位置、notes、stable IDs 和有效注释。
@@ -443,6 +471,7 @@ node probes/cl2-migration-parity-probe.mjs
 
 - [ ] ActivityDefinitionStore 只从 manifest + CL2 source + metadata 注册定义。
 - [ ] Runner 的 flow/value 执行由 CL2 Graph 驱动。
+- [ ] Runner 不把数值接收节点调度为流程或数值 producer；`inputvalue` 在所属节点执行前提供输入值。
 - [ ] pause/resume/cancel/complete/wait/transcript/one-shot guard 行为不变。
 - [ ] 时间、队列、事件、窗口、数据库、BGM、public variable 和 runtime collection gateway 逐类验证。
 - [ ] save/restore 只保存 instance state，不保存 NGL/JSON blueprint。

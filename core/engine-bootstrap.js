@@ -134,15 +134,22 @@ export async function bootstrap(rootEl) {
   for (const { databaseId } of dataStore.listDatabases()) {
     refResolver.register(`database:${databaseId}`, (key) => dataStore.getRecord(databaseId, key));
   }
+  const queues = new ActivityQueueRegistry(eventBus);
+  for (const definition of config.queues || []) {
+    if (definition?.id) queues.register(definition.id, { nonBlocking: Boolean(definition.nonBlocking) });
+  }
   const frameworkRuntimeDefinition = await dataLoader.loadJSON(frameworkManifest.documents?.runtimeCollections || config.frameworkCollections, { optional: true }) || {};
   const runtimeCollections = new RuntimeCollectionRegistry({
     dataStore,
     eventBus,
     variableStore,
+    activityQueueRegistry: queues,
     publicVariableManager: publicVariables,
     publicStateVariableId: frameworkRuntimeDefinition.publicStateVariableId ?? null,
   });
   runtimeCollections.loadDefinitions(frameworkRuntimeDefinition.collections || {});
+  eventBus.on("activity:appended", () => eventBus.emit("runtime:collection-changed", { collectionId: "activity-queues" }));
+  eventBus.on("activity:changed", () => eventBus.emit("runtime:collection-changed", { collectionId: "activity-queues" }));
   const runtimeGateway = {
     getCollection: (collectionId) => runtimeCollections.get(collectionId),
     getRecord: (collectionId, recordId) => runtimeCollections.getRecord(collectionId, recordId),
@@ -210,10 +217,6 @@ export async function bootstrap(rootEl) {
   const entries = [...ids].map((id) => manifestEntries.get(id)).filter(Boolean);
   if (entries.length) await activityDefinitions.loadManifest(entries, "activities/");
 
-  const queues = new ActivityQueueRegistry(eventBus);
-  for (const definition of config.queues || []) {
-    if (definition?.id) queues.register(definition.id, { nonBlocking: Boolean(definition.nonBlocking) });
-  }
   const saveManager = new SaveManager({
     gameClock, variableStore, publicVariableManager: publicVariables,
     activityQueueRegistry: queues, windowManager, desktopIconManager: iconManager,
@@ -241,6 +244,15 @@ export async function bootstrap(rootEl) {
   apiGateway.register("engine.queue.consume", ({ queueId = "main" }) => Boolean(consumer.consume(queueId)));
   apiGateway.register("engine.activity.pause", ({ instanceId }) => execution.pause(instanceId));
   apiGateway.register("engine.activity.resume", ({ instanceId }) => execution.resume(instanceId));
+  apiGateway.register("engine.activity.replay", ({ queueId = "main", instanceId, displayTo = "dorm-bottom" } = {}) => {
+    const instance = queues.getEntry(queueId, instanceId);
+    if (!instance) return { ok: false, reason: "activity-instance-not-found" };
+    const transcript = Array.isArray(instance.transcript) ? instance.transcript : [];
+    eventBus.emit("display:reset", { displayTo, instanceId });
+    const textEntries = transcript.filter((entry) => entry?.type === "text");
+    textEntries.forEach((entry) => eventBus.emit("display:text", { ...entry, displayTo, continueKey: null }));
+    return { ok: true, instanceId, count: textEntries.length };
+  });
   apiGateway.register("engine.activity.cancel", ({ instanceId }) => execution.cancel(instanceId));
 
   function enqueueActivity(activityId, queueId = "main", payload = null) {

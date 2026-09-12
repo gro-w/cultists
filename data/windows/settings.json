@@ -1,0 +1,125 @@
+{
+  "id": "settings",
+  "title": "设置",
+  "icon": "⚙️",
+  "width": 360,
+  "height": 300,
+  "resizable": false,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "language": { "id": "language", "type": "getLanguage" }
+    }
+  },
+  "root": {
+    "widgetId": "settings-root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "className": "app-settings panel-inset",
+    "children": [
+      {
+        "widgetId": "settings-volume-title",
+        "type": "label",
+        "text": "BGM 音量"
+      },
+      {
+        "widgetId": "settings-volume-row",
+        "type": "container",
+        "flow": "horizontal",
+        "gap": 8,
+        "children": [
+          {
+            "widgetId": "settings-volume",
+            "type": "range",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "value": { "variable": "settings:bgmVolume" },
+            "events": {
+              "onChange": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
+                  "set": { "id": "set", "type": "setVariable", "inputs": { "key": "settings:bgmVolume", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+                  "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+                }
+              }
+            }
+          },
+          {
+            "widgetId": "settings-volume-value",
+            "type": "label",
+            "text": "0–100"
+          }
+        ]
+      },
+      {
+        "widgetId": "settings-sort-title",
+        "type": "label",
+        "text": "笔记本分组排序方式"
+      },
+      {
+        "widgetId": "settings-sort",
+        "type": "select",
+        "options": [
+          { "value": "category", "label": "按类别" },
+          { "value": "day", "label": "按收集时间（第 x 天）" },
+          { "value": "pinyin", "label": "按拼音首字母" }
+        ],
+        "value": { "variable": "settings:notebookSortMode" },
+        "events": {
+          "onChange": {
+            "startNodeId": "start",
+            "nodes": {
+              "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
+              "set": { "id": "set", "type": "setVariable", "inputs": { "key": "settings:notebookSortMode", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+              "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+            }
+          }
+        }
+      },
+      {
+        "widgetId": "settings-confirm",
+        "type": "checkbox",
+        "text": "下班/睡觉前需要二次确认",
+        "value": { "variable": "settings:confirmPhaseChange" },
+        "events": {
+          "onChange": {
+            "startNodeId": "start",
+            "nodes": {
+              "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
+              "set": { "id": "set", "type": "setVariable", "inputs": { "key": "settings:confirmPhaseChange", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+              "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+            }
+          }
+        }
+      },
+      {
+        "widgetId": "settings-language-title",
+        "type": "label",
+        "text": "语言"
+      },
+      {
+        "widgetId": "settings-language",
+        "type": "select",
+        "options": [
+          { "value": "zh-cn", "label": "简体中文" },
+          { "value": "en-us", "label": "English" }
+        ],
+        "value": { "nodeId": "language", "port": "value" },
+        "events": {
+          "onChange": {
+            "startNodeId": "start",
+            "nodes": {
+              "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
+              "set": { "id": "set", "type": "setLanguage", "inputs": { "language": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
+              "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

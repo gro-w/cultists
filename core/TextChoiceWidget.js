@@ -27,6 +27,9 @@ export class TextChoiceWidget {
     this._mediaEventUnsubscribe = this.eventBus?.on?.("display:media", (payload) => this._handle({ ...payload, type: "media" }));
     this._mediaEndEventUnsubscribe = this.eventBus?.on?.("display:media-end", (payload) => this._handle({ ...payload, type: "media-end" }));
     this._completeEventUnsubscribe = this.eventBus?.on?.("display:complete", (payload) => this._onComplete(payload));
+    this._replayResetUnsubscribe = this.eventBus?.on?.("display:reset", (payload) => {
+      if (this._accepts(payload)) this.reset();
+    });
   }
 
   _buildDom() {
@@ -170,6 +173,7 @@ export class TextChoiceWidget {
     this._mediaEventUnsubscribe?.();
     this._mediaEndEventUnsubscribe?.();
     this._completeEventUnsubscribe?.();
+    this._replayResetUnsubscribe?.();
   }
 }
 

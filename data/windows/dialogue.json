@@ -2,16 +2,82 @@
   "id": "dialogue",
   "title": "对话",
   "icon": "💬",
-  "width": 520,
-  "height": 320,
+  "width": 620,
+  "height": 360,
   "resizable": true,
   "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "socialContacts": {
+        "id": "socialContacts",
+        "type": "getRuntimeCollection",
+        "inputs": { "collectionId": "socialContacts" }
+      }
+    }
+  },
   "root": {
     "widgetId": "dialogue-root",
     "type": "container",
-    "flow": "vertical",
+    "flow": "horizontal",
     "padding": 8,
+    "className": "dialogue-layout",
     "children": [
+      {
+        "widgetId": "dialogue-contacts",
+        "type": "container",
+        "flow": "vertical",
+        "className": "dialogue-contacts panel-inset",
+        "children": [
+          {
+            "widgetId": "dialogue-contacts-title",
+            "type": "label",
+            "text": "联系人"
+          },
+          {
+            "widgetId": "dialogue-contacts-list",
+            "type": "list",
+            "items": { "nodeId": "socialContacts", "port": "value" },
+            "itemLabelTemplate": "{{activityId}}",
+            "itemMetaTemplate": "第{{receivedDay}}天 · {{receivedTime}}分钟 · {{queueStatus}}",
+            "itemGroupField": "receivedDay",
+            "itemGroupClassName": "dialogue-contact-group",
+            "itemClassName": "dialogue-contact-row",
+            "events": {
+              "onItemClick": {
+                "startNodeId": "start",
+                "nodes": {
+                  "start": {
+                    "id": "start",
+                    "type": "flowStart",
+                    "inputs": {},
+                    "next": { "flowOut": { "nodeId": "remember", "port": "flowIn" } }
+                  },
+                  "remember": {
+                    "id": "remember",
+                    "type": "setVariable",
+                    "inputs": { "key": "social:selectedInstance", "value": { "variable": "event:value" } },
+                    "next": { "flowOut": { "nodeId": "replay", "port": "flowIn" } }
+                  },
+                  "replay": {
+                    "id": "replay",
+                    "type": "callApi",
+                    "inputs": {
+                      "apiId": "engine.activity.replay",
+                      "payload": {
+                        "queueId": "social",
+                        "instanceId": { "variable": "event:value" },
+                        "displayTo": "dorm-bottom"
+                      }
+                    },
+                    "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } }
+                  },
+                  "end": { "id": "end", "type": "activityEnd", "inputs": {} }
+                }
+              }
+            }
+          }
+        ]
+      },
       {
         "widgetId": "dialogue-panel",
         "type": "dialogue",
@@ -20,7 +86,7 @@
           "his-app",
           "default"
         ],
-        "className": "dialogue-panel panel-inset"
+        "className": "dialogue-panel panel-inset dialogue-transcript"
       }
     ]
   }

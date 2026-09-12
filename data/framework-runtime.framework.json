@@ -47,6 +47,7 @@
       "keyField": "id"
     },
     "socialApps": {"databaseId":"socialApps","keyField":"id"},
+    "socialContacts": {"activityQueueId":"social","projectPayload":true},
     "sceneItems": {
       "stateOnly": true
     },

@@ -9,13 +9,14 @@
   "valueGraph":{"nodes":{
     "location":{"id":"location","type":"getRecordValue","inputs":{"databaseId":"locations","key":{"variable":"stateBoundary:location"}}},
     "locationName":{"id":"locationName","type":"getProperty","inputs":{"value":{"nodeId":"location","port":"value"},"key":"name"}},
-    "background":{"id":"background","type":"getProperty","inputs":{"value":{"nodeId":"location","port":"value"},"key":"backgroundImage"}}
+    "background":{"id":"background","type":"getProperty","inputs":{"value":{"nodeId":"location","port":"value"},"key":"backgroundImage"}},
+    "subLocations":{"id":"subLocations","type":"getProperty","inputs":{"value":{"nodeId":"location","port":"value"},"key":"subLocations"}}
   }},
   "root":{"widgetId":"location-scene-root","type":"container","flow":"vertical","gap":8,"padding":10,"className":"app-location-scene","children":[
     {"widgetId":"location-scene-title","type":"label","text":{"nodeId":"locationName","port":"value"},"className":"location-scene-title"},
     {"widgetId":"location-scene-background","type":"image","src":{"nodeId":"background","port":"value"},"alt":"当前位置背景","className":"location-scene-background"},
-    {"widgetId":"location-scene-message","type":"label","text":"点击场景中的物品进行交互。","className":"location-scene-message"},
-    {"widgetId":"location-scene-empty","type":"label","text":"此位置当前没有可调查的场景物品。","className":"location-scene-empty"},
+    {"widgetId":"location-scene-message","type":"label","text":"场景中的可调查区域：","className":"location-scene-message"},
+    {"widgetId":"location-scene-subLocations","type":"list","items":{"nodeId":"subLocations","port":"value"},"itemLabelField":"name","itemMetaTemplate":"区域 ID：{{id}}","itemClassName":"location-scene-subLocation"},
     {"widgetId":"location-scene-close","type":"button","text":"返回","className":"win95-btn bevel-out","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"close","port":"flowIn"}}},"close":{"id":"close","type":"closeWindow","inputs":{"windowId":"location-scene"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
   ]}
 }

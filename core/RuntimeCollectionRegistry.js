@@ -7,7 +7,7 @@ import { t } from "./i18n/index.js";
  * NGL/data packages; no game or framework domain is named here.
  */
 export class RuntimeCollectionRegistry {
-  constructor({ dataStore, eventBus, variableStore = null, publicVariableManager = null, publicStateVariableId = null } = {}) {
+  constructor({ dataStore, eventBus, variableStore = null, publicVariableManager = null, publicStateVariableId = null, activityQueueRegistry = null } = {}) {
     this.dataStore = dataStore;
     this.eventBus = eventBus;
     this.variableStore = variableStore;
@@ -15,6 +15,7 @@ export class RuntimeCollectionRegistry {
     this.state = new Map();
     this.publicVariableManager = publicVariableManager;
     this.publicStateVariableId = publicStateVariableId;
+    this.activityQueueRegistry = activityQueueRegistry;
   }
 
   loadDefinitions(collections = {}) {
@@ -38,6 +39,16 @@ export class RuntimeCollectionRegistry {
 
   _records(id) {
     const definition = this.definition(id);
+    if (definition?.activityQueueId) {
+      const entries = this.activityQueueRegistry?.listEntries(definition.activityQueueId) || [];
+      return entries.map((entry) => ({
+        ...(definition.projectPayload && entry?.payload && typeof entry.payload === "object" ? entry.payload : {}),
+        ...entry,
+        id: entry.instanceId || entry.id,
+        queueInstanceId: entry.instanceId || entry.id,
+        queueStatus: entry.status,
+      }));
+    }
     if (definition?.generatedRange) {
       const range = definition.generatedRange;
       const start = Number(range.start ?? 1);

@@ -138,9 +138,9 @@
 - 聊天气泡 `.chat-bubble.bubble-npc` / `.bubble-me`
 - 联系人选择后保持聊天区上下文
 
-当前 `data/windows/dialogue.json` 只有一个 `dialogue` Widget，`width=520`、`height=320`，且 `displayTo` 为 `dorm-bottom`，通过 aliases 连接 `his-app` 和 `default`。当前定义中没有联系人列表、分组标题、联系人状态按钮或双栏布局。
+当前已将 `data/windows/dialogue.json` 改为 `620×360` 双栏结构：左侧联系人列表由 `socialContacts` runtime collection 提供，点击联系人会把稳定的 Activity 实例 ID 写入 `social:selectedInstance`；右侧仍由通用 DialogueWidget 接收 `dorm-bottom` 对话事件。`RuntimeCollectionRegistry` 已提供通用 `activityQueueId`/`projectPayload` 投影，并在队列变化时触发窗口刷新。
 
-这是本次审计发现的最高优先级 UI 差异：当前通用 DialogueWidget 复用了对话显示能力，但没有复刻旧版 SocialApp 的窗口结构和联系人选择面。
+当前状态为“结构与队列数据已迁移，聊天切换行为已支持只读回放”：左栏已经不再是静态联系人占位，并已按队列的 `receivedDay` 分组、显示时间与状态；点击联系人会回放该 Activity 实例已保存的 transcript，不会重新执行蓝图。仍缺少离线/睡眠/低 SAN 状态图标和禁用逻辑，也尚未把未完成实例的交互式继续执行上下文完整迁移。不能据此宣称 SocialApp 完全等价。
 
 ### 3.3 日历：结构保持，当前实现已声明式化
 
@@ -178,9 +178,9 @@
 
 ### 3.7 设置、地点和模式窗口：入口迁移不完整
 
-旧版 `SettingsApp.js` 明确包含 BGM 滑块、笔记本排序下拉、阶段确认复选框和语言下拉，窗口为 360×300 且不可缩放。当前仓库没有 `data/windows/settings.json`，也没有对应桌面图标。
+旧版 `SettingsApp.js` 明确包含 BGM 滑块、笔记本排序下拉、阶段确认复选框和语言下拉，窗口为 360×300 且不可缩放。当前已迁移为 `data/windows/settings.json`，并通过 `settings` 桌面图标接入；四项控件均使用 NGL 属性绑定和事件流程，语言使用 core 的 `getLanguage` / `setLanguage` 节点。仍需浏览器实际操作确认尺寸、控件反馈和持久化恢复。
 
-旧版 `LocationScene.js`、`DormMode.js`、`MainMenu.js`、`EndingScreen.js`、`NotificationBanner.js`、`TutorialOverlay.js` 是可见 UI 的重要组成部分。当前仓库虽有 `desktopTutorialOverlay.js` 和若干 Activity/窗口定义，但在 `data/windows/` 中没有同名的主菜单、结局、通知、宿舍场景窗口定义。应把这些列为“运行时外壳/模式迁移”而不是已完成的普通应用窗口迁移，直到有真实入口和浏览器证据。
+旧版 `LocationScene.js`、`DormMode.js`、`MainMenu.js`、`EndingScreen.js`、`NotificationBanner.js`、`TutorialOverlay.js` 是可见 UI 的重要组成部分。当前已增强 `data/windows/location-scene.json`：从 canonical 位置数据库读取地点名称、背景和 `subLocations`，以通用 list Widget 显示可调查区域；仍缺少真实点击区域交互和浏览器证据。主菜单、结局、通知、宿舍场景仍应列为“运行时外壳/模式迁移”，直到有真实入口和浏览器证据。
 
 ## 4. 当前与旧版的迁移映射
 
@@ -197,8 +197,8 @@
 | Calendar | `data/windows/calendar.json` | 结构接近 | 对照色块、当前日、夜班、未解锁天数 |
 | Turtle Soup | `data/windows/turtle-soup.json` | 有定义但无桌面入口 | 补入口并验证完整答题路径 |
 | Social Media | `data/windows/social-media.json` | 当前新增/拆分 | 与旧版是否存在的实际产品路径对齐 |
-| Settings | 无当前窗口定义 | 缺失 | 迁移为 `data/windows/settings.json` 和 desktop icon |
-| 地点三入口 | `locations.json` | 合并 | 验证一个窗口内是否保留三地点全部操作和状态反馈 |
+| Settings | `data/windows/settings.json` + `settings` desktop icon | 结构已迁移，需交互核对 | 验证四项控件、语言切换和存档恢复 |
+| 地点三入口 | `locations.json` + `location-scene.json` | 入口和场景列表已迁移，需交互核对 | 验证三地点背景、子区域和点击交互 |
 | 下班/睡觉 | `off-duty*.json` + Activity | 重构为数据 Activity | 验证三种状态、阻塞提示、确认和恢复 |
 | 主菜单/结局/通知/教程 | 部分 core/Activity/overlay | 未证明等价 | 分别建立入口矩阵和浏览器回归证据 |
 
@@ -207,7 +207,7 @@
 ### P0：阻断“UI 已迁移”结论
 
 1. 恢复 Social 的联系人列表、状态标识、联系人选择和双栏聊天结构，或记录产品决策明确放弃旧版结构。
-2. 恢复 Settings 的可见入口和四项设置行为。
+2. 在浏览器中核对 Settings 的可见入口和四项设置行为。
 3. 证明地点入口和阶段切换在当前桌面可达，并覆盖旧版三地点及“去上班/下班/睡觉”状态。
 
 ### P1：窗口视觉回归

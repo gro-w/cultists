@@ -502,6 +502,8 @@ export function createActivityRunner({
           continueKey: continueKey || null,
         };
         lastDialogueDisplayTo = payload.displayTo || lastDialogueDisplayTo;
+        instance.transcript = Array.isArray(instance.transcript) ? instance.transcript : [];
+        instance.transcript.push({ type: "text", ...payload, continueKey: null });
         /* DEV-TOOLS:START */
         console.log("[NG dialogue] ActivityRunner text node", { activityId: definition.id, nodeId: node.id, payload });
         /* DEV-TOOLS:END */
@@ -520,6 +522,8 @@ export function createActivityRunner({
           displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway, dbGateway, runtimeGateway),
         };
         lastDialogueDisplayTo = payload.displayTo || lastDialogueDisplayTo;
+        instance.transcript = Array.isArray(instance.transcript) ? instance.transcript : [];
+        instance.transcript.push({ type: "choice", ...payload });
         /* DEV-TOOLS:START */
         console.log("[NG dialogue] ActivityRunner choice node", { activityId: definition.id, nodeId: node.id, payload });
         /* DEV-TOOLS:END */

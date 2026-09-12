@@ -238,8 +238,8 @@ input[type="range"] {
    ------------------------------------------------------------------------- */
 .ng-window {
   position: absolute;
-  min-width: 220px;
-  min-height: 140px;
+  min-width: 260px;
+  min-height: 160px;
   background: var(--w95-gray);
   padding: 3px;
   display: flex;
@@ -301,12 +301,12 @@ input[type="range"] {
 
 .ng-system-menu {
   position: absolute;
-  top: 20px;
+  top: 24px;
   left: 2px;
   z-index: 20;
   display: flex;
   flex-direction: column;
-  min-width: 110px;
+  min-width: 130px;
   padding: 2px;
   background: var(--w95-gray);
   border-top: 1px solid var(--w95-white);
@@ -461,7 +461,7 @@ input[type="range"] {
   border-right: 1px solid var(--w95-white);
   border-bottom: 1px solid var(--w95-white);
   background: var(--w95-white);
-  padding: 4px 6px;
+  padding: 6px;
 }
 
 .app-status,
@@ -991,6 +991,31 @@ input[type="range"] {
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+}
+
+.dialogue-layout {
+  gap: 8px;
+}
+
+.dialogue-contacts {
+  flex: 0 0 150px;
+  min-width: 150px;
+}
+
+.dialogue-transcript {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dialogue-contact-row {
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+
+.dialogue-contact-group {
+  padding: 4px 6px 2px;
+  color: var(--w95-gray-darkest);
+  font-weight: bold;
 }
 
 .dialogue-panel .ng-dialogue-view {

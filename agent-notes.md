@@ -28,6 +28,10 @@ media/                     历史宣传资源和设计稿
 
 当前 manifest 的主要连接关系：`game-manifest.json` → `framework-manifest.json`、`activity-manifest.json`、窗口 manifest、数据库、公共变量、本地变量和 Activity 列表。默认 Activity 是 `default`，队列定义包含 `work`、`social`、`managers`、`main` 以及窗口/Widget/桌面事件队列。
 
+设置窗口已迁移到 `data/windows/settings.json`，由桌面图标 `settings` 打开；四项设置分别绑定 `settings:bgmVolume`、`settings:notebookSortMode`、`settings:confirmPhaseChange` 和 core 语言节点。该窗口不新增业务 JavaScript。
+
+位置场景窗口 `data/windows/location-scene.json` 现在从 `locations` canonical database 读取当前地点的 `name`、`backgroundImage` 和 `subLocations`，以通用 list Widget 显示可调查区域；医院、火锅店和海边没有子区域时列表保持为空，不伪造交互状态。
+
 ## 本地运行
 
 只读静态服务器：
@@ -70,6 +74,8 @@ node dev-server.js --port 8001 --lang zh-hans
 - 游戏内容使用稳定 ID。窗口、Activity、数据库、公共变量和资源之间通过 manifest/schema 连接。
 - 公共变量、数据库、窗口、Activity 和存档各有边界；数据库编辑器写 canonical 数据，存档调试器只改运行时存档。
 - 运行时集合可在数据定义中声明 `stateAliases`，用于旧稳定 ID 到 canonical ID 的恢复兼容；同一存档同时存在两者时 canonical ID 优先。
+- 运行时集合可声明 `activityQueueId` 和 `projectPayload`，以通用方式把 Activity 队列投影为 NGL 列表；队列追加/变更会发出 `runtime:collection-changed`，窗口可据此刷新，core 不解释 payload 的业务语义。
+- Activity 的 `text`/`choice` 显示事件会保留在实例 transcript 中；`engine.activity.replay` 只回放已保存文本并先发送 `display:reset`，不会重新运行 Activity 节点。
 - 本地变量管理器写 `data/local-variables.framework.json` 的定义，不保存实例值；活动调试器才允许实时修改具体实例的 `localVariables`。
 - 详细 schema 以实际 `data/*.json` 和对应 loader/validator 为准；修改 schema 时必须同步编辑器、运行器、调试器和探针。
 - Core 自有字符串放在 `core/i18n/xx-xx.js` locale 模块中；`I18nManager` 管理当前/启用语言并纳入存档，Activity 可通过 `getLanguage` 与 `setLanguage` 节点访问。

@@ -133,5 +133,38 @@
     },
     "startMenu": true,
     "engineOwned": false
+  },
+  {
+    "iconId": "social-media",
+    "label": "社交媒体",
+    "glyph": "📱",
+    "order": 7,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "social-media" },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "turtle-soup",
+    "label": "海龟汤",
+    "glyph": "🐢",
+    "order": 8,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "turtle-soup" },
+    "startMenu": true,
+    "engineOwned": false
+  },
+  {
+    "iconId": "settings",
+    "label": "设置",
+    "glyph": "⚙️",
+    "order": 10,
+    "position": { "mode": "grid" },
+    "blueprintId": "desktop.open-window",
+    "inputs": { "windowId": "settings" },
+    "startMenu": true,
+    "engineOwned": false
   }
 ]

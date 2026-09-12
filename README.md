@@ -14,6 +14,8 @@
 - 患者诊疗、技能检定、SAN 变化、物品调查、法术、关键词笔记本和多种结局
 - 开发模式、canonical 数据编辑器、运行时调试器和确定性探针
 - Core 与开发人员模式 i18n locale 模块、语言管理器和蓝图语言节点；用户可见字符串集中存放于 `core/i18n/xx-xx.js`
+- 数据驱动设置窗口：可调整 BGM 音量、笔记本排序、阶段切换确认和界面语言
+- 位置场景窗口从 canonical 位置数据库显示当前地点背景和可调查区域
 
 ## 本地运行
 
@@ -77,7 +79,7 @@ media/                     历史宣传资源和设计稿
 - `data/activity-lists/`：按用途组织 Activity 的清单
 - `data/game-manifest.json`：内容包、初始状态、队列和入口配置
 
-编辑器写入 canonical 数据，存档调试器只修改存档和运行时状态。运行时集合可以通过数据定义中的 `stateAliases` 兼容旧稳定 ID，恢复时 canonical ID 优先。新增内容应优先使用 NGL 和数据，不要把业务逻辑写进 JavaScript。
+编辑器写入 canonical 数据，存档调试器只修改存档和运行时状态。运行时集合可以通过数据定义中的 `stateAliases` 兼容旧稳定 ID，恢复时 canonical ID 优先；也可以通过 `activityQueueId` 把 Activity 队列投影给 NGL 窗口列表，队列变化会自动触发窗口刷新。Activity 对话 transcript 支持只读回放，不会重新执行剧情节点。新增内容应优先使用 NGL 和数据，不要把业务逻辑写进 JavaScript。
 
 ChatGTP QA 与 Turtle Soup 的运行时数据分别由 `data/databases/chatgtpQaEntries.json` 和 `data/databases/turtleSoupPuzzles.json` 唯一持有；迁移工具、manifest 和探针不得重新引入已删除的重复 seed/native 文件。
 

@@ -224,6 +224,13 @@
     "windows/off-duty-blocked.json",
     "windows/off-duty.json",
     "windows/social-media.json",
-    "windows/status.json"
+    "windows/status.json",
+    "activities/patient_lin_ruoqing_01.json",
+    "activities/patient_01_02_kidney_stone.json",
+    "activities/patient_01_03_benign_prostatic_hyperplasia.json",
+    "activities/patient_01_04_nausea_vomiting.json",
+    "activities/patient_01_05_lymphadenopathy.json",
+    "activities/patient_01_06_orthostatic_hypotension.json",
+    "activities/patient_01_07_closed_foot_fracture.json"
   ]
 }

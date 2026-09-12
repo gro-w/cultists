@@ -45,9 +45,11 @@ for (let slot = 1; slot <= 7; slot++) {
   assert.ok(defaultList.activityIds.includes(start.id), `default list should include ${start.id}`);
 }
 
-// --- 7 seeded patient records, each with a resolvable dialogueActivityId ---
-assert.equal(seedRecords.patients.length, 7, "all 7 work01a patients seeded");
-for (const patient of seedRecords.patients) {
+// --- the migrated database contains all 57 patients; this probe covers Day 1's 7 ---
+assert.equal(seedRecords.patients.length, 57, "all migrated patients seeded");
+const day1Patients = seedRecords.patients.filter(({ dialogueActivityId }) => /^work01a-patient[1-7]-start$/.test(dialogueActivityId || ""));
+assert.equal(day1Patients.length, 7, "all 7 work01a patients seeded");
+for (const patient of day1Patients) {
   assert.ok(patient.correctDiagnosisId, `${patient.id} needs a correctDiagnosisId`);
   assert.ok(patient.diagnosisOptionIds.length >= 2, `${patient.id} needs >=2 diagnosis options`);
   assert.ok(patient.diagnosisOptionIds.includes(patient.correctDiagnosisId), `${patient.id}'s correct diagnosis must be among its options`);
@@ -56,7 +58,7 @@ for (const patient of seedRecords.patients) {
 
 // --- every patient's diagnosis options resolve against the seeded diagnoses database ---
 const diagnosisIds = new Set((seedRecords.diagnoses || []).map((d) => d.id));
-for (const patient of seedRecords.patients) {
+for (const patient of day1Patients) {
   for (const diagnosisId of patient.diagnosisOptionIds) {
     assert.ok(diagnosisIds.has(diagnosisId), `${patient.id}'s option "${diagnosisId}" must exist in the diagnoses database`);
   }

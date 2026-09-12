@@ -49,6 +49,7 @@
 - framework 的默认游戏状态为第 1 天 `08:00`、`phase=day`、`duty=on-duty`、`location=work`；工作窗口为 `[08:00, 16:00)`。`phase`、`duty`、`location` 是 framework 的独立字段，恢复存档时必须保持一致。
 - 普通成功行动默认推进 20 分钟；长时间成本按现有 Activity/NGL 约定拆分，不在 UI 层偷偷推进时间。
 - 存档恢复、跨日、睡眠、医疗、收入支出、队列和动态 Activity 的所有状态变化必须有明确 owner 和恢复顺序。
+- 运行时集合定义可声明 `stateAliases`，由通用恢复流程把旧稳定 ID 归一到 canonical ID；core 不得写入具体游戏 ID，冲突时 canonical 记录优先。
 - 蓝图节点只能使用项目定义的合法端口组合；新增节点必须同时通过 schema 校验、运行时探针和相关编辑器验证。
 
 ## 数据、版权和字体

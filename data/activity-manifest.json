@@ -8,7 +8,6 @@
       "id": "achievement__all_texts_read",
       "file": "achievement__all_texts_read.json"
     },
-
     {
       "id": "achievement__ending_any",
       "file": "achievement__ending_any.json"
@@ -141,7 +140,6 @@
       "id": "spell-cast",
       "file": "spell-cast.json"
     },
-
     {
       "id": "dorm_activity_day1",
       "file": "dorm_activity_day1.json"
@@ -302,7 +300,6 @@
       "id": "off-duty-open",
       "file": "off-duty-open.json"
     },
-
     {
       "id": "patient_02_01_gingivitis",
       "file": "patient_02_01_gingivitis.json"
@@ -503,7 +500,6 @@
       "id": "patient_extra_07_b_09",
       "file": "patient_extra_07_b_09.json"
     },
-
     {
       "id": "social01b_ajie_honor_of_kings",
       "file": "social01b_ajie_honor_of_kings.json"
@@ -575,10 +571,6 @@
     {
       "id": "social06a_awei_chat",
       "file": "social06a_awei_chat.json"
-    },
-    {
-      "id": "use-item",
-      "file": "use-item.json"
     },
     {
       "id": "work01a-patient1",
@@ -659,6 +651,34 @@
     {
       "id": "work01a-patient7-start",
       "file": "work01a-patient7-start.json"
+    },
+    {
+      "id": "patient_lin_ruoqing_01",
+      "file": "patient_lin_ruoqing_01.json"
+    },
+    {
+      "id": "patient_01_02_kidney_stone",
+      "file": "patient_01_02_kidney_stone.json"
+    },
+    {
+      "id": "patient_01_03_benign_prostatic_hyperplasia",
+      "file": "patient_01_03_benign_prostatic_hyperplasia.json"
+    },
+    {
+      "id": "patient_01_04_nausea_vomiting",
+      "file": "patient_01_04_nausea_vomiting.json"
+    },
+    {
+      "id": "patient_01_05_lymphadenopathy",
+      "file": "patient_01_05_lymphadenopathy.json"
+    },
+    {
+      "id": "patient_01_06_orthostatic_hypotension",
+      "file": "patient_01_06_orthostatic_hypotension.json"
+    },
+    {
+      "id": "patient_01_07_closed_foot_fracture",
+      "file": "patient_01_07_closed_foot_fracture.json"
     }
   ]
 }

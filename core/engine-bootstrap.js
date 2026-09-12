@@ -177,6 +177,14 @@ export async function bootstrap(rootEl) {
     variableStore,
     displayReceiverRegistry: dialogueRegistry,
     displayTo: "ending-screen",
+    keywordResolver: (id) => dataStore.getRecord("keywords", id)?.content || null,
+    onKeywordCollect: (id) => {
+      const value = { collected: true, collectedDay: gameClock.day };
+      const result = runtimeCollections.set("keywords", id, value);
+      runtimeCollections.set("notebookKeywords", id, value);
+      eventBus.emit("keyword:collected", { id, ...value });
+      return result;
+    },
   });
   globalMediaView.el.classList.add("ng-global-media-view");
   runtimeGateway.dispatchDisplay = (target, payload) => dialogueRegistry.dispatch(target, payload);

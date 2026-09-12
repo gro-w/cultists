@@ -69,6 +69,7 @@ node dev-server.js --port 8001 --lang zh-hans
 - 玩家可见计时和持久化副作用通过 Activity 执行。工作、社交、管理器和主队列由 manifest 配置，不能在入口中按业务语义偷偷插入 Activity。
 - 游戏内容使用稳定 ID。窗口、Activity、数据库、公共变量和资源之间通过 manifest/schema 连接。
 - 公共变量、数据库、窗口、Activity 和存档各有边界；数据库编辑器写 canonical 数据，存档调试器只改运行时存档。
+- 运行时集合可在数据定义中声明 `stateAliases`，用于旧稳定 ID 到 canonical ID 的恢复兼容；同一存档同时存在两者时 canonical ID 优先。
 - 本地变量管理器写 `data/local-variables.framework.json` 的定义，不保存实例值；活动调试器才允许实时修改具体实例的 `localVariables`。
 - 详细 schema 以实际 `data/*.json` 和对应 loader/validator 为准；修改 schema 时必须同步编辑器、运行器、调试器和探针。
 - Core 自有字符串放在 `core/i18n/xx-xx.js` locale 模块中；`I18nManager` 管理当前/启用语言并纳入存档，Activity 可通过 `getLanguage` 与 `setLanguage` 节点访问。

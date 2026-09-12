@@ -11,7 +11,10 @@
     "achievementStates": {
       "databaseId": "achievements",
       "mergeState": true,
-      "keyField": "id"
+      "keyField": "id",
+      "stateAliases": {
+        "developer_mode": "force_end_work"
+      }
     },
     "achievementItems": {
       "databaseId": "achievements",

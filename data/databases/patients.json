@@ -90,6 +90,656 @@
         "lymphadenopathy"
       ],
       "dialogueActivityId": "work01a-patient7-start"
+    },
+    {
+      "id": "patient_02_01_gingivitis",
+      "name": "周欣怡",
+      "npcRef": null,
+      "age": 54,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "iron_deficiency_anemia",
+        "ulcerative_colitis"
+      ],
+      "dialogueActivityId": "patient_02_01_gingivitis"
+    },
+    {
+      "id": "patient_02_02_plantar_fasciitis",
+      "name": "林子轩",
+      "npcRef": null,
+      "age": 57,
+      "correctDiagnosisId": "plantar_fasciitis",
+      "diagnosisOptionIds": [
+        "plantar_fasciitis",
+        "dry_eye",
+        "hemorrhoids"
+      ],
+      "dialogueActivityId": "patient_02_02_plantar_fasciitis"
+    },
+    {
+      "id": "patient_02_03_hyperthyroidism",
+      "name": "罗泽阳",
+      "npcRef": null,
+      "age": 63,
+      "correctDiagnosisId": "hyperthyroidism",
+      "diagnosisOptionIds": [
+        "hyperthyroidism",
+        "ulcerative_colitis",
+        "benign_prostatic_hyperplasia"
+      ],
+      "dialogueActivityId": "patient_02_03_hyperthyroidism"
+    },
+    {
+      "id": "patient_02_04_hypothyroidism",
+      "name": "沈静怡",
+      "npcRef": null,
+      "age": 31,
+      "correctDiagnosisId": "hypothyroidism",
+      "diagnosisOptionIds": [
+        "hypothyroidism",
+        "hemorrhoids",
+        "nausea_vomiting"
+      ],
+      "dialogueActivityId": "patient_02_04_hypothyroidism"
+    },
+    {
+      "id": "patient_02_05_vitamin_b12_deficiency_anemia",
+      "name": "朱语嫣",
+      "npcRef": null,
+      "age": 26,
+      "correctDiagnosisId": "vitamin_b12_deficiency_anemia",
+      "diagnosisOptionIds": [
+        "vitamin_b12_deficiency_anemia",
+        "kidney_stone",
+        "lymphadenopathy"
+      ],
+      "dialogueActivityId": "patient_02_05_vitamin_b12_deficiency_anemia"
+    },
+    {
+      "id": "patient_02_06_iron_deficiency_anemia",
+      "name": "许雨桐",
+      "npcRef": null,
+      "age": 55,
+      "correctDiagnosisId": "iron_deficiency_anemia",
+      "diagnosisOptionIds": [
+        "iron_deficiency_anemia",
+        "benign_prostatic_hyperplasia",
+        "orthostatic_hypotension"
+      ],
+      "dialogueActivityId": "patient_02_06_iron_deficiency_anemia"
+    },
+    {
+      "id": "patient_02_07_dry_eye",
+      "name": "谢安琪",
+      "npcRef": null,
+      "age": 37,
+      "correctDiagnosisId": "dry_eye",
+      "diagnosisOptionIds": [
+        "dry_eye",
+        "nausea_vomiting",
+        "closed_foot_fracture"
+      ],
+      "dialogueActivityId": "patient_02_07_dry_eye"
+    },
+    {
+      "id": "patient_extra_02_a_08",
+      "name": "高文博",
+      "npcRef": null,
+      "age": 36,
+      "correctDiagnosisId": "dry_eye",
+      "diagnosisOptionIds": [
+        "dry_eye",
+        "nausea_vomiting",
+        "closed_foot_fracture"
+      ],
+      "dialogueActivityId": "patient_extra_02_a_08"
+    },
+    {
+      "id": "patient_03_01_bacterial_conjunctivitis",
+      "name": "王俊杰",
+      "npcRef": null,
+      "age": 62,
+      "correctDiagnosisId": "bacterial_conjunctivitis",
+      "diagnosisOptionIds": [
+        "bacterial_conjunctivitis",
+        "dry_eye",
+        "kidney_stone"
+      ],
+      "dialogueActivityId": "patient_03_01_bacterial_conjunctivitis"
+    },
+    {
+      "id": "patient_03_02_ulcerative_colitis",
+      "name": "郑嘉诚",
+      "npcRef": null,
+      "age": 49,
+      "correctDiagnosisId": "ulcerative_colitis",
+      "diagnosisOptionIds": [
+        "ulcerative_colitis",
+        "bacterial_conjunctivitis",
+        "benign_prostatic_hyperplasia"
+      ],
+      "dialogueActivityId": "patient_03_02_ulcerative_colitis"
+    },
+    {
+      "id": "patient_03_03_hemorrhoids",
+      "name": "孙泽阳",
+      "npcRef": null,
+      "age": 22,
+      "correctDiagnosisId": "hemorrhoids",
+      "diagnosisOptionIds": [
+        "hemorrhoids",
+        "ulcerative_colitis",
+        "nausea_vomiting"
+      ],
+      "dialogueActivityId": "patient_03_03_hemorrhoids"
+    },
+    {
+      "id": "patient_03_04_kidney_stone",
+      "name": "冯诗涵",
+      "npcRef": null,
+      "age": 57,
+      "correctDiagnosisId": "kidney_stone",
+      "diagnosisOptionIds": [
+        "kidney_stone",
+        "hemorrhoids",
+        "lymphadenopathy"
+      ],
+      "dialogueActivityId": "patient_03_04_kidney_stone"
+    },
+    {
+      "id": "patient_03_05_benign_prostatic_hyperplasia",
+      "name": "朱天佑",
+      "npcRef": null,
+      "age": 31,
+      "correctDiagnosisId": "benign_prostatic_hyperplasia",
+      "diagnosisOptionIds": [
+        "benign_prostatic_hyperplasia",
+        "kidney_stone",
+        "orthostatic_hypotension"
+      ],
+      "dialogueActivityId": "patient_03_05_benign_prostatic_hyperplasia"
+    },
+    {
+      "id": "patient_03_06_nausea_vomiting",
+      "name": "梁文博",
+      "npcRef": null,
+      "age": 24,
+      "correctDiagnosisId": "nausea_vomiting",
+      "diagnosisOptionIds": [
+        "nausea_vomiting",
+        "benign_prostatic_hyperplasia",
+        "closed_foot_fracture"
+      ],
+      "dialogueActivityId": "patient_03_06_nausea_vomiting"
+    },
+    {
+      "id": "patient_03_07_lymphadenopathy",
+      "name": "梁俊杰",
+      "npcRef": null,
+      "age": 38,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "nausea_vomiting",
+        "gingivitis"
+      ],
+      "dialogueActivityId": "patient_03_07_lymphadenopathy"
+    },
+    {
+      "id": "patient_extra_03_a_08",
+      "name": "陈梦瑶",
+      "npcRef": null,
+      "age": 37,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "nausea_vomiting",
+        "gingivitis"
+      ],
+      "dialogueActivityId": "patient_extra_03_a_08"
+    },
+    {
+      "id": "patient_extra_03_a_09",
+      "name": "谢俊杰",
+      "npcRef": null,
+      "age": 39,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "nausea_vomiting",
+        "gingivitis"
+      ],
+      "dialogueActivityId": "patient_extra_03_a_09"
+    },
+    {
+      "id": "patient_04_01_orthostatic_hypotension",
+      "name": "宋可欣",
+      "npcRef": null,
+      "age": 41,
+      "correctDiagnosisId": "orthostatic_hypotension",
+      "diagnosisOptionIds": [
+        "orthostatic_hypotension",
+        "bacterial_conjunctivitis",
+        "kidney_stone"
+      ],
+      "dialogueActivityId": "patient_04_01_orthostatic_hypotension"
+    },
+    {
+      "id": "patient_04_02_closed_foot_fracture",
+      "name": "高雨桐",
+      "npcRef": null,
+      "age": 55,
+      "correctDiagnosisId": "closed_foot_fracture",
+      "diagnosisOptionIds": [
+        "closed_foot_fracture",
+        "ulcerative_colitis",
+        "benign_prostatic_hyperplasia"
+      ],
+      "dialogueActivityId": "patient_04_02_closed_foot_fracture"
+    },
+    {
+      "id": "patient_04_03_gingivitis",
+      "name": "孙欣怡",
+      "npcRef": null,
+      "age": 51,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "hemorrhoids",
+        "nausea_vomiting"
+      ],
+      "dialogueActivityId": "patient_04_03_gingivitis"
+    },
+    {
+      "id": "patient_04_04_plantar_fasciitis",
+      "name": "陈语嫣",
+      "npcRef": null,
+      "age": 64,
+      "correctDiagnosisId": "plantar_fasciitis",
+      "diagnosisOptionIds": [
+        "plantar_fasciitis",
+        "kidney_stone",
+        "lymphadenopathy"
+      ],
+      "dialogueActivityId": "patient_04_04_plantar_fasciitis"
+    },
+    {
+      "id": "patient_04_05_hyperthyroidism",
+      "name": "马可欣",
+      "npcRef": null,
+      "age": 58,
+      "correctDiagnosisId": "hyperthyroidism",
+      "diagnosisOptionIds": [
+        "hyperthyroidism",
+        "nausea_vomiting",
+        "closed_foot_fracture"
+      ],
+      "dialogueActivityId": "patient_04_05_hyperthyroidism"
+    },
+    {
+      "id": "patient_04_06_hypothyroidism",
+      "name": "唐明宇",
+      "npcRef": null,
+      "age": 41,
+      "correctDiagnosisId": "hypothyroidism",
+      "diagnosisOptionIds": [
+        "hypothyroidism",
+        "lymphadenopathy",
+        "gingivitis"
+      ],
+      "dialogueActivityId": "patient_04_06_hypothyroidism"
+    },
+    {
+      "id": "patient_04_07_vitamin_b12_deficiency_anemia",
+      "name": "唐嘉诚",
+      "npcRef": null,
+      "age": 59,
+      "correctDiagnosisId": "vitamin_b12_deficiency_anemia",
+      "diagnosisOptionIds": [
+        "vitamin_b12_deficiency_anemia",
+        "orthostatic_hypotension",
+        "plantar_fasciitis"
+      ],
+      "dialogueActivityId": "patient_04_07_vitamin_b12_deficiency_anemia"
+    },
+    {
+      "id": "patient_06_01_nausea_vomiting",
+      "name": "梁若琳",
+      "npcRef": null,
+      "age": 45,
+      "correctDiagnosisId": "nausea_vomiting",
+      "diagnosisOptionIds": [
+        "nausea_vomiting",
+        "hemorrhoids",
+        "lymphadenopathy"
+      ],
+      "dialogueActivityId": "patient_06_01_nausea_vomiting"
+    },
+    {
+      "id": "patient_06_02_lymphadenopathy",
+      "name": "冯天佑",
+      "npcRef": null,
+      "age": 57,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "kidney_stone",
+        "orthostatic_hypotension"
+      ],
+      "dialogueActivityId": "patient_06_02_lymphadenopathy"
+    },
+    {
+      "id": "patient_06_03_orthostatic_hypotension",
+      "name": "朱可欣",
+      "npcRef": null,
+      "age": 36,
+      "correctDiagnosisId": "orthostatic_hypotension",
+      "diagnosisOptionIds": [
+        "orthostatic_hypotension",
+        "benign_prostatic_hyperplasia",
+        "closed_foot_fracture"
+      ],
+      "dialogueActivityId": "patient_06_03_orthostatic_hypotension"
+    },
+    {
+      "id": "patient_06_04_closed_foot_fracture",
+      "name": "唐家豪",
+      "npcRef": null,
+      "age": 57,
+      "correctDiagnosisId": "closed_foot_fracture",
+      "diagnosisOptionIds": [
+        "closed_foot_fracture",
+        "nausea_vomiting",
+        "gingivitis"
+      ],
+      "dialogueActivityId": "patient_06_04_closed_foot_fracture"
+    },
+    {
+      "id": "patient_06_05_gingivitis",
+      "name": "许语嫣",
+      "npcRef": null,
+      "age": 63,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "lymphadenopathy",
+        "plantar_fasciitis"
+      ],
+      "dialogueActivityId": "patient_06_05_gingivitis"
+    },
+    {
+      "id": "patient_06_06_plantar_fasciitis",
+      "name": "唐欣怡",
+      "npcRef": null,
+      "age": 64,
+      "correctDiagnosisId": "plantar_fasciitis",
+      "diagnosisOptionIds": [
+        "plantar_fasciitis",
+        "orthostatic_hypotension",
+        "hyperthyroidism"
+      ],
+      "dialogueActivityId": "patient_06_06_plantar_fasciitis"
+    },
+    {
+      "id": "patient_06_07_hyperthyroidism",
+      "name": "彭心怡",
+      "npcRef": null,
+      "age": 21,
+      "correctDiagnosisId": "hyperthyroidism",
+      "diagnosisOptionIds": [
+        "hyperthyroidism",
+        "gingivitis",
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_06_07_hyperthyroidism"
+    },
+    {
+      "id": "patient_extra_06_a_08",
+      "name": "何浩然",
+      "npcRef": null,
+      "age": 20,
+      "correctDiagnosisId": "hyperthyroidism",
+      "diagnosisOptionIds": [
+        "hyperthyroidism",
+        "gingivitis",
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_extra_06_a_08"
+    },
+    {
+      "id": "patient_extra_06_a_09",
+      "name": "罗婉宁",
+      "npcRef": null,
+      "age": 22,
+      "correctDiagnosisId": "hyperthyroidism",
+      "diagnosisOptionIds": [
+        "hyperthyroidism",
+        "gingivitis",
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_extra_06_a_09"
+    },
+    {
+      "id": "patient_07_01_hypothyroidism",
+      "name": "郭心怡",
+      "npcRef": null,
+      "age": 47,
+      "correctDiagnosisId": "hypothyroidism",
+      "diagnosisOptionIds": [
+        "hypothyroidism",
+        "benign_prostatic_hyperplasia",
+        "orthostatic_hypotension"
+      ],
+      "dialogueActivityId": "patient_07_01_hypothyroidism"
+    },
+    {
+      "id": "patient_07_02_vitamin_b12_deficiency_anemia",
+      "name": "赵可欣",
+      "npcRef": null,
+      "age": 20,
+      "correctDiagnosisId": "vitamin_b12_deficiency_anemia",
+      "diagnosisOptionIds": [
+        "vitamin_b12_deficiency_anemia",
+        "nausea_vomiting",
+        "closed_foot_fracture"
+      ],
+      "dialogueActivityId": "patient_07_02_vitamin_b12_deficiency_anemia"
+    },
+    {
+      "id": "patient_07_03_iron_deficiency_anemia",
+      "name": "孙梦瑶",
+      "npcRef": null,
+      "age": 34,
+      "correctDiagnosisId": "iron_deficiency_anemia",
+      "diagnosisOptionIds": [
+        "iron_deficiency_anemia",
+        "lymphadenopathy",
+        "gingivitis"
+      ],
+      "dialogueActivityId": "patient_07_03_iron_deficiency_anemia"
+    },
+    {
+      "id": "patient_07_04_dry_eye",
+      "name": "彭俊杰",
+      "npcRef": null,
+      "age": 37,
+      "correctDiagnosisId": "dry_eye",
+      "diagnosisOptionIds": [
+        "dry_eye",
+        "orthostatic_hypotension",
+        "plantar_fasciitis"
+      ],
+      "dialogueActivityId": "patient_07_04_dry_eye"
+    },
+    {
+      "id": "patient_07_05_bacterial_conjunctivitis",
+      "name": "郑心怡",
+      "npcRef": null,
+      "age": 33,
+      "correctDiagnosisId": "bacterial_conjunctivitis",
+      "diagnosisOptionIds": [
+        "bacterial_conjunctivitis",
+        "closed_foot_fracture",
+        "hyperthyroidism"
+      ],
+      "dialogueActivityId": "patient_07_05_bacterial_conjunctivitis"
+    },
+    {
+      "id": "patient_07_06_ulcerative_colitis",
+      "name": "沈嘉诚",
+      "npcRef": null,
+      "age": 32,
+      "correctDiagnosisId": "ulcerative_colitis",
+      "diagnosisOptionIds": [
+        "ulcerative_colitis",
+        "gingivitis",
+        "hypothyroidism"
+      ],
+      "dialogueActivityId": "patient_07_06_ulcerative_colitis"
+    },
+    {
+      "id": "patient_07_07_hemorrhoids",
+      "name": "宋清妍",
+      "npcRef": null,
+      "age": 45,
+      "correctDiagnosisId": "hemorrhoids",
+      "diagnosisOptionIds": [
+        "hemorrhoids",
+        "plantar_fasciitis",
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_07_07_hemorrhoids"
+    },
+    {
+      "id": "patient_extra_07_a_08",
+      "name": "彭嘉诚",
+      "npcRef": null,
+      "age": 44,
+      "correctDiagnosisId": "hemorrhoids",
+      "diagnosisOptionIds": [
+        "hemorrhoids",
+        "plantar_fasciitis",
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_extra_07_a_08"
+    },
+    {
+      "id": "patient_08_01_kidney_stone",
+      "name": "赵明宇",
+      "npcRef": null,
+      "age": 27,
+      "correctDiagnosisId": "kidney_stone",
+      "diagnosisOptionIds": [
+        "kidney_stone",
+        "nausea_vomiting",
+        "closed_foot_fracture"
+      ],
+      "dialogueActivityId": "patient_08_01_kidney_stone"
+    },
+    {
+      "id": "patient_08_02_benign_prostatic_hyperplasia",
+      "name": "何欣怡",
+      "npcRef": null,
+      "age": 37,
+      "correctDiagnosisId": "benign_prostatic_hyperplasia",
+      "diagnosisOptionIds": [
+        "benign_prostatic_hyperplasia",
+        "lymphadenopathy",
+        "gingivitis"
+      ],
+      "dialogueActivityId": "patient_08_02_benign_prostatic_hyperplasia"
+    },
+    {
+      "id": "patient_08_03_nausea_vomiting",
+      "name": "许可欣",
+      "npcRef": null,
+      "age": 21,
+      "correctDiagnosisId": "nausea_vomiting",
+      "diagnosisOptionIds": [
+        "nausea_vomiting",
+        "orthostatic_hypotension",
+        "plantar_fasciitis"
+      ],
+      "dialogueActivityId": "patient_08_03_nausea_vomiting"
+    },
+    {
+      "id": "patient_08_04_lymphadenopathy",
+      "name": "宋文博",
+      "npcRef": null,
+      "age": 34,
+      "correctDiagnosisId": "lymphadenopathy",
+      "diagnosisOptionIds": [
+        "lymphadenopathy",
+        "closed_foot_fracture",
+        "hyperthyroidism"
+      ],
+      "dialogueActivityId": "patient_08_04_lymphadenopathy"
+    },
+    {
+      "id": "patient_08_05_orthostatic_hypotension",
+      "name": "罗若琳",
+      "npcRef": null,
+      "age": 60,
+      "correctDiagnosisId": "orthostatic_hypotension",
+      "diagnosisOptionIds": [
+        "orthostatic_hypotension",
+        "gingivitis",
+        "hypothyroidism"
+      ],
+      "dialogueActivityId": "patient_08_05_orthostatic_hypotension"
+    },
+    {
+      "id": "patient_08_06_closed_foot_fracture",
+      "name": "赵诗涵",
+      "npcRef": null,
+      "age": 63,
+      "correctDiagnosisId": "closed_foot_fracture",
+      "diagnosisOptionIds": [
+        "closed_foot_fracture",
+        "plantar_fasciitis",
+        "vitamin_b12_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_08_06_closed_foot_fracture"
+    },
+    {
+      "id": "patient_08_07_gingivitis",
+      "name": "宋语嫣",
+      "npcRef": null,
+      "age": 22,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "hyperthyroidism",
+        "iron_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_08_07_gingivitis"
+    },
+    {
+      "id": "patient_extra_07_b_08",
+      "name": "马思远",
+      "npcRef": null,
+      "age": 21,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "hyperthyroidism",
+        "iron_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_extra_07_b_08"
+    },
+    {
+      "id": "patient_extra_07_b_09",
+      "name": "沈欣怡",
+      "npcRef": null,
+      "age": 23,
+      "correctDiagnosisId": "gingivitis",
+      "diagnosisOptionIds": [
+        "gingivitis",
+        "hyperthyroidism",
+        "iron_deficiency_anemia"
+      ],
+      "dialogueActivityId": "patient_extra_07_b_09"
     }
   ]
 }

@@ -457,6 +457,10 @@
       "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"ending_any","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
     },
     {
+      "event": "ending:triggered",
+      "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"ending_any","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
+    },
+    {
       "event": "developer:force_end_work",
       "actions": [{"type":"collection.set","collectionId":"achievementStates","recordId":"force_end_work","value":{"unlocked":true,"statusMark":"✅","statusClass":"unlocked","unlockDate":{"variable":"gameState:day"}}}]
     },

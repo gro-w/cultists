@@ -265,6 +265,14 @@ export class DesktopShell {
           displayReceiverRegistry: this.dialogueRegistry,
           displayTo: target,
           displayAliases: aliases,
+          keywordResolver: (id) => this.dbGateway?.getRecord?.("keywords", id)?.content || null,
+          onKeywordCollect: (id) => {
+            const value = { collected: true, collectedDay: this.gameClock?.day };
+            const result = this.runtimeGateway?.setCollectionValue?.("keywords", id, value);
+            this.runtimeGateway?.setCollectionValue?.("notebookKeywords", id, value);
+            if (result !== undefined) this.eventBus?.emit("keyword:collected", { id, ...value });
+            return result;
+          },
         });
       }
       this.dialogueViews[target].addAliases?.(aliases);

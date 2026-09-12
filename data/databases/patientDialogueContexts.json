@@ -1,3 +1,289 @@
 {
-  "patientDialogueContexts": []
+  "patientDialogueContexts": [
+    {
+      "id": "patient_dialogue_context__patient_lin_ruoqing_01",
+      "patientId": "patient_lin_ruoqing_01",
+      "dialogueActivityId": "work01a-patient1-start"
+    },
+    {
+      "id": "patient_dialogue_context__patient_01_02_kidney_stone",
+      "patientId": "patient_01_02_kidney_stone",
+      "dialogueActivityId": "work01a-patient2-start"
+    },
+    {
+      "id": "patient_dialogue_context__patient_01_03_benign_prostatic_hyperplasia",
+      "patientId": "patient_01_03_benign_prostatic_hyperplasia",
+      "dialogueActivityId": "work01a-patient3-start"
+    },
+    {
+      "id": "patient_dialogue_context__patient_01_04_nausea_vomiting",
+      "patientId": "patient_01_04_nausea_vomiting",
+      "dialogueActivityId": "work01a-patient4-start"
+    },
+    {
+      "id": "patient_dialogue_context__patient_01_05_lymphadenopathy",
+      "patientId": "patient_01_05_lymphadenopathy",
+      "dialogueActivityId": "work01a-patient5-start"
+    },
+    {
+      "id": "patient_dialogue_context__patient_01_06_orthostatic_hypotension",
+      "patientId": "patient_01_06_orthostatic_hypotension",
+      "dialogueActivityId": "work01a-patient6-start"
+    },
+    {
+      "id": "patient_dialogue_context__patient_01_07_closed_foot_fracture",
+      "patientId": "patient_01_07_closed_foot_fracture",
+      "dialogueActivityId": "work01a-patient7-start"
+    },
+    {
+      "id": "patient_dialogue_context__patient_02_01_gingivitis",
+      "patientId": "patient_02_01_gingivitis",
+      "dialogueActivityId": "patient_02_01_gingivitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_02_02_plantar_fasciitis",
+      "patientId": "patient_02_02_plantar_fasciitis",
+      "dialogueActivityId": "patient_02_02_plantar_fasciitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_02_03_hyperthyroidism",
+      "patientId": "patient_02_03_hyperthyroidism",
+      "dialogueActivityId": "patient_02_03_hyperthyroidism"
+    },
+    {
+      "id": "patient_dialogue_context__patient_02_04_hypothyroidism",
+      "patientId": "patient_02_04_hypothyroidism",
+      "dialogueActivityId": "patient_02_04_hypothyroidism"
+    },
+    {
+      "id": "patient_dialogue_context__patient_02_05_vitamin_b12_deficiency_anemia",
+      "patientId": "patient_02_05_vitamin_b12_deficiency_anemia",
+      "dialogueActivityId": "patient_02_05_vitamin_b12_deficiency_anemia"
+    },
+    {
+      "id": "patient_dialogue_context__patient_02_06_iron_deficiency_anemia",
+      "patientId": "patient_02_06_iron_deficiency_anemia",
+      "dialogueActivityId": "patient_02_06_iron_deficiency_anemia"
+    },
+    {
+      "id": "patient_dialogue_context__patient_02_07_dry_eye",
+      "patientId": "patient_02_07_dry_eye",
+      "dialogueActivityId": "patient_02_07_dry_eye"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_02_a_08",
+      "patientId": "patient_extra_02_a_08",
+      "dialogueActivityId": "patient_extra_02_a_08"
+    },
+    {
+      "id": "patient_dialogue_context__patient_03_01_bacterial_conjunctivitis",
+      "patientId": "patient_03_01_bacterial_conjunctivitis",
+      "dialogueActivityId": "patient_03_01_bacterial_conjunctivitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_03_02_ulcerative_colitis",
+      "patientId": "patient_03_02_ulcerative_colitis",
+      "dialogueActivityId": "patient_03_02_ulcerative_colitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_03_03_hemorrhoids",
+      "patientId": "patient_03_03_hemorrhoids",
+      "dialogueActivityId": "patient_03_03_hemorrhoids"
+    },
+    {
+      "id": "patient_dialogue_context__patient_03_04_kidney_stone",
+      "patientId": "patient_03_04_kidney_stone",
+      "dialogueActivityId": "patient_03_04_kidney_stone"
+    },
+    {
+      "id": "patient_dialogue_context__patient_03_05_benign_prostatic_hyperplasia",
+      "patientId": "patient_03_05_benign_prostatic_hyperplasia",
+      "dialogueActivityId": "patient_03_05_benign_prostatic_hyperplasia"
+    },
+    {
+      "id": "patient_dialogue_context__patient_03_06_nausea_vomiting",
+      "patientId": "patient_03_06_nausea_vomiting",
+      "dialogueActivityId": "patient_03_06_nausea_vomiting"
+    },
+    {
+      "id": "patient_dialogue_context__patient_03_07_lymphadenopathy",
+      "patientId": "patient_03_07_lymphadenopathy",
+      "dialogueActivityId": "patient_03_07_lymphadenopathy"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_03_a_08",
+      "patientId": "patient_extra_03_a_08",
+      "dialogueActivityId": "patient_extra_03_a_08"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_03_a_09",
+      "patientId": "patient_extra_03_a_09",
+      "dialogueActivityId": "patient_extra_03_a_09"
+    },
+    {
+      "id": "patient_dialogue_context__patient_04_01_orthostatic_hypotension",
+      "patientId": "patient_04_01_orthostatic_hypotension",
+      "dialogueActivityId": "patient_04_01_orthostatic_hypotension"
+    },
+    {
+      "id": "patient_dialogue_context__patient_04_02_closed_foot_fracture",
+      "patientId": "patient_04_02_closed_foot_fracture",
+      "dialogueActivityId": "patient_04_02_closed_foot_fracture"
+    },
+    {
+      "id": "patient_dialogue_context__patient_04_03_gingivitis",
+      "patientId": "patient_04_03_gingivitis",
+      "dialogueActivityId": "patient_04_03_gingivitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_04_04_plantar_fasciitis",
+      "patientId": "patient_04_04_plantar_fasciitis",
+      "dialogueActivityId": "patient_04_04_plantar_fasciitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_04_05_hyperthyroidism",
+      "patientId": "patient_04_05_hyperthyroidism",
+      "dialogueActivityId": "patient_04_05_hyperthyroidism"
+    },
+    {
+      "id": "patient_dialogue_context__patient_04_06_hypothyroidism",
+      "patientId": "patient_04_06_hypothyroidism",
+      "dialogueActivityId": "patient_04_06_hypothyroidism"
+    },
+    {
+      "id": "patient_dialogue_context__patient_04_07_vitamin_b12_deficiency_anemia",
+      "patientId": "patient_04_07_vitamin_b12_deficiency_anemia",
+      "dialogueActivityId": "patient_04_07_vitamin_b12_deficiency_anemia"
+    },
+    {
+      "id": "patient_dialogue_context__patient_06_01_nausea_vomiting",
+      "patientId": "patient_06_01_nausea_vomiting",
+      "dialogueActivityId": "patient_06_01_nausea_vomiting"
+    },
+    {
+      "id": "patient_dialogue_context__patient_06_02_lymphadenopathy",
+      "patientId": "patient_06_02_lymphadenopathy",
+      "dialogueActivityId": "patient_06_02_lymphadenopathy"
+    },
+    {
+      "id": "patient_dialogue_context__patient_06_03_orthostatic_hypotension",
+      "patientId": "patient_06_03_orthostatic_hypotension",
+      "dialogueActivityId": "patient_06_03_orthostatic_hypotension"
+    },
+    {
+      "id": "patient_dialogue_context__patient_06_04_closed_foot_fracture",
+      "patientId": "patient_06_04_closed_foot_fracture",
+      "dialogueActivityId": "patient_06_04_closed_foot_fracture"
+    },
+    {
+      "id": "patient_dialogue_context__patient_06_05_gingivitis",
+      "patientId": "patient_06_05_gingivitis",
+      "dialogueActivityId": "patient_06_05_gingivitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_06_06_plantar_fasciitis",
+      "patientId": "patient_06_06_plantar_fasciitis",
+      "dialogueActivityId": "patient_06_06_plantar_fasciitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_06_07_hyperthyroidism",
+      "patientId": "patient_06_07_hyperthyroidism",
+      "dialogueActivityId": "patient_06_07_hyperthyroidism"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_06_a_08",
+      "patientId": "patient_extra_06_a_08",
+      "dialogueActivityId": "patient_extra_06_a_08"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_06_a_09",
+      "patientId": "patient_extra_06_a_09",
+      "dialogueActivityId": "patient_extra_06_a_09"
+    },
+    {
+      "id": "patient_dialogue_context__patient_07_01_hypothyroidism",
+      "patientId": "patient_07_01_hypothyroidism",
+      "dialogueActivityId": "patient_07_01_hypothyroidism"
+    },
+    {
+      "id": "patient_dialogue_context__patient_07_02_vitamin_b12_deficiency_anemia",
+      "patientId": "patient_07_02_vitamin_b12_deficiency_anemia",
+      "dialogueActivityId": "patient_07_02_vitamin_b12_deficiency_anemia"
+    },
+    {
+      "id": "patient_dialogue_context__patient_07_03_iron_deficiency_anemia",
+      "patientId": "patient_07_03_iron_deficiency_anemia",
+      "dialogueActivityId": "patient_07_03_iron_deficiency_anemia"
+    },
+    {
+      "id": "patient_dialogue_context__patient_07_04_dry_eye",
+      "patientId": "patient_07_04_dry_eye",
+      "dialogueActivityId": "patient_07_04_dry_eye"
+    },
+    {
+      "id": "patient_dialogue_context__patient_07_05_bacterial_conjunctivitis",
+      "patientId": "patient_07_05_bacterial_conjunctivitis",
+      "dialogueActivityId": "patient_07_05_bacterial_conjunctivitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_07_06_ulcerative_colitis",
+      "patientId": "patient_07_06_ulcerative_colitis",
+      "dialogueActivityId": "patient_07_06_ulcerative_colitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_07_07_hemorrhoids",
+      "patientId": "patient_07_07_hemorrhoids",
+      "dialogueActivityId": "patient_07_07_hemorrhoids"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_07_a_08",
+      "patientId": "patient_extra_07_a_08",
+      "dialogueActivityId": "patient_extra_07_a_08"
+    },
+    {
+      "id": "patient_dialogue_context__patient_08_01_kidney_stone",
+      "patientId": "patient_08_01_kidney_stone",
+      "dialogueActivityId": "patient_08_01_kidney_stone"
+    },
+    {
+      "id": "patient_dialogue_context__patient_08_02_benign_prostatic_hyperplasia",
+      "patientId": "patient_08_02_benign_prostatic_hyperplasia",
+      "dialogueActivityId": "patient_08_02_benign_prostatic_hyperplasia"
+    },
+    {
+      "id": "patient_dialogue_context__patient_08_03_nausea_vomiting",
+      "patientId": "patient_08_03_nausea_vomiting",
+      "dialogueActivityId": "patient_08_03_nausea_vomiting"
+    },
+    {
+      "id": "patient_dialogue_context__patient_08_04_lymphadenopathy",
+      "patientId": "patient_08_04_lymphadenopathy",
+      "dialogueActivityId": "patient_08_04_lymphadenopathy"
+    },
+    {
+      "id": "patient_dialogue_context__patient_08_05_orthostatic_hypotension",
+      "patientId": "patient_08_05_orthostatic_hypotension",
+      "dialogueActivityId": "patient_08_05_orthostatic_hypotension"
+    },
+    {
+      "id": "patient_dialogue_context__patient_08_06_closed_foot_fracture",
+      "patientId": "patient_08_06_closed_foot_fracture",
+      "dialogueActivityId": "patient_08_06_closed_foot_fracture"
+    },
+    {
+      "id": "patient_dialogue_context__patient_08_07_gingivitis",
+      "patientId": "patient_08_07_gingivitis",
+      "dialogueActivityId": "patient_08_07_gingivitis"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_07_b_08",
+      "patientId": "patient_extra_07_b_08",
+      "dialogueActivityId": "patient_extra_07_b_08"
+    },
+    {
+      "id": "patient_dialogue_context__patient_extra_07_b_09",
+      "patientId": "patient_extra_07_b_09",
+      "dialogueActivityId": "patient_extra_07_b_09"
+    }
+  ]
 }

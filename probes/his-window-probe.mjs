@@ -127,7 +127,7 @@ function fireChange(widgetId, value) {
 
 // --- onCreate loads the roster + category reference data -----------------
 runBlueprint(his.events.onCreate, "onCreate");
-assert.equal(variableStore.get("his:patients").length, 7);
+assert.equal(variableStore.get("his:patients").length, 57);
 assert.ok(variableStore.get("his:diagnosisCategories").length > 0);
 assert.ok(variableStore.get("his:medicineCategories").length > 0);
 assert.equal(variableStore.get("his:selectedPatient"), null);

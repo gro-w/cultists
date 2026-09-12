@@ -1,3 +1,984 @@
 {
-  "symptoms": []
+  "symptoms": [
+    {
+      "id": "symptom_001",
+      "name": "乏力",
+      "description": ""
+    },
+    {
+      "id": "symptom_002",
+      "name": "食欲减退",
+      "description": ""
+    },
+    {
+      "id": "symptom_003",
+      "name": "恶心",
+      "description": ""
+    },
+    {
+      "id": "symptom_004",
+      "name": "呕吐",
+      "description": ""
+    },
+    {
+      "id": "symptom_005",
+      "name": "腹痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_006",
+      "name": "腹泻",
+      "description": ""
+    },
+    {
+      "id": "symptom_007",
+      "name": "便秘",
+      "description": ""
+    },
+    {
+      "id": "symptom_008",
+      "name": "腹胀",
+      "description": ""
+    },
+    {
+      "id": "symptom_009",
+      "name": "反酸",
+      "description": ""
+    },
+    {
+      "id": "symptom_010",
+      "name": "烧心",
+      "description": ""
+    },
+    {
+      "id": "symptom_011",
+      "name": "吞咽困难",
+      "description": ""
+    },
+    {
+      "id": "symptom_012",
+      "name": "口干",
+      "description": ""
+    },
+    {
+      "id": "symptom_013",
+      "name": "口苦",
+      "description": ""
+    },
+    {
+      "id": "symptom_014",
+      "name": "口腔溃疡",
+      "description": ""
+    },
+    {
+      "id": "symptom_015",
+      "name": "牙龈出血",
+      "description": ""
+    },
+    {
+      "id": "symptom_016",
+      "name": "鼻塞",
+      "description": ""
+    },
+    {
+      "id": "symptom_017",
+      "name": "流鼻涕",
+      "description": ""
+    },
+    {
+      "id": "symptom_018",
+      "name": "打喷嚏",
+      "description": ""
+    },
+    {
+      "id": "symptom_019",
+      "name": "鼻痒",
+      "description": ""
+    },
+    {
+      "id": "symptom_020",
+      "name": "嗅觉减退",
+      "description": ""
+    },
+    {
+      "id": "symptom_021",
+      "name": "声音嘶哑",
+      "description": ""
+    },
+    {
+      "id": "symptom_022",
+      "name": "咽部异物感",
+      "description": ""
+    },
+    {
+      "id": "symptom_023",
+      "name": "咽干",
+      "description": ""
+    },
+    {
+      "id": "symptom_024",
+      "name": "咽痒",
+      "description": ""
+    },
+    {
+      "id": "symptom_025",
+      "name": "胸痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_026",
+      "name": "胸闷",
+      "description": ""
+    },
+    {
+      "id": "symptom_027",
+      "name": "心悸",
+      "description": ""
+    },
+    {
+      "id": "symptom_028",
+      "name": "气短",
+      "description": ""
+    },
+    {
+      "id": "symptom_029",
+      "name": "呼吸困难",
+      "description": ""
+    },
+    {
+      "id": "symptom_030",
+      "name": "喘息",
+      "description": ""
+    },
+    {
+      "id": "symptom_031",
+      "name": "咳痰",
+      "description": ""
+    },
+    {
+      "id": "symptom_032",
+      "name": "咯血",
+      "description": ""
+    },
+    {
+      "id": "symptom_033",
+      "name": "夜间盗汗",
+      "description": ""
+    },
+    {
+      "id": "symptom_034",
+      "name": "寒战",
+      "description": ""
+    },
+    {
+      "id": "symptom_035",
+      "name": "体重下降",
+      "description": ""
+    },
+    {
+      "id": "symptom_036",
+      "name": "体重增加",
+      "description": ""
+    },
+    {
+      "id": "symptom_037",
+      "name": "水肿",
+      "description": ""
+    },
+    {
+      "id": "symptom_038",
+      "name": "面部水肿",
+      "description": ""
+    },
+    {
+      "id": "symptom_039",
+      "name": "下肢水肿",
+      "description": ""
+    },
+    {
+      "id": "symptom_040",
+      "name": "皮肤瘙痒",
+      "description": ""
+    },
+    {
+      "id": "symptom_041",
+      "name": "皮疹",
+      "description": ""
+    },
+    {
+      "id": "symptom_042",
+      "name": "红斑",
+      "description": ""
+    },
+    {
+      "id": "symptom_043",
+      "name": "丘疹",
+      "description": ""
+    },
+    {
+      "id": "symptom_044",
+      "name": "风团",
+      "description": ""
+    },
+    {
+      "id": "symptom_045",
+      "name": "水疱",
+      "description": ""
+    },
+    {
+      "id": "symptom_046",
+      "name": "脓疱",
+      "description": ""
+    },
+    {
+      "id": "symptom_047",
+      "name": "脱屑",
+      "description": ""
+    },
+    {
+      "id": "symptom_048",
+      "name": "皮肤干燥",
+      "description": ""
+    },
+    {
+      "id": "symptom_049",
+      "name": "皮肤脱色",
+      "description": ""
+    },
+    {
+      "id": "symptom_050",
+      "name": "色素沉着",
+      "description": ""
+    },
+    {
+      "id": "symptom_051",
+      "name": "伤口疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_052",
+      "name": "伤口红肿",
+      "description": ""
+    },
+    {
+      "id": "symptom_053",
+      "name": "伤口渗液",
+      "description": ""
+    },
+    {
+      "id": "symptom_054",
+      "name": "眼睛干涩",
+      "description": ""
+    },
+    {
+      "id": "symptom_055",
+      "name": "眼睛发红",
+      "description": ""
+    },
+    {
+      "id": "symptom_056",
+      "name": "眼睛疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_057",
+      "name": "畏光",
+      "description": ""
+    },
+    {
+      "id": "symptom_058",
+      "name": "流泪",
+      "description": ""
+    },
+    {
+      "id": "symptom_059",
+      "name": "视物模糊",
+      "description": ""
+    },
+    {
+      "id": "symptom_060",
+      "name": "视力下降",
+      "description": ""
+    },
+    {
+      "id": "symptom_061",
+      "name": "耳鸣",
+      "description": ""
+    },
+    {
+      "id": "symptom_062",
+      "name": "耳痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_063",
+      "name": "听力下降",
+      "description": ""
+    },
+    {
+      "id": "symptom_064",
+      "name": "耳闷",
+      "description": ""
+    },
+    {
+      "id": "symptom_065",
+      "name": "鼻出血",
+      "description": ""
+    },
+    {
+      "id": "symptom_066",
+      "name": "牙痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_067",
+      "name": "面部疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_068",
+      "name": "颈部疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_069",
+      "name": "颈部僵硬",
+      "description": ""
+    },
+    {
+      "id": "symptom_070",
+      "name": "肩痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_071",
+      "name": "肩部活动受限",
+      "description": ""
+    },
+    {
+      "id": "symptom_072",
+      "name": "背部疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_073",
+      "name": "腰部僵硬",
+      "description": ""
+    },
+    {
+      "id": "symptom_074",
+      "name": "关节疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_075",
+      "name": "关节肿胀",
+      "description": ""
+    },
+    {
+      "id": "symptom_076",
+      "name": "关节僵硬",
+      "description": ""
+    },
+    {
+      "id": "symptom_077",
+      "name": "关节发热",
+      "description": ""
+    },
+    {
+      "id": "symptom_078",
+      "name": "肌肉酸痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_079",
+      "name": "肌肉无力",
+      "description": ""
+    },
+    {
+      "id": "symptom_080",
+      "name": "肢体麻木",
+      "description": ""
+    },
+    {
+      "id": "symptom_081",
+      "name": "手脚发麻",
+      "description": ""
+    },
+    {
+      "id": "symptom_082",
+      "name": "针刺感",
+      "description": ""
+    },
+    {
+      "id": "symptom_083",
+      "name": "烧灼感",
+      "description": ""
+    },
+    {
+      "id": "symptom_084",
+      "name": "触觉减退",
+      "description": ""
+    },
+    {
+      "id": "symptom_085",
+      "name": "步态不稳",
+      "description": ""
+    },
+    {
+      "id": "symptom_086",
+      "name": "协调障碍",
+      "description": ""
+    },
+    {
+      "id": "symptom_087",
+      "name": "震颤",
+      "description": ""
+    },
+    {
+      "id": "symptom_088",
+      "name": "抽搐",
+      "description": ""
+    },
+    {
+      "id": "symptom_089",
+      "name": "晕厥",
+      "description": ""
+    },
+    {
+      "id": "symptom_090",
+      "name": "意识模糊",
+      "description": ""
+    },
+    {
+      "id": "symptom_091",
+      "name": "记忆力减退",
+      "description": ""
+    },
+    {
+      "id": "symptom_092",
+      "name": "注意力不集中",
+      "description": ""
+    },
+    {
+      "id": "symptom_093",
+      "name": "言语含糊",
+      "description": ""
+    },
+    {
+      "id": "symptom_094",
+      "name": "吞咽障碍",
+      "description": ""
+    },
+    {
+      "id": "symptom_095",
+      "name": "面部麻木",
+      "description": ""
+    },
+    {
+      "id": "symptom_096",
+      "name": "单侧无力",
+      "description": ""
+    },
+    {
+      "id": "symptom_097",
+      "name": "手臂无力",
+      "description": ""
+    },
+    {
+      "id": "symptom_098",
+      "name": "腿部无力",
+      "description": ""
+    },
+    {
+      "id": "symptom_099",
+      "name": "尿频",
+      "description": ""
+    },
+    {
+      "id": "symptom_100",
+      "name": "尿急",
+      "description": ""
+    },
+    {
+      "id": "symptom_101",
+      "name": "尿痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_102",
+      "name": "排尿困难",
+      "description": ""
+    },
+    {
+      "id": "symptom_103",
+      "name": "尿潴留",
+      "description": ""
+    },
+    {
+      "id": "symptom_104",
+      "name": "血尿",
+      "description": ""
+    },
+    {
+      "id": "symptom_105",
+      "name": "夜尿增多",
+      "description": ""
+    },
+    {
+      "id": "symptom_106",
+      "name": "尿失禁",
+      "description": ""
+    },
+    {
+      "id": "symptom_107",
+      "name": "腰腹绞痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_108",
+      "name": "阴囊疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_109",
+      "name": "月经不规律",
+      "description": ""
+    },
+    {
+      "id": "symptom_110",
+      "name": "月经过多",
+      "description": ""
+    },
+    {
+      "id": "symptom_111",
+      "name": "月经量少",
+      "description": ""
+    },
+    {
+      "id": "symptom_112",
+      "name": "痛经",
+      "description": ""
+    },
+    {
+      "id": "symptom_113",
+      "name": "经间期出血",
+      "description": ""
+    },
+    {
+      "id": "symptom_114",
+      "name": "白带增多",
+      "description": ""
+    },
+    {
+      "id": "symptom_115",
+      "name": "外阴瘙痒",
+      "description": ""
+    },
+    {
+      "id": "symptom_116",
+      "name": "性欲减退",
+      "description": ""
+    },
+    {
+      "id": "symptom_117",
+      "name": "勃起困难",
+      "description": ""
+    },
+    {
+      "id": "symptom_118",
+      "name": "乳房疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_120",
+      "name": "潮热",
+      "description": ""
+    },
+    {
+      "id": "symptom_121",
+      "name": "盗汗",
+      "description": ""
+    },
+    {
+      "id": "symptom_122",
+      "name": "怕冷",
+      "description": ""
+    },
+    {
+      "id": "symptom_123",
+      "name": "怕热",
+      "description": ""
+    },
+    {
+      "id": "symptom_124",
+      "name": "手抖",
+      "description": ""
+    },
+    {
+      "id": "symptom_125",
+      "name": "多汗",
+      "description": ""
+    },
+    {
+      "id": "symptom_127",
+      "name": "毛发脱落",
+      "description": ""
+    },
+    {
+      "id": "symptom_128",
+      "name": "毛发增多",
+      "description": ""
+    },
+    {
+      "id": "symptom_129",
+      "name": "痤疮",
+      "description": ""
+    },
+    {
+      "id": "symptom_130",
+      "name": "脱发",
+      "description": ""
+    },
+    {
+      "id": "symptom_131",
+      "name": "伤口愈合慢",
+      "description": ""
+    },
+    {
+      "id": "symptom_132",
+      "name": "口渴",
+      "description": ""
+    },
+    {
+      "id": "symptom_133",
+      "name": "多饮",
+      "description": ""
+    },
+    {
+      "id": "symptom_134",
+      "name": "多尿",
+      "description": ""
+    },
+    {
+      "id": "symptom_136",
+      "name": "视物重影",
+      "description": ""
+    },
+    {
+      "id": "symptom_137",
+      "name": "眼球突出",
+      "description": ""
+    },
+    {
+      "id": "symptom_138",
+      "name": "颈部肿大",
+      "description": ""
+    },
+    {
+      "id": "symptom_139",
+      "name": "声音低沉",
+      "description": ""
+    },
+    {
+      "id": "symptom_140",
+      "name": "反应迟钝",
+      "description": ""
+    },
+    {
+      "id": "symptom_141",
+      "name": "情绪低落",
+      "description": ""
+    },
+    {
+      "id": "symptom_142",
+      "name": "兴趣减退",
+      "description": ""
+    },
+    {
+      "id": "symptom_143",
+      "name": "自责感",
+      "description": ""
+    },
+    {
+      "id": "symptom_144",
+      "name": "紧张不安",
+      "description": ""
+    },
+    {
+      "id": "symptom_145",
+      "name": "坐立不安",
+      "description": ""
+    },
+    {
+      "id": "symptom_146",
+      "name": "易怒",
+      "description": ""
+    },
+    {
+      "id": "symptom_147",
+      "name": "情绪波动",
+      "description": ""
+    },
+    {
+      "id": "symptom_148",
+      "name": "惊恐发作",
+      "description": ""
+    },
+    {
+      "id": "symptom_149",
+      "name": "强迫思维",
+      "description": ""
+    },
+    {
+      "id": "symptom_150",
+      "name": "睡眠过多",
+      "description": ""
+    },
+    {
+      "id": "symptom_151",
+      "name": "早醒",
+      "description": ""
+    },
+    {
+      "id": "symptom_152",
+      "name": "噩梦",
+      "description": ""
+    },
+    {
+      "id": "symptom_153",
+      "name": "注意力涣散",
+      "description": ""
+    },
+    {
+      "id": "symptom_154",
+      "name": "疲劳感",
+      "description": ""
+    },
+    {
+      "id": "symptom_155",
+      "name": "晨僵",
+      "description": ""
+    },
+    {
+      "id": "symptom_156",
+      "name": "活动后疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_157",
+      "name": "静息痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_158",
+      "name": "夜间疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_159",
+      "name": "间歇性跛行",
+      "description": ""
+    },
+    {
+      "id": "symptom_160",
+      "name": "肢端发冷",
+      "description": ""
+    },
+    {
+      "id": "symptom_162",
+      "name": "皮下结节",
+      "description": ""
+    },
+    {
+      "id": "symptom_163",
+      "name": "淋巴结肿大",
+      "description": ""
+    },
+    {
+      "id": "symptom_164",
+      "name": "脖子肿块",
+      "description": ""
+    },
+    {
+      "id": "symptom_165",
+      "name": "腋窝肿块",
+      "description": ""
+    },
+    {
+      "id": "symptom_166",
+      "name": "腹股沟肿块",
+      "description": ""
+    },
+    {
+      "id": "symptom_167",
+      "name": "肝区不适",
+      "description": ""
+    },
+    {
+      "id": "symptom_168",
+      "name": "右上腹痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_169",
+      "name": "左上腹痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_170",
+      "name": "黄疸",
+      "description": ""
+    },
+    {
+      "id": "symptom_171",
+      "name": "眼白发黄",
+      "description": ""
+    },
+    {
+      "id": "symptom_172",
+      "name": "黑便",
+      "description": ""
+    },
+    {
+      "id": "symptom_173",
+      "name": "便血",
+      "description": ""
+    },
+    {
+      "id": "symptom_174",
+      "name": "黏液便",
+      "description": ""
+    },
+    {
+      "id": "symptom_175",
+      "name": "里急后重",
+      "description": ""
+    },
+    {
+      "id": "symptom_176",
+      "name": "排便不尽",
+      "description": ""
+    },
+    {
+      "id": "symptom_177",
+      "name": "肛门疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_178",
+      "name": "肛门瘙痒",
+      "description": ""
+    },
+    {
+      "id": "symptom_179",
+      "name": "肛门出血",
+      "description": ""
+    },
+    {
+      "id": "symptom_180",
+      "name": "皮肤苍白",
+      "description": ""
+    },
+    {
+      "id": "symptom_181",
+      "name": "口唇发绀",
+      "description": ""
+    },
+    {
+      "id": "symptom_182",
+      "name": "指甲脆裂",
+      "description": ""
+    },
+    {
+      "id": "symptom_183",
+      "name": "头发干枯",
+      "description": ""
+    },
+    {
+      "id": "symptom_184",
+      "name": "骨痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_185",
+      "name": "骨折后疼痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_186",
+      "name": "活动受限",
+      "description": ""
+    },
+    {
+      "id": "symptom_187",
+      "name": "关节弹响",
+      "description": ""
+    },
+    {
+      "id": "symptom_188",
+      "name": "足跟痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_189",
+      "name": "足底痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_190",
+      "name": "手腕痛",
+      "description": ""
+    },
+    {
+      "id": "symptom_191",
+      "name": "手指僵硬",
+      "description": ""
+    },
+    {
+      "id": "symptom_192",
+      "name": "手指变形",
+      "description": ""
+    },
+    {
+      "id": "symptom_193",
+      "name": "小腿抽筋",
+      "description": ""
+    },
+    {
+      "id": "symptom_194",
+      "name": "腿部沉重",
+      "description": ""
+    },
+    {
+      "id": "symptom_195",
+      "name": "静脉曲张",
+      "description": ""
+    },
+    {
+      "id": "symptom_196",
+      "name": "伤口感染",
+      "description": ""
+    },
+    {
+      "id": "symptom_197",
+      "name": "发冷",
+      "description": ""
+    },
+    {
+      "id": "symptom_198",
+      "name": "虚弱感",
+      "description": ""
+    },
+    {
+      "id": "symptom_199",
+      "name": "脱水感",
+      "description": ""
+    },
+    {
+      "id": "symptom_200",
+      "name": "站立头晕",
+      "description": ""
+    }
+  ]
 }

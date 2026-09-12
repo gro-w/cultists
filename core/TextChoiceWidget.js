@@ -7,13 +7,15 @@ import { resolveAssetPath } from "./AssetPath.js";
  * receiver protocol; content packages decide the target and payload fields.
  */
 export class TextChoiceWidget {
-  constructor({ eventBus, variableStore, displayReceiverRegistry, displayTo = "default", displayAliases = [] } = {}) {
+  constructor({ eventBus, variableStore, displayReceiverRegistry, displayTo = "default", displayAliases = [], keywordResolver = null, onKeywordCollect = null } = {}) {
     this.eventBus = eventBus;
     this.variableStore = variableStore;
     this.displayTo = String(displayTo || "default").trim();
     this.displayAliases = (Array.isArray(displayAliases) ? displayAliases : [displayAliases])
       .map((target) => String(target || "").trim())
       .filter((target) => target && target !== this.displayTo);
+    this.keywordResolver = keywordResolver;
+    this.onKeywordCollect = onKeywordCollect;
     this.registry = displayReceiverRegistry || new DisplayReceiverRegistry();
     this._buildDom();
     this._receiver = { handle: (payload) => this._handle(payload) };
@@ -99,12 +101,18 @@ export class TextChoiceWidget {
     while ((match = marker.exec(source))) {
       if (match.index > cursor) parent.appendChild(document.createTextNode(source.slice(cursor, match.index)));
       const id = String(match[1]).trim();
-      const label = match[2] === undefined ? id : match[2];
+      const resolved = this.keywordResolver?.(id);
+      const label = match[2] === undefined ? (resolved || id) : match[2];
       const keyword = document.createElement("span");
-      keyword.className = "ng-dialogue-keyword";
+      keyword.className = "keyword-highlight";
       keyword.dataset.keywordId = id;
+      keyword.title = id;
       if (allowed.size && !allowed.has(id)) keyword.classList.add("is-unlisted");
       keyword.textContent = label;
+      keyword.addEventListener("click", () => {
+        const result = this.onKeywordCollect?.(id);
+        if (result !== undefined) keyword.classList.add("keyword-highlight-collected");
+      });
       parent.appendChild(keyword);
       cursor = match.index + match[0].length;
     }

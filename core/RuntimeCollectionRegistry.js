@@ -252,7 +252,16 @@ export class RuntimeCollectionRegistry {
 
   restore(snapshot = {}) {
     for (const id of this.definitions.keys()) {
-      const values = new Map(Object.entries(snapshot[id] || {}));
+      const definition = this.definitions.get(id) || {};
+      const aliases = definition.stateAliases || {};
+      const normalized = {};
+      for (const [recordId, value] of Object.entries(snapshot[id] || {})) {
+        const canonicalId = String(aliases[recordId] || recordId);
+        // Prefer an explicitly canonical record when both the legacy alias and
+        // the canonical id are present in the same save.
+        if (!(canonicalId in normalized) || canonicalId === recordId) normalized[canonicalId] = value;
+      }
+      const values = new Map(Object.entries(normalized));
       this.state.set(id, values);
     }
     this.eventBus?.emit("runtime:collection-changed", { restored: true });

@@ -1,0 +1,8 @@
+// CL2 export for activity bgm-manager
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+ready: emitEvent("bgm:manager-ready", {"source":"bgm-manager"});
+
+end: end();

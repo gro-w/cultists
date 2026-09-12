@@ -1,0 +1,80 @@
+// CL2 export for activity social04a_ajie_chat
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_global_100__value: getPublicVariable[100];
+reusablevalue favor_compare__value: arithmetic[">", favor_global__value[], 49];
+reusablevalue favor_global__value: getPublicVariable[40];
+
+start: flowStart();
+
+n1: text("dorm-bottom", "阿杰", "回来了？今天怎么样？", "dlg:n1:continue") {
+    default consume_time_20_1;
+};
+
+n2: text("dorm-bottom", "player", "还行，接诊了几个病人……就那样。你呢？", "dlg:n2:continue") {
+    default consume_time_20_4;
+};
+
+n3: text("dorm-bottom", "阿杰", "我也还行。不过我买到了很好吃的酸奶，黏黏的，你要不要来一罐？", "dlg:n3:continue") {
+    default consume_time_20_6;
+};
+
+choice4: choice([{"label":"好啊，给我一罐吧。"},{"label":"听起来有点恶心……还是算了。"}], 2, "dlg:choice4:select") {
+    option<1> choice4_op0;
+    option<2> n5;
+};
+
+choice4_op0: applyPublicVariableEffect(5, 0);
+
+n5: text("dorm-bottom", "阿杰", "今晚还打《第二十四人格》吗？", "dlg:n5:continue") {
+    default consume_time_20_9;
+};
+
+n6: text("dorm-bottom", "player", "我觉得我还是不该喜欢打什么游戏，会影响我刷题的。", "dlg:n6:continue") {
+    default favor_check;
+};
+
+end: end();
+
+consume_time_20_1: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_2: framework:consumeTime(20); // @cl2.pos 60,40
+
+consume_time_20_3: framework:consumeTime(20) {
+    default n2;
+}; // @cl2.pos 90,40
+
+consume_time_20_4: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_5: framework:consumeTime(20) {
+    default n3;
+}; // @cl2.pos 60,40
+
+consume_time_20_6: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_7: framework:consumeTime(20); // @cl2.pos 60,40
+
+consume_time_20_8: framework:consumeTime(20) {
+    default choice4;
+}; // @cl2.pos 90,40
+
+consume_time_20_9: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_10: framework:consumeTime(20); // @cl2.pos 60,40
+
+consume_time_20_11: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_12: framework:consumeTime(20) {
+    default n6;
+}; // @cl2.pos 60,40
+
+favor_check: branch(favor_compare__value[]) {
+    option<1> tabletop_invite;
+    default end;
+}; // @cl2.pos 2500,160
+
+tabletop_invite: text("dorm-bottom", "阿杰", "那晚上一起打桌游吗？", "dlg:tabletop_invite:continue"); // @cl2.pos 2700,80
+
+tabletop_reply: text("dorm-bottom", "player", "待会儿有空我就来。", "dlg:tabletop_reply:continue") {
+    default end;
+}; // @cl2.pos 2950,80

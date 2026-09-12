@@ -1,0 +1,65 @@
+// CL2 export for activity social05b_awei_record_low
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+t0: text("dorm-bottom", "阿伟", "我要去唱片店，怎么，你也要来吗？", "dlg:t0:continue");
+
+t1: text("dorm-bottom", "主控", "走，我也去逛逛。", "dlg:t1:continue");
+
+t2: text("dorm-bottom", "阿伟", "顺路我要去把耳机退了。", "dlg:t2:continue");
+
+time_0: framework:consumeTime(20);
+
+t4: text("dorm-bottom", "主控", "……你真狠得下心。", "dlg:t4:continue");
+
+t5: text("dorm-bottom", "阿伟", "其实这只是厂商的样机罢了。", "dlg:t5:continue");
+
+time_1: framework:consumeTime(20);
+
+t7: text("dorm-bottom", "主控", "所以你并没有买耳机？", "dlg:t7:continue");
+
+t8: text("dorm-bottom", "阿伟", "嘘，别告诉别人。", "dlg:t8:continue");
+
+time_2: framework:consumeTime(20);
+
+choice_0: choice([{"label":"这个耳机也并不怎么样，老有怪声音。","next":"choice_0_op0"},{"label":"其实这只是厂商的样机罢了。","next":"choice_0_op1"}], 2, "dlg:choice_0:select") {
+    option<1> choice_0_op0;
+    option<2> choice_0_op1;
+};
+
+choice_0_join: text("dorm-bottom", "旁白", "（场景继续）", "dlg:choice_0_join:continue") {
+    default after_0;
+};
+
+choice_0_op0: applyPublicVariableEffect(-10, 41);
+
+choice_0_op0_t0: text("dorm-bottom", "阿伟", "我听着好好的。", "dlg:choice_0_op0_t0:continue");
+
+choice_0_op0_t1: text("dorm-bottom", "主控", "你骗我？我差点借钱给你。", "dlg:choice_0_op0_t1:continue");
+
+choice_0_op0_t2: text("dorm-bottom", "阿伟", "随你怎么想。", "dlg:choice_0_op0_t2:continue") {
+    default choice_0_join;
+};
+
+choice_0_op1: applyPublicVariableEffect(10, 41);
+
+choice_0_op1_t0: text("dorm-bottom", "主控", "所以你并没有买耳机？", "dlg:choice_0_op1_t0:continue");
+
+choice_0_op1_t1: text("dorm-bottom", "阿伟", "嘘，别告诉别人。", "dlg:choice_0_op1_t1:continue") {
+    default choice_0_join;
+};
+
+after_0: text("dorm-bottom", "主控", "那现在我们还去唱片店吗？你应该有钱买唱片了吧。", "dlg:after_0:continue");
+
+after_1: text("dorm-bottom", "阿伟", "走啊，去看看。", "dlg:after_1:continue");
+
+after_2: text("dorm-bottom", "主控", "你想买哪个？", "dlg:after_2:continue");
+
+after_3: text("dorm-bottom", "阿伟", "没看上的。", "dlg:after_3:continue");
+
+after_4: text("dorm-bottom", "主控", "连唱片都不感兴趣了？", "dlg:after_4:continue");
+
+after_5: text("dorm-bottom", "阿伟", "其实我在手机上听听《月之暗面》就足够开心了。", "dlg:after_5:continue");
+
+end: end();

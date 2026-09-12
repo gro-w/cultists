@@ -1,0 +1,53 @@
+// CL2 export for activity social05b_ajie_goods_high
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+t0: text("dorm-bottom", "阿杰", "走，跟我去谷子店看看。", "dlg:t0:continue");
+
+t1: text("dorm-bottom", "主控", "谷子店？那是什么地方？", "dlg:t1:continue");
+
+t2: text("dorm-bottom", "阿杰", "买盲盒的地方。", "dlg:t2:continue");
+
+time_0: framework:consumeTime(20);
+
+t4: text("dorm-bottom", "主控", "你有要想抽到的角色吗？我可以帮你看看攻略。", "dlg:t4:continue");
+
+t5: text("dorm-bottom", "阿杰", "你是照攻略学会走路的吧……", "dlg:t5:continue");
+
+time_1: framework:consumeTime(20);
+
+choice_0: choice([{"label":"不然很亏啊，价格除以概率，远远超出物品的价值。","next":"choice_0_op0"},{"label":"你愿意承担风险就行。","next":"choice_0_op1"}], 2, "dlg:choice_0:select") {
+    option<1> choice_0_op0;
+    option<2> choice_0_op1;
+};
+
+choice_0_join: text("dorm-bottom", "旁白", "（场景继续）", "dlg:choice_0_join:continue") {
+    default after_0;
+};
+
+choice_0_op0: applyPublicVariableEffect(-10, 40);
+
+choice_0_op0_t0: text("dorm-bottom", "阿杰", "这样才刺激嘛。", "dlg:choice_0_op0_t0:continue");
+
+choice_0_op0_t1: text("dorm-bottom", "主控", "花钱得到想要的就是惊喜，得到不想要的不就是吃亏了吗？", "dlg:choice_0_op0_t1:continue");
+
+choice_0_op0_t2: text("dorm-bottom", "阿杰", "你是对意外过敏吗？", "dlg:choice_0_op0_t2:continue") {
+    default choice_0_join;
+};
+
+choice_0_op1: applyPublicVariableEffect(10, 40);
+
+choice_0_op1_t0: text("dorm-bottom", "阿杰", "我买的就是风险。", "dlg:choice_0_op1_t0:continue") {
+    default choice_0_join;
+};
+
+after_0: text("dorm-bottom", "主控", "好诡异的店面，所有人都低着头不说话。", "dlg:after_0:continue");
+
+after_1: text("dorm-bottom", "阿杰", "只需要挑选就可以了。", "dlg:after_1:continue");
+
+after_2: text("dorm-bottom", "主控", "挑选这些肉色的片状物吗？", "dlg:after_2:continue");
+
+after_3: text("dorm-bottom", "阿杰", "我推在墙上从左到右第三列，你看到了吗？怎么样，可爱吧？要不要入坑？", "dlg:after_3:continue");
+
+end: end();

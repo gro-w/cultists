@@ -1,0 +1,104 @@
+// CL2 export for activity event__追逐事件
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+cg_dorm: emitEvent("content:showCg", {"cgId":"cg_exrn4m_1"});
+
+intro_01: text("ending-screen", "player", "昨天晚上，我做了个梦。梦见我和GTP说，我需要逃离，又说，我已经逃离，摆脱了邪教的阴谋。醒来时却还在这个令人恐慌的诡异宿舍之中。", "dlg:intro_01:continue");
+
+intro_02: text("ending-screen", "player", "这个宿舍越来越不对劲。邪教徒的阴谋正在暗中推进。我有生命危险。我必须马上逃离。就像《印斯茅斯的阴霾》中一样。而且我知道，那些邪教徒——甚至异种怪物——将会追逐我。", "dlg:intro_02:continue");
+
+intro_03: text("ending-screen", "player", "梦是预兆。现在我已经不再安全，或者说我从来就没有安全过。", "dlg:intro_03:continue");
+
+intro_04: text("ending-screen", "player", "我早就知道——那次跑团——不仅是游戏，不仅是虚构，不仅是故事。那真的是此时此刻的预演。它们早有准备。", "dlg:intro_04:continue");
+
+intro_05: text("ending-screen", "player", "我需要把线索墙叠起来，和记录本一并收进背包。然后下床，开门，从外面反锁住门，这样应该可以拖延一些时间。然后我将向最安全的方向跑。最危险的地方就是最安全的地方——我将逃往海边。", "dlg:intro_05:continue");
+
+cg_seaside: emitEvent("content:showCg", {"cgId":"cg_extit1_7"});
+
+chase_01: text("ending-screen", "player", "我现在已经逃离。但它们正在追逐我。", "dlg:chase_01:continue");
+
+chase_02: text("ending-screen", "阿杰", "诶，你往哪跑啊，不和我们一起了吗？你早上的动静把我吵醒了，迷迷糊糊中似乎听到你说要去海边。我就打了个专车把大家送到这。", "dlg:chase_02:continue");
+
+chase_03: text("ending-screen", "阿伟", "大早上的咋突然跑了，还把门反锁了。幸好我会撬锁把门弄开了。", "dlg:chase_03:continue");
+
+chase_04: text("ending-screen", "彬彬", "我们好不容易才追上你，你到底怎么了？", "dlg:chase_04:continue");
+
+chase_05: text("ending-screen", "player", "不必多言了，邪教徒。", "dlg:chase_05:continue");
+
+chase_06: text("ending-screen", "阿杰", "啊？什么邪教徒？", "dlg:chase_06:continue");
+
+chase_07: text("ending-screen", "player", "你们", "dlg:chase_07:continue");
+
+chase_08: text("ending-screen", "player", "既然", "dlg:chase_08:continue");
+
+chase_09: text("ending-screen", "player", "追上", "dlg:chase_09:continue");
+
+chase_10: text("ending-screen", "player", "了我", "dlg:chase_10:continue");
+
+chase_11: text("ending-screen", "player", "那么", "dlg:chase_11:continue");
+
+choice: choice([{"label":"使用万字符","requiredItemId":"swastika","requiredSpellId":"book_moon__0","next":"use_talisman"},{"label":"使用支配术","requiredSpellId":"book_coc7__0","next":"cast_domination"},{"label":"接受注定的终局。","next":"normal_cg"}], 3, "dlg:choice:select") {
+    option<1> use_talisman;
+    option<2> cast_domination;
+    option<3> normal_cg;
+};
+
+use_talisman: emitEvent("content:inventoryOperation", {"itemId":"swastika","count":-1});
+
+use_talisman_cost: statOperation("sanity", -5);
+
+use_talisman_spell: emitEvent("content:spellEffect", {"spellId":"book_moon__0","eventId":"追逐事件","choiceId":"use_talisman"}) {
+    default end;
+};
+
+cast_domination: emitEvent("content:spellCast", {"spellId":"book_coc7__0","eventId":"追逐事件","choiceId":"cast_domination","location":"seaside"});
+
+abnormal_cg: emitEvent("content:showCg", {"cgId":"cg_ewexmk_b"});
+
+abnormal_01: text("ending-screen", "player", "我看见它们——过来了——犹格·索托斯救我——", "dlg:abnormal_01:continue");
+
+abnormal_02: text("ending-screen", "player", "藉由旧神之力，我将施展法术——", "dlg:abnormal_02:continue");
+
+abnormal_03: text("ending-screen", "彬彬", "等下，你拿的这个……是……", "dlg:abnormal_03:continue");
+
+abnormal_04: text("ending-screen", "阿杰", "不，快放下它！你发神经吗？", "dlg:abnormal_04:continue");
+
+abnormal_05: text("ending-screen", "阿伟", "为什么……为什么拿这个鬼东西指着我们……你明明知道它是邪恶的！", "dlg:abnormal_05:continue");
+
+abnormal_06: text("ending-screen", "player", "不，不，不，你们才无疑是邪恶的。我只为自保，现在你们是不是被我的法术定住动不了了？你们有想过那些无辜的活人祭品，他们在被你们束缚无法动弹时也是绝望的？哈，哈，哈！你们捆人就像捆螃蟹！而我，我将逃离你们的追逐，彻底挫败你们的献祭计划。我将在一个更好的环境里，开启一段崭新的，美好的，不被邪教阴谋所困扰的人生！", "dlg:abnormal_06:continue");
+
+abnormal_07: text("ending-screen", "彬彬", "等一下，危险，停！你在往海里跑，这是凹岸，海里是有离岸流的！", "dlg:abnormal_07:continue");
+
+abnormal_08: text("ending-screen", "player", "不要再蛊惑我了！新生活，我来了！", "dlg:abnormal_08:continue");
+
+abnormal_09: text("ending-screen", "player", "……", "dlg:abnormal_09:continue");
+
+abnormal_10: text("ending-screen", "阿杰", "离岸流给卷走了！我看不见人影！", "dlg:abnormal_10:continue");
+
+abnormal_11: text("ending-screen", "彬彬", "那咋办？报警，找救生员？都试一遍吧。", "dlg:abnormal_11:continue");
+
+abnormal_12: text("ending-screen", "阿伟", "毕竟是我们室友啊。走吧，咱分头行动。", "dlg:abnormal_12:continue");
+
+abnormal_end: ending("异常结局") {
+    default end;
+};
+
+normal_cg: emitEvent("content:showCg", {"cgId":"cg_ewexmk_h"});
+
+normal_01: text("ending-screen", "player", "已经没有别的办法了，我只能接受现实。我将被这些恐怖的邪教徒当成祭品，死亡是我注定的结局。", "dlg:normal_01:continue");
+
+normal_02: text("ending-screen", "player", "阿撒托斯发发慈悲！赐予我我无痛的昏迷，让我无需经历流血之苦……", "dlg:normal_02:continue");
+
+normal_03: text("ending-screen", "player", "就在这濒临死亡的一刻，我才真正悟到，生死轮转即是不可变更、四海皆准的自然规律。万物终将灭亡。死是凉爽的夏夜，可供人无忧地安眠，而试图逃离死亡的行为正如强迫自己悖逆身体的自然节律，是一种邪恶的病态，为一切正常人所不容。", "dlg:normal_03:continue");
+
+normal_04: text("ending-screen", "player", "就算我即将死于邪教徒之手，我也知道我有一点比他们强：我的认知是完全正常的，而它们则深陷于病态的执念中，无法接受自然的规律。", "dlg:normal_04:continue");
+
+normal_05: text("ending-screen", "player", "这些邪教徒的阴谋是无法得逞的。即使它们完成仪式，服下秘药，终有一天它们也会像我一样别无选择地走向生命的消逝，无法逃离死亡的终局。", "dlg:normal_05:continue");
+
+normal_06: text("ending-screen", "player", "是时候放手了……", "dlg:normal_06:continue");
+
+normal_end: ending("正常结局");
+
+end: end();

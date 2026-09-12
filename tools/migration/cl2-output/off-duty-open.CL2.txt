@@ -1,0 +1,20 @@
+// CL2 export for activity off-duty-open
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue hasPending__value: arithmetic[">", pending__value[], 0];
+reusablevalue pending__value: getQueueEntryCount["work"];
+
+start: flowStart(); // @cl2.pos 60,60
+
+branch: branch(hasPending__value[]) {
+    option<1> blocked;
+    default open;
+};
+
+blocked: openWindow("off-duty-blocked") {
+    default end;
+};
+
+open: openWindow("off-duty"); // @cl2.pos 260,60
+
+end: end(); // @cl2.pos 460,60

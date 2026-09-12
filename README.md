@@ -9,6 +9,7 @@
 - 原生 HTML、CSS 和 ES modules，无框架、无 bundler、无构建步骤
 - JSON 与 NGL 蓝图驱动的 Activity、对话、医疗、物品、关键词、成就、结局、公共变量和 Activity 本地变量
 - CL2（Cultists Blueprint & Script Language 2）统一脚本图语言设计草案：以显式节点、`option<x>`、`default` 和纯值表达式直接表示蓝图图结构
+- 提供离线 `tools/migration/blueprint_to_cl2.py`，可将现有 Activity JSON 导出为 `*.CL2.txt`；当前运行时仍加载 NGL，导出诊断会记录不能无损表达的旧端口
 - Windows 95 风格桌面、任务栏、开始菜单、窗口和数据驱动应用
 - 医院工作与宿舍生活两种场景，以及工作、社交、管理器和主活动队列
 - 确定性的游戏时钟：普通行动默认推进 20 分钟，睡眠和跨日按明确边界结算

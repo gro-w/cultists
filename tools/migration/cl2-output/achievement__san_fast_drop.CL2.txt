@@ -1,0 +1,8 @@
+// CL2 export for activity achievement__san_fast_drop
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+unlock: emitEvent("achievement:display", {"achievementId":"san_fast_drop"});
+
+end: end();

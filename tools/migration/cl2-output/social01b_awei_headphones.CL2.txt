@@ -1,0 +1,144 @@
+// CL2 export for activity social01b_awei_headphones
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue current_game_time__value: getGameTime[];
+reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
+reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day1"];
+
+start: flowStart();
+
+n1: text("dorm-bottom", "阿伟", "新买的耳机终于到了，来，给你试听一下。") {
+    default consume_time_20_1;
+};
+
+n2: text("dorm-bottom", "player", "这是你新买的？看起来很贵啊，你不才买了个黑椒唱片机吗？") {
+    default consume_time_20_2;
+};
+
+n3: text("dorm-bottom", "阿伟", "是啊，不错吧，在购物车里放了好久终于等到降价了。");
+
+n4: text("dorm-bottom", "player", "你全款买的？") {
+    default consume_time_20_3;
+};
+
+n5: text("dorm-bottom", "阿伟", "……还没付尾款。到底听不听？赶紧的。");
+
+n6: text("dorm-bottom", "player", "音质很……好，声场比较强，有空间感，高音甜中音稳低音沉……") {
+    default consume_time_20_4;
+};
+
+n7: text("dorm-bottom", "阿伟", "你有没有听到什么奇怪的声音？");
+
+n8: text("dorm-bottom", "player", "什么？") {
+    default consume_time_20_5;
+};
+
+n9: text("dorm-bottom", "阿伟", "这里，我放大点，你仔细听。") {
+    default consume_time_20_6;
+};
+
+n10: text("dorm-bottom", "player", "什么也没听出来啊。");
+
+n11: text("dorm-bottom", "阿伟", "难道是我幻听了？我总觉得这里有点底噪，但只有我听到第37秒会有。") {
+    default consume_time_20_7;
+};
+
+choice12: choice(2, "是什么声音？", "要不你换首歌试试？") {
+    option<1> choice12_op0;
+    option<2> choice12_op1;
+};
+
+choice12_op0: setGlobal(41, 5);
+
+n13: text("dorm-bottom", "阿伟", "一种……好像谁在说话。");
+
+n14: text("dorm-bottom", "player", "是不是这首歌里本来就有的？") {
+    default consume_time_20_8;
+};
+
+n15: text("dorm-bottom", "阿伟", "我对《月之暗面》比对《外科学》还熟悉，怎么会搞错？");
+
+n16: text("dorm-bottom", "player", "肯定是你听错了，你是不是背着大家在偷偷复习医师资格证考试压力太大？") {
+    default consume_time_20_9;
+};
+
+n17: text("dorm-bottom", "阿伟", "说你自己呢吧……") {
+    default consume_time_20_11;
+};
+
+choice12_op1: setGlobal(41, -5);
+
+n18: text("dorm-bottom", "阿伟", "就是为了听《月之暗面》我才买的这个耳机。");
+
+n19: text("dorm-bottom", "player", "真的没听出来。") {
+    default consume_time_20_10;
+};
+
+n20: text("dorm-bottom", "阿伟", "或许是这段时间太累了，我休息休息就好了。");
+
+n21: text("dorm-bottom", "player", "幻听要去看医生的。") {
+    default consume_time_20_12;
+};
+
+n22: text("dorm-bottom", "阿伟", "这不用你告诉我。") {
+    default schedule_guard;
+};
+
+end: end();
+
+consume_time_20_1: consumeTime(20) {
+    default n2;
+}; // @cl2.pos 30,40
+
+consume_time_20_2: consumeTime(20) {
+    default n3;
+}; // @cl2.pos 30,40
+
+consume_time_20_3: consumeTime(20) {
+    default n5;
+}; // @cl2.pos 30,40
+
+consume_time_20_4: consumeTime(20) {
+    default n7;
+}; // @cl2.pos 30,40
+
+consume_time_20_5: consumeTime(20) {
+    default n9;
+}; // @cl2.pos 30,40
+
+consume_time_20_6: consumeTime(20) {
+    default n10;
+}; // @cl2.pos 30,40
+
+consume_time_20_7: consumeTime(20) {
+    default choice12;
+}; // @cl2.pos 30,40
+
+consume_time_20_8: consumeTime(20) {
+    default n15;
+}; // @cl2.pos 30,40
+
+consume_time_20_9: consumeTime(20) {
+    default n17;
+}; // @cl2.pos 30,40
+
+consume_time_20_10: consumeTime(20) {
+    default n20;
+}; // @cl2.pos 30,40
+
+consume_time_20_11: consumeTime(20) {
+    default n21;
+}; // @cl2.pos 30,40
+
+consume_time_20_12: consumeTime(20) {
+    default n22;
+}; // @cl2.pos 30,40
+
+insert_dorm_schedule: insertSchedule("dorm_schedule_day1", "social", true, false, current_game_time__value[]) {
+    default end;
+};
+
+schedule_guard: branch(schedule_available__value[]) {
+    default end;
+    option<1> insert_dorm_schedule;
+};

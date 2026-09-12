@@ -1,0 +1,32 @@
+// CL2 export for activity ending__异常结局
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+n000: emitEvent("content:showCg", {"cgId":"cg_ewexmk_b"}); // @cl2.pos 340,40
+
+n001: text("ending-screen", "player", "我看见它们——过来了——犹格·索托斯救我——", "dlg:n001:continue"); // @cl2.pos 640,40
+
+n002: text("ending-screen", "player", "藉由旧神之力，我将施展法术——", "dlg:n002:continue"); // @cl2.pos 940,40
+
+n003: text("ending-screen", "binbin", "等下，你拿的这个……是……", "dlg:n003:continue"); // @cl2.pos 1240,40
+
+n004: text("ending-screen", "ajie", "不，快放下它！你发神经吗？", "dlg:n004:continue"); // @cl2.pos 1540,40
+
+n005: text("ending-screen", "awei", "为什么……为什么拿这个鬼东西指着我们……你明明知道它是邪恶的！", "dlg:n005:continue"); // @cl2.pos 1840,40
+
+n006: text("ending-screen", "player", "不，不，不，你们才无疑是邪恶的。我只为自保，现在你们是不是被我的法术定住动不了了？你们有想过那些无辜的活人祭品，他们在被你们束缚无法动弹时也是绝望的？哈，哈，哈！你们捆人就像捆螃蟹！而我，我将逃离你们的追逐，彻底挫败你们的献祭计划。我将在一个更好的环境里，开启一段崭新的，美好的，不被邪教阴谋所困扰的人生！", "dlg:n006:continue"); // @cl2.pos 2140,40
+
+n007: text("ending-screen", "binbin", "等一下，危险，停！你在往海里跑，这是凹岸，海里是有离岸流的！", "dlg:n007:continue"); // @cl2.pos 2440,40
+
+n008: text("ending-screen", "player", "不要再蛊惑我了！新生活，我来了！", "dlg:n008:continue"); // @cl2.pos 2740,40
+
+n009: text("ending-screen", "player", "……", "dlg:n009:continue"); // @cl2.pos 3040,40
+
+n010: text("ending-screen", "ajie", "离岸流给卷走了！我看不见人影！", "dlg:n010:continue"); // @cl2.pos 3340,40
+
+n011: text("ending-screen", "binbin", "那咋办？报警，找救生员？都试一遍吧。", "dlg:n011:continue"); // @cl2.pos 3640,40
+
+n012: text("ending-screen", "awei", "毕竟是我们室友啊。走吧，咱分头行动。", "dlg:n012:continue"); // @cl2.pos 3940,40
+
+end: end(); // @cl2.pos 4240,40

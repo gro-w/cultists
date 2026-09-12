@@ -1,0 +1,96 @@
+// CL2 export for activity dorm_activity_day1
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __invite_any__value: arithmetic["or", __invite_any_01__value[], __invite_cmp_42__value[]];
+reusablevalue __invite_any_01__value: arithmetic["or", __invite_cmp_40__value[], __invite_cmp_41__value[]];
+reusablevalue __invite_cmp_40__value: arithmetic["gte", __invite_get_40__value[], 50];
+reusablevalue __invite_cmp_41__value: arithmetic["gte", __invite_get_41__value[], 50];
+reusablevalue __invite_cmp_42__value: arithmetic["gte", __invite_get_42__value[], 50];
+reusablevalue __invite_get_40__value: getPublicVariable[40];
+reusablevalue __invite_get_41__value: getPublicVariable[41];
+reusablevalue __invite_get_42__value: getPublicVariable[42];
+
+start: flowStart();
+
+choice: choice([{"label":"我还是刷题好了。","next":"choice_op0","id":"choice-option-0"},{"label":"【卡卡送】要不要来一起打桌游！","next":"choice_op1","condition":{"any":[{"globalVariables":{"id":40,"op":"gte","value":50}},{"globalVariables":{"id":41,"op":"gte","value":50}},{"globalVariables":{"id":42,"op":"gte","value":50}}]},"id":"choice-option-1"}], 2, "dlg:choice:select") {
+    option<1> study_set;
+    option<2> game_start;
+};
+
+study_set: applyPublicVariableEffect(false, 113);
+
+study_time: framework:consumeTime(20);
+
+study_san: statOperation("mental", 10);
+
+study_end: end();
+
+game_start: framework:consumeTime(20);
+
+line_0: text("dorm-bottom", "阿杰", "今天我们来玩《卡卡送》吧，一款互相割据来占领更多地盘的桌游。", "dlg:line_0:continue");
+
+line_1: text("dorm-bottom", "彬彬", "是零和博弈吗？", "dlg:line_1:continue");
+
+line_2: text("dorm-bottom", "阿伟", "看我一统四国。", "dlg:line_2:continue");
+
+line_3: text("dorm-bottom", "主控", "等一下，我需要看完全部规则和攻略才能开始玩。", "dlg:line_3:continue");
+
+game_time_3: framework:consumeTime(20);
+
+line_4: text("dorm-bottom", "阿伟", "我们又不赌钱，玩儿而已，认真就没意思了。", "dlg:line_4:continue");
+
+line_5: text("dorm-bottom", "彬彬", "放轻松，不会的我教你。", "dlg:line_5:continue");
+
+line_6: text("dorm-bottom", "阿杰", "别让阿伟久等，他一会儿还要去打工赚钱养耳机。", "dlg:line_6:continue");
+
+game_time_6: framework:consumeTime(20);
+
+line_7: text("dorm-bottom", "主控", "不行，等等，我再看最后一眼……", "dlg:line_7:continue");
+
+line_8: text("dorm-bottom", "阿杰", "快快藏好主控手机。", "dlg:line_8:continue");
+
+line_9: text("dorm-bottom", "旁白", "*游戏进行中", "dlg:line_9:continue");
+
+game_time_9: framework:consumeTime(20);
+
+line_10: text("dorm-bottom", "阿伟", "这是谁的人在我地盘上？", "dlg:line_10:continue");
+
+line_11: text("dorm-bottom", "主控", "我的。", "dlg:line_11:continue");
+
+line_12: text("dorm-bottom", "彬彬", "他也挡住我的路了。我的城堡围不起来了。", "dlg:line_12:continue");
+
+game_time_12: framework:consumeTime(20);
+
+line_13: text("dorm-bottom", "阿杰", "你的策略是什么？", "dlg:line_13:continue");
+
+line_14: text("dorm-bottom", "主控", "只要让你们都没法赢，我就不会输了，不是吗？", "dlg:line_14:continue");
+
+line_15: text("dorm-bottom", "阿伟", "原来是搅屎棍流。", "dlg:line_15:continue");
+
+game_time_15: framework:consumeTime(20);
+
+line_16: text("dorm-bottom", "彬彬", "你觉得你能防住我们全部吗？", "dlg:line_16:continue");
+
+line_17: text("dorm-bottom", "主控", "这是我最有可能立于不败之地的办法了，因为一开始我没把握好节奏，晚于你们一步，建自己的城堡已经不可能了。", "dlg:line_17:continue");
+
+line_18: text("dorm-bottom", "阿杰", "不试试怎么知道？你这一上来就放弃了啊。", "dlg:line_18:continue");
+
+game_time_18: framework:consumeTime(20);
+
+line_19: text("dorm-bottom", "主控", "对。只有这样，我才不会被打倒。", "dlg:line_19:continue");
+
+line_20: text("dorm-bottom", "彬彬", "对未知的恐惧只会招来更多未知。", "dlg:line_20:continue");
+
+line_21: text("dorm-bottom", "主控", "我不在乎。", "dlg:line_21:continue");
+
+game_time_21: framework:consumeTime(20) {
+    default study_set_2;
+};
+
+end: end();
+
+study_set_2: applyPublicVariableEffect(true, 109);
+
+schedule_set: applyPublicVariableEffect(true, 104) {
+    default end;
+};

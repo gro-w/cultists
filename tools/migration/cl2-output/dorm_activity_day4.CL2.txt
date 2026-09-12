@@ -1,0 +1,80 @@
+// CL2 export for activity dorm_activity_day4
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __invite_any__value: arithmetic["or", __invite_any_01__value[], __invite_cmp_42__value[]];
+reusablevalue __invite_any_01__value: arithmetic["or", __invite_cmp_40__value[], __invite_cmp_41__value[]];
+reusablevalue __invite_cmp_40__value: arithmetic["gte", __invite_get_40__value[], 50];
+reusablevalue __invite_cmp_41__value: arithmetic["gte", __invite_get_41__value[], 50];
+reusablevalue __invite_cmp_42__value: arithmetic["gte", __invite_get_42__value[], 50];
+reusablevalue __invite_get_40__value: getPublicVariable[40];
+reusablevalue __invite_get_41__value: getPublicVariable[41];
+reusablevalue __invite_get_42__value: getPublicVariable[42];
+reusablevalue check_0__value: getPublicVariable[113];
+reusablevalue check_1__value: getPublicVariable[110];
+reusablevalue check_2__value: getPublicVariable[111];
+reusablevalue check_3__value: getPublicVariable[112];
+
+start: flowStart();
+
+choice: choice([{"label":"我还是刷题好了。","next":"choice_op0","id":"choice-option-0"},{"label":"【山中小黑屋】快来玩！少了我们你的生活该多么沉闷无趣啊~","next":"choice_op1","condition":{"any":[{"globalVariables":{"id":40,"op":"gte","value":50}},{"globalVariables":{"id":41,"op":"gte","value":50}},{"globalVariables":{"id":42,"op":"gte","value":50}}]},"id":"choice-option-1"}], 2, "dlg:choice:select") {
+    option<1> study_set;
+    option<2> game_start;
+};
+
+study_set: applyPublicVariableEffect(true, 112);
+
+study_time: framework:consumeTime(20);
+
+study_san: statOperation("mental", 10);
+
+study_end: end();
+
+game_start: framework:consumeTime(20);
+
+line_0: text("dorm-bottom", "阿杰", "今天我们来到山中一栋荒废已久的小黑屋里……", "dlg:line_0:continue");
+
+line_1: text("dorm-bottom", "阿伟", "潮湿的雾气，蒸腾的鬼气，月亮照映之下的摇滚之魂在歌唱……", "dlg:line_1:continue");
+
+line_2: text("dorm-bottom", "彬彬", "自己人别开腔。", "dlg:line_2:continue");
+
+line_3: text("dorm-bottom", "主控", "谁挑的游戏？果然我该去刷题的。", "dlg:line_3:continue");
+
+game_time_3: framework:consumeTime(20);
+
+line_4: text("dorm-bottom", "阿杰", "怎么会呢，你该天天都加入我们相亲相爱的宿舍集体活动。", "dlg:line_4:continue");
+
+line_5: text("dorm-bottom", "阿伟", "有人会玩吗？有人会我就不看攻略了", "dlg:line_5:continue");
+
+line_6: text("dorm-bottom", "彬彬", "我玩过。", "dlg:line_6:continue");
+
+game_time_6: framework:consumeTime(20);
+
+streak_text1: text("dorm-bottom", "阿杰", "你都多久不跟我们一起玩了？", "dlg:streak_text1:continue");
+
+streak_text2: text("dorm-bottom", "主控", "三天了。提高一分，干掉千人；在这三天里，我已经干掉了……大约五千人。", "dlg:streak_text2:continue");
+
+streak_text3: text("dorm-bottom", "阿伟", "他居然计数。", "dlg:streak_text3:continue");
+
+streak_text4: text("dorm-bottom", "彬彬", "这个精神状态已经很危险了。", "dlg:streak_text4:continue");
+
+suspicion: applyPublicVariableEffect(10, 0);
+
+check_branch_0: branch(check_0__value[]) {
+    option<1> check_branch_1;
+};
+
+check_branch_1: branch(check_1__value[]) {
+    option<1> check_branch_2;
+};
+
+check_branch_2: branch(check_2__value[]) {
+    option<1> check_branch_3;
+};
+
+check_branch_3: branch(check_3__value[]) {
+    option<1> schedule_set;
+};
+
+schedule_set: applyPublicVariableEffect(true, 107);
+
+end: end();

@@ -1,0 +1,23 @@
+// CL2 export for activity social02b_dorm_invite
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue current_game_time__value: getGameTime[];
+reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
+reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day2"];
+
+start: flowStart();
+
+line: text("dorm-bottom", "阿杰", "阿杰：下班了！今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~");
+
+time: consumeTime(20) {
+    default schedule_guard;
+};
+
+insert_dorm_schedule: insertSchedule("dorm_schedule_day2", current_game_time__value[], "social", true, false);
+
+end: end();
+
+schedule_guard: branch(schedule_available__value[]) {
+    default end;
+    option<1> insert_dorm_schedule;
+};

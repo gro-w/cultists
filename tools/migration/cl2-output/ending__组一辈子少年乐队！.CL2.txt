@@ -1,0 +1,83 @@
+// CL2 export for activity ending__组一辈子少年乐队！
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+intro_01: text("ending-screen", "player", "你们的乐队，名字是叫“赞”是吧，似乎要在六道口黑暗学术bar首演了？", "dlg:intro_01:continue"); // @cl2.pos 340,40
+
+intro_02: text("ending-screen", "awei", "对啊，我最近一直在练这个万年氢能旅馆的《永生的岩户城人》。（一阵劲爆的吉他扫弦）", "dlg:intro_02:continue"); // @cl2.pos 640,40
+
+intro_03: text("ending-screen", "player", "岩户城，那不是我老家吗？", "dlg:intro_03:continue"); // @cl2.pos 940,40
+
+intro_04: text("ending-screen", "awei", "傍晚溜点辖办~关掉药厂的易伤", "dlg:intro_04:continue"); // @cl2.pos 1240,40
+
+intro_05: text("ending-screen", "player", "咱们在医院实习，何尝不是一种药厂。", "dlg:intro_05:continue"); // @cl2.pos 1540,40
+
+intro_06: text("ending-screen", "awei", "棋子在澳洲~我取合剂瓶配酒~", "dlg:intro_06:continue"); // @cl2.pos 1840,40
+
+intro_07: text("ending-screen", "player", "还是别喝酒，伤肝。", "dlg:intro_07:continue"); // @cl2.pos 2140,40
+
+intro_08: text("ending-screen", "awei", "如此圣火三十年~制导弹杀崩他~", "dlg:intro_08:continue"); // @cl2.pos 2440,40
+
+intro_09: text("ending-screen", "player", "大厦是豆腐渣工程吧。", "dlg:intro_09:continue"); // @cl2.pos 2740,40
+
+intro_10: text("ending-screen", "awei", "用藏身处的黑案啊~淹没心急的的警官~", "dlg:intro_10:continue"); // @cl2.pos 3040,40
+
+intro_11: text("ending-screen", "awei", "核备时打服众~兵帮少年焙香我~", "dlg:intro_11:continue"); // @cl2.pos 3340,40
+
+intro_12: text("ending-screen", "player", "师大附中啊，遥远的回忆了。", "dlg:intro_12:continue"); // @cl2.pos 3640,40
+
+intro_13: text("ending-screen", "awei", "沉没的诸事~巫法移开的礁石", "dlg:intro_13:continue"); // @cl2.pos 3940,40
+
+intro_14: text("ending-screen", "player", "可不是嘛，往家里打电话都限时。电话那儿贴了个“少聊一分，提高一分，提高一分，干掉千人”的横幅。", "dlg:intro_14:continue"); // @cl2.pos 4240,40
+
+intro_15: text("ending-screen", "awei", "圣火在惊魇你~制导弹杀崩他~", "dlg:intro_15:continue"); // @cl2.pos 4540,40
+
+choice: choice([], 2, "dlg:choice:select") {
+    option<1> choice_1_01;
+    option<2> choice_2_01;
+}; // @cl2.pos 4840,40
+
+choice_1_01: text("ending-screen", "awei", "你也妹听我唱歌啊！总之要不要来吧，听我们演奏。", "dlg:choice_1_01:continue"); // @cl2.pos 5140,205
+
+choice_1_02: text("ending-screen", "player", "正有此意。", "dlg:choice_1_02:continue") {
+    default concert_cg;
+}; // @cl2.pos 5440,205
+
+choice_2_01: text("ending-screen", "awei", "你懂我。", "dlg:choice_2_01:continue"); // @cl2.pos 5140,40
+
+choice_2_02: text("ending-screen", "player", "首演的时候，要不要我捧场？", "dlg:choice_2_02:continue"); // @cl2.pos 5440,40
+
+choice_2_03: text("ending-screen", "awei", "呵呵，我一定不会让你失望哒！（一阵劲爆的吉他扫弦）", "dlg:choice_2_03:continue"); // @cl2.pos 5740,40
+
+concert_cg: emitEvent("content:showCg", {"cgId":"cg_awei_band_ending"}); // @cl2.pos 6040,40
+
+concert_01: text("ending-screen", "awei", "亿万匹拓疆的蛙~在祂滔海中奔跑~（一阵劲爆的吉他尾杀）", "dlg:concert_01:continue"); // @cl2.pos 6340,40
+
+concert_02: text("ending-screen", "narrator", "喔喔喔喔喔喔！咿呀！咿呀！", "dlg:concert_02:continue"); // @cl2.pos 6640,40
+
+concert_03: text("ending-screen", "player", "咿呀！", "dlg:concert_03:continue"); // @cl2.pos 6940,40
+
+concert_04: text("ending-screen", "awei", "谢谢！", "dlg:concert_04:continue"); // @cl2.pos 7240,40
+
+concert_05: text("ending-screen", "awei", "这次我要特别感谢我的一位朋友。", "dlg:concert_05:continue"); // @cl2.pos 7540,40
+
+concert_06: text("ending-screen", "narrator", "那一人是谁？", "dlg:concert_06:continue"); // @cl2.pos 7840,40
+
+concert_07: text("ending-screen", "awei", "这位朋友，在我最穷困的时候不忘鼓励我哀兵必胜，在我最辉煌的时刻也不忘提醒我骄兵必败！", "dlg:concert_07:continue"); // @cl2.pos 8140,40
+
+concert_08: text("ending-screen", "awei", "没有这位朋友支持我努力走下去，就没有我今日的监听级发烧耳机，也没有我们即将在流媒体上架的歌曲的HiFi音质。", "dlg:concert_08:continue"); // @cl2.pos 8440,40
+
+concert_09: text("ending-screen", "awei", "好Homie，你在我心中的地位，堪比让赛博坦陆逊反败为胜的夷陵山脉最后一道山梁，在演唱结束时，让我们为这个残酷世界里的最后一道善良，点“赞”！我们要组一辈子少年乐队！谢谢。", "dlg:concert_09:continue"); // @cl2.pos 8740,40
+
+concert_end: emitEvent("content:endCg", {}); // @cl2.pos 9040,40
+
+after_01: text("ending-screen", "player", "唱得不错，还有……特别感谢，你的特别感谢。", "dlg:after_01:continue"); // @cl2.pos 9340,40
+
+after_02: text("ending-screen", "player", "我很久没被人这样夸过了。", "dlg:after_02:continue"); // @cl2.pos 9640,40
+
+after_03: text("ending-screen", "awei", "无所谓，我会出手。", "dlg:after_03:continue"); // @cl2.pos 9940,40
+
+after_04: text("ending-screen", "awei", "往后余生，就由我一人，夸你，“赞”你，稳稳地接住你。", {"ending":"组一辈子少年乐队！"}, "dlg:after_04:continue"); // @cl2.pos 10240,40
+
+end: end(); // @cl2.pos 10540,40

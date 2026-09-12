@@ -1,0 +1,292 @@
+// CL2 export for activity patient-queue-manager
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue slot-1-due__value: publicVariableCondition[1000, "gte", 480];
+reusablevalue slot-10-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-11-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-12-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-13-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-14-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-15-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-16-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-17-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-18-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-19-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-2-due__value: publicVariableCondition[1000, "gte", 480];
+reusablevalue slot-20-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-21-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-22-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-23-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-24-due__value: publicVariableCondition[1000, "gte", 3360];
+reusablevalue slot-25-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-26-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-27-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-28-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-29-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-3-due__value: publicVariableCondition[1000, "gte", 480];
+reusablevalue slot-30-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-31-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-32-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-33-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-34-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-35-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-36-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-37-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-38-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-39-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-4-due__value: publicVariableCondition[1000, "gte", 480];
+reusablevalue slot-40-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-41-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-42-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-43-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-44-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-45-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-46-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-47-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-48-due__value: publicVariableCondition[1000, "gte", 9120];
+reusablevalue slot-49-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-5-due__value: publicVariableCondition[1000, "gte", 480];
+reusablevalue slot-50-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-51-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-52-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-53-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-54-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-55-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-56-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-57-due__value: publicVariableCondition[1000, "gte", 9600];
+reusablevalue slot-6-due__value: publicVariableCondition[1000, "gte", 480];
+reusablevalue slot-7-due__value: publicVariableCondition[1000, "gte", 480];
+reusablevalue slot-8-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-9-due__value: publicVariableCondition[1000, "gte", 1920];
+
+start: flowStart();
+
+slot-1-wait: blockUntil(slot-1-due__value[]);
+
+slot-1-insert: insertActivity("work01a-patient1", "work", {"autoRun":true,"scheduled":{"day":1,"minutes":480}});
+
+slot-2-wait: blockUntil(slot-2-due__value[]);
+
+slot-2-insert: insertActivity("work01a-patient2", "work", {"autoRun":true,"scheduled":{"day":1,"minutes":480}});
+
+slot-3-wait: blockUntil(slot-3-due__value[]);
+
+slot-3-insert: insertActivity("work01a-patient3", "work", {"autoRun":true,"scheduled":{"day":1,"minutes":480}});
+
+slot-4-wait: blockUntil(slot-4-due__value[]);
+
+slot-4-insert: insertActivity("work01a-patient4", "work", {"autoRun":true,"scheduled":{"day":1,"minutes":480}});
+
+slot-5-wait: blockUntil(slot-5-due__value[]);
+
+slot-5-insert: insertActivity("work01a-patient5", "work", {"autoRun":true,"scheduled":{"day":1,"minutes":480}});
+
+slot-6-wait: blockUntil(slot-6-due__value[]);
+
+slot-6-insert: insertActivity("work01a-patient6", "work", {"autoRun":true,"scheduled":{"day":1,"minutes":480}});
+
+slot-7-wait: blockUntil(slot-7-due__value[]);
+
+slot-7-insert: insertActivity("work01a-patient7", "work", {"autoRun":true,"scheduled":{"day":1,"minutes":480}});
+
+slot-8-wait: blockUntil(slot-8-due__value[]);
+
+slot-8-insert: insertActivity("patient_02_01_gingivitis", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-9-wait: blockUntil(slot-9-due__value[]);
+
+slot-9-insert: insertActivity("patient_02_02_plantar_fasciitis", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-10-wait: blockUntil(slot-10-due__value[]);
+
+slot-10-insert: insertActivity("patient_02_03_hyperthyroidism", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-11-wait: blockUntil(slot-11-due__value[]);
+
+slot-11-insert: insertActivity("patient_02_04_hypothyroidism", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-12-wait: blockUntil(slot-12-due__value[]);
+
+slot-12-insert: insertActivity("patient_02_05_vitamin_b12_deficiency_anemia", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-13-wait: blockUntil(slot-13-due__value[]);
+
+slot-13-insert: insertActivity("patient_02_06_iron_deficiency_anemia", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-14-wait: blockUntil(slot-14-due__value[]);
+
+slot-14-insert: insertActivity("patient_02_07_dry_eye", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-15-wait: blockUntil(slot-15-due__value[]);
+
+slot-15-insert: insertActivity("patient_extra_02_a_08", "work", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-16-wait: blockUntil(slot-16-due__value[]);
+
+slot-16-insert: insertActivity("patient_03_01_bacterial_conjunctivitis", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-17-wait: blockUntil(slot-17-due__value[]);
+
+slot-17-insert: insertActivity("patient_03_02_ulcerative_colitis", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-18-wait: blockUntil(slot-18-due__value[]);
+
+slot-18-insert: insertActivity("patient_03_03_hemorrhoids", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-19-wait: blockUntil(slot-19-due__value[]);
+
+slot-19-insert: insertActivity("patient_03_04_kidney_stone", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-20-wait: blockUntil(slot-20-due__value[]);
+
+slot-20-insert: insertActivity("patient_03_05_benign_prostatic_hyperplasia", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-21-wait: blockUntil(slot-21-due__value[]);
+
+slot-21-insert: insertActivity("patient_03_06_nausea_vomiting", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-22-wait: blockUntil(slot-22-due__value[]);
+
+slot-22-insert: insertActivity("patient_03_07_lymphadenopathy", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-23-wait: blockUntil(slot-23-due__value[]);
+
+slot-23-insert: insertActivity("patient_extra_03_a_08", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-24-wait: blockUntil(slot-24-due__value[]);
+
+slot-24-insert: insertActivity("patient_extra_03_a_09", "work", {"autoRun":true,"scheduled":{"day":3,"minutes":480}});
+
+slot-25-wait: blockUntil(slot-25-due__value[]);
+
+slot-25-insert: insertActivity("patient_04_01_orthostatic_hypotension", "work", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-26-wait: blockUntil(slot-26-due__value[]);
+
+slot-26-insert: insertActivity("patient_04_02_closed_foot_fracture", "work", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-27-wait: blockUntil(slot-27-due__value[]);
+
+slot-27-insert: insertActivity("patient_04_03_gingivitis", "work", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-28-wait: blockUntil(slot-28-due__value[]);
+
+slot-28-insert: insertActivity("patient_04_04_plantar_fasciitis", "work", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-29-wait: blockUntil(slot-29-due__value[]);
+
+slot-29-insert: insertActivity("patient_04_05_hyperthyroidism", "work", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-30-wait: blockUntil(slot-30-due__value[]);
+
+slot-30-insert: insertActivity("patient_04_06_hypothyroidism", "work", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-31-wait: blockUntil(slot-31-due__value[]);
+
+slot-31-insert: insertActivity("patient_04_07_vitamin_b12_deficiency_anemia", "work", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-32-wait: blockUntil(slot-32-due__value[]);
+
+slot-32-insert: insertActivity("patient_06_01_nausea_vomiting", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-33-wait: blockUntil(slot-33-due__value[]);
+
+slot-33-insert: insertActivity("patient_06_02_lymphadenopathy", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-34-wait: blockUntil(slot-34-due__value[]);
+
+slot-34-insert: insertActivity("patient_06_03_orthostatic_hypotension", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-35-wait: blockUntil(slot-35-due__value[]);
+
+slot-35-insert: insertActivity("patient_06_04_closed_foot_fracture", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-36-wait: blockUntil(slot-36-due__value[]);
+
+slot-36-insert: insertActivity("patient_06_05_gingivitis", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-37-wait: blockUntil(slot-37-due__value[]);
+
+slot-37-insert: insertActivity("patient_06_06_plantar_fasciitis", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-38-wait: blockUntil(slot-38-due__value[]);
+
+slot-38-insert: insertActivity("patient_06_07_hyperthyroidism", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-39-wait: blockUntil(slot-39-due__value[]);
+
+slot-39-insert: insertActivity("patient_extra_06_a_08", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-40-wait: blockUntil(slot-40-due__value[]);
+
+slot-40-insert: insertActivity("patient_extra_06_a_09", "work", {"autoRun":true,"scheduled":{"day":6,"minutes":480}});
+
+slot-41-wait: blockUntil(slot-41-due__value[]);
+
+slot-41-insert: insertActivity("patient_07_01_hypothyroidism", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-42-wait: blockUntil(slot-42-due__value[]);
+
+slot-42-insert: insertActivity("patient_07_02_vitamin_b12_deficiency_anemia", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-43-wait: blockUntil(slot-43-due__value[]);
+
+slot-43-insert: insertActivity("patient_07_03_iron_deficiency_anemia", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-44-wait: blockUntil(slot-44-due__value[]);
+
+slot-44-insert: insertActivity("patient_07_04_dry_eye", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-45-wait: blockUntil(slot-45-due__value[]);
+
+slot-45-insert: insertActivity("patient_07_05_bacterial_conjunctivitis", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-46-wait: blockUntil(slot-46-due__value[]);
+
+slot-46-insert: insertActivity("patient_07_06_ulcerative_colitis", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-47-wait: blockUntil(slot-47-due__value[]);
+
+slot-47-insert: insertActivity("patient_07_07_hemorrhoids", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-48-wait: blockUntil(slot-48-due__value[]);
+
+slot-48-insert: insertActivity("patient_extra_07_a_08", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":480}});
+
+slot-49-wait: blockUntil(slot-49-due__value[]);
+
+slot-49-insert: insertActivity("patient_08_01_kidney_stone", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-50-wait: blockUntil(slot-50-due__value[]);
+
+slot-50-insert: insertActivity("patient_08_02_benign_prostatic_hyperplasia", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-51-wait: blockUntil(slot-51-due__value[]);
+
+slot-51-insert: insertActivity("patient_08_03_nausea_vomiting", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-52-wait: blockUntil(slot-52-due__value[]);
+
+slot-52-insert: insertActivity("patient_08_04_lymphadenopathy", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-53-wait: blockUntil(slot-53-due__value[]);
+
+slot-53-insert: insertActivity("patient_08_05_orthostatic_hypotension", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-54-wait: blockUntil(slot-54-due__value[]);
+
+slot-54-insert: insertActivity("patient_08_06_closed_foot_fracture", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-55-wait: blockUntil(slot-55-due__value[]);
+
+slot-55-insert: insertActivity("patient_08_07_gingivitis", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-56-wait: blockUntil(slot-56-due__value[]);
+
+slot-56-insert: insertActivity("patient_extra_07_b_08", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+slot-57-wait: blockUntil(slot-57-due__value[]);
+
+slot-57-insert: insertActivity("patient_extra_07_b_09", "work", {"autoRun":true,"scheduled":{"day":7,"minutes":960}});
+
+end: end();

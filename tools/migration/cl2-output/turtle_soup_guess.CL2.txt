@@ -1,0 +1,22 @@
+// CL2 export for activity turtle_soup_guess
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue guess__value: getVariable["turtleSoup:guess"];
+reusablevalue match1__value: arithmetic["=", guess__value[], "他曾经误食了亲人的肉"];
+reusablevalue match2__value: arithmetic["=", guess__value[], "海难获救后喝到的是亲人肉，后来发现真相"];
+reusablevalue matches__value: arithmetic["or", match1__value[], match2__value[]];
+
+start: flowStart();
+
+branch: branch(matches__value[]) {
+    option<1> success;
+    default failEvent;
+};
+
+success: runActivity("event__binbin_turtle_success", "social") {
+    default end;
+};
+
+failEvent: emitEvent("turtleSoup:guess-fail", {"puzzleId":"binbin_turtle_01"});
+
+end: end();

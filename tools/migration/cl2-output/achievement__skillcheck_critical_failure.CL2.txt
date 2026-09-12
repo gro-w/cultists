@@ -1,0 +1,8 @@
+// CL2 export for activity achievement__skillcheck_critical_failure
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+unlock: emitEvent("achievement:display", {"achievementId":"skillcheck_critical_failure"});
+
+end: end();

@@ -1,0 +1,171 @@
+// CL2 export for activity social03b_ajie_24_personality_high
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_compare_40__value: arithmetic[">", __social_gate_global_40__value[], 49];
+reusablevalue __social_gate_global_40__value: getGlobal[40];
+reusablevalue current_game_time__value: getGameTime[];
+reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
+reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day3"];
+
+start: flowStart();
+
+n1: text("dorm-bottom", "阿杰", "来开黑，今天玩《第二十四人格》。") {
+    default consume_time_20_1;
+};
+
+n2: text("dorm-bottom", "阿杰", "我在做一个测评手游的视频，今天测《第二十四人格》这个手游，我想听听你的意见。");
+
+n3: text("dorm-bottom", "player", "第二十四人格？") {
+    default consume_time_20_2;
+};
+
+n4: text("dorm-bottom", "阿杰", "前23个我都收集好了，就差第24个。");
+
+n5: text("dorm-bottom", "player", "第24个是什么？") {
+    default consume_time_20_3;
+};
+
+n6: text("dorm-bottom", "阿杰", "不，不重要。你可以去游戏里抽奖，有一个叫“三重馈赠”的栏目，点开就送卡。这活动名字听起来像发誓似的。");
+
+n7: text("dorm-bottom", "player", "等我查查攻略……") {
+    default consume_time_20_4;
+};
+
+n8: text("dorm-bottom", "阿杰", "别查。");
+
+n9: text("dorm-bottom", "player", "那我看看评分。") {
+    default consume_time_20_5;
+};
+
+n10: text("dorm-bottom", "阿杰", "别人的观点会腐蚀你的脑子。");
+
+choice11: choice(2, "是么？那我不看了。", "他人的观点是智慧的结晶。") {
+    option<1> choice11_op0;
+    option<2> choice11_op1;
+};
+
+choice11_op0: setGlobal(40, 5);
+
+n12: text("dorm-bottom", "阿杰", "其实这也是我的观点。") {
+    default consume_time_20_6;
+};
+
+n13: text("dorm-bottom", "player", "什么意思？");
+
+n14: text("dorm-bottom", "阿杰", "没什么意思，快抽卡。") {
+    default n18;
+};
+
+choice11_op1: setGlobal(40, -5);
+
+n15: text("dorm-bottom", "阿杰", "长满结晶的大脑么，很难下嘴啊……") {
+    default consume_time_20_7;
+};
+
+n16: text("dorm-bottom", "player", "你说我吗？");
+
+n17: text("dorm-bottom", "阿杰", "哈哈，开玩笑的。");
+
+n18: text("dorm-bottom", "player", "诶，我进大厅了。") {
+    default consume_time_20_8;
+};
+
+n19: text("dorm-bottom", "阿杰", "我也在这儿。");
+
+n20: text("dorm-bottom", "player", "这里怎么有两个人？其中一个是我，另一个不认识。") {
+    default consume_time_20_9;
+};
+
+n21: text("dorm-bottom", "阿杰", "不就该是两个人吗？我和你。") {
+    default choice_final_25;
+};
+
+end: end();
+
+choice_final_25: choice(2, "是吗？好像也对。", "不对啊，我，你……我进来之前这个我和你就在大厅里了。") {
+    option<1> choice_final_25_op0;
+    option<2> choice_final_25_op1;
+};
+
+choice_final_25_op0: setGlobal(40, 5);
+
+choice_final_25_0_0: text("dorm-bottom", "阿杰", "想什么呢？恍恍惚惚的。") {
+    default consume_time_20_10;
+};
+
+choice_final_25_0_1: text("dorm-bottom", "player", "总觉得哪里怪怪的……") {
+    default consume_time_20_12;
+};
+
+choice_final_25_0_2: text("dorm-bottom", "阿杰", "神经太敏感了吧，总是想赢想赢的。") {
+    default schedule_guard;
+};
+
+choice_final_25_op1: setGlobal(0, 5);
+
+choice_final_25_1_0: text("dorm-bottom", "阿杰", "说什么呢你？");
+
+choice_final_25_1_1: text("dorm-bottom", "player", "有两个我？另一个我是谁？还是说你在搞我？") {
+    default consume_time_20_11;
+};
+
+choice_final_25_1_2: text("dorm-bottom", "阿杰", "哈哈，被你发现了。") {
+    default schedule_guard;
+};
+
+consume_time_20_1: consumeTime(20) {
+    default n2;
+}; // @cl2.pos 30,40
+
+consume_time_20_2: consumeTime(20) {
+    default n4;
+}; // @cl2.pos 30,40
+
+consume_time_20_3: consumeTime(20) {
+    default n6;
+}; // @cl2.pos 30,40
+
+consume_time_20_4: consumeTime(20) {
+    default n8;
+}; // @cl2.pos 30,40
+
+consume_time_20_5: consumeTime(20) {
+    default n10;
+}; // @cl2.pos 30,40
+
+consume_time_20_6: consumeTime(20) {
+    default n13;
+}; // @cl2.pos 30,40
+
+consume_time_20_7: consumeTime(20) {
+    default n16;
+}; // @cl2.pos 30,40
+
+consume_time_20_8: consumeTime(20) {
+    default n19;
+}; // @cl2.pos 30,40
+
+consume_time_20_9: consumeTime(20) {
+    default n21;
+}; // @cl2.pos 30,40
+
+consume_time_20_10: consumeTime(20) {
+    default choice_final_25_0_1;
+}; // @cl2.pos 30,40
+
+consume_time_20_11: consumeTime(20) {
+    default choice_final_25_1_2;
+}; // @cl2.pos 30,40
+
+consume_time_20_12: consumeTime(20) {
+    default choice_final_25_0_2;
+}; // @cl2.pos 30,40
+
+insert_dorm_schedule: insertSchedule("dorm_schedule_day3", "social", true, false, current_game_time__value[]) {
+    default end;
+};
+
+schedule_guard: branch(schedule_available__value[]) {
+    default end;
+    option<1> insert_dorm_schedule;
+};

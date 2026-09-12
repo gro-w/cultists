@@ -1,0 +1,6 @@
+// CL2 export for activity event__一切谜锁都解开了
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+end: end();

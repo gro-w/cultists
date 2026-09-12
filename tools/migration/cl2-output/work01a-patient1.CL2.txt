@@ -1,0 +1,56 @@
+// CL2 export for activity work01a-patient1
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,220
+
+openDialogueWindow: openWindow("dialogue"); // @cl2.pos 140,220
+
+intro: text("his-app", "林若晴", "医生您好，我叫林若晴，今年29岁。昨晚开始上腹部[[symptom_005]]，还一直[[symptom_003]]，嘴里有点[[symptom_013]]，所以来看看。", "dlg:intro:continue"); // @cl2.pos 260,220
+
+time_intro: framework:consumeTime(20); // @cl2.pos 520,220
+
+main_choice: choice([{"label":"详细询问疼痛和进食关系","next":"pain_answer"},{"label":"询问既往病史和用药","next":"history_answer"},{"label":"询问是否有反酸或烧心","next":"reflux_answer"}], 3, "dlg:main_choice:select") {
+    option<1> pain_answer;
+    option<2> history_answer;
+    option<3> reflux_answer;
+}; // @cl2.pos 760,220
+
+pain_answer: text("his-app", "林若晴", "疼痛主要在肚脐上方，像被拧着一样，饭后会更明显，大概持续了六七个小时；目前没有[[symptom_004]]，也没有[[symptom_006]]。", "dlg:pain_answer:continue"); // @cl2.pos 1020,40
+
+time_pain: framework:consumeTime(20); // @cl2.pos 1270,40
+
+pain_followup: choice([{"label":"继续询问诱因","next":"cause_answer"},{"label":"结束问诊","next":"closing"}], 2, "dlg:pain_followup:select") {
+    option<1> cause_answer;
+    option<2> closing;
+}; // @cl2.pos 1510,40
+
+cause_answer: text("his-app", "林若晴", "这几天加班比较多，三餐也不规律。昨天晚上空腹喝了咖啡，之后就开始不舒服。以前偶尔也会[[symptom_009]]，但没有这么严重。", "dlg:cause_answer:continue"); // @cl2.pos 1760,20
+
+time_cause: framework:consumeTime(20) {
+    default closing;
+}; // @cl2.pos 2010,20
+
+history_answer: text("his-app", "林若晴", "我以前有过一次[[disease:acute_gastritis:normal]]，休息后就好了。平时没有长期服药，也没有做过胃部手术；最近为了[[headache]]吃过两次止痛药。", "dlg:history_answer:continue"); // @cl2.pos 1020,220
+
+time_history: framework:consumeTime(20); // @cl2.pos 1270,220
+
+history_followup: choice([{"label":"询问是否有消化道出血表现","next":"bleeding_answer"},{"label":"结束问诊","next":"closing"}], 2, "dlg:history_followup:select") {
+    option<1> bleeding_answer;
+    option<2> closing;
+}; // @cl2.pos 1510,220
+
+bleeding_answer: text("his-app", "林若晴", "没有[[symptom_104]]，大便颜色也正常，最近没有明显的[[symptom_035]]。", "dlg:bleeding_answer:continue"); // @cl2.pos 1760,220
+
+time_bleeding: framework:consumeTime(20) {
+    default closing;
+}; // @cl2.pos 2010,220
+
+reflux_answer: text("his-app", "林若晴", "偶尔会[[symptom_009]]，胸口有一点[[symptom_010]]，但没有明显的[[symptom_011]]；躺下后不舒服会稍微加重。", "dlg:reflux_answer:continue"); // @cl2.pos 1020,400
+
+time_reflux: framework:consumeTime(20); // @cl2.pos 1270,400
+
+closing: text("his-app", "player", "好的，我已经了解你的症状、诱因和既往病史了。请先到外面等候检查结果。", "dlg:closing:continue"); // @cl2.pos 2260,220
+
+time_closing: framework:consumeTime(20); // @cl2.pos 2510,220
+
+scheduleEnd: end(); // @cl2.pos 2760,220

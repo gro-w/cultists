@@ -1,0 +1,8 @@
+// CL2 export for activity achievement__fav_cumulative_up
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+unlock: emitEvent("achievement:display", {"achievementId":"fav_cumulative_up"});
+
+end: end();

@@ -1,0 +1,138 @@
+// CL2 export for activity medical_complaint_work
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue skill__value: getPublicVariable[22];
+
+start: flowStart(); // @cl2.pos 100,100
+
+random: framework:randomBranch(20) {
+    option<1> dialogue0;
+    option<2> dialogue1;
+    option<3> dialogue2;
+    option<4> dialogue3;
+    option<5> dialogue4;
+    option<6> dialogue5;
+    option<7> dialogue6;
+    option<8> dialogue7;
+    option<9> dialogue8;
+    option<10> dialogue9;
+    option<11> dialogue10;
+    option<12> dialogue11;
+    option<13> dialogue12;
+    option<14> dialogue13;
+    option<15> dialogue14;
+    option<16> dialogue15;
+    option<17> dialogue16;
+    option<18> dialogue17;
+    option<19> dialogue18;
+    option<20> dialogue19;
+}; // @cl2.pos 100,100
+
+dialogue0: text("his-app", "患者", "医生，药吃了好几天，症状一点都没减轻，你们到底有没有认真看病？", "dlg:dialogue0:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue1: text("his-app", "患者", "我照着处方按时吃药，病情却越来越严重，这让我怎么相信你们？", "dlg:dialogue1:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue2: text("his-app", "患者", "这药不仅没效果，还让我整晚睡不着，你们必须给我一个解释。", "dlg:dialogue2:continue"); // @cl2.pos 100,100
+
+explain: choice([], 1, "dlg:explain:select") {
+    option<1> check;
+}; // @cl2.pos 100,100
+
+check: framework:diceCheck(skill__value[]) {
+    option<1> persuaded;
+    option<2> persuaded;
+    option<3> fineText;
+    default doubleFineText;
+}; // @cl2.pos 100,100
+
+persuaded: text("his-app", "系统", "你成功说服了对方，对方暂时平静下来并离开了。", "dlg:persuaded:continue") {
+    default end;
+}; // @cl2.pos 100,100
+
+fine: applyPublicVariableEffect(-100, 2) {
+    default end;
+}; // @cl2.pos 100,100
+
+doubleFine: applyPublicVariableEffect(-200, 2); // @cl2.pos 100,100
+
+end: end(); // @cl2.pos 100,100
+
+fineText: text("his-app", "系统", "你未能平息对方的愤怒，你被罚款了100元。", "dlg:fineText:continue") {
+    default fine;
+}; // @cl2.pos 100,100
+
+doubleFineText: text("his-app", "系统", "你的辩解反而激起了对方的怒火，你被罚款了200元。", "dlg:doubleFineText:continue") {
+    default doubleFine;
+}; // @cl2.pos 100,100
+
+dialogue3: text("his-app", "患者", "复诊的时候你说很快会好，现在一点起色都没有，是不是误诊了？", "dlg:dialogue3:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue4: text("his-app", "患者", "我们花钱来治病，不是来试药的，这个治疗结果太让人失望了。", "dlg:dialogue4:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue5: text("his-app", "患者", "药盒上的说明和你说的不一样，我吃出不舒服谁来负责？", "dlg:dialogue5:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue6: text("his-app", "患者", "我已经跑了三趟医院，问题还是没有解决，你们的医生能不能上点心？", "dlg:dialogue6:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue7: text("his-app", "患者", "你开的药让我胃疼得更厉害了，之前为什么不把风险说清楚？", "dlg:dialogue7:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue8: text("his-app", "患者", "病人一直在受罪，你们却只会让我们继续等，今天必须说明白。", "dlg:dialogue8:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue9: text("his-app", "患者", "检查结果出来这么久了还没人解释，这种服务也太不负责任了。", "dlg:dialogue9:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue10: text("his-app", "患者", "我按你说的换了药，反而出现了新的症状，你们是不是把人当实验品？", "dlg:dialogue10:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue11: text("his-app", "患者", "同样的病别人都能治好，为什么到了你这里就一直拖着？", "dlg:dialogue11:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue12: text("his-app", "患者", "你们承诺的治疗效果完全没有出现，这笔钱是不是该退给我们？", "dlg:dialogue12:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue13: text("his-app", "患者", "我问了好几次注意事项都没人说，现在出了问题就想装作不知道？", "dlg:dialogue13:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue14: text("his-app", "患者", "病情明明在恶化，你还说这是正常反应，我不能接受这个说法。", "dlg:dialogue14:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue15: text("his-app", "患者", "今天不给出明确的处理办法，我就要向医院和有关部门投诉。", "dlg:dialogue15:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue16: text("his-app", "患者", "处方上的剂量是不是写错了？病人吃完之后整个人都不对劲。", "dlg:dialogue16:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue17: text("his-app", "患者", "我们相信你的专业判断才接受治疗，现在结果这样，你必须承担责任。", "dlg:dialogue17:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue18: text("his-app", "患者", "这次看病既浪费时间又花了冤枉钱，你们至少应该认真道歉。", "dlg:dialogue18:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue19: text("his-app", "患者", "我只想知道病什么时候能好，你们不能每次都用几句话把我打发走。", "dlg:dialogue19:continue") {
+    default explain;
+}; // @cl2.pos 100,100

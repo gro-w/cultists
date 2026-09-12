@@ -1,0 +1,22 @@
+// CL2 export for activity medical-appointment-watcher
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue isDue__value: publicVariableCondition[1000, "gte", 100];
+
+start: flowStart(); // @cl2.pos 60,60
+
+ensurePatient: createRecord("patients", {"id":"patient-1","name":"访客","npcRef":"npc-1"}); // @cl2.pos 260,0
+
+ensureCase: createRecord("medicalCases", {"id":"case-1","patientId":"patient-1","status":"scheduled"}); // @cl2.pos 460,0
+
+ensureAppointment: createRecord("medicalAppointments", {"id":"appointment-1","patientId":"patient-1","startMinutes":100,"dialogueActivityId":"patient-dialogue-1","triggered":false}); // @cl2.pos 660,0
+
+wait: blockUntil(isDue__value[]); // @cl2.pos 860,60
+
+markTriggered: updateRecord("medicalAppointments", "appointment-1", {"triggered":true}); // @cl2.pos 1060,0
+
+runDialogue: runActivity("patient-dialogue-1", "main"); // @cl2.pos 1260,0
+
+updateCase: updateRecord("medicalCases", "case-1", {"status":"in-progress"}); // @cl2.pos 1460,0
+
+end: end(); // @cl2.pos 1660,0

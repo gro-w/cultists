@@ -1,0 +1,40 @@
+// CL2 export for activity ending__蹈海
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+cg_001: emitEvent("content:showCg", {"cgId":"cg_ewexmk_5"}); // @cl2.pos 340,40
+
+line_002: text("ending-screen", "narrator", "鱼群。", "dlg:line_002:continue"); // @cl2.pos 640,40
+
+line_003: text("ending-screen", "narrator", "汹涌不断浪潮翻滚无边无际的海洋，与其中的，同样无边无际的鱼群。", "dlg:line_003:continue"); // @cl2.pos 940,40
+
+line_004: text("ending-screen", "narrator", "那些微小的，非人的，异质的脊椎动物与无脊椎动物，从来就是那高居于食物链顶端的存在——人类的盘中美馔。当然也是他们动物朋友与其他生物界同伴的食粮。", "dlg:line_004:continue"); // @cl2.pos 1240,40
+
+line_005: text("ending-screen", "narrator", "但让我们回到人类——对人类而言，它们从来就是不值得同情的，如果给予它们哪怕最微末的同情的话，那宇宙的精华、万物的灵长就会失去一切自诩的圣性，而泯然于众造物。", "dlg:line_005:continue"); // @cl2.pos 1540,40
+
+line_006: text("ending-screen", "narrator", "所以不妨假设，假设这种在上古者之眼的注视下年轻胜过新星的所谓“传统”，是天经地义，是自然规律。", "dlg:line_006:continue"); // @cl2.pos 1840,40
+
+line_007: text("ending-screen", "narrator", "哦，你要知道，鱼虾是有大脑的。", "dlg:line_007:continue"); // @cl2.pos 2140,40
+
+line_008: text("ending-screen", "narrator", "信不信由你——它们会感到痛觉。", "dlg:line_008:continue"); // @cl2.pos 2440,40
+
+cg_009: emitEvent("content:showCg", {"cgId":"cg_ewexmk_6"}); // @cl2.pos 2740,40
+
+line_010: text("ending-screen", "narrator", "从盲目痴愚的阿撒托斯说起（从那个无可名状的创世之梦开始，宇宙将永远冷漠，直到诡异的万古）——一直到原始浓汤里诞生的巨神乌波·萨斯拉——再到那臃肿的札特瓜的怪形，和无名的巨蟹神，就是那称为世界之癌的——日光之下并无新事：", "dlg:line_010:continue"); // @cl2.pos 3040,40
+
+line_011: text("ending-screen", "narrator", "万物终将受苦——这恰好促成了某种复制单位在时空中的扩散。或者反过来说也一样，这是个循环。", "dlg:line_011:continue"); // @cl2.pos 3340,40
+
+line_012: text("ending-screen", "narrator", "Ia! 旧日支配者昔在，今在，永在！但阿尔-哈兹莱德又曾说过，在诡异的万古中就连死亡也会消逝。", "dlg:line_012:continue"); // @cl2.pos 3640,40
+
+line_013: text("ending-screen", "player", "……", "dlg:line_013:continue"); // @cl2.pos 3940,40
+
+line_014: text("ending-screen", "player", "祸哉！我灭亡了。因为它们已来复仇。它们来报复我——它们的食客。", "dlg:line_014:continue"); // @cl2.pos 4240,40
+
+cg_015: emitEvent("content:showCg", {"cgId":"cg_ewexmk_4"}); // @cl2.pos 4540,40
+
+line_016: text("ending-screen", "narrator", "接受这一切吧。温和顺从地走进这片鱼群，正如鱼群游进罗网，万物的灵长达观地走进坟墓。", "dlg:line_016:continue"); // @cl2.pos 4840,40
+
+line_017: text("ending-screen", "narrator", "别无他选。只能接受。", "dlg:line_017:continue"); // @cl2.pos 5140,40
+
+end: end(); // @cl2.pos 5440,40

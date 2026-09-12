@@ -1,0 +1,31 @@
+// CL2 export for activity event__追逐
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+intro: text("ending-screen", "narrator", "追逐开始了。你必须在混乱中做出选择。", "dlg:intro:continue");
+
+choice: choice([{"label":"施放支配术"},{"label":"对万字符施放旧印开光术"},{"label":"什么也不做"}], 3, "dlg:choice:select") {
+    option<1> domination;
+    option<2> seal;
+    option<3> plain;
+};
+
+domination: emitEvent("content:spellCast", {"spellId":"book_coc7__0","eventId":"追逐","choiceId":"cast_domination"}) {
+    default end;
+};
+
+seal: emitEvent("content:spellCast", {"spellId":"book_moon__0","eventId":"追逐","choiceId":"seal_activation"});
+
+sealChoice: choice([{"label":"使用万字符","next":"sealUse"},{"label":"放弃使用","next":"end"}], 2, "dlg:sealChoice:select") {
+    option<1> sealUse;
+    option<2> end;
+};
+
+sealUse: emitEvent("content:spellEffect", {"spellId":"book_moon__0","eventId":"追逐","choiceId":"use_talisman"}) {
+    default end;
+};
+
+plain: text("ending-screen", "narrator", "你选择了谨慎应对。", "dlg:plain:continue");
+
+end: end();

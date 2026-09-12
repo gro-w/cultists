@@ -1,0 +1,76 @@
+// CL2 export for activity ending__摇滚不死
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+cg_001: emitEvent("content:showCg", {"cgId":"cg_exrzfp_5"}); // @cl2.pos 340,40
+
+line_002: text("ending-screen", "player", "你们的乐队，名字是叫“赞”是吧，似乎要在六道口黑暗学术bar首演了？", "dlg:line_002:continue"); // @cl2.pos 640,40
+
+line_003: text("ending-screen", "awei", "对啊，我最近一直在练这个万年氢能旅馆的《永生的岩户城人》。（一阵亵渎的拨弦异声）", "dlg:line_003:continue"); // @cl2.pos 940,40
+
+line_004: text("ending-screen", "awei", "药□不死！", "dlg:line_004:continue"); // @cl2.pos 1240,40
+
+line_005: text("ending-screen", "awei", "宰八九鬼胎~疯狂的人命尚长", "dlg:line_005:continue"); // @cl2.pos 1540,40
+
+line_006: text("ending-screen", "awei", "用一张邪咒~买一磅血浆~", "dlg:line_006:continue"); // @cl2.pos 1840,40
+
+line_007: text("ending-screen", "awei", "保卫祂的圣火~直到R’lyeh崩塌~", "dlg:line_007:continue"); // @cl2.pos 2140,40
+
+line_008: text("ending-screen", "player", "这渎神的音乐，不谐的旋律，让我心神不宁。", "dlg:line_008:continue"); // @cl2.pos 2440,40
+
+line_009: text("ending-screen", "player", "可以不要再唱了吗？", "dlg:line_009:continue"); // @cl2.pos 2740,40
+
+line_010: text("ending-screen", "awei", "为什么？你难道不想听吗？", "dlg:line_010:continue"); // @cl2.pos 3040,40
+
+line_011: text("ending-screen", "player", "……", "dlg:line_011:continue"); // @cl2.pos 3340,40
+
+line_012: text("ending-screen", "awei", "请到现场听我们演奏吧。如果不想听的话，可能会后悔哦！", "dlg:line_012:continue"); // @cl2.pos 3640,40
+
+line_013: text("ending-screen", "player", "……", "dlg:line_013:continue"); // @cl2.pos 3940,40
+
+cg_014: emitEvent("content:showCg", {"cgId":"cg_ewexmk_l"}); // @cl2.pos 4240,40
+
+line_015: text("ending-screen", "awei", "夜幕覆盖华北平原~幽深尽头祂的脸~", "dlg:line_015:continue"); // @cl2.pos 4540,40
+
+line_016: text("ending-screen", "awei", "海底尸堆腹中~冰封少年北向卧~", "dlg:line_016:continue"); // @cl2.pos 4840,40
+
+line_017: text("ending-screen", "awei", "沉没的诸事~巫法移开的礁石~", "dlg:line_017:continue"); // @cl2.pos 5140,40
+
+line_018: text("ending-screen", "player", "", "dlg:line_018:continue"); // @cl2.pos 5440,40
+
+line_019: text("ending-screen", "awei", "圣火在惊魇你~直到R’lyeh崩塌~", "dlg:line_019:continue"); // @cl2.pos 5740,40
+
+line_020: text("ending-screen", "awei", "亿万匹拓疆的蛙~在祂滔海中奔跑~（一阵亵渎的拨弦异声）", "dlg:line_020:continue"); // @cl2.pos 6040,40
+
+line_021: text("ending-screen", "narrator", "喔喔喔喔喔喔！咿呀！咿呀！", "dlg:line_021:continue"); // @cl2.pos 6340,40
+
+line_022: text("ending-screen", "player", "……", "dlg:line_022:continue"); // @cl2.pos 6640,40
+
+line_023: text("ending-screen", "awei", "谢谢！", "dlg:line_023:continue"); // @cl2.pos 6940,40
+
+line_024: text("ending-screen", "awei", "这次我要特别感谢我的一位朋友。没有这位朋友支持我努力走下去，就没有我今日的监听□□□□□□□□□□诡计□□□□□□□□□焚烧□□□□□十字架颂歌□□□□□□□□□□□□□□□海之阴鸷□□□□□□□", "dlg:line_024:continue"); // @cl2.pos 7240,40
+
+line_025: text("ending-screen", "player", "我听出来了——这是久已失传的埃里克·赞之曲！", "dlg:line_025:continue"); // @cl2.pos 7540,40
+
+line_026: text("ending-screen", "player", "他们是冲我来的！他们是冲我来的！他们要献祭我！他们要分食我！我才是深潜秘药的材料！", "dlg:line_026:continue"); // @cl2.pos 7840,40
+
+line_027: text("ending-screen", "narrator", "现在立刻外跑迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯迯", "dlg:line_027:continue"); // @cl2.pos 8140,40
+
+line_028: text("ending-screen", "narrator", "迯□掉了。", "dlg:line_028:continue"); // @cl2.pos 8440,40
+
+line_029: text("ending-screen", "narrator", "它□你□后。", "dlg:line_029:continue"); // @cl2.pos 8740,40
+
+line_030: text("ending-screen", "awei", "诶？你怎么跑了？不要跑啊！", "dlg:line_030:continue"); // @cl2.pos 9040,40
+
+line_031: text("ending-screen", "awei", "不是说好了来□我的手眼吗？", "dlg:line_031:continue"); // @cl2.pos 9340,40
+
+line_032: text("ending-screen", "narrator", "外外外外外外外外外外外外外外外外外外外外外外外", "dlg:line_032:continue"); // @cl2.pos 9640,40
+
+line_033: text("ending-screen", "narrator", "死死死死死死死死死死死死死死死死死死死死死死死", "dlg:line_033:continue"); // @cl2.pos 9940,40
+
+line_034: text("ending-screen", "awei", "不要跑啊！不要跑啊！不要跑啊！不要跑啊！和我一起啊！和我一起啊！和我一起啊！和我一起啊！", "dlg:line_034:continue"); // @cl2.pos 10240,40
+
+line_035: text("ending-screen", "narrator", "飤", "dlg:line_035:continue"); // @cl2.pos 10540,40
+
+end: end(); // @cl2.pos 10840,40

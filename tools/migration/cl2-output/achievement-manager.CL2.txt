@@ -1,0 +1,8 @@
+// CL2 export for activity achievement-manager
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+ready: emitEvent("achievement:manager-ready", {"source":"achievement-manager"});
+
+end: end();

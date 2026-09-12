@@ -1,0 +1,89 @@
+// CL2 export for activity social02a_awei_chat
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_global_101__value: getPublicVariable[101];
+
+start: flowStart(); // @cl2.pos 100,100
+
+n1: text("dorm-bottom", "阿伟", "你晚饭吃什么？", "dlg:n1:continue") {
+    default consume_time_20_1;
+}; // @cl2.pos 100,100
+
+n2: text("dorm-bottom", "player", "没想好呢。", "dlg:n2:continue") {
+    default consume_time_20_3;
+}; // @cl2.pos 100,100
+
+n3: text("dorm-bottom", "阿伟", "我去食堂看看有没有剩饭。", "dlg:n3:continue") {
+    default consume_time_20_5;
+}; // @cl2.pos 100,100
+
+n4: text("dorm-bottom", "player", "……剩饭也要花钱吧。", "dlg:n4:continue") {
+    default consume_time_20_7;
+}; // @cl2.pos 100,100
+
+n5: text("dorm-bottom", "阿伟", "能省则省了。话说，你觉不觉得屋里越来越潮了？", "dlg:n5:continue") {
+    default consume_time_20_8;
+}; // @cl2.pos 100,100
+
+choice6: choice([], 2, "dlg:choice6:select") {
+    option<1> choice6_op0;
+    option<2> choice6_op1;
+}; // @cl2.pos 100,100
+
+choice6_op0: applyPublicVariableEffect(5, 41) {
+    default consume_time_20_10;
+}; // @cl2.pos 100,100
+
+n7: text("dorm-bottom", "阿伟", "看来不止我一个人这么觉得。", "dlg:n7:continue") {
+    default end;
+}; // @cl2.pos 100,100
+
+choice6_op1: applyPublicVariableEffect(-5, 41) {
+    default choice6_op1_suspicion;
+}; // @cl2.pos 100,100
+
+n8: text("dorm-bottom", "阿伟", "难道这也是我的错觉？我真该多睡点了……", "dlg:n8:continue"); // @cl2.pos 100,100
+
+end: end(); // @cl2.pos 100,100
+
+consume_time_20_1: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_2: framework:consumeTime(20) {
+    default n2;
+}; // @cl2.pos 60,40
+
+consume_time_20_3: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_4: framework:consumeTime(20) {
+    default n3;
+}; // @cl2.pos 60,40
+
+consume_time_20_5: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_6: framework:consumeTime(20) {
+    default n4;
+}; // @cl2.pos 60,40
+
+consume_time_20_7: framework:consumeTime(20) {
+    default n5;
+}; // @cl2.pos 30,40
+
+consume_time_20_8: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_9: framework:consumeTime(20) {
+    default choice6;
+}; // @cl2.pos 60,40
+
+consume_time_20_10: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_11: framework:consumeTime(20) {
+    default n7;
+}; // @cl2.pos 60,40
+
+consume_time_20_12: framework:consumeTime(20) {
+    default n8;
+}; // @cl2.pos 30,40
+
+choice6_op1_suspicion: applyPublicVariableEffect(5, 0) {
+    default consume_time_20_12;
+}; // @cl2.pos 100,100

@@ -1,0 +1,8 @@
+// CL2 export for activity ending__万物终亡
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 80,80
+
+text: text("ending-screen", "narrator", "万物终亡", "dlg:text:continue"); // @cl2.pos 80,220
+
+end: end(); // @cl2.pos 80,360

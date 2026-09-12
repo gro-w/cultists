@@ -1,0 +1,8 @@
+// CL2 export for activity patient_lin_ruoqing_01
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+run: runActivity("work01a-patient1");
+
+end: end();

@@ -1,0 +1,10 @@
+// CL2 export for activity his__his-submit
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+submit: emitEvent("content:hisSubmit", {});
+
+time: framework:consumeTime(20);
+
+end: end();

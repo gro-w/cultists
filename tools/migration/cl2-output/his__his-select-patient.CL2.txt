@@ -1,0 +1,12 @@
+// CL2 export for activity his__his-select-patient
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+select: emitEvent("content:hisSelectPatient", {});
+
+diagnosis: emitEvent("content:hisRenderDiagnosis", {});
+
+prescription: emitEvent("content:hisRenderPrescription", {});
+
+end: end();

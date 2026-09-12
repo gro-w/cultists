@@ -1,0 +1,8 @@
+// CL2 export for activity patient_01_07_closed_foot_fracture
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+run: runActivity("work01a-patient7");
+
+end: end();

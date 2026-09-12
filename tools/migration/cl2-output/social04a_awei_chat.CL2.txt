@@ -1,0 +1,75 @@
+// CL2 export for activity social04a_awei_chat
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_global_101__value: getPublicVariable[101];
+
+start: flowStart();
+
+n1: text("dorm-bottom", "player", "今天你也不准备吃饭吗？", "dlg:n1:continue") {
+    default consume_time_20_1;
+};
+
+n2: text("dorm-bottom", "阿伟", "等我打个电话……*能不能再宽限两天？我没想赖着不还。……*唉，后天就要还尾款了。", "dlg:n2:continue") {
+    default consume_time_20_3;
+};
+
+n3: text("dorm-bottom", "player", "现在你还差多少钱？", "dlg:n3:continue") {
+    default consume_time_20_5;
+};
+
+n4: text("dorm-bottom", "阿伟", "别提了。", "dlg:n4:continue") {
+    default consume_time_20_7;
+};
+
+choice5: choice([{"label":"加油吧。"},{"label":"你不是明天就要还了吗？"}], 2, "dlg:choice5:select") {
+    option<1> choice5_op0;
+    option<2> choice5_op1;
+};
+
+choice5_op0: applyPublicVariableEffect(5, 41) {
+    default end;
+};
+
+choice5_op1: applyPublicVariableEffect(5, 0);
+
+n6: text("dorm-bottom", "阿伟", "怎么会，你别吓唬我。", "dlg:n6:continue") {
+    default consume_time_20_9;
+};
+
+n7: text("dorm-bottom", "player", "明明昨天你说是后天来着……", "dlg:n7:continue");
+
+end: end();
+
+consume_time_20_1: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_2: framework:consumeTime(20) {
+    default n2;
+}; // @cl2.pos 60,40
+
+consume_time_20_3: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_4: framework:consumeTime(20) {
+    default n3;
+}; // @cl2.pos 60,40
+
+consume_time_20_5: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_6: framework:consumeTime(20) {
+    default n4;
+}; // @cl2.pos 60,40
+
+consume_time_20_7: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_8: framework:consumeTime(20) {
+    default choice5;
+}; // @cl2.pos 60,40
+
+consume_time_20_9: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_10: framework:consumeTime(20); // @cl2.pos 60,40
+
+consume_time_20_11: framework:consumeTime(20); // @cl2.pos 30,40
+
+consume_time_20_12: framework:consumeTime(20) {
+    default n7;
+}; // @cl2.pos 60,40

@@ -1,0 +1,10 @@
+// CL2 export for activity event__binbin_turtle_success
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+text: text("ending-screen", "binbin", "你终于猜到了。接下来，我有一件东西想让你看。", "dlg:text:continue");
+
+cg: emitEvent("content:showCg", {"cgId":"cg_binbin_turtle_01"});
+
+end: end();

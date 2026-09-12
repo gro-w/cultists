@@ -1,0 +1,8 @@
+// CL2 export for activity achievement__san_recovery
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+unlock: emitEvent("achievement:display", {"achievementId":"san_recovery"});
+
+end: end();

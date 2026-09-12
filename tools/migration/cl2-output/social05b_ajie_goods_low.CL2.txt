@@ -1,0 +1,57 @@
+// CL2 export for activity social05b_ajie_goods_low
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+t0: text("dorm-bottom", "阿杰", "你要跟我一起去逛逛吗？", "dlg:t0:continue");
+
+t1: text("dorm-bottom", "主控", "你要去哪？", "dlg:t1:continue");
+
+t2: text("dorm-bottom", "阿杰", "或许去买两个手办。", "dlg:t2:continue");
+
+time_0: framework:consumeTime(20);
+
+t4: text("dorm-bottom", "主控", "那是什么东西？好玩吗？", "dlg:t4:continue");
+
+t5: text("dorm-bottom", "阿杰", "不是拿来玩的，是一种为了满足精神需要的小玩偶。", "dlg:t5:continue");
+
+time_1: framework:consumeTime(20);
+
+t7: text("dorm-bottom", "主控", "走吧，我们去看看。", "dlg:t7:continue");
+
+choice_0: choice([{"label":"手办有什么用？","next":"choice_0_op0"},{"label":"那是什么东西？好玩吗？","next":"choice_0_op1"}], 2, "dlg:choice_0:select") {
+    option<1> choice_0_op0;
+    option<2> choice_0_op1;
+};
+
+choice_0_join: text("dorm-bottom", "旁白", "（场景继续）", "dlg:choice_0_join:continue") {
+    default after_0;
+};
+
+choice_0_op0: applyPublicVariableEffect(-10, 40);
+
+choice_0_op0_t0: text("dorm-bottom", "阿杰", "没什么用，就是放在桌上。", "dlg:choice_0_op0_t0:continue");
+
+choice_0_op0_t1: text("dorm-bottom", "主控", "那你买它干什么？", "dlg:choice_0_op0_t1:continue");
+
+choice_0_op0_t2: text("dorm-bottom", "阿杰", "放在桌上啊，就是这样。", "dlg:choice_0_op0_t2:continue") {
+    default choice_0_join;
+};
+
+choice_0_op1: applyPublicVariableEffect(10, 40);
+
+choice_0_op1_t0: text("dorm-bottom", "阿杰", "不是拿来玩的，是一种为了满足精神需要的小玩偶。", "dlg:choice_0_op1_t0:continue") {
+    default choice_0_join;
+};
+
+after_0: text("dorm-bottom", "主控", "好诡异的店面，所有人都低着头不说话。", "dlg:after_0:continue");
+
+after_1: text("dorm-bottom", "阿杰", "只需要挑选就可以了。", "dlg:after_1:continue");
+
+after_2: text("dorm-bottom", "主控", "挑选这些肉色的片状物吗？", "dlg:after_2:continue");
+
+after_3: text("dorm-bottom", "阿杰", "这些就是谷子。", "dlg:after_3:continue");
+
+after_4: text("dorm-bottom", "主控", "听起来像粮食的名字。", "dlg:after_4:continue");
+
+end: end();

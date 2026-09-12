@@ -1,0 +1,46 @@
+// CL2 export for activity event__彬彬献祭事件
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+cg: emitEvent("content:showCg", {"cgId":"cg_binbin_ending"});
+
+intro: text("ending-screen", "dlg:intro:continue");
+
+questions: text("ending-screen", "dlg:questions:continue");
+
+answer1: text("ending-screen", "dlg:answer1:continue");
+
+choice1: choice([{"label":"你想……你虽然需要我的血肉，但其实不想杀死我？","next":"choice1a"},{"label":"你只是想杀死我……因为我曾冒犯过你？","next":"choice1b"}], 2, "dlg:choice1:select") {
+    option<1> choice1a;
+    option<2> choice1b;
+};
+
+choice1a: text("ending-screen", "dlg:choice1a:continue") {
+    default truth;
+};
+
+choice1b: text("ending-screen", "dlg:choice1b:continue");
+
+truth: text("ending-screen", "dlg:truth:continue");
+
+ritual: text("ending-screen", "dlg:ritual:continue");
+
+choice2intro: text("ending-screen", "dlg:choice2intro:continue");
+
+choice2: choice([{"label":"如果事情无法挽回，那么死亡并非我的欲望。我愿发下三重誓言。","next":"oath"},{"label":"不……不……我宁愿死，死在你的手中，也不愿意变成怪物……","next":"death"}], 2, "dlg:choice2:select") {
+    option<1> oath;
+    option<2> death;
+};
+
+oath: text("ending-screen", "dlg:oath:continue");
+
+good: ending("ending-screen", "pl现实魅惑大成功") {
+    default end;
+};
+
+death: text("ending-screen", "dlg:death:continue");
+
+bad: ending("ending-screen", "牺牲之血");
+
+end: end();

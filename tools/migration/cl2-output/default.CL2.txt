@@ -1,0 +1,12 @@
+// CL2 export for activity default
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+patients: runActivity("patient-queue-manager", "managers");
+
+stories: runActivity("social-story-manager", "managers");
+
+achievements: runActivity("achievement-manager", "managers");
+
+end: end();

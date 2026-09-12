@@ -1,0 +1,166 @@
+// CL2 export for activity social03b_awei_tail_high
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_compare_41__value: arithmetic[">", __social_gate_global_41__value[], 49];
+reusablevalue __social_gate_global_41__value: getGlobal[41];
+reusablevalue current_game_time__value: getGameTime[];
+reusablevalue listen_compare__value: arithmetic[">", listen_global__value[], 49];
+reusablevalue listen_global__value: getGlobal[41];
+reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
+reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day3"];
+
+start: flowStart();
+
+n1: text("dorm-bottom", "阿伟", "我需要你帮我下决心……") {
+    default consume_time_20_1;
+};
+
+n2: text("dorm-bottom", "阿伟", "我买了个新耳机，你知道我，这个耳机我喜欢很久了。正好这次打折，我咬咬牙就买了，千金难买心头好。") {
+    default consume_time_20_2;
+};
+
+n3: text("dorm-bottom", "阿伟", "后天就要到尾款期限了。");
+
+n4: text("dorm-bottom", "player", "你想留它吗？") {
+    default consume_time_20_3;
+};
+
+n5: text("dorm-bottom", "阿伟", "有些事情是由不得我的。全都由不得我。想让事情按我想的那样发展只是一种幻觉罢了。");
+
+n6: text("dorm-bottom", "player", "还差多少钱？") {
+    default consume_time_20_4;
+};
+
+n7: text("dorm-bottom", "阿伟", "还差五千。");
+
+n8: text("dorm-bottom", "player", "这么多？我只有一千八，可以借给你。") {
+    default consume_time_20_5;
+};
+
+n9: text("dorm-bottom", "阿伟", "虽然还是不够……不过谢谢你。") {
+    default consume_time_20_6;
+};
+
+choice10: choice(2, "你可以再去问问别人。", "你不会不还吧，为了听《月之暗面》你烧了不少钱了。") {
+    option<1> choice10_op0;
+    option<2> choice10_op1;
+};
+
+choice10_op0: setGlobal(41, 5);
+
+n11: text("dorm-bottom", "阿伟", "你知道阿杰的，从来不会借钱给别人。至于彬彬……");
+
+n12: text("dorm-bottom", "player", "怎么了？") {
+    default consume_time_20_7;
+};
+
+n13: text("dorm-bottom", "阿伟", "说不好，或许是我的错觉。");
+
+n14: text("dorm-bottom", "player", "你最近总疑神疑鬼的，《月之暗面》到底给你带来了什么……") {
+    default consume_time_20_8;
+};
+
+choice10_op1: setGlobal(41, -5) {
+    default listen_check;
+};
+
+n15: text("dorm-bottom", "阿伟", "说到这儿，我还是总能从这首歌里听到那段声音……它越来越清晰了。");
+
+n16: text("dorm-bottom", "阿伟", "你要不要听听？");
+
+n17: text("dorm-bottom", "player", "好，我听听看。") {
+    default consume_time_20_9;
+};
+
+n18: text("dorm-bottom", "阿伟", "*一段有些模糊的白噪音*") {
+    default consume_time_20_10;
+};
+
+n19: text("dorm-bottom", "player", "说的是什么？");
+
+n20: text("dorm-bottom", "阿伟", "好像是怎么给自己开刀做手术的内容。") {
+    default consume_time_20_11;
+};
+
+end: end();
+
+choice_final_24: choice(2, "不会是过几天“医师资格考试”泄题了吧。", "你刷题刷魔怔了。") {
+    option<1> choice_final_24_op0;
+    option<2> choice_final_24_op1;
+};
+
+choice_final_24_op0: setGlobal(41, 5);
+
+choice_final_24_0_0: text("dorm-bottom", "阿伟", "一点都不好笑。") {
+    default schedule_guard;
+};
+
+choice_final_24_op1: setGlobal(41, -5) {
+    default consume_time_20_12;
+};
+
+choice_final_24_1_0: text("dorm-bottom", "阿伟", "魔怔人是你吧，我从来不刷题。") {
+    default schedule_guard;
+};
+
+consume_time_20_1: consumeTime(20) {
+    default n2;
+}; // @cl2.pos 30,40
+
+consume_time_20_2: consumeTime(20) {
+    default n3;
+}; // @cl2.pos 30,40
+
+consume_time_20_3: consumeTime(20) {
+    default n5;
+}; // @cl2.pos 30,40
+
+consume_time_20_4: consumeTime(20) {
+    default n7;
+}; // @cl2.pos 30,40
+
+consume_time_20_5: consumeTime(20) {
+    default n9;
+}; // @cl2.pos 30,40
+
+consume_time_20_6: consumeTime(20) {
+    default choice10;
+}; // @cl2.pos 30,40
+
+consume_time_20_7: consumeTime(20) {
+    default n13;
+}; // @cl2.pos 30,40
+
+consume_time_20_8: consumeTime(20) {
+    default n16;
+}; // @cl2.pos 30,40
+
+consume_time_20_9: consumeTime(20) {
+    default n18;
+}; // @cl2.pos 30,40
+
+consume_time_20_10: consumeTime(20) {
+    default n19;
+}; // @cl2.pos 30,40
+
+consume_time_20_11: consumeTime(20) {
+    default choice_final_24;
+}; // @cl2.pos 30,40
+
+consume_time_20_12: consumeTime(20) {
+    default choice_final_24_1_0;
+}; // @cl2.pos 30,40
+
+listen_check: branch(listen_compare__value[]) {
+    option<1> n15;
+    default n19;
+}; // @cl2.pos 2200,80
+
+insert_dorm_schedule: insertSchedule("dorm_schedule_day3", "social", true, false, current_game_time__value[]) {
+    default end;
+};
+
+schedule_guard: branch(schedule_available__value[]) {
+    default end;
+    option<1> insert_dorm_schedule;
+};

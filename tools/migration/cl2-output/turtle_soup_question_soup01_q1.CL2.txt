@@ -1,0 +1,26 @@
+// CL2 export for activity turtle_soup_question_soup01_q1
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue count__value: getVariable["turtleSoup:questionCount"];
+reusablevalue ok__value: getProperty[{"variable":"turtleSoup:claim"}, "ok"];
+reusablevalue underLimit__value: arithmetic["<", count__value[], 5];
+
+start: flowStart();
+
+limit: branch(underLimit__value[]) {
+    option<1> claim;
+    default end;
+};
+
+claim: callApi("runtime.collection.operation", {"collectionId":"turtleSoupState","recordId":"soup01_q1","operation":"setIfAbsent","value":{"asked":true}}, "turtleSoup:claim");
+
+branch: branch(ok__value[]) {
+    option<1> increment;
+    default end;
+};
+
+increment: setVariable("turtleSoup:questionCount", 1);
+
+answer: emitEvent("turtleSoup:question", {"puzzleId":"binbin_turtle_01","questionId":"soup01_q1","questionText":"这碗汤是人肉汤吗？","answer":"no"});
+
+end: end();

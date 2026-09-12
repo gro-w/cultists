@@ -1,0 +1,192 @@
+// CL2 export for activity social-story-manager
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue slot-1-due__value: publicVariableCondition[1000, "gte", 960];
+reusablevalue slot-10-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-11-due__value: publicVariableCondition[1000, "gte", 4800];
+reusablevalue slot-12-due__value: publicVariableCondition[1000, "gte", 5280];
+reusablevalue slot-13-due__value: publicVariableCondition[1000, "gte", 6240];
+reusablevalue slot-14-due__value: publicVariableCondition[1000, "gte", 6720];
+reusablevalue slot-14-prerequisite-1__value: publicVariableCondition[40, "gte", 50];
+reusablevalue slot-15-due__value: publicVariableCondition[1000, "gte", 6720];
+reusablevalue slot-15-prerequisite-1__value: publicVariableCondition[40, "lt", 50];
+reusablevalue slot-16-due__value: publicVariableCondition[1000, "gte", 6720];
+reusablevalue slot-16-prerequisite-1__value: publicVariableCondition[41, "gte", 50];
+reusablevalue slot-17-due__value: publicVariableCondition[1000, "gte", 6720];
+reusablevalue slot-17-prerequisite-1__value: publicVariableCondition[41, "lt", 50];
+reusablevalue slot-18-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-18-prerequisite-1__value: publicVariableCondition[100, "eq", true];
+reusablevalue slot-19-due__value: publicVariableCondition[1000, "gte", 7680];
+reusablevalue slot-19-prerequisite-1__value: publicVariableCondition[101, "eq", true];
+reusablevalue slot-2-due__value: publicVariableCondition[1000, "gte", 960];
+reusablevalue slot-3-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-4-due__value: publicVariableCondition[1000, "gte", 1920];
+reusablevalue slot-5-due__value: publicVariableCondition[1000, "gte", 2400];
+reusablevalue slot-6-due__value: publicVariableCondition[1000, "gte", 3840];
+reusablevalue slot-6-prerequisite-1__value: publicVariableCondition[40, "gte", 50];
+reusablevalue slot-7-due__value: publicVariableCondition[1000, "gte", 3840];
+reusablevalue slot-7-prerequisite-1__value: publicVariableCondition[40, "lt", 50];
+reusablevalue slot-8-due__value: publicVariableCondition[1000, "gte", 3840];
+reusablevalue slot-8-prerequisite-1__value: publicVariableCondition[41, "gte", 50];
+reusablevalue slot-9-due__value: publicVariableCondition[1000, "gte", 3840];
+reusablevalue slot-9-prerequisite-1__value: publicVariableCondition[41, "lt", 50];
+
+start: flowStart();
+
+slot-1-wait: blockUntil(slot-1-due__value[]);
+
+slot-1-insert: insertActivity("social01b_ajie_honor_of_kings", "social", {"autoRun":true,"scheduled":{"day":1,"minutes":960}});
+
+slot-2-wait: blockUntil(slot-2-due__value[]);
+
+slot-2-insert: insertActivity("social01b_awei_headphones", "social", {"autoRun":true,"scheduled":{"day":1,"minutes":960}});
+
+slot-3-wait: blockUntil(slot-3-due__value[]);
+
+slot-3-insert: insertActivity("social02a_ajie_chat", "social", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-4-wait: blockUntil(slot-4-due__value[]);
+
+slot-4-insert: insertActivity("social02a_awei_chat", "social", {"autoRun":true,"scheduled":{"day":2,"minutes":480}});
+
+slot-5-wait: blockUntil(slot-5-due__value[]);
+
+slot-5-insert: insertActivity("social02b_dorm_invite", "social", {"autoRun":true,"scheduled":{"day":2,"minutes":960}});
+
+slot-6-wait: blockUntil(slot-6-due__value[]) {
+    default slot-6-prerequisite-branch;
+};
+
+slot-6-insert: insertActivity("social03b_ajie_24_personality_high", "social", {"autoRun":true,"scheduled":{"day":3,"minutes":960}}) {
+    default slot-7-wait;
+};
+
+slot-6-prerequisite-branch: branch(slot-6-prerequisite-1__value[]) {
+    option<1> slot-6-insert;
+};
+
+slot-7-wait: blockUntil(slot-7-due__value[]) {
+    default slot-7-prerequisite-branch;
+};
+
+slot-7-insert: insertActivity("social03b_ajie_24_personality_low", "social", {"autoRun":true,"scheduled":{"day":3,"minutes":960}}) {
+    default slot-8-wait;
+};
+
+slot-7-prerequisite-branch: branch(slot-7-prerequisite-1__value[]) {
+    option<1> slot-7-insert;
+};
+
+slot-8-wait: blockUntil(slot-8-due__value[]) {
+    default slot-8-prerequisite-branch;
+};
+
+slot-8-insert: insertActivity("social03b_awei_tail_high", "social", {"autoRun":true,"scheduled":{"day":3,"minutes":960}}) {
+    default slot-9-wait;
+};
+
+slot-8-prerequisite-branch: branch(slot-8-prerequisite-1__value[]) {
+    option<1> slot-8-insert;
+};
+
+slot-9-wait: blockUntil(slot-9-due__value[]) {
+    default slot-9-prerequisite-branch;
+};
+
+slot-9-insert: insertActivity("social03b_awei_tail_low", "social", {"autoRun":true,"scheduled":{"day":3,"minutes":960}}) {
+    default slot-10-wait;
+};
+
+slot-9-prerequisite-branch: branch(slot-9-prerequisite-1__value[]) {
+    option<1> slot-9-insert;
+};
+
+slot-10-wait: blockUntil(slot-10-due__value[]);
+
+slot-10-insert: insertActivity("social04a_ajie_chat", "social", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-11-wait: blockUntil(slot-11-due__value[]);
+
+slot-11-insert: insertActivity("social04a_awei_chat", "social", {"autoRun":true,"scheduled":{"day":4,"minutes":480}});
+
+slot-12-wait: blockUntil(slot-12-due__value[]);
+
+slot-12-insert: insertActivity("social04b_dorm_invite", "social", {"autoRun":true,"scheduled":{"day":4,"minutes":960}});
+
+slot-13-wait: blockUntil(slot-13-due__value[]);
+
+slot-13-insert: insertActivity("dorm_activity_day5", "social", {"autoRun":true,"scheduled":{"day":5,"minutes":480}});
+
+slot-14-wait: blockUntil(slot-14-due__value[]) {
+    default slot-14-prerequisite-branch;
+};
+
+slot-14-insert: insertActivity("social05b_ajie_goods_high", "social", {"autoRun":true,"scheduled":{"day":5,"minutes":960}}) {
+    default slot-15-wait;
+};
+
+slot-14-prerequisite-branch: branch(slot-14-prerequisite-1__value[]) {
+    option<1> slot-14-insert;
+};
+
+slot-15-wait: blockUntil(slot-15-due__value[]) {
+    default slot-15-prerequisite-branch;
+};
+
+slot-15-insert: insertActivity("social05b_ajie_goods_low", "social", {"autoRun":true,"scheduled":{"day":5,"minutes":960}}) {
+    default slot-16-wait;
+};
+
+slot-15-prerequisite-branch: branch(slot-15-prerequisite-1__value[]) {
+    option<1> slot-15-insert;
+};
+
+slot-16-wait: blockUntil(slot-16-due__value[]) {
+    default slot-16-prerequisite-branch;
+};
+
+slot-16-insert: insertActivity("social05b_awei_record_high", "social", {"autoRun":true,"scheduled":{"day":5,"minutes":960}}) {
+    default slot-17-wait;
+};
+
+slot-16-prerequisite-branch: branch(slot-16-prerequisite-1__value[]) {
+    option<1> slot-16-insert;
+};
+
+slot-17-wait: blockUntil(slot-17-due__value[]) {
+    default slot-17-prerequisite-branch;
+};
+
+slot-17-insert: insertActivity("social05b_awei_record_low", "social", {"autoRun":true,"scheduled":{"day":5,"minutes":960}}) {
+    default slot-18-wait;
+};
+
+slot-17-prerequisite-branch: branch(slot-17-prerequisite-1__value[]) {
+    option<1> slot-17-insert;
+};
+
+slot-18-wait: blockUntil(slot-18-due__value[]) {
+    default slot-18-prerequisite-branch;
+};
+
+slot-18-insert: insertActivity("social06a_ajie_chat", "social", {"autoRun":true,"scheduled":{"day":6,"minutes":480}}) {
+    default slot-19-wait;
+};
+
+slot-18-prerequisite-branch: branch(slot-18-prerequisite-1__value[]) {
+    option<1> slot-18-insert;
+};
+
+slot-19-wait: blockUntil(slot-19-due__value[]) {
+    default slot-19-prerequisite-branch;
+};
+
+slot-19-insert: insertActivity("social06a_awei_chat", "social", {"autoRun":true,"scheduled":{"day":6,"minutes":480}}) {
+    default end;
+};
+
+slot-19-prerequisite-branch: branch(slot-19-prerequisite-1__value[]) {
+    option<1> slot-19-insert;
+};
+
+end: end();

@@ -1,0 +1,144 @@
+// CL2 export for activity medical_riot_work
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue skill__value: getPublicVariable[22];
+
+start: flowStart(); // @cl2.pos 100,100
+
+random: framework:randomBranch(20) {
+    option<1> dialogue0;
+    option<2> dialogue1;
+    option<3> dialogue2;
+    option<4> dialogue3;
+    option<5> dialogue4;
+    option<6> dialogue5;
+    option<7> dialogue6;
+    option<8> dialogue7;
+    option<9> dialogue8;
+    option<10> dialogue9;
+    option<11> dialogue10;
+    option<12> dialogue11;
+    option<13> dialogue12;
+    option<14> dialogue13;
+    option<15> dialogue14;
+    option<16> dialogue15;
+    option<17> dialogue16;
+    option<18> dialogue17;
+    option<19> dialogue18;
+    option<20> dialogue19;
+}; // @cl2.pos 100,100
+
+dialogue0: text("his-app", "患者家属", "你们把人治成这样还敢说没问题？今天不把责任说清楚谁也别想走！", "dlg:dialogue0:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue1: text("his-app", "患者家属", "我家人因为你开的药出了大事，你们医院必须马上给个交代！", "dlg:dialogue1:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue2: text("his-app", "患者家属", "你是不是根本没看清病情就乱开药？出了人命你赔得起吗？", "dlg:dialogue2:continue"); // @cl2.pos 100,100
+
+explain: choice([], 1, "dlg:explain:select") {
+    option<1> check;
+}; // @cl2.pos 100,100
+
+check: framework:diceCheck(skill__value[]) {
+    option<1> riotLargeText;
+    option<2> riotFineText;
+    option<3> riotDeathText;
+    default riotDeathText;
+}; // @cl2.pos 100,100
+
+end: end(); // @cl2.pos 100,100
+
+riotFine: applyPublicVariableEffect(-600, 2) {
+    default end;
+}; // @cl2.pos 100,100
+
+riotLargeSuccess: applyPublicVariableEffect(-300, 2) {
+    default end;
+}; // @cl2.pos 100,100
+
+death: emitEvent("activity:ending", {"endingId":"mob_violence_death","displayTo":"default"}) {
+    default end;
+}; // @cl2.pos 100,100
+
+riotFineText: text("his-app", "系统", "你未能平息家属的愤怒，医院被罚款了600元。", "dlg:riotFineText:continue") {
+    default riotFine;
+}; // @cl2.pos 100,100
+
+riotLargeText: text("his-app", "系统", "你的辩解暂时稳住了家属，但医院仍被罚款了300元。", "dlg:riotLargeText:continue") {
+    default riotLargeSuccess;
+}; // @cl2.pos 100,100
+
+riotDeathText: text("his-app", "系统", "你的解释彻底激怒了家属，医闹失控了。", "dlg:riotDeathText:continue") {
+    default death;
+}; // @cl2.pos 100,100
+
+dialogue3: text("his-app", "患者家属", "我们把病人交给你们，你们却把他越治越糟，今天必须负责！", "dlg:dialogue3:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue4: text("his-app", "患者家属", "别拿什么正常反应来糊弄人，病人现在这个样子就是你们的错！", "dlg:dialogue4:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue5: text("his-app", "患者家属", "你们这不是治病，是在拿我家人的命开玩笑，我绝不会善罢甘休！", "dlg:dialogue5:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue6: text("his-app", "患者家属", "检查和处方都是你们开的，现在出了问题还想把责任推给我们？", "dlg:dialogue6:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue7: text("his-app", "患者家属", "我家人躺在病床上受罪，你们却一个个躲着不见，谁给我解释？", "dlg:dialogue7:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue8: text("his-app", "患者家属", "如果你们不给赔偿，我现在就把这件事闹到所有人都知道！", "dlg:dialogue8:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue9: text("his-app", "患者家属", "这家医院到底有没有规矩？庸医害人还不肯承认错误！", "dlg:dialogue9:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue10: text("his-app", "患者家属", "你们说药没问题，那为什么人吃完之后会突然恶化？", "dlg:dialogue10:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue11: text("his-app", "患者家属", "今天谁也别想用一句道歉打发我们，必须给出实际的解决办法！", "dlg:dialogue11:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue12: text("his-app", "患者家属", "我已经忍了这么久，你们还敢说这是病人自己的原因？", "dlg:dialogue12:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue13: text("his-app", "患者家属", "你开的药让病人差点出事，出了这种医疗事故谁承担后果？", "dlg:dialogue13:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue14: text("his-app", "患者家属", "我们不是来听推诿的，院长和负责医生都必须出来面对我们！", "dlg:dialogue14:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue15: text("his-app", "患者家属", "你们的治疗方案害得病人更严重，这笔账今天一定要算清楚！", "dlg:dialogue15:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue16: text("his-app", "患者家属", "别以为穿着白大褂就可以不负责任，病人的命不是你们的试错成本！", "dlg:dialogue16:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue17: text("his-app", "患者家属", "我家人现在生死未卜，你们还在这里互相推责，简直欺人太甚！", "dlg:dialogue17:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue18: text("his-app", "患者家属", "如果医院不给我们满意答复，我就让所有媒体和监管部门来评评理！", "dlg:dialogue18:continue") {
+    default explain;
+}; // @cl2.pos 100,100
+
+dialogue19: text("his-app", "患者家属", "你们今天要是不给个说法，我就把这间医院闹个天翻地覆！", "dlg:dialogue19:continue") {
+    default explain;
+}; // @cl2.pos 100,100

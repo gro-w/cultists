@@ -1,0 +1,20 @@
+// CL2 export for activity spell-cast
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue ok__value: getProperty[{"variable":"spell:cast"}, "ok"];
+reusablevalue payload__value: getVariable["event:payload"];
+
+start: flowStart();
+
+cast: callApi("engine.publicVariableOperation", {"id":1,"operation":"delta","value":-5,"minimum":0}, "spell:cast");
+
+branch: branch(ok__value[]) {
+    option<1> success;
+    default failure;
+};
+
+success: emitEvent("content:spellCast", {"variable":"event:payload"});
+
+end: end();
+
+failure: end();

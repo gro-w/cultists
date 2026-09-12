@@ -1,0 +1,76 @@
+// CL2 export for activity social02a_ajie_chat
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_global_100__value: getPublicVariable[100];
+
+start: flowStart(); // @cl2.pos 40,220
+
+greeting: text("dorm-bottom", "阿杰", "回来了？工作累吗？", "dlg:greeting:continue") {
+    default consume_time_20_1;
+}; // @cl2.pos 260,220
+
+reply_tired: text("dorm-bottom", "player", "挺累的。", "dlg:reply_tired:continue") {
+    default consume_time_20_3;
+}; // @cl2.pos 520,220
+
+comfort: text("dorm-bottom", "阿杰", "累就对了，舒服是留给死人的……哦不，留给神的。", "dlg:comfort:continue") {
+    default consume_time_20_4;
+}; // @cl2.pos 780,220
+
+question: text("dorm-bottom", "player", "什么意思？", "dlg:question:continue") {
+    default consume_time_20_6;
+}; // @cl2.pos 1080,220
+
+deflect: text("dorm-bottom", "阿杰", "没什么。最近阿伟买了新耳机，他估计又要吃土了。", "dlg:deflect:continue") {
+    default consume_time_20_7;
+}; // @cl2.pos 1360,220
+
+reply_record: text("dorm-bottom", "player", "他不才还完那张限量唱片的尾款吗？", "dlg:reply_record:continue") {
+    default consume_time_20_9;
+}; // @cl2.pos 1640,220
+
+gossip: text("dorm-bottom", "阿杰", "对啊。你看他黑眼圈那么重，估计是没忍住买了，买完又后悔。你要不要借他点钱？", "dlg:gossip:continue") {
+    default consume_time_20_10;
+}; // @cl2.pos 1920,220
+
+reply_maybe: text("dorm-bottom", "player", "……我有机会问问他。", "dlg:reply_maybe:continue"); // @cl2.pos 2200,220
+
+end: end(); // @cl2.pos 2480,220
+
+consume_time_20_1: framework:consumeTime(20); // @cl2.pos 290,260
+
+consume_time_20_2: framework:consumeTime(20) {
+    default reply_tired;
+}; // @cl2.pos 320,260
+
+consume_time_20_3: framework:consumeTime(20) {
+    default comfort;
+}; // @cl2.pos 550,260
+
+consume_time_20_4: framework:consumeTime(20); // @cl2.pos 810,260
+
+consume_time_20_5: framework:consumeTime(20) {
+    default question;
+}; // @cl2.pos 840,260
+
+consume_time_20_6: framework:consumeTime(20) {
+    default deflect;
+}; // @cl2.pos 1110,260
+
+consume_time_20_7: framework:consumeTime(20); // @cl2.pos 1390,260
+
+consume_time_20_8: framework:consumeTime(20) {
+    default reply_record;
+}; // @cl2.pos 1420,260
+
+consume_time_20_9: framework:consumeTime(20) {
+    default gossip;
+}; // @cl2.pos 1670,260
+
+consume_time_20_10: framework:consumeTime(20); // @cl2.pos 1950,260
+
+consume_time_20_11: framework:consumeTime(20); // @cl2.pos 1980,260
+
+consume_time_20_12: framework:consumeTime(20) {
+    default reply_maybe;
+}; // @cl2.pos 2230,260

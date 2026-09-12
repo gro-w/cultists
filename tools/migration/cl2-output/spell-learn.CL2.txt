@@ -1,0 +1,23 @@
+// CL2 export for activity spell-learn
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue ok__value: getProperty[{"variable":"spell:learn"}, "ok"];
+reusablevalue payload__value: getVariable["event:payload"];
+reusablevalue spellId__value: getProperty[payload__value[], "spellId"];
+
+start: flowStart();
+
+time: framework:consumeTime(240);
+
+learn: callApi("runtime.collection.operation", {"collectionId":"spellState","recordId":{"nodeId":"spellId","port":"value"},"operation":"setIfAbsent","value":{"learned":true}}, "spell:learn");
+
+branch: branch(ok__value[]) {
+    option<1> learned;
+    default failure;
+};
+
+learned: emitEvent("content:spellLearned", {"variable":"event:payload"});
+
+end: end();
+
+failure: end();

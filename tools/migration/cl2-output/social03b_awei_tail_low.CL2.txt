@@ -1,0 +1,165 @@
+// CL2 export for activity social03b_awei_tail_low
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_compare_41__value: arithmetic["<", __social_gate_global_41__value[], 50];
+reusablevalue __social_gate_global_41__value: getGlobal[41];
+reusablevalue current_game_time__value: getGameTime[];
+reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
+reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day3"];
+
+start: flowStart();
+
+n1: text("dorm-bottom", "阿伟", "我想跟你商量个事。") {
+    default consume_time_20_1;
+};
+
+n2: text("dorm-bottom", "player", "什么事？关于耳机吗？") {
+    default consume_time_20_2;
+};
+
+n3: text("dorm-bottom", "阿伟", "我在想要不要退了。");
+
+n4: text("dorm-bottom", "player", "怎么了，是尾款还是那段声音？") {
+    default consume_time_20_3;
+};
+
+n5: text("dorm-bottom", "阿伟", "尾款……");
+
+n6: text("dorm-bottom", "player", "还差多少？") {
+    default consume_time_20_4;
+};
+
+n7: text("dorm-bottom", "阿伟", "一些。");
+
+n8: text("dorm-bottom", "player", "我借你点钱也还不起吗？") {
+    default consume_time_20_5;
+};
+
+n9: text("dorm-bottom", "阿伟", "肯定还得起，不过是最近手头紧一点。") {
+    default consume_time_20_6;
+};
+
+choice10: choice(2, "你要不再去问问别人。", "你不会不还吧，为了听《月之暗面》你烧了不少钱了。") {
+    option<1> choice10_op0;
+    option<2> choice10_op1;
+};
+
+choice10_op0: setGlobal(41, 5);
+
+n11: text("dorm-bottom", "阿伟", "我都问了。");
+
+n12: text("dorm-bottom", "player", "怎么了？不肯借？") {
+    default consume_time_20_7;
+};
+
+n13: text("dorm-bottom", "阿伟", "当然愿意借我，我什么人缘。");
+
+n14: text("dorm-bottom", "player", "你从前都不借钱的，《月之暗面》到底给你带来了什么……") {
+    default consume_time_20_8;
+};
+
+choice10_op1: setGlobal(41, -5);
+
+n15: text("dorm-bottom", "阿伟", "说到这儿，我还是总能从这首歌里听到那段声音……它越来越清晰了。");
+
+n16: text("dorm-bottom", "阿伟", "你要不要听听？");
+
+n17: text("dorm-bottom", "player", "好，我听听看。") {
+    default consume_time_20_9;
+};
+
+n18: text("dorm-bottom", "阿伟", "*一段有些模糊的白噪音*") {
+    default consume_time_20_10;
+};
+
+n19: text("dorm-bottom", "player", "说的是什么？") {
+    default choice_final_23;
+};
+
+end: end();
+
+choice_final_23: choice(2, "你说来听听。", "当然不，你不是在开玩笑吗？") {
+    option<1> choice_final_23_op0;
+    option<2> choice_final_23_op1;
+};
+
+choice_final_23_op0: setGlobal(41, 5) {
+    default choice_final_23_op0_suspicion;
+};
+
+choice_final_23_0_0: text("dorm-bottom", "阿伟", "一些……开刀做手术的东西。") {
+    default consume_time_20_11;
+};
+
+choice_final_23_0_1: text("dorm-bottom", "player", "你是不是压力太大把两个音频搞混了？") {
+    default schedule_guard;
+};
+
+choice_final_23_op1: setGlobal(41, -5) {
+    default consume_time_20_12;
+};
+
+choice_final_23_1_0: text("dorm-bottom", "阿伟", "真好笑。") {
+    default schedule_guard;
+};
+
+consume_time_20_1: consumeTime(20) {
+    default n2;
+}; // @cl2.pos 30,40
+
+consume_time_20_2: consumeTime(20) {
+    default n3;
+}; // @cl2.pos 30,40
+
+consume_time_20_3: consumeTime(20) {
+    default n5;
+}; // @cl2.pos 30,40
+
+consume_time_20_4: consumeTime(20) {
+    default n7;
+}; // @cl2.pos 30,40
+
+consume_time_20_5: consumeTime(20) {
+    default n9;
+}; // @cl2.pos 30,40
+
+consume_time_20_6: consumeTime(20) {
+    default choice10;
+}; // @cl2.pos 30,40
+
+consume_time_20_7: consumeTime(20) {
+    default n13;
+}; // @cl2.pos 30,40
+
+consume_time_20_8: consumeTime(20) {
+    default n16;
+}; // @cl2.pos 30,40
+
+consume_time_20_9: consumeTime(20) {
+    default n18;
+}; // @cl2.pos 30,40
+
+consume_time_20_10: consumeTime(20) {
+    default n19;
+}; // @cl2.pos 30,40
+
+consume_time_20_11: consumeTime(20) {
+    default choice_final_23_0_1;
+}; // @cl2.pos 30,40
+
+consume_time_20_12: consumeTime(20) {
+    default choice_final_23_1_0;
+}; // @cl2.pos 30,40
+
+choice_final_23_op0_suspicion: setGlobal(0, 5) {
+    default choice_final_23_0_0;
+};
+
+insert_dorm_schedule: insertSchedule("dorm_schedule_day3", "social", true, false, current_game_time__value[]) {
+    default end;
+};
+
+schedule_guard: branch(schedule_available__value[]) {
+    default end;
+    option<1> insert_dorm_schedule;
+};

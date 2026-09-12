@@ -1,0 +1,149 @@
+// CL2 export for activity social03b_ajie_24_personality_low
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue __social_gate_compare_40__value: arithmetic["<", __social_gate_global_40__value[], 50];
+reusablevalue __social_gate_global_40__value: getGlobal[40];
+reusablevalue current_game_time__value: getGameTime[];
+reusablevalue schedule_available__value: arithmetic["eq", schedule_count__value[], 0];
+reusablevalue schedule_count__value: getScheduleInstanceCount["dorm_schedule_day3"];
+
+start: flowStart();
+
+n1: text("dorm-bottom", "阿杰", "要不要帮我测评个游戏？") {
+    default consume_time_20_1;
+};
+
+n2: text("dorm-bottom", "player", "可以啊，什么游戏？") {
+    default consume_time_20_2;
+};
+
+n3: text("dorm-bottom", "阿杰", "《第二十四人格》。") {
+    default consume_time_20_3;
+};
+
+n4: text("dorm-bottom", "player", "怎么测？");
+
+n5: text("dorm-bottom", "阿杰", "什么都不要看，直接玩，玩完告诉我感想。") {
+    default consume_time_20_4;
+};
+
+n6: text("dorm-bottom", "player", "评分都不能看吗……") {
+    default consume_time_20_5;
+};
+
+n7: text("dorm-bottom", "阿杰", "不能看。进去抽个卡，“三重馈赠”。 这活动名字听起来像发誓似的。");
+
+choice8: choice(2, "好吧，那我不看了。", "他人的观点是智慧的结晶。") {
+    option<1> choice8_op0;
+    option<2> choice8_op1;
+};
+
+choice8_op0: setGlobal(40, 5);
+
+n9: text("dorm-bottom", "阿杰", "其实这也是我的观点。") {
+    default consume_time_20_6;
+};
+
+n10: text("dorm-bottom", "player", "什么意思？") {
+    default consume_time_20_7;
+};
+
+n11: text("dorm-bottom", "阿杰", "没什么意思，快抽卡。") {
+    default consume_time_20_10;
+};
+
+choice8_op1: setGlobal(40, -5);
+
+n12: text("dorm-bottom", "阿杰", "长满结晶的大脑么，很难下嘴啊……") {
+    default consume_time_20_8;
+};
+
+n13: text("dorm-bottom", "player", "你说我吗？") {
+    default consume_time_20_9;
+};
+
+n14: text("dorm-bottom", "阿杰", "说的火锅，刚才我联想到了上次咱们去火锅店吃的猪脑。");
+
+n15: text("dorm-bottom", "player", "没抽到我想要的，要不还是氪一下。");
+
+n16: text("dorm-bottom", "阿杰", "充钱就像上供，只能得到保底作为神的恩赐，无法买到你心爱的那张卡……我是说游戏之神。") {
+    default consume_time_20_11;
+};
+
+end: end();
+
+choice_final_20: choice(2, "是不是我不够虔诚？", "能赢我怎么样都行。") {
+    option<1> choice_final_20_op0;
+    option<2> choice_final_20_op1;
+};
+
+choice_final_20_op0: setGlobal(40, -5) {
+    default consume_time_20_12;
+};
+
+choice_final_20_0_0: text("dorm-bottom", "阿杰", "神不在乎。") {
+    default schedule_guard;
+};
+
+choice_final_20_op1: setGlobal(40, 5);
+
+choice_final_20_1_0: text("dorm-bottom", "阿杰", "那你就做好准备为游戏之神奉献全部吧。") {
+    default schedule_guard;
+};
+
+consume_time_20_1: consumeTime(20) {
+    default n2;
+}; // @cl2.pos 30,40
+
+consume_time_20_2: consumeTime(20) {
+    default n3;
+}; // @cl2.pos 30,40
+
+consume_time_20_3: consumeTime(20) {
+    default n4;
+}; // @cl2.pos 30,40
+
+consume_time_20_4: consumeTime(20) {
+    default n6;
+}; // @cl2.pos 30,40
+
+consume_time_20_5: consumeTime(20) {
+    default n7;
+}; // @cl2.pos 30,40
+
+consume_time_20_6: consumeTime(20) {
+    default n10;
+}; // @cl2.pos 30,40
+
+consume_time_20_7: consumeTime(20) {
+    default n11;
+}; // @cl2.pos 30,40
+
+consume_time_20_8: consumeTime(20) {
+    default n13;
+}; // @cl2.pos 30,40
+
+consume_time_20_9: consumeTime(20) {
+    default n14;
+}; // @cl2.pos 30,40
+
+consume_time_20_10: consumeTime(20) {
+    default n15;
+}; // @cl2.pos 30,40
+
+consume_time_20_11: consumeTime(20) {
+    default choice_final_20;
+}; // @cl2.pos 30,40
+
+consume_time_20_12: consumeTime(20) {
+    default choice_final_20_0_0;
+}; // @cl2.pos 30,40
+
+insert_dorm_schedule: insertSchedule("dorm_schedule_day3", "social", true, false, current_game_time__value[]) {
+    default end;
+};
+
+schedule_guard: branch(schedule_available__value[]) {
+    default end;
+    option<1> insert_dorm_schedule;
+};

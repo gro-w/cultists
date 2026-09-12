@@ -1,0 +1,40 @@
+// CL2 export for activity ending__游戏王の福利
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+cg_001: emitEvent("content:showCg", {"cgId":"cg_exrzfp_5"}); // @cl2.pos 340,40
+
+line_002: text("ending-screen", "player", "刚才阿杰约我去漫展，说会给我一个惊喜，还叫我带上相机。是什么惊喜呢？", "dlg:line_002:continue"); // @cl2.pos 640,40
+
+line_003: text("ending-screen", "player", "某种礼物？有趣的活动？", "dlg:line_003:continue"); // @cl2.pos 940,40
+
+line_004: text("ending-screen", "player", "不管了，先坐地铁去漫展那里。", "dlg:line_004:continue"); // @cl2.pos 1240,40
+
+cg_005: emitEvent("content:showCg", {"cgId":"cg_ewexmk_1"}); // @cl2.pos 1540,40
+
+line_006: text("ending-screen", "阿杰", "Surprise！我是始终面带微笑潜行到你身边的混沌(少女)，奈亚拉托提普向你问好~", "dlg:line_006:continue"); // @cl2.pos 1840,40
+
+line_007: text("ending-screen", "player", "啊……啊？玩这么大？", "dlg:line_007:continue"); // @cl2.pos 2140,40
+
+line_008: text("ending-screen", "阿杰", "那咋了，cos是up主家常事。因为那个端游玩家从夯到拉锐评手游的视频我已经万粉了。今天本来约了摄影师，拍女装福利视频，但他临时有事来不了了。你不是也会一点摄影吗？来帮我拍点场照和视频，我请你吃火锅。", "dlg:line_008:continue"); // @cl2.pos 2440,40
+
+line_009: text("ending-screen", "player", "好呀，正好我好久没拍过，手有点生了。", "dlg:line_009:continue"); // @cl2.pos 2740,40
+
+line_010: text("ending-screen", "阿杰", "喂喂喂，你这靠谱吗？", "dlg:line_010:continue"); // @cl2.pos 3040,40
+
+line_011: text("ending-screen", "player", "放心吧，包在我身上。", "dlg:line_011:continue"); // @cl2.pos 3340,40
+
+line_012: text("ending-screen", "阿杰", "如果他们知道我是……可能反而不会求着我女装了。", "dlg:line_012:continue"); // @cl2.pos 3640,40
+
+line_013: text("ending-screen", "player", "嗯，那你说，为啥up主都要拍女装福利视频呢？或者说，女装为什么可以作为福利呢？", "dlg:line_013:continue"); // @cl2.pos 3940,40
+
+line_014: text("ending-screen", "阿杰", "不知道啊，别人都拍，我也跟着拍了。我的高赞评论里还有嬷嬷呢。", "dlg:line_014:continue"); // @cl2.pos 4240,40
+
+line_015: text("ending-screen", "player", "是啊。Homie你好香，我有嬷欲爽。", "dlg:line_015:continue"); // @cl2.pos 4540,40
+
+line_016: text("ending-screen", "阿杰", "是啊，吃什么。", "dlg:line_016:continue"); // @cl2.pos 4840,40
+
+line_017: text("ending-screen", "player", "吃八万个馒头！", "dlg:line_017:continue"); // @cl2.pos 5140,40
+
+end: end(); // @cl2.pos 5440,40

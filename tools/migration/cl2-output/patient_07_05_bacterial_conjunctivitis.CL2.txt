@@ -1,0 +1,36 @@
+// CL2 export for activity patient_07_05_bacterial_conjunctivitis
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,260
+
+intro: text("his-app", "郑心怡", "医生您好，我叫郑心怡，今年33岁。最近主要是[[symptom_055]]，还伴有[[symptom_056]]，所以来医院看看。", "dlg:intro:continue"); // @cl2.pos 260,260
+
+time_intro: framework:consumeTime(20); // @cl2.pos 520,260
+
+main_choice: choice([{"label":"详细询问主诉和症状变化","next":"answer_symptom"},{"label":"询问既往病史和用药情况","next":"answer_history"},{"label":"询问伴随症状和危险信号","next":"answer_risk"}], 3, "dlg:main_choice:select") {
+    option<1> answer_symptom;
+    option<2> answer_history;
+    option<3> answer_risk;
+}; // @cl2.pos 760,260
+
+answer_symptom: text("his-app", "郑心怡", "症状大约持续了几天，时轻时重。最明显的是[[symptom_055]]，同时还有[[symptom_058]]，活动或休息时都会感觉到。", "dlg:answer_symptom:continue"); // @cl2.pos 1020,80
+
+time_symptom: framework:consumeTime(20) {
+    default closing;
+}; // @cl2.pos 1270,80
+
+answer_history: text("his-app", "郑心怡", "我以前没有确诊过严重疾病，但家里有人得过[[disease:bacterial_conjunctivitis:normal]]。最近只自己买过一些常用药，没有长期规律服药。", "dlg:answer_history:continue"); // @cl2.pos 1020,260
+
+time_history: framework:consumeTime(20) {
+    default closing;
+}; // @cl2.pos 1270,260
+
+answer_risk: text("his-app", "郑心怡", "目前没有昏厥或剧烈出血，只是[[symptom_056]]比较明显；这几天也注意到[[symptom_058]]，因此有些担心。", "dlg:answer_risk:continue"); // @cl2.pos 1020,440
+
+time_risk: framework:consumeTime(20); // @cl2.pos 1270,440
+
+closing: text("his-app", "player", "好的，我已经了解你的主诉、伴随症状和既往病史了。请先到外面等候检查结果。", "dlg:closing:continue"); // @cl2.pos 1510,260
+
+time_closing: framework:consumeTime(20); // @cl2.pos 1760,260
+
+scheduleEnd: end(); // @cl2.pos 2010,260

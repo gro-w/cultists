@@ -1,0 +1,42 @@
+// CL2 export for activity ending__入院快乐
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+cg_001: emitEvent("content:showCg", {"cgId":"cg_ey7w5j_8"}); // @cl2.pos 340,40
+
+line_002: text("ending-screen", "binbin", "你醒了？", "dlg:line_002:continue"); // @cl2.pos 640,40
+
+line_003: text("ending-screen", "player", "彬彬？头……有点晕……我刚才是低血糖晕倒了吗？", "dlg:line_003:continue"); // @cl2.pos 940,40
+
+line_004: text("ending-screen", "binbin", "是也不是。", "dlg:line_004:continue"); // @cl2.pos 1240,40
+
+line_005: text("ending-screen", "player", "等一下……我在哪里？你……要做什么？", "dlg:line_005:continue"); // @cl2.pos 1540,40
+
+line_006: text("ending-screen", "player", "你们这些邪教徒，不准备演了？是不是现在要把我献祭给你们不可名状的神？", "dlg:line_006:continue"); // @cl2.pos 1840,40
+
+line_007: text("ending-screen", "阿杰", "傻孩子，你怕是发神经了，说什么胡话呢。", "dlg:line_007:continue"); // @cl2.pos 2140,40
+
+line_008: text("ending-screen", "awei", "是啊是啊，你最近一直精神状态不对劲。", "dlg:line_008:continue"); // @cl2.pos 2440,40
+
+line_009: text("ending-screen", "binbin", "可能是刷题刷疯了。", "dlg:line_009:continue"); // @cl2.pos 2740,40
+
+line_010: text("ending-screen", "阿杰", "而且你半夜翻我们东西，我们也注意到了，不知道是不是梦游。", "dlg:line_010:continue"); // @cl2.pos 3040,40
+
+line_011: text("ending-screen", "awei", "梦游的话感觉有点危险啊。", "dlg:line_011:continue"); // @cl2.pos 3340,40
+
+line_012: text("ending-screen", "binbin", "你的调查笔记，并没有藏得很好呢。我都看到了，但是其实我们真不是邪教徒……", "dlg:line_012:continue"); // @cl2.pos 3640,40
+
+line_013: text("ending-screen", "awei", "医者不能自医，你可能治着治着病，就把自己搞精神病了。", "dlg:line_013:continue"); // @cl2.pos 3940,40
+
+line_014: text("ending-screen", "阿杰", "然后刚才你在宿舍突然晕倒了。总之我们三个决定打120把你送到医院，住院治疗。", "dlg:line_014:continue"); // @cl2.pos 4240,40
+
+line_015: text("ending-screen", "player", "别骗我，我是清醒的！你们才是疯子，邪教徒！……", "dlg:line_015:continue"); // @cl2.pos 4540,40
+
+line_016: text("ending-screen", "binbin", "额，主任，总之就是这么个情况。您……看着办吧。", "dlg:line_016:continue"); // @cl2.pos 4840,40
+
+line_017: text("ending-screen", "awei", "总之是把他送过来了。我们几个才疏学浅，治他的精神病还得需要专业团队。", "dlg:line_017:continue"); // @cl2.pos 5140,40
+
+line_018: text("ending-screen", "player", "吃人的书！血祭的证据！所有线索都对上了，GTP说我是对的，你们骗不了我……", "dlg:line_018:continue"); // @cl2.pos 5440,40
+
+end: end(); // @cl2.pos 5740,40

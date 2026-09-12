@@ -1,0 +1,23 @@
+// CL2 export for activity use-item
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+reusablevalue itemId__value: getProperty[payload__value[], "itemId"];
+reusablevalue ok__value: getProperty[{"variable":"item:operation"}, "ok"];
+reusablevalue payload__value: getVariable["event:payload"];
+
+start: flowStart();
+
+consume: callApi("runtime.collection.operation", {"collectionId":"inventoryItems","recordId":{"nodeId":"itemId","port":"value"},"operation":"delta","value":-1,"minimum":0}, "item:operation");
+
+branch: branch(ok__value[]) {
+    option<1> time;
+    default failure;
+};
+
+time: framework:consumeTime(5);
+
+used: emitEvent("item:used", {"variable":"event:payload"});
+
+success: end();
+
+failure: end();

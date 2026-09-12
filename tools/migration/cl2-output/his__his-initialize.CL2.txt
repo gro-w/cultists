@@ -1,0 +1,8 @@
+// CL2 export for activity his__his-initialize
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+refresh: emitEvent("content:hisRefresh", {"query":""});
+
+end: end();

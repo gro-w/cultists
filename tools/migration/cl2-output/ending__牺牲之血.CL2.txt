@@ -1,0 +1,86 @@
+// CL2 export for activity ending__牺牲之血
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+n000: emitEvent("content:showCg", {"cgId":"cg_ewexmk_f"}); // @cl2.pos 340,40
+
+n001: text("ending-screen", "narrator", "一个陌生的房间里。", "dlg:n001:continue"); // @cl2.pos 640,40
+
+n002: text("ending-screen", "binbin", "你醒了？", "dlg:n002:continue"); // @cl2.pos 940,40
+
+n003: text("ending-screen", "player", "彬彬？头……有点晕……我刚才是低血糖晕倒了吗？", "dlg:n003:continue"); // @cl2.pos 1240,40
+
+n004: text("ending-screen", "binbin", "是也不是。", "dlg:n004:continue"); // @cl2.pos 1540,40
+
+n005: text("ending-screen", "player", "我怎么什么都看不见？等一下……你把我绑在椅子上了？你……要做什么？", "dlg:n005:continue"); // @cl2.pos 1840,40
+
+n006: text("ending-screen", "binbin", "猜猜看呢？就像以前玩海龟汤的时候一样。", "dlg:n006:continue"); // @cl2.pos 2140,40
+
+n007: text("ending-screen", "player", "……", "dlg:n007:continue"); // @cl2.pos 2440,40
+
+n008: text("ending-screen", "binbin", "需要我重新讲一遍【规则】吗？你可以问任何问题，我只会回答是、不是、是也不是三种答案。限时10次。", "dlg:n008:continue"); // @cl2.pos 2740,40
+
+n009: text("ending-screen", "binbin", "怎么了，不想玩吗？猜错或不猜，都有惩罚。而且，你不是已经开始怀疑我了吗？你的调查笔记，并没有藏得很好呢。", "dlg:n009:continue"); // @cl2.pos 3040,40
+
+n010: text("ending-screen", "player", "你……你到底是什么人？", "dlg:n010:continue"); // @cl2.pos 3340,40
+
+n011: text("ending-screen", "binbin", "违规警告一次。你只能问能用是或否回答的问题。下次，可就不只是警告了。", "dlg:n011:continue"); // @cl2.pos 3640,40
+
+n012: text("ending-screen", "player", "你是大衮密教的教徒吗？", "dlg:n012:continue"); // @cl2.pos 3940,40
+
+n013: text("ending-screen", "binbin", "是也不是。", "dlg:n013:continue"); // @cl2.pos 4240,40
+
+n014: text("ending-screen", "player", "你是大衮密教的教主吗？", "dlg:n014:continue"); // @cl2.pos 4540,40
+
+n015: text("ending-screen", "binbin", "哈哈哈哈哈哈哈哈哈，是。", "dlg:n015:continue"); // @cl2.pos 4840,40
+
+n016: text("ending-screen", "player", "你想把我作为祭品献祭？", "dlg:n016:continue"); // @cl2.pos 5140,40
+
+n017: text("ending-screen", "binbin", "不是。", "dlg:n017:continue"); // @cl2.pos 5440,40
+
+n018: text("ending-screen", "player", "你想杀死我，把我的血肉作为深潜秘药的材料？", "dlg:n018:continue"); // @cl2.pos 5740,40
+
+n019: text("ending-screen", "binbin", "是，也不是。", "dlg:n019:continue"); // @cl2.pos 6040,40
+
+n020: text("ending-screen", "player", "你只是想杀死我……因为我曾冒犯过你？", "dlg:n020:continue"); // @cl2.pos 6340,40
+
+n021: text("ending-screen", "binbin", "不是。", "dlg:n021:continue"); // @cl2.pos 6640,40
+
+n022: text("ending-screen", "binbin", "真相是这样的。", "dlg:n022:continue"); // @cl2.pos 6940,40
+
+n023: text("ending-screen", "binbin", "我在你的腿部注射了麻醉剂，所以你动不了，也不会感到痛。我蒙上你的双眼，只是不想让你看到我如今的样子，以免你受到惊吓。", "dlg:n023:continue"); // @cl2.pos 7240,40
+
+n024: text("ending-screen", "binbin", "放心，只是断一双腿，多少人天生就失去双腿，这样所谓的“残缺”却激发了他们求生的意志。进步的意志。在装上义体之后，他们比所谓“健全”之人更高，更快，更强。", "dlg:n024:continue"); // @cl2.pos 7540,40
+
+n025: text("ending-screen", "binbin", "我们的计划只是智慧种族进步的一环。一人无足轻重的牺牲——甚至并非付出生命的代价，就能带来整个文明更伟大的利益。这难道不值得吗？", "dlg:n025:continue"); // @cl2.pos 7840,40
+
+n026: text("ending-screen", "binbin", "随我来吧，你的牺牲会被永远铭记，因你也会服下秘药，发下三重誓言，加入永生者的行列，永永远远做我的朋友。——不仅是朋友，我对你的情谊，早已超过“朋友”这种关系符号可以指代的一切。", "dlg:n026:continue"); // @cl2.pos 8140,40
+
+n027: text("ending-screen", "binbin", "让仪式开始吧。", "dlg:n027:continue"); // @cl2.pos 8440,40
+
+n028: text("ending-screen", "binbin", "Ia! Dagon! Iii! Hydra!", "dlg:n028:continue"); // @cl2.pos 8740,40
+
+n029: text("ending-screen", "binbin", "“““非人勤以求知，知者勤以求人，其知者非求人，实乃出而逐人。其刻深无情者，有如鹰犬逐兔。”””", "dlg:n029:continue"); // @cl2.pos 9040,40
+
+n030: text("ending-screen", "binbin", "为我扫清这片迷雾——让我得以窥见真实——", "dlg:n030:continue"); // @cl2.pos 9340,40
+
+n031: text("ending-screen", "binbin", "圣盐，圣盐，降福于这仪式，无使活人之身化为盐柱。", "dlg:n031:continue"); // @cl2.pos 9640,40
+
+n032: text("ending-screen", "binbin", "圣香，圣香，降福于这仪式，令活人之心如波形长存。", "dlg:n032:continue"); // @cl2.pos 9940,40
+
+n033: text("ending-screen", "binbin", "血肉，血肉，被迫献出，为这仪式付出轻如鱼鳞之代价。", "dlg:n033:continue"); // @cl2.pos 10240,40
+
+n034: text("ending-screen", "binbin", "Ia! Dagon! Iii! Hydra! 藉由大衮之印，完成这仪式，制成使活人超脱凡体之深潜秘药。", "dlg:n034:continue"); // @cl2.pos 10540,40
+
+n035: text("ending-screen", "player", "……", "dlg:n035:continue"); // @cl2.pos 10840,40
+
+n036: text("ending-screen", "binbin", "仪式已成。现在我给你两个选择——一是发下三重誓言，加入永生者的行列，永永远远做我的朋友。二是，二是，接受你注定的终局……", "dlg:n036:continue"); // @cl2.pos 11140,40
+
+n037: text("ending-screen", "player", "不……不……我宁愿死，死在你的手中，也不愿意变成怪物……", "dlg:n037:continue"); // @cl2.pos 11440,40
+
+n038: text("ending-screen", "binbin", "我计划了那么多，却仍旧没能让你接受我的情谊。", "dlg:n038:continue"); // @cl2.pos 11740,40
+
+n039: text("ending-screen", "binbin", "无论如何，是时候让你看见真相了。", "dlg:n039:continue"); // @cl2.pos 12040,40
+
+end: end(); // @cl2.pos 12340,40

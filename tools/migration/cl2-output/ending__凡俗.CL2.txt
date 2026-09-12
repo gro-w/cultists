@@ -1,0 +1,52 @@
+// CL2 export for activity ending__凡俗
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart(); // @cl2.pos 40,40
+
+cg_001: emitEvent("content:showCg", {"cgId":"cg_ewexmk_d"}); // @cl2.pos 340,40
+
+line_002: text("ending-screen", "player", "真是充实的一周。", "dlg:line_002:continue"); // @cl2.pos 640,40
+
+line_003: text("ending-screen", "player", "虽然发生了些奇怪的事，但似乎并没有什么影响。也许只是我疑神疑鬼，虚惊一场。", "dlg:line_003:continue"); // @cl2.pos 940,40
+
+line_004: text("ending-screen", "player", "过几天就要执业医师考试了，我得多刷点题。", "dlg:line_004:continue"); // @cl2.pos 1240,40
+
+line_005: text("ending-screen", "player", "……", "dlg:line_005:continue"); // @cl2.pos 1540,40
+
+line_006: text("ending-screen", "阿杰", "嗨害嗨，今天想不想吃火锅啊？", "dlg:line_006:continue"); // @cl2.pos 1840,40
+
+line_007: text("ending-screen", "player", "额，你们都不复习的吗？", "dlg:line_007:continue"); // @cl2.pos 2140,40
+
+line_008: text("ending-screen", "阿杰", "可是涮肉好好吃。", "dlg:line_008:continue"); // @cl2.pos 2440,40
+
+line_009: text("ending-screen", "binbin", "嗯嗯，猩红果实为引，动物尸片为祭，确实好吃。", "dlg:line_009:continue"); // @cl2.pos 2740,40
+
+line_010: text("ending-screen", "阿杰", "哎哎，你别吓我。", "dlg:line_010:continue"); // @cl2.pos 3040,40
+
+line_011: text("ending-screen", "awei", "这个彬彬就是逊啦。", "dlg:line_011:continue"); // @cl2.pos 3340,40
+
+line_012: text("ending-screen", "player", "牢kp发力了。说实话，我前几天真怀疑你们……算了不说了", "dlg:line_012:continue"); // @cl2.pos 3640,40
+
+line_013: text("ending-screen", "阿杰", "所以你们真不想吃火锅？", "dlg:line_013:continue"); // @cl2.pos 3940,40
+
+line_014: text("ending-screen", "awei", "杰哥不要，我也得复习呢。", "dlg:line_014:continue"); // @cl2.pos 4240,40
+
+line_015: text("ending-screen", "player", "那要不这样，咱考完试再一起去吃？", "dlg:line_015:continue"); // @cl2.pos 4540,40
+
+line_016: text("ending-screen", "binbin", "嗯……要么咱现在一起去图书馆自习吧。", "dlg:line_016:continue"); // @cl2.pos 4840,40
+
+line_017: text("ending-screen", "player", "同意。这个宿舍的环境，还是有点让人静不下心。", "dlg:line_017:continue"); // @cl2.pos 5140,40
+
+line_018: text("ending-screen", "阿杰", "gogogo出发喽！", "dlg:line_018:continue"); // @cl2.pos 5440,40
+
+line_019: text("ending-screen", "awei", "学就学，不学的是gay！", "dlg:line_019:continue"); // @cl2.pos 5740,40
+
+line_020: text("ending-screen", "binbin", "我都说了，别当我面玩这种烂梗……", "dlg:line_020:continue"); // @cl2.pos 6040,40
+
+line_021: text("ending-screen", "awei", "老大我错了。", "dlg:line_021:continue"); // @cl2.pos 6340,40
+
+line_022: text("ending-screen", "binbin", "算了，知错能改，善莫大焉，本教主宽宏大量，这次原谅你们，下次可就不一定喽。", "dlg:line_022:continue"); // @cl2.pos 6640,40
+
+line_023: text("ending-screen", "narrator", "宿舍里充满了快活的空气。", "dlg:line_023:continue"); // @cl2.pos 6940,40
+
+end: end(); // @cl2.pos 7240,40

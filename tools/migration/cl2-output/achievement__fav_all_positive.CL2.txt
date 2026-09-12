@@ -1,0 +1,8 @@
+// CL2 export for activity achievement__fav_all_positive
+// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.
+
+start: flowStart();
+
+unlock: emitEvent("achievement:display", {"achievementId":"fav_all_positive"});
+
+end: end();

@@ -8,6 +8,7 @@
     "databases": "databases.framework.json",
     "publicVariables": "public-variables.framework.json",
     "localVariables": "local-variables.framework.json",
+    "bgm": "bgm.json",
     "eventState": {
       "data": "onboarding.json",
       "events": {

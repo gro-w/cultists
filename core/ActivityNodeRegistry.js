@@ -34,6 +34,12 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("key", "string"), valueIn("value"), valueIn("delta", "number")],
   },
+  setGlobal: {
+    label: t("legacy.6e5239637e0e"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("variableId", "number"), valueIn("value"), valueIn("delta", "number")],
+  },
   appendToArrayVariable: {
     label: t("legacy.043ad239c775"),
     flowInputs: [flowIn()],
@@ -125,6 +131,34 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("apiId", "string"), valueIn("payload"), valueIn("resultVariable", "string")],
   },
+  playBgm: {
+    label: t("node.playBgm"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("bgmId", "string")],
+  },
+  stopBgm: {
+    label: t("node.stopBgm"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+  },
+  setBgmVolume: {
+    label: t("node.setBgmVolume"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("volume", "number")],
+  },
+  pushBgmLayer: {
+    label: t("node.pushBgmLayer"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("action", "string"), valueIn("bgmId", "string")],
+  },
+  restoreBgmLayer: {
+    label: t("node.restoreBgmLayer"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+  },
   // Generic database CRUD actions (plan §9.3). Every result is written into
   // `variableStore` under the node's own `resultVariable` input - the same
   // "write into a well-known variable, then read it with getVariable/
@@ -191,6 +225,11 @@ const definitions = {
   getVariable: {
     label: t("legacy.f8e5337b5ffe"),
     valueInputs: [valueIn("key", "string")],
+    valueOutputs: [valueOut("value")],
+  },
+  getGlobal: {
+    label: t("legacy.f8e5337b5ffe"),
+    valueInputs: [valueIn("variableId", "number")],
     valueOutputs: [valueOut("value")],
   },
   // Reads one field off an object value (e.g. a `getRecord`/`findRecords`
@@ -349,6 +388,31 @@ const definitions = {
     flowOutputs: [flowOut()],
     valueInputs: [valueIn("activityId", "string"), valueIn("queue", "string"), valueIn("addTime", "number")],
   },
+  consumeTime: {
+    label: t("legacy.611b518dad60"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("minutes", "number")],
+  },
+
+  insertSchedule: {
+    label: t("legacy.611b518dad60"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("scheduleId", "string"), valueIn("queue", "string"), valueIn("addTime", "number"), valueIn("respectPrerequisite", "bool"), valueIn("protectFromExpiry", "bool")],
+  },
+  getScheduleInstanceCount: {
+    label: t("legacy.137795627288"),
+    valueInputs: [valueIn("scheduleId", "string")],
+    valueOutputs: [valueOut("value", "number")],
+  },
+  statOperation: {
+    label: t("legacy.908400ca4f67"),
+    flowInputs: [flowIn()],
+    flowOutputs: [flowOut()],
+    valueInputs: [valueIn("statId", "string"), valueIn("value"), valueIn("delta", "number")],
+  },
+
 
 
   segmentBranch: {

@@ -33,6 +33,14 @@ export function normalizeBlueprint(raw) {
   const nodes = {};
   for (const [id, node] of Object.entries(source.nodes || {})) {
     nodes[id] = { ...clone(node), id: node?.id || id, inputs: { ...(node?.inputs || {}) }, next: { ...(node?.next || {}) } };
+    if (node?.type === "choice" && Array.isArray(node.options)) {
+      nodes[id].inputs.options = clone(node.options);
+      nodes[id].inputs.optionCount = Number(node.inputs?.optionCount ?? node.inputs?.branchCount ?? node.options.length);
+      nodes[id].inputs.selectionKey ||= `choice:${id}`;
+      node.options.forEach((option, index) => {
+        if (option?.next) nodes[id].next[`option${index}`] = { nodeId: option.next, port: "flowIn" };
+      });
+    }
   }
   // Back-compat: fold a legacy flat `connections` array (fromNodeId/
   // fromPort/toNodeId/toPort) into the next/inputs-only shape on load, so
@@ -80,8 +88,10 @@ export function validateBlueprint(raw) {
       // option5); only the first `optionCount` of them are required to be
       // wired, the rest are simply unused ports, not validation errors.
       const optionCount = Number(node.inputs?.optionCount) || 0;
-      const outputPorts = node.type === "choice" && optionCount > 0
-        ? flowPorts("output", definition).slice(0, optionCount)
+      const branchCount = node.type === "framework:randomBranch" ? Number(node.inputs?.n) || 0 : 0;
+      const requiredCount = node.type === "choice" ? optionCount : branchCount;
+      const outputPorts = requiredCount > 0
+        ? flowPorts("output", definition).slice(0, requiredCount)
         : flowPorts("output", definition);
       for (const port of outputPorts) {
         const target = node.next?.[port.name];

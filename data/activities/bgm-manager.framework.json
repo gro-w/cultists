@@ -1,0 +1,13 @@
+{
+  "id": "bgm-manager",
+  "displayName": "BGM 管理器",
+  "type": "manager",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"ready","port":"flowIn"}}},
+      "ready": {"id":"ready","type":"emitEvent","inputs":{"eventName":"bgm:manager-ready","payload":{"source":"bgm-manager"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},
+      "end": {"id":"end","type":"activityEnd","inputs":{}}
+    }
+  }
+}

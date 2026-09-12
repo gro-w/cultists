@@ -697,6 +697,28 @@
     "fields":[{"id":"day","type":"integer"},{"id":"exchanges","type":"array"}]
   },
   {
+    "id":"bgmTrack",
+    "fields":[
+      {"id":"id","type":"string"},
+      {"id":"name","type":"string"},
+      {"id":"src","type":"string"},
+      {"id":"note","type":"string","default":""}
+    ]
+  },
+  {
+    "id":"bgmRule",
+    "fields":[
+      {"id":"id","type":"string"},
+      {"id":"dayMin","type":"integer"},
+      {"id":"dayMax","type":"integer"},
+      {"id":"phase","type":"string"},
+      {"id":"sanMin","type":"integer"},
+      {"id":"sanMax","type":"integer"},
+      {"id":"bgmId","type":"string"},
+      {"id":"priority","type":"integer"}
+    ]
+  },
+  {
     "id":"dailyImports",
     "fields":[{"id":"day","type":"integer"},{"id":"pairs","type":"array"}]
   }

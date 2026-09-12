@@ -40,6 +40,7 @@ import { EventActivityRouter } from "./EventActivityRouter.js";
 import { I18nManager } from "./i18n/I18nManager.js";
 import { setActiveI18nManager } from "./i18n/index.js";
 import { t } from "./i18n/index.js";
+import { AudioPlaybackService } from "./AudioPlaybackService.js";
 
 export function isDevEntry(search = typeof location !== "undefined" ? location.search : "") {
   return search === "?dev";
@@ -77,6 +78,8 @@ export async function bootstrap(rootEl) {
     rules: config.stateBoundary?.rules || {},
   });
   const variableStore = new VariableStore(eventBus);
+  const audioPlayback = new AudioPlaybackService({ dataLoader, variableStore });
+  await audioPlayback.mount("bgm.json");
   const i18n = new I18nManager({ eventBus, language: config.language || "zh-cn", supportedLanguages: config.supportedLanguages });
   setActiveI18nManager(i18n);
   Object.entries(config.initialVariables || {}).forEach(([key, value]) => {
@@ -224,7 +227,7 @@ export async function bootstrap(rootEl) {
     saveableVariable: content.saveableVariable,
     activityExecutionService: null, resumePendingActivities: () => {}, engineVersion: config.version,
   });
-  const apiGateway = createApiRegistry({ eventBus, variableStore, publicVariableManager: publicVariables, activityQueueRegistry: queues, shell, timeService, dataStore, runtimeGateway });
+  const apiGateway = createApiRegistry({ eventBus, variableStore, publicVariableManager: publicVariables, activityQueueRegistry: queues, shell, timeService, dataStore, runtimeGateway, audioPlayback });
   apiGateway.register("engine.stateBoundary.toggle", () => stateBoundary.toggleDuty());
   apiGateway.register("engine.stateBoundary.sleep", () => stateBoundary.sleep());
   apiGateway.register("engine.stateBoundary.location", ({ location } = {}) => stateBoundary.requestLocation(location));
@@ -430,5 +433,5 @@ export async function bootstrap(rootEl) {
     const instance = enqueueActivity(startup.activityId, startup.queueId || "main");
     if (instance) consumer.consume(startup.queueId || "main");
   }
-  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, i18n, contentPackage: content, eventRouter, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, stateBoundary, iconManager, saveManager, eventStateRegistry: eventState };
+  return { eventBus, windowManager, windowDefinitionStore: windowDefinitions, shell, variableStore, i18n, audioPlayback, contentPackage: content, eventRouter, activityDefinitionStore: activityDefinitions, activityQueueRegistry: queues, activityExecutionService: execution, activityApi: { enqueue: enqueueActivity, run: runActivity, read: (q, id) => queues.getEntry(q, id), list: (q, f) => queues.listEntries(q, f), update: (q, id, p) => queues.updateEntry(q, id, p), complete: (q, id) => queues.completeEntry(q, id), cancel: (q, id) => queues.cancelEntry(q, id), consume: (q) => consumer.consume(q), callApi: (id, payload) => apiGateway.call(id, payload), apis: () => apiGateway.list() }, dataLoader, dataStore, dataStructureManager: structures, publicVariableManager: publicVariables, gameClock, timeService, stateBoundary, iconManager, saveManager, eventStateRegistry: eventState };
 }

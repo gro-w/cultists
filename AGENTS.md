@@ -29,12 +29,14 @@
 ### `framework`
 
 - `framework` 实现可复用的预制系统和通用 UI 行为，必须使用 NGL 蓝图及数据文件，不得新增业务 JavaScript。工作时间、`phase`、`duty`、`location`、上下班/睡眠边界、工作状态机和通用时间规则都属于 framework。
+- BGM 的策略管理归 framework：`data/activities/bgm-manager.framework.json` 是 NGL 管理器，通过 core API/NGL 节点控制播放；BGM 曲目和规则属于 game 的自定义数据结构，不得把具体曲目 ID 写进 core。
 - 需要宿主能力时，先在 `core` 增加领域无关的能力，再通过类型安全的 NGL 节点调用；禁止为单个业务添加 JavaScript 快捷入口。
 - framework 不得依赖 game，也不得把具体游戏概念写进 core。
 
 ### `game`
 
 - `game` 实现本项目的医疗、患者、宿舍、日历、社交、物品、成就、结局、应用、剧情和业务 Activity，必须使用 NGL 蓝图及数据文件。
+- game 的 BGM 配置位于 `data/bgm.json`；音频 `src` 使用稳定曲目 ID 关联，素材缺失时必须如实报告，不得用占位资源冒充迁移完成。
 - 不得在 game 中新增原生 JavaScript 业务模块、业务管理器或绕过 Activity 执行系统的副作用。
 - 业务数据、蓝图定义、窗口定义和能力注册通过稳定 ID 与明确 schema 连接。
 
@@ -53,6 +55,7 @@
 - 运行时集合还可通过通用 `activityQueueId` 投影 Activity 队列；core 只负责队列记录和可选 payload 投影，具体联系人/业务字段必须由 framework/game 数据声明，队列变化通过 `runtime:collection-changed` 驱动窗口刷新。
 - Activity 的对话 transcript 可随实例保存，并通过通用回放能力向声明的 display receiver 重放；回放只能发送已保存的显示事件，不得重新执行蓝图或产生时间、资源和剧情副作用。
 - 蓝图节点只能使用项目定义的合法端口组合；新增节点必须同时通过 schema 校验、运行时探针和相关编辑器验证。
+- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言目前是设计草案，规范见 [`docs/cl2-language.md`](docs/cl2-language.md)；当前运行时仍以 NGL 蓝图和现有数据契约为准。CL2 采用显式节点 ID、`option<x>` 分支、`default` 默认出口、纯值函数和 `if` 回边，不得在未完成解析器、编辑器、运行时和迁移验证前声称已完成格式迁移。
 
 ## 数据、版权和字体
 

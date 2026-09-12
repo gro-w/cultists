@@ -21,8 +21,8 @@ import { t } from "./i18n/index.js";
 import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
 
 const ONE_SHOT_NODE_TYPES = new Set([
-  "setVariable", "setLocalVariable", "openWindow", "closeWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
-  "setLanguage", "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect", "markEventState",
+  "setVariable", "setGlobal", "setLocalVariable", "consumeTime", "insertSchedule", "openWindow", "closeWindow", "runActivity", "insertActivity", "emitEvent", "addWindowComponent", "removeWindowComponent", "getWindowLayout",
+  "setLanguage", "createRecord", "updateRecord", "deleteRecord", "applyPublicVariableEffect", "markEventState", "playBgm", "stopBgm", "setBgmVolume", "pushBgmLayer", "restoreBgmLayer",
 ]);
 const MAX_STEPS = 1000;
 
@@ -110,6 +110,9 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
     case "getActivityInstanceCount":
       result = variableStore.get(`__activityCount:${read("activityId")}`) ?? 0;
       break;
+    case "getScheduleInstanceCount":
+      result = variableStore.get(`__scheduleCount:${read("scheduleId")}`) ?? 0;
+      break;
     case "getQueueEntryCount":
       if (!runtimeGateway?.listEntries) throw new Error(t("error.a54f6a6d6d07"));
       result = runtimeGateway.listEntries(read("queueId"), { status: "unresolved" }).length;
@@ -182,7 +185,8 @@ function applyArithmetic(operator, left, right) {
     case ">=": return left >= right;
     case "<": return left < right;
     case "<=": return left <= right;
-    case "=": return left === right;
+    case "=":
+    case "eq": return left === right;
     case "not": return !Boolean(left);
     case "floor": return Math.floor(Number(left));
     // Generic entropy source: composed with value and flow operators,
@@ -318,6 +322,13 @@ export function createActivityRunner({
         }
         return { next: nextFlow(blueprint, node) };
       }
+      case "setGlobal": {
+        if (!pvGateway) throw new Error(`Node ${node.type} requires a pvGateway`);
+        const id = resolveInput(blueprint, node, "variableId", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+        if (Object.prototype.hasOwnProperty.call(node.inputs || {}, "delta")) pvGateway.increment(id, resolveInput(blueprint, node, "delta", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway));
+        else pvGateway.set(id, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
+        return { next: nextFlow(blueprint, node) };
+      }
       case "appendToArrayVariable": {
         const key = resolveInput(blueprint, node, "key", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         const current = variableStore.get(key);
@@ -420,6 +431,18 @@ export function createActivityRunner({
         activityGateway(activityId, queueId, instance, node, payload);
         return { next: nextFlow(blueprint, node) };
       }
+      case "consumeTime": {
+        timeGateway(Number(resolveInput(blueprint, node, "minutes", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway)) || 0);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "insertSchedule": {
+        eventGateway("schedule:insert", {
+          scheduleId: resolveInput(blueprint, node, "scheduleId", variableStore, "", undefined, pvGateway, dbGateway, runtimeGateway),
+          queueId: resolveInput(blueprint, node, "queue", variableStore, "main", undefined, pvGateway, dbGateway, runtimeGateway),
+          addTime: resolveInput(blueprint, node, "addTime", variableStore, 0, undefined, pvGateway, dbGateway, runtimeGateway),
+        }, instance, node);
+        return { next: nextFlow(blueprint, node) };
+      }
 
 
       case "segmentBranch": {
@@ -442,6 +465,34 @@ export function createActivityRunner({
         const result = apiGateway.call(apiId, payload, instance, node);
         const resultVariable = resolveInput(blueprint, node, "resultVariable", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
         if (resultVariable) variableStore.set(resultVariable, result);
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "playBgm": {
+        if (!apiGateway?.call) throw new Error("Node playBgm requires an apiGateway");
+        apiGateway.call("audio.playLoop", { trackId: resolveInput(blueprint, node, "bgmId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway) });
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "stopBgm": {
+        if (!apiGateway?.call) throw new Error("Node stopBgm requires an apiGateway");
+        apiGateway.call("audio.stop");
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "setBgmVolume": {
+        if (!apiGateway?.call) throw new Error("Node setBgmVolume requires an apiGateway");
+        apiGateway.call("audio.volume", { volume: resolveInput(blueprint, node, "volume", variableStore, 100, undefined, pvGateway, dbGateway, runtimeGateway) });
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "pushBgmLayer": {
+        if (!apiGateway?.call) throw new Error("Node pushBgmLayer requires an apiGateway");
+        apiGateway.call("audio.layer", {
+          action: resolveInput(blueprint, node, "action", variableStore, "play", undefined, pvGateway, dbGateway, runtimeGateway),
+          trackId: resolveInput(blueprint, node, "bgmId", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway),
+        });
+        return { next: nextFlow(blueprint, node) };
+      }
+      case "restoreBgmLayer": {
+        if (!apiGateway?.call) throw new Error("Node restoreBgmLayer requires an apiGateway");
+        apiGateway.call("audio.layer", { action: "restore" });
         return { next: nextFlow(blueprint, node) };
       }
       case "createRecord":

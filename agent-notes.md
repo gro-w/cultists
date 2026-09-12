@@ -28,7 +28,11 @@ media/                     历史宣传资源和设计稿
 
 当前 manifest 的主要连接关系：`game-manifest.json` → `framework-manifest.json`、`activity-manifest.json`、窗口 manifest、数据库、公共变量、本地变量和 Activity 列表。默认 Activity 是 `default`，队列定义包含 `work`、`social`、`managers`、`main` 以及窗口/Widget/桌面事件队列。
 
+CL2（Cultists Blueprint & Script Language 2）统一脚本图语言的设计草案位于 `docs/cl2-language.md`。它是直接等效于 Blueprint Graph 的文本表示，不以 JSON 作为第二份 canonical 图定义：流程节点必须有显式 ID，流程边使用 `option<x>` 和 `default`，纯值节点使用方括号函数和 `reusablevalue`，循环通过 `if` 回边表达。当前运行时仍使用 NGL，CL2 只有在解析器、编辑器、运行时和迁移验证完成后才能替换现有格式。
+
 设置窗口已迁移到 `data/windows/settings.json`，由桌面图标 `settings` 打开；四项设置分别绑定 `settings:bgmVolume`、`settings:notebookSortMode`、`settings:confirmPhaseChange` 和 core 语言节点。该窗口不新增业务 JavaScript。
+
+BGM 已按三层接入：`data/bgm.json` 保存旧引擎迁移的曲目与 schedule 规则，`data/structures.framework.json` 声明 `bgmTrack`/`bgmRule` 自定义结构；core 的 `playBgm`、`stopBgm`、`setBgmVolume`、`pushBgmLayer`、`restoreBgmLayer` 节点只调用通用音频宿主 API；framework 的 `data/activities/bgm-manager.framework.json` 是 NGL 管理器。旧工程目录中没有音频二进制文件，因此当前只迁移了配置与控制层，音频素材仍需外部补齐。
 
 位置场景窗口 `data/windows/location-scene.json` 现在从 `locations` canonical database 读取当前地点的 `name`、`backgroundImage` 和 `subLocations`，以通用 list Widget 显示可调查区域；医院、火锅店和海边没有子区域时列表保持为空，不伪造交互状态。
 
@@ -117,6 +121,7 @@ node tools/verify-publish.js
 
 - [`AGENTS.md`](AGENTS.md)：代理必须遵守的架构、版权、字体、修改和验证规则。
 - [`README.md`](README.md)：面向玩家、贡献者和普通读者的项目介绍。
+- [`docs/cl2-language.md`](docs/cl2-language.md)：CL2 统一脚本图语言设计草案。
 - `data/game-manifest.json`：当前内容包入口和初始状态。
 - `data/framework-manifest.json`：framework 文档与通用运行时连接。
 - `data/activity-manifest.json`：Activity ID 到蓝图文件的清单。

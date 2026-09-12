@@ -5,6 +5,7 @@
   "frameworkCollections": "framework-runtime.framework.json",
   "contentRoot": "data/",
   "nativeContent": [
+    "bgm.json",
     "media.json",
     "calendar-rules.json",
     "item-placements.json",

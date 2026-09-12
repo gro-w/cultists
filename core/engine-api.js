@@ -1,4 +1,4 @@
-export function createApiRegistry({ eventBus: bus, variableStore, publicVariableManager, activityQueueRegistry, shell, timeService, dataStore, runtimeGateway }) {
+export function createApiRegistry({ eventBus: bus, variableStore, publicVariableManager, activityQueueRegistry, shell, timeService, dataStore, runtimeGateway, audioPlayback = null }) {
   const handlers = new Map([
     ["engine.getVariable", ({ key }) => variableStore.get(key)],
     ["engine.setVariable", ({ key, value }) => (variableStore.set(key, value), value)],
@@ -24,6 +24,10 @@ export function createApiRegistry({ eventBus: bus, variableStore, publicVariable
     ["engine.queue.cancel", ({ queueId = "main", instanceId }) => activityQueueRegistry.cancelEntry(queueId, instanceId)],
     ["engine.queue.remove", ({ queueId = "main", instanceId }) => activityQueueRegistry.removeEntry(queueId, instanceId)],
     ["engine.openWindow", ({ windowId }) => (shell.openWindow(windowId), true)],
+    ["audio.playLoop", ({ trackId }) => audioPlayback?.play(trackId) || { ok: false, reason: "audio-unavailable" }],
+    ["audio.stop", () => audioPlayback?.stop() || { ok: false, reason: "audio-unavailable" }],
+    ["audio.volume", ({ volume }) => audioPlayback?.setVolume(volume) ?? 0],
+    ["audio.layer", ({ action, trackId }) => audioPlayback?.applyLayer(action, trackId) || { ok: false, reason: "audio-unavailable" }],
   ]);
   return {
     call(apiId, payload = {}) {

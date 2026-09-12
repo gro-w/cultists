@@ -1,6 +1,9 @@
 {
   "files": [
+    "bgm.json",
     "activities/achievement-manager.framework.json",
+    "activities/bgm-manager.framework.json",
+
     "activities/achievement__all_texts_read.json",
     "activities/achievement__ending_any.json",
     "activities/achievement__exam_pass.json",

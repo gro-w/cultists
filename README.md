@@ -8,6 +8,7 @@
 
 - 原生 HTML、CSS 和 ES modules，无框架、无 bundler、无构建步骤
 - JSON 与 NGL 蓝图驱动的 Activity、对话、医疗、物品、关键词、成就、结局、公共变量和 Activity 本地变量
+- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言设计草案：以显式节点、`option<x>`、`default` 和纯值表达式直接表示蓝图图结构
 - Windows 95 风格桌面、任务栏、开始菜单、窗口和数据驱动应用
 - 医院工作与宿舍生活两种场景，以及工作、社交、管理器和主活动队列
 - 确定性的游戏时钟：普通行动默认推进 20 分钟，睡眠和跨日按明确边界结算
@@ -15,6 +16,7 @@
 - 开发模式、canonical 数据编辑器、运行时调试器和确定性探针
 - Core 与开发人员模式 i18n locale 模块、语言管理器和蓝图语言节点；用户可见字符串集中存放于 `core/i18n/xx-xx.js`
 - 数据驱动设置窗口：可调整 BGM 音量、笔记本排序、阶段切换确认和界面语言
+- 分层 BGM：game 数据保存曲目/规则，framework 管理优先级，NGL 节点控制播放、停止、音量和临时层恢复
 - 位置场景窗口从 canonical 位置数据库显示当前地点背景和可调查区域
 
 ## 本地运行
@@ -104,5 +106,6 @@ Cultists 引擎（`core` 与 `framework`）遵循根目录 [`copying.txt`](copyi
 - 修改引擎或迁移游戏数据后，应同步检查并更新 `AGENTS.md`、`agent-notes.md` 和本文件，分别保持代理规则、开发补充信息和人类阅读版说明一致
 - [`AGENTS.md`](AGENTS.md)：贡献者和编码代理必须遵守的工程规则
 - [`agent-notes.md`](agent-notes.md)：目录、manifest、运行时职责和维护命令的补充说明
+- [`docs/cl2-language.md`](docs/cl2-language.md)：CL2 统一脚本图语言设计草案；当前运行时仍以 NGL 为准
 - `data/game-manifest.json`：当前融合引擎的内容入口
 - `tools/publish.js`：玩家版发布脚本

@@ -109,6 +109,11 @@
       "file": "achievement-manager.framework.json"
     },
     {
+      "id": "bgm-manager",
+      "file": "bgm-manager.framework.json"
+    },
+
+    {
       "id": "inventory-manager",
       "file": "inventory-manager.framework.json"
     },

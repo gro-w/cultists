@@ -122,6 +122,7 @@ function fireChange(widgetId, value) {
   assert.equal(prescriptionRows.children[0].events.onAdd.nodes.add.type, "addWindowComponent");
   assert.equal(prescriptionRows.children[0].events.onAdd.nodes.add.inputs.maxCount, 5);
   assert.equal(prescriptionRows.children[0].events.onRemove.nodes.remove.type, "removeWindowComponent");
+  assert.deepEqual(prescriptionRows.children[0].events.onRemove.nodes.remove.inputs.componentId, { variable: "event:componentId" });
 }
 
 // --- onCreate loads the roster + category reference data -----------------

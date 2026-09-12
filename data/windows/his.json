@@ -1258,7 +1258,7 @@
                             "inputs": {
                               "windowId": "his",
                               "componentId": {
-                                "variable": "his:lastPrescriptionComponentId"
+                                "variable": "event:componentId"
                               }
                             },
                             "next": {

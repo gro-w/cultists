@@ -499,7 +499,7 @@ export function renderWidgetNode(node, ctx = {}) {
       el.appendChild(summary);
     }
     for (const child of node.children || []) {
-      const childEl = renderWidgetNode(child, ctx);
+      const childEl = renderWidgetNode(child, { ...ctx, componentParent: node });
       applyStackPosition(childEl, child, node, ctx);
       el.appendChild(childEl);
     }
@@ -524,6 +524,9 @@ export function renderWidgetNode(node, ctx = {}) {
       remove.className = "win95-btn bevel-out his-prescription-delete";
       remove.textContent = "−";
       remove.title = t("legacy.fcd6a3765d0c");
+      const siblings = ctx.componentParent?.children || [];
+      const siblingCount = siblings.filter((sibling) => sibling.className === node.className).length;
+      remove.disabled = siblingCount <= 1;
       remove.addEventListener("click", (event) => {
         event.preventDefault();
         event.stopPropagation();

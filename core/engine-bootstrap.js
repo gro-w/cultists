@@ -343,6 +343,7 @@ export async function bootstrap(rootEl) {
     /* DEV-TOOLS:END */
     if (!blueprint) return null;
     if (value !== undefined) variableStore.set("event:value", value);
+    if (widgetId) variableStore.set("event:componentId", widgetId);
     return runInlineBlueprint(widgetEventsQueue, `widget:${windowId}:${widgetId}:${eventName}`, blueprint);
   }
   function runIconBlueprint(icon) {

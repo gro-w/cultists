@@ -971,6 +971,12 @@ input[type="range"] {
   line-height: 1.4;
 }
 
+.ng-dialogue-keyword {
+  color: var(--w95-blue, #000080);
+  font-weight: 700;
+  text-decoration: underline dotted;
+}
+
 .ng-dialogue-speaker {
   font-weight: bold;
 }

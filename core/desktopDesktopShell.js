@@ -43,7 +43,10 @@ export class DesktopShell {
     this.runWidgetEvent = null;
     this.frames = new Map(); // instanceId -> WindowFrame
     this.runtimeRoots = new Map(); // instanceId -> mutable runtime widget tree
-    this.runtimeComponentSeq = 0;
+    // The definition already owns the first prescription row (suffix 1).
+    // Start generated rows at 2 so the first clone cannot share row 1's
+    // variable bindings.
+    this.runtimeComponentSeq = 1;
     this._buildDom();
     this._bindEvents();
     this._startClock();
@@ -152,19 +155,18 @@ export class DesktopShell {
 
   _cloneRuntimeComponent(component, sequence) {
     const suffix = String(sequence);
-    const rewrite = (value) => {
-      if (Array.isArray(value)) return value.map(rewrite);
+    const rewriteVariableRefs = (value) => {
+      if (Array.isArray(value)) return value.map(rewriteVariableRefs);
       if (!value || typeof value !== "object") {
         if (typeof value !== "string") return value;
-        // Dynamic HIS rows carry their instance number in both widget IDs and
-        // variable keys.  Rows added from an already-cloned row must advance
-        // the previous suffix as well; replacing only a literal trailing `1`
-        // made row 3+ share row 2's variables.
-        return value.replace(/((?:[:\-])[A-Za-z_][\w-]*?)(\d+)$/g, `$1${suffix}`);
+        // Only rewrite stable variable bindings.  Rewriting every string also
+        // changed inline blueprint node IDs without changing the `nodes` map
+        // keys, leaving cloned row event flows pointing at missing nodes.
+        return value.replace(/^(his:[A-Za-z_][\w-]*?)(\d+)$/g, `$1${suffix}`);
       }
-      return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child)]));
+      return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewriteVariableRefs(child)]));
     };
-    const out = rewrite(component);
+    const out = rewriteVariableRefs(structuredClone(component));
     const visit = (node, isRoot = false) => {
       if (!node || typeof node !== "object") return;
       if (!isRoot && typeof node.widgetId === "string") node.widgetId += `-${suffix}`;

@@ -76,7 +76,7 @@ export class TextChoiceWidget {
       speaker.textContent = `${payload.speaker}：`;
       line.appendChild(speaker);
     }
-    line.appendChild(document.createTextNode(payload.text || ""));
+    this._appendTextWithKeywords(line, payload.text, payload.keywordIds);
     this.transcriptEl.appendChild(line);
     this.controlsEl.replaceChildren();
     if (payload.continueKey) {
@@ -88,6 +88,27 @@ export class TextChoiceWidget {
       this.controlsEl.appendChild(button);
     }
     this.transcriptEl.scrollTop = this.transcriptEl.scrollHeight;
+  }
+
+  _appendTextWithKeywords(parent, text, keywordIds = []) {
+    const source = String(text || "");
+    const allowed = new Set(Array.isArray(keywordIds) ? keywordIds.map((id) => String(id)) : []);
+    const marker = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
+    let cursor = 0;
+    let match;
+    while ((match = marker.exec(source))) {
+      if (match.index > cursor) parent.appendChild(document.createTextNode(source.slice(cursor, match.index)));
+      const id = String(match[1]).trim();
+      const label = match[2] === undefined ? id : match[2];
+      const keyword = document.createElement("span");
+      keyword.className = "ng-dialogue-keyword";
+      keyword.dataset.keywordId = id;
+      if (allowed.size && !allowed.has(id)) keyword.classList.add("is-unlisted");
+      keyword.textContent = label;
+      parent.appendChild(keyword);
+      cursor = match.index + match[0].length;
+    }
+    if (cursor < source.length) parent.appendChild(document.createTextNode(source.slice(cursor)));
   }
 
   _onChoice(payload) {

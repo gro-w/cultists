@@ -29,16 +29,30 @@ export default class EndingScreen {
     });
     endingManager.onReset(() => this.hide());
     eventBus.on("ending:debug-event-requested", ({ endingId, ending, event }) => {
-      if (!endingId || !ending || !event) return;
+      // Pure special-event debug playback: show the event blueprint from its
+      // real startNodeId; no ending card is appended when it completes.
+      if (endingId == null && ending == null && event?.blueprint) {
+        this._debugEventEndingId = "__none__";
+        this.show({ ...event, id: event.id, blueprintScheduleId: event.id, debugEventOnly: true });
+        return;
+      }
+      if (!endingId || !ending) return;
+      // event === null: mechanism-triggered ending with no source special event.
+      // Play the ending's own blueprint from its real startNodeId instead.
+      const eventDef = event || null;
+      const ownBlueprint = ending.blueprint || ending.dialogueTree || null;
+      if (!eventDef && !ownBlueprint) return;
       this._debugEventEndingId = String(endingId);
-      this.show({
-        ...event,
-        ...ending,
-        id: ending.id,
-        blueprintScheduleId: event.id,
-        blueprint: event.blueprint,
-        dialogueTree: event.dialogueTree,
-      });
+      this.show(eventDef
+        ? {
+          ...eventDef,
+          ...ending,
+          id: ending.id,
+          blueprintScheduleId: eventDef.id,
+          blueprint: eventDef.blueprint,
+          dialogueTree: eventDef.dialogueTree,
+        }
+        : { ...ending, id: ending.id, blueprintScheduleId: ending.id });
     });
   }
 
@@ -48,13 +62,11 @@ export default class EndingScreen {
       <div class="ending-gal-screen">
         <div class="ending-gal-scene">
           <div class="ending-gal-cg"></div>
-          <div class="ending-gal-character ending-gal-player" data-ending-speaker="player"><img class="ending-gal-portrait" src="data/assets/player_portrait.png" alt="主控" draggable="false"></div>
+          <div class="ending-gal-character ending-gal-player" data-ending-speaker="player"></div>
           <div class="ending-gal-character ending-gal-npc" data-ending-speaker="binbin"></div>
         </div>
         <div class="ending-screen-panel">
-          <div class="ending-screen-icon">${def.icon || "🌑"}</div>
-          <h2 class="ending-screen-title">${def.title || ""}</h2>
-          <div class="ending-schedule-status">正在加载结局活动……</div>
+          <h2 class="ending-screen-title">${def.debugEventOnly ? (def.name || def.id || "") : (def.title || "")}</h2>
           <div class="ending-schedule-log" aria-live="polite"></div>
           <div class="dialogue-options ending-schedule-options"></div>
           <div class="ending-final hidden">
@@ -72,17 +84,54 @@ export default class EndingScreen {
     const cgEl = this.rootEl.querySelector(".ending-gal-cg");
     const playerEl = this.rootEl.querySelector('[data-ending-speaker="player"]');
     const npcEl = this.rootEl.querySelector('[data-ending-speaker="binbin"]');
+    // Load every character's portraits once; the stage shows the current speaker's
+    // portrait and hides whoever is not talking. The player entry (id "player")
+    // is editable in the same character list as every NPC.
+    let portraitsByNpc = {};
     dataLoader.loadJSON("npcs.json").then((data) => {
       if (token !== this._runToken) return;
-      const npc = (data.npcs || []).find((item) => item.id === "binbin");
-      const endingPortrait = (npc?.endingPortraits || []).find(
-        (item) => item.endingId === def.id && item.imageData,
-      );
-      const portrait = endingPortrait || (npc?.portraits || []).find((item) => item.imageData);
-      if (portrait) {
-        npcEl.innerHTML = `<img class="ending-gal-portrait" src="${portrait.imageData}" alt="彬彬" draggable="false">`;
+      for (const npc of (data.npcs || [])) {
+        const endingPortrait = (npc.endingPortraits || []).find(
+          (item) => item.endingId === def.id && item.imageData,
+        );
+        const portrait = endingPortrait || (npc.portraits || []).find((item) => item.imageData);
+        if (portrait) portraitsByNpc[npc.id] = portrait.imageData;
       }
-    }).catch(() => {});
+      // Stage always has the protagonist on the left, from the editable entry
+      // when available, else the static asset.
+      if (!portraitsByNpc.player) portraitsByNpc.player = "data/assets/player_portrait.png";
+    }).catch(() => { portraitsByNpc.player = "data/assets/player_portrait.png"; });
+    // Map every speaker label the data may use to a stable character id.
+    const speakerNpcIds = { 主控: "player", player: "player", 彬彬: "binbin", 阿杰: "ajie", 阿伟: "awei", binbin: "binbin", ajie: "ajie", awei: "awei", 克苏鲁: "new_npc_4", 大衮: "new_npc_5", 海德拉: "new_npc_6" };
+    const stageElFor = (npcId) => (npcId === "player" ? playerEl : npcEl);
+    const setNpcStage = (speaker) => {
+      const npcId = speakerNpcIds[speaker];
+      const imageData = npcId ? portraitsByNpc[npcId] : null;
+      const stageEl = npcId ? stageElFor(npcId) : npcEl;
+      if (imageData && npcId) {
+        if (stageEl.dataset.npcId !== npcId) {
+          stageEl.dataset.npcId = npcId;
+          stageEl.innerHTML = `<img class="ending-gal-portrait" src="${imageData}" alt="${speaker}" draggable="false">`;
+        }
+        stageEl.classList.remove("hidden");
+        stageEl.style.opacity = "1";
+      } else if (npcId) {
+        stageEl.classList.add("hidden");
+        stageEl.replaceChildren();
+        delete stageEl.dataset.npcId;
+      }
+    };
+    const setStage = (speaker) => {
+      const npcId = speakerNpcIds[speaker];
+      if (npcId) {
+        setNpcStage(speaker);
+        // Whoever is not talking leaves the stage entirely.
+        const otherEl = npcId === "player" ? npcEl : playerEl;
+        otherEl.classList.add("hidden");
+        otherEl.replaceChildren();
+        delete otherEl.dataset.npcId;
+      }
+    };
     this._eventOffs.push(eventBus.on("cg:show", ({ imageData }) => {
       if (token !== this._runToken) return;
       if (imageData) cgEl.style.backgroundImage = `url("${imageData}")`;
@@ -110,8 +159,8 @@ export default class EndingScreen {
       textEl.textContent = text;
       line.append(speakerEl, textEl);
       logEl.appendChild(line);
-      playerEl.classList.toggle("ending-gal-active", speaker === "player");
-      npcEl.classList.toggle("ending-gal-active", speaker !== "player" && speaker !== "narrator");
+      // Only the current speaker stands on stage, at full opacity and clarity.
+      setStage(speaker);
     };
     const optionsEl = this.rootEl.querySelector(".ending-schedule-options");
     optionsEl.addEventListener("click", continueCapture, true);
@@ -134,18 +183,17 @@ export default class EndingScreen {
       ? def
       : scheduleData.definition(playbackScheduleId);
     if (!(playbackDefinition?.blueprint || playbackDefinition?.dialogueTree)) {
-      finish();
+      if (!def.debugEventOnly) finish();
       return;
     }
 
     const logEl = this.rootEl.querySelector(".ending-schedule-log");
-    const statusEl = this.rootEl.querySelector(".ending-schedule-status");
     const appendLine = (speaker, label, text) => {
       if (token !== this._runToken) return;
       if (pendingLines.length === 0) logEl.replaceChildren();
-      const speakerLabels = { player: "主控", awei: "阿伟", binbin: "彬彬", narrator: "旁白" };
+      const speakerLabels = { player: "主控", awei: "阿伟", ajie: "阿杰", binbin: "彬彬", narrator: "旁白", npc: "" };
       const speakerIds = { 主控: "player", 彬彬: "binbin", 旁白: "narrator" };
-      const fallbackSpeaker = speakerLabels[speaker] || label || speaker || "活动";
+      const fallbackSpeaker = speakerLabels[speaker] || label || speaker || "";
       String(text ?? "").split(/\r?\n/).forEach((rawLine) => {
         const content = rawLine.trim();
         if (!content) return;
@@ -178,15 +226,15 @@ export default class EndingScreen {
         onComplete: (next) => {
           offDisplay();
           mainQueue.complete(next.instanceId);
-          if (statusEl) statusEl.textContent = "结局活动已完成";
-          finish();
+          if (!def.debugEventOnly) finish();
+          else this.hide();
         },
       });
     }).catch((error) => {
       if (token !== this._runToken) return;
       console.error("[EndingScreen] Failed to execute ending blueprint:", error);
-      if (statusEl) statusEl.textContent = "结局活动执行失败，已显示结局结果";
-      finish();
+      if (!def.debugEventOnly) finish();
+      else this.hide();
     });
   }
 

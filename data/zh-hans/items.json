@@ -2637,7 +2637,8 @@
           "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
         }
       }
     },
@@ -2967,7 +2968,8 @@
           "image": "data/assets/item_necklace_ajie_427e67402772.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
         }
       }
     },
@@ -3010,7 +3012,8 @@
           "image": "data/assets/item_book_moon_87c2afcddbe3.jpg"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_book_moon_472e02008b36.jpg"
         }
       },
       "spells": [
@@ -3661,7 +3664,8 @@
           "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
         }
       }
     },
@@ -3993,7 +3997,8 @@
           "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
         }
       }
     },
@@ -4323,7 +4328,8 @@
           "image": "data/assets/item_necklace_ajie_427e67402772.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
         }
       }
     },
@@ -4366,7 +4372,8 @@
           "image": "data/assets/item_book_innsmouth_1a28a7530f9e.jpg"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_book_innsmouth_556ee63102f7.jpg"
         }
       },
       "spells": [
@@ -4744,7 +4751,8 @@
           "image": "data/assets/item_book_coc7_7773850fb36a.jpg"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_book_coc7_d10dfd3fbabb.jpg"
         }
       },
       "spells": [
@@ -5392,7 +5400,8 @@
           "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
         }
       }
     },
@@ -5722,7 +5731,8 @@
           "image": "data/assets/item_necklace_ajie_427e67402772.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
         }
       }
     },
@@ -6188,7 +6198,8 @@
           "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
         }
       }
     },
@@ -6516,7 +6527,8 @@
           "image": "data/assets/item_frozen_meat_8aa14925a808.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
         }
       }
     },
@@ -6845,7 +6857,8 @@
           "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
         }
       }
     },
@@ -7165,7 +7178,8 @@
           "image": "data/assets/item_pasta_82b5fd22b666.png"
         },
         "=0": {
-          "description": "上面印着飞天意面神教的logo。"
+          "description": "上面印着飞天意面神教的logo。",
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
         }
       }
     },
@@ -7489,7 +7503,8 @@
           "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
         }
       }
     },
@@ -7818,7 +7833,8 @@
           "image": "data/assets/item_perfume_2a8a198f25c5.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
         }
       }
     },
@@ -8140,7 +8156,8 @@
           "image": "data/assets/item_swastika_029dad2dcbfe.png"
         },
         "=0": {
-          "description": "（没有更多可以查看的信息。）"
+          "description": "（没有更多可以查看的信息。）",
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
         }
       }
     },

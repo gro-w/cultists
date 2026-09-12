@@ -128,7 +128,7 @@ export class DeveloperMode {
     const icon = (label, iconText, action, kind) => `<div class="dev-app-icon ${kind === "data" ? "dev-app-icon-data" : kind === "runtime" ? "dev-app-icon-runtime" : "dev-app-icon-mature"}" data-dev-dblclick="open-editor" data-editor-action="${action}" data-editor-title="${label}" data-editor-kind="${kind}" tabindex="0"><span class="dev-app-icon-glyph">${iconText}</span><span>${label}</span></div>`;
     const matureActions = new Set(["tab-keywords", "tab-chatgtp", "tab-npcs", "tab-global-variables", "tab-dialogue-editor", "tab-bgm-editor", "tab-location-editor", "tab-dorm-computer"]);
     const dataIcons = [
-      ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["NPC 列表", "👥", "tab-npcs"], ["公共变量定义", "🔢", "tab-global-variables"],
+      ["关键词编辑器", "🔑", "tab-keywords"], ["ChatGTP 问答", "🤖", "tab-chatgtp"], ["角色列表", "👥", "tab-npcs"], ["公共变量定义", "🔢", "tab-global-variables"],
       ["物品与法术编辑器", "📦", "tab-item-editor"], ["活动编辑器", "📅", "tab-dialogue-editor"], ["BGM 编辑器", "🎵", "tab-bgm-editor"], ["位置编辑器", "📍", "tab-location-editor"], ["CG 编辑器", "🖼️", "tab-cg-editor"], ["电脑内容", "💻", "tab-dorm-computer"], ["海龟汤谜题", "🐢", "tab-turtle-soup"],
       ["自定义窗口管理器", "🪟", "tab-custom-windows"],
       ...Object.keys(DEDICATED_EDITOR_CLASSES).map((key) => [DEDICATED_EDITOR_TITLES[key], "🗃️", `tab-structured-${key}`]),
@@ -161,7 +161,7 @@ export class DeveloperMode {
     // Use the static DataLoader flag so editor sub-windows (which have their own
     // DeveloperMode instance and never receive setDevServer()) also work correctly.
     if (!this._devServerActive && !DataLoader._devServerOrigin) { this.setStatus("未检测到开发服务器，无法写入磁盘。请用「下载」按钮代替。", true); return false; }
-    try { await writeJSONToDisk(filename, value); this.setStatus(`✅ ${filename} 已写入磁盘。`); return true; }
+    try { await writeJSONToDisk(filename, value); this.setStatus(`已成功写入磁盘：${filename}`); return true; }
     catch (err) { this.setStatus(`✗ 写入磁盘失败：${err.message}`, true); return false; }
   }
 
@@ -432,12 +432,15 @@ export class DeveloperMode {
     this._bindGlobalVariableVisibility("showWorld");
   }
 
-  showMedicalEnding() {
+  async showMedicalEnding() {
     this._activeRuntimeMethod = "showMedicalEnding";
     const medical = medicalCaseManager.snapshot();
     const submissions = (medical.submissions || []).map((submission) => `<tr><td>${esc(submission.patientId)}</td><td>${submission.day}</td><td>${submission.dueDay}</td><td>${esc(submission.diagnosisId)}</td><td>${submission.processed ? "已处理" : "待处理"}</td></tr>`).join("");
+    await endingManager.load();
+    await scheduleData.init();
     const endings = [...endingManager.defs.keys()].map((id) => `<option value="${esc(id)}">${esc(id)}</option>`).join("");
-    this.panel(`<section class="dev-section"><h3>医疗与结局</h3><p>医疗提交、待结算金额和延迟事件均来自 MedicalCaseManager；结局按 EndingManager 的优先级规则互斥选择：数值越大越优先，同优先级先触发者胜出。</p><p>当前收入：${medicalCaseManager.money()}；待收入：${medical.pendingIncome}；待支出：${medical.pendingExpenses}；待处理事件：${(medical.pendingIncidents || []).length}；已结束：${endingManager.isEnded ? "是" : "否"}</p><table class="dev-table"><thead><tr><th>患者</th><th>提交日</th><th>到期日</th><th>诊断</th><th>状态</th></tr></thead><tbody>${submissions || "<tr><td colspan=5>暂无提交</td></tr>"}</tbody></table><div>${button("结算上一日医疗账目", "settle-medical-day")} ${button("重置结局锁定", "reset-ending")}</div><label>触发结局 <select data-ending-id>${endings}</select> ${button("触发", "trigger-ending")}</label></section>`);
+    const specialEvents = scheduleData.catalog("special").map((entry) => `<option value="${esc(entry.id)}">${esc(entry.id)}</option>`).join("");
+    this.panel(`<section class="dev-section"><h3>医疗与结局</h3><p>医疗提交、待结算金额和延迟事件均来自 MedicalCaseManager；结局按 EndingManager 的优先级规则互斥选择：数值越大越优先，同优先级先触发者胜出。</p><p>当前收入：${medicalCaseManager.money()}；待收入：${medical.pendingIncome}；待支出：${medical.pendingExpenses}；待处理事件：${(medical.pendingIncidents || []).length}；已结束：${endingManager.isEnded ? "是" : "否"}</p><table class="dev-table"><thead><tr><th>患者</th><th>提交日</th><th>到期日</th><th>诊断</th><th>状态</th></tr></thead><tbody>${submissions || "<tr><td colspan=5>暂无提交</td></tr>"}</tbody></table><div>${button("结算上一日医疗账目", "settle-medical-day")} ${button("重置结局锁定", "reset-ending")}</div><label>触发结局 <select data-ending-id>${endings}</select> ${button("触发", "trigger-ending")}</label><label style="display:block;margin-top:6px">触发特殊事件 <select data-special-event-id>${specialEvents}</select> ${button("触发", "trigger-special-event")}</label></section>`);
   }
 
   async loadDoc(fileName) {
@@ -598,8 +601,8 @@ export class DeveloperMode {
         ${endingPortraits || '<p style="font-size:11px;color:#aaa;margin:0 0 4px">暂无结局专用立绘。</p>'}
       </div>`;
     };
-    this.panel(`<section class="dev-section"><h3>NPC 列表</h3>
-      <p style="font-size:12px;color:#aaa">维护稳定 NPC ID、名字、头像、好感度、初始 SAN 和立绘。每个 NPC 可添加多张立绘变体，对话时按理智值自动选择。</p>
+    this.panel(`<section class="dev-section"><h3>角色列表</h3>
+      <p style="font-size:12px;color:#aaa">维护稳定角色 ID（含主控 player）、名字、头像、好感度、初始 SAN 和立绘。每个角色可添加多张立绘变体，对话时按理智值自动选择。主控条目不参与好感度/SAN 数值系统，仅提供立绘。</p>
       <div id="dev-npc-cards">${(doc.npcs || []).map(toCard).join("")}</div>
       <div style="margin-top:8px">${button("新增 NPC", "add-npc")} ${button("保存到内存", "save-npcs")} ${button("下载 npcs.json", "download-npcs")} ${button("写入磁盘", "write-npcs")}</div>
     </section>`, "data");
@@ -933,6 +936,23 @@ export class DeveloperMode {
       this.setStatus("结局锁定已重置。");
       return this.showMedicalEnding();
     }
+    if (action === "trigger-special-event") {
+      const id = this.root.querySelector("[data-special-event-id]")?.value;
+      await scheduleData.init();
+      const definition = scheduleData.definition(id);
+      if (!definition?.blueprint) {
+        this.setStatus(`无法触发特殊事件：未知事件或缺少蓝图 ${id}。`, true);
+        return this.showMedicalEnding();
+      }
+      endingManager.reset();
+      eventBus.emit("ending:debug-event-requested", {
+        endingId: null,
+        ending: null,
+        event: definition,
+      });
+      this.setStatus(`特殊事件「${id}」已从蓝图起点直接播放。`);
+      return this.showMedicalEnding();
+    }
     if (action === "trigger-ending") {
       const id = this.root.querySelector("[data-ending-id]")?.value;
       await endingManager.load();
@@ -946,16 +966,16 @@ export class DeveloperMode {
       });
       if (!ending) {
         this.setStatus(`无法触发结局：未知结局 ID ${id}。`, true);
-      } else if (!source?.definition) {
-        this.setStatus(`无法触发结局：未找到引发 ${id} 的特殊事件。`, true);
       } else {
         endingManager.reset();
         eventBus.emit("ending:debug-event-requested", {
           endingId: id,
           ending,
-          event: source.definition,
+          event: source?.definition || null,
         });
-        this.setStatus(`已从引发事件“${source.id}”开始播放结局：${id}。`);
+        this.setStatus(source?.definition
+          ? `已从引发事件“${source.id}”开始播放结局：${id}。`
+          : `结局 ${id} 没有引发事件（机制触发型），已从结局蓝图起点播放。`);
       }
       return this.showMedicalEnding();
     }
@@ -1028,6 +1048,7 @@ export class DeveloperMode {
             imageData: existing.imageData || "",
           };
         });
+        const savedNpc = doc.npcs?.[ci] || {};
         return {
           id: card.querySelector("[data-npc-id]").value.trim(),
           name: card.querySelector("[data-npc-name]").value,
@@ -1036,6 +1057,8 @@ export class DeveloperMode {
           initialSan: Math.max(0, Math.min(100, Number(card.querySelector("[data-npc-san]").value) || 0)),
           portraits,
           endingPortraits,
+          // Preserve non-editable engine flags (e.g. the player entry's noFavorability).
+          ...Object.fromEntries(Object.entries(savedNpc).filter(([key]) => !["id", "name", "avatar", "initialFavorability", "initialSan", "portraits", "endingPortraits", "numericid"].includes(key))),
         };
       });
       this.docs.set("npcs.json", doc);

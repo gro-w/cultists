@@ -45,8 +45,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -92,8 +92,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -171,8 +171,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -249,8 +249,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -311,7 +311,7 @@
             },
             "check": {
               "id": "check",
-              "type": "framework:diceCheck",
+              "type": "diceCheck",
               "inputs": {
                 "n": null
               },
@@ -386,8 +386,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -516,8 +516,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -563,8 +563,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -640,8 +640,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -699,9 +699,9 @@
             },
             "use:stat:satiety": {
               "id": "use:stat:satiety",
-              "type": "setVariable",
+              "type": "statOperation",
               "inputs": {
-                "key": "satiety",
+                "statId": "satiety",
                 "delta": 6
               },
               "outputs": {},
@@ -718,8 +718,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -798,8 +798,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -857,9 +857,9 @@
             },
             "use:stat:satiety": {
               "id": "use:stat:satiety",
-              "type": "setVariable",
+              "type": "statOperation",
               "inputs": {
-                "key": "satiety",
+                "statId": "satiety",
                 "delta": 90
               },
               "outputs": {},
@@ -876,8 +876,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -938,7 +938,7 @@
             },
             "check": {
               "id": "check",
-              "type": "framework:diceCheck",
+              "type": "diceCheck",
               "inputs": {
                 "n": null
               },
@@ -988,9 +988,9 @@
             },
             "criticalFailure:effect": {
               "id": "criticalFailure:effect",
-              "type": "setVariable",
+              "type": "statOperation",
               "inputs": {
-                "key": "physical",
+                "statId": "physical",
                 "delta": -3
               },
               "outputs": {}
@@ -1013,8 +1013,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -1137,8 +1137,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -1211,8 +1211,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -1258,8 +1258,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -1314,7 +1314,12 @@
           "image": "data/assets/item_book_nahan_70_90_58e0c48144f6.jpg"
         },
         "50-70": {
-          "image": "data/assets/item_book_nahan_50_70_33d406c8077c.jpg"
+          "image": "data/assets/item_book_nahan_50_70_33d406c8077c.jpg",
+          "inspectEffect": {
+            "statChanges": {
+              "mental": -5
+            }
+          }
         },
         "30-50": {
           "name": "《尸食教典仪》",
@@ -1343,7 +1348,7 @@
             "type": "disease",
             "selfEnding": "自杀结局"
           },
-          "activities": {}
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -1416,7 +1421,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "framework:consumeTime",
+              "type": "consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -1591,8 +1596,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -1803,8 +1808,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -1880,7 +1885,7 @@
             "wakeSanity": 0,
             "sleepEvent": "长眠的克苏鲁候汝入梦"
           },
-          "activities": {}
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -1951,7 +1956,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "framework:consumeTime",
+              "type": "consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -2093,8 +2098,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -2281,8 +2286,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -2316,6 +2321,29 @@
         "ajie_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -2450,8 +2478,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -2581,8 +2609,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -2611,29 +2639,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -2648,6 +2653,29 @@
         "ajie_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -2780,8 +2808,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -2911,8 +2939,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -2940,29 +2968,6 @@
             }
           ],
           "startNodeId": "start"
-        }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -3018,7 +3023,7 @@
             "type": "seal_activation",
             "chaseEnding": "异常结局"
           },
-          "activities": {}
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -3082,7 +3087,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "framework:consumeTime",
+              "type": "consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -3162,8 +3167,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -3308,8 +3313,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -3343,6 +3348,29 @@
         "awei_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
+        },
+        "30-50": {
+          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
+        },
+        "15-30": {
+          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
+        },
+        "0-15": {
+          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -3474,8 +3502,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -3605,8 +3633,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -3635,29 +3663,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
-        },
-        "70-90": {
-          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
-        },
-        "50-70": {
-          "image": "data/assets/item_poster_jesus_27a09bdc9c33.jpg"
-        },
-        "30-50": {
-          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
-        },
-        "15-30": {
-          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
-        },
-        "0-15": {
-          "image": "data/assets/item_poster_jesus_56ebb65431a6.jpg"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -3672,6 +3677,29 @@
         "awei_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -3806,8 +3834,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -3937,8 +3965,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -3967,29 +3995,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -4004,6 +4009,29 @@
         "awei_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -4136,8 +4164,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -4267,8 +4295,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -4296,29 +4324,6 @@
             }
           ],
           "startNodeId": "start"
-        }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
         }
       }
     },
@@ -4376,7 +4381,7 @@
             "ending": "蹈海",
             "sanThreshold": 30
           },
-          "activities": {}
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -4446,7 +4451,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "framework:consumeTime",
+              "type": "consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -4531,8 +4536,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -4677,8 +4682,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -4752,7 +4757,7 @@
             "type": "domination",
             "chaseEnding": "异常结局"
           },
-          "activities": {}
+          "schedules": {}
         }
       ],
       "bookContents": [
@@ -4813,7 +4818,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "framework:consumeTime",
+              "type": "consumeTime",
               "inputs": {
                 "minutes": 60
               },
@@ -4893,8 +4898,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -5039,8 +5044,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -5074,6 +5079,29 @@
         "binbin_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -5205,8 +5233,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -5336,8 +5364,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -5366,29 +5394,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_statue_ajie_cfd6d37ca00a.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_statue_ajie_7d79d0e6b40a.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -5403,6 +5408,29 @@
         "binbin_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_necklace_ajie_427e67402772.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -5535,8 +5563,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -5666,8 +5694,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -5696,29 +5724,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_necklace_ajie_427e67402772.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -5734,6 +5739,29 @@
       ],
       "isBook": true,
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "70-90": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "50-70": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "30-50": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "15-30": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "0-15": {
+          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -5799,7 +5827,7 @@
             },
             "band0:time": {
               "id": "band0:time",
-              "type": "framework:consumeTime",
+              "type": "consumeTime",
               "inputs": {
                 "minutes": 240
               },
@@ -5953,8 +5981,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -6132,8 +6160,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -6162,29 +6190,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
-        },
-        "70-90": {
-          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
-        },
-        "50-70": {
-          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
-        },
-        "30-50": {
-          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
-        },
-        "15-30": {
-          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
-        },
-        "0-15": {
-          "image": "data/assets/item_book_blue_love_b0aab3731a9a.jpg"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -6199,6 +6204,29 @@
         "fridge"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -6329,8 +6357,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -6460,8 +6488,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -6490,29 +6518,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_frozen_meat_8aa14925a808.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -6527,6 +6532,29 @@
         "fridge"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -6658,8 +6686,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -6789,8 +6817,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -6819,29 +6847,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_ketchup_09bbc40fbbaf.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -6856,6 +6861,29 @@
         "fridge"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_pasta_82b5fd22b666.png"
+        },
+        "=0": {
+          "description": "上面印着飞天意面神教的logo。"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -6978,8 +7006,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -7109,8 +7137,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -7139,29 +7167,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_pasta_82b5fd22b666.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_pasta_82b5fd22b666.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_pasta_82b5fd22b666.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_pasta_82b5fd22b666.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_pasta_82b5fd22b666.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_pasta_82b5fd22b666.png"
-        },
-        "=0": {
-          "description": "上面印着飞天意面神教的logo。"
-        }
       }
     },
     {
@@ -7176,6 +7181,29 @@
         "fridge"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -7302,8 +7330,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -7433,8 +7461,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -7463,29 +7491,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_salt_bag_cc1c5ddd741b.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -7500,6 +7505,29 @@
         "binbin_desk"
       ],
       "pickable": false,
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_perfume_2a8a198f25c5.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -7631,8 +7659,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -7762,8 +7790,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -7792,29 +7820,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_perfume_2a8a198f25c5.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_perfume_2a8a198f25c5.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_perfume_2a8a198f25c5.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_perfume_2a8a198f25c5.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_perfume_2a8a198f25c5.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_perfume_2a8a198f25c5.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -7828,6 +7833,29 @@
       "locations": [
         "hospital"
       ],
+      "sanVariants": {
+        ">90": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "70-90": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "50-70": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "30-50": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "15-30": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "0-15": {
+          "image": "data/assets/item_swastika_029dad2dcbfe.png"
+        },
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -7950,8 +7978,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -8093,8 +8121,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -8114,29 +8142,6 @@
             }
           ]
         }
-      },
-      "sanVariants": {
-        ">90": {
-          "image": "data/assets/item_swastika_029dad2dcbfe.png"
-        },
-        "70-90": {
-          "image": "data/assets/item_swastika_029dad2dcbfe.png"
-        },
-        "50-70": {
-          "image": "data/assets/item_swastika_029dad2dcbfe.png"
-        },
-        "30-50": {
-          "image": "data/assets/item_swastika_029dad2dcbfe.png"
-        },
-        "15-30": {
-          "image": "data/assets/item_swastika_029dad2dcbfe.png"
-        },
-        "0-15": {
-          "image": "data/assets/item_swastika_029dad2dcbfe.png"
-        },
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -8150,6 +8155,11 @@
         "restaurant"
       ],
       "pickable": false,
+      "sanVariants": {
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -8270,8 +8280,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -8401,8 +8411,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -8431,11 +8441,6 @@
           ],
           "startNodeId": "start"
         }
-      },
-      "sanVariants": {
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
-        }
       }
     },
     {
@@ -8449,6 +8454,11 @@
         "restaurant"
       ],
       "pickable": false,
+      "sanVariants": {
+        "=0": {
+          "description": "（没有更多可以查看的信息。）"
+        }
+      },
       "activities": {
         "investigate": {
           "startNodeId": "start",
@@ -8569,8 +8579,8 @@
               "x": 80,
               "y": 240
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "inputs": {
                 "expires": false,
@@ -8700,8 +8710,8 @@
               },
               "outputs": {}
             },
-            "__activity_expiry__": {
-              "id": "__activity_expiry__",
+            "__schedule_expiry__": {
+              "id": "__schedule_expiry__",
               "type": "activityExpiry",
               "x": 80,
               "y": 360,
@@ -8729,11 +8739,6 @@
             }
           ],
           "startNodeId": "start"
-        }
-      },
-      "sanVariants": {
-        "=0": {
-          "description": "（没有更多可以查看的信息。）"
         }
       }
     }

@@ -12,8 +12,8 @@
           "condition": true
         }
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": false,
@@ -243,9 +243,9 @@
       },
       "use_talisman_cost": {
         "id": "use_talisman_cost",
-        "type": "setVariable",
+        "type": "statOperation",
         "inputs": {
-          "key": "sanity",
+          "statId": "sanity",
           "delta": -5
         }
       },
@@ -406,13 +406,9 @@
       },
       "abnormal_end": {
         "id": "abnormal_end",
-        "type": "emitEvent",
+        "type": "ending",
         "inputs": {
-          "eventName": "activity:ending",
-          "payload": {
-            "endingId": "异常结局",
-            "displayTo": "default"
-          }
+          "endingId": "异常结局"
         }
       },
       "normal_cg": {
@@ -487,13 +483,9 @@
       },
       "normal_end": {
         "id": "normal_end",
-        "type": "emitEvent",
+        "type": "ending",
         "inputs": {
-          "eventName": "activity:ending",
-          "payload": {
-            "endingId": "正常结局",
-            "displayTo": "default"
-          }
+          "endingId": "正常结局"
         }
       },
       "end": {

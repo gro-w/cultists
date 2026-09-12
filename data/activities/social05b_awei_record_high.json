@@ -428,5 +428,15 @@
         "toPort": "flowIn"
       }
     ]
+  },
+  "npcId": "awei",
+  "name": "阿伟",
+  "avatar": "👓",
+  "condition": {
+    "globalVariables": {
+      "id": 41,
+      "op": "gte",
+      "value": 50
+    }
   }
 }

@@ -233,8 +233,8 @@
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
@@ -387,5 +387,8 @@
         "toPort": "condition"
       }
     ]
-  }
+  },
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶"
 }

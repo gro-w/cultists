@@ -17,8 +17,8 @@
           "condition": true
         }
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": false,
@@ -145,13 +145,10 @@
       },
       "good": {
         "id": "good",
-        "type": "emitEvent",
+        "type": "ending",
         "inputs": {
-          "eventName": "activity:ending",
-          "payload": {
-            "endingId": "pl现实魅惑大成功",
-            "displayTo": "ending-screen"
-          }
+          "displayTo": "ending-screen",
+          "endingId": "pl现实魅惑大成功"
         }
       },
       "death": {
@@ -164,13 +161,10 @@
       },
       "bad": {
         "id": "bad",
-        "type": "emitEvent",
+        "type": "ending",
         "inputs": {
-          "eventName": "activity:ending",
-          "payload": {
-            "endingId": "牺牲之血",
-            "displayTo": "ending-screen"
-          }
+          "displayTo": "ending-screen",
+          "endingId": "牺牲之血"
         }
       },
       "end": {

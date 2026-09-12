@@ -225,8 +225,8 @@
         "x": 80,
         "y": 260
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
@@ -391,5 +391,8 @@
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "npcId": "awei",
+  "name": "阿伟",
+  "avatar": "🐱"
 }

@@ -1,6 +1,6 @@
 {
   "id": "dorm_activity_day1",
-  "type": "dormActivity",
+  "type": "dormSchedule",
   "displayName": "第1天宿舍集体活动",
   "queueId": "social",
   "blueprint": {
@@ -80,9 +80,9 @@
       },
       "study_san": {
         "id": "study_san",
-        "type": "setVariable",
+        "type": "statOperation",
         "inputs": {
-          "key": "mental",
+          "statId": "mental",
           "delta": 10
         }
       },
@@ -380,16 +380,16 @@
           "id": 109
         }
       },
-      "activity_set": {
-        "id": "activity_set",
+      "schedule_set": {
+        "id": "schedule_set",
         "type": "applyPublicVariableEffect",
         "inputs": {
           "value": true,
           "id": 104
         }
       },
-      "activityExpiry": {
-        "id": "activityExpiry",
+      "scheduleExpiry": {
+        "id": "scheduleExpiry",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
@@ -706,7 +706,7 @@
       {
         "fromNodeId": "study_set_2",
         "fromPort": "flowOut",
-        "toNodeId": "activity_set",
+        "toNodeId": "schedule_set",
         "toPort": "flowIn"
       },
       {
@@ -716,7 +716,7 @@
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_set",
+        "fromNodeId": "schedule_set",
         "fromPort": "flowOut",
         "toNodeId": "end",
         "toPort": "flowIn"
@@ -734,5 +734,8 @@
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "name": "宿舍集体活动",
+  "day": 1,
+  "afterSocialDialogue": true
 }

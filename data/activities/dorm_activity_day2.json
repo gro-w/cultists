@@ -1,6 +1,6 @@
 {
   "id": "dorm_activity_day2",
-  "type": "dormActivity",
+  "type": "dormSchedule",
   "displayName": "第2天宿舍集体活动",
   "queueId": "social",
   "blueprint": {
@@ -80,9 +80,9 @@
       },
       "study_san": {
         "id": "study_san",
-        "type": "setVariable",
+        "type": "statOperation",
         "inputs": {
-          "key": "mental",
+          "statId": "mental",
           "delta": 10
         }
       },
@@ -98,8 +98,8 @@
           "minutes": 20
         }
       },
-      "day1_activity": {
-        "id": "day1_activity",
+      "day1_schedule": {
+        "id": "day1_schedule",
         "type": "getPublicVariable",
         "inputs": {
           "id": 104
@@ -357,16 +357,16 @@
         "type": "activityEnd",
         "inputs": {}
       },
-      "activity_set": {
-        "id": "activity_set",
+      "schedule_set": {
+        "id": "schedule_set",
         "type": "applyPublicVariableEffect",
         "inputs": {
           "value": true,
           "id": 105
         }
       },
-      "activityExpiry": {
-        "id": "activityExpiry",
+      "scheduleExpiry": {
+        "id": "scheduleExpiry",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
@@ -435,7 +435,7 @@
     },
     "connections": [
       {
-        "fromNodeId": "day1_activity",
+        "fromNodeId": "day1_schedule",
         "fromPort": "value",
         "toNodeId": "day2_intro_branch",
         "toPort": "condition"
@@ -677,7 +677,7 @@
       {
         "fromNodeId": "game_time_18",
         "fromPort": "flowOut",
-        "toNodeId": "activity_set",
+        "toNodeId": "schedule_set",
         "toPort": "flowIn"
       },
       {
@@ -687,7 +687,7 @@
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_set",
+        "fromNodeId": "schedule_set",
         "fromPort": "flowOut",
         "toNodeId": "end",
         "toPort": "flowIn"
@@ -705,5 +705,8 @@
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "name": "宿舍集体活动",
+  "day": 2,
+  "afterSocialDialogue": true
 }

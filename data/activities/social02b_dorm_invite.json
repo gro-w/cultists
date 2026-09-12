@@ -9,7 +9,8 @@
       "start": {
         "id": "start",
         "type": "flowStart",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "line": {
         "id": "line",
@@ -17,22 +18,23 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "阿杰：下班了！今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~",
-          "continueKey": "dlg:line:continue"
-        }
+          "text": "阿杰：下班了！今天的桌游三个人也能玩，你要是不跟我们一起可是你的损失~"
+        },
+        "outputs": {}
       },
       "time": {
         "id": "time",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
-        }
+        },
+        "outputs": {}
       },
-      "insert_dorm_activity": {
-        "id": "insert_dorm_activity",
-        "type": "insertActivity",
+      "insert_dorm_schedule": {
+        "id": "insert_dorm_schedule",
+        "type": "insertSchedule",
         "inputs": {
-          "activityId": "dorm_activity_day2",
+          "scheduleId": "dorm_schedule_day2",
           "addTime": {
             "nodeId": "current_game_time",
             "port": "value"
@@ -40,52 +42,60 @@
           "queue": "social",
           "respectPrerequisite": true,
           "protectFromExpiry": false
-        }
+        },
+        "outputs": {}
       },
       "current_game_time": {
         "id": "current_game_time",
         "type": "getGameTime",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "end": {
         "id": "end",
         "type": "activityEnd",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
-      "activity_count": {
-        "id": "activity_count",
-        "type": "getActivityInstanceCount",
+      "schedule_count": {
+        "id": "schedule_count",
+        "type": "getScheduleInstanceCount",
         "inputs": {
-          "activityId": "dorm_activity_day2"
-        }
+          "scheduleId": "dorm_schedule_day2"
+        },
+        "outputs": {}
       },
-      "activity_available": {
-        "id": "activity_available",
+      "schedule_available": {
+        "id": "schedule_available",
         "type": "arithmetic",
         "inputs": {
           "operator": "eq",
           "right": 0
-        }
+        },
+        "outputs": {}
       },
-      "activity_guard": {
-        "id": "activity_guard",
+      "schedule_guard": {
+        "id": "schedule_guard",
         "type": "branch",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "prerequisite": {
         "id": "prerequisite",
         "type": "prerequisite",
         "inputs": {
           "condition": true
-        }
+        },
+        "outputs": {}
       },
-      "activityExpiry": {
-        "id": "activityExpiry",
+      "scheduleExpiry": {
+        "id": "scheduleExpiry",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
           "expiresAt": 4319
-        }
+        },
+        "outputs": {}
       }
     },
     "connections": [
@@ -104,39 +114,42 @@
       {
         "fromNodeId": "time",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_count",
+        "fromNodeId": "schedule_count",
         "fromPort": "value",
-        "toNodeId": "activity_available",
+        "toNodeId": "schedule_available",
         "toPort": "left"
       },
       {
-        "fromNodeId": "activity_available",
+        "fromNodeId": "schedule_available",
         "fromPort": "value",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "condition"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "false",
         "toNodeId": "end",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "true",
-        "toNodeId": "insert_dorm_activity",
+        "toNodeId": "insert_dorm_schedule",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "insert_dorm_activity",
+        "fromNodeId": "insert_dorm_schedule",
         "fromPort": "flowOut",
         "toNodeId": "end",
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶"
 }

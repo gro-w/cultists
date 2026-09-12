@@ -380,5 +380,15 @@
         "toPort": "flowIn"
       }
     ]
+  },
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶",
+  "condition": {
+    "globalVariables": {
+      "id": 40,
+      "op": "lt",
+      "value": 50
+    }
   }
 }

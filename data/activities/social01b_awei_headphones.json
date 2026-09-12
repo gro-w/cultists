@@ -9,7 +9,8 @@
       "start": {
         "id": "start",
         "type": "flowStart",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "n1": {
         "id": "n1",
@@ -17,9 +18,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "新买的耳机终于到了，来，给你试听一下。",
-          "continueKey": "dlg:n1:continue"
-        }
+          "text": "新买的耳机终于到了，来，给你试听一下。"
+        },
+        "outputs": {}
       },
       "n2": {
         "id": "n2",
@@ -27,9 +28,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "这是你新买的？看起来很贵啊，你不才买了个黑椒唱片机吗？",
-          "continueKey": "dlg:n2:continue"
-        }
+          "text": "这是你新买的？看起来很贵啊，你不才买了个黑椒唱片机吗？"
+        },
+        "outputs": {}
       },
       "n3": {
         "id": "n3",
@@ -37,9 +38,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "是啊，不错吧，在购物车里放了好久终于等到降价了。",
-          "continueKey": "dlg:n3:continue"
-        }
+          "text": "是啊，不错吧，在购物车里放了好久终于等到降价了。"
+        },
+        "outputs": {}
       },
       "n4": {
         "id": "n4",
@@ -47,9 +48,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "你全款买的？",
-          "continueKey": "dlg:n4:continue"
-        }
+          "text": "你全款买的？"
+        },
+        "outputs": {}
       },
       "n5": {
         "id": "n5",
@@ -57,9 +58,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "……还没付尾款。到底听不听？赶紧的。",
-          "continueKey": "dlg:n5:continue"
-        }
+          "text": "……还没付尾款。到底听不听？赶紧的。"
+        },
+        "outputs": {}
       },
       "n6": {
         "id": "n6",
@@ -67,9 +68,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "音质很……好，声场比较强，有空间感，高音甜中音稳低音沉……",
-          "continueKey": "dlg:n6:continue"
-        }
+          "text": "音质很……好，声场比较强，有空间感，高音甜中音稳低音沉……"
+        },
+        "outputs": {}
       },
       "n7": {
         "id": "n7",
@@ -77,9 +78,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "你有没有听到什么奇怪的声音？",
-          "continueKey": "dlg:n7:continue"
-        }
+          "text": "你有没有听到什么奇怪的声音？"
+        },
+        "outputs": {}
       },
       "n8": {
         "id": "n8",
@@ -87,9 +88,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "什么？",
-          "continueKey": "dlg:n8:continue"
-        }
+          "text": "什么？"
+        },
+        "outputs": {}
       },
       "n9": {
         "id": "n9",
@@ -97,9 +98,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "这里，我放大点，你仔细听。",
-          "continueKey": "dlg:n9:continue"
-        }
+          "text": "这里，我放大点，你仔细听。"
+        },
+        "outputs": {}
       },
       "n10": {
         "id": "n10",
@@ -107,9 +108,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "什么也没听出来啊。",
-          "continueKey": "dlg:n10:continue"
-        }
+          "text": "什么也没听出来啊。"
+        },
+        "outputs": {}
       },
       "n11": {
         "id": "n11",
@@ -117,33 +118,36 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "难道是我幻听了？我总觉得这里有点底噪，但只有我听到第37秒会有。",
-          "continueKey": "dlg:n11:continue"
-        }
+          "text": "难道是我幻听了？我总觉得这里有点底噪，但只有我听到第37秒会有。"
+        },
+        "outputs": {}
       },
       "choice12": {
         "id": "choice12",
         "type": "choice",
         "inputs": {
-          "options": [
-            {
-              "label": "是什么声音？"
-            },
-            {
-              "label": "要不你换首歌试试？"
-            }
-          ],
-          "optionCount": 2,
-          "selectionKey": "dlg:choice12:select"
-        }
+          "branchCount": 2,
+          "label0": "是什么声音？",
+          "label1": "要不你换首歌试试？"
+        },
+        "options": [
+          {
+            "label": "是什么声音？"
+          },
+          {
+            "label": "要不你换首歌试试？"
+          }
+        ],
+        "outputs": {}
       },
       "choice12_op0": {
         "id": "choice12_op0",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 41
-        }
+          "variableId": 41,
+          "delta": 5
+        },
+        "outputs": {}
       },
       "n13": {
         "id": "n13",
@@ -151,9 +155,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "一种……好像谁在说话。",
-          "continueKey": "dlg:n13:continue"
-        }
+          "text": "一种……好像谁在说话。"
+        },
+        "outputs": {}
       },
       "n14": {
         "id": "n14",
@@ -161,9 +165,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "是不是这首歌里本来就有的？",
-          "continueKey": "dlg:n14:continue"
-        }
+          "text": "是不是这首歌里本来就有的？"
+        },
+        "outputs": {}
       },
       "n15": {
         "id": "n15",
@@ -171,9 +175,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "我对《月之暗面》比对《外科学》还熟悉，怎么会搞错？",
-          "continueKey": "dlg:n15:continue"
-        }
+          "text": "我对《月之暗面》比对《外科学》还熟悉，怎么会搞错？"
+        },
+        "outputs": {}
       },
       "n16": {
         "id": "n16",
@@ -181,9 +185,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "肯定是你听错了，你是不是背着大家在偷偷复习医师资格证考试压力太大？",
-          "continueKey": "dlg:n16:continue"
-        }
+          "text": "肯定是你听错了，你是不是背着大家在偷偷复习医师资格证考试压力太大？"
+        },
+        "outputs": {}
       },
       "n17": {
         "id": "n17",
@@ -191,17 +195,18 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "说你自己呢吧……",
-          "continueKey": "dlg:n17:continue"
-        }
+          "text": "说你自己呢吧……"
+        },
+        "outputs": {}
       },
       "choice12_op1": {
         "id": "choice12_op1",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": -5,
-          "id": 41
-        }
+          "variableId": 41,
+          "delta": -5
+        },
+        "outputs": {}
       },
       "n18": {
         "id": "n18",
@@ -209,9 +214,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "就是为了听《月之暗面》我才买的这个耳机。",
-          "continueKey": "dlg:n18:continue"
-        }
+          "text": "就是为了听《月之暗面》我才买的这个耳机。"
+        },
+        "outputs": {}
       },
       "n19": {
         "id": "n19",
@@ -219,9 +224,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "真的没听出来。",
-          "continueKey": "dlg:n19:continue"
-        }
+          "text": "真的没听出来。"
+        },
+        "outputs": {}
       },
       "n20": {
         "id": "n20",
@@ -229,9 +234,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "或许是这段时间太累了，我休息休息就好了。",
-          "continueKey": "dlg:n20:continue"
-        }
+          "text": "或许是这段时间太累了，我休息休息就好了。"
+        },
+        "outputs": {}
       },
       "n21": {
         "id": "n21",
@@ -239,9 +244,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "幻听要去看医生的。",
-          "continueKey": "dlg:n21:continue"
-        }
+          "text": "幻听要去看医生的。"
+        },
+        "outputs": {}
       },
       "n22": {
         "id": "n22",
@@ -249,120 +254,133 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿伟",
-          "text": "这不用你告诉我。",
-          "continueKey": "dlg:n22:continue"
-        }
+          "text": "这不用你告诉我。"
+        },
+        "outputs": {}
       },
       "end": {
         "id": "end",
         "type": "activityEnd",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "consume_time_20_1": {
         "id": "consume_time_20_1",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_2": {
         "id": "consume_time_20_2",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_3": {
         "id": "consume_time_20_3",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_4": {
         "id": "consume_time_20_4",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_5": {
         "id": "consume_time_20_5",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_6": {
         "id": "consume_time_20_6",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_7": {
         "id": "consume_time_20_7",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_8": {
         "id": "consume_time_20_8",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_9": {
         "id": "consume_time_20_9",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_10": {
         "id": "consume_time_20_10",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_11": {
         "id": "consume_time_20_11",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_12": {
         "id": "consume_time_20_12",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
@@ -372,29 +390,32 @@
         "inputs": {
           "condition": true
         },
+        "outputs": {},
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
           "expiresAt": 2880
         },
+        "outputs": {},
         "x": 80,
         "y": 360
       },
       "current_game_time": {
         "id": "current_game_time",
         "type": "getGameTime",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
-      "insert_dorm_activity": {
-        "id": "insert_dorm_activity",
-        "type": "insertActivity",
+      "insert_dorm_schedule": {
+        "id": "insert_dorm_schedule",
+        "type": "insertSchedule",
         "inputs": {
-          "activityId": "dorm_activity_day1",
+          "scheduleId": "dorm_schedule_day1",
           "queue": "social",
           "respectPrerequisite": true,
           "protectFromExpiry": false,
@@ -402,27 +423,31 @@
             "nodeId": "current_game_time",
             "port": "value"
           }
-        }
+        },
+        "outputs": {}
       },
-      "activity_count": {
-        "id": "activity_count",
-        "type": "getActivityInstanceCount",
+      "schedule_count": {
+        "id": "schedule_count",
+        "type": "getScheduleInstanceCount",
         "inputs": {
-          "activityId": "dorm_activity_day1"
-        }
+          "scheduleId": "dorm_schedule_day1"
+        },
+        "outputs": {}
       },
-      "activity_available": {
-        "id": "activity_available",
+      "schedule_available": {
+        "id": "schedule_available",
         "type": "arithmetic",
         "inputs": {
           "operator": "eq",
           "right": 0
-        }
+        },
+        "outputs": {}
       },
-      "activity_guard": {
-        "id": "activity_guard",
+      "schedule_guard": {
+        "id": "schedule_guard",
         "type": "branch",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       }
     },
     "connections": [
@@ -651,39 +676,42 @@
       {
         "fromNodeId": "n22",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_count",
+        "fromNodeId": "schedule_count",
         "fromPort": "value",
-        "toNodeId": "activity_available",
+        "toNodeId": "schedule_available",
         "toPort": "left"
       },
       {
-        "fromNodeId": "activity_available",
+        "fromNodeId": "schedule_available",
         "fromPort": "value",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "condition"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "false",
         "toNodeId": "end",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "true",
-        "toNodeId": "insert_dorm_activity",
+        "toNodeId": "insert_dorm_schedule",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "insert_dorm_activity",
+        "fromNodeId": "insert_dorm_schedule",
         "fromPort": "flowOut",
         "toNodeId": "end",
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "npcId": "awei",
+  "name": "阿伟",
+  "avatar": "🐱"
 }

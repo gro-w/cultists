@@ -271,5 +271,15 @@
         "toPort": "flowIn"
       }
     ]
+  },
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶",
+  "condition": {
+    "globalVariables": {
+      "id": 100,
+      "op": "eq",
+      "value": true
+    }
   }
 }

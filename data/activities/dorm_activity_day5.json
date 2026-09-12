@@ -1,6 +1,6 @@
 {
   "id": "dorm_activity_day5",
-  "type": "dormActivity",
+  "type": "dormSchedule",
   "displayName": "【海底O火锅】",
   "queueId": "social",
   "blueprint": {
@@ -312,8 +312,8 @@
           "condition": true
         }
       },
-      "activityExpiry": {
-        "id": "activityExpiry",
+      "scheduleExpiry": {
+        "id": "scheduleExpiry",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
@@ -515,5 +515,8 @@
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "name": "海底O火锅",
+  "day": 5,
+  "afterSocialDialogue": false
 }

@@ -9,7 +9,8 @@
       "start": {
         "id": "start",
         "type": "flowStart",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "n1": {
         "id": "n1",
@@ -17,9 +18,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "来开黑，今天玩《第二十四人格》。",
-          "continueKey": "dlg:n1:continue"
-        }
+          "text": "来开黑，今天玩《第二十四人格》。"
+        },
+        "outputs": {}
       },
       "n2": {
         "id": "n2",
@@ -27,9 +28,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "我在做一个测评手游的视频，今天测《第二十四人格》这个手游，我想听听你的意见。",
-          "continueKey": "dlg:n2:continue"
-        }
+          "text": "我在做一个测评手游的视频，今天测《第二十四人格》这个手游，我想听听你的意见。"
+        },
+        "outputs": {}
       },
       "n3": {
         "id": "n3",
@@ -37,9 +38,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "第二十四人格？",
-          "continueKey": "dlg:n3:continue"
-        }
+          "text": "第二十四人格？"
+        },
+        "outputs": {}
       },
       "n4": {
         "id": "n4",
@@ -47,9 +48,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "前23个我都收集好了，就差第24个。",
-          "continueKey": "dlg:n4:continue"
-        }
+          "text": "前23个我都收集好了，就差第24个。"
+        },
+        "outputs": {}
       },
       "n5": {
         "id": "n5",
@@ -57,9 +58,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "第24个是什么？",
-          "continueKey": "dlg:n5:continue"
-        }
+          "text": "第24个是什么？"
+        },
+        "outputs": {}
       },
       "n6": {
         "id": "n6",
@@ -67,9 +68,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "不，不重要。你可以去游戏里抽奖，有一个叫“三重馈赠”的栏目，点开就送卡。这活动名字听起来像发誓似的。",
-          "continueKey": "dlg:n6:continue"
-        }
+          "text": "不，不重要。你可以去游戏里抽奖，有一个叫“三重馈赠”的栏目，点开就送卡。这活动名字听起来像发誓似的。"
+        },
+        "outputs": {}
       },
       "n7": {
         "id": "n7",
@@ -77,9 +78,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "等我查查攻略……",
-          "continueKey": "dlg:n7:continue"
-        }
+          "text": "等我查查攻略……"
+        },
+        "outputs": {}
       },
       "n8": {
         "id": "n8",
@@ -87,9 +88,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "别查。",
-          "continueKey": "dlg:n8:continue"
-        }
+          "text": "别查。"
+        },
+        "outputs": {}
       },
       "n9": {
         "id": "n9",
@@ -97,9 +98,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "那我看看评分。",
-          "continueKey": "dlg:n9:continue"
-        }
+          "text": "那我看看评分。"
+        },
+        "outputs": {}
       },
       "n10": {
         "id": "n10",
@@ -107,33 +108,36 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "别人的观点会腐蚀你的脑子。",
-          "continueKey": "dlg:n10:continue"
-        }
+          "text": "别人的观点会腐蚀你的脑子。"
+        },
+        "outputs": {}
       },
       "choice11": {
         "id": "choice11",
         "type": "choice",
         "inputs": {
-          "options": [
-            {
-              "label": "是么？那我不看了。"
-            },
-            {
-              "label": "他人的观点是智慧的结晶。"
-            }
-          ],
-          "optionCount": 2,
-          "selectionKey": "dlg:choice11:select"
-        }
+          "branchCount": 2,
+          "label0": "是么？那我不看了。",
+          "label1": "他人的观点是智慧的结晶。"
+        },
+        "options": [
+          {
+            "label": "是么？那我不看了。"
+          },
+          {
+            "label": "他人的观点是智慧的结晶。"
+          }
+        ],
+        "outputs": {}
       },
       "choice11_op0": {
         "id": "choice11_op0",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 40
-        }
+          "variableId": 40,
+          "delta": 5
+        },
+        "outputs": {}
       },
       "n12": {
         "id": "n12",
@@ -141,9 +145,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "其实这也是我的观点。",
-          "continueKey": "dlg:n12:continue"
-        }
+          "text": "其实这也是我的观点。"
+        },
+        "outputs": {}
       },
       "n13": {
         "id": "n13",
@@ -151,9 +155,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "什么意思？",
-          "continueKey": "dlg:n13:continue"
-        }
+          "text": "什么意思？"
+        },
+        "outputs": {}
       },
       "n14": {
         "id": "n14",
@@ -161,17 +165,18 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "没什么意思，快抽卡。",
-          "continueKey": "dlg:n14:continue"
-        }
+          "text": "没什么意思，快抽卡。"
+        },
+        "outputs": {}
       },
       "choice11_op1": {
         "id": "choice11_op1",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": -5,
-          "id": 40
-        }
+          "variableId": 40,
+          "delta": -5
+        },
+        "outputs": {}
       },
       "n15": {
         "id": "n15",
@@ -179,9 +184,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "长满结晶的大脑么，很难下嘴啊……",
-          "continueKey": "dlg:n15:continue"
-        }
+          "text": "长满结晶的大脑么，很难下嘴啊……"
+        },
+        "outputs": {}
       },
       "n16": {
         "id": "n16",
@@ -189,9 +194,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "你说我吗？",
-          "continueKey": "dlg:n16:continue"
-        }
+          "text": "你说我吗？"
+        },
+        "outputs": {}
       },
       "n17": {
         "id": "n17",
@@ -199,9 +204,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "哈哈，开玩笑的。",
-          "continueKey": "dlg:n17:continue"
-        }
+          "text": "哈哈，开玩笑的。"
+        },
+        "outputs": {}
       },
       "n18": {
         "id": "n18",
@@ -209,9 +214,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "诶，我进大厅了。",
-          "continueKey": "dlg:n18:continue"
-        }
+          "text": "诶，我进大厅了。"
+        },
+        "outputs": {}
       },
       "n19": {
         "id": "n19",
@@ -219,9 +224,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "我也在这儿。",
-          "continueKey": "dlg:n19:continue"
-        }
+          "text": "我也在这儿。"
+        },
+        "outputs": {}
       },
       "n20": {
         "id": "n20",
@@ -229,9 +234,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "这里怎么有两个人？其中一个是我，另一个不认识。",
-          "continueKey": "dlg:n20:continue"
-        }
+          "text": "这里怎么有两个人？其中一个是我，另一个不认识。"
+        },
+        "outputs": {}
       },
       "n21": {
         "id": "n21",
@@ -239,38 +244,42 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "不就该是两个人吗？我和你。",
-          "continueKey": "dlg:n21:continue"
-        }
+          "text": "不就该是两个人吗？我和你。"
+        },
+        "outputs": {}
       },
       "end": {
         "id": "end",
         "type": "activityEnd",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "choice_final_25": {
         "id": "choice_final_25",
         "type": "choice",
         "inputs": {
-          "options": [
-            {
-              "label": "是吗？好像也对。"
-            },
-            {
-              "label": "不对啊，我，你……我进来之前这个我和你就在大厅里了。"
-            }
-          ],
-          "optionCount": 2,
-          "selectionKey": "dlg:choice_final_25:select"
-        }
+          "branchCount": 2,
+          "label0": "是吗？好像也对。",
+          "label1": "不对啊，我，你……我进来之前这个我和你就在大厅里了。"
+        },
+        "options": [
+          {
+            "label": "是吗？好像也对。"
+          },
+          {
+            "label": "不对啊，我，你……我进来之前这个我和你就在大厅里了。"
+          }
+        ],
+        "outputs": {}
       },
       "choice_final_25_op0": {
         "id": "choice_final_25_op0",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 40
-        }
+          "variableId": 40,
+          "delta": 5
+        },
+        "outputs": {}
       },
       "choice_final_25_0_0": {
         "id": "choice_final_25_0_0",
@@ -278,9 +287,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "想什么呢？恍恍惚惚的。",
-          "continueKey": "dlg:choice_final_25_0_0:continue"
-        }
+          "text": "想什么呢？恍恍惚惚的。"
+        },
+        "outputs": {}
       },
       "choice_final_25_0_1": {
         "id": "choice_final_25_0_1",
@@ -288,9 +297,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "总觉得哪里怪怪的……",
-          "continueKey": "dlg:choice_final_25_0_1:continue"
-        }
+          "text": "总觉得哪里怪怪的……"
+        },
+        "outputs": {}
       },
       "choice_final_25_0_2": {
         "id": "choice_final_25_0_2",
@@ -298,17 +307,18 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "神经太敏感了吧，总是想赢想赢的。",
-          "continueKey": "dlg:choice_final_25_0_2:continue"
-        }
+          "text": "神经太敏感了吧，总是想赢想赢的。"
+        },
+        "outputs": {}
       },
       "choice_final_25_op1": {
         "id": "choice_final_25_op1",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 0
-        }
+          "variableId": 0,
+          "delta": 5
+        },
+        "outputs": {}
       },
       "choice_final_25_1_0": {
         "id": "choice_final_25_1_0",
@@ -316,9 +326,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "说什么呢你？",
-          "continueKey": "dlg:choice_final_25_1_0:continue"
-        }
+          "text": "说什么呢你？"
+        },
+        "outputs": {}
       },
       "choice_final_25_1_1": {
         "id": "choice_final_25_1_1",
@@ -326,9 +336,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "有两个我？另一个我是谁？还是说你在搞我？",
-          "continueKey": "dlg:choice_final_25_1_1:continue"
-        }
+          "text": "有两个我？另一个我是谁？还是说你在搞我？"
+        },
+        "outputs": {}
       },
       "choice_final_25_1_2": {
         "id": "choice_final_25_1_2",
@@ -336,115 +346,127 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "哈哈，被你发现了。",
-          "continueKey": "dlg:choice_final_25_1_2:continue"
-        }
+          "text": "哈哈，被你发现了。"
+        },
+        "outputs": {}
       },
       "consume_time_20_1": {
         "id": "consume_time_20_1",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_2": {
         "id": "consume_time_20_2",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_3": {
         "id": "consume_time_20_3",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_4": {
         "id": "consume_time_20_4",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_5": {
         "id": "consume_time_20_5",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_6": {
         "id": "consume_time_20_6",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_7": {
         "id": "consume_time_20_7",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_8": {
         "id": "consume_time_20_8",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_9": {
         "id": "consume_time_20_9",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_10": {
         "id": "consume_time_20_10",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_11": {
         "id": "consume_time_20_11",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_12": {
         "id": "consume_time_20_12",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
@@ -454,25 +476,28 @@
         "inputs": {
           "condition": false
         },
+        "outputs": {},
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
           "expiresAt": 5760
         },
+        "outputs": {},
         "x": 80,
         "y": 360
       },
       "__social_gate_global_40": {
         "id": "__social_gate_global_40",
-        "type": "getPublicVariable",
+        "type": "getGlobal",
         "inputs": {
-          "id": 40
+          "variableId": 40
         },
+        "outputs": {},
         "x": 80,
         "y": 80
       },
@@ -483,19 +508,21 @@
           "operator": ">",
           "right": 49
         },
+        "outputs": {},
         "x": 160,
         "y": 80
       },
       "current_game_time": {
         "id": "current_game_time",
         "type": "getGameTime",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
-      "insert_dorm_activity": {
-        "id": "insert_dorm_activity",
-        "type": "insertActivity",
+      "insert_dorm_schedule": {
+        "id": "insert_dorm_schedule",
+        "type": "insertSchedule",
         "inputs": {
-          "activityId": "dorm_activity_day3",
+          "scheduleId": "dorm_schedule_day3",
           "queue": "social",
           "respectPrerequisite": true,
           "protectFromExpiry": false,
@@ -503,27 +530,31 @@
             "nodeId": "current_game_time",
             "port": "value"
           }
-        }
+        },
+        "outputs": {}
       },
-      "activity_count": {
-        "id": "activity_count",
-        "type": "getActivityInstanceCount",
+      "schedule_count": {
+        "id": "schedule_count",
+        "type": "getScheduleInstanceCount",
         "inputs": {
-          "activityId": "dorm_activity_day3"
-        }
+          "scheduleId": "dorm_schedule_day3"
+        },
+        "outputs": {}
       },
-      "activity_available": {
-        "id": "activity_available",
+      "schedule_available": {
+        "id": "schedule_available",
         "type": "arithmetic",
         "inputs": {
           "operator": "eq",
           "right": 0
-        }
+        },
+        "outputs": {}
       },
-      "activity_guard": {
-        "id": "activity_guard",
+      "schedule_guard": {
+        "id": "schedule_guard",
         "type": "branch",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       }
     },
     "connections": [
@@ -788,7 +819,7 @@
       {
         "fromNodeId": "choice_final_25_1_2",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
@@ -806,7 +837,7 @@
       {
         "fromNodeId": "choice_final_25_0_2",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
@@ -822,34 +853,46 @@
         "toPort": "left"
       },
       {
-        "fromNodeId": "activity_count",
+        "fromNodeId": "schedule_count",
         "fromPort": "value",
-        "toNodeId": "activity_available",
+        "toNodeId": "schedule_available",
         "toPort": "left"
       },
       {
-        "fromNodeId": "activity_available",
+        "fromNodeId": "schedule_available",
         "fromPort": "value",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "condition"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "false",
         "toNodeId": "end",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "true",
-        "toNodeId": "insert_dorm_activity",
+        "toNodeId": "insert_dorm_schedule",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "insert_dorm_activity",
+        "fromNodeId": "insert_dorm_schedule",
         "fromPort": "flowOut",
         "toNodeId": "end",
         "toPort": "flowIn"
+      }
+    ]
+  },
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶",
+  "condition": {
+    "globalVariables": [
+      {
+        "id": 40,
+        "op": "gte",
+        "value": 50
       }
     ]
   }

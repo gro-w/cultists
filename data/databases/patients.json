@@ -11,7 +11,8 @@
         "gastroesophageal_reflux",
         "peptic_ulcer_unspecified"
       ],
-      "dialogueActivityId": "work01a-patient1-start"
+      "dialogueActivityId": "work01a-patient1-start",
+      "type": "his"
     },
     {
       "id": "patient_01_02_kidney_stone",
@@ -24,7 +25,8 @@
         "iron_deficiency_anemia",
         "ulcerative_colitis"
       ],
-      "dialogueActivityId": "work01a-patient2-start"
+      "dialogueActivityId": "work01a-patient2-start",
+      "type": "his"
     },
     {
       "id": "patient_01_03_benign_prostatic_hyperplasia",
@@ -37,7 +39,8 @@
         "dry_eye",
         "hemorrhoids"
       ],
-      "dialogueActivityId": "work01a-patient3-start"
+      "dialogueActivityId": "work01a-patient3-start",
+      "type": "his"
     },
     {
       "id": "patient_01_04_nausea_vomiting",
@@ -50,7 +53,8 @@
         "bacterial_conjunctivitis",
         "kidney_stone"
       ],
-      "dialogueActivityId": "work01a-patient4-start"
+      "dialogueActivityId": "work01a-patient4-start",
+      "type": "his"
     },
     {
       "id": "patient_01_05_lymphadenopathy",
@@ -63,7 +67,8 @@
         "ulcerative_colitis",
         "benign_prostatic_hyperplasia"
       ],
-      "dialogueActivityId": "work01a-patient5-start"
+      "dialogueActivityId": "work01a-patient5-start",
+      "type": "his"
     },
     {
       "id": "patient_01_06_orthostatic_hypotension",
@@ -76,7 +81,8 @@
         "hemorrhoids",
         "nausea_vomiting"
       ],
-      "dialogueActivityId": "work01a-patient6-start"
+      "dialogueActivityId": "work01a-patient6-start",
+      "type": "his"
     },
     {
       "id": "patient_01_07_closed_foot_fracture",
@@ -89,7 +95,8 @@
         "kidney_stone",
         "lymphadenopathy"
       ],
-      "dialogueActivityId": "work01a-patient7-start"
+      "dialogueActivityId": "work01a-patient7-start",
+      "type": "his"
     },
     {
       "id": "patient_02_01_gingivitis",
@@ -102,7 +109,8 @@
         "iron_deficiency_anemia",
         "ulcerative_colitis"
       ],
-      "dialogueActivityId": "patient_02_01_gingivitis"
+      "dialogueActivityId": "patient_02_01_gingivitis",
+      "type": "his"
     },
     {
       "id": "patient_02_02_plantar_fasciitis",
@@ -115,7 +123,8 @@
         "dry_eye",
         "hemorrhoids"
       ],
-      "dialogueActivityId": "patient_02_02_plantar_fasciitis"
+      "dialogueActivityId": "patient_02_02_plantar_fasciitis",
+      "type": "his"
     },
     {
       "id": "patient_02_03_hyperthyroidism",
@@ -128,7 +137,8 @@
         "ulcerative_colitis",
         "benign_prostatic_hyperplasia"
       ],
-      "dialogueActivityId": "patient_02_03_hyperthyroidism"
+      "dialogueActivityId": "patient_02_03_hyperthyroidism",
+      "type": "his"
     },
     {
       "id": "patient_02_04_hypothyroidism",
@@ -141,7 +151,8 @@
         "hemorrhoids",
         "nausea_vomiting"
       ],
-      "dialogueActivityId": "patient_02_04_hypothyroidism"
+      "dialogueActivityId": "patient_02_04_hypothyroidism",
+      "type": "his"
     },
     {
       "id": "patient_02_05_vitamin_b12_deficiency_anemia",
@@ -154,7 +165,8 @@
         "kidney_stone",
         "lymphadenopathy"
       ],
-      "dialogueActivityId": "patient_02_05_vitamin_b12_deficiency_anemia"
+      "dialogueActivityId": "patient_02_05_vitamin_b12_deficiency_anemia",
+      "type": "his"
     },
     {
       "id": "patient_02_06_iron_deficiency_anemia",
@@ -167,7 +179,8 @@
         "benign_prostatic_hyperplasia",
         "orthostatic_hypotension"
       ],
-      "dialogueActivityId": "patient_02_06_iron_deficiency_anemia"
+      "dialogueActivityId": "patient_02_06_iron_deficiency_anemia",
+      "type": "his"
     },
     {
       "id": "patient_02_07_dry_eye",
@@ -180,7 +193,8 @@
         "nausea_vomiting",
         "closed_foot_fracture"
       ],
-      "dialogueActivityId": "patient_02_07_dry_eye"
+      "dialogueActivityId": "patient_02_07_dry_eye",
+      "type": "his"
     },
     {
       "id": "patient_extra_02_a_08",
@@ -193,7 +207,8 @@
         "nausea_vomiting",
         "closed_foot_fracture"
       ],
-      "dialogueActivityId": "patient_extra_02_a_08"
+      "dialogueActivityId": "patient_extra_02_a_08",
+      "type": "his"
     },
     {
       "id": "patient_03_01_bacterial_conjunctivitis",
@@ -206,7 +221,8 @@
         "dry_eye",
         "kidney_stone"
       ],
-      "dialogueActivityId": "patient_03_01_bacterial_conjunctivitis"
+      "dialogueActivityId": "patient_03_01_bacterial_conjunctivitis",
+      "type": "his"
     },
     {
       "id": "patient_03_02_ulcerative_colitis",
@@ -219,7 +235,8 @@
         "bacterial_conjunctivitis",
         "benign_prostatic_hyperplasia"
       ],
-      "dialogueActivityId": "patient_03_02_ulcerative_colitis"
+      "dialogueActivityId": "patient_03_02_ulcerative_colitis",
+      "type": "his"
     },
     {
       "id": "patient_03_03_hemorrhoids",
@@ -232,7 +249,8 @@
         "ulcerative_colitis",
         "nausea_vomiting"
       ],
-      "dialogueActivityId": "patient_03_03_hemorrhoids"
+      "dialogueActivityId": "patient_03_03_hemorrhoids",
+      "type": "his"
     },
     {
       "id": "patient_03_04_kidney_stone",
@@ -245,7 +263,8 @@
         "hemorrhoids",
         "lymphadenopathy"
       ],
-      "dialogueActivityId": "patient_03_04_kidney_stone"
+      "dialogueActivityId": "patient_03_04_kidney_stone",
+      "type": "his"
     },
     {
       "id": "patient_03_05_benign_prostatic_hyperplasia",
@@ -258,7 +277,8 @@
         "kidney_stone",
         "orthostatic_hypotension"
       ],
-      "dialogueActivityId": "patient_03_05_benign_prostatic_hyperplasia"
+      "dialogueActivityId": "patient_03_05_benign_prostatic_hyperplasia",
+      "type": "his"
     },
     {
       "id": "patient_03_06_nausea_vomiting",
@@ -271,7 +291,8 @@
         "benign_prostatic_hyperplasia",
         "closed_foot_fracture"
       ],
-      "dialogueActivityId": "patient_03_06_nausea_vomiting"
+      "dialogueActivityId": "patient_03_06_nausea_vomiting",
+      "type": "his"
     },
     {
       "id": "patient_03_07_lymphadenopathy",
@@ -284,7 +305,8 @@
         "nausea_vomiting",
         "gingivitis"
       ],
-      "dialogueActivityId": "patient_03_07_lymphadenopathy"
+      "dialogueActivityId": "patient_03_07_lymphadenopathy",
+      "type": "his"
     },
     {
       "id": "patient_extra_03_a_08",
@@ -297,7 +319,8 @@
         "nausea_vomiting",
         "gingivitis"
       ],
-      "dialogueActivityId": "patient_extra_03_a_08"
+      "dialogueActivityId": "patient_extra_03_a_08",
+      "type": "his"
     },
     {
       "id": "patient_extra_03_a_09",
@@ -310,7 +333,8 @@
         "nausea_vomiting",
         "gingivitis"
       ],
-      "dialogueActivityId": "patient_extra_03_a_09"
+      "dialogueActivityId": "patient_extra_03_a_09",
+      "type": "his"
     },
     {
       "id": "patient_04_01_orthostatic_hypotension",
@@ -323,7 +347,8 @@
         "bacterial_conjunctivitis",
         "kidney_stone"
       ],
-      "dialogueActivityId": "patient_04_01_orthostatic_hypotension"
+      "dialogueActivityId": "patient_04_01_orthostatic_hypotension",
+      "type": "his"
     },
     {
       "id": "patient_04_02_closed_foot_fracture",
@@ -336,7 +361,8 @@
         "ulcerative_colitis",
         "benign_prostatic_hyperplasia"
       ],
-      "dialogueActivityId": "patient_04_02_closed_foot_fracture"
+      "dialogueActivityId": "patient_04_02_closed_foot_fracture",
+      "type": "his"
     },
     {
       "id": "patient_04_03_gingivitis",
@@ -349,7 +375,8 @@
         "hemorrhoids",
         "nausea_vomiting"
       ],
-      "dialogueActivityId": "patient_04_03_gingivitis"
+      "dialogueActivityId": "patient_04_03_gingivitis",
+      "type": "his"
     },
     {
       "id": "patient_04_04_plantar_fasciitis",
@@ -362,7 +389,8 @@
         "kidney_stone",
         "lymphadenopathy"
       ],
-      "dialogueActivityId": "patient_04_04_plantar_fasciitis"
+      "dialogueActivityId": "patient_04_04_plantar_fasciitis",
+      "type": "his"
     },
     {
       "id": "patient_04_05_hyperthyroidism",
@@ -375,7 +403,8 @@
         "nausea_vomiting",
         "closed_foot_fracture"
       ],
-      "dialogueActivityId": "patient_04_05_hyperthyroidism"
+      "dialogueActivityId": "patient_04_05_hyperthyroidism",
+      "type": "his"
     },
     {
       "id": "patient_04_06_hypothyroidism",
@@ -388,7 +417,8 @@
         "lymphadenopathy",
         "gingivitis"
       ],
-      "dialogueActivityId": "patient_04_06_hypothyroidism"
+      "dialogueActivityId": "patient_04_06_hypothyroidism",
+      "type": "his"
     },
     {
       "id": "patient_04_07_vitamin_b12_deficiency_anemia",
@@ -401,7 +431,8 @@
         "orthostatic_hypotension",
         "plantar_fasciitis"
       ],
-      "dialogueActivityId": "patient_04_07_vitamin_b12_deficiency_anemia"
+      "dialogueActivityId": "patient_04_07_vitamin_b12_deficiency_anemia",
+      "type": "his"
     },
     {
       "id": "patient_06_01_nausea_vomiting",
@@ -414,7 +445,8 @@
         "hemorrhoids",
         "lymphadenopathy"
       ],
-      "dialogueActivityId": "patient_06_01_nausea_vomiting"
+      "dialogueActivityId": "patient_06_01_nausea_vomiting",
+      "type": "his"
     },
     {
       "id": "patient_06_02_lymphadenopathy",
@@ -427,7 +459,8 @@
         "kidney_stone",
         "orthostatic_hypotension"
       ],
-      "dialogueActivityId": "patient_06_02_lymphadenopathy"
+      "dialogueActivityId": "patient_06_02_lymphadenopathy",
+      "type": "his"
     },
     {
       "id": "patient_06_03_orthostatic_hypotension",
@@ -440,7 +473,8 @@
         "benign_prostatic_hyperplasia",
         "closed_foot_fracture"
       ],
-      "dialogueActivityId": "patient_06_03_orthostatic_hypotension"
+      "dialogueActivityId": "patient_06_03_orthostatic_hypotension",
+      "type": "his"
     },
     {
       "id": "patient_06_04_closed_foot_fracture",
@@ -453,7 +487,8 @@
         "nausea_vomiting",
         "gingivitis"
       ],
-      "dialogueActivityId": "patient_06_04_closed_foot_fracture"
+      "dialogueActivityId": "patient_06_04_closed_foot_fracture",
+      "type": "his"
     },
     {
       "id": "patient_06_05_gingivitis",
@@ -466,7 +501,8 @@
         "lymphadenopathy",
         "plantar_fasciitis"
       ],
-      "dialogueActivityId": "patient_06_05_gingivitis"
+      "dialogueActivityId": "patient_06_05_gingivitis",
+      "type": "his"
     },
     {
       "id": "patient_06_06_plantar_fasciitis",
@@ -479,7 +515,8 @@
         "orthostatic_hypotension",
         "hyperthyroidism"
       ],
-      "dialogueActivityId": "patient_06_06_plantar_fasciitis"
+      "dialogueActivityId": "patient_06_06_plantar_fasciitis",
+      "type": "his"
     },
     {
       "id": "patient_06_07_hyperthyroidism",
@@ -492,7 +529,8 @@
         "gingivitis",
         "vitamin_b12_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_06_07_hyperthyroidism"
+      "dialogueActivityId": "patient_06_07_hyperthyroidism",
+      "type": "his"
     },
     {
       "id": "patient_extra_06_a_08",
@@ -505,7 +543,8 @@
         "gingivitis",
         "vitamin_b12_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_extra_06_a_08"
+      "dialogueActivityId": "patient_extra_06_a_08",
+      "type": "his"
     },
     {
       "id": "patient_extra_06_a_09",
@@ -518,7 +557,8 @@
         "gingivitis",
         "vitamin_b12_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_extra_06_a_09"
+      "dialogueActivityId": "patient_extra_06_a_09",
+      "type": "his"
     },
     {
       "id": "patient_07_01_hypothyroidism",
@@ -531,7 +571,8 @@
         "benign_prostatic_hyperplasia",
         "orthostatic_hypotension"
       ],
-      "dialogueActivityId": "patient_07_01_hypothyroidism"
+      "dialogueActivityId": "patient_07_01_hypothyroidism",
+      "type": "his"
     },
     {
       "id": "patient_07_02_vitamin_b12_deficiency_anemia",
@@ -544,7 +585,8 @@
         "nausea_vomiting",
         "closed_foot_fracture"
       ],
-      "dialogueActivityId": "patient_07_02_vitamin_b12_deficiency_anemia"
+      "dialogueActivityId": "patient_07_02_vitamin_b12_deficiency_anemia",
+      "type": "his"
     },
     {
       "id": "patient_07_03_iron_deficiency_anemia",
@@ -557,7 +599,8 @@
         "lymphadenopathy",
         "gingivitis"
       ],
-      "dialogueActivityId": "patient_07_03_iron_deficiency_anemia"
+      "dialogueActivityId": "patient_07_03_iron_deficiency_anemia",
+      "type": "his"
     },
     {
       "id": "patient_07_04_dry_eye",
@@ -570,7 +613,8 @@
         "orthostatic_hypotension",
         "plantar_fasciitis"
       ],
-      "dialogueActivityId": "patient_07_04_dry_eye"
+      "dialogueActivityId": "patient_07_04_dry_eye",
+      "type": "his"
     },
     {
       "id": "patient_07_05_bacterial_conjunctivitis",
@@ -583,7 +627,8 @@
         "closed_foot_fracture",
         "hyperthyroidism"
       ],
-      "dialogueActivityId": "patient_07_05_bacterial_conjunctivitis"
+      "dialogueActivityId": "patient_07_05_bacterial_conjunctivitis",
+      "type": "his"
     },
     {
       "id": "patient_07_06_ulcerative_colitis",
@@ -596,7 +641,8 @@
         "gingivitis",
         "hypothyroidism"
       ],
-      "dialogueActivityId": "patient_07_06_ulcerative_colitis"
+      "dialogueActivityId": "patient_07_06_ulcerative_colitis",
+      "type": "his"
     },
     {
       "id": "patient_07_07_hemorrhoids",
@@ -609,7 +655,8 @@
         "plantar_fasciitis",
         "vitamin_b12_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_07_07_hemorrhoids"
+      "dialogueActivityId": "patient_07_07_hemorrhoids",
+      "type": "his"
     },
     {
       "id": "patient_extra_07_a_08",
@@ -622,7 +669,8 @@
         "plantar_fasciitis",
         "vitamin_b12_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_extra_07_a_08"
+      "dialogueActivityId": "patient_extra_07_a_08",
+      "type": "his"
     },
     {
       "id": "patient_08_01_kidney_stone",
@@ -635,7 +683,8 @@
         "nausea_vomiting",
         "closed_foot_fracture"
       ],
-      "dialogueActivityId": "patient_08_01_kidney_stone"
+      "dialogueActivityId": "patient_08_01_kidney_stone",
+      "type": "his"
     },
     {
       "id": "patient_08_02_benign_prostatic_hyperplasia",
@@ -648,7 +697,8 @@
         "lymphadenopathy",
         "gingivitis"
       ],
-      "dialogueActivityId": "patient_08_02_benign_prostatic_hyperplasia"
+      "dialogueActivityId": "patient_08_02_benign_prostatic_hyperplasia",
+      "type": "his"
     },
     {
       "id": "patient_08_03_nausea_vomiting",
@@ -661,7 +711,8 @@
         "orthostatic_hypotension",
         "plantar_fasciitis"
       ],
-      "dialogueActivityId": "patient_08_03_nausea_vomiting"
+      "dialogueActivityId": "patient_08_03_nausea_vomiting",
+      "type": "his"
     },
     {
       "id": "patient_08_04_lymphadenopathy",
@@ -674,7 +725,8 @@
         "closed_foot_fracture",
         "hyperthyroidism"
       ],
-      "dialogueActivityId": "patient_08_04_lymphadenopathy"
+      "dialogueActivityId": "patient_08_04_lymphadenopathy",
+      "type": "his"
     },
     {
       "id": "patient_08_05_orthostatic_hypotension",
@@ -687,7 +739,8 @@
         "gingivitis",
         "hypothyroidism"
       ],
-      "dialogueActivityId": "patient_08_05_orthostatic_hypotension"
+      "dialogueActivityId": "patient_08_05_orthostatic_hypotension",
+      "type": "his"
     },
     {
       "id": "patient_08_06_closed_foot_fracture",
@@ -700,7 +753,8 @@
         "plantar_fasciitis",
         "vitamin_b12_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_08_06_closed_foot_fracture"
+      "dialogueActivityId": "patient_08_06_closed_foot_fracture",
+      "type": "his"
     },
     {
       "id": "patient_08_07_gingivitis",
@@ -713,7 +767,8 @@
         "hyperthyroidism",
         "iron_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_08_07_gingivitis"
+      "dialogueActivityId": "patient_08_07_gingivitis",
+      "type": "his"
     },
     {
       "id": "patient_extra_07_b_08",
@@ -726,7 +781,8 @@
         "hyperthyroidism",
         "iron_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_extra_07_b_08"
+      "dialogueActivityId": "patient_extra_07_b_08",
+      "type": "his"
     },
     {
       "id": "patient_extra_07_b_09",
@@ -739,7 +795,8 @@
         "hyperthyroidism",
         "iron_deficiency_anemia"
       ],
-      "dialogueActivityId": "patient_extra_07_b_09"
+      "dialogueActivityId": "patient_extra_07_b_09",
+      "type": "his"
     }
   ]
 }

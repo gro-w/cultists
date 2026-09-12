@@ -142,8 +142,8 @@
         "x": 1760,
         "y": 260
       },
-      "activityEnd": {
-        "id": "activityEnd",
+      "scheduleEnd": {
+        "id": "scheduleEnd",
         "type": "activityEnd",
         "inputs": {},
         "x": 2010,
@@ -158,8 +158,8 @@
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": false,
@@ -251,7 +251,7 @@
       {
         "fromNodeId": "time_closing",
         "fromPort": "flowOut",
-        "toNodeId": "activityEnd",
+        "toNodeId": "scheduleEnd",
         "toPort": "flowIn"
       }
     ]

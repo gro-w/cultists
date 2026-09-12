@@ -15,28 +15,7 @@
         "type": "emitEvent",
         "inputs": {
           "eventName": "content:hisSubmit",
-          "payload": {
-            "case": {
-              "variable": "his:lastCase"
-            },
-            "resultMessage": {
-              "variable": "his:resultMessage"
-            },
-            "patientId": {
-              "nodeId": "patientId",
-              "port": "value"
-            }
-          }
-        }
-      },
-      "patientId": {
-        "id": "patientId",
-        "type": "getProperty",
-        "inputs": {
-          "value": {
-            "variable": "his:selectedPatient"
-          },
-          "key": "id"
+          "payload": {}
         }
       },
       "__prerequisite__": {
@@ -46,8 +25,8 @@
           "condition": true
         }
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": false,

@@ -9,7 +9,8 @@
       "start": {
         "id": "start",
         "type": "flowStart",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "n1": {
         "id": "n1",
@@ -17,9 +18,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "要不要帮我测评个游戏？",
-          "continueKey": "dlg:n1:continue"
-        }
+          "text": "要不要帮我测评个游戏？"
+        },
+        "outputs": {}
       },
       "n2": {
         "id": "n2",
@@ -27,9 +28,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "可以啊，什么游戏？",
-          "continueKey": "dlg:n2:continue"
-        }
+          "text": "可以啊，什么游戏？"
+        },
+        "outputs": {}
       },
       "n3": {
         "id": "n3",
@@ -37,9 +38,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "《第二十四人格》。",
-          "continueKey": "dlg:n3:continue"
-        }
+          "text": "《第二十四人格》。"
+        },
+        "outputs": {}
       },
       "n4": {
         "id": "n4",
@@ -47,9 +48,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "怎么测？",
-          "continueKey": "dlg:n4:continue"
-        }
+          "text": "怎么测？"
+        },
+        "outputs": {}
       },
       "n5": {
         "id": "n5",
@@ -57,9 +58,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "什么都不要看，直接玩，玩完告诉我感想。",
-          "continueKey": "dlg:n5:continue"
-        }
+          "text": "什么都不要看，直接玩，玩完告诉我感想。"
+        },
+        "outputs": {}
       },
       "n6": {
         "id": "n6",
@@ -67,9 +68,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "评分都不能看吗……",
-          "continueKey": "dlg:n6:continue"
-        }
+          "text": "评分都不能看吗……"
+        },
+        "outputs": {}
       },
       "n7": {
         "id": "n7",
@@ -77,33 +78,36 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "不能看。进去抽个卡，“三重馈赠”。 这活动名字听起来像发誓似的。",
-          "continueKey": "dlg:n7:continue"
-        }
+          "text": "不能看。进去抽个卡，“三重馈赠”。 这活动名字听起来像发誓似的。"
+        },
+        "outputs": {}
       },
       "choice8": {
         "id": "choice8",
         "type": "choice",
         "inputs": {
-          "options": [
-            {
-              "label": "好吧，那我不看了。"
-            },
-            {
-              "label": "他人的观点是智慧的结晶。"
-            }
-          ],
-          "optionCount": 2,
-          "selectionKey": "dlg:choice8:select"
-        }
+          "branchCount": 2,
+          "label0": "好吧，那我不看了。",
+          "label1": "他人的观点是智慧的结晶。"
+        },
+        "options": [
+          {
+            "label": "好吧，那我不看了。"
+          },
+          {
+            "label": "他人的观点是智慧的结晶。"
+          }
+        ],
+        "outputs": {}
       },
       "choice8_op0": {
         "id": "choice8_op0",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 40
-        }
+          "variableId": 40,
+          "delta": 5
+        },
+        "outputs": {}
       },
       "n9": {
         "id": "n9",
@@ -111,9 +115,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "其实这也是我的观点。",
-          "continueKey": "dlg:n9:continue"
-        }
+          "text": "其实这也是我的观点。"
+        },
+        "outputs": {}
       },
       "n10": {
         "id": "n10",
@@ -121,9 +125,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "什么意思？",
-          "continueKey": "dlg:n10:continue"
-        }
+          "text": "什么意思？"
+        },
+        "outputs": {}
       },
       "n11": {
         "id": "n11",
@@ -131,17 +135,18 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "没什么意思，快抽卡。",
-          "continueKey": "dlg:n11:continue"
-        }
+          "text": "没什么意思，快抽卡。"
+        },
+        "outputs": {}
       },
       "choice8_op1": {
         "id": "choice8_op1",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": -5,
-          "id": 40
-        }
+          "variableId": 40,
+          "delta": -5
+        },
+        "outputs": {}
       },
       "n12": {
         "id": "n12",
@@ -149,9 +154,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "长满结晶的大脑么，很难下嘴啊……",
-          "continueKey": "dlg:n12:continue"
-        }
+          "text": "长满结晶的大脑么，很难下嘴啊……"
+        },
+        "outputs": {}
       },
       "n13": {
         "id": "n13",
@@ -159,9 +164,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "你说我吗？",
-          "continueKey": "dlg:n13:continue"
-        }
+          "text": "你说我吗？"
+        },
+        "outputs": {}
       },
       "n14": {
         "id": "n14",
@@ -169,9 +174,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "说的火锅，刚才我联想到了上次咱们去火锅店吃的猪脑。",
-          "continueKey": "dlg:n14:continue"
-        }
+          "text": "说的火锅，刚才我联想到了上次咱们去火锅店吃的猪脑。"
+        },
+        "outputs": {}
       },
       "n15": {
         "id": "n15",
@@ -179,9 +184,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "没抽到我想要的，要不还是氪一下。",
-          "continueKey": "dlg:n15:continue"
-        }
+          "text": "没抽到我想要的，要不还是氪一下。"
+        },
+        "outputs": {}
       },
       "n16": {
         "id": "n16",
@@ -189,38 +194,42 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "充钱就像上供，只能得到保底作为神的恩赐，无法买到你心爱的那张卡……我是说游戏之神。",
-          "continueKey": "dlg:n16:continue"
-        }
+          "text": "充钱就像上供，只能得到保底作为神的恩赐，无法买到你心爱的那张卡……我是说游戏之神。"
+        },
+        "outputs": {}
       },
       "end": {
         "id": "end",
         "type": "activityEnd",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
       "choice_final_20": {
         "id": "choice_final_20",
         "type": "choice",
         "inputs": {
-          "options": [
-            {
-              "label": "是不是我不够虔诚？"
-            },
-            {
-              "label": "能赢我怎么样都行。"
-            }
-          ],
-          "optionCount": 2,
-          "selectionKey": "dlg:choice_final_20:select"
-        }
+          "branchCount": 2,
+          "label0": "是不是我不够虔诚？",
+          "label1": "能赢我怎么样都行。"
+        },
+        "options": [
+          {
+            "label": "是不是我不够虔诚？"
+          },
+          {
+            "label": "能赢我怎么样都行。"
+          }
+        ],
+        "outputs": {}
       },
       "choice_final_20_op0": {
         "id": "choice_final_20_op0",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": -5,
-          "id": 40
-        }
+          "variableId": 40,
+          "delta": -5
+        },
+        "outputs": {}
       },
       "choice_final_20_0_0": {
         "id": "choice_final_20_0_0",
@@ -228,17 +237,18 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "神不在乎。",
-          "continueKey": "dlg:choice_final_20_0_0:continue"
-        }
+          "text": "神不在乎。"
+        },
+        "outputs": {}
       },
       "choice_final_20_op1": {
         "id": "choice_final_20_op1",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 40
-        }
+          "variableId": 40,
+          "delta": 5
+        },
+        "outputs": {}
       },
       "choice_final_20_1_0": {
         "id": "choice_final_20_1_0",
@@ -246,115 +256,127 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "那你就做好准备为游戏之神奉献全部吧。",
-          "continueKey": "dlg:choice_final_20_1_0:continue"
-        }
+          "text": "那你就做好准备为游戏之神奉献全部吧。"
+        },
+        "outputs": {}
       },
       "consume_time_20_1": {
         "id": "consume_time_20_1",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_2": {
         "id": "consume_time_20_2",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_3": {
         "id": "consume_time_20_3",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_4": {
         "id": "consume_time_20_4",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_5": {
         "id": "consume_time_20_5",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_6": {
         "id": "consume_time_20_6",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_7": {
         "id": "consume_time_20_7",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_8": {
         "id": "consume_time_20_8",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_9": {
         "id": "consume_time_20_9",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_10": {
         "id": "consume_time_20_10",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_11": {
         "id": "consume_time_20_11",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
       "consume_time_20_12": {
         "id": "consume_time_20_12",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 30,
         "y": 40
       },
@@ -364,25 +386,28 @@
         "inputs": {
           "condition": false
         },
+        "outputs": {},
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
           "expiresAt": 5760
         },
+        "outputs": {},
         "x": 80,
         "y": 360
       },
       "__social_gate_global_40": {
         "id": "__social_gate_global_40",
-        "type": "getPublicVariable",
+        "type": "getGlobal",
         "inputs": {
-          "id": 40
+          "variableId": 40
         },
+        "outputs": {},
         "x": 80,
         "y": 80
       },
@@ -393,19 +418,21 @@
           "operator": "<",
           "right": 50
         },
+        "outputs": {},
         "x": 160,
         "y": 80
       },
       "current_game_time": {
         "id": "current_game_time",
         "type": "getGameTime",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
-      "insert_dorm_activity": {
-        "id": "insert_dorm_activity",
-        "type": "insertActivity",
+      "insert_dorm_schedule": {
+        "id": "insert_dorm_schedule",
+        "type": "insertSchedule",
         "inputs": {
-          "activityId": "dorm_activity_day3",
+          "scheduleId": "dorm_schedule_day3",
           "queue": "social",
           "respectPrerequisite": true,
           "protectFromExpiry": false,
@@ -413,27 +440,31 @@
             "nodeId": "current_game_time",
             "port": "value"
           }
-        }
+        },
+        "outputs": {}
       },
-      "activity_count": {
-        "id": "activity_count",
-        "type": "getActivityInstanceCount",
+      "schedule_count": {
+        "id": "schedule_count",
+        "type": "getScheduleInstanceCount",
         "inputs": {
-          "activityId": "dorm_activity_day3"
-        }
+          "scheduleId": "dorm_schedule_day3"
+        },
+        "outputs": {}
       },
-      "activity_available": {
-        "id": "activity_available",
+      "schedule_available": {
+        "id": "schedule_available",
         "type": "arithmetic",
         "inputs": {
           "operator": "eq",
           "right": 0
-        }
+        },
+        "outputs": {}
       },
-      "activity_guard": {
-        "id": "activity_guard",
+      "schedule_guard": {
+        "id": "schedule_guard",
         "type": "branch",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       }
     },
     "connections": [
@@ -644,7 +675,7 @@
       {
         "fromNodeId": "choice_final_20_1_0",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
@@ -662,7 +693,7 @@
       {
         "fromNodeId": "choice_final_20_0_0",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
@@ -678,34 +709,46 @@
         "toPort": "left"
       },
       {
-        "fromNodeId": "activity_count",
+        "fromNodeId": "schedule_count",
         "fromPort": "value",
-        "toNodeId": "activity_available",
+        "toNodeId": "schedule_available",
         "toPort": "left"
       },
       {
-        "fromNodeId": "activity_available",
+        "fromNodeId": "schedule_available",
         "fromPort": "value",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "condition"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "false",
         "toNodeId": "end",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "true",
-        "toNodeId": "insert_dorm_activity",
+        "toNodeId": "insert_dorm_schedule",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "insert_dorm_activity",
+        "fromNodeId": "insert_dorm_schedule",
         "fromPort": "flowOut",
         "toNodeId": "end",
         "toPort": "flowIn"
+      }
+    ]
+  },
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶",
+  "condition": {
+    "globalVariables": [
+      {
+        "id": 40,
+        "op": "lt",
+        "value": 50
       }
     ]
   }

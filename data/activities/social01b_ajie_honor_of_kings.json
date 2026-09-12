@@ -10,6 +10,7 @@
         "id": "start",
         "type": "flowStart",
         "inputs": {},
+        "outputs": {},
         "x": 40,
         "y": 360
       },
@@ -19,9 +20,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "我正好要做测试手游的视频，要不要来跟我一起玩？",
-          "continueKey": "dlg:invite:continue"
+          "text": "我正好要做测试手游的视频，要不要来跟我一起玩？"
         },
+        "outputs": {},
         "x": 260,
         "y": 360
       },
@@ -31,9 +32,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "什么手游？",
-          "continueKey": "dlg:ask_game:continue"
+          "text": "什么手游？"
         },
+        "outputs": {},
         "x": 520,
         "y": 360
       },
@@ -43,9 +44,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "《皇者荣耀》，你玩过没？",
-          "continueKey": "dlg:game_name:continue"
+          "text": "《皇者荣耀》，你玩过没？"
         },
+        "outputs": {},
         "x": 780,
         "y": 360
       },
@@ -55,9 +56,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "看过攻略，就是推塔游戏呗。应该不难。",
-          "continueKey": "dlg:player_guide:continue"
+          "text": "看过攻略，就是推塔游戏呗。应该不难。"
         },
+        "outputs": {},
         "x": 1040,
         "y": 360
       },
@@ -67,9 +68,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "先打。",
-          "continueKey": "dlg:start_game:continue"
+          "text": "先打。"
         },
+        "outputs": {},
         "x": 1320,
         "y": 360
       },
@@ -79,9 +80,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "要是匹配上很厉害的对手怎么办？",
-          "continueKey": "dlg:ask_opponent:continue"
+          "text": "要是匹配上很厉害的对手怎么办？"
         },
+        "outputs": {},
         "x": 1580,
         "y": 360
       },
@@ -91,9 +92,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "有我带你。况且你现在是新手保护期，不会遇到皇者的。",
-          "continueKey": "dlg:protect:continue"
+          "text": "有我带你。况且你现在是新手保护期，不会遇到皇者的。"
         },
+        "outputs": {},
         "x": 1840,
         "y": 360
       },
@@ -103,9 +104,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "你能保证会赢吗？要不我还是再去看看攻略？",
-          "continueKey": "dlg:ask_win:continue"
+          "text": "你能保证会赢吗？要不我还是再去看看攻略？"
         },
+        "outputs": {},
         "x": 2100,
         "y": 360
       },
@@ -113,19 +114,19 @@
         "id": "first_choice",
         "type": "choice",
         "inputs": {
-          "options": [
-            {
-              "label": "那我相信你。",
-              "next": "first_favor_plus"
-            },
-            {
-              "label": "要不咱也充点钱。",
-              "next": "first_favor_minus"
-            }
-          ],
-          "optionCount": 2,
-          "selectionKey": "dlg:first_choice:select"
+          "branchCount": 2
         },
+        "options": [
+          {
+            "label": "那我相信你。",
+            "next": "first_favor_plus"
+          },
+          {
+            "label": "要不咱也充点钱。",
+            "next": "first_favor_minus"
+          }
+        ],
+        "outputs": {},
         "x": 2380,
         "y": 360
       },
@@ -135,9 +136,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "这就对了，你先签个到，一会听我指挥。",
-          "continueKey": "dlg:trust:continue"
+          "text": "这就对了，你先签个到，一会听我指挥。"
         },
+        "outputs": {},
         "x": 2660,
         "y": 180
       },
@@ -147,9 +148,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "我还是紧张，一定要赢啊。",
-          "continueKey": "dlg:trust_nervous:continue"
+          "text": "我还是紧张，一定要赢啊。"
         },
+        "outputs": {},
         "x": 2940,
         "y": 180
       },
@@ -159,9 +160,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "你在向我祷告吗？行，我保佑你赢。",
-          "continueKey": "dlg:trust_bless:continue"
+          "text": "你在向我祷告吗？行，我保佑你赢。"
         },
+        "outputs": {},
         "x": 3220,
         "y": 180
       },
@@ -171,9 +172,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "输了呢？",
-          "continueKey": "dlg:trust_lose:continue"
+          "text": "输了呢？"
         },
+        "outputs": {},
         "x": 3500,
         "y": 180
       },
@@ -183,29 +184,31 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "请你喝8喜。",
-          "continueKey": "dlg:trust_drink:continue"
+          "text": "请你喝8喜。"
         },
+        "outputs": {},
         "x": 3780,
         "y": 180
       },
       "first_favor_plus": {
         "id": "first_favor_plus",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 40
+          "variableId": 40,
+          "delta": 5
         },
+        "outputs": {},
         "x": 2660,
         "y": 360
       },
       "first_favor_minus": {
         "id": "first_favor_minus",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": -5,
-          "id": 40
+          "variableId": 40,
+          "delta": -5
         },
+        "outputs": {},
         "x": 2660,
         "y": 700
       },
@@ -215,9 +218,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "你充吧，我不想充。",
-          "continueKey": "dlg:pay_reply:continue"
+          "text": "你充吧，我不想充。"
         },
+        "outputs": {},
         "x": 2660,
         "y": 540
       },
@@ -227,9 +230,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "到处都是rmb玩家，我攻略也没背过，还是充点好了。",
-          "continueKey": "dlg:pay_reason:continue"
+          "text": "到处都是rmb玩家，我攻略也没背过，还是充点好了。"
         },
+        "outputs": {},
         "x": 2940,
         "y": 540
       },
@@ -239,9 +242,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "所有人都这么想，充点钱就容易了，段位高了，心愿达成了——这么说手游跟教堂有什么区别？都是门口放个箱子收钱。",
-          "continueKey": "dlg:pay_church:continue"
+          "text": "所有人都这么想，充点钱就容易了，段位高了，心愿达成了——这么说手游跟教堂有什么区别？都是门口放个箱子收钱。"
         },
+        "outputs": {},
         "x": 3220,
         "y": 540
       },
@@ -251,9 +254,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "我好像快死了，怎么办？",
-          "continueKey": "dlg:death:continue"
+          "text": "我好像快死了，怎么办？"
         },
+        "outputs": {},
         "x": 4060,
         "y": 360
       },
@@ -263,9 +266,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "没事，死了又不是终点。有些时候，死了还能激发出英雄的第二人格——就像我们一样，有时候得“死”一次才能活出真我。",
-          "continueKey": "dlg:second_personality:continue"
+          "text": "没事，死了又不是终点。有些时候，死了还能激发出英雄的第二人格——就像我们一样，有时候得“死”一次才能活出真我。"
         },
+        "outputs": {},
         "x": 4340,
         "y": 360
       },
@@ -275,9 +278,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "我又复活了。",
-          "continueKey": "dlg:revive:continue"
+          "text": "我又复活了。"
         },
+        "outputs": {},
         "x": 4620,
         "y": 360
       },
@@ -287,9 +290,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "快去推塔，我们快赢了。",
-          "continueKey": "dlg:push_tower:continue"
+          "text": "快去推塔，我们快赢了。"
         },
+        "outputs": {},
         "x": 4900,
         "y": 360
       },
@@ -297,19 +300,19 @@
         "id": "second_choice",
         "type": "choice",
         "inputs": {
-          "options": [
-            {
-              "label": "呼，没想到这么快就结束了，好刺激。",
-              "next": "second_favor_plus"
-            },
-            {
-              "label": "要是有攻略刚才我肯定不会死。死掉的感觉太糟糕了，哪怕是在游戏里。",
-              "next": "second_favor_minus"
-            }
-          ],
-          "optionCount": 2,
-          "selectionKey": "dlg:second_choice:select"
+          "branchCount": 2
         },
+        "options": [
+          {
+            "label": "呼，没想到这么快就结束了，好刺激。",
+            "next": "second_favor_plus"
+          },
+          {
+            "label": "要是有攻略刚才我肯定不会死。死掉的感觉太糟糕了，哪怕是在游戏里。",
+            "next": "second_favor_minus"
+          }
+        ],
+        "outputs": {},
         "x": 5180,
         "y": 360
       },
@@ -319,9 +322,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "怎么样，攻略可带不来这种感觉。",
-          "continueKey": "dlg:excited_reply:continue"
+          "text": "怎么样，攻略可带不来这种感觉。"
         },
+        "outputs": {},
         "x": 5460,
         "y": 180
       },
@@ -331,9 +334,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "……确实。",
-          "continueKey": "dlg:excited_endline:continue"
+          "text": "……确实。"
         },
+        "outputs": {},
         "x": 5740,
         "y": 180
       },
@@ -343,9 +346,9 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "阿杰",
-          "text": "没办法，有人当主力，有人就得当炮灰。刚才对面那个辅助，为保射手死了那么多次，遇上我还是得输。",
-          "continueKey": "dlg:regret_reply:continue"
+          "text": "没办法，有人当主力，有人就得当炮灰。刚才对面那个辅助，为保射手死了那么多次，遇上我还是得输。"
         },
+        "outputs": {},
         "x": 5460,
         "y": 540
       },
@@ -355,29 +358,31 @@
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "player",
-          "text": "……确实。",
-          "continueKey": "dlg:regret_endline:continue"
+          "text": "……确实。"
         },
+        "outputs": {},
         "x": 5740,
         "y": 540
       },
       "second_favor_plus": {
         "id": "second_favor_plus",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": 5,
-          "id": 40
+          "variableId": 40,
+          "delta": 5
         },
+        "outputs": {},
         "x": 5460,
         "y": 360
       },
       "second_favor_minus": {
         "id": "second_favor_minus",
-        "type": "applyPublicVariableEffect",
+        "type": "setGlobal",
         "inputs": {
-          "delta": -5,
-          "id": 40
+          "variableId": 40,
+          "delta": -5
         },
+        "outputs": {},
         "x": 5460,
         "y": 700
       },
@@ -385,114 +390,127 @@
         "id": "end",
         "type": "activityEnd",
         "inputs": {},
+        "outputs": {},
         "x": 6020,
         "y": 360
       },
       "consume_time_20_1": {
         "id": "consume_time_20_1",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 290,
         "y": 400
       },
       "consume_time_20_2": {
         "id": "consume_time_20_2",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 810,
         "y": 400
       },
       "consume_time_20_3": {
         "id": "consume_time_20_3",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 1350,
         "y": 400
       },
       "consume_time_20_4": {
         "id": "consume_time_20_4",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 1870,
         "y": 400
       },
       "consume_time_20_5": {
         "id": "consume_time_20_5",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 2690,
         "y": 220
       },
       "consume_time_20_6": {
         "id": "consume_time_20_6",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 3250,
         "y": 220
       },
       "consume_time_20_7": {
         "id": "consume_time_20_7",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 3810,
         "y": 220
       },
       "consume_time_20_8": {
         "id": "consume_time_20_8",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 2970,
         "y": 580
       },
       "consume_time_20_9": {
         "id": "consume_time_20_9",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 4370,
         "y": 400
       },
       "consume_time_20_10": {
         "id": "consume_time_20_10",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 4930,
         "y": 400
       },
       "consume_time_20_11": {
         "id": "consume_time_20_11",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 5770,
         "y": 220
       },
       "consume_time_20_12": {
         "id": "consume_time_20_12",
-        "type": "framework:consumeTime",
+        "type": "consumeTime",
         "inputs": {
           "minutes": 20
         },
+        "outputs": {},
         "x": 5770,
         "y": 580
       },
@@ -502,29 +520,32 @@
         "inputs": {
           "condition": true
         },
+        "outputs": {},
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
           "expiresAt": 2880
         },
+        "outputs": {},
         "x": 80,
         "y": 360
       },
       "current_game_time": {
         "id": "current_game_time",
         "type": "getGameTime",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       },
-      "insert_dorm_activity": {
-        "id": "insert_dorm_activity",
-        "type": "insertActivity",
+      "insert_dorm_schedule": {
+        "id": "insert_dorm_schedule",
+        "type": "insertSchedule",
         "inputs": {
-          "activityId": "dorm_activity_day1",
+          "scheduleId": "dorm_schedule_day1",
           "queue": "social",
           "respectPrerequisite": true,
           "protectFromExpiry": false,
@@ -532,27 +553,31 @@
             "nodeId": "current_game_time",
             "port": "value"
           }
-        }
+        },
+        "outputs": {}
       },
-      "activity_count": {
-        "id": "activity_count",
-        "type": "getActivityInstanceCount",
+      "schedule_count": {
+        "id": "schedule_count",
+        "type": "getScheduleInstanceCount",
         "inputs": {
-          "activityId": "dorm_activity_day1"
-        }
+          "scheduleId": "dorm_schedule_day1"
+        },
+        "outputs": {}
       },
-      "activity_available": {
-        "id": "activity_available",
+      "schedule_available": {
+        "id": "schedule_available",
         "type": "arithmetic",
         "inputs": {
           "operator": "eq",
           "right": 0
-        }
+        },
+        "outputs": {}
       },
-      "activity_guard": {
-        "id": "activity_guard",
+      "schedule_guard": {
+        "id": "schedule_guard",
         "type": "branch",
-        "inputs": {}
+        "inputs": {},
+        "outputs": {}
       }
     },
     "connections": [
@@ -805,7 +830,7 @@
       {
         "fromNodeId": "excited_endline",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
@@ -823,39 +848,42 @@
       {
         "fromNodeId": "regret_endline",
         "fromPort": "flowOut",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_count",
+        "fromNodeId": "schedule_count",
         "fromPort": "value",
-        "toNodeId": "activity_available",
+        "toNodeId": "schedule_available",
         "toPort": "left"
       },
       {
-        "fromNodeId": "activity_available",
+        "fromNodeId": "schedule_available",
         "fromPort": "value",
-        "toNodeId": "activity_guard",
+        "toNodeId": "schedule_guard",
         "toPort": "condition"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "false",
         "toNodeId": "end",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_guard",
+        "fromNodeId": "schedule_guard",
         "fromPort": "true",
-        "toNodeId": "insert_dorm_activity",
+        "toNodeId": "insert_dorm_schedule",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "insert_dorm_activity",
+        "fromNodeId": "insert_dorm_schedule",
         "fromPort": "flowOut",
         "toNodeId": "end",
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "npcId": "ajie",
+  "name": "阿杰",
+  "avatar": "🐶"
 }

@@ -1,6 +1,6 @@
 {
   "id": "dorm_activity_day3",
-  "type": "dormActivity",
+  "type": "dormSchedule",
   "displayName": "第3天宿舍集体活动",
   "queueId": "social",
   "blueprint": {
@@ -80,9 +80,9 @@
       },
       "study_san": {
         "id": "study_san",
-        "type": "setVariable",
+        "type": "statOperation",
         "inputs": {
-          "key": "mental",
+          "statId": "mental",
           "delta": 10
         }
       },
@@ -402,38 +402,38 @@
         "type": "branch",
         "inputs": {}
       },
-      "activity_set": {
-        "id": "activity_set",
+      "schedule_set": {
+        "id": "schedule_set",
         "type": "applyPublicVariableEffect",
         "inputs": {
           "value": true,
           "id": 106
         }
       },
-      "previous_activity": {
-        "id": "previous_activity",
+      "previous_schedule": {
+        "id": "previous_schedule",
         "type": "getPublicVariable",
         "inputs": {
           "id": 105
         }
       },
-      "previous_activity_branch": {
-        "id": "previous_activity_branch",
+      "previous_schedule_branch": {
+        "id": "previous_schedule_branch",
         "type": "branch",
         "inputs": {}
       },
-      "previous_activity_line": {
-        "id": "previous_activity_line",
+      "previous_schedule_line": {
+        "id": "previous_schedule_line",
         "type": "text",
         "inputs": {
           "displayTo": "dorm-bottom",
           "speaker": "主控",
           "text": "又是个恐怖游戏？",
-          "continueKey": "dlg:previous_activity_line:continue"
+          "continueKey": "dlg:previous_schedule_line:continue"
         }
       },
-      "activityExpiry": {
-        "id": "activityExpiry",
+      "scheduleExpiry": {
+        "id": "scheduleExpiry",
         "type": "activityExpiry",
         "inputs": {
           "expires": true,
@@ -786,29 +786,29 @@
       {
         "fromNodeId": "check_branch_2",
         "fromPort": "false",
-        "toNodeId": "activity_set",
+        "toNodeId": "schedule_set",
         "toPort": "flowIn"
       },
       {
         "fromNodeId": "check_branch_2",
         "fromPort": "true",
-        "toNodeId": "activity_set",
+        "toNodeId": "schedule_set",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "previous_activity_branch",
+        "fromNodeId": "previous_schedule_branch",
         "fromPort": "false",
-        "toNodeId": "previous_activity_line",
+        "toNodeId": "previous_schedule_line",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "previous_activity_branch",
+        "fromNodeId": "previous_schedule_branch",
         "fromPort": "true",
-        "toNodeId": "previous_activity_line",
+        "toNodeId": "previous_schedule_line",
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "previous_activity_line",
+        "fromNodeId": "previous_schedule_line",
         "fromPort": "flowOut",
         "toNodeId": "streak_end",
         "toPort": "flowIn"
@@ -820,9 +820,9 @@
         "toPort": "flowIn"
       },
       {
-        "fromNodeId": "activity_set",
+        "fromNodeId": "schedule_set",
         "fromPort": "flowOut",
-        "toNodeId": "previous_activity_branch",
+        "toNodeId": "previous_schedule_branch",
         "toPort": "flowIn"
       },
       {
@@ -838,5 +838,8 @@
         "toPort": "flowIn"
       }
     ]
-  }
+  },
+  "name": "宿舍集体活动",
+  "day": 3,
+  "afterSocialDialogue": true
 }

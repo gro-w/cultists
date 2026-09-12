@@ -22,7 +22,8 @@
       "displayName": "好结局（彬彬线）：pl现实魅惑大成功",
       "text": "你接受了彬彬的情谊，加入了永生者的行列。",
       "blueprintActivityId": "彬彬献祭事件",
-      "activityId": "ending__pl现实魅惑大成功"
+      "activityId": "ending__pl现实魅惑大成功",
+      "blueprintScheduleId": "彬彬献祭事件"
     },
     {
       "id": "摇滚不死",
@@ -44,7 +45,8 @@
       "displayName": "坏结局（彬彬线）：面对未知的命运",
       "text": "你拒绝成为怪物，独自面对未知的命运。",
       "blueprintActivityId": "彬彬献祭事件",
-      "activityId": "ending__牺牲之血"
+      "activityId": "ending__牺牲之血",
+      "blueprintScheduleId": "彬彬献祭事件"
     },
     {
       "id": "正常结局",

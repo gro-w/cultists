@@ -241,7 +241,8 @@
       "trigger": {
         "event": "game:tabletop_skipped",
         "once": true
-      }
+      },
+      "todo": "触发条件：当有跑团支线但玩家选择刷题时，由调度逻辑 emit game:tabletop_skipped"
     },
     {
       "id": "skillcheck_first_success",
@@ -323,7 +324,7 @@
       "hidden": false,
       "icon": "🌙",
       "trigger": {
-        "event": "ending__triggered",
+        "event": "ending:triggered",
         "once": true
       }
     },
@@ -414,6 +415,19 @@
         "condition": {
           "allRead": true
         }
+      },
+      "todo": "触发条件：需要 ScheduleData 提供 totalNodeCount，由 AchievementManager 与 readNodeIds 的大小比对"
+    },
+    {
+      "id": "developer_mode",
+      "title": "我要强制下班",
+      "description": "你可以通过存档把这个成就带出开发人员模式。",
+      "category": "special",
+      "hidden": false,
+      "icon": "🛠️",
+      "trigger": {
+        "event": "developer:force_end_work",
+        "once": true
       }
     }
   ]

@@ -45,7 +45,6 @@
         "id": "main_choice",
         "type": "choice",
         "inputs": {
-          "displayTo": "his-app",
           "options": [
             {
               "label": "详细询问疼痛和进食关系",
@@ -91,7 +90,6 @@
         "id": "pain_followup",
         "type": "choice",
         "inputs": {
-          "displayTo": "his-app",
           "options": [
             {
               "label": "继续询问诱因",
@@ -154,7 +152,6 @@
         "id": "history_followup",
         "type": "choice",
         "inputs": {
-          "displayTo": "his-app",
           "options": [
             {
               "label": "询问是否有消化道出血表现",
@@ -234,8 +231,8 @@
         "x": 2510,
         "y": 220
       },
-      "activityEnd": {
-        "id": "activityEnd",
+      "scheduleEnd": {
+        "id": "scheduleEnd",
         "type": "activityEnd",
         "inputs": {},
         "x": 2760,
@@ -250,8 +247,8 @@
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": false,
@@ -263,9 +260,17 @@
     },
     "connections": [
       {
+        "id": "edge-open-dialogue",
         "fromNodeId": "start",
         "fromPort": "flowOut",
         "toNodeId": "openDialogueWindow",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-open-dialogue-next",
+        "fromNodeId": "openDialogueWindow",
+        "fromPort": "flowOut",
+        "toNodeId": "intro",
         "toPort": "flowIn"
       },
       {
@@ -397,7 +402,7 @@
       {
         "fromNodeId": "time_closing",
         "fromPort": "flowOut",
-        "toNodeId": "activityEnd",
+        "toNodeId": "scheduleEnd",
         "toPort": "flowIn"
       }
     ]

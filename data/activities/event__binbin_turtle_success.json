@@ -10,22 +10,6 @@
         "type": "flowStart",
         "inputs": {}
       },
-      "status": {
-        "id": "status",
-        "type": "setVariable",
-        "inputs": {
-          "key": "turtleSoup:message",
-          "value": "彬彬笑了起来：你猜中了汤底。"
-        }
-      },
-      "progress": {
-        "id": "progress",
-        "type": "setVariable",
-        "inputs": {
-          "key": "turtleSoup:progress",
-          "value": "猜谜成功：彬彬好感度 +15"
-        }
-      },
       "text": {
         "id": "text",
         "type": "text",
@@ -46,14 +30,6 @@
           }
         }
       },
-      "reward": {
-        "id": "reward",
-        "type": "applyPublicVariableEffect",
-        "inputs": {
-          "id": 42,
-          "delta": 15
-        }
-      },
       "end": {
         "id": "end",
         "type": "activityEnd",
@@ -68,8 +44,8 @@
         "x": 80,
         "y": 240
       },
-      "__activity_expiry__": {
-        "id": "__activity_expiry__",
+      "__schedule_expiry__": {
+        "id": "__schedule_expiry__",
         "type": "activityExpiry",
         "inputs": {
           "expires": false,
@@ -83,29 +59,11 @@
       {
         "fromNodeId": "start",
         "fromPort": "flowOut",
-        "toNodeId": "status",
-        "toPort": "flowIn"
-      },
-      {
-        "fromNodeId": "status",
-        "fromPort": "flowOut",
-        "toNodeId": "progress",
-        "toPort": "flowIn"
-      },
-      {
-        "fromNodeId": "progress",
-        "fromPort": "flowOut",
         "toNodeId": "text",
         "toPort": "flowIn"
       },
       {
         "fromNodeId": "text",
-        "fromPort": "flowOut",
-        "toNodeId": "reward",
-        "toPort": "flowIn"
-      },
-      {
-        "fromNodeId": "reward",
         "fromPort": "flowOut",
         "toNodeId": "cg",
         "toPort": "flowIn"

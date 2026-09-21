@@ -27,6 +27,14 @@ VALUE_ONLY_TYPES = {
     "getQueueEntryCount", "getScheduleInstanceCount", "prerequisite", "activityExpiry",
 }
 
+NODE_TYPE_MAP = {
+    "consumeTime": "framework:consumeTime",
+    "diceCheck": "framework:diceCheck",
+    "randomBranch": "framework:randomBranch",
+    "getGlobal": "getPublicVariable",
+    "statOperation": "setGlobal",
+}
+
 
 @dataclass
 class ConversionResult:
@@ -78,6 +86,14 @@ def _normalize(blueprint: dict[str, Any], diagnostics: list[str]) -> tuple[dict[
         node["id"] = node.get("id") or raw_id
         node["inputs"] = dict(node.get("inputs") or {})
         node["next"] = dict(node.get("next") or {})
+        legacy_type = node.get("type")
+        node["type"] = NODE_TYPE_MAP.get(legacy_type, legacy_type)
+        if legacy_type == "statOperation":
+            stat_id = node["inputs"].get("statId")
+            if stat_id not in {"mental", "sanity"}:
+                diagnostics.append(f"statOperation {node['id']} has unsupported statId: {stat_id!r}")
+            delta = node["inputs"].get("delta", 0)
+            node["inputs"] = {"variableId": 1, "value": delta}
         nodes[raw_id] = node
 
     for connection in blueprint.get("connections") or []:
@@ -235,8 +251,8 @@ def convert_activity(activity: dict[str, Any]) -> ConversionResult:
         return ("[" if bracket else "(") + ", ".join(values) + ("]" if bracket else ")")
 
     lines: list[str] = []
-    lines.append(f"// CL2 export for activity {activity.get('id', '<unnamed>')}")
-    lines.append("// Generated from canonical NGL blueprint JSON; CL2 remains a design draft.")
+    lines.append(f"/** CL2 export for activity {activity.get('id', '<unnamed>')} */")
+    lines.append("/** Generated from canonical blueprint JSON. */")
     lines.append("")
 
     for source_id, source_port in sorted(value_sources):
@@ -286,7 +302,7 @@ def convert_activity(activity: dict[str, Any]) -> ConversionResult:
             line += " {\n" + "\n".join(edges) + "\n}"
         line += ";"
         if "x" in node or "y" in node:
-            line += f" // @cl2.pos {node.get('x', 0)},{node.get('y', 0)}"
+            line += f" /** @cl2.pos {node.get('x', 0)},{node.get('y', 0)} */"
         lines.append(line)
         lines.append("")
 

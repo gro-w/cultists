@@ -118,39 +118,7 @@
             "text": "状态",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "set",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "set": {
-                    "id": "set",
-                    "type": "setVariable",
-                    "inputs": {
-                      "key": "status:tab",
-                      "value": "state"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[0].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"status:tab\", \"state\"); end: end();"
               }
             }
           },
@@ -166,39 +134,7 @@
             "text": "物品",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "set",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "set": {
-                    "id": "set",
-                    "type": "setVariable",
-                    "inputs": {
-                      "key": "status:tab",
-                      "value": "items"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[0].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"status:tab\", \"items\"); end: end();"
               }
             }
           },
@@ -214,52 +150,7 @@
             "text": "设置",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "set",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "set": {
-                    "id": "set",
-                    "type": "setVariable",
-                    "inputs": {
-                      "key": "status:tab",
-                      "value": "settings"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "mark",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "mark": {
-                    "id": "mark",
-                    "type": "markEventState",
-                    "inputs": {
-                      "id": "status_settings_opened"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[0].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"status:tab\", \"settings\"); mark: markEventState(\"status_settings_opened\"); end: end();"
               }
             }
           }
@@ -378,84 +269,10 @@
             ],
             "events": {
               "onInspect": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "call",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "call": {
-                    "id": "call",
-                    "type": "callApi",
-                    "inputs": {
-                      "apiId": "engine.itemAction",
-                      "payload": {
-                        "itemId": {
-                          "variable": "event:value"
-                        },
-                        "action": "inspect"
-                      }
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[3].children[1].events.onInspect Generated from canonical blueprint JSON. */ start: flowStart(); call: callApi(\"engine.itemAction\", {\"itemId\":{\"variable\":\"event:value\"},\"action\":\"inspect\"}); end: end();"
               },
               "onUse": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "call",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "call": {
-                    "id": "call",
-                    "type": "callApi",
-                    "inputs": {
-                      "apiId": "engine.itemAction",
-                      "payload": {
-                        "itemId": {
-                          "variable": "event:value"
-                        },
-                        "action": "use"
-                      }
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[3].children[1].events.onUse Generated from canonical blueprint JSON. */ start: flowStart(); call: callApi(\"engine.itemAction\", {\"itemId\":{\"variable\":\"event:value\"},\"action\":\"use\"}); end: end();"
               }
             }
           }
@@ -502,41 +319,7 @@
             },
             "events": {
               "onChange": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "set",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "set": {
-                    "id": "set",
-                    "type": "setVariable",
-                    "inputs": {
-                      "key": "settings:language",
-                      "value": {
-                        "variable": "event:value"
-                      }
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[4].children[2].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"settings:language\", {\"variable\":\"event:value\"}); end: end();"
               }
             }
           },
@@ -564,41 +347,7 @@
             },
             "events": {
               "onChange": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "set",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "set": {
-                    "id": "set",
-                    "type": "setVariable",
-                    "inputs": {
-                      "key": "settings:notebookSortMode",
-                      "value": {
-                        "variable": "event:value"
-                      }
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[4].children[4].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"settings:notebookSortMode\", {\"variable\":\"event:value\"}); end: end();"
               }
             }
           },
@@ -618,39 +367,7 @@
   },
   "events": {
     "onCreate": {
-      "startNodeId": "start",
-      "nodes": {
-        "start": {
-          "id": "start",
-          "type": "flowStart",
-          "inputs": {},
-          "next": {
-            "flowOut": {
-              "nodeId": "tab",
-              "port": "flowIn"
-            }
-          }
-        },
-        "tab": {
-          "id": "tab",
-          "type": "setVariable",
-          "inputs": {
-            "key": "status:tab",
-            "value": "state"
-          },
-          "next": {
-            "flowOut": {
-              "nodeId": "end",
-              "port": "flowIn"
-            }
-          }
-        },
-        "end": {
-          "id": "end",
-          "type": "activityEnd",
-          "inputs": {}
-        }
-      }
+      "cl2": "/** CL2 export for activity data/windows/status.json.events.onCreate Generated from canonical blueprint JSON. */ start: flowStart(); tab: setVariable(\"status:tab\", \"state\"); end: end();"
     }
   }
 }

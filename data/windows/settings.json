@@ -8,7 +8,10 @@
   "singleInstance": true,
   "valueGraph": {
     "nodes": {
-      "language": { "id": "language", "type": "getLanguage" }
+      "language": {
+        "id": "language",
+        "type": "getLanguage"
+      }
     }
   },
   "root": {
@@ -36,15 +39,12 @@
             "min": 0,
             "max": 100,
             "step": 1,
-            "value": { "variable": "settings:bgmVolume" },
+            "value": {
+              "variable": "settings:bgmVolume"
+            },
             "events": {
               "onChange": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
-                  "set": { "id": "set", "type": "setVariable", "inputs": { "key": "settings:bgmVolume", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
-                  "end": { "id": "end", "type": "activityEnd", "inputs": {} }
-                }
+                "cl2": "/** CL2 export for activity data/windows/settings.json.root.children[1].children[0].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"settings:bgmVolume\", {\"variable\":\"event:value\"}); end: end();"
               }
             }
           },
@@ -64,19 +64,25 @@
         "widgetId": "settings-sort",
         "type": "select",
         "options": [
-          { "value": "category", "label": "按类别" },
-          { "value": "day", "label": "按收集时间（第 x 天）" },
-          { "value": "pinyin", "label": "按拼音首字母" }
+          {
+            "value": "category",
+            "label": "按类别"
+          },
+          {
+            "value": "day",
+            "label": "按收集时间（第 x 天）"
+          },
+          {
+            "value": "pinyin",
+            "label": "按拼音首字母"
+          }
         ],
-        "value": { "variable": "settings:notebookSortMode" },
+        "value": {
+          "variable": "settings:notebookSortMode"
+        },
         "events": {
           "onChange": {
-            "startNodeId": "start",
-            "nodes": {
-              "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
-              "set": { "id": "set", "type": "setVariable", "inputs": { "key": "settings:notebookSortMode", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
-              "end": { "id": "end", "type": "activityEnd", "inputs": {} }
-            }
+            "cl2": "/** CL2 export for activity data/windows/settings.json.root.children[3].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"settings:notebookSortMode\", {\"variable\":\"event:value\"}); end: end();"
           }
         }
       },
@@ -84,15 +90,12 @@
         "widgetId": "settings-confirm",
         "type": "checkbox",
         "text": "下班/睡觉前需要二次确认",
-        "value": { "variable": "settings:confirmPhaseChange" },
+        "value": {
+          "variable": "settings:confirmPhaseChange"
+        },
         "events": {
           "onChange": {
-            "startNodeId": "start",
-            "nodes": {
-              "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
-              "set": { "id": "set", "type": "setVariable", "inputs": { "key": "settings:confirmPhaseChange", "value": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
-              "end": { "id": "end", "type": "activityEnd", "inputs": {} }
-            }
+            "cl2": "/** CL2 export for activity data/windows/settings.json.root.children[4].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"settings:confirmPhaseChange\", {\"variable\":\"event:value\"}); end: end();"
           }
         }
       },
@@ -105,18 +108,22 @@
         "widgetId": "settings-language",
         "type": "select",
         "options": [
-          { "value": "zh-cn", "label": "简体中文" },
-          { "value": "en-us", "label": "English" }
+          {
+            "value": "zh-cn",
+            "label": "简体中文"
+          },
+          {
+            "value": "en-us",
+            "label": "English"
+          }
         ],
-        "value": { "nodeId": "language", "port": "value" },
+        "value": {
+          "nodeId": "language",
+          "port": "value"
+        },
         "events": {
           "onChange": {
-            "startNodeId": "start",
-            "nodes": {
-              "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "set", "port": "flowIn" } } },
-              "set": { "id": "set", "type": "setLanguage", "inputs": { "language": { "variable": "event:value" } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
-              "end": { "id": "end", "type": "activityEnd", "inputs": {} }
-            }
+            "cl2": "/** CL2 export for activity data/windows/settings.json.root.children[6].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setLanguage({\"variable\":\"event:value\"}); end: end();"
           }
         }
       }

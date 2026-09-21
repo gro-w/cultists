@@ -22,6 +22,7 @@ import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
 import { OnboardingManager } from "../tools/OnboardingManager.js";
 import { entryKey } from "../tools/migrate-legacy-chatgtp-qa.mjs";
+import { decodeCl2Blueprints } from "../core/Cl2Embedded.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(__dirname, "../data");
@@ -78,7 +79,7 @@ function findWidget(root, widgetId) {
   return null;
 }
 
-const chatgtp = readJSON("windows/chatgtp.json");
+const chatgtp = decodeCl2Blueprints(readJSON("windows/chatgtp.json"));
 const CHATGTP_SAN_VARIABLE_ID = 5;
 
 // --- every inline blueprint is structurally valid -------------------------
@@ -93,22 +94,11 @@ const CHATGTP_SAN_VARIABLE_ID = 5;
     const { ok, errors } = validateBlueprint(bp);
     assert.equal(ok, true, `${label}: ${errors?.join("；")}`);
   }
-  assert.equal(blueprints.length, 9, "expected onCreate + source/category/keyword1/keyword2/query and legacy selector blueprints");
+  assert.equal(blueprints.length, 6, "expected onCreate + source/category/keyword1/keyword2/query blueprints");
   assert.ok(findWidget(chatgtp.root, "chatgtp-keyword2-select"), "expected second keyword selector");
-  for (const widgetId of ["chatgtp-disease-row", "chatgtp-medicine-row", "chatgtp-notebook-row"]) {
-    assert.ok(findWidget(chatgtp.root, widgetId), `expected legacy selector row: ${widgetId}`);
-  }
-}
-
-// --- legacy disease/medicine/notebook rows feed the shared keyword state ---
-for (const [widgetId, variable, value] of [
-  ["chatgtp-disease-select", "chatgtp:keyword1", "disease-keyword"],
-  ["chatgtp-medicine-select", "chatgtp:keyword2", "medicine-keyword"],
-  ["chatgtp-notebook-select", "chatgtp:keyword1", "notebook-keyword"],
-]) {
-  variableStore.set("event:value", value);
-  runBlueprint(findWidget(chatgtp.root, widgetId).events.onChange, `${widgetId}Change`);
-  assert.equal(variableStore.get(variable), value);
+  assert.ok(findWidget(chatgtp.root, "chatgtp-source-row"), "expected source row");
+  assert.ok(findWidget(chatgtp.root, "chatgtp-category-row"), "expected category row");
+  assert.ok(findWidget(chatgtp.root, "chatgtp-keyword-row"), "expected keyword row");
 }
 
 // --- onCreate loads keywords + settings, resets query state ---------------

@@ -72,10 +72,29 @@
       "mergeState": true,
       "stateField": "collected",
       "filterState": true,
-      "keyField": "id"
+      "keyField": "id",
+      "stateCollectionId": "notebookKeywords",
+      "derivedFields": {
+        "source": {
+          "prefixes": {"disease:": "disease", "med_": "medicine"},
+          "default": "notebook"
+        },
+        "category": {
+          "lookups": [
+            {"prefix": "disease:", "stripPrefix": "disease:", "stripSuffix": ":normal", "databaseId": "diagnoses", "valueField": "categoryId"},
+            {"prefix": "disease:", "stripPrefix": "disease:", "stripSuffix": ":low", "databaseId": "diagnoses", "valueField": "categoryId"},
+            {"prefix": "med_", "databaseId": "medicines", "valueField": "categoryId"}
+          ]
+        }
+      },
+      "filters": [
+        {"variable":"chatgtp:source","field":"source"},
+        {"variable":"chatgtp:category","field":"category"}
+      ]
     },
     "chatgtpCategories": {
-      "databaseId": "diagnosisCategories"
+      "databaseIds": ["diagnosisCategories", "medicineCategories"],
+      "prepend": [{"id":"", "name":"不选择"}]
     },
     "chatgtpDailyMessages": {
       "databaseId": "chatgtpDailyMessages",

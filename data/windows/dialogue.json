@@ -11,7 +11,9 @@
       "socialContacts": {
         "id": "socialContacts",
         "type": "getRuntimeCollection",
-        "inputs": { "collectionId": "socialContacts" }
+        "inputs": {
+          "collectionId": "socialContacts"
+        }
       }
     }
   },
@@ -36,7 +38,10 @@
           {
             "widgetId": "dialogue-contacts-list",
             "type": "list",
-            "items": { "nodeId": "socialContacts", "port": "value" },
+            "items": {
+              "nodeId": "socialContacts",
+              "port": "value"
+            },
             "itemLabelTemplate": "{{activityId}}",
             "itemMetaTemplate": "第{{receivedDay}}天 · {{receivedTime}}分钟 · {{queueStatus}}",
             "itemGroupField": "receivedDay",
@@ -44,35 +49,7 @@
             "itemClassName": "dialogue-contact-row",
             "events": {
               "onItemClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": { "flowOut": { "nodeId": "remember", "port": "flowIn" } }
-                  },
-                  "remember": {
-                    "id": "remember",
-                    "type": "setVariable",
-                    "inputs": { "key": "social:selectedInstance", "value": { "variable": "event:value" } },
-                    "next": { "flowOut": { "nodeId": "replay", "port": "flowIn" } }
-                  },
-                  "replay": {
-                    "id": "replay",
-                    "type": "callApi",
-                    "inputs": {
-                      "apiId": "engine.activity.replay",
-                      "payload": {
-                        "queueId": "social",
-                        "instanceId": { "variable": "event:value" },
-                        "displayTo": "dorm-bottom"
-                      }
-                    },
-                    "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } }
-                  },
-                  "end": { "id": "end", "type": "activityEnd", "inputs": {} }
-                }
+                "cl2": "/** CL2 export for activity data/windows/dialogue.json.root.children[0].children[1].events.onItemClick Generated from canonical blueprint JSON. */ start: flowStart(); remember: setVariable(\"social:selectedInstance\", {\"variable\":\"event:value\"}); replay: callApi(\"engine.activity.replay\", {\"queueId\":\"social\",\"instanceId\":{\"variable\":\"event:value\"},\"displayTo\":\"dorm-bottom\"}); end: end();"
               }
             }
           }

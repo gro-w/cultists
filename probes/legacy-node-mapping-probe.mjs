@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseCl2 } from "../core/Cl2Parser.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const mapping = JSON.parse(fs.readFileSync(path.join(root, "tools/migration/legacy-node-mappings.json"), "utf8"));
@@ -17,9 +18,11 @@ const walk = (value) => {
   }
   Object.values(value).forEach(walk);
 };
-for (const file of fs.readdirSync(activitiesDir).filter((name) => name.endsWith(".json"))) {
-  const data = JSON.parse(fs.readFileSync(path.join(activitiesDir, file), "utf8"));
-  walk(data);
+for (const file of fs.readdirSync(activitiesDir).filter((name) => name.endsWith(".CL2.txt"))) {
+  const source = fs.readFileSync(path.join(activitiesDir, file), "utf8");
+  const parsed = parseCl2(source, { sourcePath: file, validate: false });
+  if (!parsed.ok) throw new Error(`${file}: invalid CL2: ${parsed.diagnostics.map((item) => item.message).join("；")}`);
+  walk(parsed.graph);
 }
 const retiredTypes = Object.entries(mapping.mappings)
   .filter(([, value]) => value.status === "converted")

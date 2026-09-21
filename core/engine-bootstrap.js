@@ -60,10 +60,10 @@ export async function bootstrap(rootEl) {
   if (isDevEntry() && await dataLoader.detectDevServer()) {
     dataLoader.connectChangeEvents({ onChange: (payload) => eventBus.emit("data:changed", payload) });
   }
-  await windowDefinitions.loadManifest(config.windowManifest, "windows/");
   const icons = await dataLoader.loadJSON(config.desktopIcons, { optional: true }) || [];
   const customBlueprintNodes = await dataLoader.loadJSON(frameworkManifest.documents?.blueprintNodes || config.blueprintNodes, { optional: true }) || [];
   customBlueprintNodes.forEach((node) => registerCustomActivityNode(node));
+  await windowDefinitions.loadManifest(config.windowManifest, "windows/");
   const initialState = config.initialState || {};
   const gameClock = new GameClock(eventBus, {
     day: initialState.day,
@@ -251,9 +251,14 @@ export async function bootstrap(rootEl) {
     const instance = queues.getEntry(queueId, instanceId);
     if (!instance) return { ok: false, reason: "activity-instance-not-found" };
     const transcript = Array.isArray(instance.transcript) ? instance.transcript : [];
+    runtimeGateway.dispatchDisplay(displayTo, { displayTo, instanceId, type: "reset" });
     eventBus.emit("display:reset", { displayTo, instanceId });
     const textEntries = transcript.filter((entry) => entry?.type === "text");
-    textEntries.forEach((entry) => eventBus.emit("display:text", { ...entry, displayTo, continueKey: null }));
+    textEntries.forEach((entry) => {
+      const payload = { ...entry, displayTo, continueKey: null, instanceId: entry.instanceId || instanceId };
+      runtimeGateway.dispatchDisplay(displayTo, { ...payload, type: "text" });
+      eventBus.emit("display:text", payload);
+    });
     return { ok: true, instanceId, count: textEntries.length };
   });
   apiGateway.register("engine.activity.cancel", ({ instanceId }) => execution.cancel(instanceId));
@@ -266,7 +271,7 @@ export async function bootstrap(rootEl) {
     eventBus.emit(ACTIVITY_EVENTS.appended, { queueId, instance: { ...instance } });
     return instance;
   }
-  function runActivity(activityId, queueId = "main") {
+  function runActivity(activityId, queueId = "main", { ignoreAvailability = false } = {}) {
     /* DEV-TOOLS:START */
     console.log("[NG dialogue] runActivity requested", { activityId, queueId, hasQueue: Boolean(queues.get(queueId)), hasDefinition: Boolean(activityDefinitions.get(activityId)) });
     /* DEV-TOOLS:END */
@@ -278,7 +283,7 @@ export async function bootstrap(rootEl) {
       /* DEV-TOOLS:END */
       return null;
     }
-    const availability = evaluateActivityAvailability(definition, { gameClock, variableStore, publicVariableManager: publicVariables, pvGateway: publicVariables, activityQueueRegistry: queues, activityDefinitionStore: activityDefinitions, evaluateCondition });
+    const availability = ignoreAvailability ? { ok: true, forced: true } : evaluateActivityAvailability(definition, { gameClock, variableStore, publicVariableManager: publicVariables, pvGateway: publicVariables, activityQueueRegistry: queues, activityDefinitionStore: activityDefinitions, evaluateCondition });
     if (!availability.ok) {
       /* DEV-TOOLS:START */
       console.log("[NG dialogue] runActivity unavailable", { activityId, queueId, availability });
@@ -394,6 +399,7 @@ export async function bootstrap(rootEl) {
       activityQueueRegistry: queues,
       activityDefinitionStore: activityDefinitions,
       activityExecutionService: execution,
+      runActivity,
       eventBus,
       variableStore,
       pvGateway: publicVariables,

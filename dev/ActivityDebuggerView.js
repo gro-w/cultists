@@ -4,12 +4,13 @@ import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 
 /** Live runtime Activity inspector. All mutations go through queue/execution APIs. */
 export class ActivityDebuggerView {
-  constructor({ activityQueueRegistry, activityDefinitionStore, activityExecutionService, localVariableManager, eventBus }) {
+  constructor({ activityQueueRegistry, activityDefinitionStore, activityExecutionService, localVariableManager, eventBus, runActivity = null }) {
     this.activityQueueRegistry = activityQueueRegistry;
     this.activityDefinitionStore = activityDefinitionStore;
     this.activityExecutionService = activityExecutionService;
     this.localVariableManager = localVariableManager;
     this.eventBus = eventBus;
+    this.runActivity = runActivity;
     this._unsubscribers = [];
     this._buildDom();
     this._bindEvents();
@@ -19,12 +20,13 @@ export class ActivityDebuggerView {
   _buildDom() {
     const el = document.createElement("div");
     el.className = "ng-activity-debugger";
-    el.innerHTML = `<div class="ng-debugger-toolbar"><button data-action="refresh">${t("legacy.38108eaa1d32")}</button><select data-role="new-activity"></select><select data-role="new-queue"></select><button data-action="create">${t("legacy.df0ec16d44ca")}</button><span class="ng-debugger-status"></span></div><div class="ng-debugger-body"></div>`;
+    el.innerHTML = `<div class="ng-debugger-toolbar"><button data-action="refresh">${t("legacy.38108eaa1d32")}</button><select data-role="new-activity"></select><select data-role="new-queue"></select><button data-action="create">${t("legacy.df0ec16d44ca")}</button><select data-role="ending"></select><button data-action="trigger-ending">${t("legacy.debug.triggerEnding")}</button><span class="ng-debugger-status"></span></div><div class="ng-debugger-body"></div>`;
     this.el = el;
     this.bodyEl = el.querySelector(".ng-debugger-body");
     this.statusEl = el.querySelector(".ng-debugger-status");
     el.querySelector('[data-action="refresh"]').addEventListener("click", () => this.render());
     el.querySelector('[data-action="create"]').addEventListener("click", () => this.createInstance());
+    el.querySelector('[data-action="trigger-ending"]').addEventListener("click", () => this.triggerEnding());
   }
 
   _bindEvents() {
@@ -36,12 +38,15 @@ export class ActivityDebuggerView {
     const activities = this.activityDefinitionStore?.list() || [];
     const activitySelect = this.el.querySelector('[data-role="new-activity"]');
     const queueSelect = this.el.querySelector('[data-role="new-queue"]');
+    const endingSelect = this.el.querySelector('[data-role="ending"]');
     const selectedActivity = activitySelect.value;
     const selectedQueue = queueSelect.value;
     activitySelect.innerHTML = activities.map((item) => `<option value="${this.escape(item.id)}">${this.escape(item.displayName || item.id)}</option>`).join("");
     queueSelect.innerHTML = (this.activityQueueRegistry?.list() || []).map((queue) => `<option value="${this.escape(queue.queueId)}">${this.escape(queue.queueId)}</option>`).join("");
     if (selectedActivity) activitySelect.value = selectedActivity;
     if (selectedQueue) queueSelect.value = selectedQueue;
+    const endings = activities.filter((item) => String(item.id).startsWith("ending"));
+    endingSelect.innerHTML = endings.map((item) => `<option value="${this.escape(item.id)}">${this.escape(item.displayName || item.id)}</option>`).join("");
     this.bodyEl.innerHTML = "";
     for (const queue of this.activityQueueRegistry?.list() || []) this.bodyEl.appendChild(this.renderQueue(queue));
     this.statusEl.textContent = `${t("legacy.0f4f88883db6")}${new Date().toLocaleTimeString()}`;
@@ -55,6 +60,16 @@ export class ActivityDebuggerView {
     const definition = this.activityDefinitionStore?.get(activityId);
     if (!definition) return;
     this.activityQueueRegistry.append(queueId, { activityId, currentNodeId: definition.blueprint?.startNodeId || null });
+  }
+
+  triggerEnding() {
+    const activityId = this.el.querySelector('[data-role="ending"]').value;
+    if (!activityId || typeof this.runActivity !== "function") {
+      this.statusEl.textContent = t("legacy.debug.noEnding");
+      return;
+    }
+    const instance = this.runActivity(activityId, "main", { ignoreAvailability: true });
+    this.statusEl.textContent = instance ? `${t("legacy.debug.endingTriggered")}${activityId}` : `${t("legacy.debug.endingFailed")}${activityId}`;
   }
 
   renderQueue(queue) {

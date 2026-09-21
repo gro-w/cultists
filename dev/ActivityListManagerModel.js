@@ -1,5 +1,6 @@
 // DEV-TOOLS:START
 import { t } from "../core/i18n/index.js";
+import { serializeCl2 } from "../core/Cl2Serializer.js";
 /**
  * ActivityListManagerModel - DOM-independent state for the "Activity 列表
  * 管理器" developer window (plan §6.1). Owns Activity *lists* (which
@@ -171,6 +172,11 @@ export function createActivityListManagerModel() {
     return JSON.stringify({ id: activity.id, displayName: activity.displayName, blueprint: activity.blueprint }, null, 2);
   }
 
+  function exportActivityCL2(activityId) {
+    const activity = getActivity(activityId);
+    return activity ? serializeCl2(activity.blueprint, { activityId }) : null;
+  }
+
   return {
     registerList,
     registerActivity,
@@ -191,6 +197,7 @@ export function createActivityListManagerModel() {
     saveActivityBlueprint,
     exportListJSON,
     exportActivityJSON,
+    exportActivityCL2,
   };
 }
 

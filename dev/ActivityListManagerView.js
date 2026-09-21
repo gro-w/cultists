@@ -126,11 +126,11 @@ export class ActivityListManagerView {
     });
     row.querySelector('[data-action="open"]').addEventListener("click", () => this.openEditor(this.model.getActivity(activity.id)));
     row.querySelector('[data-action="download"]').addEventListener("click", () => {
-      downloadTextFile(`${activity.id}.json`, this.model.exportActivityJSON(activity.id));
+      downloadTextFile(`${activity.id}.CL2.txt`, this.model.exportActivityCL2(activity.id));
     });
     row.querySelector('[data-action="write-disk"]').addEventListener("click", async () => {
       try {
-        await writeDataFile(`activities/${activity.id}.json`, this.model.exportActivityJSON(activity.id));
+        await writeDataFile(`activities/${activity.id}.CL2.txt`, this.model.exportActivityCL2(activity.id));
       } catch (error) {
         alert(`${t("legacy.e92dc2256061")}: ${error.message}`);
       }

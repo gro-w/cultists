@@ -145,8 +145,15 @@ export class DesktopShell {
       return { ok: false, reason: "component-limit", maxCount: Number(maxCount) };
     }
     const id = componentId || `runtime-component-${++this.runtimeComponentSeq}`;
-    const inheritedEvents = Object.keys(events).length ? events : parent.children.find((child) => child.className === className)?.events || {};
-    const component = this._cloneRuntimeComponent({ widgetId: id, id, type: componentType, ...properties, events: inheritedEvents }, this.runtimeComponentSeq);
+    const template = parent.children.find((child) => child.className === className);
+    // The Activity runner may supply lifecycle flow branches (currently
+    // `onCreate`) for the newly-created component.  Those branches augment
+    // the template; they must not replace its interaction blueprints.  In
+    // particular prescription rows inherit onAdd/onRemove from the first
+    // row, and dropping them here makes every cloned row lose +/- after a
+    // delete/re-render cycle.
+    const componentEvents = { ...(template?.events || {}), ...events };
+    const component = this._cloneRuntimeComponent({ widgetId: id, id, type: componentType, ...properties, events: componentEvents }, this.runtimeComponentSeq);
     parent.children.push(component);
     this.frames.get(runtime.state.instanceId)?._rerenderRoot();
     this.eventBus.emit("window:component-added", { windowId: runtime.state.windowId, componentId: id });

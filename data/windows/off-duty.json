@@ -48,38 +48,7 @@
                 "text": "🧑 主角",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "open",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "status"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"status\"); end: end();"
                   }
                 }
               },
@@ -89,38 +58,7 @@
                 "text": "🛏️ 睡觉",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "consume",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "consume": {
-                        "id": "consume",
-                        "type": "framework:consumeTime",
-                        "inputs": {
-                          "minutes": 480
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); consume: framework:consumeTime(480); end: end();"
                   }
                 }
               },
@@ -130,38 +68,7 @@
                 "text": "🧵 线索墙",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "open",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "clue-wall"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"clue-wall\"); end: end();"
                   }
                 }
               },
@@ -171,62 +78,37 @@
                 "text": "🖥️ 电脑",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},
-                      "set": {"id":"set","type":"setVariable","inputs":{"key":"off-duty:computerOpen","value":true},"next":{"flowOut":{"nodeId":"setChat","port":"flowIn"}}},
-                      "setChat": {"id":"setChat","type":"setVariable","inputs":{"key":"off-duty:computerTab","value":"chatgtp"},"next":{"flowOut":{"nodeId":"showChat","port":"flowIn"}}},
-                      "showChat": {"id":"showChat","type":"setVariable","inputs":{"key":"off-duty:showChat","value":true},"next":{"flowOut":{"nodeId":"hideSocial","port":"flowIn"}}},
-                      "hideSocial": {"id":"hideSocial","type":"setVariable","inputs":{"key":"off-duty:showSocial","value":false},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"off-duty:computerOpen\", true); setChat: setVariable(\"off-duty:computerTab\", \"chatgtp\"); showChat: setVariable(\"off-duty:showChat\", true); hideSocial: setVariable(\"off-duty:showSocial\", false); end: end();"
                   }
                 }
               },
-              {"widgetId":"off-duty-restaurant","type":"button","text":"🍲 火锅店","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"location:requested","payload":{"locationId":"restaurant"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
-              {"widgetId":"off-duty-seaside","type":"button","text":"🌊 海边","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"location:requested","payload":{"locationId":"seaside"}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
+              {
+                "widgetId": "off-duty-restaurant",
+                "type": "button",
+                "text": "🍲 火锅店",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"location:requested\", {\"locationId\":\"restaurant\"}); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-seaside",
+                "type": "button",
+                "text": "🌊 海边",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"location:requested\", {\"locationId\":\"seaside\"}); end: end();"
+                  }
+                }
+              },
               {
                 "widgetId": "off-duty-turtle-soup",
                 "type": "button",
                 "text": "🐢 海龟汤",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "open",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "turtle-soup"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[6].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"turtle-soup\"); end: end();"
                   }
                 }
               }
@@ -235,20 +117,74 @@
         ]
       },
       {
-        "widgetId":"off-duty-computer-overlay",
-        "type":"container",
-        "flow":"vertical",
-        "gap":4,
-        "visible":{"variable":"off-duty:computerOpen"},
-        "className":"ng-off-duty-computer-overlay",
-        "children":[
-          {"widgetId":"off-duty-computer-tabs","type":"container","flow":"horizontal","gap":4,"children":[
-            {"widgetId":"off-duty-computer-chat-tab","type":"button","text":"🤖 ChatGTP","className":"win95-btn bevel-out ng-off-duty-computer-tab","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"show","port":"flowIn"}}},"show":{"id":"show","type":"setVariable","inputs":{"key":"off-duty:showChat","value":true},"next":{"flowOut":{"nodeId":"hide","port":"flowIn"}}},"hide":{"id":"hide","type":"setVariable","inputs":{"key":"off-duty:showSocial","value":false},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
-            {"widgetId":"off-duty-computer-social-tab","type":"button","text":"📱 社交媒体","className":"win95-btn bevel-out ng-off-duty-computer-tab","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"show","port":"flowIn"}}},"show":{"id":"show","type":"setVariable","inputs":{"key":"off-duty:showSocial","value":true},"next":{"flowOut":{"nodeId":"hide","port":"flowIn"}}},"hide":{"id":"hide","type":"setVariable","inputs":{"key":"off-duty:showChat","value":false},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}},
-            {"widgetId":"off-duty-computer-close","type":"button","text":"✖ 关闭电脑","className":"win95-btn bevel-out","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"set","port":"flowIn"}}},"set":{"id":"set","type":"setVariable","inputs":{"key":"off-duty:computerOpen","value":false},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
-          ]},
-          {"widgetId":"off-duty-computer-chat","type":"embeddedWindow","windowId":"chatgtp","visible":{"variable":"off-duty:showChat"},"className":"ng-off-duty-computer-chat"},
-          {"widgetId":"off-duty-computer-social","type":"embeddedWindow","windowId":"social-media","visible":{"variable":"off-duty:showSocial"},"className":"ng-off-duty-computer-social"}
+        "widgetId": "off-duty-computer-overlay",
+        "type": "container",
+        "flow": "vertical",
+        "gap": 4,
+        "visible": {
+          "variable": "off-duty:computerOpen"
+        },
+        "className": "ng-off-duty-computer-overlay",
+        "children": [
+          {
+            "widgetId": "off-duty-computer-tabs",
+            "type": "container",
+            "flow": "horizontal",
+            "gap": 4,
+            "children": [
+              {
+                "widgetId": "off-duty-computer-chat-tab",
+                "type": "button",
+                "text": "🤖 ChatGTP",
+                "className": "win95-btn bevel-out ng-off-duty-computer-tab",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[1].children[0].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); show: setVariable(\"off-duty:showChat\", true); hide: setVariable(\"off-duty:showSocial\", false); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-computer-social-tab",
+                "type": "button",
+                "text": "📱 社交媒体",
+                "className": "win95-btn bevel-out ng-off-duty-computer-tab",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[1].children[0].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); show: setVariable(\"off-duty:showSocial\", true); hide: setVariable(\"off-duty:showChat\", false); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-computer-close",
+                "type": "button",
+                "text": "✖ 关闭电脑",
+                "className": "win95-btn bevel-out",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[1].children[0].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"off-duty:computerOpen\", false); end: end();"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "off-duty-computer-chat",
+            "type": "embeddedWindow",
+            "windowId": "chatgtp",
+            "visible": {
+              "variable": "off-duty:showChat"
+            },
+            "className": "ng-off-duty-computer-chat"
+          },
+          {
+            "widgetId": "off-duty-computer-social",
+            "type": "embeddedWindow",
+            "windowId": "social-media",
+            "visible": {
+              "variable": "off-duty:showSocial"
+            },
+            "className": "ng-off-duty-computer-social"
+          }
         ]
       },
       {
@@ -264,52 +200,7 @@
             "text": "《皇者荣耀》 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social01b_ajie_honor_of_kings",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
               }
             }
           },
@@ -319,52 +210,7 @@
             "text": "测评耳机 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social01b_awei_headphones",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
               }
             }
           },
@@ -374,52 +220,7 @@
             "text": "闲聊池 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social02a_ajie_chat",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social02a_ajie_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -429,52 +230,7 @@
             "text": "闲聊池 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social02a_awei_chat",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social02a_awei_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -484,52 +240,7 @@
             "text": "宿舍集体活动邀请 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social02b_dorm_invite",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social02b_dorm_invite\", \"social\"); end: end();"
               }
             }
           },
@@ -539,52 +250,7 @@
             "text": "《第二十四人格》 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social03b_ajie_24_personality_high",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_ajie_24_personality_high\", \"social\"); end: end();"
               }
             }
           },
@@ -594,52 +260,7 @@
             "text": "《第二十四人格》 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social03b_ajie_24_personality_low",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[6].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_ajie_24_personality_low\", \"social\"); end: end();"
               }
             }
           },
@@ -649,52 +270,7 @@
             "text": "尾款风云 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social03b_awei_tail_high",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[7].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_awei_tail_high\", \"social\"); end: end();"
               }
             }
           },
@@ -704,52 +280,7 @@
             "text": "尾款风云 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social03b_awei_tail_low",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[8].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_awei_tail_low\", \"social\"); end: end();"
               }
             }
           },
@@ -759,52 +290,7 @@
             "text": "闲聊池 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social04a_ajie_chat",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[9].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social04a_ajie_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -814,52 +300,7 @@
             "text": "闲聊池 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social04a_awei_chat",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[10].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social04a_awei_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -869,52 +310,7 @@
             "text": "宿舍集体活动邀请 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social04b_dorm_invite",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[11].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social04b_dorm_invite\", \"social\"); end: end();"
               }
             }
           },
@@ -924,52 +320,7 @@
             "text": "【海底O火锅】 · 海底O火锅",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "dorm_activity_day5",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[12].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day5\", \"social\"); end: end();"
               }
             }
           },
@@ -979,52 +330,7 @@
             "text": "【谷子店】 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social05b_ajie_goods_high",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[13].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_ajie_goods_high\", \"social\"); end: end();"
               }
             }
           },
@@ -1034,52 +340,7 @@
             "text": "【谷子店】 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social05b_ajie_goods_low",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[14].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_ajie_goods_low\", \"social\"); end: end();"
               }
             }
           },
@@ -1089,52 +350,7 @@
             "text": "【线下唱片店】 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social05b_awei_record_high",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[15].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_awei_record_high\", \"social\"); end: end();"
               }
             }
           },
@@ -1144,52 +360,7 @@
             "text": "【线下唱片店】 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social05b_awei_record_low",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[16].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_awei_record_low\", \"social\"); end: end();"
               }
             }
           },
@@ -1199,52 +370,7 @@
             "text": "闲聊池 · 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social06a_ajie_chat",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[17].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social06a_ajie_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -1254,52 +380,7 @@
             "text": "闲聊池 · 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social06a_awei_chat",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[18].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social06a_awei_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -1309,52 +390,7 @@
             "text": "第1天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "dorm_activity_day1",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[19].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
               }
             }
           },
@@ -1364,52 +400,7 @@
             "text": "第2天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "dorm_activity_day2",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[20].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day2\", \"social\"); end: end();"
               }
             }
           },
@@ -1419,52 +410,7 @@
             "text": "第3天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "dorm_activity_day3",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[21].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day3\", \"social\"); end: end();"
               }
             }
           },
@@ -1474,52 +420,7 @@
             "text": "第4天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "dorm_activity_day4",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[22].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day4\", \"social\"); end: end();"
               }
             }
           }
@@ -1580,52 +481,7 @@
                 "text": "交流",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "open",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "dialogue"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "run",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "run": {
-                        "id": "run",
-                        "type": "runActivity",
-                        "inputs": {
-                          "activityId": "social01b_ajie_honor_of_kings",
-                          "queueId": "social"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[0].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
                   }
                 }
               },
@@ -1635,39 +491,7 @@
                 "text": "调查铺位",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {"flowOut":{"nodeId":"setDesk","port":"flowIn"}}
-                      },
-                      "setDesk": {
-                        "id": "setDesk",
-                        "type": "setVariable",
-                        "inputs": {"key":"item:desk","value":"ajie_desk"},
-                        "next": {"flowOut":{"nodeId":"open","port":"flowIn"}}
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "item-inspection"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[0].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); setDesk: setVariable(\"item:desk\", \"ajie_desk\"); open: openWindow(\"item-inspection\"); end: end();"
                   }
                 }
               }
@@ -1720,52 +544,7 @@
                 "text": "交流",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "open",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "dialogue"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "run",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "run": {
-                        "id": "run",
-                        "type": "runActivity",
-                        "inputs": {
-                          "activityId": "social01b_awei_headphones",
-                          "queueId": "social"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[1].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
                   }
                 }
               },
@@ -1775,39 +554,7 @@
                 "text": "调查铺位",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {"flowOut":{"nodeId":"setDesk","port":"flowIn"}}
-                      },
-                      "setDesk": {
-                        "id": "setDesk",
-                        "type": "setVariable",
-                        "inputs": {"key":"item:desk","value":"awei_desk"},
-                        "next": {"flowOut":{"nodeId":"open","port":"flowIn"}}
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "item-inspection"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[1].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); setDesk: setVariable(\"item:desk\", \"awei_desk\"); open: openWindow(\"item-inspection\"); end: end();"
                   }
                 }
               }
@@ -1860,52 +607,7 @@
                 "text": "交流",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "open",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "dialogue"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "run",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "run": {
-                        "id": "run",
-                        "type": "runActivity",
-                        "inputs": {
-                          "activityId": "dorm_activity_day1",
-                          "queueId": "social"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
                   }
                 }
               },
@@ -1915,39 +617,7 @@
                 "text": "调查铺位",
                 "events": {
                   "onClick": {
-                    "startNodeId": "start",
-                    "nodes": {
-                      "start": {
-                        "id": "start",
-                        "type": "flowStart",
-                        "inputs": {},
-                        "next": {"flowOut":{"nodeId":"setDesk","port":"flowIn"}}
-                      },
-                      "setDesk": {
-                        "id": "setDesk",
-                        "type": "setVariable",
-                        "inputs": {"key":"item:desk","value":"binbin_desk"},
-                        "next": {"flowOut":{"nodeId":"open","port":"flowIn"}}
-                      },
-                      "open": {
-                        "id": "open",
-                        "type": "openWindow",
-                        "inputs": {
-                          "windowId": "item-inspection"
-                        },
-                        "next": {
-                          "flowOut": {
-                            "nodeId": "end",
-                            "port": "flowIn"
-                          }
-                        }
-                      },
-                      "end": {
-                        "id": "end",
-                        "type": "activityEnd",
-                        "inputs": {}
-                      }
-                    }
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); setDesk: setVariable(\"item:desk\", \"binbin_desk\"); open: openWindow(\"item-inspection\"); end: end();"
                   }
                 }
               }
@@ -1968,52 +638,7 @@
             "text": "👦 阿杰",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social01b_ajie_honor_of_kings",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
               }
             }
           },
@@ -2023,52 +648,7 @@
             "text": "👩 阿伟",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "social01b_awei_headphones",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
               }
             }
           },
@@ -2078,52 +658,7 @@
             "text": "🧒 彬彬",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "open",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "open": {
-                    "id": "open",
-                    "type": "openWindow",
-                    "inputs": {
-                      "windowId": "dialogue"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "dorm_activity_day1",
-                      "queueId": "social"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
               }
             }
           }
@@ -2342,121 +877,25 @@
           }
         }
       },
-      "computerOpen": {"id":"computerOpen","type":"getVariable","inputs":{"key":"off-duty:computerOpen"}},
-      "computerChat": {"id":"computerChat","type":"getVariable","inputs":{"key":"off-duty:computerTab"}}
+      "computerOpen": {
+        "id": "computerOpen",
+        "type": "getVariable",
+        "inputs": {
+          "key": "off-duty:computerOpen"
+        }
+      },
+      "computerChat": {
+        "id": "computerChat",
+        "type": "getVariable",
+        "inputs": {
+          "key": "off-duty:computerTab"
+        }
+      }
     }
   },
   "events": {
     "onCreate": {
-      "startNodeId": "start",
-      "nodes": {
-        "start": {
-          "id": "start",
-          "type": "flowStart",
-          "inputs": {},
-          "next": {
-            "flowOut": {
-              "nodeId": "resetComputer",
-              "port": "flowIn"
-            }
-          }
-        },
-        "resetComputer": {
-          "id": "resetComputer",
-          "type": "setVariable",
-          "inputs": {"key":"off-duty:computerOpen","value":false},
-          "next": {"flowOut":{"nodeId":"resetChat","port":"flowIn"}}
-        },
-        "resetChat": {
-          "id": "resetChat",
-          "type": "setVariable",
-          "inputs": {"key":"off-duty:showChat","value":false},
-          "next": {"flowOut":{"nodeId":"resetSocial","port":"flowIn"}}
-        },
-        "resetSocial": {
-          "id": "resetSocial",
-          "type": "setVariable",
-          "inputs": {"key":"off-duty:showSocial","value":false},
-          "next": {"flowOut":{"nodeId":"get-ajie","port":"flowIn"}}
-        },
-        "get-ajie": {
-          "id": "get-ajie",
-          "type": "getRecord",
-          "inputs": {
-            "databaseId": "npcs",
-            "key": "ajie",
-            "resultVariable": "dorm:npc0"
-          },
-          "next": {
-            "flowOut": {
-              "nodeId": "get-awei",
-              "port": "flowIn"
-            }
-          }
-        },
-        "get-awei": {
-          "id": "get-awei",
-          "type": "getRecord",
-          "inputs": {
-            "databaseId": "npcs",
-            "key": "awei",
-            "resultVariable": "dorm:npc1"
-          },
-          "next": {
-            "flowOut": {
-              "nodeId": "get-binbin",
-              "port": "flowIn"
-            }
-          }
-        },
-        "get-binbin": {
-          "id": "get-binbin",
-          "type": "getRecord",
-          "inputs": {
-            "databaseId": "npcs",
-            "key": "binbin",
-            "resultVariable": "dorm:npc2"
-          },
-          "next": {
-            "flowOut": {
-              "nodeId": "clearMessage",
-              "port": "flowIn"
-            }
-          }
-        },
-        "clearMessage": {
-          "id": "clearMessage",
-          "type": "setVariable",
-          "inputs": {
-            "key": "dorm:message",
-            "value": ""
-          },
-          "next": {
-            "flowOut": {
-              "nodeId": "markDormSeen",
-              "port": "flowIn"
-            }
-          }
-        },
-        "markDormSeen": {
-          "id": "markDormSeen",
-          "type": "markEventState",
-          "inputs": {
-            "id": "dorm_seen"
-          },
-          "next": {
-            "flowOut": {
-              "nodeId": "end",
-              "port": "flowIn"
-            }
-          }
-        },
-        "end": {
-          "id": "end",
-          "type": "activityEnd",
-          "inputs": {}
-        }
-      }
+      "cl2": "/** CL2 export for activity data/windows/off-duty.json.events.onCreate Generated from canonical blueprint JSON. */ start: flowStart(); resetComputer: setVariable(\"off-duty:computerOpen\", false); resetChat: setVariable(\"off-duty:showChat\", false); resetSocial: setVariable(\"off-duty:showSocial\", false); get-ajie: getRecord(\"npcs\", \"ajie\", \"dorm:npc0\"); get-awei: getRecord(\"npcs\", \"awei\", \"dorm:npc1\"); get-binbin: getRecord(\"npcs\", \"binbin\", \"dorm:npc2\"); clearMessage: setVariable(\"dorm:message\", \"\"); markDormSeen: markEventState(\"dorm_seen\"); end: end();"
     },
     "onDestroy": null
   }

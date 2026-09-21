@@ -2,6 +2,7 @@
 import { t } from "../core/i18n/index.js";
 import { normalizeBlueprint, validateBlueprint } from "../core/ActivityValidator.js";
 import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
+import { serializeCl2 } from "../core/Cl2Serializer.js";
 
 /**
  * ActivityEditorModel - DOM-independent state for one Activity editor
@@ -392,7 +393,7 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
   }
 
   function toDownloadPayload() {
-    return JSON.stringify(toDefinition(), null, 2);
+    return serializeCl2(current, { activityId });
   }
 
   function setDisplayName(nextName) {

@@ -19,32 +19,32 @@
 ### `core`
 
 - `core` 是唯一允许使用原生 JavaScript 实现的平台层。
-- 只提供与具体游戏无关的宿主能力：桌面与窗口运行时、Activity/NGL 执行与调度、节点/端口/连线校验、数据加载、通用变量与存档基础设施、事件总线、通用 Widget/DOM 能力、输入输出和受控能力网关，以及开发模式的宿主入口。
+- 只提供与具体游戏无关的宿主能力：桌面与窗口运行时、Activity/CL2 执行与调度、节点/端口/连线校验、数据加载、通用变量与存档基础设施、事件总线、通用 Widget/DOM 能力、输入输出和受控能力网关，以及开发模式的宿主入口。
 - 不得包含患者、物品、日历、宿舍、NPC、成就、结局、剧情或具体应用语义。
-- 工作时间、`phase`、`duty`、`location`、上下班/睡眠边界和工作状态机不属于 core；它们必须由 framework 通过 NGL 与数据实现。core 只提供可复用的时钟、状态存储、Activity 和能力网关。
-- 新增能力必须说明 owner、输入输出契约、权限与副作用、snapshot/restore（如需持久化）和确定性探针；上层只能通过公开的通用 API 或 NGL 节点使用它。
+- 工作时间、`phase`、`duty`、`location`、上下班/睡眠边界和工作状态机不属于 core；它们必须由 framework 通过 CL2 与数据实现。core 只提供可复用的时钟、状态存储、Activity 和能力网关。
+- 新增能力必须说明 owner、输入输出契约、权限与副作用、snapshot/restore（如需持久化）和确定性探针；上层只能通过公开的通用 API 或 CL2 节点使用它。
 - core 自有 UI/错误字符串必须存放在 `core/i18n/xx-xx.js` locale 模块；语言状态由 core 的 i18n 管理器拥有，使用 `getLanguage` 数值节点读取、`setLanguage` 流程节点设置，并通过 snapshot/restore 持久化。
 - core 与开发人员模式中的用户可见文本必须通过 `core/i18n/index.js` 的 `t()` 读取；locale 模块是字符串的唯一存储位置。协议 ID、CSS 类名、事件名、节点类型和数据字段名不翻译。
 
 ### `framework`
 
-- `framework` 实现可复用的预制系统和通用 UI 行为，必须使用 NGL 蓝图及数据文件，不得新增业务 JavaScript。工作时间、`phase`、`duty`、`location`、上下班/睡眠边界、工作状态机和通用时间规则都属于 framework。
-- BGM 的策略管理归 framework：`data/activities/bgm-manager.framework.json` 是 NGL 管理器，通过 core API/NGL 节点控制播放；BGM 曲目和规则属于 game 的自定义数据结构，不得把具体曲目 ID 写进 core。
-- 需要宿主能力时，先在 `core` 增加领域无关的能力，再通过类型安全的 NGL 节点调用；禁止为单个业务添加 JavaScript 快捷入口。
+- `framework` 实现可复用的预制系统和通用 UI 行为，必须使用 CL2 蓝图及数据文件，不得新增业务 JavaScript。工作时间、`phase`、`duty`、`location`、上下班/睡眠边界、工作状态机和通用时间规则都属于 framework。
+- BGM 的策略管理归 framework：`data/activities/bgm-manager.framework.json` 是 CL2 管理器，通过 core API/CL2 节点控制播放；BGM 曲目和规则属于 game 的自定义数据结构，不得把具体曲目 ID 写进 core。
+- 需要宿主能力时，先在 `core` 增加领域无关的能力，再通过类型安全的 CL2 节点调用；禁止为单个业务添加原生 JavaScript 快捷入口。
 - framework 不得依赖 game，也不得把具体游戏概念写进 core。
 
 ### `game`
 
-- `game` 实现本项目的医疗、患者、宿舍、日历、社交、物品、成就、结局、应用、剧情和业务 Activity，必须使用 NGL 蓝图及数据文件。
+- `game` 实现本项目的医疗、患者、宿舍、日历、社交、物品、成就、结局、应用、剧情和业务 Activity，必须使用 CL2 蓝图及数据文件。
 - game 的 BGM 配置位于 `data/bgm.json`；音频 `src` 使用稳定曲目 ID 关联，素材缺失时必须如实报告，不得用占位资源冒充迁移完成。
 - 不得在 game 中新增原生 JavaScript 业务模块、业务管理器或绕过 Activity 执行系统的副作用。
 - 业务数据、蓝图定义、窗口定义和能力注册通过稳定 ID 与明确 schema 连接。
 
-依赖方向只能是 `game → framework → core`。`core` 不得依赖上层，`framework` 不得依赖 game。Cultists 引擎入口只负责启动 core、加载 framework/game 内容清单并把默认 Activity 放入默认队列；后续业务调度必须由已运行的管理器 Activity 通过 NGL Activity API 显式完成。
+依赖方向只能是 `game → framework → core`。`core` 不得依赖上层，`framework` 不得依赖 game。Cultists 引擎入口只负责启动 core、加载 framework/game 内容清单并把默认 Activity 放入默认队列；后续业务调度必须由已运行的管理器 Activity 通过 CL2 Activity API 显式完成。
 
-## NGL 与运行时约束
+## CL2 与运行时约束
 
-- 蓝图语言统一称为 **NGL（NG Language）**。编辑器、schema 校验器、运行器、调试器和数据迁移工具必须遵守同一节点、端口、连线、局部变量和公共变量契约。
+- 蓝图语言统一称为 **CL2（Cultists Blueprint & Script Language 2）**。编辑器、schema 校验器、运行器、调试器和数据迁移工具必须遵守同一节点、端口、连线、局部变量和公共变量契约；Activity canonical 文件使用 `.CL2.txt`。
 - 本地变量管理器只登记本地变量的稳定 ID、名称和类型；变量值必须保存在单个 Activity 实例的 `localVariables` 中，不得通过管理器或公共变量跨实例共享。
 - Activity 是玩家可见计时和可持久化副作用的统一入口；窗口/App 负责发起请求和显示结果，不直接修改游戏状态或推进游戏时间。
 - 游戏时间必须是确定性的游戏状态，不使用真实系统时间、`Date`、`getHours()` 或计时器控制游戏时间。
@@ -52,11 +52,14 @@
 - 普通成功行动默认推进 20 分钟；长时间成本按现有 Activity/NGL 约定拆分，不在 UI 层偷偷推进时间。
 - 存档恢复、跨日、睡眠、医疗、收入支出、队列和动态 Activity 的所有状态变化必须有明确 owner 和恢复顺序。
 - 运行时集合定义可声明 `stateAliases`，由通用恢复流程把旧稳定 ID 归一到 canonical ID；core 不得写入具体游戏 ID，冲突时 canonical 记录优先。
+- 运行时集合可通过声明式 `derivedFields`、数据库 lookup、`prepend` 和 `stateCollectionId` 生成筛选字段、占位选项并复用 canonical 收集状态；窗口筛选应使用稳定 ID 和通用集合过滤，不在 renderer 或业务 JavaScript 中硬编码来源/类别判断。
 - 运行时集合还可通过通用 `activityQueueId` 投影 Activity 队列；core 只负责队列记录和可选 payload 投影，具体联系人/业务字段必须由 framework/game 数据声明，队列变化通过 `runtime:collection-changed` 驱动窗口刷新。
 - Activity 的对话 transcript 可随实例保存，并通过通用回放能力向声明的 display receiver 重放；回放只能发送已保存的显示事件，不得重新执行蓝图或产生时间、资源和剧情副作用。
 - 蓝图节点只能使用项目定义的合法端口组合；新增节点必须同时通过 schema 校验、运行时探针和相关编辑器验证。
-- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言目前是设计草案，规范见 [`docs/cl2-language.md`](docs/cl2-language.md)；当前运行时仍以 NGL 蓝图和现有数据契约为准。CL2 采用显式节点 ID、`option<x>` 分支、`default` 默认出口、纯值函数和 `if` 回边，不得在未完成解析器、编辑器、运行时和迁移验证前声称已完成格式迁移。
-- `tools/migration/blueprint_to_cl2.py` 是离线导出器：读取 `data/activities/*.json`，写出 `*.CL2.txt` 和 `conversion-report.json`，不得替代当前 NGL loader，也不得原地修改 canonical JSON；转换时必须区分流程节点、数值节点、流程起始节点和数值接收节点，第 4 类使用 `inputvalue` 表达；有损或无法对应的旧端口必须保留在报告中。
+- CL2 内嵌值绑定必须递归解析；自定义流程节点的隐式 `default` 必须映射到其声明的首个流程出口，framework 宏不得调用未注册的领域 API。
+- 显示节点的 canonical `text` 调用使用 `displayTo, speaker, text, ...` 顺序；动态窗口组件复制必须合并模板事件，不能因生命周期事件覆盖 `onAdd`/`onRemove` 等交互蓝图。
+- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言规范见 [`docs/cl2-language.md`](docs/cl2-language.md)。Activity 运行时、定义存储和编辑器均使用 CL2；旧 JSON 仅作为迁移审计输入，不是生产 Activity source。CL2 采用显式节点 ID、`option<x>` 分支、`default` 默认出口、纯值函数和 `if` 回边。
+- `tools/migration/blueprint_to_cl2.py` 是离线审计/再生成工具：读取旧 `data/activities/*.json`，写出 `*.CL2.txt` 和 `conversion-report.json`，不得作为生产 loader，也不得覆盖 CL2 canonical 文件；转换时必须区分四类节点，第 4 类使用 `inputvalue` 表达；有损或无法对应的旧端口必须保留在报告中。
 
 ## 数据、版权和字体
 
@@ -72,6 +75,7 @@
 - 开发专用代码使用 `DEV-TOOLS:START` / `DEV-TOOLS:END` 标记（CSS/HTML 使用对应注释形式）。业务成就和业务数据不是开发人员模式内容，不能因发布清理而删除。
 - canonical 数据编辑器必须校验 schema，并明确区分“保存到内存”“下载”和“写入磁盘”；存档调试器只能修改存档/运行时状态，不能把数据库内容写入存档调试器。
 - 活动调试器必须订阅 Activity 生命周期事件实时刷新，并通过运行时 API 修改实例节点、状态、本地变量和队列，不得直接改写隐藏的 runner/Map。
+- 活动调试器的“触发结局”入口必须筛选 canonical ending Activity 并调用公开的 `runActivity` API；不得直接改写隐藏队列或绕过 Activity 执行系统。对话 transcript 回放必须同时投递到 DisplayReceiverRegistry 与公开事件总线，确保已挂载窗口不会只出现空容器。社交媒体窗口如需保持旧版布局，应在窗口数据和通用 Widget/CSS 契约中声明 main 分支的尺寸、标签栏和滚动边界，不得新增业务 JavaScript。
 - ChatGTP QA 和 Turtle Soup 的运行时 canonical owner 分别是 `data/databases/chatgtpQaEntries.json` 与 `data/databases/turtleSoupPuzzles.json`；不得重新注册已删除的 seed/native 重复副本。
 - 发布版必须移除开发工具、编辑器、调试入口、本地写盘服务器和迁移工具，同时保留运行时所需的 framework/game 数据与 core 能力。
 
@@ -84,4 +88,5 @@
 5. 状态、存档、Activity 或边界改动必须增加或运行确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
 6. 需要验证发布产物时执行 `node tools/verify-publish.js`；该命令会生成并检查发布产物、检查入口语法，然后无论成功失败都删除 `publish/`。确认产物不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口。
 7. 静态检查、探针和浏览器交互验证要分别如实报告；没有真实运行就不能声称 UI 已验证。
-8. 除非用户明确要求，不创建 PR。
+8. `dev-server.js` 提供静态文件时必须先解码 URL 百分号编码，再执行根目录穿越校验，以保证中文 canonical Activity 路径可加载。
+9. 除非用户明确要求，不创建 PR。

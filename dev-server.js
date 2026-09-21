@@ -52,6 +52,7 @@ const MIME = {
   ".svg": "image/svg+xml",
   ".png": "image/png",
   ".ttf": "font/ttf",
+  ".txt": "text/plain; charset=utf-8",
 };
 
 /** Resolve `name` inside DATA_DIR, rejecting any path traversal. */
@@ -69,7 +70,13 @@ function send(res, status, body, contentType = "application/json; charset=utf-8"
 }
 
 function serveStatic(req, res, pathname) {
-  const relative = pathname === "/" ? "index.html" : pathname.slice(1);
+  let decodedPathname;
+  try {
+    decodedPathname = decodeURIComponent(pathname);
+  } catch {
+    return send(res, 400, "Bad request", "text/plain");
+  }
+  const relative = decodedPathname === "/" ? "index.html" : decodedPathname.slice(1);
   const filePath = path.resolve(ROOT, relative);
   if (path.relative(ROOT, filePath).startsWith("..")) return send(res, 403, "Forbidden", "text/plain");
   fs.readFile(filePath, (err, data) => {

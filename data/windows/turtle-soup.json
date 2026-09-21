@@ -17,7 +17,10 @@
       {
         "widgetId": "turtle-soup-title",
         "type": "label",
-        "text": {"nodeId":"puzzleTitle","port":"value"},
+        "text": {
+          "nodeId": "puzzleTitle",
+          "port": "value"
+        },
         "className": "turtle-soup-title"
       },
       {
@@ -34,7 +37,15 @@
         "legend": "汤面",
         "className": "turtle-soup-story",
         "children": [
-          {"widgetId":"turtle-soup-story-text","type":"label","text":{"nodeId":"puzzleStory","port":"value"},"className":"turtle-soup-story-text"}
+          {
+            "widgetId": "turtle-soup-story-text",
+            "type": "label",
+            "text": {
+              "nodeId": "puzzleStory",
+              "port": "value"
+            },
+            "className": "turtle-soup-story-text"
+          }
         ]
       },
       {
@@ -47,41 +58,7 @@
         "className": "turtle-soup-guess",
         "events": {
           "onChange": {
-            "startNodeId": "start",
-            "nodes": {
-              "start": {
-                "id": "start",
-                "type": "flowStart",
-                "inputs": {},
-                "next": {
-                  "flowOut": {
-                    "nodeId": "set",
-                    "port": "flowIn"
-                  }
-                }
-              },
-              "set": {
-                "id": "set",
-                "type": "setVariable",
-                "inputs": {
-                  "key": "turtleSoup:guess",
-                  "value": {
-                    "variable": "event:value"
-                  }
-                },
-                "next": {
-                  "flowOut": {
-                    "nodeId": "end",
-                    "port": "flowIn"
-                  }
-                }
-              },
-              "end": {
-                "id": "end",
-                "type": "activityEnd",
-                "inputs": {}
-              }
-            }
+            "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[3].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"turtleSoup:guess\", {\"variable\":\"event:value\"}); end: end();"
           }
         }
       },
@@ -92,39 +69,7 @@
         "className": "win95-btn bevel-out",
         "events": {
           "onClick": {
-            "startNodeId": "start",
-            "nodes": {
-              "start": {
-                "id": "start",
-                "type": "flowStart",
-                "inputs": {},
-                "next": {
-                  "flowOut": {
-                    "nodeId": "run",
-                    "port": "flowIn"
-                  }
-                }
-              },
-              "run": {
-                "id": "run",
-                "type": "runActivity",
-                "inputs": {
-                  "activityId": "turtle_soup_guess",
-                  "queueId": "main"
-                },
-                "next": {
-                  "flowOut": {
-                    "nodeId": "end",
-                    "port": "flowIn"
-                  }
-                }
-              },
-              "end": {
-                "id": "end",
-                "type": "activityEnd",
-                "inputs": {}
-              }
-            }
+            "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"turtle_soup_guess\", \"main\"); end: end();"
           }
         }
       },
@@ -142,15 +87,28 @@
         "summary": "已经问过的问题",
         "className": "turtle-soup-history",
         "children": [
-          {"widgetId":"turtle-soup-history-list","type":"list","items":{"nodeId":"history","port":"value"},"itemLabelTemplate":"{{questionText}}　彬彬：{{answer}}","itemClassName":"turtle-soup-history-item"}
+          {
+            "widgetId": "turtle-soup-history-list",
+            "type": "list",
+            "items": {
+              "nodeId": "history",
+              "port": "value"
+            },
+            "itemLabelTemplate": "{{questionText}}　彬彬：{{answer}}",
+            "itemClassName": "turtle-soup-history-item"
+          }
         ]
       },
       {
-        "widgetId":"turtle-soup-finish-day",
-        "type":"button",
-        "text":"结束今天",
-        "className":"win95-btn bevel-out turtle-soup-finish-day",
-        "events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"emit","port":"flowIn"}}},"emit":{"id":"emit","type":"emitEvent","inputs":{"eventName":"turtleSoup:day-finished","payload":{"puzzleId":{"variable":"turtleSoup:puzzleId"}}},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}
+        "widgetId": "turtle-soup-finish-day",
+        "type": "button",
+        "text": "结束今天",
+        "className": "win95-btn bevel-out turtle-soup-finish-day",
+        "events": {
+          "onClick": {
+            "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[7].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"turtleSoup:day-finished\", {\"puzzleId\":{\"variable\":\"turtleSoup:puzzleId\"}}); end: end();"
+          }
+        }
       },
       {
         "widgetId": "turtle-soup-questions",
@@ -162,215 +120,70 @@
           {
             "widgetId": "turtle-soup-question-soup01_q1",
             "type": "button",
-            "enabled": {"nodeId":"q1Enabled","port":"value"},
+            "enabled": {
+              "nodeId": "q1Enabled",
+              "port": "value"
+            },
             "text": "？ 这碗汤是人肉汤吗？",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "turtle_soup_question_soup01_q1",
-                      "queueId": "main"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[8].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"turtle_soup_question_soup01_q1\", \"main\"); end: end();"
               }
             }
           },
           {
             "widgetId": "turtle-soup-question-soup01_q2",
             "type": "button",
-            "enabled": {"nodeId":"q2Enabled","port":"value"},
+            "enabled": {
+              "nodeId": "q2Enabled",
+              "port": "value"
+            },
             "text": "？ 他以前喝过类似的汤吗？",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "turtle_soup_question_soup01_q2",
-                      "queueId": "main"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[8].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"turtle_soup_question_soup01_q2\", \"main\"); end: end();"
               }
             }
           },
           {
             "widgetId": "turtle-soup-question-soup01_q3",
             "type": "button",
-            "enabled": {"nodeId":"q3Enabled","port":"value"},
+            "enabled": {
+              "nodeId": "q3Enabled",
+              "port": "value"
+            },
             "text": "？ 他曾经遭遇海难吗？",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "turtle_soup_question_soup01_q3",
-                      "queueId": "main"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[8].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"turtle_soup_question_soup01_q3\", \"main\"); end: end();"
               }
             }
           },
           {
             "widgetId": "turtle-soup-question-soup01_q4",
             "type": "button",
-            "enabled": {"nodeId":"q4Enabled","port":"value"},
+            "enabled": {
+              "nodeId": "q4Enabled",
+              "port": "value"
+            },
             "text": "？ 他当年喝到的汤确实来自亲人吗？",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "turtle_soup_question_soup01_q4",
-                      "queueId": "main"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[8].children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"turtle_soup_question_soup01_q4\", \"main\"); end: end();"
               }
             }
           },
           {
             "widgetId": "turtle-soup-question-soup01_q5",
             "type": "button",
-            "enabled": {"nodeId":"q5Enabled","port":"value"},
+            "enabled": {
+              "nodeId": "q5Enabled",
+              "port": "value"
+            },
             "text": "？ 真相和误食亲人的肉有关吗？",
             "events": {
               "onClick": {
-                "startNodeId": "start",
-                "nodes": {
-                  "start": {
-                    "id": "start",
-                    "type": "flowStart",
-                    "inputs": {},
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "run",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "run": {
-                    "id": "run",
-                    "type": "runActivity",
-                    "inputs": {
-                      "activityId": "turtle_soup_question_soup01_q5",
-                      "queueId": "main"
-                    },
-                    "next": {
-                      "flowOut": {
-                        "nodeId": "end",
-                        "port": "flowIn"
-                      }
-                    }
-                  },
-                  "end": {
-                    "id": "end",
-                    "type": "activityEnd",
-                    "inputs": {}
-                  }
-                }
+                "cl2": "/** CL2 export for activity data/windows/turtle-soup.json.root.children[8].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"turtle_soup_question_soup01_q5\", \"main\"); end: end();"
               }
             }
           }
@@ -380,25 +193,195 @@
   },
   "valueGraph": {
     "nodes": {
-      "puzzle": {"id":"puzzle","type":"getRecordValue","inputs":{"databaseId":"turtleSoupPuzzles","key":{"variable":"turtleSoup:puzzleId"}}},
-      "puzzleTitle": {"id":"puzzleTitle","type":"getProperty","inputs":{"value":{"nodeId":"puzzle","port":"value"},"key":"title"}},
-      "puzzleStory": {"id":"puzzleStory","type":"getProperty","inputs":{"value":{"nodeId":"puzzle","port":"value"},"key":"story"}},
-      "history": {"id":"history","type":"getRuntimeCollection","inputs":{"collectionId":"eventHistory"}},
-      "q1State": {"id":"q1State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q1"}},
-      "q2State": {"id":"q2State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q2"}},
-      "q3State": {"id":"q3State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q3"}},
-      "q4State": {"id":"q4State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q4"}},
-      "q5State": {"id":"q5State","type":"getRuntimeRecord","inputs":{"collectionId":"turtleSoupState","recordId":"soup01_q5"}},
-      "q1Asked": {"id":"q1Asked","type":"getProperty","inputs":{"value":{"nodeId":"q1State","port":"value"},"key":"asked"}},
-      "q2Asked": {"id":"q2Asked","type":"getProperty","inputs":{"value":{"nodeId":"q2State","port":"value"},"key":"asked"}},
-      "q3Asked": {"id":"q3Asked","type":"getProperty","inputs":{"value":{"nodeId":"q3State","port":"value"},"key":"asked"}},
-      "q4Asked": {"id":"q4Asked","type":"getProperty","inputs":{"value":{"nodeId":"q4State","port":"value"},"key":"asked"}},
-      "q5Asked": {"id":"q5Asked","type":"getProperty","inputs":{"value":{"nodeId":"q5State","port":"value"},"key":"asked"}},
-      "q1Enabled": {"id":"q1Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q1Asked","port":"value"}}},
-      "q2Enabled": {"id":"q2Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q2Asked","port":"value"}}},
-      "q3Enabled": {"id":"q3Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q3Asked","port":"value"}}},
-      "q4Enabled": {"id":"q4Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q4Asked","port":"value"}}},
-      "q5Enabled": {"id":"q5Enabled","type":"arithmetic","inputs":{"operator":"not","left":{"nodeId":"q5Asked","port":"value"}}}
+      "puzzle": {
+        "id": "puzzle",
+        "type": "getRecordValue",
+        "inputs": {
+          "databaseId": "turtleSoupPuzzles",
+          "key": {
+            "variable": "turtleSoup:puzzleId"
+          }
+        }
+      },
+      "puzzleTitle": {
+        "id": "puzzleTitle",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "puzzle",
+            "port": "value"
+          },
+          "key": "title"
+        }
+      },
+      "puzzleStory": {
+        "id": "puzzleStory",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "puzzle",
+            "port": "value"
+          },
+          "key": "story"
+        }
+      },
+      "history": {
+        "id": "history",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "eventHistory"
+        }
+      },
+      "q1State": {
+        "id": "q1State",
+        "type": "getRuntimeRecord",
+        "inputs": {
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q1"
+        }
+      },
+      "q2State": {
+        "id": "q2State",
+        "type": "getRuntimeRecord",
+        "inputs": {
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q2"
+        }
+      },
+      "q3State": {
+        "id": "q3State",
+        "type": "getRuntimeRecord",
+        "inputs": {
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q3"
+        }
+      },
+      "q4State": {
+        "id": "q4State",
+        "type": "getRuntimeRecord",
+        "inputs": {
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q4"
+        }
+      },
+      "q5State": {
+        "id": "q5State",
+        "type": "getRuntimeRecord",
+        "inputs": {
+          "collectionId": "turtleSoupState",
+          "recordId": "soup01_q5"
+        }
+      },
+      "q1Asked": {
+        "id": "q1Asked",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "q1State",
+            "port": "value"
+          },
+          "key": "asked"
+        }
+      },
+      "q2Asked": {
+        "id": "q2Asked",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "q2State",
+            "port": "value"
+          },
+          "key": "asked"
+        }
+      },
+      "q3Asked": {
+        "id": "q3Asked",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "q3State",
+            "port": "value"
+          },
+          "key": "asked"
+        }
+      },
+      "q4Asked": {
+        "id": "q4Asked",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "q4State",
+            "port": "value"
+          },
+          "key": "asked"
+        }
+      },
+      "q5Asked": {
+        "id": "q5Asked",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "q5State",
+            "port": "value"
+          },
+          "key": "asked"
+        }
+      },
+      "q1Enabled": {
+        "id": "q1Enabled",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "not",
+          "left": {
+            "nodeId": "q1Asked",
+            "port": "value"
+          }
+        }
+      },
+      "q2Enabled": {
+        "id": "q2Enabled",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "not",
+          "left": {
+            "nodeId": "q2Asked",
+            "port": "value"
+          }
+        }
+      },
+      "q3Enabled": {
+        "id": "q3Enabled",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "not",
+          "left": {
+            "nodeId": "q3Asked",
+            "port": "value"
+          }
+        }
+      },
+      "q4Enabled": {
+        "id": "q4Enabled",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "not",
+          "left": {
+            "nodeId": "q4Asked",
+            "port": "value"
+          }
+        }
+      },
+      "q5Enabled": {
+        "id": "q5Enabled",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "not",
+          "left": {
+            "nodeId": "q5Asked",
+            "port": "value"
+          }
+        }
+      }
     }
   }
 }

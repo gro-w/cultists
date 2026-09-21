@@ -2000,6 +2000,19 @@ input[type="range"] {
 .chatgtp-disease-row .ng-widget-select, .chatgtp-medicine-row .ng-widget-select, .chatgtp-notebook-row .ng-widget-select { flex:1; min-width:0; }
 
 /* Exact legacy app layout contracts for the fused data-driven windows. */
+.app-social-media { display:flex; flex-direction:column; height:100%; min-height:0; gap:0; }
+.app-social-media > .sm-tabs { display:flex; gap:0; flex-shrink:0; border-bottom:1px solid #808080; }
+.app-social-media > .sm-tabs > .sm-tab-btn { flex:0 0 auto; min-width:0; padding:4px 10px; border-radius:3px 3px 0 0; }
+.app-social-media > .sm-tabs > .ng-widget-list-item { flex:0 0 auto; min-width:0; padding:4px 10px; border-radius:3px 3px 0 0; }
+.app-social-media > .sm-tabs > .ng-widget-list-item .ng-widget-list-item-meta { display:none; }
+.app-social-media > .sm-tabs + * { flex:1 1 auto; min-height:0; overflow:auto; }
+.sm-panels { flex:1 1 auto; min-height:0; overflow:auto; padding:6px; }
+.sm-post-card { display:flex; flex-direction:column; gap:4px; margin-bottom:6px; padding:8px; line-height:1.35; }
+.sm-post-card strong { font-size:13px; }
+.sm-post-card small { color:var(--w95-gray-dark); font-size:11px; }
+.sm-post-card p { margin:0; font-size:12px; white-space:pre-wrap; }
+.sm-post-card [class^="ng-record-tab-"] { padding-top:3px; border-top:1px solid #d0d0d0; }
+.sm-post-card [class^="ng-record-tab-"] p { margin:3px 0 0; }
 .app-achievements { display:flex; flex-direction:column; height:100%; gap:6px; }
 .ach-toolbar { display:flex; flex-direction:column; gap:4px; flex-shrink:0; }
 .ach-tabs { display:flex; gap:4px; }

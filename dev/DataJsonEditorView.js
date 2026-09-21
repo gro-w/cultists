@@ -1,6 +1,7 @@
 // DEV-TOOLS:START
 import { t } from "../core/i18n/index.js";
 import { writeDataFile } from "./devApi.js";
+import { encodeCl2Blueprints } from "../core/Cl2EmbeddedSerializer.js";
 
 function clone(value) {
   return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
@@ -177,7 +178,7 @@ export class DataJsonEditorView {
   async save() {
     if (!this.selectedPath) return;
     try {
-      await writeDataFile(this.selectedPath, `${JSON.stringify(this.draft, null, 2)}\n`);
+      await writeDataFile(this.selectedPath, `${JSON.stringify(encodeCl2Blueprints(this.draft, this.selectedPath), null, 2)}\n`);
       this.statusEl.textContent = t("legacy.d4371481b26a");
     } catch (error) {
       this.statusEl.textContent = `${t("legacy.e92dc2256061")}: ${error.message}`;

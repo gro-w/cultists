@@ -1,22 +1,113 @@
 {
-  "id":"location-scene",
-  "title":"位置",
-  "icon":"🗺️",
-  "width":640,
-  "height":460,
-  "resizable":true,
-  "singleInstance":true,
-  "valueGraph":{"nodes":{
-    "location":{"id":"location","type":"getRecordValue","inputs":{"databaseId":"locations","key":{"variable":"stateBoundary:location"}}},
-    "locationName":{"id":"locationName","type":"getProperty","inputs":{"value":{"nodeId":"location","port":"value"},"key":"name"}},
-    "background":{"id":"background","type":"getProperty","inputs":{"value":{"nodeId":"location","port":"value"},"key":"backgroundImage"}},
-    "subLocations":{"id":"subLocations","type":"getProperty","inputs":{"value":{"nodeId":"location","port":"value"},"key":"subLocations"}}
-  }},
-  "root":{"widgetId":"location-scene-root","type":"container","flow":"vertical","gap":8,"padding":10,"className":"app-location-scene","children":[
-    {"widgetId":"location-scene-title","type":"label","text":{"nodeId":"locationName","port":"value"},"className":"location-scene-title"},
-    {"widgetId":"location-scene-background","type":"image","src":{"nodeId":"background","port":"value"},"alt":"当前位置背景","className":"location-scene-background"},
-    {"widgetId":"location-scene-message","type":"label","text":"场景中的可调查区域：","className":"location-scene-message"},
-    {"widgetId":"location-scene-subLocations","type":"list","items":{"nodeId":"subLocations","port":"value"},"itemLabelField":"name","itemMetaTemplate":"区域 ID：{{id}}","itemClassName":"location-scene-subLocation"},
-    {"widgetId":"location-scene-close","type":"button","text":"返回","className":"win95-btn bevel-out","events":{"onClick":{"startNodeId":"start","nodes":{"start":{"id":"start","type":"flowStart","inputs":{},"next":{"flowOut":{"nodeId":"close","port":"flowIn"}}},"close":{"id":"close","type":"closeWindow","inputs":{"windowId":"location-scene"},"next":{"flowOut":{"nodeId":"end","port":"flowIn"}}},"end":{"id":"end","type":"activityEnd","inputs":{}}}}}}
-  ]}
+  "id": "location-scene",
+  "title": "位置",
+  "icon": "🗺️",
+  "width": 640,
+  "height": 460,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "location": {
+        "id": "location",
+        "type": "getRecordValue",
+        "inputs": {
+          "databaseId": "locations",
+          "key": {
+            "variable": "stateBoundary:location"
+          }
+        }
+      },
+      "locationName": {
+        "id": "locationName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "location",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "background": {
+        "id": "background",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "location",
+            "port": "value"
+          },
+          "key": "backgroundImage"
+        }
+      },
+      "subLocations": {
+        "id": "subLocations",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "location",
+            "port": "value"
+          },
+          "key": "subLocations"
+        }
+      }
+    }
+  },
+  "root": {
+    "widgetId": "location-scene-root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "className": "app-location-scene",
+    "children": [
+      {
+        "widgetId": "location-scene-title",
+        "type": "label",
+        "text": {
+          "nodeId": "locationName",
+          "port": "value"
+        },
+        "className": "location-scene-title"
+      },
+      {
+        "widgetId": "location-scene-background",
+        "type": "image",
+        "src": {
+          "nodeId": "background",
+          "port": "value"
+        },
+        "alt": "当前位置背景",
+        "className": "location-scene-background"
+      },
+      {
+        "widgetId": "location-scene-message",
+        "type": "label",
+        "text": "场景中的可调查区域：",
+        "className": "location-scene-message"
+      },
+      {
+        "widgetId": "location-scene-subLocations",
+        "type": "list",
+        "items": {
+          "nodeId": "subLocations",
+          "port": "value"
+        },
+        "itemLabelField": "name",
+        "itemMetaTemplate": "区域 ID：{{id}}",
+        "itemClassName": "location-scene-subLocation"
+      },
+      {
+        "widgetId": "location-scene-close",
+        "type": "button",
+        "text": "返回",
+        "className": "win95-btn bevel-out",
+        "events": {
+          "onClick": {
+            "cl2": "/** CL2 export for activity data/windows/location-scene.json.root.children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); close: closeWindow(\"location-scene\"); end: end();"
+          }
+        }
+      }
+    ]
+  }
 }

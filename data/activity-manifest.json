@@ -2,688 +2,1113 @@
   "activityIds": [
     {
       "id": "achievement__force_end_work",
-      "file": "achievement__force_end_work.json"
+      "file": "achievement__force_end_work.CL2.txt",
+      "displayName": "我要强制下班",
+      "type": "achievement"
     },
     {
       "id": "achievement__all_texts_read",
-      "file": "achievement__all_texts_read.json"
+      "file": "achievement__all_texts_read.CL2.txt",
+      "displayName": "无字天书",
+      "type": "achievement"
     },
     {
       "id": "achievement__ending_any",
-      "file": "achievement__ending_any.json"
+      "file": "achievement__ending_any.CL2.txt",
+      "displayName": "命运的终章",
+      "type": "achievement"
     },
     {
       "id": "achievement__exam_pass",
-      "file": "achievement__exam_pass.json"
+      "file": "achievement__exam_pass.CL2.txt",
+      "displayName": "金榜题名",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_all_positive",
-      "file": "achievement__fav_all_positive.json"
+      "file": "achievement__fav_all_positive.CL2.txt",
+      "displayName": "雨露均沾",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_cumulative_down",
-      "file": "achievement__fav_cumulative_down.json"
+      "file": "achievement__fav_cumulative_down.CL2.txt",
+      "displayName": "到处惹祸",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_cumulative_up",
-      "file": "achievement__fav_cumulative_up.json"
+      "file": "achievement__fav_cumulative_up.CL2.txt",
+      "displayName": "宿舍暖心人",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_first_down",
-      "file": "achievement__fav_first_down.json"
+      "file": "achievement__fav_first_down.CL2.txt",
+      "displayName": "关系裂痕",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_first_up",
-      "file": "achievement__fav_first_up.json"
+      "file": "achievement__fav_first_up.CL2.txt",
+      "displayName": "初见倾心",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_maxed",
-      "file": "achievement__fav_maxed.json"
+      "file": "achievement__fav_maxed.CL2.txt",
+      "displayName": "真心相待",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_three_high",
-      "file": "achievement__fav_three_high.json"
+      "file": "achievement__fav_three_high.CL2.txt",
+      "displayName": "三千宠爱在一身",
+      "type": "achievement"
     },
     {
       "id": "achievement__fav_zeroed",
-      "file": "achievement__fav_zeroed.json"
+      "file": "achievement__fav_zeroed.CL2.txt",
+      "displayName": "反目成仇",
+      "type": "achievement"
     },
     {
       "id": "achievement__san_fast_drop",
-      "file": "achievement__san_fast_drop.json"
+      "file": "achievement__san_fast_drop.CL2.txt",
+      "displayName": "精神内耗",
+      "type": "achievement"
     },
     {
       "id": "achievement__san_recovery",
-      "file": "achievement__san_recovery.json"
+      "file": "achievement__san_recovery.CL2.txt",
+      "displayName": "触底反弹",
+      "type": "achievement"
     },
     {
       "id": "achievement__san_steady",
-      "file": "achievement__san_steady.json"
+      "file": "achievement__san_steady.CL2.txt",
+      "displayName": "处变不惊",
+      "type": "achievement"
     },
     {
       "id": "achievement__san_zero",
-      "file": "achievement__san_zero.json"
+      "file": "achievement__san_zero.CL2.txt",
+      "displayName": "清醒的疯狂",
+      "type": "achievement"
     },
     {
       "id": "achievement__skillcheck_critical_failure",
-      "file": "achievement__skillcheck_critical_failure.json"
+      "file": "achievement__skillcheck_critical_failure.CL2.txt",
+      "displayName": "一命归西",
+      "type": "achievement"
     },
     {
       "id": "achievement__skillcheck_cumulative_success",
-      "file": "achievement__skillcheck_cumulative_success.json"
+      "file": "achievement__skillcheck_cumulative_success.CL2.txt",
+      "displayName": "大骰精",
+      "type": "achievement"
     },
     {
       "id": "achievement__skillcheck_first_failure",
-      "file": "achievement__skillcheck_first_failure.json"
+      "file": "achievement__skillcheck_first_failure.CL2.txt",
+      "displayName": "骰子背刺",
+      "type": "achievement"
     },
     {
       "id": "achievement__skillcheck_first_success",
-      "file": "achievement__skillcheck_first_success.json"
+      "file": "achievement__skillcheck_first_success.CL2.txt",
+      "displayName": "骰运附体",
+      "type": "achievement"
     },
     {
       "id": "achievement__study_believer",
-      "file": "achievement__study_believer.json"
+      "file": "achievement__study_believer.CL2.txt",
+      "displayName": "题之信念",
+      "type": "achievement"
     },
     {
       "id": "achievement__study_first",
-      "file": "achievement__study_first.json"
+      "file": "achievement__study_first.CL2.txt",
+      "displayName": "题之意志",
+      "type": "achievement"
     },
     {
       "id": "achievement__study_king",
-      "file": "achievement__study_king.json"
+      "file": "achievement__study_king.CL2.txt",
+      "displayName": "题王争霸",
+      "type": "achievement"
     },
     {
       "id": "achievement__tabletop_first",
-      "file": "achievement__tabletop_first.json"
+      "file": "achievement__tabletop_first.CL2.txt",
+      "displayName": "新手探案",
+      "type": "achievement"
     },
     {
       "id": "achievement__tabletop_skip",
-      "file": "achievement__tabletop_skip.json"
+      "file": "achievement__tabletop_skip.CL2.txt",
+      "displayName": "鸽了彬彬",
+      "type": "achievement"
     },
     {
       "id": "achievement__tabletop_veteran",
-      "file": "achievement__tabletop_veteran.json"
+      "file": "achievement__tabletop_veteran.CL2.txt",
+      "displayName": "老KP的眼神",
+      "type": "achievement"
     },
     {
       "id": "achievement-manager",
-      "file": "achievement-manager.framework.json"
+      "file": "achievement-manager.CL2.txt",
+      "displayName": "成就管理器",
+      "type": "manager"
     },
     {
       "id": "bgm-manager",
-      "file": "bgm-manager.framework.json"
+      "file": "bgm-manager.CL2.txt",
+      "displayName": "BGM 管理器",
+      "type": "manager"
     },
-
     {
       "id": "inventory-manager",
-      "file": "inventory-manager.framework.json"
+      "file": "inventory-manager.CL2.txt",
+      "displayName": "物品管理器",
+      "type": "manager"
     },
     {
       "id": "keyword-manager",
-      "file": "keyword-manager.framework.json"
+      "file": "keyword-manager.CL2.txt",
+      "displayName": "关键词管理器",
+      "type": "manager"
     },
     {
       "id": "patient-queue-manager",
-      "file": "patient-queue-manager.json"
+      "file": "patient-queue-manager.CL2.txt",
+      "displayName": "患者队列管理器",
+      "type": "manager"
     },
     {
       "id": "social-story-manager",
-      "file": "social-story-manager.json"
+      "file": "social-story-manager.CL2.txt",
+      "displayName": "室友剧情管理器",
+      "type": "manager"
     },
     {
       "id": "default",
-      "file": "default.json"
+      "file": "default.CL2.txt",
+      "displayName": "默认业务管理器",
+      "type": "manager"
     },
     {
       "id": "use-item",
-      "file": "use-item.json"
+      "file": "use-item.CL2.txt",
+      "displayName": "使用物品"
     },
     {
       "id": "spell-learn",
-      "file": "spell-learn.json"
+      "file": "spell-learn.CL2.txt",
+      "displayName": "学习法术"
     },
     {
       "id": "spell-cast",
-      "file": "spell-cast.json"
+      "file": "spell-cast.CL2.txt",
+      "displayName": "施放法术"
     },
     {
       "id": "dorm_activity_day1",
-      "file": "dorm_activity_day1.json"
+      "file": "dorm_activity_day1.CL2.txt",
+      "displayName": "第1天宿舍集体活动",
+      "type": "dormSchedule",
+      "queueId": "social",
+      "day": 1,
+      "name": "宿舍集体活动"
     },
     {
       "id": "dorm_activity_day2",
-      "file": "dorm_activity_day2.json"
+      "file": "dorm_activity_day2.CL2.txt",
+      "displayName": "第2天宿舍集体活动",
+      "type": "dormSchedule",
+      "queueId": "social",
+      "day": 2,
+      "name": "宿舍集体活动"
     },
     {
       "id": "dorm_activity_day3",
-      "file": "dorm_activity_day3.json"
+      "file": "dorm_activity_day3.CL2.txt",
+      "displayName": "第3天宿舍集体活动",
+      "type": "dormSchedule",
+      "queueId": "social",
+      "day": 3,
+      "name": "宿舍集体活动"
     },
     {
       "id": "dorm_activity_day4",
-      "file": "dorm_activity_day4.json"
+      "file": "dorm_activity_day4.CL2.txt",
+      "displayName": "第4天宿舍集体活动",
+      "type": "dormSchedule",
+      "queueId": "social",
+      "day": 4,
+      "name": "宿舍集体活动"
     },
     {
       "id": "dorm_activity_day5",
-      "file": "dorm_activity_day5.json"
+      "file": "dorm_activity_day5.CL2.txt",
+      "displayName": "【海底O火锅】",
+      "type": "dormSchedule",
+      "queueId": "social",
+      "day": 5,
+      "name": "海底O火锅"
     },
     {
       "id": "ending__pl现实魅惑大成功",
-      "file": "ending__cn01.json"
+      "file": "ending__pl现实魅惑大成功.CL2.txt",
+      "displayName": "pl现实魅惑大成功",
+      "type": "ending"
     },
     {
       "id": "ending__万物终亡",
-      "file": "ending__cn02.json"
+      "file": "ending__万物终亡.CL2.txt",
+      "displayName": "万物终亡",
+      "type": "ending"
     },
     {
       "id": "ending__入院快乐",
-      "file": "ending__cn03.json"
+      "file": "ending__入院快乐.CL2.txt",
+      "displayName": "入院快乐",
+      "type": "ending"
     },
     {
       "id": "ending__凡俗",
-      "file": "ending__cn04.json"
+      "file": "ending__凡俗.CL2.txt",
+      "displayName": "凡俗",
+      "type": "ending"
     },
     {
       "id": "ending__异常结局",
-      "file": "ending__cn05.json"
+      "file": "ending__异常结局.CL2.txt",
+      "displayName": "异常结局",
+      "type": "ending"
     },
     {
       "id": "ending__摇滚不死",
-      "file": "ending__cn06.json"
+      "file": "ending__摇滚不死.CL2.txt",
+      "displayName": "摇滚不死",
+      "type": "ending"
     },
     {
       "id": "ending__正常结局",
-      "file": "ending__cn07.json"
+      "file": "ending__正常结局.CL2.txt",
+      "displayName": "正常结局",
+      "type": "ending"
     },
     {
       "id": "ending__混沌一瞥",
-      "file": "ending__cn08.json"
+      "file": "ending__混沌一瞥.CL2.txt",
+      "displayName": "无尽玩笑",
+      "type": "ending"
     },
     {
       "id": "ending__游戏王の福利",
-      "file": "ending__cn09.json"
+      "file": "ending__游戏王の福利.CL2.txt",
+      "displayName": "游戏王の福利",
+      "type": "ending"
     },
     {
       "id": "ending__牺牲之血",
-      "file": "ending__cn10.json"
+      "file": "ending__牺牲之血.CL2.txt",
+      "displayName": "面对未知的命运",
+      "type": "ending"
     },
     {
       "id": "ending__现实=现实",
-      "file": "ending__cn11.json"
+      "file": "ending__现实=现实.CL2.txt",
+      "displayName": "现实=现实",
+      "type": "ending"
     },
     {
       "id": "ending__组一辈子少年乐队！",
-      "file": "ending__cn12.json"
+      "file": "ending__组一辈子少年乐队！.CL2.txt",
+      "displayName": "组一辈子少年乐队！",
+      "type": "ending"
     },
     {
       "id": "ending__自杀结局",
-      "file": "ending__cn13.json"
+      "file": "ending__自杀结局.CL2.txt",
+      "displayName": "自杀结局",
+      "type": "ending"
     },
     {
       "id": "ending__药物过量",
-      "file": "ending__cn14.json"
+      "file": "ending__药物过量.CL2.txt",
+      "displayName": "药物过量",
+      "type": "ending"
     },
     {
       "id": "ending__蹈海",
-      "file": "ending__cn15.json"
+      "file": "ending__蹈海.CL2.txt",
+      "displayName": "蹈海",
+      "type": "ending"
     },
     {
       "id": "event__binbin_turtle_fail",
-      "file": "event__binbin_turtle_fail.json"
+      "file": "event__binbin_turtle_fail.CL2.txt",
+      "displayName": "binbin_turtle_fail",
+      "type": "specialEvent"
     },
     {
       "id": "event__binbin_turtle_success",
-      "file": "event__binbin_turtle_success.json"
+      "file": "event__binbin_turtle_success.CL2.txt",
+      "displayName": "binbin_turtle_success",
+      "type": "specialEvent"
     },
     {
       "id": "event__与海之子对话",
-      "file": "event__cn01.json"
+      "file": "event__与海之子对话.CL2.txt",
+      "displayName": "与海之子对话",
+      "type": "specialEvent"
     },
     {
       "id": "event__彬彬献祭事件",
-      "file": "event__cn02.json"
+      "file": "event__彬彬献祭事件.CL2.txt",
+      "displayName": "彬彬献祭事件",
+      "type": "specialEvent"
     },
     {
       "id": "event__悔恨之泪",
-      "file": "event__cn03.json"
+      "file": "event__悔恨之泪.CL2.txt",
+      "displayName": "悔恨之泪",
+      "type": "specialEvent"
     },
     {
       "id": "event__追逐",
-      "file": "event__cn04.json"
+      "file": "event__追逐.CL2.txt",
+      "displayName": "追逐",
+      "type": "specialEvent"
     },
     {
       "id": "event__游戏王の荣耀",
-      "file": "event__cn08.json"
+      "file": "event__游戏王の荣耀.CL2.txt",
+      "displayName": "游戏王の荣耀",
+      "type": "specialEvent"
     },
     {
       "id": "event__一切谜锁都解开了",
-      "file": "event__cn09.json"
+      "file": "event__一切谜锁都解开了.CL2.txt",
+      "displayName": "一切谜锁都解开了",
+      "type": "specialEvent"
     },
     {
       "id": "event__追逐事件",
-      "file": "event__cn05.json"
+      "file": "event__追逐事件.CL2.txt",
+      "displayName": "追逐事件",
+      "type": "specialEvent"
     },
     {
       "id": "event__长眠的克苏鲁候汝入梦",
-      "file": "event__cn06.json"
+      "file": "event__长眠的克苏鲁候汝入梦.CL2.txt",
+      "displayName": "长眠的克苏鲁候汝入梦",
+      "type": "specialEvent"
     },
     {
       "id": "event__长眠的克苏鲁候汝入梦事件",
-      "file": "event__cn07.json"
+      "file": "event__长眠的克苏鲁候汝入梦事件.CL2.txt",
+      "displayName": "长眠的克苏鲁候汝入梦事件",
+      "type": "specialEvent"
     },
     {
       "id": "his__his-filter-diagnosis",
-      "file": "his__his-filter-diagnosis.json"
+      "file": "his__his-filter-diagnosis.CL2.txt",
+      "displayName": "his-filter-diagnosis",
+      "type": "hisCustom"
     },
     {
       "id": "his__his-initialize",
-      "file": "his__his-initialize.json"
+      "file": "his__his-initialize.CL2.txt",
+      "displayName": "his-initialize",
+      "type": "hisCustom"
     },
     {
       "id": "his__his-search",
-      "file": "his__his-search.json"
+      "file": "his__his-search.CL2.txt",
+      "displayName": "his-search",
+      "type": "hisCustom"
     },
     {
       "id": "his__his-select-patient",
-      "file": "his__his-select-patient.json"
+      "file": "his__his-select-patient.CL2.txt",
+      "displayName": "his-select-patient",
+      "type": "hisCustom"
     },
     {
       "id": "his__his-submit",
-      "file": "his__his-submit.json"
+      "file": "his__his-submit.CL2.txt",
+      "displayName": "his-submit",
+      "type": "hisCustom"
     },
     {
       "id": "medical-appointment-watcher",
-      "file": "medical-appointment-watcher.json"
+      "file": "medical-appointment-watcher.CL2.txt",
+      "displayName": "医疗预约触发器（示例）"
     },
     {
       "id": "medical_complaint_work",
-      "file": "medical_complaint_work.json"
+      "file": "medical_complaint_work.CL2.txt",
+      "displayName": "medical_complaint_work",
+      "type": "medicalIncident",
+      "queueId": "work"
     },
     {
       "id": "medical_riot_work",
-      "file": "medical_riot_work.json"
+      "file": "medical_riot_work.CL2.txt",
+      "displayName": "medical_riot_work",
+      "type": "medicalIncident",
+      "queueId": "work"
     },
     {
       "id": "off-duty-open",
-      "file": "off-duty-open.json"
+      "file": "off-duty-open.CL2.txt",
+      "displayName": "下班"
     },
     {
       "id": "patient_02_01_gingivitis",
-      "file": "patient_02_01_gingivitis.json"
+      "file": "patient_02_01_gingivitis.CL2.txt",
+      "displayName": "patient_02_01_gingivitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_02_02_plantar_fasciitis",
-      "file": "patient_02_02_plantar_fasciitis.json"
+      "file": "patient_02_02_plantar_fasciitis.CL2.txt",
+      "displayName": "patient_02_02_plantar_fasciitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_02_03_hyperthyroidism",
-      "file": "patient_02_03_hyperthyroidism.json"
+      "file": "patient_02_03_hyperthyroidism.CL2.txt",
+      "displayName": "patient_02_03_hyperthyroidism",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_02_04_hypothyroidism",
-      "file": "patient_02_04_hypothyroidism.json"
+      "file": "patient_02_04_hypothyroidism.CL2.txt",
+      "displayName": "patient_02_04_hypothyroidism",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_02_05_vitamin_b12_deficiency_anemia",
-      "file": "patient_02_05_vitamin_b12_deficiency_anemia.json"
+      "file": "patient_02_05_vitamin_b12_deficiency_anemia.CL2.txt",
+      "displayName": "patient_02_05_vitamin_b12_deficiency_anemia",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_02_06_iron_deficiency_anemia",
-      "file": "patient_02_06_iron_deficiency_anemia.json"
+      "file": "patient_02_06_iron_deficiency_anemia.CL2.txt",
+      "displayName": "patient_02_06_iron_deficiency_anemia",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_02_07_dry_eye",
-      "file": "patient_02_07_dry_eye.json"
+      "file": "patient_02_07_dry_eye.CL2.txt",
+      "displayName": "patient_02_07_dry_eye",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_03_01_bacterial_conjunctivitis",
-      "file": "patient_03_01_bacterial_conjunctivitis.json"
+      "file": "patient_03_01_bacterial_conjunctivitis.CL2.txt",
+      "displayName": "patient_03_01_bacterial_conjunctivitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_03_02_ulcerative_colitis",
-      "file": "patient_03_02_ulcerative_colitis.json"
+      "file": "patient_03_02_ulcerative_colitis.CL2.txt",
+      "displayName": "patient_03_02_ulcerative_colitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_03_03_hemorrhoids",
-      "file": "patient_03_03_hemorrhoids.json"
+      "file": "patient_03_03_hemorrhoids.CL2.txt",
+      "displayName": "patient_03_03_hemorrhoids",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_03_04_kidney_stone",
-      "file": "patient_03_04_kidney_stone.json"
+      "file": "patient_03_04_kidney_stone.CL2.txt",
+      "displayName": "patient_03_04_kidney_stone",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_03_05_benign_prostatic_hyperplasia",
-      "file": "patient_03_05_benign_prostatic_hyperplasia.json"
+      "file": "patient_03_05_benign_prostatic_hyperplasia.CL2.txt",
+      "displayName": "patient_03_05_benign_prostatic_hyperplasia",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_03_06_nausea_vomiting",
-      "file": "patient_03_06_nausea_vomiting.json"
+      "file": "patient_03_06_nausea_vomiting.CL2.txt",
+      "displayName": "patient_03_06_nausea_vomiting",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_03_07_lymphadenopathy",
-      "file": "patient_03_07_lymphadenopathy.json"
+      "file": "patient_03_07_lymphadenopathy.CL2.txt",
+      "displayName": "patient_03_07_lymphadenopathy",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_04_01_orthostatic_hypotension",
-      "file": "patient_04_01_orthostatic_hypotension.json"
+      "file": "patient_04_01_orthostatic_hypotension.CL2.txt",
+      "displayName": "patient_04_01_orthostatic_hypotension",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_04_02_closed_foot_fracture",
-      "file": "patient_04_02_closed_foot_fracture.json"
+      "file": "patient_04_02_closed_foot_fracture.CL2.txt",
+      "displayName": "patient_04_02_closed_foot_fracture",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_04_03_gingivitis",
-      "file": "patient_04_03_gingivitis.json"
+      "file": "patient_04_03_gingivitis.CL2.txt",
+      "displayName": "patient_04_03_gingivitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_04_04_plantar_fasciitis",
-      "file": "patient_04_04_plantar_fasciitis.json"
+      "file": "patient_04_04_plantar_fasciitis.CL2.txt",
+      "displayName": "patient_04_04_plantar_fasciitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_04_05_hyperthyroidism",
-      "file": "patient_04_05_hyperthyroidism.json"
+      "file": "patient_04_05_hyperthyroidism.CL2.txt",
+      "displayName": "patient_04_05_hyperthyroidism",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_04_06_hypothyroidism",
-      "file": "patient_04_06_hypothyroidism.json"
+      "file": "patient_04_06_hypothyroidism.CL2.txt",
+      "displayName": "patient_04_06_hypothyroidism",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_04_07_vitamin_b12_deficiency_anemia",
-      "file": "patient_04_07_vitamin_b12_deficiency_anemia.json"
+      "file": "patient_04_07_vitamin_b12_deficiency_anemia.CL2.txt",
+      "displayName": "patient_04_07_vitamin_b12_deficiency_anemia",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_06_01_nausea_vomiting",
-      "file": "patient_06_01_nausea_vomiting.json"
+      "file": "patient_06_01_nausea_vomiting.CL2.txt",
+      "displayName": "patient_06_01_nausea_vomiting",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_06_02_lymphadenopathy",
-      "file": "patient_06_02_lymphadenopathy.json"
+      "file": "patient_06_02_lymphadenopathy.CL2.txt",
+      "displayName": "patient_06_02_lymphadenopathy",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_06_03_orthostatic_hypotension",
-      "file": "patient_06_03_orthostatic_hypotension.json"
+      "file": "patient_06_03_orthostatic_hypotension.CL2.txt",
+      "displayName": "patient_06_03_orthostatic_hypotension",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_06_04_closed_foot_fracture",
-      "file": "patient_06_04_closed_foot_fracture.json"
+      "file": "patient_06_04_closed_foot_fracture.CL2.txt",
+      "displayName": "patient_06_04_closed_foot_fracture",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_06_05_gingivitis",
-      "file": "patient_06_05_gingivitis.json"
+      "file": "patient_06_05_gingivitis.CL2.txt",
+      "displayName": "patient_06_05_gingivitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_06_06_plantar_fasciitis",
-      "file": "patient_06_06_plantar_fasciitis.json"
+      "file": "patient_06_06_plantar_fasciitis.CL2.txt",
+      "displayName": "patient_06_06_plantar_fasciitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_06_07_hyperthyroidism",
-      "file": "patient_06_07_hyperthyroidism.json"
+      "file": "patient_06_07_hyperthyroidism.CL2.txt",
+      "displayName": "patient_06_07_hyperthyroidism",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_07_01_hypothyroidism",
-      "file": "patient_07_01_hypothyroidism.json"
+      "file": "patient_07_01_hypothyroidism.CL2.txt",
+      "displayName": "patient_07_01_hypothyroidism",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_07_02_vitamin_b12_deficiency_anemia",
-      "file": "patient_07_02_vitamin_b12_deficiency_anemia.json"
+      "file": "patient_07_02_vitamin_b12_deficiency_anemia.CL2.txt",
+      "displayName": "patient_07_02_vitamin_b12_deficiency_anemia",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_07_03_iron_deficiency_anemia",
-      "file": "patient_07_03_iron_deficiency_anemia.json"
+      "file": "patient_07_03_iron_deficiency_anemia.CL2.txt",
+      "displayName": "patient_07_03_iron_deficiency_anemia",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_07_04_dry_eye",
-      "file": "patient_07_04_dry_eye.json"
+      "file": "patient_07_04_dry_eye.CL2.txt",
+      "displayName": "patient_07_04_dry_eye",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_07_05_bacterial_conjunctivitis",
-      "file": "patient_07_05_bacterial_conjunctivitis.json"
+      "file": "patient_07_05_bacterial_conjunctivitis.CL2.txt",
+      "displayName": "patient_07_05_bacterial_conjunctivitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_07_06_ulcerative_colitis",
-      "file": "patient_07_06_ulcerative_colitis.json"
+      "file": "patient_07_06_ulcerative_colitis.CL2.txt",
+      "displayName": "patient_07_06_ulcerative_colitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_07_07_hemorrhoids",
-      "file": "patient_07_07_hemorrhoids.json"
+      "file": "patient_07_07_hemorrhoids.CL2.txt",
+      "displayName": "patient_07_07_hemorrhoids",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_08_01_kidney_stone",
-      "file": "patient_08_01_kidney_stone.json"
+      "file": "patient_08_01_kidney_stone.CL2.txt",
+      "displayName": "patient_08_01_kidney_stone",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_08_02_benign_prostatic_hyperplasia",
-      "file": "patient_08_02_benign_prostatic_hyperplasia.json"
+      "file": "patient_08_02_benign_prostatic_hyperplasia.CL2.txt",
+      "displayName": "patient_08_02_benign_prostatic_hyperplasia",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_08_03_nausea_vomiting",
-      "file": "patient_08_03_nausea_vomiting.json"
+      "file": "patient_08_03_nausea_vomiting.CL2.txt",
+      "displayName": "patient_08_03_nausea_vomiting",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_08_04_lymphadenopathy",
-      "file": "patient_08_04_lymphadenopathy.json"
+      "file": "patient_08_04_lymphadenopathy.CL2.txt",
+      "displayName": "patient_08_04_lymphadenopathy",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_08_05_orthostatic_hypotension",
-      "file": "patient_08_05_orthostatic_hypotension.json"
+      "file": "patient_08_05_orthostatic_hypotension.CL2.txt",
+      "displayName": "patient_08_05_orthostatic_hypotension",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_08_06_closed_foot_fracture",
-      "file": "patient_08_06_closed_foot_fracture.json"
+      "file": "patient_08_06_closed_foot_fracture.CL2.txt",
+      "displayName": "patient_08_06_closed_foot_fracture",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_08_07_gingivitis",
-      "file": "patient_08_07_gingivitis.json"
+      "file": "patient_08_07_gingivitis.CL2.txt",
+      "displayName": "patient_08_07_gingivitis",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_02_a_08",
-      "file": "patient_extra_02_a_08.json"
+      "file": "patient_extra_02_a_08.CL2.txt",
+      "displayName": "patient_extra_02_a_08",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_03_a_08",
-      "file": "patient_extra_03_a_08.json"
+      "file": "patient_extra_03_a_08.CL2.txt",
+      "displayName": "patient_extra_03_a_08",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_03_a_09",
-      "file": "patient_extra_03_a_09.json"
+      "file": "patient_extra_03_a_09.CL2.txt",
+      "displayName": "patient_extra_03_a_09",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_06_a_08",
-      "file": "patient_extra_06_a_08.json"
+      "file": "patient_extra_06_a_08.CL2.txt",
+      "displayName": "patient_extra_06_a_08",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_06_a_09",
-      "file": "patient_extra_06_a_09.json"
+      "file": "patient_extra_06_a_09.CL2.txt",
+      "displayName": "patient_extra_06_a_09",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_07_a_08",
-      "file": "patient_extra_07_a_08.json"
+      "file": "patient_extra_07_a_08.CL2.txt",
+      "displayName": "patient_extra_07_a_08",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_07_b_08",
-      "file": "patient_extra_07_b_08.json"
+      "file": "patient_extra_07_b_08.CL2.txt",
+      "displayName": "patient_extra_07_b_08",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "patient_extra_07_b_09",
-      "file": "patient_extra_07_b_09.json"
+      "file": "patient_extra_07_b_09.CL2.txt",
+      "displayName": "patient_extra_07_b_09",
+      "type": "his",
+      "queueId": "work"
     },
     {
       "id": "social01b_ajie_honor_of_kings",
-      "file": "social01b_ajie_honor_of_kings.json"
+      "file": "social01b_ajie_honor_of_kings.CL2.txt",
+      "displayName": "《皇者荣耀》",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social01b_awei_headphones",
-      "file": "social01b_awei_headphones.json"
+      "file": "social01b_awei_headphones.CL2.txt",
+      "displayName": "测评耳机",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "social02a_ajie_chat",
-      "file": "social02a_ajie_chat.json"
+      "file": "social02a_ajie_chat.CL2.txt",
+      "displayName": "闲聊池",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social02a_awei_chat",
-      "file": "social02a_awei_chat.json"
+      "file": "social02a_awei_chat.CL2.txt",
+      "displayName": "闲聊池",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "social02b_dorm_invite",
-      "file": "social02b_dorm_invite.json"
+      "file": "social02b_dorm_invite.CL2.txt",
+      "displayName": "宿舍集体活动邀请",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social03b_ajie_24_personality_high",
-      "file": "social03b_ajie_24_personality_high.json"
+      "file": "social03b_ajie_24_personality_high.CL2.txt",
+      "displayName": "《第二十四人格》",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social03b_ajie_24_personality_low",
-      "file": "social03b_ajie_24_personality_low.json"
+      "file": "social03b_ajie_24_personality_low.CL2.txt",
+      "displayName": "《第二十四人格》",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social03b_awei_tail_high",
-      "file": "social03b_awei_tail_high.json"
+      "file": "social03b_awei_tail_high.CL2.txt",
+      "displayName": "尾款风云",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "social03b_awei_tail_low",
-      "file": "social03b_awei_tail_low.json"
+      "file": "social03b_awei_tail_low.CL2.txt",
+      "displayName": "尾款风云",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "social04a_ajie_chat",
-      "file": "social04a_ajie_chat.json"
+      "file": "social04a_ajie_chat.CL2.txt",
+      "displayName": "闲聊池",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social04a_awei_chat",
-      "file": "social04a_awei_chat.json"
+      "file": "social04a_awei_chat.CL2.txt",
+      "displayName": "闲聊池",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "social04b_dorm_invite",
-      "file": "social04b_dorm_invite.json"
+      "file": "social04b_dorm_invite.CL2.txt",
+      "displayName": "宿舍集体活动邀请",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social05b_ajie_goods_high",
-      "file": "social05b_ajie_goods_high.json"
+      "file": "social05b_ajie_goods_high.CL2.txt",
+      "displayName": "【谷子店】",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social05b_ajie_goods_low",
-      "file": "social05b_ajie_goods_low.json"
+      "file": "social05b_ajie_goods_low.CL2.txt",
+      "displayName": "【谷子店】",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social05b_awei_record_high",
-      "file": "social05b_awei_record_high.json"
+      "file": "social05b_awei_record_high.CL2.txt",
+      "displayName": "【线下唱片店】",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "social05b_awei_record_low",
-      "file": "social05b_awei_record_low.json"
+      "file": "social05b_awei_record_low.CL2.txt",
+      "displayName": "【线下唱片店】",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "social06a_ajie_chat",
-      "file": "social06a_ajie_chat.json"
+      "file": "social06a_ajie_chat.CL2.txt",
+      "displayName": "闲聊池",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿杰"
     },
     {
       "id": "social06a_awei_chat",
-      "file": "social06a_awei_chat.json"
+      "file": "social06a_awei_chat.CL2.txt",
+      "displayName": "闲聊池",
+      "type": "other",
+      "queueId": "social",
+      "name": "阿伟"
     },
     {
       "id": "work01a-patient1",
-      "file": "work01a-patient1.json"
+      "file": "work01a-patient1.CL2.txt",
+      "displayName": "问诊：林若晴"
     },
     {
       "id": "work01a-patient1-start",
-      "file": "work01a-patient1-start.json"
+      "file": "work01a-patient1-start.CL2.txt",
+      "displayName": "上班（问诊：林若晴）"
     },
     {
       "id": "work01a-patient2",
-      "file": "work01a-patient2.json"
+      "file": "work01a-patient2.CL2.txt",
+      "displayName": "问诊：朱梦瑶"
     },
     {
       "id": "work01a-patient2-start",
-      "file": "work01a-patient2-start.json"
+      "file": "work01a-patient2-start.CL2.txt",
+      "displayName": "上班（问诊：朱梦瑶）"
     },
     {
       "id": "work01a-patient3",
-      "file": "work01a-patient3.json"
+      "file": "work01a-patient3.CL2.txt",
+      "displayName": "问诊：韩子轩"
     },
     {
       "id": "work01a-patient3-start",
-      "file": "work01a-patient3-start.json"
+      "file": "work01a-patient3-start.CL2.txt",
+      "displayName": "上班（问诊：韩子轩）"
     },
     {
       "id": "work01a-patient4",
-      "file": "work01a-patient4.json"
+      "file": "work01a-patient4.CL2.txt",
+      "displayName": "问诊：吴博文"
     },
     {
       "id": "work01a-patient4-start",
-      "file": "work01a-patient4-start.json"
+      "file": "work01a-patient4-start.CL2.txt",
+      "displayName": "上班（问诊：吴博文）"
     },
     {
       "id": "work01a-patient5",
-      "file": "work01a-patient5.json"
+      "file": "work01a-patient5.CL2.txt",
+      "displayName": "问诊：罗安琪"
     },
     {
       "id": "work01a-patient5-start",
-      "file": "work01a-patient5-start.json"
+      "file": "work01a-patient5-start.CL2.txt",
+      "displayName": "上班（问诊：罗安琪）"
     },
     {
       "id": "work01a-patient6",
-      "file": "work01a-patient6.json"
+      "file": "work01a-patient6.CL2.txt",
+      "displayName": "问诊：郭可欣"
     },
     {
       "id": "work01a-patient6-start",
-      "file": "work01a-patient6-start.json"
+      "file": "work01a-patient6-start.CL2.txt",
+      "displayName": "上班（问诊：郭可欣）"
     },
     {
       "id": "work01a-patient7",
-      "file": "work01a-patient7.json"
+      "file": "work01a-patient7.CL2.txt",
+      "displayName": "问诊：郑文博"
     },
     {
       "id": "turtle_soup_question_soup01_q1",
-      "file": "turtle_soup_question_soup01_q1.json"
+      "file": "turtle_soup_question_soup01_q1.CL2.txt",
+      "displayName": "海龟汤提问：这碗汤是人肉汤吗？",
+      "type": "specialEvent"
     },
     {
       "id": "turtle_soup_question_soup01_q2",
-      "file": "turtle_soup_question_soup01_q2.json"
+      "file": "turtle_soup_question_soup01_q2.CL2.txt",
+      "displayName": "海龟汤提问：他以前喝过类似的汤吗？",
+      "type": "specialEvent"
     },
     {
       "id": "turtle_soup_question_soup01_q3",
-      "file": "turtle_soup_question_soup01_q3.json"
+      "file": "turtle_soup_question_soup01_q3.CL2.txt",
+      "displayName": "海龟汤提问：他曾经遭遇海难吗？",
+      "type": "specialEvent"
     },
     {
       "id": "turtle_soup_question_soup01_q4",
-      "file": "turtle_soup_question_soup01_q4.json"
+      "file": "turtle_soup_question_soup01_q4.CL2.txt",
+      "displayName": "海龟汤提问：他当年喝到的汤确实来自亲人吗？",
+      "type": "specialEvent"
     },
     {
       "id": "turtle_soup_question_soup01_q5",
-      "file": "turtle_soup_question_soup01_q5.json"
+      "file": "turtle_soup_question_soup01_q5.CL2.txt",
+      "displayName": "海龟汤提问：真相和误食亲人的肉有关吗？",
+      "type": "specialEvent"
     },
     {
       "id": "turtle_soup_guess",
-      "file": "turtle_soup_guess.json"
+      "file": "turtle_soup_guess.CL2.txt",
+      "displayName": "海龟汤猜谜",
+      "type": "specialEvent"
     },
     {
       "id": "work01a-patient7-start",
-      "file": "work01a-patient7-start.json"
+      "file": "work01a-patient7-start.CL2.txt",
+      "displayName": "上班（问诊：郑文博）"
     },
     {
       "id": "patient_lin_ruoqing_01",
-      "file": "patient_lin_ruoqing_01.json"
+      "file": "patient_lin_ruoqing_01.CL2.txt",
+      "displayName": "兼容入口：林若晴",
+      "type": "his"
     },
     {
       "id": "patient_01_02_kidney_stone",
-      "file": "patient_01_02_kidney_stone.json"
+      "file": "patient_01_02_kidney_stone.CL2.txt",
+      "displayName": "兼容入口：朱梦瑶",
+      "type": "his"
     },
     {
       "id": "patient_01_03_benign_prostatic_hyperplasia",
-      "file": "patient_01_03_benign_prostatic_hyperplasia.json"
+      "file": "patient_01_03_benign_prostatic_hyperplasia.CL2.txt",
+      "displayName": "兼容入口：韩子轩",
+      "type": "his"
     },
     {
       "id": "patient_01_04_nausea_vomiting",
-      "file": "patient_01_04_nausea_vomiting.json"
+      "file": "patient_01_04_nausea_vomiting.CL2.txt",
+      "displayName": "兼容入口：吴博文",
+      "type": "his"
     },
     {
       "id": "patient_01_05_lymphadenopathy",
-      "file": "patient_01_05_lymphadenopathy.json"
+      "file": "patient_01_05_lymphadenopathy.CL2.txt",
+      "displayName": "兼容入口：罗安琪",
+      "type": "his"
     },
     {
       "id": "patient_01_06_orthostatic_hypotension",
-      "file": "patient_01_06_orthostatic_hypotension.json"
+      "file": "patient_01_06_orthostatic_hypotension.CL2.txt",
+      "displayName": "兼容入口：郭可欣",
+      "type": "his"
     },
     {
       "id": "patient_01_07_closed_foot_fracture",
-      "file": "patient_01_07_closed_foot_fracture.json"
+      "file": "patient_01_07_closed_foot_fracture.CL2.txt",
+      "displayName": "兼容入口：郑文博",
+      "type": "his"
     }
   ]
 }

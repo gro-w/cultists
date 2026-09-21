@@ -7,9 +7,8 @@
 ## 主要特点
 
 - 原生 HTML、CSS 和 ES modules，无框架、无 bundler、无构建步骤
-- JSON 与 NGL 蓝图驱动的 Activity、对话、医疗、物品、关键词、成就、结局、公共变量和 Activity 本地变量
-- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言设计草案：以显式节点、`option<x>`、`default` 和纯值表达式直接表示蓝图图结构
-- 提供离线 `tools/migration/blueprint_to_cl2.py`，可将现有 Activity JSON 导出为 `*.CL2.txt`；转换器区分四类蓝图节点，并用 `inputvalue` 表达数值接收节点；当前运行时仍加载 NGL，导出诊断会记录不能无损表达的旧端口
+- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言：Activity 运行时和编辑器直接使用 `.CL2.txt`，以显式节点、`option<x>`、`default` 和纯值表达式表示蓝图图结构
+- 提供离线 `tools/migration/blueprint_to_cl2.py`，用于审计旧 Activity JSON 并重新生成 CL2；转换器区分四类蓝图节点，并用 `inputvalue` 表达数值接收节点
 - Windows 95 风格桌面、任务栏、开始菜单、窗口和数据驱动应用
 - 医院工作与宿舍生活两种场景，以及工作、社交、管理器和主活动队列
 - 确定性的游戏时钟：普通行动默认推进 20 分钟，睡眠和跨日按明确边界结算
@@ -17,7 +16,10 @@
 - 开发模式、canonical 数据编辑器、运行时调试器和确定性探针
 - Core 与开发人员模式 i18n locale 模块、语言管理器和蓝图语言节点；用户可见字符串集中存放于 `core/i18n/xx-xx.js`
 - 数据驱动设置窗口：可调整 BGM 音量、笔记本排序、阶段切换确认和界面语言
-- 分层 BGM：game 数据保存曲目/规则，framework 管理优先级，NGL 节点控制播放、停止、音量和临时层恢复
+- 内嵌蓝图同样使用 CL2：窗口事件、物品活动和自定义蓝图节点在 JSON 中保存为 `{ "cl2": "..." }`，运行时由 `DataLoader` 解码，开发编辑器保存时重新编码
+- CL2 parser 会递归解析内嵌值绑定，并将自定义节点的隐式 `default` 出口映射到其首个声明流程出口；framework 的 `consumeTime` 宏通过 core 的通用时间节点执行
+- 显示节点的 canonical `text(displayTo, speaker, text, ...)` 参数顺序由 parser 显式保留；动态窗口组件复制时会合并模板交互事件，避免新增或删除处方行后丢失 `+/-` 行为
+- 分层 BGM：game 数据保存曲目/规则，framework 管理优先级，CL2 节点控制播放、停止、音量和临时层恢复
 - 位置场景窗口从 canonical 位置数据库显示当前地点背景和可调查区域
 
 ## 本地运行
@@ -40,7 +42,7 @@ http://127.0.0.1:8000/
 node dev-server.js
 ```
 
-开发模式地址严格为 `http://127.0.0.1:8000/?dev`。开发服务器只绑定本机，不应暴露到公共网络；开发工具和写盘 API 不属于玩家版。
+开发模式地址严格为 `http://127.0.0.1:8000/?dev`。开发服务器只绑定本机，不应暴露到公共网络；开发工具和写盘 API 不属于玩家版。静态文件路径会先解码 URL 百分号编码，因此中文 Activity 文件名可以正常加载。
 
 ## 游戏规则概览
 
@@ -67,8 +69,8 @@ media/                     历史宣传资源和设计稿
 | 层 | 作用 |
 | --- | --- |
 | `core` | 提供与具体游戏无关的桌面、窗口、Activity 执行、数据加载、基础变量、事件、存档和受控能力 |
-| `framework` | 使用 NGL 和数据实现工作时间、`phase`、`duty`、`location`、工作状态机、队列、资源、变量、Widget 与 UI 预制系统 |
-| `game` | 使用 NGL 和数据实现本作的医院、患者、宿舍、社交、物品、成就、剧情和结局 |
+| `framework` | 使用 CL2 和数据实现工作时间、`phase`、`duty`、`location`、工作状态机、队列、资源、变量、Widget 与 UI 预制系统 |
+| `game` | 使用 CL2 和数据实现本作的医院、患者、宿舍、社交、物品、成就、剧情和结局 |
 
 依赖方向为 `game → framework → core`。游戏内容通过稳定 ID、manifest 和 schema 连接；玩家可见的计时和状态副作用由 Activity 执行，而不是由窗口直接修改。
 
@@ -82,7 +84,7 @@ media/                     历史宣传资源和设计稿
 - `data/activity-lists/`：按用途组织 Activity 的清单
 - `data/game-manifest.json`：内容包、初始状态、队列和入口配置
 
-编辑器写入 canonical 数据，存档调试器只修改存档和运行时状态。运行时集合可以通过数据定义中的 `stateAliases` 兼容旧稳定 ID，恢复时 canonical ID 优先；也可以通过 `activityQueueId` 把 Activity 队列投影给 NGL 窗口列表，队列变化会自动触发窗口刷新。Activity 对话 transcript 支持只读回放，不会重新执行剧情节点。新增内容应优先使用 NGL 和数据，不要把业务逻辑写进 JavaScript。
+编辑器写入 canonical 数据，存档调试器只修改存档和运行时状态。运行时集合可以通过数据定义中的 `stateAliases` 兼容旧稳定 ID，恢复时 canonical ID 优先；也可以通过 `activityQueueId` 把 Activity 队列投影给 CL2 窗口列表，队列变化会自动触发窗口刷新。集合还支持声明式派生字段、数据库 lookup、前置占位选项和 canonical 收集状态复用；ChatGTP 窗口按来源、类别、关键词三行筛选，类别为“不选择”时跳过类别过滤。Activity 对话 transcript 支持只读回放，不会重新执行剧情节点；开发 Activity 调试器提供结局 Activity 触发入口，仍通过正常 `runActivity` API 执行。社交媒体窗口尺寸和标签栏布局与 main 分支旧应用保持一致。新增内容应优先使用 CL2 和数据，不要把业务逻辑写进 JavaScript。
 
 ChatGTP QA 与 Turtle Soup 的运行时数据分别由 `data/databases/chatgtpQaEntries.json` 和 `data/databases/turtleSoupPuzzles.json` 唯一持有；迁移工具、manifest 和探针不得重新引入已删除的重复 seed/native 文件。
 
@@ -107,6 +109,6 @@ Cultists 引擎（`core` 与 `framework`）遵循根目录 [`copying.txt`](copyi
 - 修改引擎或迁移游戏数据后，应同步检查并更新 `AGENTS.md`、`agent-notes.md` 和本文件，分别保持代理规则、开发补充信息和人类阅读版说明一致
 - [`AGENTS.md`](AGENTS.md)：贡献者和编码代理必须遵守的工程规则
 - [`agent-notes.md`](agent-notes.md)：目录、manifest、运行时职责和维护命令的补充说明
-- [`docs/cl2-language.md`](docs/cl2-language.md)：CL2 统一脚本图语言设计草案；当前运行时仍以 NGL 为准
+- [`docs/cl2-language.md`](docs/cl2-language.md)：CL2 统一脚本图语言、节点契约和单行内嵌格式
 - `data/game-manifest.json`：当前融合引擎的内容入口
 - `tools/publish.js`：玩家版发布脚本

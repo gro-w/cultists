@@ -1,4 +1,5 @@
 import { t } from "./i18n/index.js";
+import { decodeCl2Blueprints } from "./Cl2Embedded.js";
 /**
  * DataLoader - the single content-loading boundary for ng.
  *
@@ -37,10 +38,23 @@ export class DataLoader {
     }
     let value;
     try {
-      value = await response.json();
+      value = decodeCl2Blueprints(await response.json(), fileName);
     } catch (error) {
       throw new Error(`Invalid JSON in "${url}": ${error.message}`);
     }
+    if (cache) this.cache.set(url, value);
+    return value;
+  }
+
+  async loadText(fileName, { cache = true, optional = false } = {}) {
+    const url = this.resolve(fileName);
+    if (cache && this.cache.has(url)) return this.cache.get(url);
+    const response = await this.fetchImpl(url);
+    if (!response.ok) {
+      if (optional && response.status === 404) return null;
+      throw new Error(`Failed to load text "${url}": ${response.status}`);
+    }
+    const value = await response.text();
     if (cache) this.cache.set(url, value);
     return value;
   }

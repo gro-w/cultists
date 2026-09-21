@@ -147,7 +147,7 @@ export class ActivityEditorView {
       this.render();
     });
     this.el.querySelector('[data-action="download"]').addEventListener("click", () => {
-      downloadTextFile(`${this.model.activityId || "activity"}.json`, this.model.toDownloadPayload());
+      downloadTextFile(`${this.model.activityId || "activity"}.CL2.txt`, this.model.toDownloadPayload());
     });
     this.el.querySelector('[data-action="write-disk"]').addEventListener("click", () => this._writeToDisk());
     this.el.querySelector('[data-action="zoom-in"]').addEventListener("click", () => this._setZoom(this.zoom + ZOOM_STEP));

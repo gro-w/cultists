@@ -1,14 +1,49 @@
 {
-  "id":"social-media",
-  "title":"社交媒体",
-  "icon":"📱",
-  "width":520,
-  "height":360,
-  "resizable":true,
-  "singleInstance":true,
-  "valueGraph":{"nodes":{"apps":{"id":"apps","type":"getRuntimeCollection","inputs":{"collectionId":"socialApps"}}}},
-  "root":{"widgetId":"social-media-root","type":"container","flow":"vertical","gap":8,"padding":10,"className":"app-social-media","children":[
-    {"widgetId":"social-media-title","type":"label","text":"社交媒体"},
-    {"widgetId":"social-media-list","type":"list","className":"social-media-list panel-inset","items":{"nodeId":"apps","port":"value"},"itemLabelTemplate":"{{icon}} {{name}}","itemMetaTemplate":"{{description}}","itemClassName":"social-media-entry"}
-  ]}
+  "id": "social-media",
+  "title": "社交媒体",
+  "icon": "📱",
+  "width": 560,
+  "height": 480,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "apps": {
+        "id": "apps",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "socialApps"
+        }
+      }
+    }
+  },
+  "root": {
+    "widgetId": "social-media-root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "className": "app-social-media",
+    "children": [
+      {
+        "widgetId": "social-media-list",
+        "type": "recordTabs",
+        "tabsClassName": "sm-tabs",
+        "panelsClassName": "sm-panels",
+        "tabClassName": "win95-btn bevel-out sm-tab-btn",
+        "tabLabelTemplate": "{{name}}",
+        "tabIconField": "icon",
+        "panelItemsFields": ["posts", "groups"],
+        "itemClassName": "sm-post-card panel-inset",
+        "itemTitleFields": ["title", "name", "sender"],
+        "itemMetaFields": ["author", "likes"],
+        "itemBodyFields": ["content", "text"],
+        "itemListFields": ["tags", "answers", "messages"],
+        "items": {
+          "nodeId": "apps",
+          "port": "value"
+        }
+      }
+    ]
+  }
 }

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import "./register-framework-nodes.mjs";
 import { createActivityEditorModel } from "../dev/ActivityEditorModel.js";
 import { createActivityListManagerModel } from "../dev/ActivityListManagerModel.js";
+import { parseCl2 } from "../core/Cl2Parser.js";
 
 const sourceBlueprint = {
   startNodeId: "start",
@@ -15,6 +16,14 @@ const sourceBlueprint = {
     { id: "edge-2", fromNodeId: "setValue", fromPort: "flowOut", toNodeId: "end", toPort: "flowIn" },
   ],
 };
+
+function withoutParserMetadata(value) {
+  if (Array.isArray(value)) return value.map(withoutParserMetadata);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.entries(value)
+    .filter(([key]) => key !== "implicit")
+    .map(([key, child]) => [key, withoutParserMetadata(child)]));
+}
 
 // --- Scenario 1: two editor windows never share state ------------------------
 {
@@ -84,14 +93,14 @@ const sourceBlueprint = {
   assert.ok(result.errors.some((message) => message.includes("引脚") || message.includes("不兼容")));
 }
 
-// --- Scenario 4: downloaded JSON content matches the in-memory draft --------
+// --- Scenario 4: downloaded CL2 content matches the in-memory draft ----------
 {
   const editor = createActivityEditorModel({ activityId: "demo", blueprint: sourceBlueprint, displayName: "演示流程" });
   editor.moveNode("end", 400, 40);
   const download = editor.toDownloadPayload();
-  const parsedDownload = JSON.parse(download);
-  assert.deepEqual(parsedDownload, editor.toDefinition(), "download payload must equal the in-memory draft it was generated from");
-  assert.deepEqual(parsedDownload.blueprint, editor.exportBlueprint());
+  const parsedDownload = parseCl2(download, { validate: false });
+  assert.equal(parsedDownload.ok, true, "download payload must be valid CL2");
+  assert.deepEqual(withoutParserMetadata(parsedDownload.graph), withoutParserMetadata(editor.exportBlueprint()), "download payload must round-trip the in-memory draft");
 }
 
 // --- Activity List Manager: default list pinned + remove-vs-delete distinction

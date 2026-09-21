@@ -21,6 +21,7 @@ import { DataJsonEditorView } from "./DataJsonEditorView.js";
 import { TimeDebuggerView } from "./TimeDebuggerView.js";
 import { I18nManagerView } from "./I18nManagerView.js";
 import { updateCustomActivityNode } from "../core/ActivityNodeRegistry.js";
+import { parseCl2 } from "../core/Cl2Parser.js";
 
 
 
@@ -63,6 +64,7 @@ export async function initDeveloperMode({
   activityQueueRegistry,
   activityDefinitionStore,
   activityExecutionService,
+  runActivity,
   eventBus,
   variableStore,
   pvGateway,
@@ -94,12 +96,12 @@ export async function initDeveloperMode({
       activityId: activity.id,
       blueprint: activity.blueprint,
       displayName: activity.displayName,
-      dataFileName: `activities/${activity.id}.json`,
+      dataFileName: `activities/${activity.id}.CL2.txt`,
       onSaveToMemory: (blueprint) => model.saveActivityBlueprint(currentId, blueprint),
       onRenameId: (oldId, newId) => {
         model.renameActivity(oldId, newId);
         currentId = newId;
-        view.dataFileName = `activities/${newId}.json`;
+        view.dataFileName = `activities/${newId}.CL2.txt`;
       },
     });
     const definition = windowDefinitionStore.register({
@@ -135,7 +137,7 @@ export async function initDeveloperMode({
   // The debugger only needs live runtime pieces (queue registry + event
   // bus), so it's fine to build it even if the caller doesn't pass them in
   // (e.g. an older bootstrap ordering); it just shows an empty queue list.
-  const debuggerView = new ActivityDebuggerView({ activityQueueRegistry, activityDefinitionStore, activityExecutionService, localVariableManager, eventBus });
+  const debuggerView = new ActivityDebuggerView({ activityQueueRegistry, activityDefinitionStore, activityExecutionService, localVariableManager, eventBus, runActivity });
   windowDefinitionStore.register({
     id: DEBUGGER_WINDOW_ID,
     title: t("legacy.881ffd8a0a2c"),
@@ -583,9 +585,12 @@ async function loadExistingActivities(model, engineConfig, activityManifest, dat
     for (const activityId of list.activityIds || []) {
       const manifestEntry = manifestEntries.get(activityId);
       if (!manifestEntry?.file) continue;
-      const definition = await dataLoader.loadJSON(`activities/${manifestEntry.file}`, { optional: true });
-      if (!definition) continue;
-      model.registerActivity(list.id, definition, definition);
+      if (!manifestEntry.file.endsWith(".CL2.txt")) continue;
+      const source = await dataLoader.loadText(`activities/${manifestEntry.file}`, { optional: true });
+      if (!source) continue;
+      const parsed = parseCl2(source, { sourcePath: `activities/${manifestEntry.file}` });
+      if (!parsed.ok) continue;
+      model.registerActivity(list.id, { id: activityId, displayName: manifestEntry.displayName || activityId, blueprint: parsed.graph, source }, manifestEntry);
     }
   }
 
@@ -593,12 +598,15 @@ async function loadExistingActivities(model, engineConfig, activityManifest, dat
   // activity is not referenced by a player-facing activity list.
   const allActivitiesListId = "__all-activities__";
   model.registerList({ id: allActivitiesListId, activityIds: [] });
-  for (const file of dataFiles.filter((path) => path.startsWith("activities/") && path.endsWith(".json"))) {
-    const fileName = file.slice("activities/".length);
-    const definition = await dataLoader.loadJSON(file, { optional: true });
-    if (!definition) continue;
-    const id = definition.id || fileName.slice(0, -5);
-    model.registerActivity(allActivitiesListId, { ...definition, id }, definition);
+  for (const entry of activityManifest?.activityIds || []) {
+    const id = typeof entry === "string" ? entry : entry.id;
+    const file = typeof entry === "string" ? `${id}.CL2.txt` : entry.file;
+    if (!id || !file?.endsWith(".CL2.txt")) continue;
+    const source = await dataLoader.loadText(`activities/${file}`, { optional: true });
+    if (!source) continue;
+    const parsed = parseCl2(source, { sourcePath: `activities/${file}` });
+    if (!parsed.ok) continue;
+    model.registerActivity(allActivitiesListId, { id, displayName: entry.displayName || id, blueprint: parsed.graph, source }, entry);
   }
 }
 

@@ -1,8 +1,6 @@
-# CL2（Cultists Blueprint & Script Language 2）脚本图统一语言规范（设计草案）
+# CL2（Cultists Blueprint & Script Language 2）脚本图统一语言规范
 
-> 状态：设计草案。本文记录 CL2 的目标语义和文本格式，不表示当前运行时已经完成 CL2 加载器、编辑器或数据迁移。
->
-> 当前项目仍以 NGL 蓝图和现有数据契约为运行时依据。CL2 的目标是成为与蓝图图结构直接等效的文本表示，而不是先生成另一种用户可编辑格式。
+> 状态：当前生产规范。Activity 运行时、编辑器和内嵌蓝图均使用 CL2；旧 JSON 仅作为离线迁移审计输入。
 
 ## 1. 设计目标
 
@@ -48,7 +46,7 @@ reusablevalue a1: math['gt', getpubvar[1], 4];
 
 node01: showtext("test1") {
     default node02;
-}; // @cl2.pos 0,0
+}; /** @cl2.pos 0,0 */
 
 node02: showtext("test2");
 
@@ -537,7 +535,7 @@ after: end();
 节点位置使用机器可识别的注释：
 
 ```cl2
-node01: showtext("test1"); // @cl2.pos 0,0
+node01: showtext("test1"); /** @cl2.pos 0,0 */
 ```
 
 规则：
@@ -547,17 +545,17 @@ node01: showtext("test1"); // @cl2.pos 0,0
 - 自动布局结果不应在每次打开文件时自动写回
 - 布局元数据不能改变流程或数值语义
 
-普通注释只作为源码说明：
+注释不依赖换行，统一使用 `/* ... */` 块注释；`//` 不是合法 CL2 语法：
 
 ```cl2
-// 患者已经完成身份确认
+/* 患者已经完成身份确认 */
 node01: showtext("test1");
 ```
 
 蓝图 Note 使用专用格式：
 
 ```cl2
-// @cl2.note note001 @pos 100,100: 这里是紧急流程入口
+/* @cl2.note note001 @pos 100,100: 这里是紧急流程入口 */
 ```
 
 Note 具有独立的稳定 ID，不参与运行时流程，不产生节点或边。
@@ -657,14 +655,14 @@ reusablevalue isCritical: math['and', isAdult[], getpubvar[2]];
 
 node01: showtext("test1") {
     default node02;
-}; // @cl2.pos 0,0
+}; /** @cl2.pos 0,0 */
 
-node02: showtext("test2"); // implicit default: node03
+node02: showtext("test2"); /* implicit default: node03 */
 
 node03: if(isCritical[]) {
     option<1> critical;
     default node04;
-}; // @cl2.pos 100,0
+}; /** @cl2.pos 100,0 */
 
 node04: switch(
     3,
@@ -675,7 +673,7 @@ node04: switch(
     option<1> critical;
     option<2,3> normal;
     default end;
-}; // @cl2.pos 200,0
+}; /** @cl2.pos 200,0 */
 
 normal: range(4, 10, 20, 30) {
     option<1> low;
@@ -683,7 +681,7 @@ normal: range(4, 10, 20, 30) {
     option<3> high;
     option<4> veryHigh;
     default end;
-}; // @cl2.pos 300,0
+}; /** @cl2.pos 300,0 */
 
 patient_menu: playerselect(
     getpubvar[4],
@@ -696,16 +694,16 @@ patient_menu: playerselect(
     option<2> node02;
     option<3> node03;
     default end;
-}; // @cl2.pos 400,0
+}; /** @cl2.pos 400,0 */
 
 check_loop: if(getpubvar[5]) {
     option<1> loop_body;
     default end;
-}; // @cl2.pos 500,0
+}; /** @cl2.pos 500,0 */
 
 loop_body: consumeTime(20) {
     default check_loop;
-}; // @cl2.pos 600,0
+}; /** @cl2.pos 600,0 */
 
 critical: showtext("critical");
 end: end();

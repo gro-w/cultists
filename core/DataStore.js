@@ -1,4 +1,5 @@
 import { t } from "./i18n/index.js";
+import { decodeCl2Blueprints } from "./Cl2Embedded.js";
 /**
  * DataStore - plan §9.3's "数据库": in-memory record collections keyed by
  * `databaseId`, validated against a `DataStructureManager` structure on
@@ -51,7 +52,7 @@ export class DataStore {
    * would; no domain-specific bypass is introduced.
    */
   loadRecords(databaseId, records = []) {
-    records.forEach((record) => this.createRecord(databaseId, record));
+    decodeCl2Blueprints(records, `database:${databaseId}`).forEach((record) => this.createRecord(databaseId, record));
   }
 
   /** Bulk-loads a `{ databaseId: records[] }` map (e.g. fetched from `data/seed-records.json`) across every listed database, in file order. */

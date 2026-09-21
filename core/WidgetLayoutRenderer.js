@@ -364,6 +364,61 @@ function renderLeaf(node, ctx) {
       el.appendChild(board);
       break;
     }
+    case "recordTabs": {
+      const records = prop(node, "items", ctx, []) || [];
+      const tabs = document.createElement("div");
+      tabs.className = node.tabsClassName || "ng-record-tabs";
+      const panels = document.createElement("div");
+      panels.className = node.panelsClassName || "ng-record-tab-panels";
+      const show = (index) => {
+        [...tabs.children].forEach((button, buttonIndex) => button.classList.toggle("active", buttonIndex === index));
+        [...panels.children].forEach((panel, panelIndex) => { panel.hidden = panelIndex !== index; });
+      };
+      records.forEach((record, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = node.tabClassName || "win95-btn bevel-out";
+        const label = node.tabLabelTemplate
+          ? node.tabLabelTemplate.replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (_, key) => record?.[key] ?? "")
+          : record?.label ?? record?.name ?? record?.id ?? "";
+        button.textContent = node.tabIconField && record?.[node.tabIconField] ? `${record[node.tabIconField]} ${label}` : label;
+        button.addEventListener("click", () => show(index));
+        tabs.appendChild(button);
+        const panel = document.createElement("section");
+        panel.className = node.panelClassName || "ng-record-tab-panel";
+        panel.hidden = index !== 0;
+        if (record?.description) {
+          const description = document.createElement("div");
+          description.className = node.descriptionClassName || "ng-record-tab-description";
+          description.textContent = record.description;
+          panel.appendChild(description);
+        }
+        const itemFields = node.panelItemsFields || [];
+        for (const field of itemFields) {
+          for (const item of record?.[field] || []) {
+            const card = document.createElement("article");
+            card.className = node.itemClassName || "ng-record-tab-card panel-inset";
+            const title = (node.itemTitleFields || []).map((field) => item?.[field]).find((value) => value != null && value !== "") || "";
+            if (title) { const heading = document.createElement("strong"); heading.textContent = title; card.appendChild(heading); }
+            const meta = (node.itemMetaFields || []).map((field) => item?.[field]).filter((value) => value != null && value !== "").join(node.itemMetaSeparator || "  ·  ");
+            if (meta) { const metaEl = document.createElement("small"); metaEl.textContent = meta; card.appendChild(metaEl); }
+            const body = (node.itemBodyFields || []).map((field) => item?.[field]).find((value) => value != null && value !== "");
+            if (body != null) { const bodyEl = document.createElement("p"); bodyEl.textContent = body; card.appendChild(bodyEl); }
+            for (const listField of node.itemListFields || []) {
+              if (!Array.isArray(item?.[listField])) continue;
+              const list = document.createElement("div");
+              list.className = `${node.itemListClassPrefix || "ng-record-tab-list"}-${listField}`;
+              item[listField].forEach((value) => { const line = document.createElement("p"); line.textContent = typeof value === "string" ? value : (value?.label ?? value?.text ?? value?.value ?? ""); list.appendChild(line); });
+              card.appendChild(list);
+            }
+            panel.appendChild(card);
+          }
+        }
+        panels.appendChild(panel);
+      });
+      el.append(tabs, panels);
+      break;
+    }
     case "list": {
       // `items` may likewise be a bound array of raw database records
       // (e.g. a `findRecords` result written to variableStore by the

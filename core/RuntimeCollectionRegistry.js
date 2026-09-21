@@ -4,7 +4,7 @@ import { t } from "./i18n/index.js";
  *
  * Core owns only collection registration, opaque mutation, and snapshot/restore.
  * Collection identifiers, record sources, and mutation semantics are declared by
- * NGL/data packages; no game or framework domain is named here.
+ * CL2/data packages; no game or framework domain is named here.
  */
 export class RuntimeCollectionRegistry {
   constructor({ dataStore, eventBus, variableStore = null, publicVariableManager = null, publicStateVariableId = null, activityQueueRegistry = null } = {}) {
@@ -76,15 +76,43 @@ export class RuntimeCollectionRegistry {
         };
       });
     }
-    if (!definition?.databaseId || !this.dataStore) return [];
-    return this.dataStore.findRecords(definition.databaseId, definition.query || {});
+    if (!this.dataStore) return [];
+    const databaseIds = definition.databaseIds || (definition.databaseId ? [definition.databaseId] : []);
+    return [
+      ...(definition.prepend || []),
+      ...databaseIds.flatMap((databaseId) => this.dataStore.findRecords(databaseId, definition.query || {})),
+    ];
+  }
+
+  _applyDerivedFields(records, definition = {}) {
+    const derived = definition.derivedFields || {};
+    if (!Object.keys(derived).length) return records;
+    return records.map((record) => {
+      const next = { ...record };
+      for (const [field, rule] of Object.entries(derived)) {
+        if (!rule || typeof rule !== "object") continue;
+        const id = String(record?.[rule.idField || "id"] ?? "");
+        const prefix = Object.keys(rule.prefixes || {}).find((candidate) => id.startsWith(candidate));
+        if (prefix) next[field] = rule.prefixes[prefix];
+        else if (rule.default !== undefined) next[field] = rule.default;
+        for (const lookup of rule.lookups || []) {
+          if (lookup.prefix && !id.startsWith(lookup.prefix)) continue;
+          let lookupId = id;
+          if (lookup.stripPrefix && lookupId.startsWith(lookup.stripPrefix)) lookupId = lookupId.slice(lookup.stripPrefix.length);
+          if (lookup.stripSuffix && lookupId.endsWith(lookup.stripSuffix)) lookupId = lookupId.slice(0, -lookup.stripSuffix.length);
+          const lookupRecord = this.dataStore?.getRecord?.(lookup.databaseId, lookupId);
+          if (lookupRecord && lookup.valueField) next[field] = lookupRecord[lookup.valueField];
+        }
+      }
+      return next;
+    });
   }
 
   get(id) {
     const key = String(id);
     const definition = this.definition(key);
     if (!definition) return [];
-    const records = this._records(key);
+    const records = this._applyDerivedFields(this._records(key), definition);
     if (definition.nestedField) {
       const nestedRecords = records.flatMap((record) => (record?.[definition.nestedField] || []).map((nested, index) => ({
         ...nested,
@@ -102,7 +130,7 @@ export class RuntimeCollectionRegistry {
         ? mergedNested.filter((record) => Boolean(record[definition.stateField]))
         : mergedNested;
     }
-    const values = this.state.get(key) || new Map();
+    const values = this.state.get(definition.stateCollectionId || key) || new Map();
     if (!definition) return [];
     if (definition.stateOnly) {
       return [...values.entries()].map(([recordId, value]) => ({ id: recordId, ...(value && typeof value === "object" ? value : { value }) }));

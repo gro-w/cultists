@@ -33,7 +33,7 @@ class BlueprintToCl2Tests(unittest.TestCase):
         self.assertIn("start: flowStart()", result.text)
         self.assertIn("branch(read__value[])", result.text)
         self.assertNotIn("default end;", result.text)
-        self.assertIn("// @cl2.pos 1,2", result.text)
+        self.assertIn("/** @cl2.pos 1,2 */", result.text)
 
     def test_converts_value_receiver_to_inputvalue(self):
         activity = {

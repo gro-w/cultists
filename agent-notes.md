@@ -7,7 +7,7 @@
 - 项目名称：`surrounded by cultists`（《完蛋，我被邪教徒包围了！》）。项目引擎称为 **Cultists 引擎**。
 - 主要开发范围是 Cultists 引擎的 `core` 与 `framework`，以及把 `game` 层的既有内容迁移、适配到新引擎；不是继续维护两套旧运行时。
 - 这是一个 Windows 95 风格、原生 HTML/CSS/ES modules、无构建步骤的中文数据驱动网页互动游戏。
-- 当前唯一运行时是融合引擎：`core` 提供通用宿主，`framework` 提供可复用系统，`game` 由 NGL 蓝图和数据实现具体游戏内容。
+- 当前唯一运行时是融合引擎：`core` 提供通用宿主，`framework` 提供可复用系统，`game` 由 CL2 蓝图和数据实现具体游戏内容。
 - `index.html` 是浏览器入口；`core/engine.js` 是引擎入口，读取 `data/game-manifest.json`，加载 framework 与 game 内容并启动桌面。
 - `tools/migration/` 仅保留需要外部输入的转换/对照脚本；旧版 `data/game-content/` 已完成迁移并从仓库删除。
 
@@ -18,7 +18,7 @@ ChatGTP QA 的唯一运行时数据 owner 是 `data/databases/chatgtpQaEntries.j
 ```text
 index.html                 浏览器入口
 core/                      融合引擎 core：宿主运行时、Activity、窗口、变量、存档
-data/                      framework/game 的 manifest、NGL 蓝图、窗口、数据库和资源
+data/                      framework/game 的 manifest、CL2 蓝图、窗口、数据库和资源
 dev/                       开发人员模式、数据库编辑器和存档/运行时调试器
 probes/                    确定性运行时探针，不属于玩家运行时
 tools/                     发布、迁移和审计脚本，不属于玩家运行时
@@ -28,13 +28,14 @@ media/                     历史宣传资源和设计稿
 
 当前 manifest 的主要连接关系：`game-manifest.json` → `framework-manifest.json`、`activity-manifest.json`、窗口 manifest、数据库、公共变量、本地变量和 Activity 列表。默认 Activity 是 `default`，队列定义包含 `work`、`social`、`managers`、`main` 以及窗口/Widget/桌面事件队列。
 
-CL2（Cultists Blueprint & Script Language 2）统一脚本图语言的设计草案位于 `docs/cl2-language.md`。它是直接等效于 Blueprint Graph 的文本表示，不以 JSON 作为第二份 canonical 图定义：流程节点必须有显式 ID，流程边使用 `option<x>` 和 `default`，纯值节点使用方括号函数和 `reusablevalue`，循环通过 `if` 回边表达。当前运行时仍使用 NGL，CL2 只有在解析器、编辑器、运行时和迁移验证完成后才能替换现有格式。
+CL2（Cultists Blueprint & Script Language 2）是当前 Activity 的生产脚本图格式。`core/Cl2Parser.js`、`core/Cl2Validator.js` 和 `core/Cl2Serializer.js` 提供统一解析、验证、运行时图和编辑器回写；`data/activity-manifest.json` 的 171 个 Activity 均指向 `.CL2.txt`。旧 JSON 仅保留为迁移审计输入。
 
-- 离线蓝图导出器位于 `tools/migration/blueprint_to_cl2.py`。可运行 `python3 tools/migration/blueprint_to_cl2.py data/activities tools/migration/cl2-output`，输出每个 Activity 的 `*.CL2.txt` 与 `conversion-report.json`；该工具只做迁移/export，不修改 `data/activities`，并按四类引脚组合转换流程节点、数值节点、流程起始节点和数值接收节点。数值接收节点输出 `inputvalue <id>: <value-expression>;`，报告中的 diagnostics 表示旧蓝图端口或目标无法无损映射到 CL2 草案。
+CL2 也覆盖窗口事件、物品活动和自定义蓝图节点中的内嵌流程图：这些 JSON 内容使用 `{ "cl2": "..." }` 保存，`DataLoader` 在运行时解码为图，开发数据编辑器保存时重新编码为 CL2。
 
+内嵌 CL2 的对象/数组值会递归解析 reusable 和 node 引用；自定义流程节点没有名为 `flowOut` 的输出时，隐式 `default` 连接到其首个声明出口。`framework:consumeTime` 的宏图直接调用 core `consumeTime` 节点，不依赖未注册的领域 API。显示节点保留 `text(displayTo, speaker, text, ...)` 的 canonical 参数顺序；动态窗口组件复制时合并模板事件，不能覆盖原有交互事件。
 设置窗口已迁移到 `data/windows/settings.json`，由桌面图标 `settings` 打开；四项设置分别绑定 `settings:bgmVolume`、`settings:notebookSortMode`、`settings:confirmPhaseChange` 和 core 语言节点。该窗口不新增业务 JavaScript。
 
-BGM 已按三层接入：`data/bgm.json` 保存旧引擎迁移的曲目与 schedule 规则，`data/structures.framework.json` 声明 `bgmTrack`/`bgmRule` 自定义结构；core 的 `playBgm`、`stopBgm`、`setBgmVolume`、`pushBgmLayer`、`restoreBgmLayer` 节点只调用通用音频宿主 API；framework 的 `data/activities/bgm-manager.framework.json` 是 NGL 管理器。旧工程目录中没有音频二进制文件，因此当前只迁移了配置与控制层，音频素材仍需外部补齐。
+BGM 已按三层接入：`data/bgm.json` 保存旧引擎迁移的曲目与 schedule 规则，`data/structures.framework.json` 声明 `bgmTrack`/`bgmRule` 自定义结构；core 的 `playBgm`、`stopBgm`、`setBgmVolume`、`pushBgmLayer`、`restoreBgmLayer` 节点只调用通用音频宿主 API；framework 的 `data/activities/bgm-manager.CL2.txt` 是 CL2 管理器。旧工程目录中没有音频二进制文件，因此当前只迁移了配置与控制层，音频素材仍需外部补齐。
 
 位置场景窗口 `data/windows/location-scene.json` 现在从 `locations` canonical database 读取当前地点的 `name`、`backgroundImage` 和 `subLocations`，以通用 list Widget 显示可调查区域；医院、火锅店和海边没有子区域时列表保持为空，不伪造交互状态。
 
@@ -53,7 +54,7 @@ node dev-server.js
 node dev-server.js --port 8001 --lang zh-hans
 ```
 
-打开 `http://127.0.0.1:8000/`；开发工具入口只使用 `http://127.0.0.1:8000/?dev`。开发服务器仅绑定本机，写盘前仍须经过编辑器 schema 校验。不要把开发服务器暴露到公共网络。
+打开 `http://127.0.0.1:8000/`；开发工具入口只使用 `http://127.0.0.1:8000/?dev`。开发服务器仅绑定本机，写盘前仍须经过编辑器 schema 校验。静态文件路径会先解码 URL 百分号编码，以支持中文 Activity 文件名。不要把开发服务器暴露到公共网络。
 
 ## 运行时职责
 
@@ -66,7 +67,7 @@ node dev-server.js --port 8001 --lang zh-hans
 | `WindowManager`、`WindowDefinitionStore`、桌面模块 | 桌面、窗口、Widget 和布局 |
 | `DataStore`、`DataStructureManager`、`PublicVariableManager`、`LocalVariableManager` | canonical 数据、结构定义、公共变量定义和 Activity 本地变量命名定义；本地值属于实例 |
 | `SaveManager`、`VariableStore`、`EventStateRegistry` | 存档、运行时变量、事件状态和恢复 |
-| `data/activities/`、`data/windows/`、`data/databases/` | NGL Activity、窗口定义和游戏数据库 |
+| `data/activities/*.CL2.txt`、`data/windows/`、`data/databases/` | CL2 Activity、窗口定义和游戏数据库；窗口事件、物品活动和自定义节点内嵌图使用 `{ "cl2": "..." }` |
 - `dev/`、`dev-server.js` | 开发编辑器、调试器和本地数据写盘 |
 - `core/i18n/`、`dev/I18nManagerView.js` | Core 与开发人员模式 locale modules、统一 `t()` 取词、语言状态和开发人员语言管理器 |
 
@@ -80,8 +81,9 @@ node dev-server.js --port 8001 --lang zh-hans
 - 游戏内容使用稳定 ID。窗口、Activity、数据库、公共变量和资源之间通过 manifest/schema 连接。
 - 公共变量、数据库、窗口、Activity 和存档各有边界；数据库编辑器写 canonical 数据，存档调试器只改运行时存档。
 - 运行时集合可在数据定义中声明 `stateAliases`，用于旧稳定 ID 到 canonical ID 的恢复兼容；同一存档同时存在两者时 canonical ID 优先。
-- 运行时集合可声明 `activityQueueId` 和 `projectPayload`，以通用方式把 Activity 队列投影为 NGL 列表；队列追加/变更会发出 `runtime:collection-changed`，窗口可据此刷新，core 不解释 payload 的业务语义。
-- Activity 的 `text`/`choice` 显示事件会保留在实例 transcript 中；`engine.activity.replay` 只回放已保存文本并先发送 `display:reset`，不会重新运行 Activity 节点。
+- 运行时集合可声明 `activityQueueId` 和 `projectPayload`，以通用方式把 Activity 队列投影为 CL2 列表；队列追加/变更会发出 `runtime:collection-changed`，窗口可据此刷新，core 不解释 payload 的业务语义。
+- 运行时集合支持数据声明的派生字段、跨数据库 lookup、前置占位记录和 `stateCollectionId`；ChatGTP 关键词窗口按来源、类别、关键词三行筛选并复用 `notebookKeywords` 的 canonical 收集状态，空类别值表示跳过类别过滤。
+- Activity 的 `text`/`choice` 显示事件会保留在实例 transcript 中；`engine.activity.replay` 只回放已保存文本并先发送 `display:reset`，不会重新运行 Activity 节点；回放同时经过 DisplayReceiverRegistry 和 event bus，避免已打开的对话窗口只显示空容器。开发 Activity 调试器通过正常 `runActivity` API 触发结局 Activity，不直接修改队列内部状态；社交媒体窗口的尺寸与标签栏遵循 main 分支旧应用的布局契约。
 - 本地变量管理器写 `data/local-variables.framework.json` 的定义，不保存实例值；活动调试器才允许实时修改具体实例的 `localVariables`。
 - 详细 schema 以实际 `data/*.json` 和对应 loader/validator 为准；修改 schema 时必须同步编辑器、运行器、调试器和探针。
 - Core 自有字符串放在 `core/i18n/xx-xx.js` locale 模块中；`I18nManager` 管理当前/启用语言并纳入存档，Activity 可通过 `getLanguage` 与 `setLanguage` 节点访问。

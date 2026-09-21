@@ -1,10 +1,11 @@
 import { t } from "./i18n/index.js";
 import { validateBlueprint } from "./ActivityValidator.js";
 import { DataLoader } from "./DataLoader.js";
+import { validateCl2 } from "./Cl2Validator.js";
 
 /**
  * ActivityDefinitionStore - single owner of Activity *definitions*
- * (id + blueprint), loaded from `data/activities/*.json`. Mirrors
+ * (id + blueprint), loaded from `data/activities/*.CL2.txt`. Mirrors
  * WindowDefinitionStore's read-only, fetch-once contract so no other
  * module scatters `fetch("data/activities/...")` calls.
  */
@@ -14,12 +15,26 @@ export class ActivityDefinitionStore {
     this._definitions = new Map();
   }
 
+  // In-memory graph registration remains available to runtime harnesses and
+  // tests; canonical Activity sources must still enter through registerCl2().
   register(definition) {
     if (!definition || !definition.id) throw new Error(t("error.6ce7ea0c5850"));
     const validation = validateBlueprint(definition.blueprint);
-    if (!validation.ok) throw new Error(`Invalid blueprint for activity "${definition.id}": ${validation.errors.join("；")}`);
-    const registered = { ...definition, blueprint: validation.blueprint };
+    if (!validation.ok) throw new Error(`Invalid in-memory blueprint for activity "${definition.id}": ${validation.errors.join("；")}`);
+    const registered = { ...definition, format: definition.format || "graph", blueprint: validation.blueprint };
     this._definitions.set(definition.id, registered);
+    return registered;
+  }
+
+  registerCl2({ id, source, sourcePath = id, ...metadata } = {}) {
+    if (!id) throw new Error(t("error.6ce7ea0c5850"));
+    const result = validateCl2(source, { sourcePath });
+    if (!result.ok) {
+      const details = result.diagnostics.map((item) => `${item.code}: ${item.message}`).join("；");
+      throw new Error(`Invalid CL2 activity "${id}": ${details}`);
+    }
+    const registered = { id, ...metadata, source, sourcePath, format: "CL2", graph: result.graph, blueprint: result.graph };
+    this._definitions.set(id, registered);
     return registered;
   }
 
@@ -37,10 +52,11 @@ export class ActivityDefinitionStore {
     for (const entry of activityIds || []) {
       const activityId = typeof entry === "string" ? entry : entry.id;
       if (!activityId || this._definitions.has(activityId)) continue;
-      const file = typeof entry === "string" ? `${activityId}.json` : entry.file;
+      const file = typeof entry === "string" ? `${activityId}.CL2.txt` : entry.file;
       if (!file) continue;
-      const definition = await this.dataLoader.loadJSON(`${baseUrl}${file}`);
-      this.register(definition);
+      if (!file.endsWith(".CL2.txt")) throw new Error(`Activity source must use CL2: ${file}`);
+      const source = await this.dataLoader.loadText(`${baseUrl}${file}`);
+      this.registerCl2({ id: activityId, source, sourcePath: `${baseUrl}${file}`, ...entry });
     }
     return this.list();
   }

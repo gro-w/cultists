@@ -34,7 +34,7 @@ for (const [legacyId, targetId] of Object.entries(aliases)) {
   const activity = read(`data/activities/${legacyId}.json`);
   assert.equal(activity.blueprint.nodes.run.inputs.activityId, targetId);
   assert.ok(ids.includes(legacyId));
-  assert.ok(dataFiles.includes(`activities/${legacyId}.json`));
+  assert.ok(dataFiles.includes(`activities/${legacyId}.CL2.txt`));
 }
 assert.ok(read("data/game-manifest.json").eventRoutes.some(({ event }) => event === "ending:triggered"));
 const specialEvents = read("data/databases/specialEvents.json").specialEvents;

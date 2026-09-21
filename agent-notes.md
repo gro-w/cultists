@@ -148,3 +148,5 @@ node tools/verify-publish.js
 - 社交 Activity 的 `activityExpiry[true, 2880]` 表示启用第 2 天绝对过期边界，不表示当前已过期；可用性判断已改为只在启用标志为 true 时比较 `expiresAt`，修复点击交流无反应。
 - 旧社交 CL2 对白常省略 `continueKey`；ActivityRunner 对 `dorm-bottom` 自动生成 `dlg:<nodeId>:continue`，让结局窗口显示继续按钮并在点击后推进到下一句，最终完成事件再显示关闭会话按钮。
 - 社交分支 Activity 的 CL2 `choice` 节点已补回选项标签和 `dlg:<nodeId>:select` 选择键；运行时会渲染选项按钮并把索引写回 Activity 等待变量。
+- `ActivityRunner` 恢复等待中的文本节点时会先消费已设置的 continue key，再跳转下一节点；这避免重复显示上一句并确保下一节点的选项分支能够派发。
+- 社交 Activity 的 choice 通常未声明 `displayTo`；运行时现在继承上一条对白的 `dorm-bottom` 接收目标，确保结局窗口收到并替换继续按钮为选项按钮。

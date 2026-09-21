@@ -557,6 +557,13 @@ export function createActivityRunner({
         // lines a stable per-node wait key so the visible Continue button is
         // the actual Activity synchronization point.
         const continueKey = authoredContinueKey || (displayTo === "dorm-bottom" ? `dlg:${node.id}:continue` : null);
+        // A resumed text node is entered once more after its continue key is
+        // set. Do not emit the same line a second time; consume the key and
+        // advance directly to the next flow node (which may be a choice).
+        if (continueKey && variableStore.get(continueKey)) {
+          variableStore.set(continueKey, null);
+          return { next: nextFlow(blueprint, node) };
+        }
         const payload = {
           instanceId: instance.instanceId,
           speaker: resolveInput(blueprint, node, "speaker", variableStore, "", undefined, pvGateway, dbGateway, runtimeGateway),
@@ -583,7 +590,11 @@ export function createActivityRunner({
           instanceId: instance.instanceId,
           options: resolveInput(blueprint, node, "options", variableStore, [], undefined, pvGateway, dbGateway, runtimeGateway),
           selectionKey,
-          displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway, dbGateway, runtimeGateway),
+          // Choice nodes in legacy social Activities do not declare their own
+          // receiver. Keep them on the receiver used by the preceding
+          // dialogue line; otherwise ending-screen never receives the choice
+          // event and its stale Continue button remains visible.
+          displayTo: resolveInput(blueprint, node, "displayTo", variableStore, lastDialogueDisplayTo || "default", undefined, pvGateway, dbGateway, runtimeGateway),
         };
         lastDialogueDisplayTo = payload.displayTo || lastDialogueDisplayTo;
         instance.transcript = Array.isArray(instance.transcript) ? instance.transcript : [];

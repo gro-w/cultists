@@ -91,6 +91,8 @@
 - `activityExpiry.expires` 是“启用绝对过期时间”的标志，不是“已过期”结果；只有标志为 true 时才比较 `expiresAt`，否则 Activity 不得因该字段被拒绝。
 - `dorm-bottom` 的文本节点即使未声明 `continueKey` 也必须由通用 ActivityRunner 生成稳定的节点等待键；室友结局窗口的继续按钮必须真正推进 Activity，而不是只更新 DOM。
 - CL2 `choice` 必须同时保存 `options` 标签、`optionCount` 和稳定 `selectionKey`；只有流程分支而没有选项数据时不得渲染成继续按钮或空控件。
+- 文本节点从继续等待状态恢复时必须消费等待键并直接进入下一流程节点，不能再次派发同一句文本；否则后续 `choice` 永远不会到达界面。
+- 未声明 `displayTo` 的 `choice` 节点必须继承前一条对白的接收目标；否则下班模式的选项事件会落到 `default`，结局窗口只会残留“继续”按钮。
 
 1. 使用 `patch` 或 `write_file` 修改，只改任务需要的文件。
 2. 每次对代码、数据 schema、引擎架构、层职责、开发命令、版权或发布行为做出修改后，必须检查并同步更新 `AGENTS.md`、`agent-notes.md` 和 `README.md`。三份文档分别保持：代理规则、代理补充信息、人类阅读介绍；不能只更新其中一份。

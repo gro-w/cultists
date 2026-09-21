@@ -244,6 +244,15 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
         outgoing.get(id).add(target.nodeId);
         incoming.get(target.nodeId).add(id);
       }
+      // Value dependencies are graph edges too. Include them in the same
+      // ranking pass so reusable arithmetic/query nodes are placed upstream
+      // of the flow node that consumes them instead of collapsing into one
+      // disconnected vertical column.
+      for (const value of Object.values(current.nodes[id].inputs || {})) {
+        if (!isWireRef(value) || !outgoing.has(value.nodeId) || value.nodeId === id) continue;
+        outgoing.get(value.nodeId).add(id);
+        incoming.get(id).add(value.nodeId);
+      }
     }
 
     // Topological ranking (Kahn's algorithm): rank = longest path from any root.
@@ -288,10 +297,13 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
       for (let layerIndex = layers.length - 2; layerIndex >= 0; layerIndex -= 1) reorder(layerIndex, false);
     }
 
+    const MAX_ROWS_PER_COLUMN = 6;
     layers.forEach((layer, rank) => {
       layer.forEach((id, row) => {
-        current.nodes[id].x = PAD + rank * (W + GAPX);
-        current.nodes[id].y = PAD + row * (H + GAPY);
+        const columnOffset = Math.floor(row / MAX_ROWS_PER_COLUMN);
+        const rowOffset = row % MAX_ROWS_PER_COLUMN;
+        current.nodes[id].x = PAD + (rank + columnOffset) * (W + GAPX);
+        current.nodes[id].y = PAD + rowOffset * (H + GAPY);
       });
     });
     return true;

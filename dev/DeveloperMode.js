@@ -20,6 +20,7 @@ import { BlueprintNodeManagerView } from "./BlueprintNodeManagerView.js";
 import { DataJsonEditorView } from "./DataJsonEditorView.js";
 import { TimeDebuggerView } from "./TimeDebuggerView.js";
 import { I18nManagerView } from "./I18nManagerView.js";
+import { WindowDebuggerView } from "./WindowDebuggerView.js";
 import { updateCustomActivityNode } from "../core/ActivityNodeRegistry.js";
 import { parseCl2 } from "../core/Cl2Parser.js";
 
@@ -41,6 +42,7 @@ const BLUEPRINT_NODE_MANAGER_WINDOW_ID = "dev-blueprint-node-manager";
 const DATA_JSON_EDITOR_WINDOW_ID = "dev-data-json-editor";
 const TIME_DEBUGGER_WINDOW_ID = "dev-time-debugger";
 const I18N_MANAGER_WINDOW_ID = "dev-i18n-manager";
+const WINDOW_DEBUGGER_WINDOW_ID = "dev-window-debugger";
 
 const LAUNCHER_WINDOW_ID = "dev-mode-launcher";
 let editorWindowSeq = 0;
@@ -183,6 +185,18 @@ export async function initDeveloperMode({
     resizable: true,
     singleInstance: true,
     body: i18nManagerView.el,
+  });
+
+  const windowDebuggerView = new WindowDebuggerView({ windowManager, windowDefinitionStore, eventBus });
+  windowDefinitionStore.register({
+    id: WINDOW_DEBUGGER_WINDOW_ID,
+    title: "窗口调试器",
+    icon: "🔍",
+    width: 620,
+    height: 520,
+    resizable: true,
+    singleInstance: true,
+    body: windowDebuggerView.el,
   });
 
   function openWindowEditor(definition) {
@@ -470,6 +484,7 @@ export async function initDeveloperMode({
       <h4>${t("legacy.50aed45e1389")}JSON ${t("legacy.736e99f26407")}</h4>
       <button type="button" class="ng-dev-desktop-icon" data-tool="list-manager"><span class="ng-dev-icon-glyph">🛠</span><span>Activity ${t("legacy.35bd37ad3381")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="window-manager"><span class="ng-dev-icon-glyph">🪟</span><span>${t("legacy.3b195364abf4")}</span></button>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="window-debugger"><span class="ng-dev-icon-glyph">🔍</span><span>窗口调试器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="icon-editor"><span class="ng-dev-icon-glyph">🖱</span><span>${t("legacy.f670ba061ea9")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="structure-manager"><span class="ng-dev-icon-glyph">🧱</span><span>${t("legacy.aee22ce678c6")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="database-debugger"><span class="ng-dev-icon-glyph">🗄</span><span>${t("legacy.df85571b280e")}</span></button>
@@ -499,6 +514,9 @@ export async function initDeveloperMode({
   });
   launcherEl.querySelector('[data-tool="window-manager"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(WINDOW_MANAGER_WINDOW_ID));
+  });
+  launcherEl.querySelector('[data-tool="window-debugger"]').addEventListener("click", () => {
+    windowManager.open(windowDefinitionStore.get(WINDOW_DEBUGGER_WINDOW_ID));
   });
   launcherEl.querySelector('[data-tool="icon-editor"]').addEventListener("click", () => {
     windowManager.open(windowDefinitionStore.get(ICON_EDITOR_WINDOW_ID));
@@ -549,6 +567,7 @@ export async function initDeveloperMode({
     height: 620,
     resizable: true,
     singleInstance: true,
+    alwaysOnTop: true,
     body: launcherEl,
   });
 

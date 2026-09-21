@@ -37,11 +37,13 @@ export function serializeCl2(graph, { activityId = null, includeHeader = true } 
   });
   const valueNodes = Object.values(nodes).filter((node) => {
     const definition = getActivityNodeDefinition(node.type);
-    return Boolean(definition?.valueOutputs?.length) && !definition?.flowInputs?.length && !definition?.flowOutputs?.length;
+    return Boolean(definition?.valueOutputs?.length) && !definition?.flowInputs?.length && !definition?.flowOutputs?.length
+      && node.cl2Class !== "valueReceiver";
   });
   const receiverNodes = Object.values(nodes).filter((node) => {
     const definition = getActivityNodeDefinition(node.type);
-    return Boolean(definition?.valueInputs?.length) && !definition?.flowInputs?.length && !definition?.flowOutputs?.length && !definition?.valueOutputs?.length;
+    return (node.cl2Class === "valueReceiver" || Boolean(definition?.valueInputs?.length))
+      && !definition?.flowInputs?.length && !definition?.flowOutputs?.length && !definition?.valueOutputs?.length;
   });
   const reusableIds = new Set(valueNodes.map((node) => node.id));
   const lines = [];

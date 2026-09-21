@@ -434,6 +434,9 @@ export default {
     "error.fd47610c013e": "Window definition requires an id",
     "error.59f7ad31a924": "Invalid window instance snapshot",
     "error.dd0667e62363": "Invalid or duplicate window instance",
-    "error.00706e81f518": "Activity list requires an id",
+    "error.00706e81f518": "活动列表需要 id",
+    "dev.blueprint.toggleCl2": "CL2 脚本编辑器",
+    "dev.blueprint.toggleGraph": "蓝图编辑器",
+    "dev.blueprint.cl2Source": "CL2 脚本",
   }
 };

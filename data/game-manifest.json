@@ -28,6 +28,7 @@
     "location-scene.json",
     "notebook.json",
     "dialogue.json",
+    "ending-screen.json",
     "turtle-soup.json"
   ],
   "desktopIcons": "desktop-icons.json",

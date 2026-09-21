@@ -43,6 +43,7 @@
               "port": "value"
             },
             "itemLabelTemplate": "{{activityId}}",
+            "itemEventValueField": "queueInstanceId",
             "itemMetaTemplate": "第{{receivedDay}}天 · {{receivedTime}}分钟 · {{queueStatus}}",
             "itemGroupField": "receivedDay",
             "itemGroupClassName": "dialogue-contact-group",

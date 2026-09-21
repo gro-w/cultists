@@ -532,7 +532,13 @@ export function createActivityRunner({
         } else if (Object.prototype.hasOwnProperty.call(inputs, "setObjectRef")) {
           pvGateway.setObjectRef(id, resolveInput(blueprint, node, "setObjectRef", variableStore, null, undefined, pvGateway, dbGateway, runtimeGateway));
         } else {
-          pvGateway.set(id, resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway));
+          const value = resolveInput(blueprint, node, "value", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+          // Legacy effect blueprints encoded a negative adjustment in the
+          // positional `value` port. Preserve that effect semantics while
+          // keeping explicit `value` assignments unchanged for non-negative
+          // values; new blueprints should use the typed `delta` port.
+          if (typeof value === "number" && value < 0) pvGateway.increment(id, value);
+          else pvGateway.set(id, value);
         }
         return { next: nextFlow(blueprint, node) };
       }

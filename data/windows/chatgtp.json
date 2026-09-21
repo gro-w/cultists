@@ -78,7 +78,8 @@
             "className": "chatgtp-answer chat-bubble bubble-npc",
             "text": {
               "variable": "chatgtp:answer"
-            }
+            },
+            "keywordMarkup": true
           },
           {
             "widgetId": "chatgtp-keywords",

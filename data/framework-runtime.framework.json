@@ -47,7 +47,8 @@
       "keyField": "id"
     },
     "socialApps": {"databaseId":"socialApps","keyField":"id"},
-    "socialContacts": {"activityQueueId":"social","projectPayload":true},
+    "socialContacts": {"activityQueueId":"social","projectPayload":true,"unresolvedOnly":true},
+    "hisPatients": {"activityQueueId":"work","databaseId":"patients","joinField":"dialogueActivityId","joinActivitySuffix":"-start","unresolvedOnly":true},
     "sceneItems": {
       "stateOnly": true
     },

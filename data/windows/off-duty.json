@@ -58,7 +58,7 @@
                 "text": "🛏️ 睡觉",
                 "events": {
                   "onClick": {
-                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); consume: framework:consumeTime(480); end: end();"
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); consume: framework:consumeTime(480); close: closeWindow(\"off-duty\"); end: end();"
                   }
                 }
               },

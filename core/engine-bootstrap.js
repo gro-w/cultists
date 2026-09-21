@@ -125,6 +125,7 @@ export async function bootstrap(rootEl) {
     if (value) localVariables.loadDefinitions(value);
   }
   publicVariables.registerSyncSource("gameClock.totalMinutes", () => (gameClock.day - 1) * 1440 + gameClock.minutes);
+  publicVariables.syncFromSources();
   eventBus.on("gameClock:changed", () => publicVariables.syncFromSources());
   const seedFiles = [
     ...(config.seedRecords ? (Array.isArray(config.seedRecords) ? config.seedRecords : [config.seedRecords]) : []),
@@ -149,6 +150,7 @@ export async function bootstrap(rootEl) {
     activityQueueRegistry: queues,
     publicVariableManager: publicVariables,
     publicStateVariableId: frameworkRuntimeDefinition.publicStateVariableId ?? null,
+    gameClock,
   });
   runtimeCollections.loadDefinitions(frameworkRuntimeDefinition.collections || {});
   eventBus.on("activity:appended", () => eventBus.emit("runtime:collection-changed", { collectionId: "activity-queues" }));
@@ -182,25 +184,18 @@ export async function bootstrap(rootEl) {
   // developer entry can never be supplied or configured by the game package.
   iconManager.unregister("dev-mode-launcher-icon");
   const dialogueRegistry = new DisplayReceiverRegistry();
-  const globalMediaView = new TextChoiceWidget({
-    eventBus,
-    variableStore,
-    displayReceiverRegistry: dialogueRegistry,
-    displayTo: "ending-screen",
-    keywordResolver: (id) => dataStore.getRecord("keywords", id)?.content || null,
-    onKeywordCollect: (id) => {
-      const value = { collected: true, collectedDay: gameClock.day };
-      const result = runtimeCollections.set("keywords", id, value);
-      runtimeCollections.set("notebookKeywords", id, value);
-      eventBus.emit("keyword:collected", { id, ...value });
-      return result;
-    },
-  });
-  globalMediaView.el.classList.add("ng-global-media-view");
-  runtimeGateway.dispatchDisplay = (target, payload) => dialogueRegistry.dispatch(target, payload);
   content.installDisplayReceivers?.({ dialogueRegistry });
   const shell = new DesktopShell(windowManager, windowDefinitions, eventBus, rootEl, gameClock, variableStore, publicVariables, dataStore, runtimeGateway, dialogueRegistry, content.customWidgetFactories);
-  rootEl.appendChild(globalMediaView.el);
+  runtimeGateway.dispatchDisplay = (target, payload) => {
+    const isRoommateDialogue = target === "dorm-bottom";
+    const resolvedTarget = isRoommateDialogue ? "ending-screen" : target;
+    if (isRoommateDialogue) {
+      const dialogueState = windowManager.getByWindowId("dialogue");
+      if (dialogueState) windowManager.close(dialogueState.instanceId);
+    }
+    if (resolvedTarget === "ending-screen" && !windowManager.getByWindowId("ending-screen")) shell.openWindow("ending-screen");
+    return dialogueRegistry.dispatch(resolvedTarget, { ...payload, displayTo: resolvedTarget });
+  };
   // Paint icons before loading the Activity catalogue. The catalogue can be
   // large; taskbar and desktop must become visible as one initial surface.
   shell.mountIcons(iconManager);
@@ -252,12 +247,10 @@ export async function bootstrap(rootEl) {
     if (!instance) return { ok: false, reason: "activity-instance-not-found" };
     const transcript = Array.isArray(instance.transcript) ? instance.transcript : [];
     runtimeGateway.dispatchDisplay(displayTo, { displayTo, instanceId, type: "reset" });
-    eventBus.emit("display:reset", { displayTo, instanceId });
     const textEntries = transcript.filter((entry) => entry?.type === "text");
     textEntries.forEach((entry) => {
       const payload = { ...entry, displayTo, continueKey: null, instanceId: entry.instanceId || instanceId };
       runtimeGateway.dispatchDisplay(displayTo, { ...payload, type: "text" });
-      eventBus.emit("display:text", payload);
     });
     return { ok: true, instanceId, count: textEntries.length };
   });
@@ -430,6 +423,9 @@ export async function bootstrap(rootEl) {
       engineOwned: true,
     });
     shell.refreshIcons();
+    // Match the legacy `?dev` route: open the developer workbench immediately
+    // and keep it above ordinary game windows for the whole session.
+    windowManager.open(windowDefinitions.get("dev-mode-launcher"));
   }
   // DEV-TOOLS:END
 

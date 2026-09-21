@@ -257,14 +257,35 @@ input[type="range"] {
   display: none;
 }
 
-/* Fullscreen custom windows (plan §7.4): covers desktop, normal windows and
-   the taskbar, but is otherwise a perfectly ordinary window instance. */
+/* Fullscreen custom windows (plan §7.4): visual chrome only. Window ordering
+   remains ordinary; the taskbar is hidden while one is open. */
 .ng-window.ng-window-fullscreen {
   position: fixed;
   inset: 0;
   width: 100% !important;
   height: 100% !important;
-  z-index: 2000;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  min-width: 0;
+  min-height: 0;
+}
+
+.ng-fullscreen-window-open > .taskbar {
+  display: none;
+}
+
+.ng-window.ng-window-fullscreen .ng-titlebar,
+.ng-window.ng-window-fullscreen .ng-system-menu,
+.ng-window.ng-window-fullscreen .ng-resize-handle {
+  display: none;
+}
+
+.ng-window.ng-window-fullscreen .ng-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .ng-titlebar {
@@ -1037,11 +1058,15 @@ input[type="range"] {
 }
 
 .keyword-highlight {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
   background: #ffe680;
   border-bottom: 1px dashed #a86b00;
   cursor: pointer;
   padding: 0 2px;
   font-weight: bold;
+  font: inherit;
 }
 
 .keyword-highlight.keyword-highlight-collected {
@@ -1406,6 +1431,30 @@ input[type="range"] {
   min-height: 0;
 }
 
+.ng-editor-source {
+  display: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  resize: none;
+  border: 0;
+  padding: 12px;
+  color: #111;
+  background: #fff;
+  font: 13px/1.5 Consolas, "Sarasa Fixed SC", monospace;
+  tab-size: 2;
+}
+
+.ng-activity-editor.ng-editor-source-mode .ng-editor-palette,
+.ng-activity-editor.ng-editor-source-mode .ng-editor-canvas-container,
+.ng-activity-editor.ng-editor-source-mode .ng-editor-inspector {
+  display: none;
+}
+
+.ng-activity-editor.ng-editor-source-mode .ng-editor-source {
+  display: block;
+}
+
 .ng-editor-palette {
   width: 170px;
   overflow: auto;
@@ -1489,6 +1538,10 @@ input[type="range"] {
 .ng-editor-node.selected {
   border-color: #000080;
   box-shadow: 0 0 0 2px #000080;
+}
+
+.ng-editor-node.value-receiver .ng-editor-node-header {
+  background: #6b2b6b;
 }
 
 .ng-editor-node.start {
@@ -1797,6 +1850,13 @@ input[type="range"] {
   font: 13px var(--w95-font);
 }
 
+.ng-window-debugger { padding: 8px; overflow: auto; height: 100%; box-sizing: border-box; }
+.ng-window-debugger section { margin: 8px 0 14px; }
+.ng-window-debugger h3, .ng-window-debugger h4 { margin: 4px 0 8px; }
+.ng-window-debugger button { margin: 2px; }
+.ng-window-debugger-row { display: flex; align-items: center; gap: 6px; padding: 4px; border-bottom: 1px solid #aaa; }
+.ng-window-debugger-row span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .ng-dev-launcher button {
   text-align: left;
   padding: 6px 10px;
@@ -1934,7 +1994,7 @@ input[type="range"] {
 .ng-start-menu-editor-row { display: flex; gap: 8px; align-items: center; padding: 5px; border-bottom: 1px solid #d0d0d0; }
 
 /* Data-driven legacy dorm layout. All elements are widgets from off-duty.json. */
-.ng-off-duty-root { height: 100%; min-height: 0; background: #1a1530; color: #f4ecc9; }
+.ng-off-duty-root { display: flex; flex-direction: column; height: 100%; min-height: 0; background: #1a1530; color: #f4ecc9; }
 .ng-off-duty-header { flex-shrink: 0; padding: 6px; background: #211c38; border-bottom: 2px solid #51486d; }
 .ng-off-duty-story-list { flex-shrink: 0; max-height: 132px; padding: 5px 8px; overflow-y: auto; background: #171329; border-bottom: 2px solid #51486d; }
 .ng-off-duty-story-list .ng-widget-button { width: 100%; text-align: left; font-size: 11px; }
@@ -1950,6 +2010,16 @@ input[type="range"] {
 .ng-off-duty-card .ng-widget-button { font-size: 11px; margin: 2px; }
 .ng-off-duty-strip { flex-shrink: 0; padding: 6px 12px; background: #211c38; border-top: 2px solid #51486d; }
 .ng-off-duty-message { flex-shrink: 0; min-height: 26px; padding: 5px 12px; background: #231d3e; border-top: 1px solid #51486d; font-size: 12px; color: #fff0a8; }
+.ng-off-duty-computer-overlay { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.ng-off-duty-computer-tabs { flex: 0 0 auto; min-height: 0; align-items: center; }
+.ng-off-duty-computer-chat,
+.ng-off-duty-computer-social { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.ng-off-duty-computer-chat.ng-widget-embeddedWindow,
+.ng-off-duty-computer-social.ng-widget-embeddedWindow { flex: 1 1 auto; min-height: 0; }
+.ng-off-duty-computer-chat > .ng-widget,
+.ng-off-duty-computer-social > .ng-widget { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+.ng-off-duty-computer-chat .app-chatgtp,
+.ng-off-duty-computer-social .app-social-media { height: 100%; min-height: 0; overflow: hidden; }
 
 
 
@@ -2060,8 +2130,26 @@ input[type="range"] {
 .ng-clue-wall-lines line { stroke:#a00000; stroke-width:2; }
 .ng-clue-wall-node { position:absolute; width:140px; min-height:34px; padding:6px; box-sizing:border-box; border:1px solid #806040; border-radius:3px; background:#fffbe8; color:#302010; font-size:12px; }
 .ng-global-media-view { display:none; }
-.ng-global-media-view.has-media { display:flex; position:fixed; inset:0; z-index:3000; align-items:center; justify-content:center; background:rgba(0,0,0,.82); }
-.ng-global-media-view .ng-dialogue-media { max-width:92vw; max-height:92vh; object-fit:contain; }
+.ng-ending-window-dialogue { display:block; position:relative; inset:auto; z-index:auto; width:100%; height:100%; overflow:hidden; background:#080808; color:#fff; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-dialogue-view { position:relative; width:100%; height:100%; overflow:hidden; background:#080808; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-dialogue-media { position:absolute; inset:0; z-index:0; width:100%; height:100%; max-width:none; max-height:none; object-fit:cover; filter:brightness(.72); }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portraits { position:absolute; inset:0; z-index:2; pointer-events:none; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portrait { position:absolute; bottom:17vh; width:34vw; height:68vh; display:flex; align-items:flex-end; justify-content:center; overflow:hidden; opacity:.55; filter:brightness(.65) saturate(.8); transition:opacity .15s, filter .15s; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portrait-player { left:3vw; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portrait-npc { right:3vw; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portrait.is-active { opacity:1; filter:brightness(1) saturate(1); }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portrait img { width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; object-position:bottom center; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portrait-player img { transform:none; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-ending-portrait span { font-size:clamp(70px,12vw,180px); opacity:.9; filter:drop-shadow(0 0 12px #000); }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-dialogue-transcript { position:absolute; z-index:10; left:50%; bottom:12vh; transform:translateX(-50%); width:min(1100px,92vw); min-height:88px; max-height:24vh; overflow:hidden; box-sizing:border-box; padding:16px 24px; border:2px solid rgba(210,240,255,.78); border-radius:4px; background:rgba(7,14,28,.88); box-shadow:0 0 0 1px rgba(0,0,0,.8),0 0 18px rgba(0,0,0,.8); }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-dialogue-line { margin:0; min-height:1.8em; font-size:clamp(15px,1.5vw,22px); line-height:1.8; color:#fff; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-dialogue-speaker { color:#aee6ff; margin-right:10px; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-dialogue-controls { position:absolute; z-index:11; left:50%; bottom:5vh; transform:translateX(-50%); width:min(1100px,92vw); display:flex; justify-content:flex-end; }
+:is(.ng-global-media-view, .ng-ending-window-dialogue) .ng-dialogue-continue { min-width:110px; padding:8px 18px; font-size:14px; }
+.ng-ending-window-root { flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; background:#080808; }
+.ng-ending-window-dialogue { flex:1; min-height:0; overflow:hidden; }
+.ng-ending-window-dialogue.has-content { display:block; position:relative; inset:auto; z-index:auto; width:100%; height:100%; }
+.ng-ending-window-dialogue .ng-dialogue-view { height:100%; min-height:0; }
 .location-scene-title { font-size:16px; font-weight:700; }
 .location-scene-background { display:block; width:100%; max-width:100%; max-height:220px; object-fit:contain; }
 .location-scene-message, .location-scene-empty { color:#666; font-size:12px; }

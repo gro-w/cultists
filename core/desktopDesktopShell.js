@@ -82,8 +82,21 @@ export class DesktopShell {
   }
 
   _bindEvents() {
-    this.eventBus.on("window:opened", ({ instanceId }) => this._mountFrame(instanceId));
-    this.eventBus.on("window:closed", ({ instanceId }) => this._unmountFrame(instanceId));
+    this.eventBus.on("window:opened", ({ instanceId }) => {
+      this._mountFrame(instanceId);
+      this._updateFullscreenVisibility();
+    });
+    this.eventBus.on("window:closed", ({ instanceId }) => {
+      this._unmountFrame(instanceId);
+      this._updateFullscreenVisibility();
+    });
+    this.eventBus.on("window:minimized", () => this._updateFullscreenVisibility());
+    this.eventBus.on("window:restored", () => this._updateFullscreenVisibility());
+  }
+
+  _updateFullscreenVisibility() {
+    const hasFullscreen = this.windowManager.list().some((state) => state.fullscreen && !state.minimized);
+    this.rootEl.classList.toggle("ng-fullscreen-window-open", hasFullscreen);
   }
 
   /**
@@ -233,6 +246,14 @@ export class DesktopShell {
       gameClock: this.gameClock,
       eventBus: this.eventBus,
       dialogueViews: this.dialogueViews,
+      keywordResolver: (id) => this.dbGateway?.getRecord?.("keywords", id)?.content || null,
+      onKeywordCollect: (id) => {
+        const value = { collected: true, collectedDay: this.gameClock?.snapshot?.().day || 1 };
+        this.runtimeGateway?.setCollectionValue?.("keywords", id, value);
+        this.runtimeGateway?.setCollectionValue?.("notebookKeywords", id, value);
+        this.eventBus?.emit("keyword:collected", { id, ...value });
+        return value;
+      },
       windowDefinitionStore: this.windowDefinitionStore,
       valueGraph: definition?.valueGraph,
       conditionContext: this.conditionContext,
@@ -242,8 +263,8 @@ export class DesktopShell {
     // owns one persistent dialogue surface as its body. Rendering it through
     // a declarative wrapper can move/collapse the receiver element while the
     // first Activity event is being emitted, leaving a blank window.
-    const dialogueBody = state.windowId === "dialogue" ? this.dialogueViews["his-app"]?.el : null;
-    if (dialogueBody) this.dialogueViews["his-app"].reset();
+    const dialogueBody = state.windowId === "dialogue" ? this.dialogueViews["dorm-bottom"]?.el : null;
+    if (dialogueBody) this.dialogueViews["dorm-bottom"].reset();
     // A window's title (like its widget properties) may be a bound value
     // instead of a fixed literal ("窗口属性...也都可以通过蓝图指定"); this
     // only affects the rendered titlebar text, never `WindowManager`'s own
@@ -273,6 +294,22 @@ export class DesktopShell {
           displayTo: target,
           displayAliases: aliases,
           keywordResolver: (id) => this.dbGateway?.getRecord?.("keywords", id)?.content || null,
+          portraitResolver: (speaker) => {
+            const speakerText = String(speaker || "");
+            if (["player", "主控"].includes(speakerText.toLowerCase())) return "data/assets/player_portrait_cropped.png";
+            const npcs = this.dbGateway?.findRecords?.("npcs") || [];
+            const npc = this.dbGateway?.getRecord?.("npcs", speakerText)
+              || npcs.find((record) => record?.name === speakerText);
+            return npc?.endingPortraits?.find((portrait) => portrait.imageData)?.imageData
+              || npc?.portraits?.find((portrait) => portrait.imageData)?.imageData
+              || null;
+          },
+          onEndingComplete: target === "ending-screen"
+            ? () => {
+              const state = this.windowManager.getByWindowId("ending-screen");
+              if (state) this.windowManager.close(state.instanceId);
+            }
+            : null,
           onKeywordCollect: (id) => {
             const value = { collected: true, collectedDay: this.gameClock?.day };
             const result = this.runtimeGateway?.setCollectionValue?.("keywords", id, value);

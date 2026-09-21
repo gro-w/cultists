@@ -10,10 +10,9 @@
     "nodes": {
       "patients": {
         "id": "patients",
-        "type": "findRecordsValue",
+        "type": "getRuntimeCollection",
         "inputs": {
-          "databaseId": "patients",
-          "query": {}
+          "collectionId": "hisPatients"
         }
       },
       "submittedPatients": {

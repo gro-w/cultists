@@ -1,0 +1,22 @@
+import "./register-framework-nodes.mjs";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import { parseCl2 } from "../core/Cl2Parser.js";
+import { serializeCl2 } from "../core/Cl2Serializer.js";
+import { createActivityEditorModel } from "../dev/ActivityEditorModel.js";
+
+const source = fs.readFileSync("data/activities/dorm_activity_day1.CL2.txt", "utf8");
+const first = parseCl2(source, { validate: true });
+assert.equal(first.ok, true, first.diagnostics.map((item) => item.message).join("；"));
+const model = createActivityEditorModel({ activityId: "dorm_activity_day1", blueprint: first.graph });
+const before = model.listConnections().filter((connection) => connection.id.startsWith("value:")).map((connection) => connection.id).sort();
+const roundTrip = parseCl2(serializeCl2(model.exportBlueprint(), { activityId: "dorm_activity_day1" }), { validate: true });
+assert.equal(roundTrip.ok, true, roundTrip.diagnostics.map((item) => item.message).join("；"));
+model.loadBlueprint(roundTrip.graph);
+const after = model.listConnections().filter((connection) => connection.id.startsWith("value:")).map((connection) => connection.id).sort();
+assert.deepEqual(after, before);
+model.autoLayout();
+const valueNodes = model.listNodes().filter((node) => node.inputs && Object.values(node.inputs).some((value) => value?.nodeId));
+assert.ok(valueNodes.length > 1);
+assert.ok(new Set(valueNodes.map((node) => node.x)).size > 1, "value nodes must not collapse into one column");
+console.log(`cl2-editor-roundtrip-probe: ok (${before.length} value wires)`);

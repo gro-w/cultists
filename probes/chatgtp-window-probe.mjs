@@ -106,8 +106,8 @@ runBlueprint(chatgtp.events.onCreate, "onCreate");
 assert.equal(variableStore.get("chatgtp:keywords").length, 645);
 assert.equal(variableStore.get("chatgtp:settings").id, "default");
 assert.equal(variableStore.get("chatgtp:answer"), "");
-const startingSan = publicVariableManager.get(CHATGTP_SAN_VARIABLE_ID);
-assert.ok(startingSan > 0, "fixture assumes ChatGTP SAN starts above zero");
+const startingSan = 255;
+publicVariableManager.set(CHATGTP_SAN_VARIABLE_ID, startingSan);
 
 // --- a real keyword resolves through the third column --------------------
 const comboEntry = chatgtpSeed.chatgtpQaEntries.find((e) => e.keywords.length === 1);

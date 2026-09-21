@@ -1,9 +1,11 @@
 // DEV-TOOLS:START
 import { t } from "../core/i18n/index.js";
 import { PointerInteraction } from "../core/desktopPointerInteraction.js";
-import { listActivityNodeTypes, getActivityNodeDefinition, listActivityNodePorts, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
+import { listActivityNodeTypes, getActivityNodeDefinition, listActivityNodePorts, arePortsCompatible, classifyActivityNodePorts } from "../core/ActivityNodeRegistry.js";
 import { createActivityEditorModel } from "./ActivityEditorModel.js";
 import { downloadTextFile, writeDataFile } from "./devApi.js";
+import { serializeCl2 } from "../core/Cl2Serializer.js";
+import { parseCl2 } from "../core/Cl2Parser.js";
 
 // Layout constants mirror the old engine's blueprint editor
 // (js/desktop/DevDialogueEditorTab.js) so the two look and feel the same.
@@ -33,6 +35,7 @@ export class ActivityEditorView {
     this.onRenameId = onRenameId || (() => {});
     this.dataFileName = dataFileName || null;
     this.zoom = 1;
+    this.editorMode = "graph";
     this._dragPointer = new PointerInteraction();
     this._connectionDragPointer = new PointerInteraction();
     this._boxSelectPointer = new PointerInteraction();
@@ -56,6 +59,7 @@ export class ActivityEditorView {
         <button type="button" data-action="save" title="${t("legacy.b02ae67098e2")}">${t("legacy.b02ae67098e2")}</button>
         <button type="button" data-action="download" title="${t("legacy.3f10b573ee1b")}JSON">${t("legacy.2b9d013177da")}</button>
         <button type="button" data-action="write-disk" title="${t("legacy.81ee3266b03d")}">${t("legacy.81ee3266b03d")}</button>
+        <button type="button" data-action="toggle-source" title="${t("dev.blueprint.toggleCl2", "切换 CL2 脚本编辑器")}">${t("dev.blueprint.toggleCl2", "CL2 脚本编辑器")}</button>
         <span class="ng-editor-zoom-tools">
           <button type="button" data-action="zoom-out">－</button>
           <span class="ng-editor-zoom-label">100%</span>
@@ -72,6 +76,7 @@ export class ActivityEditorView {
           </div>
         </div>
         <div class="ng-editor-inspector"></div>
+        <textarea class="ng-editor-source" spellcheck="false" aria-label="${t("dev.blueprint.cl2Source", "CL2 脚本")}"></textarea>
       </div>
     `;
     this.el = el;
@@ -83,6 +88,7 @@ export class ActivityEditorView {
     this.canvasEl = el.querySelector(".ng-editor-canvas");
     this.connectionsEl = el.querySelector(".ng-editor-connections");
     this.inspectorEl = el.querySelector(".ng-editor-inspector");
+    this.sourceEl = el.querySelector(".ng-editor-source");
 
     this._ensureArrowMarker();
     this._buildPalette();
@@ -150,6 +156,7 @@ export class ActivityEditorView {
       downloadTextFile(`${this.model.activityId || "activity"}.CL2.txt`, this.model.toDownloadPayload());
     });
     this.el.querySelector('[data-action="write-disk"]').addEventListener("click", () => this._writeToDisk());
+    this.el.querySelector('[data-action="toggle-source"]').addEventListener("click", () => this._toggleSourceMode());
     this.el.querySelector('[data-action="zoom-in"]').addEventListener("click", () => this._setZoom(this.zoom + ZOOM_STEP));
     this.el.querySelector('[data-action="zoom-out"]').addEventListener("click", () => this._setZoom(this.zoom - ZOOM_STEP));
   }
@@ -157,6 +164,29 @@ export class ActivityEditorView {
   _setZoom(next) {
     this.zoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(next * 10) / 10));
     this._applyZoom();
+  }
+
+  _toggleSourceMode() {
+    const toggle = this.el.querySelector('[data-action="toggle-source"]');
+    if (this.editorMode === "graph") {
+      this.sourceEl.value = serializeCl2(this.model.exportBlueprint(), { activityId: this.model.activityId });
+      this.editorMode = "source";
+      this.el.classList.add("ng-editor-source-mode");
+      toggle.textContent = t("dev.blueprint.toggleGraph", "蓝图编辑器");
+      this.sourceEl.focus();
+      return;
+    }
+    const parsed = parseCl2(this.sourceEl.value, { sourcePath: this.dataFileName || "<editor>", validate: true });
+    if (!parsed.ok) {
+      const details = parsed.diagnostics.map((item) => item.message || String(item)).join("；");
+      this._setStatus(`${t("legacy.2da7449d8887")}: ${details}`, true);
+      return;
+    }
+    this.model.loadBlueprint(parsed.graph);
+    this.editorMode = "graph";
+    this.el.classList.remove("ng-editor-source-mode");
+    toggle.textContent = t("dev.blueprint.toggleCl2", "CL2 脚本编辑器");
+    this.render();
   }
 
   _applyZoom() {
@@ -396,6 +426,7 @@ export class ActivityEditorView {
       const outputPorts = listActivityNodePorts(node.type, "output");
       const portRows = Math.max(inputPorts.length, outputPorts.length);
       const isStart = node.id === this.model.startNodeId;
+      const nodeClass = node.cl2Class || classifyActivityNodePorts(definition) || "unknown";
       if (!el) {
         el = document.createElement("div");
         el.className = "ng-editor-node";
@@ -415,6 +446,8 @@ export class ActivityEditorView {
       el.style.minHeight = `${Math.max(NODE_MIN_HEIGHT, PORT_ROW_TOP + portRows * PORT_ROW_HEIGHT + 24)}px`;
       el.classList.toggle("selected", this.model.isSelected(node.id));
       el.classList.toggle("start", isStart);
+      el.dataset.nodeClass = nodeClass;
+      el.classList.toggle("value-receiver", nodeClass === "valueReceiver");
       el.querySelector(".ng-editor-node-title").textContent = `${definition?.label || node.type}${isStart ? " 🏠" : ""}`;
       el.querySelector(".ng-editor-node-body").textContent = JSON.stringify(node.inputs || {});
       el.querySelector(".ng-editor-node-badge").textContent = node.type;

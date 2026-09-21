@@ -51,6 +51,34 @@ function setHighlightedText(element, text, terms = []) {
   element.appendChild(fragment);
 }
 
+function renderKeywordMarkup(element, text, ctx) {
+  const source = String(text ?? "");
+  const marker = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
+  let cursor = 0;
+  let match;
+  while ((match = marker.exec(source))) {
+    if (match.index > cursor) element.appendChild(document.createTextNode(source.slice(cursor, match.index)));
+    const id = String(match[1]);
+    const keyword = document.createElement("button");
+    keyword.type = "button";
+    keyword.className = "keyword-highlight";
+    keyword.dataset.keywordId = id;
+    keyword.title = id;
+    keyword.textContent = match[2] || ctx.keywordResolver?.(id) || id;
+    keyword.addEventListener("click", () => {
+      ctx.onKeywordCollect?.(id);
+      keyword.classList.add("keyword-highlight-collected");
+    });
+    element.appendChild(keyword);
+    cursor = match.index + match[0].length;
+  }
+  if (cursor === 0) {
+    element.textContent = source;
+    return;
+  }
+  if (cursor < source.length) element.appendChild(document.createTextNode(source.slice(cursor)));
+}
+
 function applyContainerStyle(el, node, ctx) {
   const flowValue = prop(node, "flow", ctx, "vertical");
   const flow = CONTAINER_FLOWS.has(flowValue) ? flowValue : "vertical";
@@ -165,7 +193,8 @@ function renderLeaf(node, ctx) {
   const el = document.createElement(node.type === "button" ? "button" : "div");
   switch (node.type) {
     case "label":
-      el.textContent = prop(node, "text", ctx, "");
+      if (node.keywordMarkup) renderKeywordMarkup(el, prop(node, "text", ctx, ""), ctx);
+      else el.textContent = prop(node, "text", ctx, "");
       break;
     case "clock": {
       const snapshot = ctx.gameClock?.snapshot?.() || { day: 1, minutes: 0 };
@@ -484,7 +513,12 @@ function renderLeaf(node, ctx) {
         }
         if (item && typeof item === "object" && item.id !== undefined) {
           li.dataset.itemId = item.id;
-          if (ctx.onEvent) li.addEventListener("click", () => ctx.onEvent(node, "onItemClick", item.id));
+          if (ctx.onEvent) {
+            const eventValue = node.itemEventValueField && item[node.itemEventValueField] !== undefined
+              ? item[node.itemEventValueField]
+              : item.id;
+            li.addEventListener("click", () => ctx.onEvent(node, "onItemClick", eventValue));
+          }
           for (const action of node.itemActions || []) {
             const button = document.createElement("button");
             button.type = "button";
@@ -492,7 +526,10 @@ function renderLeaf(node, ctx) {
             button.textContent = action.label || action.id || t("legacy.f3ea6d345e2a");
             button.addEventListener("click", (event) => {
               event.stopPropagation();
-              ctx.onEvent?.(node, action.eventName || action.id, item.id);
+              const eventValue = node.itemEventValueField && item[node.itemEventValueField] !== undefined
+                ? item[node.itemEventValueField]
+                : item.id;
+              ctx.onEvent?.(node, action.eventName || action.id, eventValue);
             });
             li.appendChild(button);
           }

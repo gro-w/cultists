@@ -73,7 +73,7 @@ export class WindowManager {
    * is focused and restored instead of creating a duplicate.
    */
   open(definition) {
-    const { windowId: explicitWindowId, id, title, icon, resizable = true, singleInstance = true, fullscreen = false } = definition;
+    const { windowId: explicitWindowId, id, title, icon, resizable = true, singleInstance = true, fullscreen = false, alwaysOnTop = false } = definition;
     const windowId = explicitWindowId || id;
     if (singleInstance) {
       const existing = this.getByWindowId(windowId);
@@ -111,6 +111,7 @@ export class WindowManager {
       icon: icon || null,
       resizable: fullscreen ? false : resizable,
       fullscreen: Boolean(fullscreen),
+      alwaysOnTop: Boolean(alwaysOnTop),
       minimized: false,
       maximized: false,
       normalBounds: null,
@@ -136,6 +137,11 @@ export class WindowManager {
     return this.windows.get(instanceId) || null;
   }
 
+  /** Return snapshots for developer tools without exposing the internal Map. */
+  list() {
+    return [...this.windows.values()].map((state) => ({ ...state }));
+  }
+
   close(instanceId) {
     const state = this.windows.get(instanceId);
     if (!state) return;
@@ -148,7 +154,10 @@ export class WindowManager {
     const state = this.windows.get(instanceId);
     if (!state) return;
     this.zCounter += 1;
-    state.zIndex = this.zCounter;
+    // Fullscreen is a visual mode, not an ordering policy. It is placed above
+    // windows that existed when it opened, but later focused windows may appear
+    // above it. Only developer windows are always-on-top.
+    state.zIndex = state.alwaysOnTop ? 100000 + this.zCounter : this.zCounter;
     this.eventBus.emit("window:focused", { instanceId, windowId: state.windowId });
   }
 

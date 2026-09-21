@@ -7,7 +7,7 @@ import { t } from "./i18n/index.js";
  * CL2/data packages; no game or framework domain is named here.
  */
 export class RuntimeCollectionRegistry {
-  constructor({ dataStore, eventBus, variableStore = null, publicVariableManager = null, publicStateVariableId = null, activityQueueRegistry = null } = {}) {
+  constructor({ dataStore, eventBus, variableStore = null, publicVariableManager = null, publicStateVariableId = null, activityQueueRegistry = null, gameClock = null } = {}) {
     this.dataStore = dataStore;
     this.eventBus = eventBus;
     this.variableStore = variableStore;
@@ -16,6 +16,7 @@ export class RuntimeCollectionRegistry {
     this.publicVariableManager = publicVariableManager;
     this.publicStateVariableId = publicStateVariableId;
     this.activityQueueRegistry = activityQueueRegistry;
+    this.gameClock = gameClock;
   }
 
   loadDefinitions(collections = {}) {
@@ -41,13 +42,25 @@ export class RuntimeCollectionRegistry {
     const definition = this.definition(id);
     if (definition?.activityQueueId) {
       const entries = this.activityQueueRegistry?.listEntries(definition.activityQueueId) || [];
-      return entries.map((entry) => ({
+      const projected = entries.filter((entry) => {
+        if (definition.unresolvedOnly && entry?.status !== "unresolved") return false;
+        if (!definition.unresolvedOnly && Array.isArray(definition.statuses) && !definition.statuses.includes(entry?.status)) return false;
+        return true;
+      }).map((entry) => ({
         ...(definition.projectPayload && entry?.payload && typeof entry.payload === "object" ? entry.payload : {}),
         ...entry,
         id: entry.instanceId || entry.id,
         queueInstanceId: entry.instanceId || entry.id,
         queueStatus: entry.status,
       }));
+      if (!definition.databaseId) return projected;
+      const joinField = definition.joinField || "dialogueActivityId";
+      const suffix = definition.joinActivitySuffix || "";
+      return projected.flatMap((entry) => {
+        const activityKey = `${entry.activityId || ""}${suffix}`;
+        const record = this.dataStore?.findRecords(definition.databaseId, {}).find((item) => String(item?.[joinField]) === activityKey);
+        return record ? [{ ...record, ...entry, id: record.id, queueInstanceId: entry.queueInstanceId }] : [];
+      });
     }
     if (definition?.generatedRange) {
       const range = definition.generatedRange;
@@ -78,10 +91,12 @@ export class RuntimeCollectionRegistry {
     }
     if (!this.dataStore) return [];
     const databaseIds = definition.databaseIds || (definition.databaseId ? [definition.databaseId] : []);
-    return [
-      ...(definition.prepend || []),
-      ...databaseIds.flatMap((databaseId) => this.dataStore.findRecords(databaseId, definition.query || {})),
-    ];
+    const records = databaseIds.flatMap((databaseId) => this.dataStore.findRecords(databaseId, definition.query || {}));
+    const day = Number(this.gameClock?.day || 1);
+    const current = definition.currentDayField
+      ? records.filter((record) => Number(record?.[definition.currentDayField]) === day)
+      : records;
+    return [...(definition.prepend || []), ...current];
   }
 
   _applyDerivedFields(records, definition = {}) {

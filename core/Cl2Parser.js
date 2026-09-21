@@ -257,8 +257,10 @@ export function parseCl2(source, { sourcePath = "<inline>", validate = true } = 
   for (const entry of inputValues) {
     let target = nodes[entry.id];
     if (!target) {
-      target = { id: entry.id, type: functionNameToType(entry.fn?.name || ""), inputs: {}, next: {} };
+      target = { id: entry.id, type: functionNameToType(entry.fn?.name || ""), inputs: {}, next: {}, cl2Class: "valueReceiver" };
       nodes[entry.id] = target;
+    } else {
+      target.cl2Class = "valueReceiver";
     }
     const args = (entry.fn?.args || []).map((value) => resolveValue(value, reusable));
     Object.assign(target.inputs, makeInputs(target.type, args, reusable));

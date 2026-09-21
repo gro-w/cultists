@@ -7,7 +7,7 @@ import { resolveAssetPath } from "./AssetPath.js";
  * receiver protocol; content packages decide the target and payload fields.
  */
 export class TextChoiceWidget {
-  constructor({ eventBus, variableStore, displayReceiverRegistry, displayTo = "default", displayAliases = [], keywordResolver = null, onKeywordCollect = null } = {}) {
+  constructor({ eventBus, variableStore, displayReceiverRegistry, displayTo = "default", displayAliases = [], keywordResolver = null, onKeywordCollect = null, portraitResolver = null, onEndingComplete = null } = {}) {
     this.eventBus = eventBus;
     this.variableStore = variableStore;
     this.displayTo = String(displayTo || "default").trim();
@@ -16,6 +16,8 @@ export class TextChoiceWidget {
       .filter((target) => target && target !== this.displayTo);
     this.keywordResolver = keywordResolver;
     this.onKeywordCollect = onKeywordCollect;
+    this.portraitResolver = portraitResolver;
+    this.onEndingComplete = onEndingComplete;
     this.registry = displayReceiverRegistry || new DisplayReceiverRegistry();
     this._buildDom();
     this._receiver = { handle: (payload) => this._handle(payload) };
@@ -35,7 +37,7 @@ export class TextChoiceWidget {
   _buildDom() {
     this.el = document.createElement("div");
     this.el.className = "ng-dialogue-view";
-    this.el.innerHTML = '<div class="ng-dialogue-transcript"></div><div class="ng-dialogue-controls"></div>';
+    this.el.innerHTML = '<div class="ng-ending-portraits"><div class="ng-ending-portrait ng-ending-portrait-player"><span>主控</span></div><div class="ng-ending-portrait ng-ending-portrait-npc"><span>角色</span></div></div><div class="ng-dialogue-transcript"></div><div class="ng-dialogue-controls"></div>';
     this.transcriptEl = this.el.querySelector(".ng-dialogue-transcript");
     this.controlsEl = this.el.querySelector(".ng-dialogue-controls");
   }
@@ -47,7 +49,8 @@ export class TextChoiceWidget {
 
   _handle(payload = {}) {
     if (!this._accepts(payload)) return;
-    if (payload.type === "text") this._onText(payload);
+    if (payload.type === "reset") this.reset();
+    else if (payload.type === "text") this._onText(payload);
     else if (payload.type === "choice") this._onChoice(payload);
     else if (payload.type === "media") this._onMedia(payload);
     else if (payload.type === "media-end") this._onMediaEnd();
@@ -56,6 +59,7 @@ export class TextChoiceWidget {
   reset() {
     this.transcriptEl.replaceChildren();
     this.controlsEl.replaceChildren();
+    this.el.classList.remove("has-content");
     this._lastEventKey = null;
   }
 
@@ -73,6 +77,8 @@ export class TextChoiceWidget {
     if (this._lastEventKey === eventKey) return;
     this._lastEventKey = eventKey;
     this._activeInstanceId = payload.instanceId || null;
+    this.el.classList.add("has-content");
+    if (this.displayTo === "ending-screen") this._updateEndingPortraits(payload.speaker);
     const line = document.createElement("p");
     line.className = "ng-dialogue-line";
     if (payload.speaker) {
@@ -82,6 +88,9 @@ export class TextChoiceWidget {
       line.appendChild(speaker);
     }
     this._appendTextWithKeywords(line, payload.text, payload.keywordIds);
+    // Ending dialogue is a single galgame line, not a running transcript.
+    // Ordinary dialogue keeps its transcript history for activity replay.
+    if (this.displayTo === "ending-screen") this.transcriptEl.replaceChildren();
     this.transcriptEl.appendChild(line);
     this.controlsEl.replaceChildren();
     if (payload.continueKey) {
@@ -93,6 +102,27 @@ export class TextChoiceWidget {
       this.controlsEl.appendChild(button);
     }
     this.transcriptEl.scrollTop = this.transcriptEl.scrollHeight;
+  }
+
+  _updateEndingPortraits(speaker) {
+    const player = this.el.querySelector(".ng-ending-portrait-player");
+    const npc = this.el.querySelector(".ng-ending-portrait-npc");
+    const speakerText = String(speaker || "");
+    if (!speakerText || speakerText.toLowerCase() === "narrator") return;
+    const isPlayer = ["player", "主控"].includes(speakerText.toLowerCase());
+    player?.classList.toggle("is-active", isPlayer);
+    npc?.classList.toggle("is-active", !isPlayer && String(speaker || "") !== "narrator");
+    const target = isPlayer ? player : npc;
+    if (!target || target.dataset.speaker === speakerText) return;
+    const imageData = this.portraitResolver?.(speaker);
+    if (!imageData) return;
+    const image = document.createElement("img");
+    image.src = resolveAssetPath(imageData);
+    image.alt = String(speaker || "角色");
+    image.draggable = false;
+    target.replaceChildren(image);
+    target.dataset.loaded = "true";
+    target.dataset.speaker = speakerText;
   }
 
   _appendTextWithKeywords(parent, text, keywordIds = []) {
@@ -164,6 +194,13 @@ export class TextChoiceWidget {
     if (!this._accepts(payload)) return;
     if (payload.instanceId && payload.instanceId !== this._activeInstanceId) return;
     this.controlsEl.replaceChildren();
+    if (this.displayTo !== "ending-screen") return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "ng-dialogue-continue";
+    button.textContent = t("legacy.1fc1afc5c55e");
+    button.addEventListener("click", () => this.onEndingComplete?.());
+    this.controlsEl.appendChild(button);
   }
 
   destroy() {

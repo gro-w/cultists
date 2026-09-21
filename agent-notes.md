@@ -81,7 +81,7 @@ node dev-server.js --port 8001 --lang zh-hans
 - 游戏内容使用稳定 ID。窗口、Activity、数据库、公共变量和资源之间通过 manifest/schema 连接。
 - 公共变量、数据库、窗口、Activity 和存档各有边界；数据库编辑器写 canonical 数据，存档调试器只改运行时存档。
 - 运行时集合可在数据定义中声明 `stateAliases`，用于旧稳定 ID 到 canonical ID 的恢复兼容；同一存档同时存在两者时 canonical ID 优先。
-- 运行时集合可声明 `activityQueueId` 和 `projectPayload`，以通用方式把 Activity 队列投影为 CL2 列表；队列追加/变更会发出 `runtime:collection-changed`，窗口可据此刷新，core 不解释 payload 的业务语义。
+- 运行时集合可声明 `activityQueueId` 和 `projectPayload`，以通用方式把 Activity 队列投影为 CL2 列表；队列追加/变更会发出 `runtime:collection-changed`，窗口可据此刷新，core 不解释 payload 的业务语义。患者列表使用 framework 声明的未解决 work 队列投影并通过稳定的 dialogue Activity ID 关联患者数据库；室友/社交联系人列表同样从未解决 social 队列派生，不能静态读取全量数据库。
 - 运行时集合支持数据声明的派生字段、跨数据库 lookup、前置占位记录和 `stateCollectionId`；ChatGTP 关键词窗口按来源、类别、关键词三行筛选并复用 `notebookKeywords` 的 canonical 收集状态，空类别值表示跳过类别过滤。
 - Activity 的 `text`/`choice` 显示事件会保留在实例 transcript 中；`engine.activity.replay` 只回放已保存文本并先发送 `display:reset`，不会重新运行 Activity 节点；回放同时经过 DisplayReceiverRegistry 和 event bus，避免已打开的对话窗口只显示空容器。开发 Activity 调试器通过正常 `runActivity` API 触发结局 Activity，不直接修改队列内部状态；社交媒体窗口的尺寸与标签栏遵循 main 分支旧应用的布局契约。
 - 本地变量管理器写 `data/local-variables.framework.json` 的定义，不保存实例值；活动调试器才允许实时修改具体实例的 `localVariables`。
@@ -130,3 +130,14 @@ node tools/verify-publish.js
 - `data/framework-manifest.json`：framework 文档与通用运行时连接。
 - `data/activity-manifest.json`：Activity ID 到蓝图文件的清单。
 - `tools/publish.js`：玩家版发布脚本。
+
+## ChatGTP、下班电脑与结局显示
+
+- ChatGTP 答案中的 `[[keywordId|显示文本]]` 由通用 Widget renderer 渲染为可点击关键词；收集动作同时写入 `keywords` 与 `notebookKeywords`，因此疾病关键词也能进入笔记本。
+- `ending-screen` 使用独立的 `fullscreen` 数据窗口承载全屏媒体、对话面板、主控与说话角色立绘；结局 Activity 的首条文本到达前会先挂载显示目标窗口，避免首句文本和立绘因接收器尚未注册而丢失。下班模式同样使用 `off-duty.json` 的普通全屏窗口；两者隐藏边框和标题栏。全屏窗口打开期间由 Shell 隐藏任务栏；全屏窗口本身不使用特殊 z-index，后续聚焦的普通对话窗口可以覆盖它。
+- `?dev` 会自动打开开发人员模式窗口；该窗口声明 `alwaysOnTop`，普通游戏窗口不能覆盖它。
+- 对话联系人列表的显示 ID 与回放实例 ID 分离：窗口列表通过 `itemEventValueField: "queueInstanceId"` 回放 Activity 队列实例；普通对话保留 transcript，`ending-screen` 只保留当前一句并由继续按钮推进下一句。结局立绘使用统一容器尺寸和资源路径解析，玩家资源的透明留白需通过显示缩放归一化。
+- `dorm-bottom` 室友对话显示会路由到 `ending-screen`，对话窗口关闭；Activity 完成后由结局窗口自己的“继续”按钮关闭会话。`ending-screen` 声明 `dorm-bottom` 接收别名以接收 Activity 完成和 reset 事件。
+- Activity 编辑器工具栏提供“CL2 脚本编辑器/蓝图编辑器”切换；图形模式导出当前草稿为 CL2，源码模式切回图形模式前执行解析和完整验证，失败时保留源码和原图形草稿。
+- 启动时 `gameTimeMinutes` 公共变量在注册 `GameClock` 同步源后立即同步；否则患者队列管理器在第 1 天 08:00 会读取默认零值并停在首个 `blockUntil`，HIS 的 `hisPatients` 集合为空。
+- 窗口组件数值蓝图的 `inputvalue` 节点在 CL2 解析后保留 `cl2Class: "valueReceiver"`，编辑器以独立样式显示，序列化时继续输出 `inputvalue`，避免源码/蓝图切换改变节点类别。

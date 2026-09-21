@@ -435,5 +435,8 @@ export default {
     "error.59f7ad31a924": "Invalid window instance snapshot",
     "error.dd0667e62363": "Invalid or duplicate window instance",
     "error.00706e81f518": "Activity list requires an id",
+    "dev.blueprint.toggleCl2": "CL2 script editor",
+    "dev.blueprint.toggleGraph": "Blueprint editor",
+    "dev.blueprint.cl2Source": "CL2 source",
   }
 };

@@ -25,43 +25,10 @@
     "className": "dialogue-layout",
     "children": [
       {
-        "widgetId": "dialogue-contacts",
-        "type": "container",
-        "flow": "vertical",
-        "className": "dialogue-contacts panel-inset",
-        "children": [
-          {
-            "widgetId": "dialogue-contacts-title",
-            "type": "label",
-            "text": "联系人"
-          },
-          {
-            "widgetId": "dialogue-contacts-list",
-            "type": "list",
-            "items": {
-              "nodeId": "socialContacts",
-              "port": "value"
-            },
-            "itemLabelTemplate": "{{activityId}}",
-            "itemEventValueField": "queueInstanceId",
-            "itemMetaTemplate": "第{{receivedDay}}天 · {{receivedTime}}分钟 · {{queueStatus}}",
-            "itemGroupField": "receivedDay",
-            "itemGroupClassName": "dialogue-contact-group",
-            "itemClassName": "dialogue-contact-row",
-            "events": {
-              "onItemClick": {
-                "cl2": "/** CL2 export for activity data/windows/dialogue.json.root.children[0].children[1].events.onItemClick Generated from canonical blueprint JSON. */ start: flowStart(); remember: setVariable(\"social:selectedInstance\", {\"variable\":\"event:value\"}); replay: callApi(\"engine.activity.replay\", {\"queueId\":\"social\",\"instanceId\":{\"variable\":\"event:value\"},\"displayTo\":\"dorm-bottom\"}); end: end();"
-              }
-            }
-          }
-        ]
-      },
-      {
         "widgetId": "dialogue-panel",
         "type": "dialogue",
-        "displayTo": "dorm-bottom",
+        "displayTo": "his-app",
         "displayAliases": [
-          "his-app",
           "default"
         ],
         "className": "dialogue-panel panel-inset dialogue-transcript"

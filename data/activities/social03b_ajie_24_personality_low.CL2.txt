@@ -35,7 +35,7 @@ n6: text("dorm-bottom", "player", "评分都不能看吗……") {
 
 n7: text("dorm-bottom", "阿杰", "不能看。进去抽个卡，“三重馈赠”。 这活动名字听起来像发誓似的。");
 
-choice8: choice(2, "好吧，那我不看了。", "他人的观点是智慧的结晶。") {
+choice8: choice([{"label":"好吧，那我不看了。"},{"label":"他人的观点是智慧的结晶。"}], 2, "dlg:choice8:select") {
     option<1> choice8_op0;
     option<2> choice8_op1;
 };
@@ -74,7 +74,7 @@ n16: text("dorm-bottom", "阿杰", "充钱就像上供，只能得到保底作�
 
 end: end();
 
-choice_final_20: choice(2, "是不是我不够虔诚？", "能赢我怎么样都行。") {
+choice_final_20: choice([{"label":"是不是我不够虔诚？"},{"label":"能赢我怎么样都行。"}], 2, "dlg:choice_final_20:select") {
     option<1> choice_final_20_op0;
     option<2> choice_final_20_op1;
 };

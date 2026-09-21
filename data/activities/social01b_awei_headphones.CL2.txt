@@ -45,7 +45,7 @@ n11: text("dorm-bottom", "阿伟", "难道是我幻听了？我总觉得这里�
     default consume_time_20_7;
 };
 
-choice12: choice(2, "是什么声音？", "要不你换首歌试试？") {
+choice12: choice([{"label":"是什么声音？"},{"label":"要不你换首歌试试？"}], 2, "dlg:choice12:select") {
     option<1> choice12_op0;
     option<2> choice12_op1;
 };

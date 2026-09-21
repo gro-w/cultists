@@ -37,7 +37,10 @@ export class TextChoiceWidget {
   _buildDom() {
     this.el = document.createElement("div");
     this.el.className = "ng-dialogue-view";
-    this.el.innerHTML = '<div class="ng-ending-portraits"><div class="ng-ending-portrait ng-ending-portrait-player"><span>主控</span></div><div class="ng-ending-portrait ng-ending-portrait-npc"><span>角色</span></div></div><div class="ng-dialogue-transcript"></div><div class="ng-dialogue-controls"></div>';
+    const portraits = this.displayTo === "ending-screen"
+      ? '<div class="ng-ending-portraits"><div class="ng-ending-portrait ng-ending-portrait-player"></div><div class="ng-ending-portrait ng-ending-portrait-npc"></div></div>'
+      : "";
+    this.el.innerHTML = `${portraits}<div class="ng-dialogue-transcript"></div><div class="ng-dialogue-controls"></div>`;
     this.transcriptEl = this.el.querySelector(".ng-dialogue-transcript");
     this.controlsEl = this.el.querySelector(".ng-dialogue-controls");
   }
@@ -54,6 +57,7 @@ export class TextChoiceWidget {
     else if (payload.type === "choice") this._onChoice(payload);
     else if (payload.type === "media") this._onMedia(payload);
     else if (payload.type === "media-end") this._onMediaEnd();
+    else if (payload.type === "complete") this._onComplete(payload);
   }
 
   reset() {
@@ -61,6 +65,7 @@ export class TextChoiceWidget {
     this.controlsEl.replaceChildren();
     this.el.classList.remove("has-content");
     this._lastEventKey = null;
+    this._endingSessionKind = null;
   }
 
   addAliases(aliases = []) {
@@ -77,6 +82,7 @@ export class TextChoiceWidget {
     if (this._lastEventKey === eventKey) return;
     this._lastEventKey = eventKey;
     this._activeInstanceId = payload.instanceId || null;
+    if (payload.sessionKind) this._endingSessionKind = payload.sessionKind;
     this.el.classList.add("has-content");
     if (this.displayTo === "ending-screen") this._updateEndingPortraits(payload.speaker);
     const line = document.createElement("p");
@@ -194,7 +200,7 @@ export class TextChoiceWidget {
     if (!this._accepts(payload)) return;
     if (payload.instanceId && payload.instanceId !== this._activeInstanceId) return;
     this.controlsEl.replaceChildren();
-    if (this.displayTo !== "ending-screen") return;
+    if (this.displayTo !== "ending-screen" || this._endingSessionKind !== "roommate") return;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "ng-dialogue-continue";

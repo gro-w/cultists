@@ -84,6 +84,13 @@
 - Activity 蓝图开发编辑器必须提供图形蓝图与 CL2 文本源码之间的显式切换；切换回图形模式前必须解析并验证 CL2，解析失败不得覆盖当前图形草稿。
 - 依赖 `GameClock` 的公共变量同步源必须在注册后立即初始化同步，再订阅后续时钟变化；不能让启动 Activity 先看到默认零值而永久停在 `blockUntil`。
 - CL2 `inputvalue` 声明解析后必须保留 `valueReceiver` 分类；窗口组件数值蓝图中的数值接收节点不得在源码/图形往返时降级为普通数值节点。
+- 纯数值蓝图只验证数值节点、数值接收节点和数值连线，不得要求 `flowStart`、流程出口或流程连线；`blockUntil` 的单一布尔参数必须绑定到 `condition`。
+- 普通问诊对话组件不得渲染结局立绘占位标签；`dorm-bottom` 必须只路由到 `ending-screen`，不能继续作为普通对话窗口的接收目标。
+- 窗口调试器属于运行时调试工具，必须放在开发人员模式窗口的下方“调试器（运行时 / 存档状态）”区域，不得归入上方 JSON 数据编辑器区域。
+- 下班模式中所有“交流”和室友条目按钮必须直接运行对应 Activity，由 `dorm-bottom` 路由自动打开 `ending-screen`；不得先调用 `openWindow("dialogue")`。
+- `activityExpiry.expires` 是“启用绝对过期时间”的标志，不是“已过期”结果；只有标志为 true 时才比较 `expiresAt`，否则 Activity 不得因该字段被拒绝。
+- `dorm-bottom` 的文本节点即使未声明 `continueKey` 也必须由通用 ActivityRunner 生成稳定的节点等待键；室友结局窗口的继续按钮必须真正推进 Activity，而不是只更新 DOM。
+- CL2 `choice` 必须同时保存 `options` 标签、`optionCount` 和稳定 `selectionKey`；只有流程分支而没有选项数据时不得渲染成继续按钮或空控件。
 
 1. 使用 `patch` 或 `write_file` 修改，只改任务需要的文件。
 2. 每次对代码、数据 schema、引擎架构、层职责、开发命令、版权或发布行为做出修改后，必须检查并同步更新 `AGENTS.md`、`agent-notes.md` 和 `README.md`。三份文档分别保持：代理规则、代理补充信息、人类阅读介绍；不能只更新其中一份。

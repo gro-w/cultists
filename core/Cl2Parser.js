@@ -104,7 +104,7 @@ function parseLiteral(text) {
 function functionNameToType(name) { return name === "end" ? "activityEnd" : name; }
 function inputPorts(type) { return getActivityNodeDefinition(type)?.valueInputs || []; }
 function literalType(value, reusable) {
-  if (value?.nodeId) return reusable[value.nodeId]?.outputType || "any";
+  if (value?.nodeId) return value.outputType || reusable[value.nodeId]?.outputType || "any";
   if (typeof value === "boolean") return "bool";
   if (typeof value === "number") return "number";
   if (typeof value === "string") return "string";
@@ -139,6 +139,9 @@ function makeInputs(type, args, reusable = {}) {
       ...(args.length === 5 ? { keywordIds: args[3], continueKey: args[4] } : {}),
     };
   }
+  if (type === "blockUntil" && args.length === 1) {
+    return { condition: args[0] };
+  }
   const ports = inputPorts(type);
   const inputs = {};
   const unused = ports.map((port) => port.name);
@@ -146,7 +149,14 @@ function makeInputs(type, args, reusable = {}) {
     const actualType = literalType(arg, reusable);
     const positional = ports[index];
     const matches = (port) => port && (port.type === "any" || actualType === "any" || port.type === actualType);
-    const selected = matches(positional) ? positional : ports.find((port) => unused.includes(port.name) && matches(port));
+    // Prefer an exact typed port over an earlier catch-all port. This matters
+    // for single-argument boolean conditions such as blockUntil(condition):
+    // its legacy compatibility ports include `equals:any` before
+    // `condition:bool`, but the bool must bind to condition or the runner
+    // waits on an undefined variable key forever.
+    const positionalExact = positional && positional.type !== "any" && actualType !== "any" && positional.type === actualType;
+    const exact = unused.find((port) => port.type !== "any" && actualType !== "any" && port.type === actualType);
+    const selected = positionalExact ? positional : exact || ports.find((port) => unused.includes(port.name) && matches(port));
     const name = selected?.name || positional?.name || `arg${index + 1}`;
     const position = unused.indexOf(name);
     if (position >= 0) unused.splice(position, 1);

@@ -200,7 +200,7 @@
             "text": "《皇者荣耀》 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
               }
             }
           },
@@ -210,7 +210,7 @@
             "text": "测评耳机 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
               }
             }
           },
@@ -220,7 +220,7 @@
             "text": "闲聊池 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social02a_ajie_chat\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social02a_ajie_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -230,7 +230,7 @@
             "text": "闲聊池 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social02a_awei_chat\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social02a_awei_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -240,7 +240,7 @@
             "text": "宿舍集体活动邀请 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social02b_dorm_invite\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social02b_dorm_invite\", \"social\"); end: end();"
               }
             }
           },
@@ -250,7 +250,7 @@
             "text": "《第二十四人格》 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_ajie_24_personality_high\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_ajie_24_personality_high\", \"social\"); end: end();"
               }
             }
           },
@@ -260,7 +260,7 @@
             "text": "《第二十四人格》 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[6].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_ajie_24_personality_low\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[6].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_ajie_24_personality_low\", \"social\"); end: end();"
               }
             }
           },
@@ -270,7 +270,7 @@
             "text": "尾款风云 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[7].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_awei_tail_high\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[7].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_awei_tail_high\", \"social\"); end: end();"
               }
             }
           },
@@ -280,7 +280,7 @@
             "text": "尾款风云 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[8].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social03b_awei_tail_low\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[8].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_awei_tail_low\", \"social\"); end: end();"
               }
             }
           },
@@ -290,7 +290,7 @@
             "text": "闲聊池 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[9].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social04a_ajie_chat\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[9].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social04a_ajie_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -300,7 +300,7 @@
             "text": "闲聊池 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[10].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social04a_awei_chat\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[10].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social04a_awei_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -310,7 +310,7 @@
             "text": "宿舍集体活动邀请 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[11].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social04b_dorm_invite\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[11].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social04b_dorm_invite\", \"social\"); end: end();"
               }
             }
           },
@@ -320,7 +320,7 @@
             "text": "【海底O火锅】 · 海底O火锅",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[12].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day5\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[12].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day5\", \"social\"); end: end();"
               }
             }
           },
@@ -330,7 +330,7 @@
             "text": "【谷子店】 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[13].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_ajie_goods_high\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[13].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_ajie_goods_high\", \"social\"); end: end();"
               }
             }
           },
@@ -340,7 +340,7 @@
             "text": "【谷子店】 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[14].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_ajie_goods_low\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[14].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_ajie_goods_low\", \"social\"); end: end();"
               }
             }
           },
@@ -350,7 +350,7 @@
             "text": "【线下唱片店】 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[15].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_awei_record_high\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[15].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_awei_record_high\", \"social\"); end: end();"
               }
             }
           },
@@ -360,7 +360,7 @@
             "text": "【线下唱片店】 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[16].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social05b_awei_record_low\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[16].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_awei_record_low\", \"social\"); end: end();"
               }
             }
           },
@@ -370,7 +370,7 @@
             "text": "闲聊池 · 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[17].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social06a_ajie_chat\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[17].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social06a_ajie_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -380,7 +380,7 @@
             "text": "闲聊池 · 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[18].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social06a_awei_chat\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[18].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social06a_awei_chat\", \"social\"); end: end();"
               }
             }
           },
@@ -390,7 +390,7 @@
             "text": "第1天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[19].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[19].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
               }
             }
           },
@@ -400,7 +400,7 @@
             "text": "第2天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[20].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day2\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[20].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day2\", \"social\"); end: end();"
               }
             }
           },
@@ -410,7 +410,7 @@
             "text": "第3天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[21].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day3\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[21].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day3\", \"social\"); end: end();"
               }
             }
           },
@@ -420,7 +420,7 @@
             "text": "第4天宿舍集体活动 · 宿舍集体活动",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[22].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day4\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[22].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day4\", \"social\"); end: end();"
               }
             }
           }
@@ -481,7 +481,7 @@
                 "text": "交流",
                 "events": {
                   "onClick": {
-                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[0].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[0].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
                   }
                 }
               },
@@ -544,7 +544,7 @@
                 "text": "交流",
                 "events": {
                   "onClick": {
-                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[1].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[1].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
                   }
                 }
               },
@@ -607,7 +607,7 @@
                 "text": "交流",
                 "events": {
                   "onClick": {
-                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
                   }
                 }
               },
@@ -638,7 +638,7 @@
             "text": "👦 阿杰",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
               }
             }
           },
@@ -648,7 +648,7 @@
             "text": "👩 阿伟",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
               }
             }
           },
@@ -658,7 +658,7 @@
             "text": "🧒 彬彬",
             "events": {
               "onClick": {
-                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"dialogue\"); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
               }
             }
           }

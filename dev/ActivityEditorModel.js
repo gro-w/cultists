@@ -1,7 +1,7 @@
 // DEV-TOOLS:START
 import { t } from "../core/i18n/index.js";
 import { normalizeBlueprint, validateBlueprint } from "../core/ActivityValidator.js";
-import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "../core/ActivityNodeRegistry.js";
+import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible, classifyActivityNodePorts } from "../core/ActivityNodeRegistry.js";
 import { serializeCl2 } from "../core/Cl2Serializer.js";
 
 /**
@@ -40,7 +40,7 @@ function isWireRef(value) {
   return Boolean(value && typeof value === "object" && !Array.isArray(value) && "nodeId" in value);
 }
 
-export function createActivityEditorModel({ activityId, blueprint, displayName } = {}) {
+export function createActivityEditorModel({ activityId, blueprint, displayName, valueOnly = false } = {}) {
   let current = normalizeBlueprint(blueprint || {});
   Object.values(current.nodes).forEach((node, index) => {
     if (!Number.isFinite(Number(node.x))) node.x = 80 + (index % 4) * 220;
@@ -386,7 +386,24 @@ export function createActivityEditorModel({ activityId, blueprint, displayName }
 
   /** Structural + port-compatibility validation (§6.3), independent of the runtime's own validateBlueprint. */
   function validateForSave() {
-    return validateBlueprint(current);
+    if (!valueOnly) return validateBlueprint(current);
+    const errors = [];
+    for (const node of Object.values(current.nodes || {})) {
+      const definition = getActivityNodeDefinition(node.type);
+      const nodeClass = node.cl2Class || classifyActivityNodePorts(definition);
+      if (!definition) {
+        errors.push(`Unknown value node ${node.id}: ${node.type}`);
+      } else if (nodeClass !== "value" && nodeClass !== "valueReceiver") {
+        errors.push(`Value blueprint node ${node.id} is not a value node or value receiver`);
+      }
+      for (const [port, value] of Object.entries(node.inputs || {})) {
+        if (!isWireRef(value)) continue;
+        const source = current.nodes[value.nodeId];
+        if (!source) errors.push(`${node.id}.${port} references missing node ${value.nodeId}`);
+        else if (!getActivityNodePort(source.type, "output", value.port || "value")) errors.push(`${node.id}.${port} references missing value output ${value.nodeId}.${value.port || "value"}`);
+      }
+    }
+    return { ok: errors.length === 0, errors, blueprint: exportBlueprint() };
   }
 
   /** The one canonical export: a plain blueprint object, including each node's presentation position. */

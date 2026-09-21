@@ -29,8 +29,9 @@ const ZOOM_STEP = 0.1;
  * independent models + views.
  */
 export class ActivityEditorView {
-  constructor({ activityId, blueprint, displayName, onSaveToMemory, onRenameId, dataFileName } = {}) {
-    this.model = createActivityEditorModel({ activityId, blueprint, displayName });
+  constructor({ activityId, blueprint, displayName, onSaveToMemory, onRenameId, dataFileName, valueOnly = false } = {}) {
+    this.valueOnly = Boolean(valueOnly);
+    this.model = createActivityEditorModel({ activityId, blueprint, displayName, valueOnly: this.valueOnly });
     this.onSaveToMemory = onSaveToMemory || (() => {});
     this.onRenameId = onRenameId || (() => {});
     this.dataFileName = dataFileName || null;
@@ -176,10 +177,16 @@ export class ActivityEditorView {
       this.sourceEl.focus();
       return;
     }
-    const parsed = parseCl2(this.sourceEl.value, { sourcePath: this.dataFileName || "<editor>", validate: true });
+    const parsed = parseCl2(this.sourceEl.value, { sourcePath: this.dataFileName || "<editor>", validate: !this.valueOnly });
     if (!parsed.ok) {
       const details = parsed.diagnostics.map((item) => item.message || String(item)).join("；");
       this._setStatus(`${t("legacy.2da7449d8887")}: ${details}`, true);
+      return;
+    }
+    const candidateModel = createActivityEditorModel({ activityId: this.model.activityId, blueprint: parsed.graph, displayName: this.model.displayName, valueOnly: this.valueOnly });
+    const validation = candidateModel.validateForSave();
+    if (!validation.ok) {
+      this._setStatus(`${t("legacy.2da7449d8887")}: ${validation.errors.join("；")}`, true);
       return;
     }
     this.model.loadBlueprint(parsed.graph);

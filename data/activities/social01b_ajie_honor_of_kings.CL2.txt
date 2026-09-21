@@ -33,7 +33,7 @@ protect: text("dorm-bottom", "阿杰", "有我带你。况且你现在是新手�
 
 ask_win: text("dorm-bottom", "player", "你能保证会赢吗？要不我还是再去看看攻略？"); /** @cl2.pos 2100,360 */
 
-first_choice: choice(2) {
+first_choice: choice([{"label":"那我相信你。"},{"label":"要不咱也充点钱。"}], 2, "dlg:first_choice:select") {
     option<1> first_favor_plus;
     option<2> first_favor_minus;
 }; /** @cl2.pos 2380,360 */
@@ -80,7 +80,7 @@ push_tower: text("dorm-bottom", "阿杰", "快去推塔，我们快赢了。") {
     default consume_time_20_10;
 }; /** @cl2.pos 4900,360 */
 
-second_choice: choice(2) {
+second_choice: choice([{"label":"呼，没想到这么快就结束了，好刺激。"},{"label":"要是有攻略刚才我肯定不会死。死掉的感觉太糟糕了，哪怕是在游戏里。"}], 2, "dlg:second_choice:select") {
     option<1> second_favor_plus;
     option<2> second_favor_minus;
 }; /** @cl2.pos 5180,360 */

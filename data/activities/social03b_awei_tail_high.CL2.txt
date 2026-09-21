@@ -43,7 +43,7 @@ n9: text("dorm-bottom", "阿伟", "虽然还是不够……不过谢谢你。") 
     default consume_time_20_6;
 };
 
-choice10: choice(2, "你可以再去问问别人。", "你不会不还吧，为了听《月之暗面》你烧了不少钱了。") {
+choice10: choice([{"label":"你可以再去问问别人。"},{"label":"你不会不还吧，为了听《月之暗面》你烧了不少钱了。"}], 2, "dlg:choice10:select") {
     option<1> choice10_op0;
     option<2> choice10_op1;
 };
@@ -86,7 +86,7 @@ n20: text("dorm-bottom", "阿伟", "好像是怎么给自己开刀做手术的�
 
 end: end();
 
-choice_final_24: choice(2, "不会是过几天“医师资格考试”泄题了吧。", "你刷题刷魔怔了。") {
+choice_final_24: choice([{"label":"不会是过几天“医师资格考试”泄题了吧。"},{"label":"你刷题刷魔怔了。"}], 2, "dlg:choice_final_24:select") {
     option<1> choice_final_24_op0;
     option<2> choice_final_24_op1;
 };

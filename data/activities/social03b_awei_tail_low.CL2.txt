@@ -41,7 +41,7 @@ n9: text("dorm-bottom", "阿伟", "肯定还得起，不过是最近手头紧一
     default consume_time_20_6;
 };
 
-choice10: choice(2, "你要不再去问问别人。", "你不会不还吧，为了听《月之暗面》你烧了不少钱了。") {
+choice10: choice([{"label":"你要不再去问问别人。"},{"label":"你不会不还吧，为了听《月之暗面》你烧了不少钱了。"}], 2, "dlg:choice10:select") {
     option<1> choice10_op0;
     option<2> choice10_op1;
 };
@@ -80,7 +80,7 @@ n19: text("dorm-bottom", "player", "说的是什么？") {
 
 end: end();
 
-choice_final_23: choice(2, "你说来听听。", "当然不，你不是在开玩笑吗？") {
+choice_final_23: choice([{"label":"你说来听听。"},{"label":"当然不，你不是在开玩笑吗？"}], 2, "dlg:choice_final_23:select") {
     option<1> choice_final_23_op0;
     option<2> choice_final_23_op1;
 };

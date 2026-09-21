@@ -41,7 +41,7 @@ n9: text("dorm-bottom", "player", "那我看看评分。") {
 
 n10: text("dorm-bottom", "阿杰", "别人的观点会腐蚀你的脑子。");
 
-choice11: choice(2, "是么？那我不看了。", "他人的观点是智慧的结晶。") {
+choice11: choice([{"label":"是么？那我不看了。"},{"label":"他人的观点是智慧的结晶。"}], 2, "dlg:choice11:select") {
     option<1> choice11_op0;
     option<2> choice11_op1;
 };
@@ -84,7 +84,7 @@ n21: text("dorm-bottom", "阿杰", "不就该是两个人吗？我和你。") {
 
 end: end();
 
-choice_final_25: choice(2, "是吗？好像也对。", "不对啊，我，你……我进来之前这个我和你就在大厅里了。") {
+choice_final_25: choice([{"label":"是吗？好像也对。"},{"label":"不对啊，我，你……我进来之前这个我和你就在大厅里了。"}], 2, "dlg:choice_final_25:select") {
     option<1> choice_final_25_op0;
     option<2> choice_final_25_op1;
 };

@@ -86,6 +86,8 @@ def _normalize(blueprint: dict[str, Any], diagnostics: list[str]) -> tuple[dict[
         node["id"] = node.get("id") or raw_id
         node["inputs"] = dict(node.get("inputs") or {})
         node["next"] = dict(node.get("next") or {})
+        if node.get("type") == "choice" and "options" not in node["inputs"]:
+            node["inputs"]["options"] = json.loads(json.dumps(node.get("options") or []))
         legacy_type = node.get("type")
         node["type"] = NODE_TYPE_MAP.get(legacy_type, legacy_type)
         if legacy_type == "statOperation":

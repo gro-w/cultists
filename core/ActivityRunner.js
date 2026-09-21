@@ -549,12 +549,19 @@ export function createActivityRunner({
       }
 
       case "text": {
-        const continueKey = resolveInput(blueprint, node, "continueKey", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+        const displayTo = resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway, dbGateway, runtimeGateway);
+        const authoredContinueKey = resolveInput(blueprint, node, "continueKey", variableStore, undefined, undefined, pvGateway, dbGateway, runtimeGateway);
+        // Roommate dialogue is presented in the galgame-style ending window.
+        // Legacy social CL2 lines often omitted continueKey because they were
+        // previously rendered by an auto-advancing dialogue panel. Give those
+        // lines a stable per-node wait key so the visible Continue button is
+        // the actual Activity synchronization point.
+        const continueKey = authoredContinueKey || (displayTo === "dorm-bottom" ? `dlg:${node.id}:continue` : null);
         const payload = {
           instanceId: instance.instanceId,
           speaker: resolveInput(blueprint, node, "speaker", variableStore, "", undefined, pvGateway, dbGateway, runtimeGateway),
           text: resolveInput(blueprint, node, "text", variableStore, "", undefined, pvGateway, dbGateway, runtimeGateway),
-          displayTo: resolveInput(blueprint, node, "displayTo", variableStore, "default", undefined, pvGateway, dbGateway, runtimeGateway),
+          displayTo,
           keywordIds: resolveInput(blueprint, node, "keywordIds", variableStore, [], undefined, pvGateway, dbGateway, runtimeGateway),
           continueKey: continueKey || null,
         };

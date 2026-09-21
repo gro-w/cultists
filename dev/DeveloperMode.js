@@ -231,6 +231,7 @@ export async function initDeveloperMode({
       activityId: windowId,
       blueprint,
       displayName,
+      valueOnly: true,
       onSaveToMemory,
     });
     const definition = windowDefinitionStore.register({
@@ -484,7 +485,6 @@ export async function initDeveloperMode({
       <h4>${t("legacy.50aed45e1389")}JSON ${t("legacy.736e99f26407")}</h4>
       <button type="button" class="ng-dev-desktop-icon" data-tool="list-manager"><span class="ng-dev-icon-glyph">🛠</span><span>Activity ${t("legacy.35bd37ad3381")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="window-manager"><span class="ng-dev-icon-glyph">🪟</span><span>${t("legacy.3b195364abf4")}</span></button>
-      <button type="button" class="ng-dev-desktop-icon" data-tool="window-debugger"><span class="ng-dev-icon-glyph">🔍</span><span>窗口调试器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="icon-editor"><span class="ng-dev-icon-glyph">🖱</span><span>${t("legacy.f670ba061ea9")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="structure-manager"><span class="ng-dev-icon-glyph">🧱</span><span>${t("legacy.aee22ce678c6")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="database-debugger"><span class="ng-dev-icon-glyph">🗄</span><span>${t("legacy.df85571b280e")}</span></button>
@@ -499,6 +499,7 @@ export async function initDeveloperMode({
     </div>
     <div class="ng-dev-launcher-section">
       <h4>${t("legacy.a6990bcae9a8")}</h4>
+      <button type="button" class="ng-dev-desktop-icon" data-tool="window-debugger"><span class="ng-dev-icon-glyph">🔍</span><span>窗口调试器</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="debugger"><span class="ng-dev-icon-glyph">🐞</span><span>${t("legacy.881ffd8a0a2c")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="save-debugger"><span class="ng-dev-icon-glyph">💾</span><span>${t("legacy.c7a86028fa21")}</span></button>
       <button type="button" class="ng-dev-desktop-icon" data-tool="public-variable-debugger"><span class="ng-dev-icon-glyph">🧮</span><span>${t("legacy.ac44fa7035df")}</span></button>

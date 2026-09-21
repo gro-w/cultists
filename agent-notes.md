@@ -141,3 +141,10 @@ node tools/verify-publish.js
 - Activity 编辑器工具栏提供“CL2 脚本编辑器/蓝图编辑器”切换；图形模式导出当前草稿为 CL2，源码模式切回图形模式前执行解析和完整验证，失败时保留源码和原图形草稿。
 - 启动时 `gameTimeMinutes` 公共变量在注册 `GameClock` 同步源后立即同步；否则患者队列管理器在第 1 天 08:00 会读取默认零值并停在首个 `blockUntil`，HIS 的 `hisPatients` 集合为空。
 - 窗口组件数值蓝图的 `inputvalue` 节点在 CL2 解析后保留 `cl2Class: "valueReceiver"`，编辑器以独立样式显示，序列化时继续输出 `inputvalue`，避免源码/蓝图切换改变节点类别。
+- `blockUntil(condition)` 的单参数布尔 CL2 形式固定绑定 `condition`，不能落到兼容性的 `equals` 输入；这保证启动患者队列管理器在 08:00 立即插入首批患者。纯数值编辑器使用独立验证，不要求流程起点和终点。
+- 普通 `dialogue` 窗口的主接收目标是 `his-app`，只保留 `default` 别名且不创建结局立绘占位 DOM；`dorm-bottom` 由引擎路由到全屏 `ending-screen`，避免室友对白同时落入普通对话框。
+- 开发人员模式的窗口调试器位于下方运行时调试器区域，与 Activity、存档、公共变量和时间调试器并列；窗口定义编辑器仍位于上方数据编辑区域。
+- 下班模式的交流按钮和室友条目已移除普通 `dialogue` 窗口打开节点，直接运行 Activity；首条 `dorm-bottom` 显示事件负责打开结局窗口，避免出现空的对话框。
+- 社交 Activity 的 `activityExpiry[true, 2880]` 表示启用第 2 天绝对过期边界，不表示当前已过期；可用性判断已改为只在启用标志为 true 时比较 `expiresAt`，修复点击交流无反应。
+- 旧社交 CL2 对白常省略 `continueKey`；ActivityRunner 对 `dorm-bottom` 自动生成 `dlg:<nodeId>:continue`，让结局窗口显示继续按钮并在点击后推进到下一句，最终完成事件再显示关闭会话按钮。
+- 社交分支 Activity 的 CL2 `choice` 节点已补回选项标签和 `dlg:<nodeId>:select` 选择键；运行时会渲染选项按钮并把索引写回 Activity 等待变量。

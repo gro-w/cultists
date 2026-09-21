@@ -194,7 +194,11 @@ export async function bootstrap(rootEl) {
       if (dialogueState) windowManager.close(dialogueState.instanceId);
     }
     if (resolvedTarget === "ending-screen" && !windowManager.getByWindowId("ending-screen")) shell.openWindow("ending-screen");
-    return dialogueRegistry.dispatch(resolvedTarget, { ...payload, displayTo: resolvedTarget });
+    return dialogueRegistry.dispatch(resolvedTarget, {
+      ...payload,
+      displayTo: resolvedTarget,
+      ...(isRoommateDialogue ? { sessionKind: "roommate" } : {}),
+    });
   };
   // Paint icons before loading the Activity catalogue. The catalogue can be
   // large; taskbar and desktop must become visible as one initial surface.
@@ -252,6 +256,7 @@ export async function bootstrap(rootEl) {
       const payload = { ...entry, displayTo, continueKey: null, instanceId: entry.instanceId || instanceId };
       runtimeGateway.dispatchDisplay(displayTo, { ...payload, type: "text" });
     });
+    runtimeGateway.dispatchDisplay(displayTo, { displayTo, instanceId, type: "complete" });
     return { ok: true, instanceId, count: textEntries.length };
   });
   apiGateway.register("engine.activity.cancel", ({ instanceId }) => execution.cancel(instanceId));

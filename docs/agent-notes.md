@@ -1,6 +1,6 @@
 # agent-notes.md
 
-本文件是给编码代理使用的项目补充说明。必须遵守的规则在 [`AGENTS.md`](AGENTS.md)，人类阅读版在 [`README.md`](README.md)。本文只记录当前融合引擎的背景、目录、入口和验证方法，不把旧引擎或 NG 引擎描述成可运行的并行系统。
+本文件是给编码代理使用的项目补充说明。必须遵守的规则在 [`AGENTS.md`](../AGENTS.md)，人类阅读版在 [`README.md`](../README.md)。本文只记录当前融合引擎的背景、目录、入口和验证方法，不把旧引擎或 NG 引擎描述成可运行的并行系统。
 
 ## 项目概览
 
@@ -112,20 +112,23 @@ node tools/verify-publish.js
 任何 agent 修改代码、数据 schema、引擎分层、开发命令、版权边界或发布行为后，必须在同一任务中检查并更新以下三份文档：
 
 - `AGENTS.md`：更新必须遵守的规则和架构约束
-- `agent-notes.md`：更新实现索引、命令和维护补充信息
+- `docs/agent-notes.md`：更新实现索引、命令和维护补充信息
 - `README.md`：更新面向人类读者的项目描述和使用方式
 
 完成修改前应搜索三份文档中的旧名称、旧路径、旧层职责和旧许可证，避免只更新一份文档造成互相矛盾。
 
+文档归属判断：只有所有后续任务都必须遵守的稳定约束才进入 `AGENTS.md`；项目背景、实现索引、过程说明和可变信息进入本文件；面向人类的使用说明进入 `README.md`。
+
 ## 发布与版权
 
-`tools/publish.js` 生成玩家版 `publish/`，排除 `dev/`、`tools/`、`probes/`、`dev-server.js` 和迁移资料，并移除 `DEV-TOOLS` 区块；发布验证统一使用 `tools/verify-publish.js`，验证完成后自动删除 `publish/`。Cultists 引擎遵循根目录 [`copying.txt`](copying.txt) 的 BSD 2-Clause License；`game` 层游戏内容保留版权，除非内容文件另有声明，不得擅自再分发。外部素材和字体仍需分别确认许可证、保留来源和版权信息。项目不使用未经确认可商业使用的版权字体。
+`tools/publish.js` 生成玩家版 `publish/`，排除 `dev/`、`tools/`、`probes/`、`dev-server.js` 和迁移资料，并移除 `DEV-TOOLS` 区块；发布验证统一使用 `tools/verify-publish.js`，验证完成后自动删除 `publish/`。Cultists 引擎遵循根目录 [`copying.txt`](../copying.txt) 的 BSD 2-Clause License；`game` 层游戏内容保留版权，除非内容文件另有声明，不得擅自再分发。外部素材和字体仍需分别确认许可证、保留来源和版权信息。项目不使用未经确认可商业使用的版权字体。
 
 ## 相关文件
 
-- [`AGENTS.md`](AGENTS.md)：代理必须遵守的架构、版权、字体、修改和验证规则。
-- [`README.md`](README.md)：面向玩家、贡献者和普通读者的项目介绍。
-- [`docs/cl2-language.md`](docs/cl2-language.md)：CL2 统一脚本图语言设计草案。
+- [`AGENTS.md`](../AGENTS.md)：代理必须遵守的架构、版权、字体、修改和验证规则。
+- [`README.md`](../README.md)：面向玩家、贡献者和普通读者的项目介绍。
+- [`cl2-language.md`](cl2-language.md)：CL2 统一脚本图语言设计草案。
+- [`skills/cl2-script-authoring/SKILL.md`](skills/cl2-script-authoring/SKILL.md)：面向 Agent 的 CL2 脚本编写、迁移和验证流程。
 - `data/game-manifest.json`：当前内容包入口和初始状态。
 - `data/framework-manifest.json`：framework 文档与通用运行时连接。
 - `data/activity-manifest.json`：Activity ID 到蓝图文件的清单。
@@ -150,3 +153,4 @@ node tools/verify-publish.js
 - 社交分支 Activity 的 CL2 `choice` 节点已补回选项标签和 `dlg:<nodeId>:select` 选择键；运行时会渲染选项按钮并把索引写回 Activity 等待变量。
 - `ActivityRunner` 恢复等待中的文本节点时会先消费已设置的 continue key，再跳转下一节点；这避免重复显示上一句并确保下一节点的选项分支能够派发。
 - 社交 Activity 的 choice 通常未声明 `displayTo`；运行时现在继承上一条对白的 `dorm-bottom` 接收目标，确保结局窗口收到并替换继续按钮为选项按钮。
+- 选项点击唤醒 Activity 时，ActivityRunner 先消费已有选择并直接跳转 `option<n>`；不会重复发送相同 choice 事件造成界面看似无反应。

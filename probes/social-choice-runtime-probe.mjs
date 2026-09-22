@@ -30,7 +30,7 @@ execution.run({
     if (name.startsWith("display:")) events.push({ name, payload });
   },
   dbGateway: {},
-  pvGateway: { get: () => 0, evaluateCondition: () => false },
+  pvGateway: { get: () => 0, set: () => {}, increment: () => {}, evaluateCondition: () => false },
   runtimeGateway: {},
   eventStateGateway: { mark: () => {} },
   apiGateway: { call: () => null },
@@ -46,4 +46,9 @@ assert.ok(choice, "social choice event was not emitted");
 assert.equal(choice.payload.displayTo, "dorm-bottom");
 assert.equal(choice.payload.options.length, 2);
 assert.equal(choice.payload.selectionKey, "dlg:first_choice:select");
+variables.set(choice.payload.selectionKey, 0);
+await new Promise((resolve) => setTimeout(resolve, 0));
+const trustLine = events.find(({ payload }) => payload.text === "这就对了，你先签个到，一会听我指挥。");
+assert.ok(trustLine, "clicking the first choice did not enter option0 branch");
+assert.equal(events.filter(({ name }) => name === "display:choice").length, 1);
 console.log("social-choice-runtime-probe: ok");

@@ -37,6 +37,7 @@
 - 分支对白会从 CL2 的 `options` 和 `selectionKey` 渲染选项按钮，不会把选项节点误显示成普通“继续”。
 - 点击对白继续后，运行时会直接推进到下一节点，不会重复派发上一句文本，因此后续选项能够正常出现。
 - 未声明接收目标的社交选项会继承对白窗口目标，避免选项事件发送到默认窗口而无法显示。
+- 点击选项会先消费选择值再进入对应分支，避免重复派发 choice 事件导致按钮停留不动。
 
 ## 本地运行
 
@@ -122,9 +123,10 @@ Cultists 引擎（`core` 与 `framework`）遵循根目录 [`copying.txt`](copyi
 
 ## 贡献与进一步阅读
 
-- 修改引擎或迁移游戏数据后，应同步检查并更新 `AGENTS.md`、`agent-notes.md` 和本文件，分别保持代理规则、开发补充信息和人类阅读版说明一致
+- 修改引擎或迁移游戏数据后，应同步检查并更新 `AGENTS.md`、`docs/agent-notes.md` 和本文件，分别保持代理规则、开发补充信息和人类阅读版说明一致
 - [`AGENTS.md`](AGENTS.md)：贡献者和编码代理必须遵守的工程规则
-- [`agent-notes.md`](agent-notes.md)：目录、manifest、运行时职责和维护命令的补充说明
+- [`docs/agent-notes.md`](docs/agent-notes.md)：目录、manifest、运行时职责和维护命令的补充说明
 - [`docs/cl2-language.md`](docs/cl2-language.md)：CL2 统一脚本图语言、节点契约和单行内嵌格式
+- [`docs/skills/cl2-script-authoring/SKILL.md`](docs/skills/cl2-script-authoring/SKILL.md)：教 Agent 编写、迁移和验证 CL2 脚本
 - `data/game-manifest.json`：当前融合引擎的内容入口
 - `tools/publish.js`：玩家版发布脚本

@@ -1,6 +1,12 @@
-# CL2（Cultists Blueprint & Script Language 2）脚本图统一语言规范
+# CL2（Cultists Blueprint & Script Language 2）语言手册
 
-> 状态：当前生产规范。Activity 运行时、编辑器和内嵌蓝图均使用 CL2；旧 JSON 仅作为离线迁移审计输入。
+> 面向人类读者的 CL2 生产语言手册。Activity 运行时、编辑器和内嵌蓝图均使用 CL2；旧 JSON 仅作为离线迁移审计输入。
+>
+> Agent 编写 CL2 时应加载 [`docs/skills/cl2-script-authoring/SKILL.md`](skills/cl2-script-authoring/SKILL.md)，其中包含读取仓库契约、编辑文件和验证脚本的操作流程。
+
+## 阅读范围
+
+本手册说明 CL2 的语法、图语义、节点类型、值表达式、分支、循环、布局元数据和验证规则。它是语言契约，不是某个具体 Activity 的剧情或业务说明；具体函数和端口仍以项目的节点注册表为准。
 
 ## 1. 设计目标
 

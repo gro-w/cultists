@@ -1,6 +1,6 @@
 # AGENTS.md
 
-本文件是项目的编码代理合同，只记录必须遵守的规则。项目背景、目录索引、开发命令和实现说明见 [`agent-notes.md`](agent-notes.md)；面向人类读者的项目介绍见 [`README.md`](README.md)。本项目主要协助 **Cultists 引擎**（`core` 与 `framework`）开发，以及将 `game` 层内容适配、迁移到新引擎。
+本文件是项目的编码代理合同，只记录必须遵守的规则。项目背景、目录索引、开发命令和实现说明见 [`agent-notes.md`](docs/agent-notes.md)；面向人类读者的项目介绍见 [`README.md`](README.md)。本项目主要协助 **Cultists 引擎**（`core` 与 `framework`）开发，以及将 `game` 层内容适配、迁移到新引擎。
 
 ## 基本规则
 
@@ -58,7 +58,7 @@
 - 蓝图节点只能使用项目定义的合法端口组合；新增节点必须同时通过 schema 校验、运行时探针和相关编辑器验证。
 - CL2 内嵌值绑定必须递归解析；自定义流程节点的隐式 `default` 必须映射到其声明的首个流程出口，framework 宏不得调用未注册的领域 API。
 - 显示节点的 canonical `text` 调用使用 `displayTo, speaker, text, ...` 顺序；动态窗口组件复制必须合并模板事件，不能因生命周期事件覆盖 `onAdd`/`onRemove` 等交互蓝图。
-- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言规范见 [`docs/cl2-language.md`](docs/cl2-language.md)。Activity 运行时、定义存储和编辑器均使用 CL2；旧 JSON 仅作为迁移审计输入，不是生产 Activity source。CL2 采用显式节点 ID、`option<x>` 分支、`default` 默认出口、纯值函数和 `if` 回边。
+- CL2（Cultists Blueprint & Script Language 2）统一脚本图语言规范见 [`cl2-language.md`](cl2-language.md)。Activity 运行时、定义存储和编辑器均使用 CL2；旧 JSON 仅作为迁移审计输入，不是生产 Activity source。CL2 采用显式节点 ID、`option<x>` 分支、`default` 默认出口、纯值函数和 `if` 回边。
 - `tools/migration/blueprint_to_cl2.py` 是离线审计/再生成工具：读取旧 `data/activities/*.json`，写出 `*.CL2.txt` 和 `conversion-report.json`，不得作为生产 loader，也不得覆盖 CL2 canonical 文件；转换时必须区分四类节点，第 4 类使用 `inputvalue` 表达；有损或无法对应的旧端口必须保留在报告中。
 
 ## 数据、版权和字体
@@ -93,13 +93,15 @@
 - CL2 `choice` 必须同时保存 `options` 标签、`optionCount` 和稳定 `selectionKey`；只有流程分支而没有选项数据时不得渲染成继续按钮或空控件。
 - 文本节点从继续等待状态恢复时必须消费等待键并直接进入下一流程节点，不能再次派发同一句文本；否则后续 `choice` 永远不会到达界面。
 - 未声明 `displayTo` 的 `choice` 节点必须继承前一条对白的接收目标；否则下班模式的选项事件会落到 `default`，结局窗口只会残留“继续”按钮。
+- choice 等待恢复时必须先读取并消费已有的 `selectionKey`，再决定是否发送显示事件；不能在点击后再次发送同一 choice，阻止流程进入所选 `option` 分支。
 
 1. 使用 `patch` 或 `write_file` 修改，只改任务需要的文件。
-2. 每次对代码、数据 schema、引擎架构、层职责、开发命令、版权或发布行为做出修改后，必须检查并同步更新 `AGENTS.md`、`agent-notes.md` 和 `README.md`。三份文档分别保持：代理规则、代理补充信息、人类阅读介绍；不能只更新其中一份。
-3. 文档同步必须在同一个修改任务中完成，并检查三份文档之间的引擎名称、`core/framework/game` 边界、许可证和命令没有矛盾；纯文档修改也要检查是否影响另外两份。
-4. 修改 JavaScript 后执行 `node --check`；修改 JSON 后用 Python `json.load()` 全量校验；始终执行 `git diff --check`。
-5. 状态、存档、Activity 或边界改动必须增加或运行确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
-6. 需要验证发布产物时执行 `node tools/verify-publish.js`；该命令会生成并检查发布产物、检查入口语法，然后无论成功失败都删除 `publish/`。确认产物不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口。
-7. 静态检查、探针和浏览器交互验证要分别如实报告；没有真实运行就不能声称 UI 已验证。
-8. `dev-server.js` 提供静态文件时必须先解码 URL 百分号编码，再执行根目录穿越校验，以保证中文 canonical Activity 路径可加载。
-9. 除非用户明确要求，不创建 PR。
+2. 写入文档前先评估内容是否是所有后续任务都必须遵守的规则；只有这类稳定约束才写入 `AGENTS.md`，项目背景、实现索引、过程说明和可变信息写入 `docs/agent-notes.md`，面向人类的使用说明才写入 `README.md`。
+3. 每次对代码、数据 schema、引擎架构、层职责、开发命令、版权或发布行为做出修改后，必须检查并同步更新 `AGENTS.md`、`docs/agent-notes.md` 和 `README.md`。三份文档分别保持：代理规则、代理补充信息、人类阅读介绍；不能只更新其中一份。
+4. 文档同步必须在同一个修改任务中完成，并检查三份文档之间的引擎名称、`core/framework/game` 边界、许可证和命令没有矛盾；纯文档修改也要检查是否影响另外两份。
+5. 修改 JavaScript 后执行 `node --check`；修改 JSON 后用 Python `json.load()` 全量校验；始终执行 `git diff --check`。
+6. 状态、存档、Activity 或边界改动必须增加或运行确定性探针，覆盖初始值、边界、失败路径、恢复和副作用。
+7. 需要验证发布产物时执行 `node tools/verify-publish.js`；该命令会生成并检查发布产物、检查入口语法，然后无论成功失败都删除 `publish/`。确认产物不含 `DEV-TOOLS`、`DeveloperMode`、`dev-server.js` 或迁移/调试入口。
+8. 静态检查、探针和浏览器交互验证要分别如实报告；没有真实运行就不能声称 UI 已验证。
+9. `dev-server.js` 提供静态文件时必须先解码 URL 百分号编码，再执行根目录穿越校验，以保证中文 canonical Activity 路径可加载。
+10. 除非用户明确要求，不创建 PR。

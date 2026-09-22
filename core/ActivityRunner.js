@@ -596,6 +596,18 @@ export function createActivityRunner({
           // event and its stale Continue button remains visible.
           displayTo: resolveInput(blueprint, node, "displayTo", variableStore, lastDialogueDisplayTo || "default", undefined, pvGateway, dbGateway, runtimeGateway),
         };
+        const selected = selectionKey ? variableStore.get(selectionKey) : undefined;
+        // A wake-up caused by the button click must consume the selection and
+        // continue the graph. Re-emitting the same choice first can make the
+        // receiver look stuck and leaves the old controls mounted.
+        if (selected !== undefined && selected !== null) {
+          const index = Number(selected);
+          if (!Number.isInteger(index) || index < 0 || index >= optionCount) {
+            throw new Error(`Node ${node.id} received an out-of-range choice selection: ${selected}`);
+          }
+          if (selectionKey) variableStore.set(selectionKey, null);
+          return { next: nextFlow(blueprint, node, `option${index}`) };
+        }
         lastDialogueDisplayTo = payload.displayTo || lastDialogueDisplayTo;
         instance.transcript = Array.isArray(instance.transcript) ? instance.transcript : [];
         instance.transcript.push({ type: "choice", ...payload });
@@ -603,14 +615,7 @@ export function createActivityRunner({
         console.log("[NG dialogue] ActivityRunner choice node", { activityId: definition.id, nodeId: node.id, payload });
         /* DEV-TOOLS:END */
         eventGateway("display:choice", payload, instance, node);
-        const selected = selectionKey ? variableStore.get(selectionKey) : undefined;
-        if (selected === undefined || selected === null) return { wait: true };
-        const index = Number(selected);
-        if (!Number.isInteger(index) || index < 0 || index >= optionCount) {
-          throw new Error(`Node ${node.id} received an out-of-range choice selection: ${selected}`);
-        }
-        if (selectionKey) variableStore.set(selectionKey, null);
-        return { next: nextFlow(blueprint, node, `option${index}`) };
+        return { wait: true };
       }
       default: {
         const customDefinition = getActivityNodeDefinition(node.type);

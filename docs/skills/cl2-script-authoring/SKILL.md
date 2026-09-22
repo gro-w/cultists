@@ -39,7 +39,9 @@ metadata:
 - `if` 使用 `option<1>` 表示 true、`default` 表示 false。
 - `option<1,3,5>` 和 `option<1...4>` 只是连接语法糖，不是运行时范围判断。
 - `reusablevalue name: expression;` 定义纯值子图，引用写成 `name[]`；纯值不得推进时间、修改变量、打开窗口、触发事件或写存档。
-- 第四类数值接收节点用 `inputvalue receiver_id: expression;`，它是输入绑定，不是流程边或可调度节点。
+- CL2 节点按引脚分为流程节点、纯值节点、流程起点和数值接收节点；不要根据函数名称猜类别，先读注册表的 `flowInputs`、`flowOutputs`、`valueInputs` 和 `valueOutputs`。
+- 纯数值蓝图只验证纯值节点、数值接收节点及数值连线，不要求 `flowStart`、流程出口、流程边或 `activityEnd`；不要伪造流程节点来通过 Activity 校验。
+- 第四类数值接收节点用 `inputvalue receiver_id: expression;`，它是输入绑定，不是流程边、纯值输出或可调度节点；解析和回写时必须保留 `valueReceiver` 分类。
 - 循环使用普通流程回边，通常由 `if` 的 true 分支进入循环体、循环体回到条件节点；必须存在可达退出路径。
 - 布局写成 `/** @cl2.pos x,y */`；布局和 Note 不改变运行时语义。
 - 稳定 ID 不得由翻译文本、显示名称、患者姓名或语言目录生成。
@@ -60,7 +62,7 @@ metadata:
 
 ### 4. 处理值图
 
-需要复用的纯值表达式先定义为 `reusablevalue`，再在流程节点中用 `name[]` 引用。检查类型、前向引用和循环依赖。遇到数值接收节点时保留 `inputvalue` 的接收节点 ID 和输入槽语义，不能改写成普通流程节点或 `reusablevalue`。
+需要复用的纯值表达式先定义为 `reusablevalue`，再在流程节点或数值接收节点中用 `name[]` 引用。检查类型、前向引用和循环依赖。遇到数值接收节点时保留 `inputvalue` 的接收节点 ID 和输入槽语义，不能改写成普通流程节点或 `reusablevalue`；接收节点没有数值输出，不能作为其他表达式的值来源。
 
 ### 5. 修改文件
 
@@ -130,6 +132,8 @@ choose: playerselect(2, "选项一", "选项二", "其他") {
 - [ ] 入口、分支、默认回退和终止节点全部可达且无错误目标。
 - [ ] `choice`/`playerselect` 的标签、数量、selection key（若契约要求）和流程出口一致。
 - [ ] 纯值图无副作用、无循环依赖；`inputvalue` 没有被错误改写。
+- [ ] 纯数值蓝图没有被强行添加 `flowStart`、流程边、流程出口或 `activityEnd`。
+- [ ] 节点类别与注册表引脚契约一致；`inputvalue` 仍保持 `valueReceiver` 分类并绑定合法数值输入槽。
 - [ ] 循环有明确退出路径，暂停、存档和恢复不会依赖文本行号。
 - [ ] parser、validator、round-trip 和相关 runtime probe 真实通过。
 - [ ] 所有修改文件通过对应语法/数据校验和 `git diff --check`。
@@ -141,6 +145,8 @@ choose: playerselect(2, "选项一", "选项二", "其他") {
 - 不要把 `option<1...4>` 当作 `range(4, ...)`；前者连接多个端口，后者计算运行时数值区间。
 - 不要为循环新增专用 loop 节点；使用条件节点和普通回边。
 - 不要在流程函数中嵌入流程函数，也不要把有副作用的查询伪装成纯值函数。
+- 不要把纯数值蓝图当作 Activity 流程验证；它不需要 `flowStart`、`default`、流程边或 `end()`。
+- 不要把 `inputvalue` 当作 `reusablevalue`：前者只绑定接收节点输入，后者提供可复用的数值输出。
 - 不要以“文件数量相同”宣称迁移等价；至少比较 stable ID、出口、值边、可达性和运行时副作用。
 - 不要把源文件行号作为存档恢复或断点的持久化 ID。
 - 不要把通过静态 probe 说成完成了真实 UI 验证。

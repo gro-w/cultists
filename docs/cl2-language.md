@@ -465,13 +465,49 @@ a1            → node03.condition
 - 可复用值之间不能形成循环依赖
 - `a1[]` 必须引用已声明或最终可解析的可复用值
 
-蓝图中存在一类没有流程输入、流程输出和数值输出、但具有数值输入的数值接收节点。它不产生可复用值，也不是流程节点，使用 `inputvalue` 绑定其输入表达式：
+### 10.1 四类节点与纯数值蓝图
+
+节点类别由注册表的四组引脚决定，而不是由函数名称或文件位置猜测：
+
+| 类别 | 流程输入 | 流程输出 | 数值输入 | 数值输出 | CL2 形式 |
+| --- | --- | --- | --- | --- | --- |
+| 流程节点 | 有 | 可有 | 可有 | 无 | `node: function(...)` |
+| 纯值节点 | 无 | 无 | 可有 | 有 | `reusablevalue name: function[...]` |
+| 流程起点 | 无 | 有 | 可有 | 无 | `node: flowStart(...)` |
+| 数值接收节点 | 无 | 无 | 有 | 无 | `inputvalue receiver: function[...]` |
+
+纯数值蓝图只包含纯值节点、数值接收节点和它们之间的数值连线。它服务于窗口组件属性、筛选条件等需要计算值的声明式区域，不是一个可独立调度的 Activity 流程。因此：
+
+- 纯数值蓝图不要求 `flowStart`、流程出口、流程边或 `activityEnd`
+- 纯数值蓝图只验证数值节点、数值接收节点、输入引脚、数值输出和数值连线
+- 纯数值表达式不能推进时间、修改变量、打开窗口、触发事件或写存档
+- 不要为了满足 Activity 流程校验而伪造 `flowStart`、`default` 或 `end()`；这会把值图错误地变成流程图
+- 如果同一文件同时包含 Activity 流程，才按 Activity 流程规则要求唯一的 `flowStart`、可达终止节点和合法流程边
+
+数值接收节点没有数值输出，因此不能被 `reusablevalue` 引用；它只把一个纯值表达式绑定到自身声明的数值输入槽。使用 `inputvalue` 绑定其输入表达式：
 
 ```cl2
 inputvalue a1: math['gte', getlocalvar[1], 4];
 ```
 
 其中 `a1` 是数值接收节点的稳定 ID，右侧是普通纯值表达式。`inputvalue` 不产生流程边；同一接收节点的输入槽不得重复绑定，必填输入必须全部有字面量、数值边或 `inputvalue` 绑定。
+
+例如，下面是一个合法的纯数值蓝图片段：
+
+```cl2
+reusablevalue hasEnoughSan: math['gte', getpubvar[5], 20];
+inputvalue visibleWhen: hasEnoughSan[];
+```
+
+它只有一个可复用值和一个接收绑定，没有 `flowStart`、`default`、流程出口或 `end()`。`visibleWhen` 是接收节点的稳定 ID；它不是一个可被其他节点读取的值节点。
+
+下面的写法不合法：
+
+```cl2
+inputvalue visibleWhen: if(hasEnoughSan[]);
+```
+
+`if` 是流程节点，不是纯值函数；它不能出现在 `inputvalue` 的右侧。应使用返回 `bool` 的纯函数，例如 `hasEnoughSan[]` 或 `math['gte', ...]`。
 
 简单纯函数可以直接内联：
 
@@ -578,6 +614,7 @@ option<x>          ↔ 一个指定流程出口
 纯函数调用         ↔ 一个数值节点
 纯函数参数引用     ↔ 一条数值边
 reusablevalue      ↔ 一个命名的纯值子图入口
+inputvalue         ↔ 一个数值接收节点及其输入绑定
 @cl2.pos           ↔ 节点布局元数据
 ```
 
@@ -643,6 +680,10 @@ option 端口规则
 13. 不可达节点和不可达分支检查
 14. 流程环和循环出口检查
 15. 终止节点没有流程出口的检查
+16. 节点引脚类别检查：流程、纯值、流程起点和数值接收节点不得混用非法引脚组合
+17. 纯数值蓝图不得被错误要求 `flowStart`、流程出口、流程边或 `activityEnd`
+18. `inputvalue` 的接收节点 ID、输入槽、纯值表达式和数值边检查
+19. `inputvalue` 与 `reusablevalue` 的往返分类保持为 `valueReceiver`，不能降级为普通纯值节点
 
 错误必须保留源文件、行号、列号和节点 ID，例如：
 

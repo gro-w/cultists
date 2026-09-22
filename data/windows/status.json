@@ -1,0 +1,373 @@
+{
+  "id": "status",
+  "title": "状态与属性",
+  "icon": "📊",
+  "width": 440,
+  "height": 500,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "san": {
+        "id": "san",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 1
+        }
+      },
+      "money": {
+        "id": "money",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 2
+        }
+      },
+      "gameTime": {
+        "id": "gameTime",
+        "type": "getGameTime",
+        "inputs": {}
+      },
+      "sanText": {
+        "id": "sanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "理智（SAN）：",
+          "right": {
+            "nodeId": "san",
+            "port": "value"
+          }
+        }
+      },
+      "moneyText": {
+        "id": "moneyText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "金钱：",
+          "right": {
+            "nodeId": "money",
+            "port": "value"
+          }
+        }
+      },
+      "timeText": {
+        "id": "timeText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "游戏时间（分钟）：",
+          "right": {
+            "nodeId": "gameTime",
+            "port": "value"
+          }
+        }
+      },
+      "location": {
+        "id": "location",
+        "type": "getVariable",
+        "inputs": {
+          "key": "stateBoundary:location"
+        }
+      },
+      "locationText": {
+        "id": "locationText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "当前位置：",
+          "right": {
+            "nodeId": "location",
+            "port": "value"
+          }
+        }
+      },
+      "inventory": {
+        "id": "inventory",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "inventoryItems"
+        }
+      }
+    }
+  },
+  "root": {
+    "widgetId": "status-root",
+    "className": "app-status",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "children": [
+      {
+        "widgetId": "status-tabs",
+        "type": "container",
+        "className": "status-tabs",
+        "flow": "horizontal",
+        "gap": 4,
+        "children": [
+          {
+            "widgetId": "status-tab-state",
+            "type": "button",
+            "className": "win95-btn bevel-out",
+            "activeWhen": {
+              "variable": "status:tab",
+              "value": "state",
+              "op": "eq"
+            },
+            "text": "状态",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[0].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"status:tab\", \"state\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "status-tab-items",
+            "type": "button",
+            "className": "win95-btn bevel-out",
+            "activeWhen": {
+              "variable": "status:tab",
+              "value": "items",
+              "op": "eq"
+            },
+            "text": "物品",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[0].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"status:tab\", \"items\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "status-tab-settings",
+            "type": "button",
+            "className": "win95-btn bevel-out",
+            "activeWhen": {
+              "variable": "status:tab",
+              "value": "settings",
+              "op": "eq"
+            },
+            "text": "设置",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[0].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"status:tab\", \"settings\"); mark: markEventState(\"status_settings_opened\"); end: end();"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "status-san",
+        "type": "label",
+        "className": "status-compatibility-node",
+        "text": {
+          "nodeId": "sanText",
+          "port": "value"
+        },
+        "visible": false
+      },
+      {
+        "widgetId": "status-state-panel",
+        "type": "container",
+        "className": "status-tab-panel panel-inset",
+        "flow": "vertical",
+        "gap": 5,
+        "visibleWhen": {
+          "variable": "status:tab",
+          "value": "state",
+          "op": "eq"
+        },
+        "children": [
+          {
+            "widgetId": "status-heading",
+            "type": "label",
+            "className": "status-heading",
+            "text": "主角状态"
+          },
+          {
+            "widgetId": "status-san-value",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "sanText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-money",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "moneyText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-time",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "timeText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-location",
+            "type": "label",
+            "className": "status-row",
+            "text": {
+              "nodeId": "locationText",
+              "port": "value"
+            }
+          },
+          {
+            "widgetId": "status-note",
+            "type": "label",
+            "className": "status-note",
+            "text": "时间和金钱随游戏状态实时更新"
+          }
+        ]
+      },
+      {
+        "widgetId": "status-items-panel",
+        "type": "container",
+        "className": "status-tab-panel panel-inset",
+        "flow": "vertical",
+        "gap": 5,
+        "visibleWhen": {
+          "variable": "status:tab",
+          "value": "items",
+          "op": "eq"
+        },
+        "children": [
+          {
+            "widgetId": "status-items-title",
+            "type": "label",
+            "text": "物品栏"
+          },
+          {
+            "widgetId": "status-items-list",
+            "type": "list",
+            "className": "item-list",
+            "items": {
+              "nodeId": "inventory",
+              "port": "value"
+            },
+            "itemLabelTemplate": "{{icon}} {{name}} × {{count}}",
+            "itemClassName": "item-row",
+            "itemActions": [
+              {
+                "id": "inspect",
+                "label": "调查",
+                "eventName": "onInspect"
+              },
+              {
+                "id": "use",
+                "label": "使用",
+                "eventName": "onUse"
+              }
+            ],
+            "events": {
+              "onInspect": {
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[3].children[1].events.onInspect Generated from canonical blueprint JSON. */ start: flowStart(); call: callApi(\"engine.itemAction\", {\"itemId\":{\"variable\":\"event:value\"},\"action\":\"inspect\"}); end: end();"
+              },
+              "onUse": {
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[3].children[1].events.onUse Generated from canonical blueprint JSON. */ start: flowStart(); call: callApi(\"engine.itemAction\", {\"itemId\":{\"variable\":\"event:value\"},\"action\":\"use\"}); end: end();"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "status-settings-panel",
+        "type": "container",
+        "className": "status-tab-panel panel-inset",
+        "flow": "vertical",
+        "gap": 8,
+        "visibleWhen": {
+          "variable": "status:tab",
+          "value": "settings",
+          "op": "eq"
+        },
+        "children": [
+          {
+            "widgetId": "settings-title",
+            "type": "label",
+            "text": "设置与存档"
+          },
+          {
+            "widgetId": "settings-language-label",
+            "type": "label",
+            "text": "当前语言"
+          },
+          {
+            "widgetId": "settings-language",
+            "type": "select",
+            "className": "settings-control",
+            "options": [
+              {
+                "value": "zh-hans",
+                "label": "简体中文"
+              },
+              {
+                "value": "en",
+                "label": "English"
+              }
+            ],
+            "value": {
+              "variable": "settings:language"
+            },
+            "events": {
+              "onChange": {
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[4].children[2].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"settings:language\", {\"variable\":\"event:value\"}); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "settings-sort-label",
+            "type": "label",
+            "text": "当前笔记本排序"
+          },
+          {
+            "widgetId": "settings-sort",
+            "type": "select",
+            "className": "settings-control",
+            "options": [
+              {
+                "value": "pinyin",
+                "label": "按拼音首字母"
+              },
+              {
+                "value": "day",
+                "label": "按收集时间"
+              }
+            ],
+            "value": {
+              "variable": "settings:notebookSortMode"
+            },
+            "events": {
+              "onChange": {
+                "cl2": "/** CL2 export for activity data/windows/status.json.root.children[4].children[4].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"settings:notebookSortMode\", {\"variable\":\"event:value\"}); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "settings-note",
+            "type": "label",
+            "text": "设置和存档已合并到这里。"
+          },
+          {
+            "widgetId": "settings-save-load",
+            "type": "saveLoad",
+            "className": "save-load-controls"
+          }
+        ]
+      }
+    ]
+  },
+  "events": {
+    "onCreate": {
+      "cl2": "/** CL2 export for activity data/windows/status.json.events.onCreate Generated from canonical blueprint JSON. */ start: flowStart(); tab: setVariable(\"status:tab\", \"state\"); end: end();"
+    }
+  }
+}

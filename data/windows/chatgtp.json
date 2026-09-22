@@ -1,0 +1,282 @@
+{
+  "id": "chatgtp",
+  "title": "ChatGTP",
+  "icon": "🤖",
+  "width": 500,
+  "height": 540,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "chatgtpCategories": {
+        "id": "chatgtpCategories",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "chatgtpCategories"
+        }
+      },
+      "chatgtpKeywordOptions": {
+        "id": "chatgtpKeywordOptions",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "chatgtpKeywordOptions"
+        }
+      },
+      "chatgtpDailyMessages": {
+        "id": "chatgtpDailyMessages",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "chatgtpDailyMessages"
+        }
+      }
+    }
+  },
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "className": "app-chatgtp",
+    "flow": "vertical",
+    "gap": 6,
+    "children": [
+      {
+        "widgetId": "chatgtp-layout",
+        "type": "container",
+        "className": "chatgtp-layout",
+        "flow": "vertical",
+        "gap": 6,
+        "children": [
+          {
+            "widgetId": "chatgtp-daily",
+            "type": "list",
+            "className": "chatgtp-daily panel-inset",
+            "items": {
+              "nodeId": "chatgtpDailyMessages",
+              "port": "value"
+            },
+            "itemLabelTemplate": "{{question}}"
+          },
+          {
+            "widgetId": "chatgtp-history",
+            "type": "list",
+            "className": "chatgtp-history panel-inset",
+            "items": {
+              "variable": "chatgtp:history"
+            },
+            "itemClassName": "chat-bubble",
+            "itemClassField": "className",
+            "itemHighlightVariable": {
+              "variable": "chatgtp:keyword1"
+            },
+            "itemHighlightVariable2": {
+              "variable": "chatgtp:keyword2"
+            },
+            "itemLabelTemplate": "{{item}}"
+          },
+          {
+            "widgetId": "chatgtp-answer",
+            "type": "label",
+            "className": "chatgtp-answer chat-bubble bubble-npc",
+            "text": {
+              "variable": "chatgtp:answer"
+            },
+            "keywordMarkup": true
+          },
+          {
+            "widgetId": "chatgtp-keywords",
+            "type": "container",
+            "className": "chatgtp-keywords panel-inset",
+            "flow": "vertical",
+            "gap": 4,
+            "children": [
+              {
+                "widgetId": "chatgtp-san",
+                "type": "label",
+                "className": "chatgtp-san-indicator",
+                "text": {
+                  "variable": "chatgtp:sanLabel"
+                }
+              },
+              {
+                "widgetId": "chatgtp-prompt",
+                "type": "label",
+                "text": "选择 1-2 个关键词进行查询："
+              },
+              {
+                "widgetId": "chatgtp-source-row",
+                "type": "container",
+                "className": "chatgtp-source-row",
+                "flow": "horizontal",
+                "gap": 4,
+                "children": [
+                  {
+                    "widgetId": "chatgtp-source-label",
+                    "type": "label",
+                    "className": "chatgtp-row-label",
+                    "text": "来源"
+                  },
+                  {
+                    "widgetId": "chatgtp-source-select",
+                    "type": "select",
+                    "className": "win95-select",
+                    "options": [
+                      {
+                        "value": "notebook",
+                        "label": "笔记本"
+                      },
+                      {
+                        "value": "disease",
+                        "label": "疾病"
+                      },
+                      {
+                        "value": "medicine",
+                        "label": "药物"
+                      }
+                    ],
+                    "value": {
+                      "variable": "chatgtp:source"
+                    },
+                    "events": {
+                      "onChange": {
+                        "cl2": "/** CL2 export for activity data/windows/chatgtp.json.root.children[0].children[3].children[2].children[1].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"chatgtp:source\", {\"variable\":\"event:value\"}); clearCategory: setVariable(\"chatgtp:category\", \"\"); clearKeyword: setVariable(\"chatgtp:keyword1\", \"\"); end: end();"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "widgetId": "chatgtp-category-row",
+                "type": "container",
+                "className": "chatgtp-category-row",
+                "flow": "horizontal",
+                "gap": 4,
+                "children": [
+                  {
+                    "widgetId": "chatgtp-category-label",
+                    "type": "label",
+                    "className": "chatgtp-row-label",
+                    "text": "类别"
+                  },
+                  {
+                    "widgetId": "chatgtp-category-select",
+                    "type": "select",
+                    "className": "win95-select",
+                    "options": {
+                      "nodeId": "chatgtpCategories",
+                      "port": "value"
+                    },
+                    "value": {
+                      "variable": "chatgtp:category"
+                    },
+                    "events": {
+                      "onChange": {
+                        "cl2": "/** CL2 export for activity data/windows/chatgtp.json.root.children[0].children[3].children[6].children[1].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"chatgtp:category\", {\"variable\":\"event:value\"}); clear: setVariable(\"chatgtp:keyword1\", \"\"); clear2: setVariable(\"chatgtp:keyword2\", \"\"); end: end();"
+                      }
+                    },
+                    "placeholder": "不选择",
+                    "optionValueField": "id",
+                    "optionLabelField": "name"
+                  }
+                ]
+              },
+              {
+                "widgetId": "chatgtp-keyword-row",
+                "type": "container",
+                "className": "chatgtp-keyword-row",
+                "flow": "horizontal",
+                "gap": 4,
+                "children": [
+                  {
+                    "widgetId": "chatgtp-keyword-label",
+                    "type": "label",
+                    "className": "chatgtp-row-label",
+                    "text": "选关键词"
+                  },
+                  {
+                    "widgetId": "chatgtp-keyword1-select",
+                    "type": "select",
+                    "className": "win95-select",
+                    "options": {
+                      "nodeId": "chatgtpKeywordOptions",
+                      "port": "value"
+                    },
+                    "optionValueField": "id",
+                    "optionLabelField": "content",
+                    "value": {
+                      "variable": "chatgtp:keyword1"
+                    },
+                    "events": {
+                      "onChange": {
+                        "cl2": "/** CL2 export for activity data/windows/chatgtp.json.root.children[0].children[3].children[7].children[1].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"chatgtp:keyword1\", {\"variable\":\"event:value\"}); end: end();"
+                      }
+                    }
+                  },
+                  {
+                    "widgetId": "chatgtp-keyword2-select",
+                    "type": "select",
+                    "className": "win95-select",
+                    "options": {
+                      "nodeId": "chatgtpKeywordOptions",
+                      "port": "value"
+                    },
+                    "optionValueField": "id",
+                    "optionLabelField": "content",
+                    "value": {
+                      "variable": "chatgtp:keyword2"
+                    },
+                    "events": {
+                      "onChange": {
+                        "cl2": "/** Set the second selected keyword. */ start: flowStart(); set: setVariable(\"chatgtp:keyword2\", {\"variable\":\"event:value\"}); end: end();"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "widgetId": "chatgtp-selected-keywords",
+                "type": "container",
+                "className": "chatgtp-selected-keywords",
+                "flow": "horizontal",
+                "gap": 4,
+                "children": [
+                  {
+                    "widgetId": "chatgtp-selected1",
+                    "type": "label",
+                    "className": "chatgtp-selected-keyword",
+                    "text": {
+                      "variable": "chatgtp:keyword1"
+                    }
+                  },
+                  {
+                    "widgetId": "chatgtp-selected2",
+                    "type": "label",
+                    "className": "chatgtp-selected-keyword",
+                    "text": {
+                      "variable": "chatgtp:keyword2"
+                    }
+                  },
+                  {
+                    "widgetId": "chatgtp-query",
+                    "type": "button",
+                    "className": "win95-btn bevel-out chatgtp-query-btn",
+                    "text": "查询",
+                    "events": {
+                      "onClick": {
+                        "cl2": "/** CL2 export for activity data/windows/chatgtp.json.root.children[0].children[3].children[9].children[2].events.onClick Generated from canonical blueprint JSON. */ reusablevalue combo__value: arithmetic[\"concat\", join__value[], high__value[]]; reusablevalue cost__value: getProperty[{\"variable\":\"chatgtp:settings\"}, \"sanCostPerQuery\"]; reusablevalue empty__value: arithmetic[\"=\", {\"variable\":\"chatgtp:keyword2\"}, \"\"]; reusablevalue finalKey__value: conditionalValue[empty__value[], {\"variable\":\"chatgtp:keyword1\"}, combo__value[]]; reusablevalue found__value: getProperty[{\"variable\":\"chatgtp:lookup\"}, \"answer\"]; reusablevalue high__value: conditionalValue[less__value[], {\"variable\":\"chatgtp:keyword2\"}, {\"variable\":\"chatgtp:keyword1\"}]; reusablevalue isOnline__value: publicVariableCondition[5, \"gt\", 0]; reusablevalue join__value: arithmetic[\"concat\", low__value[], \"+\"]; reusablevalue less__value: arithmetic[\"<\", {\"variable\":\"chatgtp:keyword1\"}, {\"variable\":\"chatgtp:keyword2\"}]; reusablevalue low__value: conditionalValue[less__value[], {\"variable\":\"chatgtp:keyword1\"}, {\"variable\":\"chatgtp:keyword2\"}]; reusablevalue missing__value: arithmetic[\"=\", {\"variable\":\"chatgtp:lookup\"}, null]; reusablevalue negate__value: arithmetic[\"-\", 0, cost__value[]]; reusablevalue offlineText__value: getProperty[{\"variable\":\"chatgtp:settings\"}, \"offlineAnswer\"]; reusablevalue resolved__value: conditionalValue[missing__value[], \"……（数据库中暂无匹配这一关键词组合的问答记录。）\", found__value[]]; start: flowStart(); online: branch(isOnline__value[]) { option<1> lookup; default offline; }; lookup: getRecord(\"chatgtpQaEntries\", finalKey__value[], \"chatgtp:lookup\"); setAnswer: setVariable(\"chatgtp:answer\", resolved__value[]); appendHistory: appendToArrayVariable(\"chatgtp:history\", {\"variable\":\"chatgtp:answer\"}); spend: applyPublicVariableEffect(5, negate__value[]) { default end; }; offline: setVariable(\"chatgtp:answer\", offlineText__value[]); end: end();"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "events": {
+    "onCreate": {
+      "cl2": "/** CL2 export for activity data/windows/chatgtp.json.events.onCreate Generated from canonical blueprint JSON. */ start: flowStart(); keywords: findRecords(\"keywords\", {}, \"chatgtp:keywords\"); settings: getRecord(\"chatgtpSettings\", \"default\", \"chatgtp:settings\"); init: setVariable(\"chatgtp:history\", []); source: setVariable(\"chatgtp:source\", \"notebook\"); category: setVariable(\"chatgtp:category\", \"\"); keyword: setVariable(\"chatgtp:keyword1\", \"\"); keyword2: setVariable(\"chatgtp:keyword2\", \"\"); answer: setVariable(\"chatgtp:answer\", \"\"); end: end();"
+    },
+    "onDestroy": null
+  }
+}

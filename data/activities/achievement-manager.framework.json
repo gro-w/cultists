@@ -1,0 +1,46 @@
+{
+  "id": "achievement-manager",
+  "displayName": "成就管理器",
+  "type": "manager",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "ready": {
+        "id": "ready",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "achievement:manager-ready",
+          "payload": {
+            "source": "achievement-manager"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "ready",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "ready",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

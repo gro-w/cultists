@@ -1,0 +1,6 @@
+/** CL2 export for activity event__游戏王の荣耀 */
+/** Generated from canonical blueprint JSON. */
+
+start: flowStart();
+
+end: end();

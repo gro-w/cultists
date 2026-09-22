@@ -1,0 +1,41 @@
+{
+  "id": "patient_01_06_orthostatic_hypotension",
+  "displayName": "兼容入口：郭可欣",
+  "type": "his",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "run": {
+        "id": "run",
+        "type": "runActivity",
+        "inputs": {
+          "activityId": "work01a-patient6"
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "run",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "run",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

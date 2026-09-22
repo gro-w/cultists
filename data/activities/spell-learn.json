@@ -1,0 +1,23 @@
+{
+  "id":"spell-learn",
+  "displayName":"学习法术",
+  "blueprint":{"startNodeId":"start","nodes":{
+    "start":{"id":"start","type":"flowStart","inputs":{}},
+    "time":{"id":"time","type":"framework:consumeTime","inputs":{"minutes":240}},
+    "payload":{"id":"payload","type":"getVariable","inputs":{"key":"event:payload"}},
+    "spellId":{"id":"spellId","type":"getProperty","inputs":{"value":{"nodeId":"payload","port":"value"},"key":"spellId"}},
+    "learn":{"id":"learn","type":"callApi","inputs":{"apiId":"runtime.collection.operation","payload":{"collectionId":"spellState","recordId":{"nodeId":"spellId","port":"value"},"operation":"setIfAbsent","value":{"learned":true}},"resultVariable":"spell:learn"}},
+    "ok":{"id":"ok","type":"getProperty","inputs":{"value":{"variable":"spell:learn"},"key":"ok"}},
+    "branch":{"id":"branch","type":"branch","inputs":{"condition":{"nodeId":"ok","port":"value"}}},
+    "learned":{"id":"learned","type":"emitEvent","inputs":{"eventName":"content:spellLearned","payload":{"variable":"event:payload"}}},
+    "end":{"id":"end","type":"activityEnd","inputs":{}},
+    "failure":{"id":"failure","type":"activityEnd","inputs":{}}
+  },"connections":[
+    {"fromNodeId":"start","fromPort":"flowOut","toNodeId":"time","toPort":"flowIn"},
+    {"fromNodeId":"time","fromPort":"flowOut","toNodeId":"learn","toPort":"flowIn"},
+    {"fromNodeId":"learn","fromPort":"flowOut","toNodeId":"branch","toPort":"flowIn"},
+    {"fromNodeId":"branch","fromPort":"true","toNodeId":"learned","toPort":"flowIn"},
+    {"fromNodeId":"branch","fromPort":"false","toNodeId":"failure","toPort":"flowIn"},
+    {"fromNodeId":"learned","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"}
+  ]}
+}

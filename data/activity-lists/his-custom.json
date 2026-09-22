@@ -1,0 +1,11 @@
+{
+  "id": "his-custom",
+  "displayName": "HIS自定义活动",
+  "activityIds": [
+    "his__his-filter-diagnosis",
+    "his__his-initialize",
+    "his__his-search",
+    "his__his-select-patient",
+    "his__his-submit"
+  ]
+}

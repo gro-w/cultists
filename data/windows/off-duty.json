@@ -1,0 +1,902 @@
+{
+  "id": "off-duty",
+  "title": "下班模式",
+  "icon": "🌙",
+  "mode": "window",
+  "fullscreen": true,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 8,
+    "className": "ng-off-duty-root",
+    "children": [
+      {
+        "widgetId": "off-duty-header",
+        "type": "container",
+        "flow": "horizontal",
+        "gap": 6,
+        "align": "center",
+        "className": "ng-off-duty-header",
+        "children": [
+          {
+            "widgetId": "off-duty-title",
+            "type": "label",
+            "text": "🏠 宿舍",
+            "className": "ng-off-duty-title"
+          },
+          {
+            "widgetId": "off-duty-clock",
+            "type": "label",
+            "text": "GAME TIME",
+            "className": "ng-off-duty-clock"
+          },
+          {
+            "widgetId": "off-duty-actions",
+            "type": "container",
+            "flow": "horizontal",
+            "gap": 4,
+            "align": "center",
+            "className": "ng-off-duty-actions",
+            "children": [
+              {
+                "widgetId": "off-duty-player",
+                "type": "button",
+                "text": "🧑 主角",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"status\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-bed",
+                "type": "button",
+                "text": "🛏️ 睡觉",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); consume: framework:consumeTime(480); close: closeWindow(\"off-duty\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-clue",
+                "type": "button",
+                "text": "🧵 线索墙",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"clue-wall\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-computer",
+                "type": "button",
+                "text": "🖥️ 电脑",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"off-duty:computerOpen\", true); setChat: setVariable(\"off-duty:computerTab\", \"chatgtp\"); showChat: setVariable(\"off-duty:showChat\", true); hideSocial: setVariable(\"off-duty:showSocial\", false); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-restaurant",
+                "type": "button",
+                "text": "🍲 火锅店",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"location:requested\", {\"locationId\":\"restaurant\"}); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-seaside",
+                "type": "button",
+                "text": "🌊 海边",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"location:requested\", {\"locationId\":\"seaside\"}); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-turtle-soup",
+                "type": "button",
+                "text": "🐢 海龟汤",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[0].children[2].children[6].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); open: openWindow(\"turtle-soup\"); end: end();"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-computer-overlay",
+        "type": "container",
+        "flow": "vertical",
+        "gap": 4,
+        "visible": {
+          "variable": "off-duty:computerOpen"
+        },
+        "className": "ng-off-duty-computer-overlay",
+        "children": [
+          {
+            "widgetId": "off-duty-computer-tabs",
+            "type": "container",
+            "flow": "horizontal",
+            "gap": 4,
+            "children": [
+              {
+                "widgetId": "off-duty-computer-chat-tab",
+                "type": "button",
+                "text": "🤖 ChatGTP",
+                "className": "win95-btn bevel-out ng-off-duty-computer-tab",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[1].children[0].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); show: setVariable(\"off-duty:showChat\", true); hide: setVariable(\"off-duty:showSocial\", false); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-computer-social-tab",
+                "type": "button",
+                "text": "📱 社交媒体",
+                "className": "win95-btn bevel-out ng-off-duty-computer-tab",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[1].children[0].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); show: setVariable(\"off-duty:showSocial\", true); hide: setVariable(\"off-duty:showChat\", false); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-computer-close",
+                "type": "button",
+                "text": "✖ 关闭电脑",
+                "className": "win95-btn bevel-out",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[1].children[0].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); set: setVariable(\"off-duty:computerOpen\", false); end: end();"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "off-duty-computer-chat",
+            "type": "embeddedWindow",
+            "windowId": "chatgtp",
+            "visible": {
+              "variable": "off-duty:showChat"
+            },
+            "className": "ng-off-duty-computer-chat"
+          },
+          {
+            "widgetId": "off-duty-computer-social",
+            "type": "embeddedWindow",
+            "windowId": "social-media",
+            "visible": {
+              "variable": "off-duty:showSocial"
+            },
+            "className": "ng-off-duty-computer-social"
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-story-list",
+        "type": "container",
+        "flow": "vertical",
+        "gap": 4,
+        "className": "ng-off-duty-story-list",
+        "children": [
+          {
+            "widgetId": "off-duty-story-social01b_ajie_honor_of_kings",
+            "type": "button",
+            "text": "《皇者荣耀》 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social01b_awei_headphones",
+            "type": "button",
+            "text": "测评耳机 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social02a_ajie_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social02a_ajie_chat\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social02a_awei_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social02a_awei_chat\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social02b_dorm_invite",
+            "type": "button",
+            "text": "宿舍集体活动邀请 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social02b_dorm_invite\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_ajie_24_personality_high",
+            "type": "button",
+            "text": "《第二十四人格》 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_ajie_24_personality_high\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_ajie_24_personality_low",
+            "type": "button",
+            "text": "《第二十四人格》 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[6].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_ajie_24_personality_low\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_awei_tail_high",
+            "type": "button",
+            "text": "尾款风云 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[7].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_awei_tail_high\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social03b_awei_tail_low",
+            "type": "button",
+            "text": "尾款风云 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[8].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social03b_awei_tail_low\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social04a_ajie_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[9].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social04a_ajie_chat\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social04a_awei_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[10].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social04a_awei_chat\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social04b_dorm_invite",
+            "type": "button",
+            "text": "宿舍集体活动邀请 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[11].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social04b_dorm_invite\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day5",
+            "type": "button",
+            "text": "【海底O火锅】 · 海底O火锅",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[12].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day5\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_ajie_goods_high",
+            "type": "button",
+            "text": "【谷子店】 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[13].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_ajie_goods_high\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_ajie_goods_low",
+            "type": "button",
+            "text": "【谷子店】 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[14].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_ajie_goods_low\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_awei_record_high",
+            "type": "button",
+            "text": "【线下唱片店】 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[15].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_awei_record_high\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social05b_awei_record_low",
+            "type": "button",
+            "text": "【线下唱片店】 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[16].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social05b_awei_record_low\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social06a_ajie_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[17].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social06a_ajie_chat\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-social06a_awei_chat",
+            "type": "button",
+            "text": "闲聊池 · 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[18].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social06a_awei_chat\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day1",
+            "type": "button",
+            "text": "第1天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[19].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day2",
+            "type": "button",
+            "text": "第2天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[20].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day2\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day3",
+            "type": "button",
+            "text": "第3天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[21].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day3\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-story-dorm_activity_day4",
+            "type": "button",
+            "text": "第4天宿舍集体活动 · 宿舍集体活动",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[2].children[22].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day4\", \"social\"); end: end();"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-scene",
+        "type": "container",
+        "flow": "horizontal",
+        "gap": 8,
+        "align": "stretch",
+        "className": "ng-off-duty-scene",
+        "children": [
+          {
+            "widgetId": "off-duty-card-ajie",
+            "type": "container",
+            "flow": "vertical",
+            "gap": 6,
+            "padding": 8,
+            "align": "center",
+            "className": "ng-off-duty-card",
+            "children": [
+              {
+                "widgetId": "off-duty-ajie-portrait",
+                "type": "image",
+                "src": "data/assets/npc_ajie_portraits_0_6f62a86edebb.png",
+                "alt": "阿杰",
+                "className": "ng-off-duty-portrait"
+              },
+              {
+                "widgetId": "off-duty-ajie-name",
+                "type": "label",
+                "text": {
+                  "nodeId": "ajieName",
+                  "port": "value"
+                },
+                "className": "ng-off-duty-name"
+              },
+              {
+                "widgetId": "off-duty-ajie-fav",
+                "type": "label",
+                "text": {
+                  "nodeId": "ajieFavText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-ajie-san",
+                "type": "label",
+                "text": {
+                  "nodeId": "ajieSanText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-ajie-interact",
+                "type": "button",
+                "text": "交流",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[0].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-ajie-inspect",
+                "type": "button",
+                "text": "调查铺位",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[0].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); setDesk: setVariable(\"item:desk\", \"ajie_desk\"); open: openWindow(\"item-inspection\"); end: end();"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "off-duty-card-awei",
+            "type": "container",
+            "flow": "vertical",
+            "gap": 6,
+            "padding": 8,
+            "align": "center",
+            "className": "ng-off-duty-card",
+            "children": [
+              {
+                "widgetId": "off-duty-awei-portrait",
+                "type": "image",
+                "src": "data/assets/npc_awei_portraits_0_a9334250e042.png",
+                "alt": "阿伟",
+                "className": "ng-off-duty-portrait"
+              },
+              {
+                "widgetId": "off-duty-awei-name",
+                "type": "label",
+                "text": {
+                  "nodeId": "aweiName",
+                  "port": "value"
+                },
+                "className": "ng-off-duty-name"
+              },
+              {
+                "widgetId": "off-duty-awei-fav",
+                "type": "label",
+                "text": {
+                  "nodeId": "aweiFavText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-awei-san",
+                "type": "label",
+                "text": {
+                  "nodeId": "aweiSanText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-awei-interact",
+                "type": "button",
+                "text": "交流",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[1].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-awei-inspect",
+                "type": "button",
+                "text": "调查铺位",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[1].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); setDesk: setVariable(\"item:desk\", \"awei_desk\"); open: openWindow(\"item-inspection\"); end: end();"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "off-duty-card-binbin",
+            "type": "container",
+            "flow": "vertical",
+            "gap": 6,
+            "padding": 8,
+            "align": "center",
+            "className": "ng-off-duty-card",
+            "children": [
+              {
+                "widgetId": "off-duty-binbin-portrait",
+                "type": "image",
+                "src": "data/assets/npc_binbin_portraits_0_3e9f7feebe2c.png",
+                "alt": "彬彬",
+                "className": "ng-off-duty-portrait"
+              },
+              {
+                "widgetId": "off-duty-binbin-name",
+                "type": "label",
+                "text": {
+                  "nodeId": "binbinName",
+                  "port": "value"
+                },
+                "className": "ng-off-duty-name"
+              },
+              {
+                "widgetId": "off-duty-binbin-fav",
+                "type": "label",
+                "text": {
+                  "nodeId": "binbinFavText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-binbin-san",
+                "type": "label",
+                "text": {
+                  "nodeId": "binbinSanText",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "off-duty-binbin-interact",
+                "type": "button",
+                "text": "交流",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[2].children[4].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "off-duty-binbin-inspect",
+                "type": "button",
+                "text": "调查铺位",
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[3].children[2].children[5].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); setDesk: setVariable(\"item:desk\", \"binbin_desk\"); open: openWindow(\"item-inspection\"); end: end();"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-strip",
+        "type": "container",
+        "flow": "horizontal",
+        "gap": 6,
+        "className": "ng-off-duty-strip",
+        "children": [
+          {
+            "widgetId": "off-duty-strip-ajie",
+            "type": "button",
+            "text": "👦 阿杰",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[0].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_ajie_honor_of_kings\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-strip-awei",
+            "type": "button",
+            "text": "👩 阿伟",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"social01b_awei_headphones\", \"social\"); end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "off-duty-strip-binbin",
+            "type": "button",
+            "text": "🧒 彬彬",
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/off-duty.json.root.children[4].children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); run: runActivity(\"dorm_activity_day1\", \"social\"); end: end();"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "off-duty-message",
+        "type": "label",
+        "className": "ng-off-duty-message",
+        "text": {
+          "variable": "dorm:message"
+        }
+      }
+    ]
+  },
+  "valueGraph": {
+    "nodes": {
+      "ajieNpc": {
+        "id": "ajieNpc",
+        "type": "getVariable",
+        "inputs": {
+          "key": "dorm:npc0"
+        }
+      },
+      "ajieName": {
+        "id": "ajieName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "ajieNpc",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "ajieAvatar": {
+        "id": "ajieAvatar",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "ajieNpc",
+            "port": "value"
+          },
+          "key": "avatar"
+        }
+      },
+      "ajieFav": {
+        "id": "ajieFav",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 40
+        }
+      },
+      "ajieFavText": {
+        "id": "ajieFavText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "好感度：",
+          "right": {
+            "nodeId": "ajieFav",
+            "port": "value"
+          }
+        }
+      },
+      "ajieSan": {
+        "id": "ajieSan",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 60
+        }
+      },
+      "ajieSanText": {
+        "id": "ajieSanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "SAN：",
+          "right": {
+            "nodeId": "ajieSan",
+            "port": "value"
+          }
+        }
+      },
+      "aweiNpc": {
+        "id": "aweiNpc",
+        "type": "getVariable",
+        "inputs": {
+          "key": "dorm:npc1"
+        }
+      },
+      "aweiName": {
+        "id": "aweiName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "aweiNpc",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "aweiAvatar": {
+        "id": "aweiAvatar",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "aweiNpc",
+            "port": "value"
+          },
+          "key": "avatar"
+        }
+      },
+      "aweiFav": {
+        "id": "aweiFav",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 41
+        }
+      },
+      "aweiFavText": {
+        "id": "aweiFavText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "好感度：",
+          "right": {
+            "nodeId": "aweiFav",
+            "port": "value"
+          }
+        }
+      },
+      "aweiSan": {
+        "id": "aweiSan",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 61
+        }
+      },
+      "aweiSanText": {
+        "id": "aweiSanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "SAN：",
+          "right": {
+            "nodeId": "aweiSan",
+            "port": "value"
+          }
+        }
+      },
+      "binbinNpc": {
+        "id": "binbinNpc",
+        "type": "getVariable",
+        "inputs": {
+          "key": "dorm:npc2"
+        }
+      },
+      "binbinName": {
+        "id": "binbinName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "binbinNpc",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "binbinAvatar": {
+        "id": "binbinAvatar",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "binbinNpc",
+            "port": "value"
+          },
+          "key": "avatar"
+        }
+      },
+      "binbinFav": {
+        "id": "binbinFav",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 42
+        }
+      },
+      "binbinFavText": {
+        "id": "binbinFavText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "好感度：",
+          "right": {
+            "nodeId": "binbinFav",
+            "port": "value"
+          }
+        }
+      },
+      "binbinSan": {
+        "id": "binbinSan",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 62
+        }
+      },
+      "binbinSanText": {
+        "id": "binbinSanText",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": "SAN：",
+          "right": {
+            "nodeId": "binbinSan",
+            "port": "value"
+          }
+        }
+      },
+      "computerOpen": {
+        "id": "computerOpen",
+        "type": "getVariable",
+        "inputs": {
+          "key": "off-duty:computerOpen"
+        }
+      },
+      "computerChat": {
+        "id": "computerChat",
+        "type": "getVariable",
+        "inputs": {
+          "key": "off-duty:computerTab"
+        }
+      }
+    }
+  },
+  "events": {
+    "onCreate": {
+      "cl2": "/** CL2 export for activity data/windows/off-duty.json.events.onCreate Generated from canonical blueprint JSON. */ start: flowStart(); resetComputer: setVariable(\"off-duty:computerOpen\", false); resetChat: setVariable(\"off-duty:showChat\", false); resetSocial: setVariable(\"off-duty:showSocial\", false); get-ajie: getRecord(\"npcs\", \"ajie\", \"dorm:npc0\"); get-awei: getRecord(\"npcs\", \"awei\", \"dorm:npc1\"); get-binbin: getRecord(\"npcs\", \"binbin\", \"dorm:npc2\"); clearMessage: setVariable(\"dorm:message\", \"\"); markDormSeen: markEventState(\"dorm_seen\"); end: end();"
+    },
+    "onDestroy": null
+  }
+}

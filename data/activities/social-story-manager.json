@@ -1,0 +1,1452 @@
+{
+  "id": "social-story-manager",
+  "displayName": "室友剧情管理器",
+  "type": "manager",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "slot-1-wait": {
+        "id": "slot-1-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-1-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-1-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-1-due": {
+        "id": "slot-1-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 960
+        }
+      },
+      "slot-1-insert": {
+        "id": "slot-1-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social01b_ajie_honor_of_kings",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 1,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-2-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-2-wait": {
+        "id": "slot-2-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-2-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-2-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-2-due": {
+        "id": "slot-2-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 960
+        }
+      },
+      "slot-2-insert": {
+        "id": "slot-2-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social01b_awei_headphones",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 1,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-3-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-3-wait": {
+        "id": "slot-3-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-3-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-3-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-3-due": {
+        "id": "slot-3-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 1920
+        }
+      },
+      "slot-3-insert": {
+        "id": "slot-3-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social02a_ajie_chat",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 2,
+              "minutes": 480
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-4-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-4-wait": {
+        "id": "slot-4-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-4-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-4-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-4-due": {
+        "id": "slot-4-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 1920
+        }
+      },
+      "slot-4-insert": {
+        "id": "slot-4-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social02a_awei_chat",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 2,
+              "minutes": 480
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-5-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-5-wait": {
+        "id": "slot-5-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-5-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-5-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-5-due": {
+        "id": "slot-5-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 2400
+        }
+      },
+      "slot-5-insert": {
+        "id": "slot-5-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social02b_dorm_invite",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 2,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-6-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-6-wait": {
+        "id": "slot-6-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-6-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-6-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-6-due": {
+        "id": "slot-6-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 3840
+        }
+      },
+      "slot-6-insert": {
+        "id": "slot-6-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social03b_ajie_24_personality_high",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 3,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-7-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-6-prerequisite-1": {
+        "id": "slot-6-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 40,
+          "op": "gte",
+          "value": 50
+        }
+      },
+      "slot-6-prerequisite-branch": {
+        "id": "slot-6-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-6-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-6-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-7-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-7-wait": {
+        "id": "slot-7-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-7-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-7-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-7-due": {
+        "id": "slot-7-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 3840
+        }
+      },
+      "slot-7-insert": {
+        "id": "slot-7-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social03b_ajie_24_personality_low",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 3,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-8-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-7-prerequisite-1": {
+        "id": "slot-7-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 40,
+          "op": "lt",
+          "value": 50
+        }
+      },
+      "slot-7-prerequisite-branch": {
+        "id": "slot-7-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-7-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-7-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-8-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-8-wait": {
+        "id": "slot-8-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-8-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-8-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-8-due": {
+        "id": "slot-8-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 3840
+        }
+      },
+      "slot-8-insert": {
+        "id": "slot-8-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social03b_awei_tail_high",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 3,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-9-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-8-prerequisite-1": {
+        "id": "slot-8-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 41,
+          "op": "gte",
+          "value": 50
+        }
+      },
+      "slot-8-prerequisite-branch": {
+        "id": "slot-8-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-8-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-8-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-9-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-9-wait": {
+        "id": "slot-9-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-9-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-9-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-9-due": {
+        "id": "slot-9-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 3840
+        }
+      },
+      "slot-9-insert": {
+        "id": "slot-9-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social03b_awei_tail_low",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 3,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-10-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-9-prerequisite-1": {
+        "id": "slot-9-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 41,
+          "op": "lt",
+          "value": 50
+        }
+      },
+      "slot-9-prerequisite-branch": {
+        "id": "slot-9-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-9-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-9-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-10-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-10-wait": {
+        "id": "slot-10-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-10-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-10-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-10-due": {
+        "id": "slot-10-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 4800
+        }
+      },
+      "slot-10-insert": {
+        "id": "slot-10-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social04a_ajie_chat",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 4,
+              "minutes": 480
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-11-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-11-wait": {
+        "id": "slot-11-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-11-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-11-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-11-due": {
+        "id": "slot-11-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 4800
+        }
+      },
+      "slot-11-insert": {
+        "id": "slot-11-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social04a_awei_chat",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 4,
+              "minutes": 480
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-12-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-12-wait": {
+        "id": "slot-12-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-12-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-12-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-12-due": {
+        "id": "slot-12-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 5280
+        }
+      },
+      "slot-12-insert": {
+        "id": "slot-12-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social04b_dorm_invite",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 4,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-13-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-13-wait": {
+        "id": "slot-13-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-13-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-13-insert",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-13-due": {
+        "id": "slot-13-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 6240
+        }
+      },
+      "slot-13-insert": {
+        "id": "slot-13-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "dorm_activity_day5",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 5,
+              "minutes": 480
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-14-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-14-wait": {
+        "id": "slot-14-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-14-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-14-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-14-due": {
+        "id": "slot-14-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 6720
+        }
+      },
+      "slot-14-insert": {
+        "id": "slot-14-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social05b_ajie_goods_high",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 5,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-15-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-14-prerequisite-1": {
+        "id": "slot-14-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 40,
+          "op": "gte",
+          "value": 50
+        }
+      },
+      "slot-14-prerequisite-branch": {
+        "id": "slot-14-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-14-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-14-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-15-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-15-wait": {
+        "id": "slot-15-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-15-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-15-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-15-due": {
+        "id": "slot-15-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 6720
+        }
+      },
+      "slot-15-insert": {
+        "id": "slot-15-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social05b_ajie_goods_low",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 5,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-16-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-15-prerequisite-1": {
+        "id": "slot-15-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 40,
+          "op": "lt",
+          "value": 50
+        }
+      },
+      "slot-15-prerequisite-branch": {
+        "id": "slot-15-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-15-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-15-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-16-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-16-wait": {
+        "id": "slot-16-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-16-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-16-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-16-due": {
+        "id": "slot-16-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 6720
+        }
+      },
+      "slot-16-insert": {
+        "id": "slot-16-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social05b_awei_record_high",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 5,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-17-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-16-prerequisite-1": {
+        "id": "slot-16-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 41,
+          "op": "gte",
+          "value": 50
+        }
+      },
+      "slot-16-prerequisite-branch": {
+        "id": "slot-16-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-16-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-16-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-17-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-17-wait": {
+        "id": "slot-17-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-17-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-17-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-17-due": {
+        "id": "slot-17-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 6720
+        }
+      },
+      "slot-17-insert": {
+        "id": "slot-17-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social05b_awei_record_low",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 5,
+              "minutes": 960
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-18-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-17-prerequisite-1": {
+        "id": "slot-17-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 41,
+          "op": "lt",
+          "value": 50
+        }
+      },
+      "slot-17-prerequisite-branch": {
+        "id": "slot-17-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-17-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-17-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-18-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-18-wait": {
+        "id": "slot-18-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-18-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-18-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-18-due": {
+        "id": "slot-18-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 7680
+        }
+      },
+      "slot-18-insert": {
+        "id": "slot-18-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social06a_ajie_chat",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 6,
+              "minutes": 480
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-19-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-18-prerequisite-1": {
+        "id": "slot-18-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 100,
+          "op": "eq",
+          "value": true
+        }
+      },
+      "slot-18-prerequisite-branch": {
+        "id": "slot-18-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-18-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-18-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "slot-19-wait",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-19-wait": {
+        "id": "slot-19-wait",
+        "type": "blockUntil",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-19-due",
+            "port": "value"
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "slot-19-prerequisite-branch",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-19-due": {
+        "id": "slot-19-due",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 1000,
+          "op": "gte",
+          "value": 7680
+        }
+      },
+      "slot-19-insert": {
+        "id": "slot-19-insert",
+        "type": "insertActivity",
+        "inputs": {
+          "activityId": "social06a_awei_chat",
+          "queueId": "social",
+          "payload": {
+            "autoRun": true,
+            "scheduled": {
+              "day": 6,
+              "minutes": 480
+            }
+          }
+        },
+        "next": {
+          "flowOut": {
+            "nodeId": "end",
+            "port": "flowIn"
+          }
+        }
+      },
+      "slot-19-prerequisite-1": {
+        "id": "slot-19-prerequisite-1",
+        "type": "publicVariableCondition",
+        "inputs": {
+          "id": 101,
+          "op": "eq",
+          "value": true
+        }
+      },
+      "slot-19-prerequisite-branch": {
+        "id": "slot-19-prerequisite-branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "slot-19-prerequisite-1",
+            "port": "value"
+          }
+        },
+        "next": {
+          "true": {
+            "nodeId": "slot-19-insert",
+            "port": "flowIn"
+          },
+          "false": {
+            "nodeId": "end",
+            "port": "flowIn"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-1-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "slot-1-due",
+        "fromPort": "value",
+        "toNodeId": "slot-1-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-3",
+        "fromNodeId": "slot-1-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-2-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-4",
+        "fromNodeId": "slot-2-due",
+        "fromPort": "value",
+        "toNodeId": "slot-2-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-5",
+        "fromNodeId": "slot-2-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-3-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-6",
+        "fromNodeId": "slot-3-due",
+        "fromPort": "value",
+        "toNodeId": "slot-3-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-7",
+        "fromNodeId": "slot-3-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-4-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-8",
+        "fromNodeId": "slot-4-due",
+        "fromPort": "value",
+        "toNodeId": "slot-4-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-9",
+        "fromNodeId": "slot-4-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-5-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-10",
+        "fromNodeId": "slot-5-due",
+        "fromPort": "value",
+        "toNodeId": "slot-5-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-11",
+        "fromNodeId": "slot-5-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-6-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-12",
+        "fromNodeId": "slot-6-due",
+        "fromPort": "value",
+        "toNodeId": "slot-6-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-13",
+        "fromNodeId": "slot-6-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-7-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-14",
+        "fromNodeId": "slot-7-due",
+        "fromPort": "value",
+        "toNodeId": "slot-7-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-15",
+        "fromNodeId": "slot-7-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-8-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-16",
+        "fromNodeId": "slot-8-due",
+        "fromPort": "value",
+        "toNodeId": "slot-8-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-17",
+        "fromNodeId": "slot-8-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-9-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-18",
+        "fromNodeId": "slot-9-due",
+        "fromPort": "value",
+        "toNodeId": "slot-9-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-19",
+        "fromNodeId": "slot-9-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-10-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-20",
+        "fromNodeId": "slot-10-due",
+        "fromPort": "value",
+        "toNodeId": "slot-10-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-21",
+        "fromNodeId": "slot-10-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-11-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-22",
+        "fromNodeId": "slot-11-due",
+        "fromPort": "value",
+        "toNodeId": "slot-11-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-23",
+        "fromNodeId": "slot-11-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-12-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-24",
+        "fromNodeId": "slot-12-due",
+        "fromPort": "value",
+        "toNodeId": "slot-12-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-25",
+        "fromNodeId": "slot-12-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-13-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-26",
+        "fromNodeId": "slot-13-due",
+        "fromPort": "value",
+        "toNodeId": "slot-13-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-27",
+        "fromNodeId": "slot-13-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-14-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-28",
+        "fromNodeId": "slot-14-due",
+        "fromPort": "value",
+        "toNodeId": "slot-14-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-29",
+        "fromNodeId": "slot-14-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-15-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-30",
+        "fromNodeId": "slot-15-due",
+        "fromPort": "value",
+        "toNodeId": "slot-15-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-31",
+        "fromNodeId": "slot-15-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-16-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-32",
+        "fromNodeId": "slot-16-due",
+        "fromPort": "value",
+        "toNodeId": "slot-16-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-33",
+        "fromNodeId": "slot-16-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-17-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-34",
+        "fromNodeId": "slot-17-due",
+        "fromPort": "value",
+        "toNodeId": "slot-17-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-35",
+        "fromNodeId": "slot-17-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-18-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-36",
+        "fromNodeId": "slot-18-due",
+        "fromPort": "value",
+        "toNodeId": "slot-18-wait",
+        "toPort": "condition"
+      },
+      {
+        "id": "edge-37",
+        "fromNodeId": "slot-18-insert",
+        "fromPort": "flowOut",
+        "toNodeId": "slot-19-wait",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-38",
+        "fromNodeId": "slot-19-due",
+        "fromPort": "value",
+        "toNodeId": "slot-19-wait",
+        "toPort": "condition"
+      }
+    ]
+  }
+}

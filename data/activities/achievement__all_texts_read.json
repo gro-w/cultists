@@ -1,0 +1,47 @@
+{
+  "id": "achievement__all_texts_read",
+  "type": "achievement",
+  "displayName": "无字天书",
+  "achievementId": "all_texts_read",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "unlock": {
+        "id": "unlock",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "achievement:display",
+          "payload": {
+            "achievementId": "all_texts_read"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "unlock",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "unlock",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

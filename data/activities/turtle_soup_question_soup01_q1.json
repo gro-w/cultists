@@ -1,0 +1,156 @@
+{
+  "id": "turtle_soup_question_soup01_q1",
+  "type": "specialEvent",
+  "displayName": "海龟汤提问：这碗汤是人肉汤吗？",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "count": {
+        "id": "count",
+        "type": "getVariable",
+        "inputs": {
+          "key": "turtleSoup:questionCount"
+        }
+      },
+      "underLimit": {
+        "id": "underLimit",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "<",
+          "left": {
+            "nodeId": "count",
+            "port": "value"
+          },
+          "right": 5
+        }
+      },
+      "limit": {
+        "id": "limit",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "underLimit",
+            "port": "value"
+          }
+        }
+      },
+      "claim": {
+        "id": "claim",
+        "type": "callApi",
+        "inputs": {
+          "apiId": "runtime.collection.operation",
+          "payload": {
+            "collectionId": "turtleSoupState",
+            "recordId": "soup01_q1",
+            "operation": "setIfAbsent",
+            "value": {
+              "asked": true
+            }
+          },
+          "resultVariable": "turtleSoup:claim"
+        }
+      },
+      "ok": {
+        "id": "ok",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "variable": "turtleSoup:claim"
+          },
+          "key": "ok"
+        }
+      },
+      "branch": {
+        "id": "branch",
+        "type": "branch",
+        "inputs": {
+          "condition": {
+            "nodeId": "ok",
+            "port": "value"
+          }
+        }
+      },
+      "increment": {
+        "id": "increment",
+        "type": "setVariable",
+        "inputs": {
+          "key": "turtleSoup:questionCount",
+          "delta": 1
+        }
+      },
+      "answer": {
+        "id": "answer",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "turtleSoup:question",
+          "payload": {
+            "puzzleId": "binbin_turtle_01",
+            "questionId": "soup01_q1",
+            "questionText": "这碗汤是人肉汤吗？",
+            "answer": "no"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "limit",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "limit",
+        "fromPort": "true",
+        "toNodeId": "claim",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "limit",
+        "fromPort": "false",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "claim",
+        "fromPort": "flowOut",
+        "toNodeId": "branch",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "branch",
+        "fromPort": "true",
+        "toNodeId": "increment",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "branch",
+        "fromPort": "false",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "increment",
+        "fromPort": "flowOut",
+        "toNodeId": "answer",
+        "toPort": "flowIn"
+      },
+      {
+        "fromNodeId": "answer",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

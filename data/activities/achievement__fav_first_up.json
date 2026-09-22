@@ -1,0 +1,47 @@
+{
+  "id": "achievement__fav_first_up",
+  "type": "achievement",
+  "displayName": "初见倾心",
+  "achievementId": "fav_first_up",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {
+        "id": "start",
+        "type": "flowStart",
+        "inputs": {}
+      },
+      "unlock": {
+        "id": "unlock",
+        "type": "emitEvent",
+        "inputs": {
+          "eventName": "achievement:display",
+          "payload": {
+            "achievementId": "fav_first_up"
+          }
+        }
+      },
+      "end": {
+        "id": "end",
+        "type": "activityEnd",
+        "inputs": {}
+      }
+    },
+    "connections": [
+      {
+        "id": "edge-1",
+        "fromNodeId": "start",
+        "fromPort": "flowOut",
+        "toNodeId": "unlock",
+        "toPort": "flowIn"
+      },
+      {
+        "id": "edge-2",
+        "fromNodeId": "unlock",
+        "fromPort": "flowOut",
+        "toNodeId": "end",
+        "toPort": "flowIn"
+      }
+    ]
+  }
+}

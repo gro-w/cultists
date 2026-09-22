@@ -1,0 +1,11 @@
+/** CL2 export for activity his__his-filter-diagnosis */
+/** Generated from canonical blueprint JSON. */
+
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
+start: flowStart();
+
+render: emitEvent("content:hisRenderDiagnosis", {});
+
+end: end();

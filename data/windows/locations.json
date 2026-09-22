@@ -1,0 +1,59 @@
+{
+  "id": "locations",
+  "title": "去往位置",
+  "icon": "🗺️",
+  "width": 360,
+  "height": 300,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "locations-root",
+    "className": "app-locations",
+    "type": "container",
+    "flow": "vertical",
+    "gap": 8,
+    "padding": 10,
+    "children": [
+      {
+        "widgetId": "locations-title",
+        "type": "label",
+        "text": "选择要前往的位置"
+      },
+      {
+        "widgetId": "location-hospital",
+        "type": "button",
+        "text": "🏥 医院",
+        "events": {
+          "onClick": {
+            "cl2": "/** CL2 export for activity data/windows/locations.json.root.children[1].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"location:requested\", {\"locationId\":\"hospital\"}); end: end();"
+          }
+        }
+      },
+      {
+        "widgetId": "location-restaurant",
+        "type": "button",
+        "text": "🍲 火锅店",
+        "events": {
+          "onClick": {
+            "cl2": "/** CL2 export for activity data/windows/locations.json.root.children[2].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"location:requested\", {\"locationId\":\"restaurant\"}); end: end();"
+          }
+        }
+      },
+      {
+        "widgetId": "location-seaside",
+        "type": "button",
+        "text": "🌊 海边",
+        "events": {
+          "onClick": {
+            "cl2": "/** CL2 export for activity data/windows/locations.json.root.children[3].events.onClick Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"location:requested\", {\"locationId\":\"seaside\"}); end: end();"
+          }
+        }
+      },
+      {
+        "widgetId": "locations-note",
+        "type": "label",
+        "text": "前往位置不额外消耗时间"
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+/** CL2 export for activity achievement__tabletop_skip */
+/** Generated from canonical blueprint JSON. */
+
+start: flowStart();
+
+unlock: emitEvent("achievement:display", {"achievementId":"tabletop_skip"});
+
+end: end();

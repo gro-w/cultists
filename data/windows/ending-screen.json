@@ -1,0 +1,23 @@
+{
+  "id": "ending-screen",
+  "title": "结局",
+  "icon": "🌑",
+  "fullscreen": true,
+  "resizable": false,
+  "singleInstance": true,
+  "root": {
+    "widgetId": "ending-screen-root",
+    "type": "container",
+    "flow": "vertical",
+    "className": "ng-ending-window-root",
+    "children": [
+      {
+        "widgetId": "ending-screen-dialogue",
+        "type": "dialogue",
+        "displayTo": "ending-screen",
+        "displayAliases": ["dorm-bottom"],
+        "className": "ng-ending-window-dialogue"
+      }
+    ]
+  }
+}

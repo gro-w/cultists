@@ -1,0 +1,277 @@
+[
+  {
+    "id": "testFlowNode",
+    "label": "测试流程节点",
+    "description": "用于验证自定义流程节点封装、参数传递和流程返回",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "flowOut",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "value",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "cl2": "/** CL2 export for activity data/blueprint-nodes.framework.json[0].blueprint Generated from canonical blueprint JSON. */ start: flowStart(); /** @cl2.pos 40,80 */ write: setVariable(\"blueprint.test.flow.value\", {\"parameter\":\"value\"}); /** @cl2.pos 260,80 */ end: end(); /** @cl2.pos 500,80 */"
+    }
+  },
+  {
+    "id": "testValueNode",
+    "label": "测试数值节点",
+    "description": "用于验证自定义数值节点连线；输出输入值乘以 2",
+    "flowInputs": [],
+    "flowOutputs": [],
+    "valueInputs": [
+      {
+        "name": "value",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [
+      {
+        "name": "value",
+        "kind": "value",
+        "type": "number",
+        "source": {
+          "nodeId": "double",
+          "port": "value"
+        }
+      }
+    ],
+    "blueprint": {
+      "nodes": {
+        "double": {
+          "id": "double",
+          "type": "arithmetic",
+          "x": 180,
+          "y": 80,
+          "inputs": {
+            "operator": "*",
+            "left": {
+              "parameter": "value"
+            },
+            "right": 2
+          },
+          "next": {}
+        }
+      }
+    }
+  },
+  {
+    "id": "framework:consumeTime",
+    "label": "消耗时间",
+    "description": "Framework 时间系统节点；通过通用 Core 时钟 API 推进游戏时间",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "flowOut",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "minutes",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "cl2": "/** CL2 export for activity data/blueprint-nodes.framework.json[2].blueprint Generated from canonical blueprint JSON. */ start: flowStart(); consume: consumeTime({\"parameter\":\"minutes\"}); end: end();"
+    }
+  },
+  {
+    "id": "ending",
+    "label": "结束流程",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "flowOut",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "endingId",
+        "kind": "value",
+        "type": "string"
+      },
+      {
+        "name": "displayTo",
+        "kind": "value",
+        "type": "string"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "cl2": "/** CL2 export for activity data/blueprint-nodes.framework.json[3].blueprint Generated from canonical blueprint JSON. */ start: flowStart(); emit: emitEvent(\"activity:ending\", {\"endingId\":{\"parameter\":\"endingId\"},\"displayTo\":{\"parameter\":\"displayTo\"}}); end: end();"
+    }
+  },
+  {
+    "id": "framework:randomBranch",
+    "label": "随机分支",
+    "description": "Framework 随机流程宏；使用 Core 通用随机值和算术节点",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "flowOut0",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut1",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut2",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut3",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut4",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut5",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut6",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut7",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut8",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut9",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut10",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut11",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut12",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut13",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut14",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut15",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut16",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut17",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut18",
+        "kind": "flow"
+      },
+      {
+        "name": "flowOut19",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "n",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "cl2": "/** CL2 export for activity data/blueprint-nodes.framework.json[4].blueprint Generated from canonical blueprint JSON. */ reusablevalue eq0__value: arithmetic[\"=\", index__value[], 0]; reusablevalue eq1__value: arithmetic[\"=\", index__value[], 1]; reusablevalue eq10__value: arithmetic[\"=\", index__value[], 10]; reusablevalue eq11__value: arithmetic[\"=\", index__value[], 11]; reusablevalue eq12__value: arithmetic[\"=\", index__value[], 12]; reusablevalue eq13__value: arithmetic[\"=\", index__value[], 13]; reusablevalue eq14__value: arithmetic[\"=\", index__value[], 14]; reusablevalue eq15__value: arithmetic[\"=\", index__value[], 15]; reusablevalue eq16__value: arithmetic[\"=\", index__value[], 16]; reusablevalue eq17__value: arithmetic[\"=\", index__value[], 17]; reusablevalue eq18__value: arithmetic[\"=\", index__value[], 18]; reusablevalue eq19__value: arithmetic[\"=\", index__value[], 19]; reusablevalue eq2__value: arithmetic[\"=\", index__value[], 2]; reusablevalue eq3__value: arithmetic[\"=\", index__value[], 3]; reusablevalue eq4__value: arithmetic[\"=\", index__value[], 4]; reusablevalue eq5__value: arithmetic[\"=\", index__value[], 5]; reusablevalue eq6__value: arithmetic[\"=\", index__value[], 6]; reusablevalue eq7__value: arithmetic[\"=\", index__value[], 7]; reusablevalue eq8__value: arithmetic[\"=\", index__value[], 8]; reusablevalue eq9__value: arithmetic[\"=\", index__value[], 9]; reusablevalue index__value: arithmetic[\"floor\", scaled__value[], 0]; reusablevalue roll__value: arithmetic[\"random\", 0, 0]; reusablevalue scaled__value: arithmetic[\"*\", roll__value[], {\"parameter\":\"n\"}]; start: flowStart() { default b0; }; r0: macroReturn(\"flowOut0\"); b0: branch(eq0__value[]) { option<1> r0; default b1; }; r1: macroReturn(\"flowOut1\"); b1: branch(eq1__value[]) { option<1> r1; default b2; }; r2: macroReturn(\"flowOut2\"); b2: branch(eq2__value[]) { option<1> r2; default b3; }; r3: macroReturn(\"flowOut3\"); b3: branch(eq3__value[]) { option<1> r3; default b4; }; r4: macroReturn(\"flowOut4\"); b4: branch(eq4__value[]) { option<1> r4; default b5; }; r5: macroReturn(\"flowOut5\"); b5: branch(eq5__value[]) { option<1> r5; default b6; }; r6: macroReturn(\"flowOut6\"); b6: branch(eq6__value[]) { option<1> r6; default b7; }; r7: macroReturn(\"flowOut7\"); b7: branch(eq7__value[]) { option<1> r7; default b8; }; r8: macroReturn(\"flowOut8\"); b8: branch(eq8__value[]) { option<1> r8; default b9; }; r9: macroReturn(\"flowOut9\"); b9: branch(eq9__value[]) { option<1> r9; default b10; }; r10: macroReturn(\"flowOut10\"); b10: branch(eq10__value[]) { option<1> r10; default b11; }; r11: macroReturn(\"flowOut11\"); b11: branch(eq11__value[]) { option<1> r11; default b12; }; r12: macroReturn(\"flowOut12\"); b12: branch(eq12__value[]) { option<1> r12; default b13; }; r13: macroReturn(\"flowOut13\"); b13: branch(eq13__value[]) { option<1> r13; default b14; }; r14: macroReturn(\"flowOut14\"); b14: branch(eq14__value[]) { option<1> r14; default b15; }; r15: macroReturn(\"flowOut15\"); b15: branch(eq15__value[]) { option<1> r15; default b16; }; r16: macroReturn(\"flowOut16\"); b16: branch(eq16__value[]) { option<1> r16; default b17; }; r17: macroReturn(\"flowOut17\"); b17: branch(eq17__value[]) { option<1> r17; default b18; }; r18: macroReturn(\"flowOut18\"); b18: branch(eq18__value[]) { option<1> r18; default b19; }; r19: macroReturn(\"flowOut19\"); b19: branch(eq19__value[]) { option<1> r19; default r19; };"
+    }
+  },
+  {
+    "id": "framework:diceCheck",
+    "label": "骰子检定",
+    "description": "Framework 检定宏；使用 Core 通用随机值和比较节点",
+    "flowInputs": [
+      {
+        "name": "flowIn",
+        "kind": "flow"
+      }
+    ],
+    "flowOutputs": [
+      {
+        "name": "largeSuccess",
+        "kind": "flow"
+      },
+      {
+        "name": "success",
+        "kind": "flow"
+      },
+      {
+        "name": "failure",
+        "kind": "flow"
+      },
+      {
+        "name": "largeFailure",
+        "kind": "flow"
+      }
+    ],
+    "valueInputs": [
+      {
+        "name": "n",
+        "kind": "value",
+        "type": "number"
+      }
+    ],
+    "valueOutputs": [],
+    "blueprint": {
+      "cl2": "/** CL2 export for activity data/blueprint-nodes.framework.json[5].blueprint Generated from canonical blueprint JSON. */ reusablevalue failureCond__value: arithmetic[\"<=\", roll__value[], low__value[]]; reusablevalue high__value: arithmetic[\"+\", {\"parameter\":\"n\"}, 10]; reusablevalue largeCond__value: arithmetic[\">=\", roll__value[], high__value[]]; reusablevalue low__value: arithmetic[\"-\", {\"parameter\":\"n\"}, 10]; reusablevalue roll__value: arithmetic[\"+\", roll1__value[], 1]; reusablevalue roll0__value: arithmetic[\"random\", 0, 0]; reusablevalue roll1__value: arithmetic[\"*\", roll0__value[], 20]; reusablevalue successCond__value: arithmetic[\">=\", roll__value[], {\"parameter\":\"n\"}]; start: flowStart(); large: branch(largeCond__value[]) { option<1> largeReturn; default success; }; largeReturn: macroReturn(\"largeSuccess\"); success: branch(successCond__value[]) { option<1> successReturn; default failure; }; successReturn: macroReturn(\"success\"); failure: branch(failureCond__value[]) { option<1> largeFailureReturn; }; failureReturn: macroReturn(\"failure\"); largeFailureReturn: macroReturn(\"largeFailure\");"
+    }
+  }
+]

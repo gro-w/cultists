@@ -1,0 +1,38 @@
+{
+  "id": "dialogue",
+  "title": "对话",
+  "icon": "💬",
+  "width": 620,
+  "height": 360,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "socialContacts": {
+        "id": "socialContacts",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "socialContacts"
+        }
+      }
+    }
+  },
+  "root": {
+    "widgetId": "dialogue-root",
+    "type": "container",
+    "flow": "horizontal",
+    "padding": 8,
+    "className": "dialogue-layout",
+    "children": [
+      {
+        "widgetId": "dialogue-panel",
+        "type": "dialogue",
+        "displayTo": "his-app",
+        "displayAliases": [
+          "default"
+        ],
+        "className": "dialogue-panel panel-inset dialogue-transcript"
+      }
+    ]
+  }
+}

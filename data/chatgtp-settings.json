@@ -1,0 +1,9 @@
+{
+  "sanCostPerQuery": 2,
+  "offlineAnswer": "……（无应答。ChatGTP 似乎已经彻底宕机，光标在空白对话框里孤零零地闪烁。）",
+  "revealKeywordIds": [
+    "flu_suspect",
+    "hypertension_risk",
+    "basement_secret"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "achievementCategories": [
+    {
+      "id": "study",
+      "label": "刷题"
+    },
+    {
+      "id": "favorability",
+      "label": "好感度"
+    },
+    {
+      "id": "tabletop",
+      "label": "跑团"
+    },
+    {
+      "id": "skill",
+      "label": "技能检定"
+    },
+    {
+      "id": "ending",
+      "label": "结局"
+    },
+    {
+      "id": "sanity",
+      "label": "理智值"
+    },
+    {
+      "id": "exploration",
+      "label": "探索"
+    }
+  ]
+}

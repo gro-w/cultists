@@ -1,0 +1,569 @@
+{
+  "id": "his",
+  "title": "HIS 医疗系统",
+  "icon": "🏥",
+  "width": 640,
+  "height": 460,
+  "resizable": true,
+  "singleInstance": true,
+  "valueGraph": {
+    "nodes": {
+      "patients": {
+        "id": "patients",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "hisPatients"
+        }
+      },
+      "submittedPatients": {
+        "id": "submittedPatients",
+        "type": "getRuntimeCollection",
+        "inputs": {
+          "collectionId": "submittedPatientStates"
+        }
+      },
+      "patientItems": {
+        "id": "patientItems",
+        "type": "mergeRecords",
+        "inputs": {
+          "left": {
+            "nodeId": "patients",
+            "port": "value"
+          },
+          "right": {
+            "nodeId": "submittedPatients",
+            "port": "value"
+          },
+          "keyField": "id"
+        }
+      },
+      "patient": {
+        "id": "patient",
+        "type": "getVariable",
+        "inputs": {
+          "key": "his:selectedPatient"
+        }
+      },
+      "patientName": {
+        "id": "patientName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "patient",
+            "port": "value"
+          },
+          "key": "name"
+        }
+      },
+      "patientAge": {
+        "id": "patientAge",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "patient",
+            "port": "value"
+          },
+          "key": "age"
+        }
+      },
+      "patientHeader": {
+        "id": "patientHeader",
+        "type": "conditionalValue",
+        "inputs": {
+          "condition": {
+            "nodeId": "patientAvailable",
+            "port": "value"
+          },
+          "whenTrue": {
+            "nodeId": "patientName",
+            "port": "value"
+          },
+          "whenFalse": "请选择患者开始问诊"
+        }
+      },
+      "patientAgeLabel": {
+        "id": "patientAgeLabel",
+        "type": "conditionalValue",
+        "inputs": {
+          "condition": {
+            "nodeId": "patientAvailable",
+            "port": "value"
+          },
+          "whenTrue": {
+            "nodeId": "patientAge",
+            "port": "value"
+          },
+          "whenFalse": ""
+        }
+      },
+      "san": {
+        "id": "san",
+        "type": "getPublicVariable",
+        "inputs": {
+          "id": 1
+        }
+      },
+      "sanLow": {
+        "id": "sanLow",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "<",
+          "left": {
+            "nodeId": "san",
+            "port": "value"
+          },
+          "right": 50
+        }
+      },
+      "selectedDiagnosis": {
+        "id": "selectedDiagnosis",
+        "type": "getVariable",
+        "inputs": {
+          "key": "his:selectedDiagnosisRecord"
+        }
+      },
+      "diagnosisNormalName": {
+        "id": "diagnosisNormalName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "selectedDiagnosis",
+            "port": "value"
+          },
+          "key": "normalName"
+        }
+      },
+      "diagnosisLowSanName": {
+        "id": "diagnosisLowSanName",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "selectedDiagnosis",
+            "port": "value"
+          },
+          "key": "lowSanName"
+        }
+      },
+      "diagnosisIcd10": {
+        "id": "diagnosisIcd10",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "selectedDiagnosis",
+            "port": "value"
+          },
+          "key": "icd10"
+        }
+      },
+      "diagnosisDisplayName": {
+        "id": "diagnosisDisplayName",
+        "type": "conditionalValue",
+        "inputs": {
+          "condition": {
+            "nodeId": "sanLow",
+            "port": "value"
+          },
+          "whenTrue": {
+            "nodeId": "diagnosisLowSanName",
+            "port": "value"
+          },
+          "whenFalse": {
+            "nodeId": "diagnosisNormalName",
+            "port": "value"
+          }
+        }
+      },
+      "diagnosisLabelJoin": {
+        "id": "diagnosisLabelJoin",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": {
+            "nodeId": "diagnosisIcd10",
+            "port": "value"
+          },
+          "right": " · "
+        }
+      },
+      "diagnosisLabel": {
+        "id": "diagnosisLabel",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "concat",
+          "left": {
+            "nodeId": "diagnosisLabelJoin",
+            "port": "value"
+          },
+          "right": {
+            "nodeId": "diagnosisDisplayName",
+            "port": "value"
+          }
+        }
+      },
+      "diagnosisSelected": {
+        "id": "diagnosisSelected",
+        "type": "getVariable",
+        "inputs": {
+          "key": "his:diagnosisChoice"
+        }
+      },
+      "diagnosisLabelVisible": {
+        "id": "diagnosisLabelVisible",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "and",
+          "left": {
+            "nodeId": "patient",
+            "port": "value"
+          },
+          "right": {
+            "nodeId": "diagnosisSelected",
+            "port": "value"
+          }
+        }
+      },
+      "existingCases": {
+        "id": "existingCases",
+        "type": "getVariable",
+        "inputs": {
+          "key": "his:existingCases"
+        }
+      },
+      "existingCaseCount": {
+        "id": "existingCaseCount",
+        "type": "getProperty",
+        "inputs": {
+          "value": {
+            "nodeId": "existingCases",
+            "port": "value"
+          },
+          "key": "length"
+        }
+      },
+      "alreadySubmitted": {
+        "id": "alreadySubmitted",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": ">",
+          "left": {
+            "nodeId": "existingCaseCount",
+            "port": "value"
+          },
+          "right": 0
+        }
+      },
+      "notAlreadySubmitted": {
+        "id": "notAlreadySubmitted",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "not",
+          "left": {
+            "nodeId": "alreadySubmitted",
+            "port": "value"
+          },
+          "right": null
+        }
+      },
+      "patientAvailable": {
+        "id": "patientAvailable",
+        "type": "getVariable",
+        "inputs": {
+          "key": "his:selectedPatient"
+        }
+      },
+      "patientChosen": {
+        "id": "patientChosen",
+        "type": "arithmetic",
+        "inputs": {
+          "operator": "and",
+          "left": {
+            "nodeId": "notAlreadySubmitted",
+            "port": "value"
+          },
+          "right": {
+            "nodeId": "patient",
+            "port": "value"
+          }
+        }
+      }
+    }
+  },
+  "root": {
+    "widgetId": "root",
+    "type": "container",
+    "className": "his-layout",
+    "flow": "horizontal",
+    "gap": 6,
+    "padding": 6,
+    "children": [
+      {
+        "widgetId": "his-patient-panel",
+        "type": "container",
+        "className": "his-patient-list panel-inset",
+        "flow": "vertical",
+        "gap": 8,
+        "minSize": {
+          "width": 140
+        },
+        "children": [
+          {
+            "widgetId": "his-patient-panel-title",
+            "type": "label",
+            "text": "患者列表"
+          },
+          {
+            "widgetId": "his-patient-clock",
+            "type": "clock",
+            "format": "his",
+            "className": "his-patient-clock"
+          },
+          {
+            "widgetId": "his-patient-list",
+            "type": "list",
+            "items": {
+              "nodeId": "patientItems",
+              "port": "value"
+            },
+            "itemLabelField": "name",
+            "itemType": "button",
+            "itemDisabledField": "disabled",
+            "itemClassField": "statusClass",
+            "itemClassName": "his-patient-btn",
+            "events": {
+              "onItemClick": {
+                "cl2": "/** CL2 export for activity data/windows/his.json.root.children[0].children[2].events.onItemClick Generated from canonical blueprint JSON. */ start: flowStart(); getPatient: getRecord(\"patients\", {\"variable\":\"event:value\"}, \"his:selectedPatient\"); findExistingCases: findRecords(\"medicalCases\", {\"patientId\":{\"variable\":\"event:value\"}}, \"his:existingCases\"); clearDiagnosisCategory: setVariable(\"his:diagnosisCategoryChoice\", \"\"); clearDiagnosisOptions: setVariable(\"his:diagnosisOptions\", []); clearDiagnosis: setVariable(\"his:diagnosisChoice\", \"\"); clearSelectedDiagnosisRecord: setVariable(\"his:selectedDiagnosisRecord\", null); clearMedCategory1: setVariable(\"his:medCategoryChoice1\", \"\"); clearMedOptions1: setVariable(\"his:medOptions1\", []); clearMedChoice1: setVariable(\"his:medChoice1\", \"\"); clearMedCategory2: setVariable(\"his:medCategoryChoice2\", \"\"); clearMedOptions2: setVariable(\"his:medOptions2\", []); clearMedChoice2: setVariable(\"his:medChoice2\", \"\"); clearMedCategory3: setVariable(\"his:medCategoryChoice3\", \"\"); clearMedOptions3: setVariable(\"his:medOptions3\", []); clearMedChoice3: setVariable(\"his:medChoice3\", \"\"); clearMedCategory4: setVariable(\"his:medCategoryChoice4\", \"\"); clearMedOptions4: setVariable(\"his:medOptions4\", []); clearMedChoice4: setVariable(\"his:medChoice4\", \"\"); clearMedCategory5: setVariable(\"his:medCategoryChoice5\", \"\"); clearMedOptions5: setVariable(\"his:medOptions5\", []); clearMedChoice5: setVariable(\"his:medChoice5\", \"\"); clearResult: setVariable(\"his:resultMessage\", \"\"); markPatientSelected: markEventState(\"first_patient_selected\"); end: end();"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "widgetId": "his-main-panel",
+        "type": "container",
+        "className": "his-main",
+        "flow": "vertical",
+        "gap": 8,
+        "children": [
+          {
+            "widgetId": "his-patient-header",
+            "type": "container",
+            "className": "his-patient-header",
+            "flow": "horizontal",
+            "gap": 6,
+            "align": "center",
+            "children": [
+              {
+                "widgetId": "his-patient-name",
+                "type": "label",
+                "text": {
+                  "nodeId": "patientHeader",
+                  "port": "value"
+                }
+              },
+              {
+                "widgetId": "his-patient-age",
+                "type": "label",
+                "text": {
+                  "nodeId": "patientAgeLabel",
+                  "port": "value"
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "his-start-dialogue",
+            "type": "button",
+            "text": "开始问诊",
+            "enabled": {
+              "nodeId": "patientAvailable",
+              "port": "value"
+            },
+            "events": {
+              "onClick": {
+                "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[1].events.onClick Generated from canonical blueprint JSON. */ reusablevalue activityIdProp__value: getProperty[{\"variable\":\"his:selectedPatient\"}, \"dialogueActivityId\"]; start: flowStart(); openDialogueWindow: openWindow(\"dialogue\"); openDialogue: emitEvent(\"his:dialogue_started\", {\"patientId\":{\"variable\":\"his:selectedPatient\"}}) { default runDialogue; }; markDialogueStarted: markEventState(\"first_dialogue_started\") { default end; }; runDialogue: runActivity(activityIdProp__value[], \"main\") { default markDialogueStarted; }; end: end();"
+              }
+            }
+          },
+          {
+            "widgetId": "his-diagnosis-panel",
+            "type": "container",
+            "className": "his-diagnosis panel-inset",
+            "flow": "vertical",
+            "gap": 4,
+            "children": [
+              {
+                "widgetId": "his-diagnosis-label",
+                "type": "label",
+                "text": "诊断"
+              },
+              {
+                "widgetId": "his-diagnosis-category-select",
+                "type": "select",
+                "className": "his-diagnosis-category",
+                "options": {
+                  "variable": "his:diagnosisCategories"
+                },
+                "optionValueField": "id",
+                "optionLabelField": "name",
+                "placeholder": "-- 选择分类 --",
+                "value": {
+                  "variable": "his:diagnosisCategoryChoice"
+                },
+                "events": {
+                  "onChange": {
+                    "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[2].children[1].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); setCategory: setVariable(\"his:diagnosisCategoryChoice\", {\"variable\":\"event:value\"}); findDiagnoses: findRecords(\"diagnoses\", {\"categoryId\":{\"variable\":\"event:value\"}}, \"his:diagnosisOptions\"); clearDiagnosis: setVariable(\"his:diagnosisChoice\", \"\"); clearSelectedDiagnosisRecord: setVariable(\"his:selectedDiagnosisRecord\", null); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "his-diagnosis-select",
+                "type": "select",
+                "className": "his-diagnosis-select",
+                "options": {
+                  "variable": "his:diagnosisOptions"
+                },
+                "optionValueField": "id",
+                "optionLabelField": "normalName",
+                "placeholder": "-- 选择分类 --",
+                "enabled": {
+                  "variable": "his:diagnosisCategoryChoice"
+                },
+                "value": {
+                  "variable": "his:diagnosisChoice"
+                },
+                "events": {
+                  "onChange": {
+                    "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[2].children[2].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); setDiagnosis: setVariable(\"his:diagnosisChoice\", {\"variable\":\"event:value\"}); getDiagnosisRecord: getRecord(\"diagnoses\", {\"variable\":\"event:value\"}, \"his:selectedDiagnosisRecord\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "his-diagnosis-selected-label",
+                "type": "label",
+                "className": "his-diagnosis-selected-label",
+                "text": {
+                  "nodeId": "diagnosisLabel",
+                  "port": "value"
+                },
+                "visible": {
+                  "nodeId": "diagnosisLabelVisible",
+                  "port": "value"
+                }
+              }
+            ]
+          },
+          {
+            "widgetId": "his-prescription-panel",
+            "type": "container",
+            "className": "his-prescription panel-inset",
+            "flow": "vertical",
+            "gap": 4,
+            "children": [
+              {
+                "widgetId": "his-prescription-label",
+                "type": "label",
+                "text": "处方（最多 5 种药品，每行独立按分类筛选）"
+              },
+              {
+                "widgetId": "his-prescription-rows",
+                "type": "container",
+                "className": "his-prescription-rows",
+                "flow": "vertical",
+                "gap": 4,
+                "children": [
+                  {
+                    "widgetId": "his-prescription-row-1",
+                    "type": "container",
+                    "className": "his-prescription-row",
+                    "componentActions": [
+                      "add",
+                      "remove"
+                    ],
+                    "events": {
+                      "onAdd": {
+                        "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[3].children[1].children[0].events.onAdd Generated from canonical blueprint JSON. */ start: flowStart(); add: addWindowComponent(\"his\", \"his-prescription-rows\", \"container\", \"his:lastPrescriptionComponentId\", 5, {\"type\":\"container\",\"className\":\"his-prescription-row\",\"componentActions\":[\"add\",\"remove\"],\"flow\":\"horizontal\",\"gap\":6,\"children\":[{\"widgetId\":\"his-medicine-category-1\",\"type\":\"select\",\"className\":\"his-medicine-category\",\"options\":{\"variable\":\"his:medicineCategories\"},\"optionValueField\":\"id\",\"optionLabelField\":\"name\",\"placeholder\":\"选择药品分类\",\"value\":{\"variable\":\"his:medCategoryChoice1\"},\"events\":{\"onChange\":{\"startNodeId\":\"start\",\"nodes\":{\"start\":{\"id\":\"start\",\"type\":\"flowStart\",\"inputs\":{},\"next\":{\"flowOut\":{\"nodeId\":\"setMedCategory1\",\"port\":\"flowIn\"}}},\"setMedCategory1\":{\"id\":\"setMedCategory1\",\"type\":\"setVariable\",\"inputs\":{\"key\":\"his:medCategoryChoice1\",\"value\":{\"variable\":\"event:value\"}},\"next\":{\"flowOut\":{\"nodeId\":\"findMedicines1\",\"port\":\"flowIn\"}}},\"findMedicines1\":{\"id\":\"findMedicines1\",\"type\":\"findRecords\",\"inputs\":{\"databaseId\":\"medicines\",\"query\":{\"categoryId\":{\"variable\":\"event:value\"}},\"resultVariable\":\"his:medOptions1\"},\"next\":{\"flowOut\":{\"nodeId\":\"clearMedChoice1\",\"port\":\"flowIn\"}}},\"clearMedChoice1\":{\"id\":\"clearMedChoice1\",\"type\":\"setVariable\",\"inputs\":{\"key\":\"his:medChoice1\",\"value\":\"\"},\"next\":{\"flowOut\":{\"nodeId\":\"end\",\"port\":\"flowIn\"}}},\"end\":{\"id\":\"end\",\"type\":\"activityEnd\",\"inputs\":{}}}}}},{\"widgetId\":\"his-medicine-select-1\",\"type\":\"select\",\"className\":\"his-medicine-select\",\"options\":{\"variable\":\"his:medOptions1\"},\"optionValueField\":\"id\",\"optionLabelField\":\"name\",\"placeholder\":\"选择药品\",\"value\":{\"variable\":\"his:medChoice1\"},\"events\":{\"onChange\":{\"startNodeId\":\"start\",\"nodes\":{\"start\":{\"id\":\"start\",\"type\":\"flowStart\",\"inputs\":{},\"next\":{\"flowOut\":{\"nodeId\":\"setMedChoice1\",\"port\":\"flowIn\"}}},\"setMedChoice1\":{\"id\":\"setMedChoice1\",\"type\":\"setVariable\",\"inputs\":{\"key\":\"his:medChoice1\",\"value\":{\"variable\":\"event:value\"}},\"next\":{\"flowOut\":{\"nodeId\":\"end\",\"port\":\"flowIn\"}}},\"end\":{\"id\":\"end\",\"type\":\"activityEnd\",\"inputs\":{}}}}}}]}); end: end();"
+                      },
+                      "onRemove": {
+                        "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[3].children[1].children[0].events.onRemove Generated from canonical blueprint JSON. */ start: flowStart(); remove: removeWindowComponent(\"his\", {\"variable\":\"event:componentId\"}); clear: setVariable(\"his:lastPrescriptionComponentId\", null); end: end();"
+                      }
+                    },
+                    "flow": "horizontal",
+                    "gap": 6,
+                    "children": [
+                      {
+                        "widgetId": "his-medicine-category-1",
+                        "type": "select",
+                        "className": "his-medicine-category",
+                        "options": {
+                          "variable": "his:medicineCategories"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品分类",
+                        "value": {
+                          "variable": "his:medCategoryChoice1"
+                        },
+                        "events": {
+                          "onChange": {
+                            "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[3].children[1].children[0].children[0].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); setMedCategory1: setVariable(\"his:medCategoryChoice1\", {\"variable\":\"event:value\"}); findMedicines1: findRecords(\"medicines\", {\"categoryId\":{\"variable\":\"event:value\"}}, \"his:medOptions1\"); clearMedChoice1: setVariable(\"his:medChoice1\", \"\"); end: end();"
+                          }
+                        }
+                      },
+                      {
+                        "widgetId": "his-medicine-select-1",
+                        "type": "select",
+                        "className": "his-medicine-select",
+                        "options": {
+                          "variable": "his:medOptions1"
+                        },
+                        "optionValueField": "id",
+                        "optionLabelField": "name",
+                        "placeholder": "选择药品",
+                        "value": {
+                          "variable": "his:medChoice1"
+                        },
+                        "events": {
+                          "onChange": {
+                            "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[3].children[1].children[0].children[1].events.onChange Generated from canonical blueprint JSON. */ start: flowStart(); setMedChoice1: setVariable(\"his:medChoice1\", {\"variable\":\"event:value\"}); end: end();"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "widgetId": "his-submit",
+                "type": "button",
+                "text": "提交诊断",
+                "enabled": {
+                  "nodeId": "patientChosen",
+                  "port": "value"
+                },
+                "events": {
+                  "onClick": {
+                    "cl2": "/** CL2 export for activity data/windows/his.json.root.children[1].children[3].children[2].events.onClick Generated from canonical blueprint JSON. */ reusablevalue bonus__value: conditionalValue[isCorrect__value[], 200, 0]; reusablevalue commissionSum1__value: arithmetic[\"+\", medCommission1__value[], 0]; reusablevalue commissionSum2__value: arithmetic[\"+\", commissionSum1__value[], medCommission2__value[]]; reusablevalue commissionSum3__value: arithmetic[\"+\", commissionSum2__value[], medCommission3__value[]]; reusablevalue commissionSum4__value: arithmetic[\"+\", commissionSum3__value[], medCommission4__value[]]; reusablevalue commissionSum5__value: arithmetic[\"+\", commissionSum4__value[], medCommission5__value[]]; reusablevalue correctDiagnosisId__value: getProperty[patientVar__value[], \"correctDiagnosisId\"]; reusablevalue diagnosisChoiceVal__value: getVariable[\"his:diagnosisChoice\"]; reusablevalue diagnosisPart__value: conditionalValue[isCorrect__value[], \"正确，奖金 +200\", \"错误，无诊断奖金\"]; reusablevalue finalMessage__value: arithmetic[\"concat\", msg5__value[], \" 元。\"]; reusablevalue hasDiagnosis__value: arithmetic[\"not\", isDiagnosisEmpty__value[]]; reusablevalue income__value: getPublicVariable[2]; reusablevalue isCorrect__value: arithmetic[\"=\", diagnosisChoiceVal__value[], correctDiagnosisId__value[]]; reusablevalue isDiagnosisEmpty__value: arithmetic[\"=\", diagnosisChoiceVal__value[], \"\"]; reusablevalue isMedEmpty1__value: arithmetic[\"=\", medRecordVar1__value[], null]; reusablevalue isMedEmpty2__value: arithmetic[\"=\", medRecordVar2__value[], null]; reusablevalue isMedEmpty3__value: arithmetic[\"=\", medRecordVar3__value[], null]; reusablevalue isMedEmpty4__value: arithmetic[\"=\", medRecordVar4__value[], null]; reusablevalue isMedEmpty5__value: arithmetic[\"=\", medRecordVar5__value[], null]; reusablevalue medCommission1__value: conditionalValue[isMedEmpty1__value[], 0, medCommissionRaw1__value[]]; reusablevalue medCommission2__value: conditionalValue[isMedEmpty2__value[], 0, medCommissionRaw2__value[]]; reusablevalue medCommission3__value: conditionalValue[isMedEmpty3__value[], 0, medCommissionRaw3__value[]]; reusablevalue medCommission4__value: conditionalValue[isMedEmpty4__value[], 0, medCommissionRaw4__value[]]; reusablevalue medCommission5__value: conditionalValue[isMedEmpty5__value[], 0, medCommissionRaw5__value[]]; reusablevalue medCommissionRaw1__value: getProperty[medRecordVar1__value[], \"commission\"]; reusablevalue medCommissionRaw2__value: getProperty[medRecordVar2__value[], \"commission\"]; reusablevalue medCommissionRaw3__value: getProperty[medRecordVar3__value[], \"commission\"]; reusablevalue medCommissionRaw4__value: getProperty[medRecordVar4__value[], \"commission\"]; reusablevalue medCommissionRaw5__value: getProperty[medRecordVar5__value[], \"commission\"]; reusablevalue medRecordVar1__value: getVariable[\"his:medRecord1\"]; reusablevalue medRecordVar2__value: getVariable[\"his:medRecord2\"]; reusablevalue medRecordVar3__value: getVariable[\"his:medRecord3\"]; reusablevalue medRecordVar4__value: getVariable[\"his:medRecord4\"]; reusablevalue medRecordVar5__value: getVariable[\"his:medRecord5\"]; reusablevalue msg1__value: arithmetic[\"concat\", \"诊断\", diagnosisPart__value[]]; reusablevalue msg2__value: arithmetic[\"concat\", msg1__value[], \"。药品提成 +\"]; reusablevalue msg3__value: arithmetic[\"concat\", msg2__value[], commissionSum5__value[]]; reusablevalue msg4__value: arithmetic[\"concat\", msg3__value[], \" 元；当前收入：\"]; reusablevalue msg5__value: arithmetic[\"concat\", msg4__value[], income__value[]]; reusablevalue patientId__value: getProperty[patientVar__value[], \"id\"]; reusablevalue patientVar__value: getVariable[\"his:selectedPatient\"]; reusablevalue totalDelta__value: arithmetic[\"+\", bonus__value[], commissionSum5__value[]]; start: flowStart(); checkDiagnosis: branch(hasDiagnosis__value[]) { option<1> getMedRecord1; }; setNoDiagnosisMessage: setVariable(\"his:resultMessage\", \"请先选择诊断。\") { default end; }; getMedRecord1: getRecord(\"medicines\", {\"variable\":\"his:medChoice1\"}, \"his:medRecord1\"); getMedRecord2: getRecord(\"medicines\", {\"variable\":\"his:medChoice2\"}, \"his:medRecord2\"); getMedRecord3: getRecord(\"medicines\", {\"variable\":\"his:medChoice3\"}, \"his:medRecord3\"); getMedRecord4: getRecord(\"medicines\", {\"variable\":\"his:medChoice4\"}, \"his:medRecord4\"); getMedRecord5: getRecord(\"medicines\", {\"variable\":\"his:medChoice5\"}, \"his:medRecord5\"); create: createRecord(\"medicalCases\", {\"patientId\":{\"nodeId\":\"patientId\",\"port\":\"value\"},\"diagnosisId\":{\"nodeId\":\"diagnosisChoiceVal\",\"port\":\"value\"},\"prescribedMedicineIds\":[{\"variable\":\"his:medChoice1\"},{\"variable\":\"his:medChoice2\"},{\"variable\":\"his:medChoice3\"},{\"variable\":\"his:medChoice4\"},{\"variable\":\"his:medChoice5\"}],\"correct\":{\"nodeId\":\"isCorrect\",\"port\":\"value\"},\"status\":\"submitted\",\"bonus\":{\"nodeId\":\"bonus\",\"port\":\"value\"},\"commission\":{\"nodeId\":\"commissionSum5\",\"port\":\"value\"}}, \"his:lastCase\"); applyEffect: applyPublicVariableEffect(2, totalDelta__value[]); refreshExisting: findRecords(\"medicalCases\", {\"patientId\":{\"nodeId\":\"patientId\",\"port\":\"value\"}}, \"his:existingCases\"); setMessage: setVariable(\"his:resultMessage\", finalMessage__value[]); publishSubmission: emitEvent(\"content:hisSubmit\", {\"case\":{\"variable\":\"his:lastCase\"},\"resultMessage\":{\"variable\":\"his:resultMessage\"},\"patientId\":{\"nodeId\":\"patientId\",\"port\":\"value\"}}); markSubmitted: markEventState(\"first_diagnosis_submitted\"); end: end();"
+                  }
+                }
+              },
+              {
+                "widgetId": "his-result",
+                "type": "label",
+                "className": "his-result",
+                "text": {
+                  "variable": "his:resultMessage"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "events": {
+    "onCreate": {
+      "cl2": "/** CL2 export for activity data/windows/his.json.events.onCreate Generated from canonical blueprint JSON. */ start: flowStart(); findPatients: findRecords(\"patients\", {}, \"his:patients\"); findDiagnosisCategories: findRecords(\"diagnosisCategories\", {}, \"his:diagnosisCategories\"); findMedicineCategories: findRecords(\"medicineCategories\", {}, \"his:medicineCategories\"); clearSelectedPatient: setVariable(\"his:selectedPatient\", null); clearExistingCases: setVariable(\"his:existingCases\", []); clearDiagnosisCategory: setVariable(\"his:diagnosisCategoryChoice\", \"\"); clearDiagnosisOptions: setVariable(\"his:diagnosisOptions\", []); clearDiagnosis: setVariable(\"his:diagnosisChoice\", \"\"); clearSelectedDiagnosisRecord: setVariable(\"his:selectedDiagnosisRecord\", null); clearMedCategory1: setVariable(\"his:medCategoryChoice1\", \"\"); clearMedOptions1: setVariable(\"his:medOptions1\", []); clearMedChoice1: setVariable(\"his:medChoice1\", \"\"); clearMedCategory2: setVariable(\"his:medCategoryChoice2\", \"\"); clearMedOptions2: setVariable(\"his:medOptions2\", []); clearMedChoice2: setVariable(\"his:medChoice2\", \"\"); clearMedCategory3: setVariable(\"his:medCategoryChoice3\", \"\"); clearMedOptions3: setVariable(\"his:medOptions3\", []); clearMedChoice3: setVariable(\"his:medChoice3\", \"\"); clearMedCategory4: setVariable(\"his:medCategoryChoice4\", \"\"); clearMedOptions4: setVariable(\"his:medOptions4\", []); clearMedChoice4: setVariable(\"his:medChoice4\", \"\"); clearMedCategory5: setVariable(\"his:medCategoryChoice5\", \"\"); clearMedOptions5: setVariable(\"his:medOptions5\", []); clearMedChoice5: setVariable(\"his:medChoice5\", \"\"); clearResult: setVariable(\"his:resultMessage\", \"\"); markHisOpened: markEventState(\"his_opened\"); end: end();"
+    },
+    "onDestroy": null
+  }
+}

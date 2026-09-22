@@ -1,0 +1,13 @@
+/** CL2 export for activity his__his-submit */
+/** Generated from canonical blueprint JSON. */
+
+reusablevalue __prerequisite____value: prerequisite[true];
+reusablevalue __schedule_expiry____value: activityExpiry[false, 0];
+
+start: flowStart();
+
+submit: emitEvent("content:hisSubmit", {});
+
+time: framework:consumeTime(20);
+
+end: end();

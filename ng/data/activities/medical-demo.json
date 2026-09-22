@@ -1,8 +1,0 @@
-{
-  "id":"medical-demo",
-  "displayName":"示例医疗预约",
-  "version":1,
-  "entry":"start",
-  "nodes":[{"id":"start","type":"start","data":{}},{"id":"wait","type":"blockUntil","data":{"condition":false}},{"id":"end","type":"end","data":{}}],
-  "connections":[{"id":"e1","from":{"node":"start","port":"next"},"to":{"node":"wait","port":"in"}},{"id":"e2","from":{"node":"wait","port":"next"},"to":{"node":"end","port":"in"}}]
-}

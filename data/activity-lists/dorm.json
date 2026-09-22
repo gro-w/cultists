@@ -1,0 +1,11 @@
+{
+  "id": "dorm",
+  "displayName": "宿舍活动",
+  "activityIds": [
+    "dorm_activity_day1",
+    "dorm_activity_day2",
+    "dorm_activity_day3",
+    "dorm_activity_day4",
+    "dorm_activity_day5"
+  ]
+}

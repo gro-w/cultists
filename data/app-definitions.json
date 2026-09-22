@@ -1,0 +1,121 @@
+{
+  "hisCustom": {
+    "version": 2,
+    "id": "his_custom",
+    "title": "HIS 医疗系统",
+    "icon": "🏥",
+    "width": 640,
+    "height": 460,
+    "background": "#d4d0c8",
+    "layout": "his",
+    "widgets": [
+      {
+        "id": "patient-list",
+        "type": "list",
+        "x": 0,
+        "y": 0,
+        "width": 140,
+        "height": 460,
+        "text": "候诊病人",
+        "cssClass": "his-patient-list panel-inset",
+        "onSelect": "his-select-patient"
+      },
+      {
+        "id": "medical-incidents",
+        "type": "panel",
+        "x": 0,
+        "y": 0,
+        "width": 488,
+        "height": 28,
+        "text": "",
+        "cssClass": "his-medical-incidents"
+      },
+      {
+        "id": "dialogue",
+        "type": "panel",
+        "x": 0,
+        "y": 0,
+        "width": 488,
+        "height": 190,
+        "text": "请先选择左侧病人",
+        "cssClass": "his-dialogue panel-inset"
+      },
+      {
+        "id": "diagnosis-panel",
+        "type": "panel",
+        "x": 0,
+        "y": 0,
+        "width": 488,
+        "height": 82,
+        "text": "诊断",
+        "cssClass": "his-diagnosis panel-inset"
+      },
+      {
+        "id": "diagnosis-category",
+        "type": "select",
+        "x": 0,
+        "y": 0,
+        "width": 210,
+        "height": 30,
+        "text": "诊断分类",
+        "cssClass": "diagnosis-category",
+        "onChange": "his-filter-diagnosis"
+      },
+      {
+        "id": "diagnosis",
+        "type": "select",
+        "x": 0,
+        "y": 0,
+        "width": 218,
+        "height": 30,
+        "text": "诊断",
+        "cssClass": "diagnosis-select"
+      },
+      {
+        "id": "prescription",
+        "type": "panel",
+        "x": 0,
+        "y": 0,
+        "width": 488,
+        "height": 136,
+        "text": "处方",
+        "cssClass": "his-prescription panel-inset"
+      },
+      {
+        "id": "medicine-1",
+        "type": "select",
+        "x": 0,
+        "y": 0,
+        "width": 250,
+        "height": 24,
+        "text": "药品"
+      },
+      {
+        "id": "submit",
+        "type": "button",
+        "x": 0,
+        "y": 0,
+        "width": 178,
+        "height": 34,
+        "text": "提交诊断与处方",
+        "onClick": "his-submit"
+      }
+    ],
+    "onCreate": "his-initialize",
+    "activityIds": {
+      "his-initialize": "his:his-initialize",
+      "his-search": "his:his-search",
+      "his-select-patient": "his:his-select-patient",
+      "his-filter-diagnosis": "his:his-filter-diagnosis",
+      "his-submit": "his:his-submit"
+    }
+  },
+  "desktopApps": [
+    {
+      "id": "his_custom",
+      "title": "自定义 HIS 原型",
+      "icon": "🏥",
+      "file": "app_his_custom.json"
+    }
+  ]
+}

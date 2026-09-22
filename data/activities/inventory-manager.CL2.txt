@@ -1,0 +1,8 @@
+/** CL2 export for activity inventory-manager */
+/** Generated from canonical blueprint JSON. */
+
+start: flowStart();
+
+ready: emitEvent("inventory:manager-ready", {"source":"inventory-manager"});
+
+end: end();

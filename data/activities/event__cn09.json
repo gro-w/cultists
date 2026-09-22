@@ -1,0 +1,13 @@
+{
+  "id": "event__一切谜锁都解开了",
+  "type": "specialEvent",
+  "displayName": "一切谜锁都解开了",
+  "blueprint": {
+    "startNodeId": "start",
+    "nodes": {
+      "start": {"id":"start","type":"flowStart","inputs":{}},
+      "end": {"id":"end","type":"activityEnd","inputs":{}}
+    },
+    "connections": [{"fromNodeId":"start","fromPort":"flowOut","toNodeId":"end","toPort":"flowIn"}]
+  }
+}

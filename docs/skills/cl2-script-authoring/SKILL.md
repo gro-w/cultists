@@ -25,9 +25,9 @@ metadata:
 ## Prerequisites
 
 1. 用 `read_file` 读取根目录 `AGENTS.md`、`docs/cl2-language.md` 和本文件。
-2. 用 `search_files` 找到目标 Activity、相邻 `.CL2.txt`、`data/activity-manifest.json`、相关 probe，以及节点注册表/解析器/验证器的实际路径。
+2. 用 `search_files` 找到目标 Activity、相邻 `.CL2.txt`、`data/activity-manifest.json`、相关当前 probe，以及节点注册表/解析器/验证器的实际路径。
 3. 用 `read_file` 读取目标文件和至少一个同类型样例；不要凭文件名猜节点端口。
-4. 确认目标是 canonical `.CL2.txt`，而不是迁移工具的旧 JSON、报告或 fixture。
+4. 确认目标是 canonical `.CL2.txt`，而不是旧 JSON、历史报告或 fixture。
 
 ## Core Contract
 
@@ -71,8 +71,8 @@ metadata:
 用 `terminal` 执行项目已有的 CL2 parser、validator、runtime probe 和相关 Activity probe。至少执行：
 
 ```text
-node probes/cl2-parser-probe.mjs
-node probes/cl2-roundtrip-probe.mjs
+node probes/cl2-runtime-probe.mjs
+node probes/cl2-editor-roundtrip-probe.mjs
 node probes/activity-runtime-probe.mjs
 git diff --check
 ```

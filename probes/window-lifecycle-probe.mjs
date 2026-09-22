@@ -11,7 +11,7 @@ import { GameClock } from "../core/GameClock.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../tools/OnboardingManager.js";
+import { OnboardingManager } from "../core/OnboardingManager.js";
 import { DataStructureManager } from "../core/DataStructureManager.js";
 import { DataStore } from "../core/DataStore.js";
 import { PublicVariableManager } from "../core/PublicVariableManager.js";

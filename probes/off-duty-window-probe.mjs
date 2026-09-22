@@ -17,7 +17,7 @@ import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../tools/OnboardingManager.js";
+import { OnboardingManager } from "../core/OnboardingManager.js";
 import { evaluateValueOutput } from "../core/ActivityRunner.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

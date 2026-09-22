@@ -2,7 +2,7 @@
 // actually runs end-to-end against the real seeded 48,195-entry QA table
 // (`data/databases/chatgtpQaEntries.json`) plus `chatgtpSettings`/`keywords` -
 // keyword-combo lookup (order-independent, matching
-// `migrate-legacy-chatgtp-qa.mjs`'s `entryKey()` convention), SAN gating
+// the canonical sorted keyword-id `entryKey()` convention), SAN gating
 // via public variable id 5 ("ChatGTP SAN"), per-query SAN cost, offline
 // fallback when SAN is depleted, and a not-found combo's graceful
 // fallback message. Only exercises the generic node set + widget-tree
@@ -20,13 +20,13 @@ import { RuntimeRefResolver } from "../core/RuntimeRefResolver.js";
 import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
-import { OnboardingManager } from "../tools/OnboardingManager.js";
-import { entryKey } from "../tools/migrate-legacy-chatgtp-qa.mjs";
+import { OnboardingManager } from "../core/OnboardingManager.js";
 import { decodeCl2Blueprints } from "../core/Cl2Embedded.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(__dirname, "../data");
 const readJSON = (relPath) => JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
+const entryKey = (keywordIds) => [...keywordIds].map((id) => String(id).trim().toLowerCase()).sort().join("+");
 
 const dataStructureManager = new DataStructureManager();
 dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));

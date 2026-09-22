@@ -1,7 +1,7 @@
 // Phase 8 "playable slice" probe: proves the first real migrated content
 // (`data/activities/work01a-patient1.json`, converted verbatim from
 // `data/zh-hans/work01a.json`'s first `his` patient entry via
-// `migrate-legacy-blueprint.mjs`) actually runs end-to-end through the
+// canonical CL2 Activity definition actually runs end-to-end through the
 // exact same gateway wiring `engine.js` uses - `openWindow` fires the
 // generic display window, `text`/`choice` nodes emit `display:text`/
 // `display:choice`, and a player picking the first option every time

@@ -1,8 +1,0 @@
-/** CL2 export for activity achievement__tabletop_veteran */
-/** Generated from canonical blueprint JSON. */
-
-start: flowStart();
-
-unlock: emitEvent("achievement:display", {"achievementId":"tabletop_veteran"});
-
-end: end();

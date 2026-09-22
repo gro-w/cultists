@@ -11,8 +11,8 @@ import { ActivityQueueRegistry } from "../core/ActivityQueueRegistry.js";
 import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { WindowManager } from "../core/WindowManager.js";
 import { DesktopIconManager } from "../core/DesktopIconManager.js";
-import { KeywordManager } from "../tools/KeywordManager.js";
-import { OnboardingManager } from "../tools/OnboardingManager.js";
+import { KeywordManager } from "../core/KeywordManager.js";
+import { OnboardingManager } from "../core/OnboardingManager.js";
 import { ACTIVITY_EVENTS } from "../core/ActivityEvents.js";
 import { SaveManager } from "../core/SaveManager.js";
 

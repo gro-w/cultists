@@ -1,8 +1,0 @@
-/** CL2 export for activity keyword-manager */
-/** Generated from canonical blueprint JSON. */
-
-start: flowStart();
-
-ready: emitEvent("keyword:manager-ready", {"source":"keyword-manager"});
-
-end: end();

@@ -8,7 +8,7 @@
 
 - 原生 HTML、CSS 和 ES modules，无框架、无 bundler、无构建步骤
 - CL2（Cultists Blueprint & Script Language 2）统一脚本图语言：Activity 运行时和编辑器直接使用 `.CL2.txt`，以显式节点、`option<x>`、`default` 和纯值表达式表示蓝图图结构
-- 提供离线 `tools/migration/blueprint_to_cl2.py`，用于审计旧 Activity JSON 并重新生成 CL2；转换器区分四类蓝图节点，并用 `inputvalue` 表达数值接收节点
+
 - Windows 95 风格桌面、任务栏、开始菜单、窗口和数据驱动应用
 - 医院工作与宿舍生活两种场景，以及工作、社交、管理器和主活动队列
 - 确定性的游戏时钟：普通行动默认推进 20 分钟，睡眠和跨日按明确边界结算
@@ -103,7 +103,7 @@ media/                     历史宣传资源和设计稿
 
 编辑器写入 canonical 数据，存档调试器只修改存档和运行时状态。运行时集合可以通过数据定义中的 `stateAliases` 兼容旧稳定 ID，恢复时 canonical ID 优先；也可以通过 `activityQueueId` 把 Activity 队列投影给 CL2 窗口列表，队列变化会自动触发窗口刷新。集合还支持声明式派生字段、数据库 lookup、前置占位选项和 canonical 收集状态复用；ChatGTP 窗口按来源、类别、关键词三行筛选，类别为“不选择”时跳过类别过滤。Activity 对话 transcript 支持只读回放，不会重新执行剧情节点；开发 Activity 调试器提供结局 Activity 触发入口，仍通过正常 `runActivity` API 执行。社交媒体窗口尺寸和标签栏布局与 main 分支旧应用保持一致。新增内容应优先使用 CL2 和数据，不要把业务逻辑写进 JavaScript。
 
-ChatGTP QA 与 Turtle Soup 的运行时数据分别由 `data/databases/chatgtpQaEntries.json` 和 `data/databases/turtleSoupPuzzles.json` 唯一持有；迁移工具、manifest 和探针不得重新引入已删除的重复 seed/native 文件。
+ChatGTP QA 与 Turtle Soup 的运行时数据分别由 `data/databases/chatgtpQaEntries.json` 和 `data/databases/turtleSoupPuzzles.json` 唯一持有；manifest 和探针不得重新引入已删除的重复 seed/native 文件。
 
 ## 开发与验证
 

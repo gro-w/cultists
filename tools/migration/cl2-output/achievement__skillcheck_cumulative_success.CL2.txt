@@ -1,8 +1,0 @@
-/** CL2 export for activity achievement__skillcheck_cumulative_success */
-/** Generated from canonical blueprint JSON. */
-
-start: flowStart();
-
-unlock: emitEvent("achievement:display", {"achievementId":"skillcheck_cumulative_success"});
-
-end: end();

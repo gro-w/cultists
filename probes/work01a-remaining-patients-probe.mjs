@@ -2,7 +2,7 @@ import "./register-framework-nodes.mjs";
 
 // Phase 8 slice: the remaining 6 of `work01a.json`'s 7 patients (only
 // patient 1 was wired in the earlier "first playable slice"), batch
-// converted via the existing `migrate-legacy-blueprint.mjs#convertBlueprint`
+// represented by the canonical CL2 Activity definitions
 // tool (0 blocked node types, same as patient 1) into
 // `work01a-patient{2..7}.json` + `-start.json` wrapper pairs, added to
 // `data/activity-lists/default.json`, and seeded into the `patients`

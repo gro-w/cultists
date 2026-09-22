@@ -59,7 +59,7 @@
 - CL2 内嵌值绑定必须递归解析；自定义流程节点的隐式 `default` 必须映射到其声明的首个流程出口，framework 宏不得调用未注册的领域 API。
 - 显示节点的 canonical `text` 调用使用 `displayTo, speaker, text, ...` 顺序；动态窗口组件复制必须合并模板事件，不能因生命周期事件覆盖 `onAdd`/`onRemove` 等交互蓝图。
 - CL2（Cultists Blueprint & Script Language 2）统一脚本图语言规范见 [`cl2-language.md`](cl2-language.md)。Activity 运行时、定义存储和编辑器均使用 CL2；旧 JSON 仅作为迁移审计输入，不是生产 Activity source。CL2 采用显式节点 ID、`option<x>` 分支、`default` 默认出口、纯值函数和 `if` 回边。
-- `tools/migration/blueprint_to_cl2.py` 是离线审计/再生成工具：读取旧 `data/activities/*.json`，写出 `*.CL2.txt` 和 `conversion-report.json`，不得作为生产 loader，也不得覆盖 CL2 canonical 文件；转换时必须区分四类节点，第 4 类使用 `inputvalue` 表达；有损或无法对应的旧端口必须保留在报告中。
+
 
 ## 数据、版权和字体
 
@@ -77,7 +77,7 @@
 - 活动调试器必须订阅 Activity 生命周期事件实时刷新，并通过运行时 API 修改实例节点、状态、本地变量和队列，不得直接改写隐藏的 runner/Map。
 - 活动调试器的“触发结局”入口必须筛选 canonical ending Activity 并调用公开的 `runActivity` API；不得直接改写隐藏队列或绕过 Activity 执行系统。对话 transcript 回放必须同时投递到 DisplayReceiverRegistry 与公开事件总线，确保已挂载窗口不会只出现空容器。社交媒体窗口如需保持旧版布局，应在窗口数据和通用 Widget/CSS 契约中声明 main 分支的尺寸、标签栏和滚动边界，不得新增业务 JavaScript。
 - ChatGTP QA 和 Turtle Soup 的运行时 canonical owner 分别是 `data/databases/chatgtpQaEntries.json` 与 `data/databases/turtleSoupPuzzles.json`；不得重新注册已删除的 seed/native 重复副本。
-- 发布版必须移除开发工具、编辑器、调试入口、本地写盘服务器和迁移工具，同时保留运行时所需的 framework/game 数据与 core 能力。
+- 发布版必须移除开发工具、编辑器、调试入口、本地写盘服务器、审计工具和确定性探针，同时保留运行时所需的 framework/game 数据与 core 能力。
 
 ## 修改与验证
 

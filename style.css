@@ -1391,6 +1391,122 @@ input[type="range"] {
   font-size: 11px;
 }
 
+.ng-blueprint-node-visual {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(120px, 0.8fr) minmax(150px, 1fr);
+  align-items: center;
+  gap: 5px;
+  min-height: 150px;
+  padding: 8px 5px;
+  overflow-x: auto;
+  border: 1px dashed var(--w95-gray-dark);
+  background: var(--w95-gray-light);
+}
+
+.ng-blueprint-node-visual-side {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ng-blueprint-node-visual-core {
+  display: flex;
+  min-width: 112px;
+  min-height: 74px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px;
+  border: 2px outset var(--w95-gray);
+  background: var(--w95-gray);
+  text-align: center;
+}
+
+.ng-blueprint-node-visual-title {
+  overflow-wrap: anywhere;
+  font-weight: bold;
+}
+
+.ng-blueprint-node-visual-kind {
+  padding: 2px 6px;
+  border: 1px solid var(--w95-gray-dark);
+  background: var(--w95-gray-light);
+}
+
+.ng-blueprint-node-visual-core small {
+  color: var(--w95-gray-dark);
+  overflow-wrap: anywhere;
+}
+
+.ng-blueprint-node-port-group {
+  min-width: 0;
+}
+
+.ng-blueprint-node-port-group-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 3px;
+}
+
+.ng-blueprint-node-port-group-heading h4 {
+  margin: 0;
+  font-size: 11px;
+}
+
+.ng-blueprint-node-port-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  margin: 3px 0;
+}
+
+.ng-blueprint-node-visual-side.outputs .ng-blueprint-node-port-row {
+  flex-direction: row-reverse;
+}
+
+.ng-blueprint-node-port-row input[data-port-field="name"] {
+  box-sizing: border-box;
+  width: 78px;
+  min-width: 38px;
+}
+
+.ng-blueprint-node-port-row select[data-port-field="type"] {
+  width: 62px;
+  min-width: 48px;
+}
+
+.ng-blueprint-node-pin-socket {
+  box-sizing: border-box;
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  border: 2px solid #064b8d;
+  border-radius: 50%;
+  background: #9fc8ef;
+}
+
+.ng-blueprint-node-port-row.value .ng-blueprint-node-pin-socket {
+  border-color: #28633b;
+  background: #a6d5ae;
+}
+
+.ng-blueprint-node-pin-add,
+.ng-blueprint-node-pin-remove {
+  min-width: 23px;
+  min-height: 22px;
+  padding: 0 4px;
+  font-weight: bold;
+}
+
+.ng-blueprint-node-pin-remove:disabled {
+  opacity: 0.5;
+}
+
 .ng-activity-editor {
   display: flex;
   flex-direction: column;

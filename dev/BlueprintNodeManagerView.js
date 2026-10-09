@@ -28,6 +28,7 @@ export class BlueprintNodeManagerView {
     this.dataLoader = dataLoader || null;
     this.openEditor = openEditor || (() => {});
     this.selectedId = null;
+    this.draft = null;
     this._buildDom();
     this.render();
   }
@@ -57,11 +58,7 @@ export class BlueprintNodeManagerView {
     const id = prompt(t("legacy.8cb077e8d362"));
     if (!id || this.nodes.some((node) => node.id === id)) return;
     if (!/^[a-zA-Z][\w:-]*$/.test(id)) return alert(t("legacy.b28a0976574b"));
-    const kind = prompt("自定义节点类型：flow 或 value", "flow");
-    if (kind !== "flow" && kind !== "value") return;
-    const node = kind === "flow"
-      ? { id, label: id, flowInputs: [{ name: "flowIn", kind: "flow" }], flowOutputs: [{ name: "flowOut", kind: "flow" }], valueInputs: [], valueOutputs: [], blueprint: starterBlueprint("flow") }
-      : { id, label: id, flowInputs: [], flowOutputs: [], valueInputs: [], valueOutputs: [{ name: "value", kind: "value", receiverId: "result" }], blueprint: starterBlueprint("value") };
+    const node = { id, label: id, flowInputs: [{ name: "flowIn", kind: "flow" }], flowOutputs: [{ name: "flowOut", kind: "flow" }], valueInputs: [], valueOutputs: [], blueprint: starterBlueprint("flow") };
     this.nodes.push(node);
     registerCustomActivityNode(node);
     this.selectedId = id;
@@ -94,6 +91,7 @@ export class BlueprintNodeManagerView {
       ? this.nodes.find((entry) => entry.id === nodeOrId)
       : nodeOrId;
     if (!node) return false;
+    if (this.selectedId === node.id && this.detailEl?.querySelector('[data-field="label"]') && !this._saveNode(node)) return false;
     this.openEditor(node, (blueprint) => {
       const next = { ...structuredClone(node), blueprint: structuredClone(blueprint) };
       try {
@@ -103,55 +101,181 @@ export class BlueprintNodeManagerView {
         return false;
       }
       Object.assign(node, next);
+      this.draft = null;
       this.render();
       return true;
     });
     return true;
   }
 
-  _saveNode(node, fields) {
-    const next = structuredClone(node);
-    next.label = this.detailEl.querySelector('[data-field="label"]').value.trim() || node.id;
-    next.description = this.detailEl.querySelector('[data-field="description"]').value.trim();
+  _getDraft(node) {
+    if (this.draft?.id !== node.id) this.draft = structuredClone(node);
+    return this.draft;
+  }
+
+  _readDraftFromInspector(node) {
+    const draft = this._getDraft(node);
+    draft.label = this.detailEl.querySelector('[data-field="label"]').value.trim() || node.id;
+    draft.description = this.detailEl.querySelector('[data-field="description"]').value.trim();
     for (const key of ["flowInputs", "flowOutputs", "valueInputs", "valueOutputs"]) {
-      next[key] = [...this.detailEl.querySelectorAll(`[data-port-group="${key}"] [data-port-row]`)].map((row) => {
-        const index = Number(row.dataset.portIndex);
-        const port = structuredClone(node[key]?.[index] || {});
+      draft[key] = [...this.detailEl.querySelectorAll(`[data-port-group="${key}"] [data-port-row]`)].map((row, index) => {
+        const port = structuredClone(draft[key]?.[index] || this._newPort(draft, key));
         port.name = row.querySelector('[data-port-field="name"]').value.trim();
         if (key.startsWith("flow")) {
           port.kind = "flow";
           delete port.type;
         } else {
           port.kind = "value";
-          const type = row.querySelector('[data-port-field="type"]').value;
-          if (type === "any") delete port.type;
-          else port.type = type;
+          port.type = row.querySelector('[data-port-field="type"]').value;
         }
         return port;
       });
-      const names = next[key].map((port) => port.name);
-      if (names.some((name) => !new RegExp("^[A-Za-z][A-Za-z0-9_-]*$").test(name)) || new Set(names).size !== names.length) {
-        alert(`${t("legacy.0c870112c3ca")} ${key}: ${t("legacy.b28a0976574b")}`);
-        return false;
-      }
     }
-    if (next.valueOutputs.length) {
-      next.blueprint ||= { nodes: {} };
-      next.blueprint.nodes ||= {};
-      const receiverIds = new Set();
-      for (const output of next.valueOutputs) {
-        let receiverId = output.receiverId;
-        if (!receiverId || !next.blueprint.nodes[receiverId]) {
-          const safeName = output.name.replace(/[^A-Za-z0-9_-]/g, "_");
-          receiverId = `__output_${safeName}`;
-          while (next.blueprint.nodes[receiverId] && next.blueprint.nodes[receiverId].type !== "valueReceiver") receiverId += "_";
-          output.receiverId = receiverId;
-          next.blueprint.nodes[receiverId] = { id: receiverId, type: "valueReceiver", x: 260, y: 40 + receiverIds.size * 110, inputs: { value: null }, next: {} };
-        }
-        receiverIds.add(receiverId);
+    return draft;
+  }
+
+  _uniquePortName(node, key) {
+    const base = ({ flowOutputs: "flowOut", valueInputs: "input", valueOutputs: "value" })[key] || "flowIn";
+    const peerKey = key === "flowOutputs" ? "valueOutputs" : key === "valueOutputs" ? "flowOutputs" : "flowInputs";
+    const used = new Set([...(node[key] || []), ...(node[peerKey] || [])].map(({ name }) => name));
+    if (!used.has(base)) return base;
+    let suffix = 2;
+    while (used.has(`${base}${suffix}`)) suffix += 1;
+    return `${base}${suffix}`;
+  }
+
+  _newPort(node, key) {
+    if (key.startsWith("flow")) return { name: this._uniquePortName(node, key), kind: "flow" };
+    const port = { name: this._uniquePortName(node, key), kind: "value", type: "any" };
+    if (key === "valueOutputs") port.receiverId = `__output_${port.name}`;
+    return port;
+  }
+
+  _syncValueOutputReceivers(node) {
+    node.blueprint ||= { nodes: {} };
+    node.blueprint.nodes ||= {};
+    const receiverIds = new Set();
+    for (const [index, output] of node.valueOutputs.entries()) {
+      let receiverId = output.receiverId;
+      if (!receiverId || receiverIds.has(receiverId)
+        || (node.blueprint.nodes[receiverId] && node.blueprint.nodes[receiverId].type !== "valueReceiver")) {
+        const safeName = output.name.replace(/[^A-Za-z0-9_-]/g, "_");
+        receiverId = `__output_${safeName}`;
+        let suffix = 2;
+        while (receiverIds.has(receiverId) || node.blueprint.nodes[receiverId]) receiverId = `__output_${safeName}_${suffix++}`;
+        output.receiverId = receiverId;
       }
-      for (const [receiverId, receiver] of Object.entries(next.blueprint.nodes)) {
-        if (receiver.type === "valueReceiver" && !receiverIds.has(receiverId)) delete next.blueprint.nodes[receiverId];
+      receiverIds.add(receiverId);
+      const receiver = node.blueprint.nodes[receiverId] || {
+        id: receiverId,
+        type: "valueReceiver",
+        x: 260,
+        y: 40 + index * 110,
+        inputs: {},
+        next: {},
+      };
+      receiver.inputs ||= {};
+      if (!Object.prototype.hasOwnProperty.call(receiver.inputs, "value")) receiver.inputs.value = null;
+      node.blueprint.nodes[receiverId] = receiver;
+    }
+    for (const [receiverId, receiver] of Object.entries(node.blueprint.nodes)) {
+      if (receiver.type === "valueReceiver" && !receiverIds.has(receiverId)) delete node.blueprint.nodes[receiverId];
+    }
+  }
+
+  _reconcileFlowReturnPorts(previousPorts, node) {
+    const nextPorts = node.flowOutputs || [];
+    for (const end of Object.values(node.blueprint?.nodes || {})) {
+      if (end.type !== "activityEnd" && end.type !== "macroReturn") continue;
+      const rawPort = String(end.inputs?.port ?? "default");
+      if (rawPort === "default") continue;
+      const oldIndex = previousPorts.findIndex(({ name }) => name === rawPort);
+      const index = oldIndex >= 0 ? oldIndex : (/^\d+$/.test(rawPort) ? Number(rawPort) - 1 : -1);
+      if (index < 0 || !previousPorts[index]) {
+        if (!nextPorts.some(({ name }) => name === rawPort)) end.inputs.port = "default";
+        continue;
+      }
+      const nextIndex = nextPorts.findIndex(({ name }) => name === previousPorts[index].name);
+      end.inputs.port = nextIndex < 0 ? "default" : String(nextIndex + 1);
+    }
+  }
+
+  _changeKind(node, kind) {
+    const draft = this._readDraftFromInspector(node);
+    const currentKind = draft.valueOutputs.length ? "value" : "flow";
+    if (kind === currentKind) return;
+    if (!confirm("切换节点类型会重置内部蓝图结构与引脚，是否继续？")) {
+      this.detailEl.querySelector('[data-field="kind"]').value = currentKind;
+      return;
+    }
+    const valueInputs = structuredClone(draft.valueInputs || []);
+    if (kind === "flow") {
+      Object.assign(draft, {
+        flowInputs: [{ name: "flowIn", kind: "flow" }],
+        flowOutputs: [{ name: "flowOut", kind: "flow" }],
+        valueInputs,
+        valueOutputs: [],
+        blueprint: starterBlueprint("flow"),
+      });
+    } else {
+      Object.assign(draft, {
+        flowInputs: [],
+        flowOutputs: [],
+        valueInputs,
+        valueOutputs: [{ name: "value", kind: "value", type: "any", receiverId: "result" }],
+        blueprint: starterBlueprint("value"),
+      });
+    }
+    this.render();
+  }
+
+  _addPin(node, key) {
+    const draft = this._readDraftFromInspector(node);
+    const port = this._newPort(draft, key);
+    draft[key].push(port);
+    if (key === "valueOutputs") {
+      draft.blueprint.nodes[port.receiverId] = {
+        id: port.receiverId,
+        type: "valueReceiver",
+        x: 260,
+        y: 40 + (draft.valueOutputs.length - 1) * 110,
+        inputs: { value: null },
+        next: {},
+      };
+    }
+    this.render();
+  }
+
+  _removePin(node, key, index) {
+    if (key === "flowInputs") return;
+    const draft = this._readDraftFromInspector(node);
+    if (key === "valueOutputs" && draft.valueOutputs.length <= 1) return;
+    const previousPorts = structuredClone(draft[key]);
+    draft[key].splice(index, 1);
+    if (key === "flowOutputs") this._reconcileFlowReturnPorts(previousPorts, draft);
+    if (key === "valueOutputs") this._syncValueOutputReceivers(draft);
+    this.render();
+  }
+
+  _saveNode(node) {
+    const next = this._readDraftFromInspector(node);
+    const isValue = next.valueOutputs.length > 0;
+    if (isValue) {
+      next.flowInputs = [];
+      next.flowOutputs = [];
+      this._syncValueOutputReceivers(next);
+    } else {
+      next.valueOutputs = [];
+      if (node.valueOutputs?.length) next.blueprint = starterBlueprint("flow");
+      else this._reconcileFlowReturnPorts(node.flowOutputs || [], next);
+      if (next.flowInputs.length !== 1) next.flowInputs = [{ name: "flowIn", kind: "flow" }];
+    }
+    for (const [left, right] of [["flowInputs", "valueInputs"], ["flowOutputs", "valueOutputs"]]) {
+      const ports = [...next[left], ...next[right]];
+      const names = ports.map(({ name }) => name);
+      if (names.some((name) => !/^[A-Za-z][A-Za-z0-9_-]*$/.test(name)) || new Set(names).size !== names.length) {
+        alert(`${t("legacy.0c870112c3ca")} ${left}/${right}: ${t("legacy.b28a0976574b")}`);
+        return false;
       }
     }
     try {
@@ -161,6 +285,7 @@ export class BlueprintNodeManagerView {
       return false;
     }
     Object.assign(node, next);
+    this.draft = null;
     this.render();
     return true;
   }
@@ -180,32 +305,42 @@ export class BlueprintNodeManagerView {
     }
   }
 
-  _renderPortGroup(node, key, title) {
+  _renderPortGroup(node, key, title, { canAdd = false, canRemove = true } = {}) {
     const group = document.createElement("section");
     group.className = "ng-blueprint-node-port-group";
     group.dataset.portGroup = key;
+    const toolbar = document.createElement("div");
+    toolbar.className = "ng-blueprint-node-port-group-heading";
     const heading = document.createElement("h4");
     heading.textContent = title;
-    group.appendChild(heading);
+    toolbar.appendChild(heading);
+    if (canAdd) {
+      const add = document.createElement("button");
+      add.type = "button";
+      add.className = "ng-blueprint-node-pin-add";
+      add.textContent = "+";
+      add.title = t("blueprintNodeManager.addPin", "添加引脚");
+      add.setAttribute("aria-label", `${t("blueprintNodeManager.addPin", "添加")} ${title}`);
+      add.addEventListener("click", () => this._addPin(this.nodes.find((entry) => entry.id === this.selectedId), key));
+      toolbar.appendChild(add);
+    }
+    group.appendChild(toolbar);
     const rows = document.createElement("div");
-    (node[key] || []).forEach((port, index) => rows.appendChild(this._portRow(key, port, index)));
+    (node[key] || []).forEach((port, index) => rows.appendChild(this._portRow(node, key, port, index, canRemove)));
     group.appendChild(rows);
-    const add = document.createElement("button");
-    add.type = "button";
-    add.textContent = t("legacy.41f289b10d18");
-    add.addEventListener("click", () => rows.appendChild(this._portRow(key,
-      key.startsWith("flow")
-        ? { name: key === "flowInputs" ? "flowIn" : "flowOut", kind: "flow" }
-        : { name: key === "valueInputs" ? "value" : "result", kind: "value", type: "string" }, -1)));
-    group.appendChild(add);
     return group;
   }
 
-  _portRow(key, port, index) {
+  _portRow(node, key, port, index, canRemove) {
     const row = document.createElement("div");
-    row.className = "ng-blueprint-node-port-row";
+    row.className = `ng-blueprint-node-port-row ${key.startsWith("flow") ? "flow" : "value"}`;
     row.dataset.portRow = "";
     row.dataset.portIndex = String(index);
+    row.dataset.portGroup = key;
+    const pin = document.createElement("span");
+    pin.className = "ng-blueprint-node-pin-socket";
+    pin.setAttribute("aria-hidden", "true");
+    row.appendChild(pin);
     const name = document.createElement("input");
     name.type = "text";
     name.dataset.portField = "name";
@@ -216,7 +351,7 @@ export class BlueprintNodeManagerView {
       const type = document.createElement("select");
       type.dataset.portField = "type";
       type.setAttribute("aria-label", `${key} type`);
-      for (const value of ["any", "string", "number", "boolean", "object", "array"]) {
+      for (const value of ["any", "string", "number", "bool", "object", "array"]) {
         const option = document.createElement("option");
         option.value = value;
         option.textContent = value;
@@ -225,13 +360,45 @@ export class BlueprintNodeManagerView {
       type.value = port.type || "any";
       row.appendChild(type);
     }
-    const remove = document.createElement("button");
-    remove.type = "button";
-    remove.textContent = "−";
-    remove.title = t("legacy.3755f56f2f83");
-    remove.addEventListener("click", () => row.remove());
-    row.appendChild(remove);
+    if (canRemove) {
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "ng-blueprint-node-pin-remove";
+      remove.type = "button";
+      remove.textContent = "−";
+      remove.title = t("blueprintNodeManager.removePin", "移除此引脚");
+      remove.setAttribute("aria-label", `${t("blueprintNodeManager.removePin", "移除引脚")} ${port.name}`);
+      remove.disabled = key === "valueOutputs" && node.valueOutputs.length <= 1;
+      remove.addEventListener("click", () => this._removePin(this.nodes.find((entry) => entry.id === this.selectedId), key, index));
+      row.appendChild(remove);
+    }
     return row;
+  }
+
+  _renderNodeVisual(node) {
+    const visual = document.createElement("div");
+    visual.className = "ng-blueprint-node-visual";
+    const inputs = document.createElement("div");
+    inputs.className = "ng-blueprint-node-visual-side inputs";
+    const core = document.createElement("div");
+    core.className = "ng-blueprint-node-visual-core";
+    const title = document.createElement("strong");
+    title.className = "ng-blueprint-node-visual-title";
+    title.textContent = node.label || node.id;
+    const kind = document.createElement("span");
+    kind.className = "ng-blueprint-node-visual-kind";
+    kind.textContent = node.valueOutputs.length ? "数值节点" : "流程节点";
+    const id = document.createElement("small");
+    id.textContent = node.id;
+    core.append(title, kind, id);
+    const outputs = document.createElement("div");
+    outputs.className = "ng-blueprint-node-visual-side outputs";
+    if (node.flowInputs.length) inputs.appendChild(this._renderPortGroup(node, "flowInputs", "流程输入", { canRemove: false }));
+    inputs.appendChild(this._renderPortGroup(node, "valueInputs", "数值输入", { canAdd: true }));
+    if (node.flowOutputs.length || !node.valueOutputs.length) outputs.appendChild(this._renderPortGroup(node, "flowOutputs", "流程输出", { canAdd: true }));
+    if (node.valueOutputs.length) outputs.appendChild(this._renderPortGroup(node, "valueOutputs", "数值输出", { canAdd: true }));
+    visual.append(inputs, core, outputs);
+    return visual;
   }
 
   render() {
@@ -242,19 +409,31 @@ export class BlueprintNodeManagerView {
       row.className = "ng-list-manager-list-item";
       row.classList.toggle("selected", node.id === this.selectedId);
       row.textContent = `${node.label || node.id} (${node.id})`;
-      row.addEventListener("click", () => { this.selectedId = node.id; this.render(); });
+      row.addEventListener("click", () => {
+        if (this.draft && this.draft.id === this.selectedId) {
+          const current = this.nodes.find((entry) => entry.id === this.selectedId);
+          if (current && this.detailEl?.querySelector('[data-field="label"]')) this._readDraftFromInspector(current);
+          if (current && JSON.stringify(this.draft) !== JSON.stringify(current)
+            && !confirm(t("blueprintNodeManager.discardChanges", "当前节点有未保存修改，切换后会丢弃。继续？"))) return;
+        }
+        this.selectedId = node.id;
+        this.draft = null;
+        this.render();
+      });
       this.itemsEl.appendChild(row);
     }
     const node = this.nodes.find((entry) => entry.id === this.selectedId);
     if (!node) {
+      this.draft = null;
       this.detailEl.textContent = t("legacy.3b4e41b92a01");
       return;
     }
+    const draft = this._getDraft(node);
     this.detailEl.innerHTML = `
-      <h3></h3>
       <label>${t("legacy.7f32e700e161")}<input data-field="label" value=""></label>
       <label>Description<textarea data-field="description"></textarea></label>
-      <div data-role="ports"></div>
+      <label>${t("blueprintNodeManager.kind", "节点类型")}<select data-field="kind"><option value="flow">${t("blueprintNodeManager.flowNode", "流程节点")}</option><option value="value">${t("blueprintNodeManager.valueNode", "数值节点")}</option></select></label>
+      <div data-role="node-visual"></div>
       <div class="ng-list-manager-toolbar">
         <button type="button" data-action="save-memory">${t("legacy.b02ae67098e2")}</button>
         <button type="button" data-action="open">${t("blueprintNodeManager.editBlueprint", "编辑节点蓝图")}</button>
@@ -263,14 +442,19 @@ export class BlueprintNodeManagerView {
       </div>
       <div class="ng-editor-status" aria-live="polite"></div>
     `;
-    this.detailEl.querySelector("h3").textContent = `${node.label || node.id} (${node.id})`;
-    this.detailEl.querySelector('[data-field="label"]').value = node.label || node.id;
-    this.detailEl.querySelector('[data-field="description"]').value = node.description || "";
+    const labelInput = this.detailEl.querySelector('[data-field="label"]');
+    labelInput.value = draft.label || node.id;
+    this.detailEl.querySelector('[data-field="description"]').value = draft.description || "";
+    const kindSelect = this.detailEl.querySelector('[data-field="kind"]');
+    kindSelect.value = draft.valueOutputs.length ? "value" : "flow";
+    kindSelect.addEventListener("change", () => this._changeKind(node, kindSelect.value));
     this.statusEl = this.detailEl.querySelector(".ng-editor-status");
-    const portHost = this.detailEl.querySelector('[data-role="ports"]');
-    for (const [key, title] of [["flowInputs", "Flow inputs"], ["flowOutputs", "Flow outputs"], ["valueInputs", "Value inputs"], ["valueOutputs", "Value outputs"]]) {
-      portHost.appendChild(this._renderPortGroup(node, key, title));
-    }
+    const visualHost = this.detailEl.querySelector('[data-role="node-visual"]');
+    visualHost.appendChild(this._renderNodeVisual(draft));
+    labelInput.addEventListener("input", () => {
+      const title = visualHost.querySelector(".ng-blueprint-node-visual-title");
+      if (title) title.textContent = labelInput.value || node.id;
+    });
     this.detailEl.querySelector('[data-action="save-memory"]').addEventListener("click", () => this._saveNode(node));
     this.detailEl.querySelector('[data-action="open"]').addEventListener("click", () => this.openBlueprintEditor(node));
     this.detailEl.querySelector('[data-action="download"]').addEventListener("click", () => {

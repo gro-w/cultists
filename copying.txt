@@ -24,16 +24,3 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-Game content notice
--------------------
-
-The Cultists game engine, including its core and framework layers, is
-distributed under the BSD 2-Clause License above. The game layer and its
-content are separate works and are not licensed under that BSD 2-Clause
-License. Unless a content file states otherwise, the game's story, characters,
-dialogue, medical content, artwork, audio, video, data, and other content
-assets are copyrighted and all rights are reserved by their respective
-copyright holders. No permission is granted to copy, modify, publish,
-redistribute, or use those game contents in another project without the
-applicable copyright holder's permission.

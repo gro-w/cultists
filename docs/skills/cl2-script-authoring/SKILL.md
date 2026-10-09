@@ -44,7 +44,7 @@ metadata:
 - 第四类数值接收节点使用 `inputvalue receiver_id: valueReceiver[expression[]];`，它是无输出终端，不是流程边、可复用纯值或可调度节点；解析和回写时必须保留 `valueReceiver` 分类及上游数值边。旧式 `inputvalue receiver_id: pureFunction[...]` 必须规范化为纯值节点加 receiver 包装。
 - 循环使用普通流程回边，通常由 `if` 的 true 分支进入循环体、循环体回到条件节点；必须存在可达退出路径。
 - 布局写成 `/** @cl2.pos x,y */`；布局和 Note 不改变运行时语义。
-- 稳定 ID 不得由翻译文本、显示名称、患者姓名或语言目录生成。
+- 稳定 ID 不得由翻译文本、显示名称、角色姓名或语言目录生成。
 
 ## Procedure
 

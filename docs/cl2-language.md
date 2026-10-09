@@ -348,8 +348,8 @@ playerselect(count, text1, text2, ..., textN, defaultText)
 ```cl2
 node06: playerselect(
     getpubvar[3],
-    "调查患者",
-    "查看病历",
+    "查看条目",
+    "查看详情",
     "离开",
     "其他选项"
 ) {
@@ -595,7 +595,7 @@ inputvalue result: valueReceiver[calc[]]; /** @cl2.pos 440,0 */
 注释不依赖换行，统一使用 `/* ... */` 块注释；`//` 不是合法 CL2 语法：
 
 ```cl2
-/* 患者已经完成身份确认 */
+/* 已完成身份验证 */
 node01: showtext("test1");
 ```
 
@@ -735,10 +735,10 @@ normal: range(4, 10, 20, 30) {
     default end;
 }; /** @cl2.pos 300,0 */
 
-patient_menu: playerselect(
+record_menu: playerselect(
     getpubvar[4],
-    "调查患者",
-    "查看病历",
+    "查看条目",
+    "查看详情",
     "离开",
     "其他选项"
 ) {

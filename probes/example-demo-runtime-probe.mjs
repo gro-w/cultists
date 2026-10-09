@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { AppProgramRegistry } from "../core/AppProgramRegistry.js";
-import { createActivityRunner } from "../core/ActivityRunner.js";
+import { createActivityRunner, evaluateValueOutput } from "../core/ActivityRunner.js";
 import { registerCustomActivityNode } from "../core/ActivityNodeRegistry.js";
 import { createActivityInstance } from "../core/ActivityInstance.js";
 import { decodeCl2Blueprints } from "../core/Cl2Embedded.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
 import { validateCl2 } from "../core/Cl2Validator.js";
+import { serializeCl2 } from "../core/Cl2Serializer.js";
 import { DataStore } from "../core/DataStore.js";
 import { DataStructureManager } from "../core/DataStructureManager.js";
 import EventBus from "../core/EventBus.js";
@@ -18,6 +19,7 @@ import { VariableStore } from "../core/VariableStore.js";
 import { VirtualFileSystem } from "../core/VirtualFileSystem.js";
 import { DesktopIconManager } from "../core/DesktopIconManager.js";
 import { createApiRegistry } from "../core/engine-api.js";
+import { createActivityEditorModel } from "../dev/ActivityEditorModel.js";
 
 const base = new URL("../example.data/", import.meta.url);
 const json = (file) => readFile(new URL(file, base), "utf8").then(JSON.parse);
@@ -61,10 +63,33 @@ const sources = await Promise.all(activityManifest.activityIds.map(async ({ id, 
   const source = await readFile(new URL(`activities/${file}`, base), "utf8");
   const validation = validateCl2(source, { sourcePath: file });
   assert.equal(validation.ok, true, `${file}: ${validation.diagnostics.map(({ message }) => message).join("; ")}`);
+  const roundTrip = validateCl2(serializeCl2(validation.graph), { sourcePath: `${file} round-trip` });
+  assert.equal(roundTrip.ok, true, `${file} round-trip: ${roundTrip.diagnostics.map(({ message }) => message).join("; ")}`);
   return [id, validation.graph];
 }));
 const activityGraphs = new Map(sources);
 const decodedInventory = decodeCl2Blueprints(inventoryWindow, "windows/inventory.json");
+const inventoryValueValidation = validateBlueprint(inventoryWindow.valueGraph, { blueprintKind: "value" });
+assert.equal(inventoryValueValidation.ok, true, `inventory value graph: ${inventoryValueValidation.errors.join("; ")}`);
+const inventoryValueEditor = createActivityEditorModel({ activityId: "inventory", blueprint: inventoryWindow.valueGraph, valueOnly: true });
+assert.equal(inventoryValueEditor.validateForSave().ok, true, `inventory value editor: ${inventoryValueEditor.validateForSave().errors.join("; ")}`);
+const inventoryValueRoundTrip = validateCl2(inventoryValueEditor.toDownloadPayload(), { blueprintKind: "value", sourcePath: "windows/inventory.json valueGraph" });
+assert.equal(inventoryValueRoundTrip.ok, true,
+  `inventory value CL2 round-trip: ${inventoryValueRoundTrip.diagnostics.map(({ message }) => message).join("; ")}`);
+for (const receiverId of ["money__receiver", "useCount__receiver", "items__receiver", "activeName__receiver", "activeInvestigation__receiver"]) {
+  assert.equal(inventoryWindow.valueGraph.nodes[receiverId]?.type, "valueReceiver", `${receiverId} is a host-assigned value output receiver`);
+}
+const collectBindings = (value, output = []) => {
+  if (Array.isArray(value)) value.forEach((item) => collectBindings(item, output));
+  else if (value && typeof value === "object") {
+    if (typeof value.nodeId === "string") output.push(value.nodeId);
+    for (const [key, child] of Object.entries(value)) if (key !== "events") collectBindings(child, output);
+  }
+  return output;
+};
+for (const receiverId of collectBindings(inventoryWindow.root)) {
+  assert.equal(inventoryWindow.valueGraph.nodes[receiverId]?.type, "valueReceiver", `${receiverId} is a widget binding boundary`);
+}
 for (const eventName of ["onInspect", "onUse"]) {
   const eventGraph = decodedInventory.root.children.find(({ widgetId }) => widgetId === "inventory-list").events[eventName];
   assert.equal(validateBlueprint(eventGraph).ok, true, `${eventName} embedded item action validates`);
@@ -136,12 +161,22 @@ function execute(id, blueprint, parameters = []) {
 
 execute("default", activityGraphs.get("default"));
 assert.deepEqual(openedWindows, ["welcome"]);
+for (const [id, graph] of activityGraphs) {
+  for (const [type, expectedId] of [["prerequisite", "__system_prerequisite__"], ["activityExpiry", "__system_activity_expiry__"]]) {
+    assert.equal(graph.nodes[expectedId]?.type, type, `${id} declares its fixed ${type} receiver`);
+  }
+}
 assert.deepEqual(runtimeCollections.get("inventory").map(({ id, quantity }) => [id, quantity]), [
   ["ticket", 2], ["sealed-letter", 1], ["magnifier", 1],
 ], "initial quantities are read from canonical item database records");
 assert.deepEqual(publicVariableManager.get(12).inventory, { ticket: 2, "sealed-letter": 1, magnifier: 1 });
 assert.equal(publicVariableManager.get(10), 20);
 assert.equal(publicVariableManager.get(11), 0);
+assert.equal(evaluateValueOutput(inventoryWindow.valueGraph, "money__receiver", "value", variableStore, new Set(), publicVariableManager), 20,
+  "the window's pure-value graph resolves its receiver-backed public-variable binding");
+const doubleValueGraph = { nodes: { doubleAmount: { id: "doubleAmount", type: "example-double-value", inputs: { amount: 6 }, next: {} } } };
+assert.equal(evaluateValueOutput(doubleValueGraph, "doubleAmount", "value", variableStore, new Set()), 12,
+  "the example custom value node resolves its 1:1 mapped system receiver");
 assert.ok(eventState.requested.has("open-file-browser"), "the first onboarding hint follows the startup milestone");
 
 for (const eventName of ["example:file_browser_opened", "example:document_editor_opened", "example:terminal_opened", "example:inventory_opened"]) {

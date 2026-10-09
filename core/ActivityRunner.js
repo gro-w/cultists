@@ -140,7 +140,7 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       const output = customDefinition?.custom
         ? (customDefinition.valueOutputs || []).find((port) => port.name === portName)
         : null;
-      if (!customDefinition?.custom || !customDefinition.blueprint || !output?.source) {
+      if (!customDefinition?.custom || !customDefinition.blueprint || !output) {
         throw new Error(`Node ${node.type} does not produce a value output`);
       }
       const replaceParameters = (value) => {

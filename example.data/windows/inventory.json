@@ -24,9 +24,9 @@
         "gap": 6,
         "children": [
           { "widgetId": "inventory-money-label", "type": "label", "text": "公共变量 #10 金钱：" },
-          { "widgetId": "inventory-money-value", "type": "label", "text": { "nodeId": "money", "port": "value" } },
+          { "widgetId": "inventory-money-value", "type": "label", "text": { "nodeId": "money__receiver", "port": "value" } },
           { "widgetId": "inventory-use-count-label", "type": "label", "text": "　公共变量 #11 使用次数：" },
-          { "widgetId": "inventory-use-count-value", "type": "label", "text": { "nodeId": "useCount", "port": "value" } }
+          { "widgetId": "inventory-use-count-value", "type": "label", "text": { "nodeId": "useCount__receiver", "port": "value" } }
         ]
       },
       { "widgetId": "inventory-public-state-note", "type": "label", "text": "物品栏状态由公共变量 #12 持有；列表记录来自数据库并与运行时库存合并。" },
@@ -34,7 +34,7 @@
         "widgetId": "inventory-list",
         "type": "list",
         "className": "demo-inventory-list panel-inset",
-        "items": { "nodeId": "items", "port": "value" },
+        "items": { "nodeId": "items__receiver", "port": "value" },
         "itemLabelTemplate": "{{icon}} {{name}} × {{quantity}}",
         "itemMetaTemplate": "{{category}} · 使用 {{useMinutes}} 分钟 · 奖励 {{moneyReward}} 金钱 · 已使用 {{value}} 次",
         "itemClassName": "demo-item-row",
@@ -47,8 +47,8 @@
           "onUse": { "cl2": "start: flowStart(); use: example-use-item({\"variable\":\"event:value\"}); end: end();" }
         }
       },
-      { "widgetId": "inventory-detail-title", "type": "label", "text": { "nodeId": "activeName", "port": "value" } },
-      { "widgetId": "inventory-investigation-text", "type": "label", "className": "demo-investigation-copy panel-inset", "text": { "nodeId": "activeInvestigation", "port": "value" } },
+      { "widgetId": "inventory-detail-title", "type": "label", "text": { "nodeId": "activeName__receiver", "port": "value" } },
+      { "widgetId": "inventory-investigation-text", "type": "label", "className": "demo-investigation-copy panel-inset", "text": { "nodeId": "activeInvestigation__receiver", "port": "value" } },
       { "widgetId": "inventory-action-result", "type": "label", "text": { "variable": "demo:lastItemResult" } }
     ]
   },
@@ -62,7 +62,12 @@
       "items": { "id": "items", "type": "mergeRecords", "inputs": { "left": { "nodeId": "databaseItems", "port": "value" }, "right": { "nodeId": "itemUseCounts", "port": "value" }, "keyField": "id" }, "next": {} },
       "activeItem": { "id": "activeItem", "type": "getRecordValue", "inputs": { "databaseId": "exampleItems", "key": { "variable": "demo:activeItemId" } }, "next": {} },
       "activeName": { "id": "activeName", "type": "getProperty", "inputs": { "value": { "nodeId": "activeItem", "port": "value" }, "key": "name" }, "next": {} },
-      "activeInvestigation": { "id": "activeInvestigation", "type": "getProperty", "inputs": { "value": { "nodeId": "activeItem", "port": "value" }, "key": "investigationText" }, "next": {} }
+      "activeInvestigation": { "id": "activeInvestigation", "type": "getProperty", "inputs": { "value": { "nodeId": "activeItem", "port": "value" }, "key": "investigationText" }, "next": {} },
+      "money__receiver": { "id": "money__receiver", "type": "valueReceiver", "inputs": { "value": { "nodeId": "money", "port": "value" } }, "next": {} },
+      "useCount__receiver": { "id": "useCount__receiver", "type": "valueReceiver", "inputs": { "value": { "nodeId": "useCount", "port": "value" } }, "next": {} },
+      "items__receiver": { "id": "items__receiver", "type": "valueReceiver", "inputs": { "value": { "nodeId": "items", "port": "value" } }, "next": {} },
+      "activeName__receiver": { "id": "activeName__receiver", "type": "valueReceiver", "inputs": { "value": { "nodeId": "activeName", "port": "value" } }, "next": {} },
+      "activeInvestigation__receiver": { "id": "activeInvestigation__receiver", "type": "valueReceiver", "inputs": { "value": { "nodeId": "activeInvestigation", "port": "value" } }, "next": {} }
     }
   },
   "events": {

@@ -1,4 +1,7 @@
 /** CL2 command application: touch */
+inputvalue __system_prerequisite__: prerequisite[];
+inputvalue __system_activity_expiry__: activityExpiry[];
+
 reusablevalue invocation: getParameter[0];
 reusablevalue arguments: getProperty[invocation[], "arguments"];
 reusablevalue cwd: getProperty[invocation[], "cwd"];

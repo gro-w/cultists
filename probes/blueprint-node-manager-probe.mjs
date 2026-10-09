@@ -4,11 +4,11 @@ import { BlueprintNodeManagerView } from "../dev/BlueprintNodeManagerView.js";
 import { registerCustomActivityNode, getActivityNodeDefinition } from "../core/ActivityNodeRegistry.js";
 
 const source = JSON.parse(await readFile(new URL("../example.data/blueprint-nodes.json", import.meta.url), "utf8"));
-const nodes = source.filter((node) => ["example-use-item", "example-inspect-item"].includes(node.id));
-assert.equal(nodes.length, 2, "the example package contains both requested custom nodes");
+const nodes = source;
+assert.equal(nodes.length, 4, "the example package contains all four custom flow/value node examples");
 const frameworkNodes = JSON.parse(await readFile(new URL("../../data/blueprint-nodes.framework.json", import.meta.url), "utf8"));
 nodes.push(...frameworkNodes.filter((node) => node.id === "testValueNode"));
-assert.equal(nodes.length, 3, "the example package and game data include both flow and mapped-value custom nodes");
+assert.equal(nodes.length, 5, "the example package and game data include flow and mapped-value custom nodes");
 for (const node of nodes) registerCustomActivityNode(node);
 
 const opened = [];
@@ -34,4 +34,4 @@ for (const node of nodes) {
     `${node.id} refreshes the registered runtime definition after save`);
 }
 
-console.log("blueprint-node-manager-probe: flow-node and mapped-value edit/save paths passed");
+console.log("blueprint-node-manager-probe: all example flow/value node edit/save paths passed");

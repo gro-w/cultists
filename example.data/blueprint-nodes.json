@@ -20,7 +20,7 @@
         "ticket": { "id": "ticket", "type": "callApi", "inputs": { "apiId": "runtime.collection.operation", "payload": { "collectionId": "inventory", "recordId": "ticket", "operation": "setIfAbsent", "value": { "nodeId": "ticketQuantity", "port": "value" }, "minimum": 0 }, "resultVariable": "" }, "next": { "flowOut": { "nodeId": "letter", "port": "flowIn" } } },
         "letter": { "id": "letter", "type": "callApi", "inputs": { "apiId": "runtime.collection.operation", "payload": { "collectionId": "inventory", "recordId": "sealed-letter", "operation": "setIfAbsent", "value": { "nodeId": "letterQuantity", "port": "value" }, "minimum": 0 }, "resultVariable": "" }, "next": { "flowOut": { "nodeId": "magnifier", "port": "flowIn" } } },
         "magnifier": { "id": "magnifier", "type": "callApi", "inputs": { "apiId": "runtime.collection.operation", "payload": { "collectionId": "inventory", "recordId": "magnifier", "operation": "setIfAbsent", "value": { "nodeId": "magnifierQuantity", "port": "value" }, "minimum": 0 }, "resultVariable": "" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
-        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "next": {} }
+        "end": { "id": "end", "type": "activityEnd", "inputs": { "port": "default" }, "next": {} }
       }
     }
   },
@@ -38,7 +38,7 @@
         "start": { "id": "start", "type": "flowStart", "inputs": {}, "next": { "flowOut": { "nodeId": "select", "port": "flowIn" } } },
         "select": { "id": "select", "type": "setVariable", "inputs": { "key": "demo:activeItemId", "value": { "parameter": "itemId" } }, "next": { "flowOut": { "nodeId": "emit", "port": "flowIn" } } },
         "emit": { "id": "emit", "type": "emitEvent", "inputs": { "eventName": "example:item_inspected", "payload": { "itemId": { "parameter": "itemId" } } }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
-        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "next": {} }
+        "end": { "id": "end", "type": "activityEnd", "inputs": { "port": "default" }, "next": {} }
       }
     }
   },
@@ -69,7 +69,7 @@
         "markUsed": { "id": "markUsed", "type": "markEventState", "inputs": { "id": "tour:item_used" }, "next": { "flowOut": { "nodeId": "success", "port": "flowIn" } } },
         "success": { "id": "success", "type": "setVariable", "inputs": { "key": "demo:lastItemResult", "value": "使用成功：时间已推进、余额已增加" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
         "failed": { "id": "failed", "type": "setVariable", "inputs": { "key": "demo:lastItemResult", "value": "库存不足：未推进时间，也未增加金钱" }, "next": { "flowOut": { "nodeId": "end", "port": "flowIn" } } },
-        "end": { "id": "end", "type": "activityEnd", "inputs": {}, "next": {} }
+        "end": { "id": "end", "type": "activityEnd", "inputs": { "port": "default" }, "next": {} }
       }
     }
   }

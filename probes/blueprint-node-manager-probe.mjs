@@ -6,6 +6,9 @@ import { registerCustomActivityNode, getActivityNodeDefinition } from "../core/A
 const source = JSON.parse(await readFile(new URL("../example.data/blueprint-nodes.json", import.meta.url), "utf8"));
 const nodes = source.filter((node) => ["example-use-item", "example-inspect-item"].includes(node.id));
 assert.equal(nodes.length, 2, "the example package contains both requested custom nodes");
+const frameworkNodes = JSON.parse(await readFile(new URL("../../data/blueprint-nodes.framework.json", import.meta.url), "utf8"));
+nodes.push(...frameworkNodes.filter((node) => node.id === "testValueNode"));
+assert.equal(nodes.length, 3, "the example package and game data include both flow and mapped-value custom nodes");
 for (const node of nodes) registerCustomActivityNode(node);
 
 const opened = [];
@@ -22,12 +25,13 @@ for (const node of nodes) {
   const editor = opened.at(-1);
   assert.equal(editor.node.id, node.id);
   const updatedBlueprint = structuredClone(node.blueprint);
-  updatedBlueprint.nodes.start.x += 37;
+  const editedNodeId = updatedBlueprint.nodes.start ? "start" : "double";
+  updatedBlueprint.nodes[editedNodeId].x += 37;
   editor.onSave(updatedBlueprint);
-  assert.equal(node.blueprint.nodes.start.x, updatedBlueprint.nodes.start.x,
+  assert.equal(node.blueprint.nodes[editedNodeId].x, updatedBlueprint.nodes[editedNodeId].x,
     `${node.id} saves its edited graph back to the manager's node definition`);
-  assert.equal(getActivityNodeDefinition(node.id).blueprint.nodes.start.x, updatedBlueprint.nodes.start.x,
+  assert.equal(getActivityNodeDefinition(node.id).blueprint.nodes[editedNodeId].x, updatedBlueprint.nodes[editedNodeId].x,
     `${node.id} refreshes the registered runtime definition after save`);
 }
 
-console.log("blueprint-node-manager-probe: use-item and inspect-item edit/save path passed");
+console.log("blueprint-node-manager-probe: flow-node and mapped-value edit/save paths passed");

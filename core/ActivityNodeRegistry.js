@@ -19,9 +19,67 @@ const flowOut = (name = "flowOut", optional = false) => ({ name, kind: FLOW, opt
 const valueIn = (name, type = "any") => ({ name, kind: VALUE, type });
 const valueOut = (name = "value", type = "any") => ({ name, kind: VALUE, type });
 
+function assertCustomBlueprintContract(node, nodeClass) {
+  const blueprint = node.blueprint;
+  if (!blueprint) throw new Error(`Custom blueprint node ${node.id} must contain a graph blueprint`);
+  if (!blueprint.nodes || typeof blueprint.nodes !== "object") throw new Error(`Custom blueprint node ${node.id} must contain a graph blueprint`);
+  const nodes = Object.values(blueprint.nodes);
+  for (const child of nodes) {
+    if (!classifyActivityNodePorts(getActivityNodeDefinition(child.type))) {
+      throw new Error(`Custom blueprint node ${node.id} contains invalid or unknown node ${child.id}: ${child.type}`);
+    }
+  }
+  if (nodeClass === "flow") {
+    const starts = nodes.filter((child) => child.type === "flowStart");
+    if (starts.length !== 1 || blueprint.startNodeId !== starts[0]?.id) {
+      throw new Error(`Custom flow node ${node.id} requires one fixed flow-start node`);
+    }
+    if (nodes.some((child) => classifyActivityNodePorts(getActivityNodeDefinition(child.type)) === "valueReceiver")) {
+      throw new Error(`Custom flow node ${node.id} cannot contain value receivers`);
+    }
+    const returns = nodes.filter((child) => child.type === "activityEnd" || child.type === "macroReturn");
+    if ((node.flowOutputs || []).length && !returns.length) throw new Error(`Custom flow node ${node.id} must map its outputs to end(n) or end(default)`);
+    const outputs = node.flowOutputs || [];
+    for (const end of returns) {
+      const port = end.inputs?.port;
+      if (port === undefined && end.type === "activityEnd") throw new Error(`Custom flow end ${end.id} must use end(n) or end(default)`);
+      const value = String(port ?? "default");
+      const defaultOutput = outputs.find((output) => output.name === "default" || output.name === "flowOut") || outputs.at(-1);
+      const output = value === "default"
+        ? defaultOutput
+        : outputs.find((item) => item.name === value) || (/^\d+$/.test(value) && Number(value) >= 1 ? outputs[Number(value) - 1] : null);
+      const valid = value === "default" ? Boolean(output) || outputs.length === 0 : Boolean(output);
+      if (!valid) throw new Error(`Custom flow end ${end.id} references undeclared output ${value}`);
+    }
+  } else {
+    if (nodes.some((child) => !["value", "valueReceiver"].includes(classifyActivityNodePorts(getActivityNodeDefinition(child.type))))) {
+      throw new Error(`Custom value node ${node.id} may contain only value nodes and system value receivers`);
+    }
+    const outputs = node.valueOutputs || [];
+    const receiverIds = outputs.map((output) => output.receiverId);
+    if (receiverIds.some((id) => typeof id !== "string" || !id) || new Set(receiverIds).size !== receiverIds.length) {
+      throw new Error(`Custom value node ${node.id} must map every output to a unique receiverId`);
+    }
+    const receivers = nodes.filter((child) => classifyActivityNodePorts(getActivityNodeDefinition(child.type)) === "valueReceiver");
+    if (receivers.length !== outputs.length || receivers.some((receiver) => !receiverIds.includes(receiver.id))) {
+      throw new Error(`Custom value node ${node.id} must have exactly one system receiver per output`);
+    }
+    for (const output of outputs) {
+      const receiver = blueprint.nodes[output.receiverId];
+      const receiverDefinition = getActivityNodeDefinition(receiver?.type);
+      if (!receiver || classifyActivityNodePorts(receiverDefinition) !== "valueReceiver") {
+        throw new Error(`Custom value output ${output.name} does not map to a value receiver`);
+      }
+      if ((receiverDefinition.valueInputs || []).some((port) => !Object.prototype.hasOwnProperty.call(receiver.inputs || {}, port.name))) {
+        throw new Error(`Custom value receiver ${receiver.id} is missing a required input`);
+      }
+    }
+  }
+}
+
 const definitions = {
   flowStart: { label: t("legacy.693c26d62889"), flowOutputs: [flowOut()] },
-  activityEnd: { label: t("legacy.ed342f86a3bc"), flowInputs: [flowIn()] },
+  activityEnd: { label: t("legacy.ed342f86a3bc"), flowInputs: [flowIn()], valueInputs: [valueIn("port", "string")] },
   macroReturn: {
     label: t("legacy.b4a854b31384"),
     flowInputs: [flowIn()],
@@ -460,7 +518,9 @@ export function listActivityNodeTypes() {
 export function registerCustomActivityNode(node) {
   if (!node?.id || !/^[a-zA-Z][\w:-]*$/.test(node.id)) throw new Error(t("error.e595d5709b6b"));
   if (definitions[node.id]) throw new Error(`Cannot replace engine blueprint node: ${node.id}`);
-  if (!classifyActivityNodePorts(node)) throw new Error(`Custom blueprint node ${node.id} does not match one of the four node categories`);
+  const nodeClass = classifyActivityNodePorts(node);
+  if (nodeClass !== "flow" && nodeClass !== "value") throw new Error(`Custom blueprint node ${node.id} must be a flow node or value node`);
+  assertCustomBlueprintContract(node, nodeClass);
   const definition = {
     label: node.label || node.id,
     flowInputs: Array.isArray(node.flowInputs) ? node.flowInputs : [],
@@ -477,15 +537,28 @@ export function registerCustomActivityNode(node) {
 export function classifyActivityNodePorts(nodeOrType) {
   const definition = typeof nodeOrType === "string" ? getActivityNodeDefinition(nodeOrType) : nodeOrType;
   if (!definition) return null;
+  const groups = [
+    ["flowInputs", "input", FLOW],
+    ["flowOutputs", "output", FLOW],
+    ["valueInputs", "input", VALUE],
+    ["valueOutputs", "output", VALUE],
+  ];
+  for (const [key, direction, kind] of groups) {
+    if (definition[key] != null && !Array.isArray(definition[key])) return null;
+    if ((definition[key] || []).some((port) => !port || typeof port.name !== "string" || !port.name || port.kind !== kind)) return null;
+    const names = [
+      ...(definition[direction === "input" ? "flowInputs" : "flowOutputs"] || []),
+      ...(definition[direction === "input" ? "valueInputs" : "valueOutputs"] || []),
+    ].map((port) => port.name);
+    if (new Set(names).size !== names.length) return null;
+  }
   const hasFlowInput = Boolean(definition.flowInputs?.length);
   const hasFlowOutput = Boolean(definition.flowOutputs?.length);
   const hasValueInput = Boolean(definition.valueInputs?.length);
   const hasValueOutput = Boolean(definition.valueOutputs?.length);
-  if (hasFlowInput && hasValueOutput) return null;
-  if (hasFlowInput) return "flow";
+  if (hasFlowInput) return hasValueOutput ? null : "flow";
+  if (hasFlowOutput) return hasValueOutput ? null : "flowStart";
   if (hasValueOutput) return "value";
-  if (hasFlowOutput && hasValueInput) return null;
-  if (hasFlowOutput) return "flowStart";
   if (hasValueInput) return "valueReceiver";
   return null;
 }
@@ -498,9 +571,11 @@ export function updateCustomActivityNode(node) {
   if (!node?.id || !customDefinitions.has(node.id)) {
     throw new Error(`Cannot update unregistered custom blueprint node: ${node?.id || ""}`);
   }
-  if (!classifyActivityNodePorts(node)) {
-    throw new Error(`Custom blueprint node ${node.id} does not match one of the four node categories`);
+  const nodeClass = classifyActivityNodePorts(node);
+  if (nodeClass !== "flow" && nodeClass !== "value") {
+    throw new Error(`Custom blueprint node ${node.id} must be a flow node or value node`);
   }
+  assertCustomBlueprintContract(node, nodeClass);
   const current = customDefinitions.get(node.id);
   const updated = {
     ...current,

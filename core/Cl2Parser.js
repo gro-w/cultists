@@ -1,4 +1,4 @@
-import { getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
+import { classifyActivityNodePorts, getActivityNodeDefinition } from "./ActivityNodeRegistry.js";
 import { normalizeBlueprint, validateBlueprint } from "./ActivityValidator.js";
 
 const IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_.:-]*$/;
@@ -116,7 +116,15 @@ function literalType(value, reusable) {
   if (typeof value === "string") return "string";
   return "any";
 }
-function makeInputs(type, args, reusable = {}) {
+function makeInputs(type, args, reusable = {}, blueprintKind = null) {
+  if (type === "activityEnd") {
+    if (blueprintKind !== "customFlow" || args.length !== 1) return {};
+    const value = args[0];
+    const port = value?.expression === "default" ? "default"
+      : typeof value === "number" ? String(value)
+        : value;
+    return { port };
+  }
   if (type === "addWindowComponent" && args.length === 6
     && typeof args[0] === "string" && typeof args[1] === "string"
     && typeof args[2] === "string" && typeof args[3] === "string"
@@ -214,7 +222,7 @@ function parseFunction(cursor, diagnostics, bracket) {
   return { name, args: splitTopLevel(rawArgs).map(parseLiteral) };
 }
 
-export function parseCl2(source, { sourcePath = "<inline>", validate = true } = {}) {
+export function parseCl2(source, { sourcePath = "<inline>", validate = true, blueprintKind = validate ? "activity" : null } = {}) {
   const text = String(source || "");
   const cursor = new Cursor(text);
   const diagnostics = [];
@@ -256,8 +264,21 @@ export function parseCl2(source, { sourcePath = "<inline>", validate = true } = 
   for (const entry of reusableEntries) {
     if (!entry.id || reusable[entry.id]) diagnostics.push(diagnostic(text, entry.start, `Duplicate reusable value "${entry.id}"`, "CL2_DUPLICATE_ID"));
     const type = functionNameToType(entry.fn?.name || "");
+    const definition = getActivityNodeDefinition(type);
+    const nodeClass = classifyActivityNodePorts(type);
+    if (nodeClass === "valueReceiver") {
+      const node = { id: entry.id, type, inputs: {}, next: {}, cl2Class: "valueReceiver" };
+      node.inputs = makeInputs(type, (entry.fn?.args || []).map((value) => resolveValue(value, reusable)), reusable, blueprintKind);
+      if (entry.position) Object.assign(node, entry.position);
+      valueNodes[entry.id] = node;
+      continue;
+    }
+    if (definition && nodeClass !== "value") {
+      diagnostics.push(diagnostic(text, entry.start, `reusablevalue "${entry.id}" must use a value node`, "CL2_REUSABLE_CLASS"));
+      continue;
+    }
     const node = { id: entry.id, type, inputs: {}, next: {} };
-    node.inputs = makeInputs(type, (entry.fn?.args || []).map((value) => resolveValue(value, reusable)), reusable);
+    node.inputs = makeInputs(type, (entry.fn?.args || []).map((value) => resolveValue(value, reusable)), reusable, blueprintKind);
     if (entry.position) Object.assign(node, entry.position);
     valueNodes[entry.id] = node;
     reusable[entry.id] = { nodeId: entry.id, port: "value", outputType: getActivityNodeDefinition(type)?.valueOutputs?.[0]?.type || "any" };
@@ -265,8 +286,13 @@ export function parseCl2(source, { sourcePath = "<inline>", validate = true } = 
   const nodes = { ...valueNodes };
   for (const entry of flowEntries) {
     const type = functionNameToType(entry.fn?.name || "");
+    const nodeClass = classifyActivityNodePorts(type);
+    if (getActivityNodeDefinition(type) && nodeClass !== "flow" && nodeClass !== "flowStart") {
+      diagnostics.push(diagnostic(text, entry.start, `Flow declaration "${entry.id}" must use a flow node or flow-start node`, "CL2_FLOW_CLASS"));
+      continue;
+    }
     const node = { id: entry.id, type, inputs: {}, next: {} };
-    node.inputs = makeInputs(type, (entry.fn?.args || []).map((value) => resolveValue(value, reusable)), reusable);
+    node.inputs = makeInputs(type, (entry.fn?.args || []).map((value) => resolveValue(value, reusable)), reusable, blueprintKind);
     if (entry.position) { node.x = entry.position.x; node.y = entry.position.y; }
     nodes[entry.id] = node;
   }
@@ -274,8 +300,8 @@ export function parseCl2(source, { sourcePath = "<inline>", validate = true } = 
     const functionType = functionNameToType(entry.fn?.name || "");
     const definition = getActivityNodeDefinition(functionType);
     const args = (entry.fn?.args || []).map((value) => resolveValue(value, reusable));
-    if (definition?.valueInputs?.length && !definition?.valueOutputs?.length && !definition?.flowInputs?.length && !definition?.flowOutputs?.length) {
-      nodes[entry.id] = { id: entry.id, type: functionType, inputs: makeInputs(functionType, args, reusable), next: {}, cl2Class: "valueReceiver", ...(entry.position || {}) };
+    if (classifyActivityNodePorts(definition) === "valueReceiver") {
+      nodes[entry.id] = { id: entry.id, type: functionType, inputs: makeInputs(functionType, args, reusable, blueprintKind), next: {}, cl2Class: "valueReceiver", ...(entry.position || {}) };
       continue;
     }
     const reference = reusable[functionType] || reusable[`${functionType}__value`];
@@ -300,7 +326,7 @@ export function parseCl2(source, { sourcePath = "<inline>", validate = true } = 
     nodes[expressionId] = {
       id: expressionId,
       type: functionType,
-      inputs: makeInputs(functionType, args, reusable),
+      inputs: makeInputs(functionType, args, reusable, blueprintKind),
       next: {},
       ...(entry.position ? { x: entry.position.x - 220, y: entry.position.y } : {}),
     };
@@ -316,6 +342,7 @@ export function parseCl2(source, { sourcePath = "<inline>", validate = true } = 
   const flowIds = flowEntries.map((entry) => entry.id);
   flowEntries.forEach((entry, index) => {
     const node = nodes[entry.id];
+    if (!node) return;
     const edges = [...entry.edges];
     const definition = getActivityNodeDefinition(node.type);
     const hasDefaultPort = Boolean(definition?.flowOutputs?.some((port) => ["flowOut", "default", "false", "largeFailure", "onCreate"].includes(port.name)));
@@ -326,10 +353,19 @@ export function parseCl2(source, { sourcePath = "<inline>", validate = true } = 
       node.next[flowPortFor(node.type, edge.label)] = { nodeId: edge.target, port: "flowIn", implicit: Boolean(edge.implicit) };
     }
   });
+  if (blueprintKind === "activity") {
+    for (const [id, type] of [["__system_prerequisite__", "prerequisite"], ["__system_activity_expiry__", "activityExpiry"]]) {
+      const existing = Object.values(nodes).filter((node) => node.type === type);
+      if (!existing.length) nodes[id] = { id, type, inputs: {}, next: {}, cl2Class: "valueReceiver" };
+    }
+  }
   const startNodeId = flowEntries.find((entry) => entry.fn?.name === "flowStart")?.id || null;
   const graph = normalizeBlueprint({ startNodeId, nodes });
   if (validate) {
-    const result = validateBlueprint(graph);
+    const result = validateBlueprint(graph, {
+      blueprintKind,
+      requireActivitySystemNodes: blueprintKind === "activity",
+    });
     if (!result.ok) result.errors.forEach((message) => diagnostics.push({ code: "CL2_GRAPH", message, line: 0, column: 0 }));
   }
   const document = { sourcePath, source: text, reusableValues: reusableEntries, inputValues, flowNodes: flowEntries, graph, diagnostics };

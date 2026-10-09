@@ -1,5 +1,5 @@
 import { t } from "./i18n/index.js";
-import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "./ActivityNodeRegistry.js";
+import { classifyActivityNodePorts, getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "./ActivityNodeRegistry.js";
 
 /**
  * ActivityValidator - Blueprint schema normalization and structural
@@ -65,25 +65,52 @@ function flowPorts(direction, definition) {
   return (direction === "input" ? definition?.flowInputs : definition?.flowOutputs) || [];
 }
 
-export function validateBlueprint(raw) {
+export function validateBlueprint(raw, { blueprintKind = "activity", requireActivitySystemNodes = false } = {}) {
   const blueprint = normalizeBlueprint(raw);
   const errors = [];
   const entries = Object.entries(blueprint.nodes);
 
   const starts = entries.filter(([, node]) => node.type === "flowStart");
-  if (starts.length !== 1) errors.push(`${t("legacy.7ee8757a4386")}${starts.length} ${t("legacy.f7b2a6ee68ec")}`);
-  if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push(t("legacy.1b75d4308c3d"));
-  if (blueprint.startNodeId && blueprint.nodes[blueprint.startNodeId]?.type !== "flowStart") errors.push(t("legacy.30e2f42e49e5"));
-
-  const ends = entries.filter(([, node]) => node.type === "activityEnd");
-  if (!ends.length) errors.push(t("legacy.44fc63aa163b"));
+  const ends = entries.filter(([, node]) => node.type === "activityEnd"
+    || (blueprintKind === "customFlow" && node.type === "macroReturn"));
+  if (blueprintKind === "value" || blueprintKind === "customValue") {
+    if (entries.some(([, node]) => !["value", "valueReceiver"].includes(classifyActivityNodePorts(getActivityNodeDefinition(node.type))))) {
+      errors.push("Pure value blueprints may contain only value nodes and value receivers");
+    }
+  } else {
+    if (starts.length !== 1) errors.push(`${t("legacy.7ee8757a4386")}${starts.length} ${t("legacy.f7b2a6ee68ec")}`);
+    if (!blueprint.startNodeId || !blueprint.nodes[blueprint.startNodeId]) errors.push(t("legacy.1b75d4308c3d"));
+    if (blueprint.startNodeId && blueprint.nodes[blueprint.startNodeId]?.type !== "flowStart") errors.push(t("legacy.30e2f42e49e5"));
+    if (!ends.length) errors.push(t("legacy.44fc63aa163b"));
+  }
+  if (requireActivitySystemNodes && blueprintKind === "activity") {
+    for (const type of ["prerequisite", "activityExpiry"]) {
+      const count = entries.filter(([, node]) => node.type === type).length;
+      if (count !== 1) errors.push(`Activity system node ${type} must occur exactly once; found ${count}`);
+    }
+  }
+  if (blueprintKind === "customFlow") {
+    if (entries.some(([, node]) => classifyActivityNodePorts(getActivityNodeDefinition(node.type)) === "valueReceiver")) {
+      errors.push("Custom flow blueprints cannot contain value receiver system nodes");
+    }
+    for (const [id, node] of ends) {
+      if (!Object.prototype.hasOwnProperty.call(node.inputs || {}, "port")) errors.push(`Custom flow end node ${id} must select an output with end(n) or end(default)`);
+    }
+  }
 
   for (const [id, node] of entries) {
     if (node.id !== id) errors.push(`${t("legacy.19ff6f856978")}${id} ${t("legacy.0bbe6b12e4a0")}id ${node.id} ${t("legacy.ea88dc52f534")}`);
     const definition = getActivityNodeDefinition(node.type);
     if (!definition) { errors.push(`${t("legacy.fa002d2c545a")}${id} ${t("legacy.f1854a26d944")}${node.type}`); continue; }
+    const nodeClass = classifyActivityNodePorts(definition);
+    if (!nodeClass) errors.push(`${id} has an illegal node pin combination`);
+    if ((blueprintKind === "value" || blueprintKind === "customValue") && nodeClass === "valueReceiver") {
+      for (const port of definition.valueInputs || []) {
+        if (!Object.prototype.hasOwnProperty.call(node.inputs || {}, port.name)) errors.push(`${id} is missing receiver input ${port.name}`);
+      }
+    }
 
-    if (node.type !== "activityEnd") {
+    if (blueprintKind !== "value" && blueprintKind !== "customValue" && node.type !== "activityEnd") {
       // `choice` over-provisions a fixed static port list (option0..
       // option5); only the first `optionCount` of them are required to be
       // wired, the rest are simply unused ports, not validation errors.
@@ -117,7 +144,7 @@ export function validateBlueprint(raw) {
   }
 
   const reachable = new Set();
-  const pending = blueprint.startNodeId ? [blueprint.startNodeId] : [];
+  const pending = blueprintKind === "value" || blueprintKind === "customValue" ? [] : blueprint.startNodeId ? [blueprint.startNodeId] : [];
   while (pending.length) {
     const id = pending.pop();
     if (reachable.has(id)) continue;
@@ -132,7 +159,7 @@ export function validateBlueprint(raw) {
     }
   }
   entries.forEach(([id, node]) => {
-    if (isReachabilityRequired(node.type) && !reachable.has(id)) errors.push(`${t("legacy.a82a4b19507e")}${id} ${t("legacy.283b7e424931")}`);
+    if (blueprintKind !== "value" && blueprintKind !== "customValue" && isReachabilityRequired(node.type) && !reachable.has(id)) errors.push(`${t("legacy.a82a4b19507e")}${id} ${t("legacy.283b7e424931")}`);
   });
 
   return { ok: errors.length === 0, errors, blueprint };

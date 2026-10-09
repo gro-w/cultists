@@ -96,6 +96,7 @@ export function createCl2CodeGenerator({
   macroIndexByNodeId = new Map(),
   macroDefinitionsByNodeId = new Map(),
   optimizationCounts = { constantFolds: 0, constantBranches: 0 },
+  macroMode = false,
   valueParameterExpressions = null,
 } = {}) {
   function emitRaw(value, stack = new Set(), macroParams = valueParameterExpressions) {
@@ -213,18 +214,25 @@ export function createCl2CodeGenerator({
       default: {
         const definition = getActivityNodeDefinition(node.type);
         const output = definition?.custom ? (definition.valueOutputs || []).find((item) => item.name === portName) : null;
-        if (!definition?.custom || !definition.blueprint || !output?.source) {
+        if (!definition?.custom || !definition.blueprint || !output) {
           throw new Error(`Node ${node.type} does not produce a value output`);
         }
         const nestedParams = new Map((definition.valueInputs || []).map((item) => [item.name, read(item.name, undefined)]));
-        return createCl2CodeGenerator({
+        const nestedGenerator = createCl2CodeGenerator({
           blueprint: definition.blueprint,
           nodeIndexById,
           macroIndexByNodeId,
           macroDefinitionsByNodeId,
           optimizationCounts,
           valueParameterExpressions: nestedParams,
-        }).emitValueOutput(output.source.nodeId, output.source.port || "value", new Set(), nestedParams);
+        });
+        if (output.receiverId) {
+          const receiver = definition.blueprint.nodes[output.receiverId];
+          const receiverPort = getActivityNodeDefinition(receiver?.type)?.valueInputs?.[0]?.name;
+          if (!receiver || !receiverPort) throw new Error(`Custom value output ${node.type}.${portName} has no mapped receiver`);
+          return nestedGenerator.emitRaw(receiver.inputs?.[receiverPort], new Set(), nestedParams);
+        }
+        throw new Error(`Custom value output ${node.type}.${portName} has no mapped receiver`);
       }
     }
   }
@@ -259,6 +267,7 @@ export function createCl2CodeGenerator({
       case "flowStart":
         return go;
       case "activityEnd":
+        if (macroMode) return `instance.returnPort = String(${inputCode(node, "port", "default")}); hooks.finish("returned"); return { status: "stopped", nodeId: ${literal(node.id)}, steps };`;
         return `hooks.finish("completed"); return { status: "stopped", nodeId: ${literal(node.id)}, steps };`;
       case "macroReturn":
         return `instance.returnPort = String(${inputCode(node, "port", "flowOut")}); hooks.finish("returned"); return { status: "stopped", nodeId: ${literal(node.id)}, steps };`;
@@ -426,9 +435,12 @@ export function createCl2CodeGenerator({
         if (macroIndex !== undefined && macroDefinition) {
           const parameters = (macroDefinition.valueInputs || []).map((parameter) => `${literal(parameter.name)}: (${inputCode(node, parameter.name)})`).join(", ");
           const outputPorts = (macroDefinition.flowOutputs || []).map((output) => ({ port: output.name, target: nextInfo(node, output.name) }));
-          const branches = outputPorts.map(({ port, target }) => `if (macroPort === ${literal(port)} && ${target.index} >= 0) { nextPc = ${target.index}; nextNodeId = ${literal(target.id)}; }`).join(" else ");
+          const branches = outputPorts.map(({ port, target }, index) => `if ((macroPort === ${literal(port)} || macroPort === ${literal(String(index + 1))}) && ${target.index} >= 0) { nextPc = ${target.index}; nextNodeId = ${literal(target.id)}; }`).join(" else ");
           const fallback = nextInfo(node);
-          return `const macroResult = hooks.runMacro(macroExecutors[${macroIndex}], ${literal(node.id)}, node, { ${parameters} }); const macroPort = macroResult.returnPort; let nextPc = ${fallback.index}; let nextNodeId = ${literal(fallback.id)}; ${outputPorts.length ? `if (false) {} else ${branches}` : ""} hooks.afterStep(${literal(node.id)}, nextNodeId); pc = nextPc; isResumeEntry = false; continue;`;
+          const defaultOutput = outputPorts.find(({ port }) => port === "default" || port === "flowOut") || outputPorts.at(-1);
+          const defaultReturn = defaultOutput?.target || fallback;
+          const defaultBranch = `else if (macroPort === "default") { nextPc = ${defaultReturn.index}; nextNodeId = ${literal(defaultReturn.id)}; }`;
+          return `const macroResult = hooks.runMacro(macroExecutors[${macroIndex}], ${literal(node.id)}, node, { ${parameters} }); const macroPort = macroResult.returnPort; let nextPc = ${fallback.index}; let nextNodeId = ${literal(fallback.id)}; ${outputPorts.length ? `if (false) {} else ${branches} ${defaultBranch}` : ""} hooks.afterStep(${literal(node.id)}, nextNodeId); pc = nextPc; isResumeEntry = false; continue;`;
         }
         return `throw new Error(${literal(`Unhandled node type: ${node.type}`)});`;
       }

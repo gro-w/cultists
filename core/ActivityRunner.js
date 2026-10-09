@@ -155,17 +155,12 @@ export function evaluateValueOutput(blueprint, nodeId, portName, variableStore, 
       for (const nestedNode of Object.values(nestedBlueprint.nodes || {})) {
         nestedNode.inputs = replaceParameters(nestedNode.inputs || {});
       }
-      result = evaluateValueOutput(
-        nestedBlueprint,
-        output.source.nodeId,
-        output.source.port || "value",
-        variableStore,
-        stack,
-        pvGateway,
-        dbGateway,
-        runtimeGateway,
-        instance,
-      );
+      if (output.receiverId) {
+        const receiver = nestedBlueprint.nodes[output.receiverId];
+        const inputName = getActivityNodeDefinition(receiver?.type)?.valueInputs?.[0]?.name;
+        if (!receiver || !inputName) throw new Error(`Custom value output ${node.type}.${portName} has no mapped receiver`);
+        result = resolveInput(nestedBlueprint, receiver, inputName, variableStore, undefined, stack, pvGateway, dbGateway, runtimeGateway, instance);
+      } else throw new Error(`Custom value output ${node.type}.${portName} has no mapped receiver`);
       break;
     }
   }

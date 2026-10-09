@@ -10,6 +10,8 @@ function blueprint(endNodeId) {
     nodes: {
       start: { id: "start", type: "flowStart", x: 40, y: 40, inputs: {} },
       [endNodeId]: { id: endNodeId, type: "activityEnd", x: 220, y: 40, inputs: {} },
+      prerequisite: { id: "prerequisite", type: "prerequisite", inputs: {}, next: {} },
+      activityExpiry: { id: "activityExpiry", type: "activityExpiry", inputs: {}, next: {} },
     },
     connections: [
       { id: "edge-1", fromNodeId: "start", fromPort: "flowOut", toNodeId: endNodeId, toPort: "flowIn" },

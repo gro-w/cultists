@@ -3,12 +3,19 @@ import { t } from "../core/i18n/index.js";
 import { downloadTextFile, writeDataFile } from "./devApi.js";
 import { registerCustomActivityNode, unregisterCustomActivityNode, updateCustomActivityNode } from "../core/ActivityNodeRegistry.js";
 
-function starterBlueprint() {
+function starterBlueprint(kind = "flow") {
+  if (kind === "value") {
+    return {
+      nodes: {
+        result: { id: "result", type: "valueReceiver", x: 260, y: 40, inputs: { value: null }, next: {} },
+      },
+    };
+  }
   return {
     startNodeId: "start",
     nodes: {
       start: { id: "start", type: "flowStart", x: 40, y: 40, inputs: {}, next: { flowOut: { nodeId: "end", port: "flowIn" } } },
-      end: { id: "end", type: "activityEnd", x: 260, y: 40, inputs: {}, next: {} },
+      end: { id: "end", type: "activityEnd", x: 260, y: 40, inputs: { port: "default" }, next: {} },
     },
   };
 }
@@ -50,7 +57,11 @@ export class BlueprintNodeManagerView {
     const id = prompt(t("legacy.8cb077e8d362"));
     if (!id || this.nodes.some((node) => node.id === id)) return;
     if (!/^[a-zA-Z][\w:-]*$/.test(id)) return alert(t("legacy.b28a0976574b"));
-    const node = { id, label: id, flowInputs: [{ name: "flowIn", kind: "flow" }], flowOutputs: [{ name: "flowOut", kind: "flow" }], valueInputs: [], valueOutputs: [], blueprint: starterBlueprint() };
+    const kind = prompt("自定义节点类型：flow 或 value", "flow");
+    if (kind !== "flow" && kind !== "value") return;
+    const node = kind === "flow"
+      ? { id, label: id, flowInputs: [{ name: "flowIn", kind: "flow" }], flowOutputs: [{ name: "flowOut", kind: "flow" }], valueInputs: [], valueOutputs: [], blueprint: starterBlueprint("flow") }
+      : { id, label: id, flowInputs: [], flowOutputs: [], valueInputs: [], valueOutputs: [{ name: "value", kind: "value", receiverId: "result" }], blueprint: starterBlueprint("value") };
     this.nodes.push(node);
     registerCustomActivityNode(node);
     this.selectedId = id;
@@ -122,6 +133,25 @@ export class BlueprintNodeManagerView {
       if (names.some((name) => !new RegExp("^[A-Za-z][A-Za-z0-9_-]*$").test(name)) || new Set(names).size !== names.length) {
         alert(`${t("legacy.0c870112c3ca")} ${key}: ${t("legacy.b28a0976574b")}`);
         return false;
+      }
+    }
+    if (next.valueOutputs.length) {
+      next.blueprint ||= { nodes: {} };
+      next.blueprint.nodes ||= {};
+      const receiverIds = new Set();
+      for (const output of next.valueOutputs) {
+        let receiverId = output.receiverId;
+        if (!receiverId || !next.blueprint.nodes[receiverId]) {
+          const safeName = output.name.replace(/[^A-Za-z0-9_-]/g, "_");
+          receiverId = `__output_${safeName}`;
+          while (next.blueprint.nodes[receiverId] && next.blueprint.nodes[receiverId].type !== "valueReceiver") receiverId += "_";
+          output.receiverId = receiverId;
+          next.blueprint.nodes[receiverId] = { id: receiverId, type: "valueReceiver", x: 260, y: 40 + receiverIds.size * 110, inputs: { value: null }, next: {} };
+        }
+        receiverIds.add(receiverId);
+      }
+      for (const [receiverId, receiver] of Object.entries(next.blueprint.nodes)) {
+        if (receiver.type === "valueReceiver" && !receiverIds.has(receiverId)) delete next.blueprint.nodes[receiverId];
       }
     }
     try {

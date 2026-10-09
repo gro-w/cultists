@@ -1,23 +1,26 @@
 import { parseCl2 } from "./Cl2Parser.js";
-import { getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "./ActivityNodeRegistry.js";
+import { classifyActivityNodePorts, getActivityNodeDefinition, getActivityNodePort, arePortsCompatible } from "./ActivityNodeRegistry.js";
+import { validateBlueprint } from "./ActivityValidator.js";
 
 export function classifyActivityNode(type) {
   const definition = getActivityNodeDefinition(type);
   if (!definition) return { kind: "invalid", code: "CL2_UNKNOWN_NODE" };
-  const flowIn = Boolean(definition.flowInputs?.length);
-  const flowOut = Boolean(definition.flowOutputs?.length);
-  const valueIn = Boolean(definition.valueInputs?.length);
-  const valueOut = Boolean(definition.valueOutputs?.length);
-  if (flowIn && valueOut) return { kind: "invalid", code: "CL2_FLOW_VALUE_OUTPUT_CONFLICT" };
-  if (flowIn) return { kind: "flow", flowIn, flowOut, valueIn, valueOut };
-  if (valueOut) return { kind: "value", flowIn, flowOut, valueIn, valueOut };
-  if (flowOut) return { kind: "start", flowIn, flowOut, valueIn, valueOut };
-  if (valueIn) return { kind: "receiver", flowIn, flowOut, valueIn, valueOut };
-  return { kind: "invalid", code: "CL2_EMPTY_PIN_SET" };
+  const nodeClass = classifyActivityNodePorts(definition);
+  if (!nodeClass) return { kind: "invalid", code: "CL2_INVALID_PIN_COMBINATION" };
+  const kind = { flow: "flow", value: "value", flowStart: "start", valueReceiver: "receiver" }[nodeClass];
+  return {
+    kind,
+    flowIn: Boolean(definition.flowInputs?.length),
+    flowOut: Boolean(definition.flowOutputs?.length),
+    valueIn: Boolean(definition.valueInputs?.length),
+    valueOut: Boolean(definition.valueOutputs?.length),
+  };
 }
 
-export function validateCl2(sourceOrGraph, options = {}) {
-  const parsed = typeof sourceOrGraph === "string" ? parseCl2(sourceOrGraph, { ...options, validate: false }) : { graph: sourceOrGraph, diagnostics: [] };
+export function validateCl2(sourceOrGraph, { blueprintKind = "activity", ...options } = {}) {
+  const parsed = typeof sourceOrGraph === "string"
+    ? parseCl2(sourceOrGraph, { ...options, validate: false, blueprintKind })
+    : { graph: sourceOrGraph, diagnostics: [] };
   const diagnostics = [...(parsed.diagnostics || [])];
   const graph = parsed.graph;
   if (!graph) return { ok: false, graph: null, diagnostics };
@@ -40,6 +43,11 @@ export function validateCl2(sourceOrGraph, options = {}) {
     }
     if (!definition) diagnostics.push({ code: "CL2_UNKNOWN_NODE", message: `${node.id}: unknown node type ${node.type}`, line: 0, column: 0 });
   }
+  const structural = validateBlueprint(graph, {
+    blueprintKind,
+    requireActivitySystemNodes: blueprintKind === "activity",
+  });
+  structural.errors.forEach((message) => diagnostics.push({ code: "CL2_GRAPH", message, line: 0, column: 0 }));
   return { ok: diagnostics.length === 0, graph, diagnostics, document: parsed.document };
 }
 

@@ -48,7 +48,8 @@ function assignMissingNodePositions(blueprint) {
   return blueprint;
 }
 
-export function createActivityEditorModel({ activityId, blueprint, displayName, valueOnly = false } = {}) {
+export function createActivityEditorModel({ activityId, blueprint, displayName, valueOnly = false, blueprintKind = null } = {}) {
+  const kind = blueprintKind || (valueOnly ? "value" : "activity");
   let current = assignMissingNodePositions(normalizeBlueprint(blueprint || {}));
   let name = displayName || activityId || "untitled";
   const selection = new Set();
@@ -69,6 +70,9 @@ export function createActivityEditorModel({ activityId, blueprint, displayName, 
   function addNode(type, x = 0, y = 0, inputs = {}) {
     const definition = getActivityNodeDefinition(type);
     if (!definition) throw new Error(`Unknown node type: ${type}`);
+    const nodeClass = classifyActivityNodePorts(definition);
+    if (nodeClass === "flowStart" || nodeClass === "valueReceiver") throw new Error(`${type} is a system node and cannot be added manually`);
+    if ((kind === "value" || kind === "customValue") && nodeClass !== "value") throw new Error(`Value blueprints cannot contain ${type}`);
     pushHistory();
     const id = `${type}-${++_nodeSeq}`;
     const node = { id, type, x, y, inputs: { ...inputs }, next: {} };
@@ -115,7 +119,8 @@ export function createActivityEditorModel({ activityId, blueprint, displayName, 
   }
 
   function deleteNode(id) {
-    if (!current.nodes[id]) return false;
+    const node = current.nodes[id];
+    if (!node || ["flowStart", "valueReceiver"].includes(classifyActivityNodePorts(getActivityNodeDefinition(node.type)))) return false;
     pushHistory();
     delete current.nodes[id];
     unlinkReferencesTo(id);
@@ -126,7 +131,10 @@ export function createActivityEditorModel({ activityId, blueprint, displayName, 
 
   /** Delete every currently selected node as a single history step (plan item "复制粘贴删除选中"). */
   function deleteSelected() {
-    const ids = [...selection];
+    const ids = [...selection].filter((id) => {
+      const node = current.nodes[id];
+      return node && !["flowStart", "valueReceiver"].includes(classifyActivityNodePorts(getActivityNodeDefinition(node.type)));
+    });
     if (!ids.length) return false;
     pushHistory();
     for (const id of ids) {
@@ -393,7 +401,10 @@ export function createActivityEditorModel({ activityId, blueprint, displayName, 
 
   /** Structural + port-compatibility validation (§6.3), independent of the runtime's own validateBlueprint. */
   function validateForSave() {
-    if (!valueOnly) return validateBlueprint(current);
+    if (kind !== "value" && kind !== "customValue") return validateBlueprint(current, {
+      blueprintKind: kind,
+      requireActivitySystemNodes: kind === "activity",
+    });
     const errors = [];
     for (const node of Object.values(current.nodes || {})) {
       const definition = getActivityNodeDefinition(node.type);
@@ -418,6 +429,8 @@ export function createActivityEditorModel({ activityId, blueprint, displayName, 
         else if (!getActivityNodePort(source.type, "output", value.port || "value")) errors.push(`${node.id}.${port} references missing value output ${value.nodeId}.${value.port || "value"}`);
       }
     }
+    const structural = validateBlueprint(current, { blueprintKind: "value" });
+    errors.push(...structural.errors);
     return { ok: errors.length === 0, errors, blueprint: exportBlueprint() };
   }
 

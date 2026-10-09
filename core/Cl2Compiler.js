@@ -135,6 +135,7 @@ function compileInternal(blueprint, { maxSteps, macroStack = new Set(), macroPar
     macroIndexByNodeId,
     macroDefinitionsByNodeId,
     optimizationCounts,
+    macroMode: macroParameters !== null,
     valueParameterExpressions: macroParameters
       ? new Map(macroParameters.map((name) => [name, null]))
       : null,

@@ -30,9 +30,10 @@ const ZOOM_STEP = 0.1;
  * independent models + views.
  */
 export class ActivityEditorView {
-  constructor({ activityId, blueprint, displayName, onSaveToMemory, onRenameId, dataFileName, valueOnly = false } = {}) {
+  constructor({ activityId, blueprint, displayName, onSaveToMemory, onRenameId, dataFileName, valueOnly = false, blueprintKind = null } = {}) {
     this.valueOnly = Boolean(valueOnly);
-    this.model = createActivityEditorModel({ activityId, blueprint, displayName, valueOnly: this.valueOnly });
+    this.blueprintKind = blueprintKind || (this.valueOnly ? "value" : "activity");
+    this.model = createActivityEditorModel({ activityId, blueprint, displayName, valueOnly: this.valueOnly, blueprintKind: this.blueprintKind });
     this.onSaveToMemory = onSaveToMemory || (() => {});
     this.onRenameId = onRenameId || (() => {});
     this.dataFileName = dataFileName || null;
@@ -62,7 +63,7 @@ export class ActivityEditorView {
         <button type="button" data-action="download" title="${t("legacy.3f10b573ee1b")}JSON">${t("legacy.2b9d013177da")}</button>
         <button type="button" data-action="write-disk" title="${t("legacy.81ee3266b03d")}">${t("legacy.81ee3266b03d")}</button>
         <button type="button" data-action="toggle-source" title="${t("dev.blueprint.toggleCl2", "切换 CL2 脚本编辑器")}">${t("dev.blueprint.toggleCl2", "CL2 脚本编辑器")}</button>
-        ${this.valueOnly ? "" : `<button type="button" data-action="view-javascript" title="${t("dev.blueprint.viewCompiledJavaScript", "查看 JIT JavaScript")}">${t("dev.blueprint.viewCompiledJavaScript", "查看 JIT JavaScript")}</button>`}
+        ${this.blueprintKind !== "activity" ? "" : `<button type="button" data-action="view-javascript" title="${t("dev.blueprint.viewCompiledJavaScript", "查看 JIT JavaScript")}">${t("dev.blueprint.viewCompiledJavaScript", "查看 JIT JavaScript")}</button>`}
         <span class="ng-editor-zoom-tools">
           <button type="button" data-action="zoom-out">－</button>
           <span class="ng-editor-zoom-label">100%</span>
@@ -121,6 +122,10 @@ export class ActivityEditorView {
     this.paletteEl.innerHTML = "";
     for (const type of listActivityNodeTypes()) {
       const definition = getActivityNodeDefinition(type);
+      const nodeClass = classifyActivityNodePorts(definition);
+      if (nodeClass === "flowStart" || nodeClass === "valueReceiver") continue;
+      if (type === "macroReturn") continue;
+      if (this.valueOnly && nodeClass !== "value") continue;
       const button = document.createElement("button");
       button.type = "button";
       button.className = "ng-editor-palette-item";
@@ -193,13 +198,13 @@ export class ActivityEditorView {
       this.sourceEl.focus();
       return;
     }
-    const parsed = parseCl2(this.sourceEl.value, { sourcePath: this.dataFileName || "<editor>", validate: !this.valueOnly });
+    const parsed = parseCl2(this.sourceEl.value, { sourcePath: this.dataFileName || "<editor>", validate: !this.valueOnly, blueprintKind: this.blueprintKind });
     if (!parsed.ok) {
       const details = parsed.diagnostics.map((item) => item.message || String(item)).join("；");
       this._setStatus(`${t("legacy.2da7449d8887")}: ${details}`, true);
       return;
     }
-    const candidateModel = createActivityEditorModel({ activityId: this.model.activityId, blueprint: parsed.graph, displayName: this.model.displayName, valueOnly: this.valueOnly });
+    const candidateModel = createActivityEditorModel({ activityId: this.model.activityId, blueprint: parsed.graph, displayName: this.model.displayName, valueOnly: this.valueOnly, blueprintKind: this.blueprintKind });
     const validation = candidateModel.validateForSave();
     if (!validation.ok) {
       this._setStatus(`${t("legacy.2da7449d8887")}: ${validation.errors.join("；")}`, true);
@@ -225,12 +230,14 @@ export class ActivityEditorView {
         const parsed = parseCl2(this.sourceEl.value, {
           sourcePath: this.dataFileName || "<editor>",
           validate: true,
+          blueprintKind: this.blueprintKind,
         });
         if (!parsed.ok) throw new Error(parsed.diagnostics.map((item) => item.message || String(item)).join("；"));
         const candidateModel = createActivityEditorModel({
           activityId: this.model.activityId,
           blueprint: parsed.graph,
           displayName: this.model.displayName,
+          blueprintKind: this.blueprintKind,
         });
         const validation = candidateModel.validateForSave();
         if (!validation.ok) throw new Error(validation.errors.join("；"));

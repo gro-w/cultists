@@ -470,10 +470,13 @@ export async function initDeveloperMode({
   });
 
   function openBlueprintNodeEditor(node, onSaveToMemory = () => {}) {
+    const valueOnly = (node.valueOutputs || []).length > 0;
     const view = new ActivityEditorView({
       activityId: `blueprint-node-${node.id}`,
       blueprint: node.blueprint,
       displayName: node.label || node.id,
+      valueOnly,
+      blueprintKind: valueOnly ? "customValue" : "customFlow",
       onSaveToMemory: (blueprint) => {
         onSaveToMemory(blueprint);
       },

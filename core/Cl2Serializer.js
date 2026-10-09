@@ -23,6 +23,13 @@ function orderedInputs(node) {
   return names.map((name) => node.inputs[name]);
 }
 function functionName(type) { return type === "activityEnd" ? "end" : type; }
+function serializedArguments(node, reusableIds) {
+  if (node.type === "activityEnd" && node.inputs?.port !== undefined && Object.keys(node.inputs).length === 1) {
+    const port = String(node.inputs.port);
+    return port === "default" || /^\d+$/.test(port) ? port : json(port);
+  }
+  return orderedInputs(node).map((value) => valueExpression(value, reusableIds)).join(", ");
+}
 function optionFor(type, port) {
   if (port === "flowOut" || port === "default") return "default";
   if (type === "branch" || type === "if") return port === "true" ? "option<1>" : "default";
@@ -60,18 +67,18 @@ export function serializeCl2(graph, { activityId = null, includeHeader = true } 
     lines.push("");
   }
   for (const node of valueNodes) {
-    const args = orderedInputs(node).map((value) => valueExpression(value, reusableIds)).join(", ");
+    const args = serializedArguments(node, reusableIds);
     lines.push(`reusablevalue ${node.id}: ${functionName(node.type)}[${args}];${positionSuffix(node)}`);
   }
   if (valueNodes.length) lines.push("");
   for (const node of receiverNodes) {
-    const args = orderedInputs(node).map((value) => valueExpression(value, reusableIds)).join(", ");
+    const args = serializedArguments(node, reusableIds);
     lines.push(`inputvalue ${node.id}: ${functionName(node.type)}[${args}];${positionSuffix(node)}`);
   }
   if (receiverNodes.length) lines.push("");
   const flowIds = flowNodes.map((node) => node.id);
   for (const node of flowNodes) {
-    const args = orderedInputs(node).map((value) => valueExpression(value, reusableIds)).join(", ");
+    const args = serializedArguments(node, reusableIds);
     let line = `${node.id}: ${functionName(node.type)}(${args})`;
     const edges = [];
     for (const [port, target] of Object.entries(node.next || {})) {

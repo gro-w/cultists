@@ -19,10 +19,14 @@ import { ActivityExecutionService } from "../core/ActivityExecutionService.js";
 import { validateBlueprint } from "../core/ActivityValidator.js";
 import { OnboardingManager } from "../core/OnboardingManager.js";
 import { evaluateValueOutput } from "../core/ActivityRunner.js";
+import { decodeCl2Blueprints } from "../core/Cl2Embedded.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(__dirname, "../../data");
-const readJSON = (relPath) => JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
+const readJSON = (relPath) => {
+  const value = JSON.parse(fs.readFileSync(path.join(dataDir, relPath), "utf8"));
+  return relPath === "windows/off-duty.json" ? decodeCl2Blueprints(value, `data/${relPath}`) : value;
+};
 
 const dataStructureManager = new DataStructureManager();
 dataStructureManager.loadDefinitions(readJSON("structures.framework.json"));
